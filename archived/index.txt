@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/css/hero.css">
     <link rel="stylesheet" href="assets/css/home.css">
     <link rel="stylesheet" href="assets/css/collections.css">
+    <link rel="stylesheet" href="assets/css/system-node.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/menu.css">
     <link rel="stylesheet" href="assets/css/country-overlay.css">
@@ -189,58 +190,41 @@
   </div>
 </section>
 
-<!-- =================== Home — Music =================== -->
-<section class="home-section home-music" data-motion="lift">
-  <figure class="home-figure home-rail" id="home-sound-figure">
-    <img src="assets/images/homepage/placeholder-music.jpg.png" alt="Abstract sound architecture">
-  </figure>
-  <div class="home-inner home-rail">
-    <h2 class="home-title" data-i18n-key="home.music.title">Records</h2>
-    <p class="home-text" data-i18n-key="home.music.text">
-      Releases as architecture<br>
-      Rhythm as memory<br>
-      Sound shaped through restraint, repetition, and depth
-    </p>
-  </div>
-</section>
-
-<!-- =================== Home — Books =================== -->
-<section class="home-section home-books" data-motion="lift">
-  <div class="home-inner home-rail">
-    <h2 class="home-title" data-i18n-key="home.language.title">Press</h2>
-    <p class="home-text" data-i18n-key="home.language.text">
-      Books, essays, publications<br>
-      Language as a precise instrument of perception
-    </p>
-  </div>
-</section>
-
-<!-- =================== Home — Awareness =================== -->
+<!-- =================== Home — NeuroArtan =================== -->
 <section class="home-section home-awareness" data-motion="lift">
   <figure class="home-figure home-rail">
-    <img src="assets/images/homepage/placeholder-awareness.png" alt="Light and structure">
+    <div id="system-node-mount"></div>
   </figure>
   <div class="home-inner home-rail">
-    <h2 class="home-title" data-i18n-key="home.awareness.title">NeuroArtan</h2>
-    <p class="home-text" data-i18n-key="home.awareness.text">
-      Research that observes itself<br>
-      Cognitive architecture as method<br>
-      Measurement before myth
+    <h2 class="home-title">NeuroArtan</h2>
+    <p class="home-text">
+      Neuroscience and cognitive architecture<br>
+      Artificial intelligence systems and modeling<br>
+      Research infrastructure before narrative
     </p>
   </div>
 </section>
 
-<!-- =================== Home — Form =================== -->
-<section class="home-section home-form" data-motion="lift">
-  <figure class="home-figure home-rail">
-    <img src="assets/images/homepage/placeholder-form.png" alt="Minimal object and material">
-  </figure>
+<!-- =================== Home — Press =================== -->
+<section class="home-section home-books" data-motion="lift">
   <div class="home-inner home-rail">
-    <h2 class="home-title" data-i18n-key="home.form.title">Form</h2>
-    <p class="home-text" data-i18n-key="home.form.text">
-      Design guided by clarity<br>
-      Objects reduced to necessity<br>
-      Luxury through precision
+    <h2 class="home-title">Press</h2>
+    <p class="home-text">
+      Books and long‑form publications<br>
+      Essays and analytical frameworks<br>
+      Structured language as institutional output
+    </p>
+  </div>
+</section>
+
+<!-- =================== Home — Records =================== -->
+<section class="home-section home-music" data-motion="lift">
+  <div class="home-inner home-rail">
+    <h2 class="home-title">Records</h2>
+    <p class="home-text">
+      Albums and structured releases<br>
+      Signal architecture and distribution<br>
+      Sound systems engineered for longevity
     </p>
   </div>
 </section>
@@ -280,11 +264,11 @@
 
 <!-- =================== Home — Closing =================== -->
 <div class="home-closing" id="home-closing" aria-label="ARTAN status" data-motion="fade">
-  <p class="home-closing-line" data-i18n-key="home.closing.line1">
-    ARTAN is an evolving ecosystem.
+  <p class="home-closing-line">
+    Neuroartan is an evolving ecosystem
   </p>
-  <p class="home-closing-line home-closing-line--sub" data-i18n-key="home.closing.line2">
-    Architecture, Intelligence, and Systems are being expanded and refined — publications, releases, and research nodes update continuously.
+  <p class="home-closing-line home-closing-line--sub">
+    Architecture, Intelligence, and Systems expand through publications, releases, and research nodes
   </p>
 </div>
 
@@ -307,6 +291,7 @@
 <script src="assets/js/menu.js" defer></script>
 <script src="assets/js/hero.js" defer></script>
 <script src="assets/js/home.js" defer></script>
+<script src="assets/js/system-node.js" defer></script>
 <script src="assets/js/footer.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 

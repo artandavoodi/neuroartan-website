@@ -1,8 +1,11 @@
 User-agent: *
+Allow: /
+Crawl-delay: 1
 Disallow: /pages/legacy/
 Disallow: /pages/transitional/
-Disallow: /pages/architecture/
-Disallow: /pages/books/
 Disallow: /profile.html
 
+Disallow: /assets/
+Allow: /assets/images/brand/
+Allow: /assets/icons/
 Sitemap: https://neuroartan.com/sitemap.xml

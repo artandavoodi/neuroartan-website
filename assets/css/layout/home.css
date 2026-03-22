@@ -822,7 +822,185 @@ body.essence-pinned #essence-scroll-spacer + section{
 }
 
 /* =============================================================================
-   HOME CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
+   12) HOME ICOS CHAPTER — CAPTURED INTRODUCTION
+============================================================================= */
+
+.home-icos-chapter{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@supports (height: 100dvh){
+  .home-icos-chapter{
+    min-height: 100dvh;
+  }
+}
+
+.home-icos-chapter-stage{
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  gap: 2rem;
+  padding-top: 8vh;
+  padding-bottom: 8vh;
+  box-sizing: border-box;
+}
+
+@supports (height: 100dvh){
+  .home-icos-chapter-stage{
+    min-height: 100dvh;
+  }
+}
+
+.home-icos-chapter-figure{
+  width: min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-icos-chapter-copy{
+  width: min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.home-icos-chapter .home-title{
+  text-align: center;
+  margin-bottom: 0.2rem;
+}
+
+.home-icos-chapter-lead,
+.home-icos-chapter-body,
+.home-icos-chapter-highlight{
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 64ch;
+  text-align: center;
+}
+
+.home-icos-chapter-lead{
+  font-size: 1.12rem;
+  line-height: 1.75;
+}
+
+.home-icos-chapter-body{
+  font-size: 1.02rem;
+  line-height: 1.82;
+  opacity: 0.9;
+}
+
+.home-icos-chapter-highlight{
+  font-size: 1.05rem;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 820px){
+  .home-icos-chapter-stage{
+    gap: 1.4rem;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+  }
+
+  .home-icos-chapter-lead,
+  .home-icos-chapter-body,
+  .home-icos-chapter-highlight{
+    max-width: 100%;
+  }
+}
+
+/* =============================================================================
+   12A) HOME CHAPTER PROGRESSION — UPDATES / FEATURED / INSIGHTS / CLOSING
+============================================================================= */
+
+.home-updates-chapter,
+.home-featured-chapter,
+.home-insights-chapter,
+.home-closing-chapter{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+}
+
+@supports (height: 100dvh){
+  .home-updates-chapter,
+  .home-featured-chapter,
+  .home-insights-chapter,
+  .home-closing-chapter{
+    min-height: 100dvh;
+  }
+}
+
+.home-updates-chapter .home-inner,
+.home-featured-chapter .home-inner,
+.home-insights-chapter .home-inner,
+.home-closing-chapter{
+  width: min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-updates-chapter .home-inner,
+.home-featured-chapter .home-inner,
+.home-insights-chapter .home-inner{
+  display: grid;
+  align-content: center;
+  gap: 0.9rem;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+  box-sizing: border-box;
+}
+
+.home-updates-chapter .home-title,
+.home-featured-chapter .home-title,
+.home-insights-chapter .home-title{
+  margin-bottom: 0.2rem;
+}
+
+.home-updates-chapter .home-text,
+.home-featured-chapter .home-text,
+.home-insights-chapter .home-text{
+  max-width: 64ch;
+}
+
+.home-closing-chapter{
+  display: grid;
+  align-content: center;
+  gap: 0.9rem;
+  padding-top: 10vh;
+  padding-bottom: 10vh;
+  box-sizing: border-box;
+}
+
+@media (max-width: 820px){
+  .home-updates-chapter .home-inner,
+  .home-featured-chapter .home-inner,
+  .home-insights-chapter .home-inner,
+  .home-closing-chapter{
+    padding-top: 12vh;
+    padding-bottom: 12vh;
+  }
+}
+
+/* =============================================================================
+   13) HOME CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
 ============================================================================= */
 
 .home-closing{

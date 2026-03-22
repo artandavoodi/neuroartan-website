@@ -130,6 +130,12 @@
   height: 1.9rem;
 }
 
+.institutional-links-social[aria-label="X"]{
+  min-width: 1.35rem;
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
 .institutional-links-social[aria-label="YouTube"] svg{
   width: 100%;
   height: 100%;

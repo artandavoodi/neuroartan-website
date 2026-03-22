@@ -197,9 +197,9 @@
     const applyState = (progress) => {
       logoAuto(progress);
 
-      const l1 = lineReveal(progress, 0.00, 0.16, 0.28, 0.38);
-      const l2 = lineReveal(progress, 0.42, 0.56, 0.68, 0.78);
-      const l3 = lineReveal(progress, 0.82, 0.92, 0.982, 1.00);
+      const l1 = lineReveal(progress, 0.00, 0.18, 0.30, 0.40);
+      const l2 = lineReveal(progress, 0.42, 0.58, 0.70, 0.80);
+      const l3 = lineReveal(progress, 0.84, 0.94, 0.988, 1.00);
 
       applyLineState(lines[0], l1);
       applyLineState(lines[1], l2);
@@ -209,7 +209,7 @@
     const tick = () => {
       const y = window.scrollY || window.pageYOffset || 0;
       const { start, end, length, top } = getRanges();
-      const releaseHold = Math.round(window.innerHeight * 0.18);
+      const releaseHold = Math.round(window.innerHeight * 0.32);
       const releasePoint = end + releaseHold;
 
       if (resetIfAbove(y, start)) {
@@ -234,7 +234,7 @@
         lines[1].style.transform = 'translateY(0)';
 
         lines[2].style.setProperty('--ink', 1);
-        setSheen(lines[2], 0);
+        setSheen(lines[2], 0.5);
         lines[2].style.opacity = '1';
         lines[2].style.transform = 'translateY(0)';
 

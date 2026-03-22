@@ -12,7 +12,7 @@
   position:relative;
   width:100%;
   padding:8rem 0 6rem 0;
-  color: var(--text-color);
+  color: var(--color-primary1);
 }
 
 /* -----------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 .system-node-svg{
   width: clamp(280px, 40vw, 520px);
   height:auto;
-  color: var(--text-color);
+  color: var(--color-primary1);
   transition: transform 2.2s cubic-bezier(0.22,1,0.36,1);
 }
 

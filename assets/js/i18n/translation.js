@@ -228,8 +228,9 @@ window.NEUROARTAN_TRANSLATION = (() => {
      - translation.js loads BEFORE countrylanguage.js (defer order)
      - so we can lock the original English strings once
   ------------------------------------------------------------ */
-  function ensureEnglishBaselineCaptured() {
-    const nodes = document.querySelectorAll("[data-i18n-key]");
+  function ensureEnglishBaselineCaptured(root = document) {
+    const scope = root instanceof Element || root instanceof Document ? root : document;
+    const nodes = scope.querySelectorAll("[data-i18n-key]");
     for (const el of nodes) {
       // Lock once: what we saw at load is considered EN baseline.
       if (!el.dataset.i18nEn) {
@@ -319,7 +320,7 @@ window.NEUROARTAN_TRANSLATION = (() => {
      - Translates from EN baseline (preferred)
      - Falls back to current DOM if baseline missing
   ------------------------------------------------------------ */
-  async function applyLanguage(lang) {
+  async function applyLanguage(lang, root = document) {
     // Ensure DOM exists before we query `[data-i18n-key]`.
     await whenDomReady();
 
@@ -327,7 +328,8 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const isRtl = RTL_LANGS.includes(lang);
 
     // Capture baseline once, before any transforms.
-    ensureEnglishBaselineCaptured();
+    const scope = root instanceof Element || root instanceof Document ? root : document;
+    ensureEnglishBaselineCaptured(scope);
 
     // Always set direction/lang attributes.
     applyDir(lang);
@@ -335,7 +337,7 @@ window.NEUROARTAN_TRANSLATION = (() => {
     currentLang = lang;
 
     keyCache.clear();
-    const nodes = document.querySelectorAll("[data-i18n-key]");
+    const nodes = scope.querySelectorAll("[data-i18n-key]");
 
     for (const el of nodes) {
       const enText = (el.dataset.i18nEn || "").trim();
@@ -379,7 +381,7 @@ window.NEUROARTAN_TRANSLATION = (() => {
     }
 
     // Additive: cache translations for menu preview keys (data-preview-*-i18n)
-    const previewNodes = document.querySelectorAll('[data-preview-title-i18n], [data-preview-sub-i18n]');
+    const previewNodes = scope.querySelectorAll('[data-preview-title-i18n], [data-preview-sub-i18n]');
     for (const el of previewNodes) {
       const titleKey = (el.getAttribute('data-preview-title-i18n') || '').trim();
       const subKey = (el.getAttribute('data-preview-sub-i18n') || '').trim();
@@ -396,6 +398,10 @@ window.NEUROARTAN_TRANSLATION = (() => {
         if (val) keyCache.set(subKey, val);
       }
     }
+  }
+
+  async function refreshCurrentLanguage(root = document) {
+    await applyLanguage(currentLang, root);
   }
 
   /* ------------------------------------------------------------
@@ -424,8 +430,14 @@ window.NEUROARTAN_TRANSLATION = (() => {
     return "";
   }
 
-  const api = { applyLanguage, t };
+  const api = { applyLanguage, refreshCurrentLanguage, t };
   window.ARTAN_TRANSLATION = api;
+
+  document.addEventListener("fragment:mounted", async (event) => {
+    const root = event?.target instanceof Element ? event.target : document;
+    await refreshCurrentLanguage(root);
+  });
+
   return api;
 
 })();

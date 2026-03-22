@@ -9,6 +9,15 @@ async function injectGlobalLayout() {
       if (!res.ok) continue;
       const html = await res.text();
       el.innerHTML = html;
+
+      if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
+        window.NeuroMotion.scan(el);
+      }
+
+      el.dispatchEvent(new CustomEvent('fragment:mounted', {
+        bubbles: true,
+        detail: { name, mount: el }
+      }));
     } catch (_) {}
   }
 }
@@ -55,6 +64,16 @@ async function injectInstitutionalMenuIfNeeded() {
 
     const html = await res.text();
     header.insertAdjacentHTML('afterbegin', html);
+    const mountedMenu = header.querySelector('#institutional-menu');
+    if (mountedMenu) {
+      if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
+        window.NeuroMotion.scan(mountedMenu);
+      }
+      mountedMenu.dispatchEvent(new CustomEvent('fragment:mounted', {
+        bubbles: true,
+        detail: { name: 'institutional-menu', mount: mountedMenu }
+      }));
+    }
 
     if (legacyButton) {
       legacyButton.hidden = true;
@@ -89,6 +108,16 @@ async function injectFooterIfNeeded() {
     if (!res.ok) return false;
     const html = await res.text();
     mount.innerHTML = html;
+    const mountedFooter = mount.querySelector('footer.site-footer');
+    if (mountedFooter) {
+      if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
+        window.NeuroMotion.scan(mountedFooter);
+      }
+      mountedFooter.dispatchEvent(new CustomEvent('fragment:mounted', {
+        bubbles: true,
+        detail: { name: 'footer', mount: mountedFooter }
+      }));
+    }
     // Notify locale systems that footer controls now exist
     document.dispatchEvent(new Event('footer-mounted'));
     return true;
@@ -97,9 +126,132 @@ async function injectFooterIfNeeded() {
   }
 }
 
+function initRevealGroup(root = document, config = {}) {
+  const {
+    sectionSelector,
+    itemSelector,
+    initializedKey,
+    threshold = 0.18,
+    rootMargin = '0px 0px -10% 0px'
+  } = config;
+
+  if (!sectionSelector || !itemSelector || !initializedKey) return;
+
+  const scope = root instanceof Element || root instanceof Document ? root : document;
+  const section = scope.matches?.(sectionSelector)
+    ? scope
+    : scope.querySelector?.(sectionSelector);
+
+  if (!section || section.dataset[initializedKey] === 'true') return;
+
+  const items = section.querySelectorAll(itemSelector);
+  if (!items.length) return;
+
+  items.forEach((item) => item.classList.add('motion-init'));
+
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((item) => item.classList.add('motion-visible'));
+    section.dataset[initializedKey] = 'true';
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > threshold) {
+          entry.target.classList.add('motion-visible');
+        } else {
+          entry.target.classList.remove('motion-visible');
+        }
+      });
+    },
+    {
+      threshold: [0, threshold, 0.32, 0.5],
+      rootMargin
+    }
+  );
+
+  items.forEach((item) => observer.observe(item));
+  section.dataset[initializedKey] = 'true';
+}
+
+function initInstitutionalLinksReveal(root = document) {
+  initRevealGroup(root, {
+    sectionSelector: '.institutional-links',
+    itemSelector: '.institutional-links-column, .institutional-links-social-row',
+    initializedKey: 'motionInitialized'
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   injectInstitutionalMenuIfNeeded();
   injectFooterIfNeeded();
+  initInstitutionalLinksReveal(document);
+
+  initRevealGroup(document, {
+    sectionSelector: '#home-icos-chapter',
+    itemSelector: '.home-icos-chapter-figure, .home-icos-chapter-left, .home-icos-chapter-right',
+    initializedKey: 'motionIcosInitialized'
+  });
+
+  initRevealGroup(document, {
+    sectionSelector: '.home-updates-chapter',
+    itemSelector: '.home-title, .home-text',
+    initializedKey: 'motionUpdatesInitialized'
+  });
+
+  initRevealGroup(document, {
+    sectionSelector: '.home-featured-chapter',
+    itemSelector: '.featured-header, .featured-grid',
+    initializedKey: 'motionFeaturedInitialized'
+  });
+
+  initRevealGroup(document, {
+    sectionSelector: '.home-insights-chapter',
+    itemSelector: '.featured-header, .notes-list',
+    initializedKey: 'motionInsightsInitialized'
+  });
+
+  initRevealGroup(document, {
+    sectionSelector: '.home-closing-chapter',
+    itemSelector: '.home-closing-line',
+    initializedKey: 'motionClosingInitialized'
+  });
+
+  document.addEventListener('fragment:mounted', (event) => {
+    const root = event?.target instanceof Element ? event.target : document;
+    initInstitutionalLinksReveal(root);
+
+    initRevealGroup(root, {
+      sectionSelector: '#home-icos-chapter',
+      itemSelector: '.home-icos-chapter-figure, .home-icos-chapter-left, .home-icos-chapter-right',
+      initializedKey: 'motionIcosInitialized'
+    });
+
+    initRevealGroup(root, {
+      sectionSelector: '.home-updates-chapter',
+      itemSelector: '.home-title, .home-text',
+      initializedKey: 'motionUpdatesInitialized'
+    });
+
+    initRevealGroup(root, {
+      sectionSelector: '.home-featured-chapter',
+      itemSelector: '.featured-header, .featured-grid',
+      initializedKey: 'motionFeaturedInitialized'
+    });
+
+    initRevealGroup(root, {
+      sectionSelector: '.home-insights-chapter',
+      itemSelector: '.featured-header, .notes-list',
+      initializedKey: 'motionInsightsInitialized'
+    });
+
+    initRevealGroup(root, {
+      sectionSelector: '.home-closing-chapter',
+      itemSelector: '.home-closing-line',
+      initializedKey: 'motionClosingInitialized'
+    });
+  });
 
   /* =================== Custom Cursor (RTL-safe + re-init on language/dir change) =================== */
 

@@ -24,6 +24,22 @@
   border-top: 1px solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
 }
 
+.institutional-links-column.motion-init,
+.institutional-links-social-row.motion-init{
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.institutional-links-column.motion-visible,
+.institutional-links-social-row.motion-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .institutional-links-column{
   display: flex;
   flex-direction: column;

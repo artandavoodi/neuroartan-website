@@ -16,7 +16,7 @@ async function injectGlobalLayout() {
 
       el.dispatchEvent(new CustomEvent('fragment:mounted', {
         bubbles: true,
-        detail: { name, mount: el }
+        detail: { name, root: el, mount: el }
       }));
     } catch (_) {}
   }
@@ -115,7 +115,7 @@ async function injectInstitutionalMenuIfNeeded() {
 
     mountedMenu.dispatchEvent(new CustomEvent('fragment:mounted', {
       bubbles: true,
-      detail: { name: 'institutional-menu', mount: mountedMenu }
+      detail: { name: 'institutional-menu', root: mountedMenu, mount: mountedMenu }
     }));
 
     document.dispatchEvent(new CustomEvent('institutional-menu:mounted'));
@@ -152,7 +152,7 @@ async function injectFooterIfNeeded() {
       }
       mountedFooter.dispatchEvent(new CustomEvent('fragment:mounted', {
         bubbles: true,
-        detail: { name: 'footer', mount: mountedFooter }
+        detail: { name: 'footer', root: mountedFooter, mount: mountedFooter }
       }));
     }
     // Notify locale systems that footer controls now exist

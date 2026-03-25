@@ -16,6 +16,8 @@ window.NEUROARTAN_TRANSLATION = (() => {
   let isApplyingLanguage = false;
   let pendingApplyPromise = null;
   let pendingApplyLang = null;
+  let fragmentRefreshScheduled = false;
+  const pendingFragmentRoots = new Set();
   const cache = new Map();
   const keyCache = new Map(); // sync lookup cache for i18n keys (including menu preview keys)
 
@@ -31,9 +33,7 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const raw = String(lang).trim();
     if (!raw) return "en";
 
-    // Common UI / human labels that may come from toggles (keep SMALL, safe, explicit)
     const ALIASES = {
-      // Codes
       EN: "en",
       DE: "de",
       FA: "fa",
@@ -47,7 +47,6 @@ window.NEUROARTAN_TRANSLATION = (() => {
       ZH: "zh",
       JA: "ja",
       KO: "ko",
-      // Additional country language codes
       UR: "ur",
       HI: "hi",
       BN: "bn",
@@ -96,7 +95,6 @@ window.NEUROARTAN_TRANSLATION = (() => {
       LO: "lo",
       MY: "my",
 
-      // Human labels
       English: "en",
       Deutsch: "de",
       German: "de",
@@ -127,10 +125,8 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const upper = raw.toUpperCase();
     if (ALIASES[upper]) return ALIASES[upper];
 
-    // Handle common BCP-47 shapes: xx, xx-YY, xx_Script, xx-YY-variant
     const primary = raw.split(/[-_]/)[0].toLowerCase();
 
-    // Minimal rescue if a label leaked through lowercased
     const rescue = {
       deutsch: "de",
       german: "de",
@@ -147,7 +143,6 @@ window.NEUROARTAN_TRANSLATION = (() => {
       chinese: "zh",
       japanese: "ja",
       korean: "ko",
-      // Additional country language lowercased human labels
       urdu: "ur",
       hindi: "hi",
       bengali: "bn",
@@ -213,34 +208,31 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const nl = normalizeLang(lang) || "en";
     document.documentElement.lang = nl;
 
-    // Keep layout direction stable for now (prevents custom-cursor disappearing).
-    // If you later want full RTL layout switching, change this line back to:
-    // document.documentElement.dir = RTL_LANGS.includes(nl) ? "rtl" : "ltr";
     document.documentElement.dir = "ltr";
 
-    // Text-direction mode (layout remains LTR; only translated text nodes become RTL).
     document.documentElement.classList.toggle('lang-rtl', RTL_LANGS.includes(nl));
     document.documentElement.setAttribute('data-lang', nl);
 
-    // Notify other modules (cursor/menu) that a language apply finished.
     window.dispatchEvent(new CustomEvent("neuroartan:language-applied", { detail: { lang: nl, rtl: RTL_LANGS.includes(nl) } }));
   };
 
   /* ------------------------------------------------------------
-     Baseline capture (English source)
-     - translation.js loads BEFORE countrylanguage.js (defer order)
-     - so we can lock the original English strings once
+     Baseline capture
   ------------------------------------------------------------ */
   function ensureEnglishBaselineCaptured(root = document) {
     const scope = root instanceof Element || root instanceof Document ? root : document;
-    const nodes = scope.querySelectorAll("[data-i18n-key]");
+    const nodes = [];
+
+    if (scope instanceof Element && scope.matches("[data-i18n-key]")) {
+      nodes.push(scope);
+    }
+    nodes.push(...scope.querySelectorAll("[data-i18n-key]"));
+
     for (const el of nodes) {
-      // Lock once: what we saw at load is considered EN baseline.
       if (!el.dataset.i18nEn) {
         el.dataset.i18nEn = (el.textContent || "").trim();
       }
 
-      // Optional: also capture common translatable attributes if present.
       if (el.hasAttribute("aria-label") && !el.dataset.i18nAriaEn) {
         el.dataset.i18nAriaEn = (el.getAttribute("aria-label") || "").trim();
       }
@@ -250,16 +242,11 @@ window.NEUROARTAN_TRANSLATION = (() => {
       if (el.hasAttribute("placeholder") && !el.dataset.i18nPlaceholderEn) {
         el.dataset.i18nPlaceholderEn = (el.getAttribute("placeholder") || "").trim();
       }
-      if (el.hasAttribute("content") && !el.dataset.i18nContentEn) {
-        el.dataset.i18nContentEn = (el.getAttribute("content") || "").trim();
-      }
     }
   }
 
   /* ------------------------------------------------------------
      DOM readiness
-     - Prevents a no-op translate call if countrylanguage.js triggers
-       before the DOM is fully parsed.
   ------------------------------------------------------------ */
   function whenDomReady() {
     if (document.readyState !== "loading") return Promise.resolve();
@@ -279,8 +266,6 @@ window.NEUROARTAN_TRANSLATION = (() => {
 
   /* ------------------------------------------------------------
      Google Translate fetch
-     - Use `sl=auto` so it still works even if the current DOM is not English.
-     - Cache per (lang + source).
   ------------------------------------------------------------ */
   async function translate(text, lang) {
     if (!text) return text;
@@ -304,22 +289,63 @@ window.NEUROARTAN_TRANSLATION = (() => {
     }
   }
 
+  async function translateMany(values, lang, chunkSize = 8) {
+    const tl = normalizeLang(lang);
+    if (!tl || tl === "en") return values;
+
+    const output = new Array(values.length);
+    const pending = [];
+    const seen = new Map();
+
+    values.forEach((value, index) => {
+      const text = String(value || "").trim();
+      if (!text) {
+        output[index] = text;
+        return;
+      }
+
+      const key = `${tl}::${text}`;
+      if (cache.has(key)) {
+        output[index] = cache.get(key);
+        return;
+      }
+
+      if (!seen.has(text)) {
+        seen.set(text, []);
+        pending.push(text);
+      }
+      seen.get(text).push(index);
+    });
+
+    for (let i = 0; i < pending.length; i += chunkSize) {
+      const chunk = pending.slice(i, i + chunkSize);
+      const translatedChunk = await Promise.all(chunk.map((text) => translate(text, tl)));
+
+      translatedChunk.forEach((translated, offset) => {
+        const source = chunk[offset];
+        const resolved = translated || source;
+        cache.set(`${tl}::${source}`, resolved);
+
+        const targetIndexes = seen.get(source) || [];
+        targetIndexes.forEach((targetIndex) => {
+          output[targetIndex] = resolved;
+        });
+      });
+    }
+
+    return output.map((value, index) => value ?? String(values[index] || "").trim());
+  }
+
   /* ------------------------------------------------------------
-     RTL text-only styling (no layout flipping)
-     - Applies only to nodes with [data-i18n-key]
+     RTL text-only styling
   ------------------------------------------------------------ */
   const applyTextRTL = (el, isRtl) => {
     if (!el) return;
 
     if (isRtl) {
-      // Prevent Latin-style tracking from making Arabic/Persian look spaced out.
       el.style.letterSpacing = 'normal';
-
-      // Make punctuation + runs behave correctly without flipping global layout.
       el.style.direction = 'rtl';
       el.style.unicodeBidi = 'isolate';
-
-      // Text alignment for RTL scripts.
       el.style.textAlign = '';
     } else {
       el.style.letterSpacing = '';
@@ -331,129 +357,129 @@ window.NEUROARTAN_TRANSLATION = (() => {
 
   /* ------------------------------------------------------------
      Apply language to DOM
-     - Restores EN baseline when lang === 'en'
-     - Translates from EN baseline (preferred)
-     - Falls back to current DOM if baseline missing
   ------------------------------------------------------------ */
   async function applyLanguage(lang, root = document) {
     await whenDomReady();
 
     lang = normalizeLang(lang);
+    const isRtl = RTL_LANGS.includes(lang);
     const scope = root instanceof Element || root instanceof Document ? root : document;
+    const isGlobalScope = scope === document;
 
-    if (isApplyingLanguage && pendingApplyPromise && pendingApplyLang === lang) {
+    if (isGlobalScope && isApplyingLanguage && pendingApplyPromise && pendingApplyLang === lang) {
       return pendingApplyPromise;
     }
 
-    const run = (async () => {
-      const isRtl = RTL_LANGS.includes(lang);
+    if (isGlobalScope && !isApplyingLanguage && currentLang === lang && document.documentElement.getAttribute("data-lang") === lang) {
+      return;
+    }
 
-      // Capture baseline once, before any transforms.
+    const run = (async () => {
       ensureEnglishBaselineCaptured(scope);
 
-      // Always set direction/lang attributes.
-      applyDir(lang);
-      currentLang = lang;
-
-      if (!isApplyingLanguage) {
-        isApplyingLanguage = true;
+      if (isGlobalScope) {
+        applyDir(lang);
+        currentLang = lang;
         emitTranslationLifecycle("start", { lang });
       }
 
       try {
-        keyCache.clear();
-        const nodes = scope.querySelectorAll("[data-i18n-key]");
-
-        for (const el of nodes) {
-          const enText = (el.dataset.i18nEn || "").trim();
-          const tag = (el.tagName || "").toUpperCase();
-          const isContentOnlyNode = tag === "META";
-
-          // TextContent (skip content-only nodes like META)
-          if (!isContentOnlyNode) {
-            if (lang === "en") {
-              if (enText) el.textContent = enText;
-            } else {
-              const source = enText || (el.textContent || "").trim();
-              if (source) {
-                el.textContent = await translate(source, lang);
-              }
-            }
-          }
-
-          // aria-label
-          if (el.dataset.i18nAriaEn) {
-            if (lang === "en") {
-              el.setAttribute("aria-label", el.dataset.i18nAriaEn);
-            } else {
-              el.setAttribute("aria-label", await translate(el.dataset.i18nAriaEn, lang));
-            }
-          }
-
-          // title attribute
-          if (el.dataset.i18nTitleEn) {
-            if (lang === "en") {
-              el.setAttribute("title", el.dataset.i18nTitleEn);
-            } else {
-              el.setAttribute("title", await translate(el.dataset.i18nTitleEn, lang));
-            }
-          }
-
-          // placeholder
-          if (el.dataset.i18nPlaceholderEn) {
-            if (lang === "en") {
-              el.setAttribute("placeholder", el.dataset.i18nPlaceholderEn);
-            } else {
-              el.setAttribute("placeholder", await translate(el.dataset.i18nPlaceholderEn, lang));
-            }
-          }
-
-          // content (meta tags and other content-bearing nodes)
-          if (el.dataset.i18nContentEn) {
-            if (lang === "en") {
-              el.setAttribute("content", el.dataset.i18nContentEn);
-            } else {
-              el.setAttribute("content", await translate(el.dataset.i18nContentEn, lang));
-            }
-          }
-
-          if (!isContentOnlyNode) {
-            applyTextRTL(el, isRtl);
-          }
+        if (isGlobalScope) {
+          keyCache.clear();
         }
 
-        // Additive: cache translations for menu preview keys (data-preview-*-i18n)
-        const previewNodes = scope.querySelectorAll('[data-preview-title-i18n], [data-preview-sub-i18n]');
-        for (const el of previewNodes) {
+        const nodes = [];
+        if (scope instanceof Element && scope.matches("[data-i18n-key]")) {
+          nodes.push(scope);
+        }
+        nodes.push(...scope.querySelectorAll("[data-i18n-key]"));
+
+        const textSources = nodes.map((el) => (el.dataset.i18nEn || el.textContent || "").trim());
+        const ariaSources = nodes.map((el) => (el.dataset.i18nAriaEn || "").trim());
+        const titleSources = nodes.map((el) => (el.dataset.i18nTitleEn || "").trim());
+        const placeholderSources = nodes.map((el) => (el.dataset.i18nPlaceholderEn || "").trim());
+
+        const translatedTexts = lang === "en" ? textSources : await translateMany(textSources, lang);
+        const translatedAria = lang === "en" ? ariaSources : await translateMany(ariaSources, lang);
+        const translatedTitles = lang === "en" ? titleSources : await translateMany(titleSources, lang);
+        const translatedPlaceholders = lang === "en" ? placeholderSources : await translateMany(placeholderSources, lang);
+
+        nodes.forEach((el, index) => {
+          const textValue = translatedTexts[index];
+          if (textValue) {
+            el.textContent = textValue;
+          }
+
+          if (ariaSources[index]) {
+            el.setAttribute("aria-label", translatedAria[index] || ariaSources[index]);
+          }
+
+          if (titleSources[index]) {
+            el.setAttribute("title", translatedTitles[index] || titleSources[index]);
+          }
+
+          if (placeholderSources[index]) {
+            el.setAttribute("placeholder", translatedPlaceholders[index] || placeholderSources[index]);
+          }
+
+          applyTextRTL(el, isRtl);
+        });
+
+        const previewNodes = Array.from(scope.querySelectorAll('[data-preview-title-i18n], [data-preview-sub-i18n]'));
+        const previewTitleSources = previewNodes.map((el) => ((el.getAttribute('data-preview-title') || '')).trim());
+        const previewSubSources = previewNodes.map((el) => ((el.getAttribute('data-preview-sub') || '')).trim());
+
+        const translatedPreviewTitles = lang === 'en' ? previewTitleSources : await translateMany(previewTitleSources, lang);
+        const translatedPreviewSubs = lang === 'en' ? previewSubSources : await translateMany(previewSubSources, lang);
+
+        previewNodes.forEach((el, index) => {
           const titleKey = (el.getAttribute('data-preview-title-i18n') || '').trim();
           const subKey = (el.getAttribute('data-preview-sub-i18n') || '').trim();
 
-          if (titleKey) {
-            const enTitle = ((el.getAttribute('data-preview-title') || '')).trim();
-            const val = lang === 'en' ? enTitle : await translate(enTitle, lang);
-            if (val) keyCache.set(titleKey, val);
+          if (titleKey && translatedPreviewTitles[index]) {
+            keyCache.set(titleKey, translatedPreviewTitles[index]);
           }
 
-          if (subKey) {
-            const enSub = ((el.getAttribute('data-preview-sub') || '')).trim();
-            const val = lang === 'en' ? enSub : await translate(enSub, lang);
-            if (val) keyCache.set(subKey, val);
+          if (subKey && translatedPreviewSubs[index]) {
+            keyCache.set(subKey, translatedPreviewSubs[index]);
+          }
+        });
+
+        if (isGlobalScope) {
+          emitTranslationLifecycle("complete", { lang });
+        }
+      } catch (error) {
+        if (isGlobalScope) {
+          emitTranslationLifecycle("error", { lang, error });
+        }
+      } finally {
+        if (isGlobalScope) {
+          isApplyingLanguage = false;
+          pendingApplyPromise = null;
+          pendingApplyLang = null;
+
+          if (currentLang !== "en" && pendingFragmentRoots.size) {
+            const roots = Array.from(pendingFragmentRoots);
+            pendingFragmentRoots.clear();
+
+            window.requestAnimationFrame(async () => {
+              for (const rootEl of roots) {
+                if (rootEl instanceof Element && document.contains(rootEl)) {
+                  await refreshCurrentLanguage(rootEl);
+                }
+              }
+            });
           }
         }
-
-        emitTranslationLifecycle("complete", { lang, root: scope });
-      } catch (error) {
-        emitTranslationLifecycle("error", { lang, root: scope, error });
-        throw error;
-      } finally {
-        isApplyingLanguage = false;
-        pendingApplyPromise = null;
-        pendingApplyLang = null;
       }
     })();
 
-    pendingApplyPromise = run;
-    pendingApplyLang = lang;
+    if (isGlobalScope) {
+      isApplyingLanguage = true;
+      pendingApplyPromise = run;
+      pendingApplyLang = lang;
+    }
+
     return run;
   }
 
@@ -462,19 +488,15 @@ window.NEUROARTAN_TRANSLATION = (() => {
   }
 
   /* ------------------------------------------------------------
-     Public helper (sync lookup)
-     - Used by menu.js hover previews
-     - Returns translated text if available, otherwise EN baseline
+     Public helper
   ------------------------------------------------------------ */
   function t(key) {
     if (!key) return "";
     const k = String(key).trim();
     if (!k) return "";
 
-    // Prefer cached strings (includes menu preview keys)
     if (keyCache.has(k)) return keyCache.get(k) || "";
 
-    // Fallback: element text already translated by applyLanguage
     const el = document.querySelector(`[data-i18n-key="${k}"]`);
     if (!el) return "";
 
@@ -487,12 +509,32 @@ window.NEUROARTAN_TRANSLATION = (() => {
     return "";
   }
 
-  const api = { applyLanguage, refreshCurrentLanguage, t, isApplyingLanguage: () => isApplyingLanguage };
+  const api = { applyLanguage, refreshCurrentLanguage, t };
   window.ARTAN_TRANSLATION = api;
+  window.NEUROARTAN_TRANSLATION = api;
 
-  document.addEventListener("fragment:mounted", async (event) => {
-    const root = event?.target instanceof Element ? event.target : document;
-    await refreshCurrentLanguage(root);
+  document.addEventListener("fragment:mounted", (event) => {
+    if (!currentLang || currentLang === "en") return;
+
+    const detailRoot = event?.detail?.root;
+    const root = detailRoot instanceof Element ? detailRoot : null;
+    if (!root) return;
+
+    if (isApplyingLanguage) {
+      pendingFragmentRoots.add(root);
+      return;
+    }
+
+    if (fragmentRefreshScheduled) return;
+    fragmentRefreshScheduled = true;
+
+    window.requestAnimationFrame(async () => {
+      try {
+        await refreshCurrentLanguage(root);
+      } finally {
+        fragmentRefreshScheduled = false;
+      }
+    });
   });
 
   return api;

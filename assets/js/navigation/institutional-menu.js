@@ -6,6 +6,7 @@
   let institutionalMenuInitScheduled = false;
   let institutionalMenuRetryCount = 0;
   const INSTITUTIONAL_MENU_MAX_RETRIES = 24;
+  let institutionalMenuGlobalBound = false;
 
   function scheduleInstitutionalMenuInit() {
     if (institutionalMenuInitScheduled) return;
@@ -34,7 +35,7 @@
       trigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
     });
 
-    if (overlay) {
+    if (overlay && !overlay.__neuroartanSecondaryObserved) {
       const syncState = () => {
         const isExpanded = overlay.getAttribute('aria-hidden') === 'false';
         trigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
@@ -42,6 +43,7 @@
 
       const observer = new MutationObserver(syncState);
       observer.observe(overlay, { attributes: true, attributeFilter: ['aria-hidden'] });
+      overlay.__neuroartanSecondaryObserved = true;
       syncState();
     }
   }
@@ -70,7 +72,6 @@
 
     const applyRibbonState = () => {
       const scrollY = window.scrollY || window.pageYOffset || 0;
-
       let threshold = Number.POSITIVE_INFINITY;
 
       if (essence) {
@@ -115,7 +116,8 @@
 
   function applyInstitutionalMenuTranslations() {
     const translationEngine = window.NEUROARTAN_TRANSLATION;
-    if (!translationEngine || typeof translationEngine.applyLanguage !== 'function') return;
+    const menu = document.getElementById('institutional-menu');
+    if (!translationEngine || typeof translationEngine.applyLanguage !== 'function' || !menu) return;
 
     const storedLanguage =
       localStorage.getItem('neuroartan_language') ||
@@ -124,7 +126,7 @@
       'en';
 
     const normalizedLanguage = String(storedLanguage).toLowerCase().split('-')[0] || 'en';
-    translationEngine.applyLanguage(normalizedLanguage);
+    translationEngine.applyLanguage(normalizedLanguage, menu);
   }
 
   function bindInstitutionalMenuPanels() {
@@ -224,7 +226,6 @@
 
       window.requestAnimationFrame(() => {
         syncPanelHeight();
-        applyInstitutionalMenuTranslations();
 
         if (panelKey === 'search' && searchInput) {
           searchInput.focus();
@@ -243,7 +244,7 @@
       if (!trigger || !isDesktopMenuMode()) return;
 
       const panelKey = trigger.dataset.menuPanel || '';
-      if (panelKey === 'search') return;
+      if (!panelKey || panelKey === 'search') return;
 
       clearCloseTimer();
       openPanel(panelKey);
@@ -318,6 +319,11 @@
         const panelKey = trigger.dataset.menuPanel || '';
 
         if (panelKey === 'search') {
+          if (activePanelKey === 'search') {
+            closePanels();
+            return;
+          }
+
           openPanel('search');
           return;
         }
@@ -438,30 +444,41 @@
       scheduleClose(40);
     });
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        if (speechRecognition && speechListening) speechRecognition.stop();
+    if (!institutionalMenuGlobalBound) {
+      institutionalMenuGlobalBound = true;
+
+      document.addEventListener('keydown', (event) => {
+        const liveMenu = document.getElementById('institutional-menu');
+        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
+
+        if (event.key === 'Escape') {
+          clearCloseTimer();
+          closePanels();
+        }
+      });
+
+      document.addEventListener('click', (event) => {
+        const liveMenu = document.getElementById('institutional-menu');
+        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
+        if (liveMenu.contains(event.target)) return;
         clearCloseTimer();
         closePanels();
-      }
-    });
+      });
 
-    document.addEventListener('click', (event) => {
-      if (menu.contains(event.target)) return;
-      clearCloseTimer();
-      closePanels();
-    });
+      window.addEventListener('resize', () => {
+        const liveMenu = document.getElementById('institutional-menu');
+        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
 
-    window.addEventListener('resize', () => {
-      if (!isDesktopMenuMode()) {
-        if (speechRecognition && speechListening) speechRecognition.stop();
-        closePanels();
-        return;
-      }
+        if (!isDesktopMenuMode()) {
+          if (speechRecognition && speechListening) speechRecognition.stop();
+          closePanels();
+          return;
+        }
 
-      if (!body.classList.contains('institutional-menu-panel-open')) return;
-      syncPanelHeight();
-    }, { passive: true });
+        if (!body.classList.contains('institutional-menu-panel-open')) return;
+        syncPanelHeight();
+      }, { passive: true });
+    }
 
     closePanels();
     return true;

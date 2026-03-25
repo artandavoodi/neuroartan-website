@@ -160,6 +160,11 @@
       return target.closest('.institutional-menu-panel-trigger');
     };
 
+    const isWithinMenuExperience = (target) => {
+      if (!(target instanceof Element)) return false;
+      return menu.contains(target) || panelContainer.contains(target);
+    };
+
     const syncPanelHeight = () => {
       const activePanel = panels.find((panel) => panel.classList.contains('is-active'));
       const height = activePanel ? activePanel.offsetHeight : 0;
@@ -247,6 +252,11 @@
       if (!panelKey || panelKey === 'search') return;
 
       clearCloseTimer();
+
+      if (activePanelKey === panelKey && body.classList.contains('institutional-menu-panel-open')) {
+        return;
+      }
+
       openPanel(panelKey);
     };
 
@@ -349,6 +359,7 @@
       openFromTrigger(trigger);
     });
 
+
     menu.addEventListener('focusin', (event) => {
       const trigger = getTriggerFromTarget(event.target);
       if (!trigger || !menu.contains(trigger)) return;
@@ -387,8 +398,9 @@
       });
     }
 
-    menu.addEventListener('mouseleave', () => {
+    menu.addEventListener('mouseleave', (event) => {
       if (!isDesktopMenuMode()) return;
+      if (isWithinMenuExperience(event.relatedTarget)) return;
       scheduleClose();
     });
 
@@ -402,13 +414,16 @@
       clearCloseTimer();
     });
 
-    panelContainer.addEventListener('mouseleave', () => {
+
+    panelContainer.addEventListener('mouseleave', (event) => {
       if (!isDesktopMenuMode()) return;
+      if (isWithinMenuExperience(event.relatedTarget)) return;
       scheduleClose(90);
     });
 
-    panelContainer.addEventListener('pointerleave', () => {
+    panelContainer.addEventListener('pointerleave', (event) => {
       if (!isDesktopMenuMode()) return;
+      if (isWithinMenuExperience(event.relatedTarget)) return;
       scheduleClose(90);
     });
 
@@ -423,24 +438,28 @@
         clearCloseTimer();
       });
 
-      shell.addEventListener('mouseleave', () => {
+      shell.addEventListener('mouseleave', (event) => {
         if (!isDesktopMenuMode()) return;
+        if (isWithinMenuExperience(event.relatedTarget)) return;
         scheduleClose(70);
       });
 
-      shell.addEventListener('pointerleave', () => {
+      shell.addEventListener('pointerleave', (event) => {
         if (!isDesktopMenuMode()) return;
+        if (isWithinMenuExperience(event.relatedTarget)) return;
         scheduleClose(70);
       });
     });
 
     panelBackdrop.addEventListener('mouseenter', () => {
       if (!isDesktopMenuMode()) return;
+      clearCloseTimer();
       scheduleClose(40);
     });
 
     panelBackdrop.addEventListener('pointerenter', () => {
       if (!isDesktopMenuMode()) return;
+      clearCloseTimer();
       scheduleClose(40);
     });
 

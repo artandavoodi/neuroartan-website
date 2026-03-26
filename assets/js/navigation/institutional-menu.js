@@ -5,12 +5,10 @@
 
   const body = document.body;
   const desktopQuery = window.matchMedia('(min-width: 761px)');
+  const MAX_RETRIES = 24;
 
   let initScheduled = false;
   let retryCount = 0;
-  const MAX_RETRIES = 24;
-
-  let mountObserver = null;
   let globalBound = false;
 
   function byId(id) {
@@ -45,12 +43,6 @@
       initScheduled = false;
       initInstitutionalMenu();
     });
-  }
-
-  function disconnectMountObserver() {
-    if (!mountObserver) return;
-    mountObserver.disconnect();
-    mountObserver = null;
   }
 
   function getMenu() {
@@ -121,6 +113,7 @@
       '.country-list a'
     ].join(','));
   }
+
 
   function setCountryOverlayState(open) {
     body.classList.toggle('country-overlay-open', !!open);
@@ -379,43 +372,6 @@
       return menu.contains(target) || container.contains(target);
     }
 
-    function bindHoverAwayClose() {
-      if (menu.dataset.hoverAwayBound === 'true') return;
-      menu.dataset.hoverAwayBound = 'true';
-
-      const mapLayerSelectors = [
-        '.stage-circle',
-        '.stage',
-        '#home-hero',
-        '.home-hero',
-        '.hero-map',
-        '.map-layer',
-        '.map-stage',
-        '.globe-wrap',
-        '.hero-visual'
-      ].join(',');
-
-      const isMapLayerTarget = (target) => {
-        if (!isElement(target)) return false;
-        return !!target.closest(mapLayerSelectors);
-      };
-
-      const handleHoverAway = (event) => {
-        if (!isDesktop()) return;
-        if (!body.classList.contains('institutional-menu-panel-open')) return;
-        if (isWithinMenuExperience(event.target)) {
-          clearCloseTimer();
-          return;
-        }
-        if (!isMapLayerTarget(event.target)) return;
-        scheduleClose(60);
-      };
-
-      document.addEventListener('pointermove', handleHoverAway, true);
-      document.addEventListener('mousemove', handleHoverAway, true);
-      document.addEventListener('pointerover', handleHoverAway, true);
-      document.addEventListener('mouseover', handleHoverAway, true);
-    }
 
     function openFromTrigger(trigger) {
       if (!isDesktop() || !trigger) return;
@@ -546,7 +502,7 @@
     menu.addEventListener('mouseleave', (event) => {
       if (!isDesktop()) return;
       if (isWithinMenuExperience(event.relatedTarget)) return;
-      clearCloseTimer();
+      scheduleClose(60);
     });
 
     container.addEventListener('mouseenter', clearCloseTimer);
@@ -554,12 +510,12 @@
     container.addEventListener('mouseleave', (event) => {
       if (!isDesktop()) return;
       if (isWithinMenuExperience(event.relatedTarget)) return;
-      clearCloseTimer();
+      scheduleClose(60);
     });
     container.addEventListener('pointerleave', (event) => {
       if (!isDesktop()) return;
       if (isWithinMenuExperience(event.relatedTarget)) return;
-      clearCloseTimer();
+      scheduleClose(60);
     });
 
     shells.forEach((shell) => {
@@ -568,22 +524,33 @@
       shell.addEventListener('mouseleave', (event) => {
         if (!isDesktop()) return;
         if (isWithinMenuExperience(event.relatedTarget)) return;
-        clearCloseTimer();
+        scheduleClose(60);
       });
       shell.addEventListener('pointerleave', (event) => {
         if (!isDesktop()) return;
         if (isWithinMenuExperience(event.relatedTarget)) return;
-        clearCloseTimer();
+        scheduleClose(60);
       });
     });
 
     backdrop.addEventListener('mouseenter', () => {
       if (!isDesktop()) return;
-      scheduleClose(40);
+      clearCloseTimer();
+      closePanels();
     });
     backdrop.addEventListener('pointerenter', () => {
       if (!isDesktop()) return;
-      scheduleClose(40);
+      clearCloseTimer();
+      closePanels();
+    });
+    backdrop.addEventListener('mouseover', () => {
+      if (!isDesktop()) return;
+      clearCloseTimer();
+      closePanels();
+    });
+    backdrop.addEventListener('click', () => {
+      clearCloseTimer();
+      closePanels();
     });
 
     if (!globalBound) {
@@ -620,7 +587,6 @@
       }, { passive: true });
     }
 
-    bindHoverAwayClose();
     closePanels();
     return true;
   }
@@ -635,13 +601,11 @@
 
     if (panelsBound) {
       retryCount = 0;
-      disconnectMountObserver();
       return;
     }
 
     if (retryCount >= MAX_RETRIES) return;
     retryCount += 1;
-
     window.setTimeout(scheduleInit, 120);
   }
 
@@ -653,15 +617,4 @@
 
   window.addEventListener('load', scheduleInit, { once: true });
   document.addEventListener('institutional-menu:mounted', scheduleInit);
-
-  mountObserver = new MutationObserver(() => {
-    const menu = getMenu();
-    if (!menu) return;
-    scheduleInit();
-  });
-
-  mountObserver.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
 })();

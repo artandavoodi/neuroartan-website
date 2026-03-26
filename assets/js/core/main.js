@@ -1,4 +1,22 @@
 /* =================== Global Layout Injection (Future-Proof Shell) =================== */
+const CUSTOM_CURSOR_CSS_URL = '/assets/css/ui/custom-cursor.css';
+const CUSTOM_CURSOR_JS_URL = '/assets/js/ui/custom-cursor.js';
+
+function loadStylesheetOnce(href) {
+  if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
+
+function loadScriptOnce(src) {
+  if (document.querySelector(`script[src="${src}"]`)) return;
+  const script = document.createElement('script');
+  script.src = src;
+  script.defer = true;
+  document.body.appendChild(script);
+}
 
 function buildAssetUrlCandidates(path) {
   const normalized = String(path || '').trim();
@@ -54,108 +72,12 @@ async function injectGlobalLayout() {
 
 
 injectGlobalLayout().then(() => {
-  injectInstitutionalMenuIfNeeded();
   injectFooterIfNeeded();
   initInstitutionalLinksReveal(document);
   initLetterHover(document);
   loadStylesheetOnce(CUSTOM_CURSOR_CSS_URL);
   loadScriptOnce(CUSTOM_CURSOR_JS_URL);
 });
-
-/* =================== Institutional Menu Fragment Injection =================== */
-const INSTITUTIONAL_MENU_FRAGMENT_URL = '/assets/fragments/institutional-menu.html';
-const INSTITUTIONAL_MENU_CSS_URL = '/assets/css/navigation/institutional-menu.css';
-const INSTITUTIONAL_MENU_JS_URL = '/assets/js/navigation/institutional-menu.js';
-const CUSTOM_CURSOR_CSS_URL = '/assets/css/ui/custom-cursor.css';
-const CUSTOM_CURSOR_JS_URL = '/assets/js/ui/custom-cursor.js';
-
-function loadStylesheetOnce(href) {
-  if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = href;
-  document.head.appendChild(link);
-}
-
-function loadScriptOnce(src) {
-  if (document.querySelector(`script[src="${src}"]`)) return;
-  const script = document.createElement('script');
-  script.src = src;
-  script.defer = true;
-  document.body.appendChild(script);
-}
-
-async function injectInstitutionalMenuIfNeeded() {
-  const header = document.getElementById('header-controls');
-  if (!header) return false;
-
-  loadStylesheetOnce(INSTITUTIONAL_MENU_CSS_URL);
-  loadScriptOnce(INSTITUTIONAL_MENU_JS_URL);
-
-  const existingMenu = header.querySelector('#institutional-menu');
-  if (existingMenu) {
-    const hasPanelSystem = existingMenu.querySelector('.institutional-menu-panels');
-    const hasPrimaryTriggers = existingMenu.querySelectorAll('.institutional-menu-panel-trigger').length > 0;
-
-    if (hasPanelSystem && hasPrimaryTriggers) {
-      document.dispatchEvent(new CustomEvent('institutional-menu:mounted'));
-      return true;
-    }
-
-    existingMenu.remove();
-  }
-
-  const legacyButton = header.querySelector('#menu-button');
-
-  if (header.dataset.institutionalMenuMounting === 'true') return false;
-  header.dataset.institutionalMenuMounting = 'true';
-
-  try {
-    const result = await fetchTextFromCandidates(INSTITUTIONAL_MENU_FRAGMENT_URL, 'no-store');
-    if (!result.ok) {
-      header.dataset.institutionalMenuMounting = 'false';
-      return false;
-    }
-
-    const html = result.text;
-    const staleMenu = header.querySelector('#institutional-menu');
-    if (staleMenu) staleMenu.remove();
-
-    header.insertAdjacentHTML('afterbegin', html);
-
-    const mountedMenu = header.querySelector('#institutional-menu');
-    const hasPanelSystem = mountedMenu?.querySelector('.institutional-menu-panels');
-    const hasPrimaryTriggers = mountedMenu?.querySelectorAll('.institutional-menu-panel-trigger').length > 0;
-
-    if (!mountedMenu || !hasPanelSystem || !hasPrimaryTriggers) {
-      header.dataset.institutionalMenuMounting = 'false';
-      return false;
-    }
-
-    if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
-      window.NeuroMotion.scan(mountedMenu);
-    }
-
-    if (legacyButton) {
-      legacyButton.hidden = true;
-      legacyButton.setAttribute('aria-hidden', 'true');
-      legacyButton.tabIndex = -1;
-      legacyButton.style.display = 'none';
-    }
-
-    mountedMenu.dispatchEvent(new CustomEvent('fragment:mounted', {
-      bubbles: true,
-      detail: { name: 'institutional-menu', root: mountedMenu, mount: mountedMenu }
-    }));
-
-    document.dispatchEvent(new CustomEvent('institutional-menu:mounted'));
-    header.dataset.institutionalMenuMounting = 'false';
-    return true;
-  } catch (_) {
-    header.dataset.institutionalMenuMounting = 'false';
-    return false;
-  }
-}
 
 /* =================== Footer Fragment Injection =================== */
 const FOOTER_FRAGMENT_URL = '/assets/fragments/footer.html';

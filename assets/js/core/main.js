@@ -1,13 +1,43 @@
 /* =================== Global Layout Injection (Future-Proof Shell) =================== */
 
+function buildAssetUrlCandidates(path) {
+  const normalized = String(path || '').trim();
+  if (!normalized) return [];
+
+  const cleanPath = normalized.startsWith('/') ? normalized : `/${normalized}`;
+  const relativePath = `.${cleanPath}`;
+  const nestedRelativePath = cleanPath.replace(/^\//, '');
+
+  return Array.from(new Set([
+    cleanPath,
+    relativePath,
+    nestedRelativePath
+  ]));
+}
+
+async function fetchTextFromCandidates(path, cache = 'no-store') {
+  const candidates = buildAssetUrlCandidates(path);
+
+  for (const candidate of candidates) {
+    try {
+      const res = await fetch(candidate, { cache });
+      if (!res.ok) continue;
+      const text = await res.text();
+      return { ok: true, text, url: candidate };
+    } catch (_) {}
+  }
+
+  return { ok: false, text: '', url: '' };
+}
+
 async function injectGlobalLayout() {
   const targets = document.querySelectorAll('[data-include]');
   for (const el of targets) {
     const name = el.getAttribute('data-include');
     try {
-      const res = await fetch(`/assets/fragments/${name}.html`, { cache: 'no-store' });
-      if (!res.ok) continue;
-      const html = await res.text();
+      const result = await fetchTextFromCandidates(`/assets/fragments/${name}.html`, 'no-store');
+      if (!result.ok) continue;
+      const html = result.text;
       el.innerHTML = html;
 
       if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
@@ -81,13 +111,13 @@ async function injectInstitutionalMenuIfNeeded() {
   header.dataset.institutionalMenuMounting = 'true';
 
   try {
-    const res = await fetch(INSTITUTIONAL_MENU_FRAGMENT_URL, { cache: 'no-store' });
-    if (!res.ok) {
+    const result = await fetchTextFromCandidates(INSTITUTIONAL_MENU_FRAGMENT_URL, 'no-store');
+    if (!result.ok) {
       header.dataset.institutionalMenuMounting = 'false';
       return false;
     }
 
-    const html = await res.text();
+    const html = result.text;
     const staleMenu = header.querySelector('#institutional-menu');
     if (staleMenu) staleMenu.remove();
 
@@ -141,9 +171,9 @@ async function injectFooterIfNeeded() {
   mount.dataset.footerInjected = 'true';
 
   try {
-    const res = await fetch(FOOTER_FRAGMENT_URL, { cache: 'no-cache' });
-    if (!res.ok) return false;
-    const html = await res.text();
+    const result = await fetchTextFromCandidates(FOOTER_FRAGMENT_URL, 'no-cache');
+    if (!result.ok) return false;
+    const html = result.text;
     mount.innerHTML = html;
     const mountedFooter = mount.querySelector('footer.site-footer');
     if (mountedFooter) {
@@ -220,6 +250,66 @@ function initInstitutionalLinksReveal(root = document) {
   });
 }
 
+/* =================== Text Hover — Subtle Luxury Emphasis =================== */
+
+function initLetterHover(root = document) {
+  const selectors = [
+    "a",
+    "button",
+    "[role='button']",
+    ".country-option",
+    "#country-selector",
+    "#language-toggle",
+    "#language-dropdown button",
+    ".language-dropdown button",
+    ".language-dropdown a",
+    ".language-option",
+    ".lang-option",
+    "[data-i18n][tabindex]",
+    ".menu-list a",
+    ".menu-list button"
+  ];
+
+  const elements = root.querySelectorAll(selectors.join(","));
+
+  elements.forEach((el) => {
+    if (!el || el.dataset.letterified) return;
+    if (el.children && el.children.length > 0) return;
+    if (el.dataset.noLetterHover === "true") return;
+    if (
+      el.closest(
+        "#institutional-menu, .institutional-menu, .institutional-menu-panels, .institutional-menu-nav, .institutional-menu-utility"
+      )
+    ) return;
+
+    const raw = el.textContent || "";
+    const text = raw.trim();
+    if (!text) return;
+
+    el.dataset.letterified = "true";
+    el.style.transition = "color 220ms ease, opacity 220ms ease, transform 220ms ease";
+    el.style.transformOrigin = "center center";
+
+    el.addEventListener(
+      "mouseenter",
+      () => {
+        el.style.opacity = "1";
+        el.style.transform = "scale(1.01)";
+      },
+      { passive: true }
+    );
+
+    el.addEventListener(
+      "mouseleave",
+      () => {
+        el.style.opacity = "1";
+        el.style.transform = "scale(1)";
+      },
+      { passive: true }
+    );
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initInstitutionalLinksReveal(document);
 
@@ -289,66 +379,6 @@ document.addEventListener("DOMContentLoaded", () => {
       initializedKey: 'motionClosingInitialized'
     });
   });
-
-  /* =================== Text Hover — Subtle Luxury Emphasis =================== */
-
-  function initLetterHover(root = document) {
-    const selectors = [
-      "a",
-      "button",
-      "[role='button']",
-      ".country-option",
-      "#country-selector",
-      "#language-toggle",
-      "#language-dropdown button",
-      ".language-dropdown button",
-      ".language-dropdown a",
-      ".language-option",
-      ".lang-option",
-      "[data-i18n][tabindex]",
-      ".menu-list a",
-      ".menu-list button"
-    ];
-
-    const elements = root.querySelectorAll(selectors.join(","));
-
-    elements.forEach((el) => {
-      if (!el || el.dataset.letterified) return;
-      if (el.children && el.children.length > 0) return;
-      if (el.dataset.noLetterHover === "true") return;
-      if (
-        el.closest(
-          "#institutional-menu, .institutional-menu, .institutional-menu-panels, .institutional-menu-nav, .institutional-menu-utility"
-        )
-      ) return;
-
-      const raw = el.textContent || "";
-      const text = raw.trim();
-      if (!text) return;
-
-      el.dataset.letterified = "true";
-      el.style.transition = "color 220ms ease, opacity 220ms ease, transform 220ms ease";
-      el.style.transformOrigin = "center center";
-
-      el.addEventListener(
-        "mouseenter",
-        () => {
-          el.style.opacity = "1";
-          el.style.transform = "scale(1.01)";
-        },
-        { passive: true }
-      );
-
-      el.addEventListener(
-        "mouseleave",
-        () => {
-          el.style.opacity = "1";
-          el.style.transform = "scale(1)";
-        },
-        { passive: true }
-      );
-    });
-  }
 
   window.addEventListener('load', () => {
     initInstitutionalLinksReveal(document);

@@ -1,4 +1,5 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// /website/assets/js/system/firebase-config.js
+
 const firebaseConfig = {
   apiKey: "AIzaSyDyts8mOZou6K1qPLYR2AQugR0RFwyDS8s",
   authDomain: "artan-c7554.firebaseapp.com",
@@ -8,3 +9,7 @@ const firebaseConfig = {
   appId: "1:125487592764:web:734f02aec52b6bac4c9a39",
   measurementId: "G-JJWZXLBF8B"
 };
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}

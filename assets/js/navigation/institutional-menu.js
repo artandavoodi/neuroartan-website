@@ -3,71 +3,183 @@
 (function () {
   'use strict';
 
-  let institutionalMenuInitScheduled = false;
-  let institutionalMenuRetryCount = 0;
-  const INSTITUTIONAL_MENU_MAX_RETRIES = 24;
-  let institutionalMenuGlobalBound = false;
+  const body = document.body;
+  const desktopQuery = window.matchMedia('(min-width: 761px)');
 
-  function scheduleInstitutionalMenuInit() {
-    if (institutionalMenuInitScheduled) return;
-    institutionalMenuInitScheduled = true;
+  let initScheduled = false;
+  let retryCount = 0;
+  const MAX_RETRIES = 24;
+
+  let mountObserver = null;
+  let globalBound = false;
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function q(selector, root = document) {
+    return root.querySelector(selector);
+  }
+
+  function qa(selector, root = document) {
+    return Array.from(root.querySelectorAll(selector));
+  }
+
+  function isDesktop() {
+    return desktopQuery.matches;
+  }
+
+  function isElement(value) {
+    return value instanceof Element;
+  }
+
+  function nextFrame(fn) {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(fn));
+  }
+
+  function scheduleInit() {
+    if (initScheduled) return;
+    initScheduled = true;
 
     window.requestAnimationFrame(() => {
-      institutionalMenuInitScheduled = false;
+      initScheduled = false;
       initInstitutionalMenu();
     });
   }
 
-  function bindInstitutionalSecondaryToggle() {
-    const trigger = document.getElementById('institutional-menu-secondary-toggle');
-    const overlay = document.getElementById('menu-overlay');
-    const legacyButton = document.getElementById('menu-button');
+  function disconnectMountObserver() {
+    if (!mountObserver) return;
+    mountObserver.disconnect();
+    mountObserver = null;
+  }
 
-    if (!trigger || trigger.__neuroartanBound) return;
-    trigger.__neuroartanBound = true;
+  function getMenu() {
+    return byId('institutional-menu');
+  }
 
-    trigger.addEventListener('click', () => {
+  function getPanelContainer(menu = getMenu()) {
+    return menu ? q('.institutional-menu-panels', menu) : null;
+  }
+
+  function getTriggers(menu = getMenu()) {
+    return menu ? qa('.institutional-menu-panel-trigger', menu) : [];
+  }
+
+  function getPanels(menu = getMenu()) {
+    return menu ? qa('.institutional-menu-panel', menu) : [];
+  }
+
+  function getBackdrop(menu = getMenu()) {
+    return menu ? q('.institutional-menu-panels-backdrop', menu) : null;
+  }
+
+  function getShells(menu = getMenu()) {
+    return menu ? qa('.institutional-menu-panel-shell', menu) : [];
+  }
+
+  function getSearchInput(menu = getMenu()) {
+    return menu ? q('#institutional-menu-search-input', menu) : null;
+  }
+
+  function getMicButton(menu = getMenu()) {
+    return menu ? q('.institutional-menu-mic-button', menu) : null;
+  }
+
+  function getSecondaryToggle() {
+    return byId('institutional-menu-secondary-toggle');
+  }
+
+  function getLegacyMenuButton() {
+    return byId('menu-button');
+  }
+
+  function getOverlay() {
+    return byId('menu-overlay');
+  }
+
+  function getCountrySelector() {
+    return (
+      byId('country-selector') ||
+      q('[data-country-toggle]') ||
+      q('.country-selector') ||
+      q('.country-current')
+    );
+  }
+
+  function getCountryOptions() {
+    return qa([
+      '.country-option',
+      '[data-country-option]',
+      '[data-region-option]',
+      '#country-overlay button',
+      '#country-overlay [role="option"]',
+      '.country-overlay button',
+      '.country-overlay [role="option"]',
+      '.country-dropdown button',
+      '.country-dropdown a',
+      '.country-list button',
+      '.country-list a'
+    ].join(','));
+  }
+
+  function setCountryOverlayState(open) {
+    body.classList.toggle('country-overlay-open', !!open);
+    body.classList.toggle('country-selector-open', !!open);
+
+    const selector = getCountrySelector();
+    if (selector) {
+      selector.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+  }
+
+  function getPageTop(el) {
+    const rect = el.getBoundingClientRect();
+    const pageY = window.scrollY || window.pageYOffset || 0;
+    return rect.top + pageY;
+  }
+
+  function getOuterHeight(el) {
+    const rect = el.getBoundingClientRect();
+    return rect.height || el.offsetHeight || window.innerHeight || 0;
+  }
+
+  function bindSecondaryToggle() {
+    const trigger = getSecondaryToggle();
+    const overlay = getOverlay();
+    const legacyButton = getLegacyMenuButton();
+
+    if (!trigger || trigger.dataset.menuSecondaryBound === 'true') return;
+    trigger.dataset.menuSecondaryBound = 'true';
+
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+
       if (legacyButton && typeof legacyButton.click === 'function') {
         legacyButton.click();
       }
-
-      const isExpanded = overlay ? overlay.getAttribute('aria-hidden') === 'false' : false;
-      trigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
     });
 
-    if (overlay && !overlay.__neuroartanSecondaryObserved) {
+    if (overlay && !overlay.dataset.menuSecondaryObserved) {
       const syncState = () => {
-        const isExpanded = overlay.getAttribute('aria-hidden') === 'false';
-        trigger.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+        const open = overlay.getAttribute('aria-hidden') === 'false' || overlay.classList.contains('is-open');
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
       };
 
       const observer = new MutationObserver(syncState);
-      observer.observe(overlay, { attributes: true, attributeFilter: ['aria-hidden'] });
-      overlay.__neuroartanSecondaryObserved = true;
+      observer.observe(overlay, { attributes: true, attributeFilter: ['aria-hidden', 'class'] });
+      overlay.dataset.menuSecondaryObserved = 'true';
       syncState();
     }
   }
 
-  function bindInstitutionalMenuRibbon() {
-    const body = document.body;
-    const hero = document.getElementById('home-hero');
-    const stage = document.querySelector('.stage-circle');
-    const menu = document.getElementById('institutional-menu');
-    const essence = document.getElementById('home-essence');
+  function bindRibbon() {
+    const menu = getMenu();
+    const hero = byId('home-hero');
+    const stage = q('.stage-circle');
+    const essence = byId('home-essence');
 
-    const getPageTop = (el) => {
-      const rect = el.getBoundingClientRect();
-      const pageY = window.scrollY || window.pageYOffset || 0;
-      return rect.top + pageY;
-    };
-
-    const getOuterHeight = (el) => {
-      const rect = el.getBoundingClientRect();
-      return rect.height || el.offsetHeight || window.innerHeight || 0;
-    };
-
-    if (!body || !menu || menu.__neuroartanRibbonBound) return;
-    menu.__neuroartanRibbonBound = true;
+    if (!body || !menu || menu.dataset.ribbonBound === 'true') return;
+    menu.dataset.ribbonBound = 'true';
     body.classList.remove('menu-ribbon-active');
 
     const applyRibbonState = () => {
@@ -75,14 +187,11 @@
       let threshold = Number.POSITIVE_INFINITY;
 
       if (essence) {
-        const essenceTop = getPageTop(essence);
-        threshold = essenceTop + 48;
+        threshold = getPageTop(essence) + 48;
       } else if (hero) {
-        const heroBottom = getPageTop(hero) + getOuterHeight(hero);
-        threshold = heroBottom + 220;
+        threshold = getPageTop(hero) + getOuterHeight(hero) + 220;
       } else if (stage) {
-        const stageBottom = getPageTop(stage) + getOuterHeight(stage);
-        threshold = stageBottom + 220;
+        threshold = getPageTop(stage) + getOuterHeight(stage) + 220;
       }
 
       if (!Number.isFinite(threshold)) {
@@ -107,16 +216,13 @@
     window.addEventListener('orientationchange', requestApply, { passive: true });
     window.addEventListener('load', requestApply, { passive: true, once: true });
 
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(requestApply);
-    });
-
+    nextFrame(requestApply);
     requestApply();
   }
 
-  function applyInstitutionalMenuTranslations() {
+  function applyTranslations() {
     const translationEngine = window.NEUROARTAN_TRANSLATION;
-    const menu = document.getElementById('institutional-menu');
+    const menu = getMenu();
     if (!translationEngine || typeof translationEngine.applyLanguage !== 'function' || !menu) return;
 
     const storedLanguage =
@@ -129,73 +235,98 @@
     translationEngine.applyLanguage(normalizedLanguage, menu);
   }
 
-  function bindInstitutionalMenuPanels() {
-    const body = document.body;
-    const menu = document.getElementById('institutional-menu');
+  function bindCountrySelector() {
+    const selector = getCountrySelector();
+    const options = getCountryOptions();
 
-    if (!body || !menu) return false;
+    if (selector && selector.dataset.countrySelectorBound !== 'true') {
+      selector.dataset.countrySelectorBound = 'true';
+      selector.setAttribute('aria-expanded', 'false');
 
-    const panelContainer = menu.querySelector('.institutional-menu-panels');
-    const triggers = Array.from(menu.querySelectorAll('.institutional-menu-panel-trigger'));
-    const panels = Array.from(menu.querySelectorAll('.institutional-menu-panel'));
-    const searchInput = menu.querySelector('#institutional-menu-search-input');
-    const micButton = menu.querySelector('.institutional-menu-mic-button');
-    const panelShells = Array.from(menu.querySelectorAll('.institutional-menu-panel-shell'));
-    const panelBackdrop = menu.querySelector('.institutional-menu-panels-backdrop');
+      selector.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setCountryOverlayState(!body.classList.contains('country-overlay-open'));
+      });
+    }
 
-    if (!panelContainer || !triggers.length || !panels.length || !panelBackdrop) return false;
-    if (menu.__neuroartanPanelsBound) return true;
-    menu.__neuroartanPanelsBound = true;
+    options.forEach((option) => {
+      if (!isElement(option) || option.dataset.countryOptionBound === 'true') return;
+      option.dataset.countryOptionBound = 'true';
+
+      option.addEventListener('click', () => {
+        setCountryOverlayState(false);
+      });
+    });
+
+    if (!document.documentElement.dataset.countryDismissBound) {
+      document.documentElement.dataset.countryDismissBound = 'true';
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        const selectorEl = getCountrySelector();
+
+        if (!body.classList.contains('country-overlay-open')) return;
+        if (!isElement(target)) return;
+        if (selectorEl && selectorEl.contains(target)) return;
+        if (target.closest('.country-overlay, #country-overlay, .country-dropdown, .country-list')) return;
+
+        setCountryOverlayState(false);
+      });
+    }
+  }
+
+  function bindPanels() {
+    const menu = getMenu();
+    const container = getPanelContainer(menu);
+    const triggers = getTriggers(menu);
+    const panels = getPanels(menu);
+    const backdrop = getBackdrop(menu);
+    const shells = getShells(menu);
+    const searchInput = getSearchInput(menu);
+    const micButton = getMicButton(menu);
+
+    if (!body || !menu || !container || !triggers.length || !panels.length || !backdrop) return false;
+    if (menu.dataset.panelsBound === 'true') return true;
+    menu.dataset.panelsBound = 'true';
 
     let activePanelKey = null;
-    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
     let closeTimer = null;
-    let speechRecognition = null;
-    let speechListening = false;
+    let recognition = null;
+    let isListening = false;
 
-    const isDesktopMenuMode = () => window.matchMedia('(min-width: 761px)').matches;
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
-    const getTriggerFromTarget = (target) => {
-      if (!(target instanceof Element)) return null;
-      return target.closest('.institutional-menu-panel-trigger');
-    };
-
-    const isWithinMenuExperience = (target) => {
-      if (!(target instanceof Element)) return false;
-      return menu.contains(target) || panelContainer.contains(target);
-    };
-
-    const syncPanelHeight = () => {
-      const activePanel = panels.find((panel) => panel.classList.contains('is-active'));
-      const height = activePanel ? activePanel.offsetHeight : 0;
-      menu.style.setProperty('--institutional-menu-panel-height', `${height}px`);
-    };
-
-    const clearCloseTimer = () => {
+    function clearCloseTimer() {
       if (!closeTimer) return;
       window.clearTimeout(closeTimer);
       closeTimer = null;
-    };
+    }
 
-    const syncMicState = () => {
+    function syncPanelHeight() {
+      const activePanel = panels.find((panel) => panel.classList.contains('is-active'));
+      const height = activePanel ? activePanel.offsetHeight : 0;
+      menu.style.setProperty('--institutional-menu-panel-height', `${height}px`);
+    }
+
+    function syncMicState() {
       if (!micButton) return;
+      micButton.setAttribute('aria-pressed', isListening ? 'true' : 'false');
+      micButton.classList.toggle('is-listening', isListening);
+      micButton.setAttribute('aria-label', isListening ? 'Stop voice search' : 'Start voice search');
+    }
 
-      micButton.setAttribute('aria-pressed', speechListening ? 'true' : 'false');
-      micButton.classList.toggle('is-listening', speechListening);
-      micButton.setAttribute(
-        'aria-label',
-        speechListening ? 'Stop voice search' : 'Start voice search'
-      );
-    };
+    function stopRecognitionIfNeeded() {
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+    }
 
-    const closePanels = () => {
+    function closePanels() {
       activePanelKey = null;
       body.classList.remove('institutional-menu-panel-open');
-      panelContainer.setAttribute('aria-hidden', 'true');
-
-      if (speechRecognition && speechListening) {
-        speechRecognition.stop();
-      }
+      menu.removeAttribute('data-active-menu-panel');
+      container.setAttribute('aria-hidden', 'true');
 
       triggers.forEach((trigger) => {
         trigger.setAttribute('aria-expanded', 'false');
@@ -206,78 +337,113 @@
       });
 
       menu.style.setProperty('--institutional-menu-panel-height', '0px');
-      menu.removeAttribute('data-active-menu-panel');
-    };
+      stopRecognitionIfNeeded();
+    }
 
-    const openPanel = (panelKey) => {
+    function openPanel(panelKey) {
       if (!panelKey) return;
-
       const nextPanel = panels.find((panel) => panel.dataset.menuPanelContent === panelKey);
       if (!nextPanel) return;
 
       activePanelKey = panelKey;
       body.classList.add('institutional-menu-panel-open');
-      panelContainer.setAttribute('aria-hidden', 'false');
       menu.setAttribute('data-active-menu-panel', panelKey);
+      container.setAttribute('aria-hidden', 'false');
 
       triggers.forEach((trigger) => {
-        const isActive = trigger.dataset.menuPanel === panelKey;
-        trigger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        const active = trigger.dataset.menuPanel === panelKey;
+        trigger.setAttribute('aria-expanded', active ? 'true' : 'false');
       });
 
       panels.forEach((panel) => {
         panel.classList.toggle('is-active', panel.dataset.menuPanelContent === panelKey);
       });
 
-      window.requestAnimationFrame(() => {
+      nextFrame(() => {
         syncPanelHeight();
-
         if (panelKey === 'search' && searchInput) {
           searchInput.focus();
         }
       });
-    };
+    }
 
-    const scheduleClose = (delay = 120) => {
+    function scheduleClose(delay = 90) {
       clearCloseTimer();
       closeTimer = window.setTimeout(() => {
         closePanels();
       }, delay);
-    };
+    }
 
-    const openFromTrigger = (trigger) => {
-      if (!trigger || !isDesktopMenuMode()) return;
+    function isWithinMenuExperience(target) {
+      if (!isElement(target)) return false;
+      return menu.contains(target) || container.contains(target);
+    }
 
+    function bindHoverAwayClose() {
+      if (menu.dataset.hoverAwayBound === 'true') return;
+      menu.dataset.hoverAwayBound = 'true';
+
+      const mapLayerSelectors = [
+        '.stage-circle',
+        '.stage',
+        '#home-hero',
+        '.home-hero',
+        '.hero-map',
+        '.map-layer',
+        '.map-stage',
+        '.globe-wrap',
+        '.hero-visual'
+      ].join(',');
+
+      const isMapLayerTarget = (target) => {
+        if (!isElement(target)) return false;
+        return !!target.closest(mapLayerSelectors);
+      };
+
+      const handleHoverAway = (event) => {
+        if (!isDesktop()) return;
+        if (!body.classList.contains('institutional-menu-panel-open')) return;
+        if (isWithinMenuExperience(event.target)) {
+          clearCloseTimer();
+          return;
+        }
+        if (!isMapLayerTarget(event.target)) return;
+        scheduleClose(60);
+      };
+
+      document.addEventListener('pointermove', handleHoverAway, true);
+      document.addEventListener('mousemove', handleHoverAway, true);
+      document.addEventListener('pointerover', handleHoverAway, true);
+      document.addEventListener('mouseover', handleHoverAway, true);
+    }
+
+    function openFromTrigger(trigger) {
+      if (!isDesktop() || !trigger) return;
       const panelKey = trigger.dataset.menuPanel || '';
       if (!panelKey || panelKey === 'search') return;
 
       clearCloseTimer();
-
-      if (activePanelKey === panelKey && body.classList.contains('institutional-menu-panel-open')) {
-        return;
-      }
-
+      if (activePanelKey === panelKey && body.classList.contains('institutional-menu-panel-open')) return;
       openPanel(panelKey);
-    };
+    }
 
-    const ensureSpeechRecognition = () => {
+    function ensureRecognition() {
       if (!SpeechRecognitionCtor) return null;
-      if (speechRecognition) return speechRecognition;
+      if (recognition) return recognition;
 
-      speechRecognition = new SpeechRecognitionCtor();
-      speechRecognition.continuous = false;
-      speechRecognition.interimResults = true;
-      speechRecognition.maxAlternatives = 1;
+      recognition = new SpeechRecognitionCtor();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
 
-      speechRecognition.addEventListener('start', () => {
-        speechListening = true;
-        clearCloseTimer();
+      recognition.addEventListener('start', () => {
+        isListening = true;
         syncMicState();
+        clearCloseTimer();
       });
 
-      speechRecognition.addEventListener('result', (event) => {
+      recognition.addEventListener('result', (event) => {
         if (!searchInput) return;
-
         const transcript = Array.from(event.results)
           .map((result) => result[0]?.transcript || '')
           .join('')
@@ -287,39 +453,29 @@
         searchInput.dispatchEvent(new Event('input', { bubbles: true }));
       });
 
-      speechRecognition.addEventListener('end', () => {
-        speechListening = false;
+      recognition.addEventListener('end', () => {
+        isListening = false;
         syncMicState();
-
         if (activePanelKey === 'search' && searchInput) {
-          window.requestAnimationFrame(() => {
-            searchInput.focus();
-          });
+          nextFrame(() => searchInput.focus());
         }
       });
 
-      speechRecognition.addEventListener('error', () => {
-        speechListening = false;
+      recognition.addEventListener('error', () => {
+        isListening = false;
         syncMicState();
       });
 
-      return speechRecognition;
-    };
+      return recognition;
+    }
 
     triggers.forEach((trigger) => {
-      trigger.addEventListener('mouseenter', () => {
-        openFromTrigger(trigger);
-      });
+      if (trigger.dataset.panelTriggerBound === 'true') return;
+      trigger.dataset.panelTriggerBound = 'true';
 
-      trigger.addEventListener('pointerenter', () => {
-        openFromTrigger(trigger);
-      });
-
-      trigger.addEventListener('focus', () => {
-        const panelKey = trigger.dataset.menuPanel || '';
-        if (panelKey === 'search') return;
-        openFromTrigger(trigger);
-      });
+      trigger.addEventListener('mouseenter', () => openFromTrigger(trigger));
+      trigger.addEventListener('pointerenter', () => openFromTrigger(trigger));
+      trigger.addEventListener('focus', () => openFromTrigger(trigger));
 
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
@@ -327,16 +483,7 @@
         clearCloseTimer();
 
         const panelKey = trigger.dataset.menuPanel || '';
-
-        if (panelKey === 'search') {
-          if (activePanelKey === 'search') {
-            closePanels();
-            return;
-          }
-
-          openPanel('search');
-          return;
-        }
+        if (!panelKey) return;
 
         if (activePanelKey === panelKey) {
           closePanels();
@@ -348,33 +495,31 @@
     });
 
     menu.addEventListener('mouseover', (event) => {
-      const trigger = getTriggerFromTarget(event.target);
+      const trigger = event.target.closest('.institutional-menu-panel-trigger');
       if (!trigger || !menu.contains(trigger)) return;
       openFromTrigger(trigger);
     });
 
     menu.addEventListener('pointerover', (event) => {
-      const trigger = getTriggerFromTarget(event.target);
+      const trigger = event.target.closest('.institutional-menu-panel-trigger');
       if (!trigger || !menu.contains(trigger)) return;
       openFromTrigger(trigger);
     });
-
 
     menu.addEventListener('focusin', (event) => {
-      const trigger = getTriggerFromTarget(event.target);
+      const trigger = event.target.closest('.institutional-menu-panel-trigger');
       if (!trigger || !menu.contains(trigger)) return;
       openFromTrigger(trigger);
     });
 
-    if (micButton) {
+    if (micButton && micButton.dataset.micBound !== 'true') {
+      micButton.dataset.micBound = 'true';
       syncMicState();
 
       micButton.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
         clearCloseTimer();
-
-        if (!isDesktopMenuMode()) return;
 
         if (activePanelKey !== 'search') {
           openPanel('search');
@@ -385,111 +530,87 @@
           return;
         }
 
-        const recognition = ensureSpeechRecognition();
-        if (!recognition) return;
+        const speech = ensureRecognition();
+        if (!speech) return;
 
-        if (speechListening) {
-          recognition.stop();
+        if (isListening) {
+          speech.stop();
           return;
         }
 
-        recognition.lang = document.documentElement.lang || 'en';
-        recognition.start();
+        speech.lang = document.documentElement.lang || 'en';
+        speech.start();
       });
     }
 
     menu.addEventListener('mouseleave', (event) => {
-      if (!isDesktopMenuMode()) return;
+      if (!isDesktop()) return;
       if (isWithinMenuExperience(event.relatedTarget)) return;
-      scheduleClose();
-    });
-
-    panelContainer.addEventListener('mouseenter', () => {
-      if (!isDesktopMenuMode()) return;
       clearCloseTimer();
     });
 
-    panelContainer.addEventListener('pointerenter', () => {
-      if (!isDesktopMenuMode()) return;
+    container.addEventListener('mouseenter', clearCloseTimer);
+    container.addEventListener('pointerenter', clearCloseTimer);
+    container.addEventListener('mouseleave', (event) => {
+      if (!isDesktop()) return;
+      if (isWithinMenuExperience(event.relatedTarget)) return;
+      clearCloseTimer();
+    });
+    container.addEventListener('pointerleave', (event) => {
+      if (!isDesktop()) return;
+      if (isWithinMenuExperience(event.relatedTarget)) return;
       clearCloseTimer();
     });
 
-
-    panelContainer.addEventListener('mouseleave', (event) => {
-      if (!isDesktopMenuMode()) return;
-      if (isWithinMenuExperience(event.relatedTarget)) return;
-      scheduleClose(90);
-    });
-
-    panelContainer.addEventListener('pointerleave', (event) => {
-      if (!isDesktopMenuMode()) return;
-      if (isWithinMenuExperience(event.relatedTarget)) return;
-      scheduleClose(90);
-    });
-
-    panelShells.forEach((shell) => {
-      shell.addEventListener('mouseenter', () => {
-        if (!isDesktopMenuMode()) return;
-        clearCloseTimer();
-      });
-
-      shell.addEventListener('pointerenter', () => {
-        if (!isDesktopMenuMode()) return;
-        clearCloseTimer();
-      });
-
+    shells.forEach((shell) => {
+      shell.addEventListener('mouseenter', clearCloseTimer);
+      shell.addEventListener('pointerenter', clearCloseTimer);
       shell.addEventListener('mouseleave', (event) => {
-        if (!isDesktopMenuMode()) return;
+        if (!isDesktop()) return;
         if (isWithinMenuExperience(event.relatedTarget)) return;
-        scheduleClose(70);
+        clearCloseTimer();
       });
-
       shell.addEventListener('pointerleave', (event) => {
-        if (!isDesktopMenuMode()) return;
+        if (!isDesktop()) return;
         if (isWithinMenuExperience(event.relatedTarget)) return;
-        scheduleClose(70);
+        clearCloseTimer();
       });
     });
 
-    panelBackdrop.addEventListener('mouseenter', () => {
-      if (!isDesktopMenuMode()) return;
-      clearCloseTimer();
+    backdrop.addEventListener('mouseenter', () => {
+      if (!isDesktop()) return;
+      scheduleClose(40);
+    });
+    backdrop.addEventListener('pointerenter', () => {
+      if (!isDesktop()) return;
       scheduleClose(40);
     });
 
-    panelBackdrop.addEventListener('pointerenter', () => {
-      if (!isDesktopMenuMode()) return;
-      clearCloseTimer();
-      scheduleClose(40);
-    });
-
-    if (!institutionalMenuGlobalBound) {
-      institutionalMenuGlobalBound = true;
+    if (!globalBound) {
+      globalBound = true;
 
       document.addEventListener('keydown', (event) => {
-        const liveMenu = document.getElementById('institutional-menu');
-        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
-
-        if (event.key === 'Escape') {
-          clearCloseTimer();
-          closePanels();
-        }
+        const liveMenu = getMenu();
+        if (!liveMenu || liveMenu.dataset.panelsBound !== 'true') return;
+        if (event.key !== 'Escape') return;
+        clearCloseTimer();
+        closePanels();
       });
 
       document.addEventListener('click', (event) => {
-        const liveMenu = document.getElementById('institutional-menu');
-        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
-        if (liveMenu.contains(event.target)) return;
+        const liveMenu = getMenu();
+        const liveContainer = getPanelContainer(liveMenu);
+        if (!liveMenu || !liveContainer || liveMenu.dataset.panelsBound !== 'true') return;
+        if (liveMenu.contains(event.target) || liveContainer.contains(event.target)) return;
         clearCloseTimer();
         closePanels();
       });
 
       window.addEventListener('resize', () => {
-        const liveMenu = document.getElementById('institutional-menu');
-        if (!liveMenu || !liveMenu.__neuroartanPanelsBound) return;
+        const liveMenu = getMenu();
+        if (!liveMenu || liveMenu.dataset.panelsBound !== 'true') return;
 
-        if (!isDesktopMenuMode()) {
-          if (speechRecognition && speechListening) speechRecognition.stop();
+        if (!isDesktop()) {
           closePanels();
           return;
         }
@@ -499,46 +620,47 @@
       }, { passive: true });
     }
 
+    bindHoverAwayClose();
     closePanels();
     return true;
   }
 
   function initInstitutionalMenu() {
-    bindInstitutionalSecondaryToggle();
-    bindInstitutionalMenuRibbon();
-    applyInstitutionalMenuTranslations();
+    bindSecondaryToggle();
+    bindRibbon();
+    applyTranslations();
+    bindCountrySelector();
 
-    const panelsBound = bindInstitutionalMenuPanels();
+    const panelsBound = bindPanels();
 
     if (panelsBound) {
-      institutionalMenuRetryCount = 0;
+      retryCount = 0;
+      disconnectMountObserver();
       return;
     }
 
-    if (institutionalMenuRetryCount >= INSTITUTIONAL_MENU_MAX_RETRIES) return;
-    institutionalMenuRetryCount += 1;
+    if (retryCount >= MAX_RETRIES) return;
+    retryCount += 1;
 
-    window.setTimeout(() => {
-      scheduleInstitutionalMenuInit();
-    }, 120);
+    window.setTimeout(scheduleInit, 120);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scheduleInstitutionalMenuInit, { once: true });
+    document.addEventListener('DOMContentLoaded', scheduleInit, { once: true });
   } else {
-    scheduleInstitutionalMenuInit();
+    scheduleInit();
   }
 
-  window.addEventListener('load', scheduleInstitutionalMenuInit, { once: true });
-  document.addEventListener('institutional-menu:mounted', scheduleInstitutionalMenuInit);
+  window.addEventListener('load', scheduleInit, { once: true });
+  document.addEventListener('institutional-menu:mounted', scheduleInit);
 
-  const menuMountObserver = new MutationObserver(() => {
-    const menu = document.getElementById('institutional-menu');
+  mountObserver = new MutationObserver(() => {
+    const menu = getMenu();
     if (!menu) return;
-    scheduleInstitutionalMenuInit();
+    scheduleInit();
   });
 
-  menuMountObserver.observe(document.documentElement, {
+  mountObserver.observe(document.documentElement, {
     childList: true,
     subtree: true
   });

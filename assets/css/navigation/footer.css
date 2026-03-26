@@ -19,6 +19,8 @@
   text-align:initial;
   position:relative;
   z-index:2;
+  direction:ltr;
+  text-align:left;
 }
 
 .footer-flex{
@@ -30,6 +32,7 @@
   justify-content:space-between;
   gap:0.9rem;
   flex-wrap:wrap;
+  direction:ltr;
 }
 
 .footer-separator{
@@ -42,6 +45,7 @@
   justify-content:flex-start;
   gap:0.5rem;
   flex-wrap:wrap;
+  direction:ltr;
 }
 
 .footer-brand{
@@ -57,6 +61,7 @@
   justify-content:flex-end;
   gap:0.5rem;
   flex-wrap:wrap;
+  direction:ltr;
 }
 
 .locale-item{
@@ -94,6 +99,7 @@
 }
 
 .footer-right{
+  direction:ltr;
   text-align:right;
 }
 

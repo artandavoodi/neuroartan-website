@@ -7,10 +7,13 @@
 
 .institutional-links-inner{
   display: grid;
+  width: var(--footer-rail-width, min(calc(100% - (var(--footer-gutter, var(--site-gutter, 24px)) * 2)), var(--site-max-width, 1320px)));
+  margin: 0 auto;
+  box-sizing: border-box;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   column-gap: 2.2rem;
   row-gap: 2.6rem;
-  align-items: start;
+  /* direction: inherit; */ 
 }
 
 .institutional-links-social-row{
@@ -46,6 +49,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.82rem;
+  /* text-align: start; */
 }
 
 .institutional-links-title{
@@ -61,15 +65,16 @@
 .institutional-links-nav{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: start;
   gap: 0.46rem;
+  /* text-align: start; */
 }
 
 .institutional-links-nav a{
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  align-self: flex-start;
+  justify-content: start;
+  align-self: start;
   width: auto;
   color: var(--text-secondary-color);
   text-decoration: none;
@@ -206,6 +211,7 @@
 
   .institutional-links-inner{
     grid-template-columns: 1fr;
+    width: min(calc(100% - (var(--footer-gutter, var(--site-gutter, 20px)) * 2)), var(--site-max-width, 1320px));
     row-gap: 1.35rem;
   }
 

@@ -38,3 +38,131 @@ body.light-mode #auth-access-button:focus-visible{
   background:rgba(0,0,0,0.06);
   border-color:rgba(0,0,0,0.18);
 }
+
+html.profile-page,
+body.profile-page{
+  margin:0;
+  min-height:100%;
+  background:#000;
+  color:#fff;
+  font-family:"Manrope",sans-serif;
+}
+
+body.profile-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+.profile-shell{
+  width:min(100%,640px);
+  display:grid;
+  gap:18px;
+  padding:36px 28px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-sizing:border-box;
+}
+
+.profile-label{
+  margin:0;
+  font-size:0.78rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  opacity:0.62;
+}
+
+.profile-name,
+.profile-email,
+.profile-copy{
+  margin:0;
+}
+
+.profile-name{
+  font-size:2.1rem;
+  line-height:1.04;
+  letter-spacing:-0.03em;
+}
+
+.profile-email{
+  font-size:0.98rem;
+  opacity:0.76;
+}
+
+.profile-copy{
+  color:rgba(255,255,255,0.68);
+  line-height:1.65;
+}
+
+.profile-actions{
+  display:flex;
+  justify-content:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.profile-button{
+  appearance:none;
+  -webkit-appearance:none;
+  min-height:44px;
+  padding:0 18px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:transparent;
+  color:#fff;
+  font:inherit;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background-color 0.25s ease,border-color 0.25s ease,opacity 0.25s ease;
+}
+
+.profile-button:hover,
+.profile-button:focus-visible{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.24);
+}
+
+#profile-avatar-image{
+  width:88px;
+  height:88px;
+  object-fit:cover;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.04);
+}
+
+body.light-mode.profile-page{
+  background:#f6f3ee;
+  color:var(--text-color);
+}
+
+body.light-mode .profile-shell{
+  background:rgba(0,0,0,0.03);
+  border-color:rgba(0,0,0,0.12);
+}
+
+body.light-mode .profile-copy,
+body.light-mode .profile-email,
+body.light-mode .profile-label{
+  color:rgba(0,0,0,0.62);
+}
+
+body.light-mode .profile-button{
+  border-color:rgba(0,0,0,0.18);
+  color:var(--text-color);
+}
+
+body.light-mode .profile-button:hover,
+body.light-mode .profile-button:focus-visible{
+  background:rgba(0,0,0,0.05);
+  border-color:rgba(0,0,0,0.22);
+}
+
+body.light-mode #profile-avatar-image{
+  border-color:rgba(0,0,0,0.12);
+  background:rgba(0,0,0,0.03);
+}

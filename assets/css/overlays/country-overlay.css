@@ -20,8 +20,8 @@
 :root{
   /* Country overlay accent follows the global palette */
   --country-accent: var(--color-primary1);
-  --country-container-max: min(1200px, 92vw);
-  --country-container-pad: clamp(14px, 2.6vw, 28px);
+  --country-container-max: var(--site-rail-width, min(calc(100% - (var(--site-gutter, 24px) * 2)), var(--site-max-width, 1320px)));
+  --country-container-pad: 0px;
 }
 
 /* Overlay-local surface tokens (inherit active theme vars) */
@@ -65,6 +65,8 @@
   -webkit-backdrop-filter: blur(16px);
 
   color: var(--text-color);
+  direction: ltr;
+  text-align: left;
 
   display: flex;
   justify-content: center;
@@ -72,7 +74,7 @@
 
   overflow-y: auto;
   z-index: 200000;
-  padding: clamp(3rem, 6vh, 5rem) clamp(0.75rem, 3vw, 2.5rem);
+  padding: clamp(3rem, 6vh, 5rem) 0;
   box-sizing: border-box;
 
   opacity: 0;
@@ -102,8 +104,9 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
 ============================================================================= */
 #country-overlay .country-overlay-inner,
 .country-overlay .country-overlay-inner{
-  max-width: var(--country-container-max);
-  width: 100%;
+  max-width: none;
+  width: var(--country-container-max);
+  direction: ltr;
 
   display: flex;
   flex-direction: column;
@@ -148,6 +151,7 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
   display: flex;
   justify-content: space-between;
   align-items: center;
+  direction: ltr;
 }
 
 /* =============================================================================
@@ -169,6 +173,7 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  direction: ltr;
 }
 
 #country-overlay .region-title,
@@ -207,6 +212,7 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
   justify-content: flex-start;
   align-items: flex-start;
   align-content: flex-start;
+  direction: ltr;
 }
 
 #country-overlay .country-list li,
@@ -304,6 +310,7 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
     color 220ms ease,
     opacity 220ms ease;
   text-align: left;
+  direction: ltr;
   transform: none !important; /* no hover jump */
 }
 
@@ -404,7 +411,7 @@ body.country-active .stage-circle{opacity: 0 !important; filter: none !important
 
 @media (max-width:768px){
   #country-overlay.country-overlay,
-  .country-overlay{padding: 3rem 1rem;}
+  .country-overlay{padding: 3rem 0;}
 
   #country-overlay .country-overlay-title,
   .country-overlay .country-overlay-title{font-size: 1.6rem;}

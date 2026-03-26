@@ -17,7 +17,10 @@
   'use strict';
 
   /* =================== Fragment Injection =================== */
-  const COUNTRY_FRAGMENT_URL = '/assets/fragments/country-overlay.html';
+  const COUNTRY_FRAGMENT_URLS = [
+    '/assets/fragments/country-overlay.html',
+    'assets/fragments/country-overlay.html'
+  ];
 
   const injectCountryOverlayIfNeeded = async () => {
     const existing = document.getElementById('country-overlay');
@@ -29,16 +32,18 @@
     if (mount.dataset.injected === 'true') return !!document.getElementById('country-overlay');
     mount.dataset.injected = 'true';
 
-    try {
-      const res = await fetch(COUNTRY_FRAGMENT_URL, { cache: 'no-cache' });
-      if (!res.ok) return false;
-      const html = await res.text();
-      mount.innerHTML = html;
-      document.dispatchEvent(new Event('country-overlay-mounted'));
-      return !!document.getElementById('country-overlay');
-    } catch {
-      return false;
+    for (const url of COUNTRY_FRAGMENT_URLS) {
+      try {
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (!res.ok) continue;
+        const html = await res.text();
+        mount.innerHTML = html;
+        document.dispatchEvent(new Event('country-overlay-mounted'));
+        return !!document.getElementById('country-overlay');
+      } catch {}
     }
+
+    return false;
   };
 
   const STORAGE = {
@@ -180,6 +185,25 @@
 
     if (countryEl) countryEl.textContent = state.countryLabel || '—';
     if (langEl) langEl.textContent = (state.language || DEFAULT_LANGUAGE).toUpperCase();
+  };
+
+  const hydrateStateFromStorage = () => {
+    state.countryCode = (getLS(STORAGE.COUNTRY_CODE, LEGACY_STORAGE.COUNTRY_CODE) || DEFAULT_COUNTRY_CODE).toUpperCase();
+    state.language = normalizeLang(getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE) || DEFAULT_LANGUAGE);
+    state.countryLabel = getLS(STORAGE.COUNTRY_LABEL, LEGACY_STORAGE.COUNTRY_LABEL) || nativeCountryName(state.countryCode, state.language);
+    state.languages = getStoredLanguages();
+  };
+
+  const refreshFooterLocaleUI = async () => {
+    hydrateStateFromStorage();
+    bindFooterTriggers();
+    setLabels();
+    buildLanguageDropdown(state.language, state.languages);
+    await injectCountryOverlayIfNeeded();
+    bindOverlayClose();
+    bindCountrySelection();
+    setLabels();
+    buildLanguageDropdown(state.language, state.languages);
   };
 
   /* =================== Translation Bridge (safe + retry + fallback) =================== */
@@ -543,7 +567,9 @@
   /* =================== Init =================== */
 
   async function init() {
-    await injectCountryOverlayIfNeeded();
+    hydrateStateFromStorage();
+    await refreshFooterLocaleUI();
+
     const isNewSession = !sessionStorage.getItem(STORAGE.SESSION);
 
     if (isNewSession) {
@@ -562,27 +588,26 @@
       setLS(STORAGE.LANGUAGE, lang, LEGACY_STORAGE.LANGUAGE);
 
       sessionStorage.setItem(STORAGE.SESSION, '1');
-    } else {
-      state.countryCode = (getLS(STORAGE.COUNTRY_CODE, LEGACY_STORAGE.COUNTRY_CODE) || DEFAULT_COUNTRY_CODE).toUpperCase();
-      state.language = normalizeLang(getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE) || DEFAULT_LANGUAGE);
-      state.countryLabel = getLS(STORAGE.COUNTRY_LABEL, LEGACY_STORAGE.COUNTRY_LABEL) || nativeCountryName(state.countryCode, state.language);
-      state.languages = getStoredLanguages();
     }
 
-    bindFooterTriggers();
-    bindOverlayClose();
-    bindCountrySelection();
-
-    setLabels();
-    buildLanguageDropdown(state.language, state.languages);
+    await refreshFooterLocaleUI();
     applyTranslation(state.language);
   }
 
   // Re-bind footer triggers if footer is injected after initial load
   document.addEventListener('footer-mounted', () => {
-    bindFooterTriggers();
-    setLabels();
-    buildLanguageDropdown(state.language, state.languages);
+    refreshFooterLocaleUI();
+  });
+
+  document.addEventListener('country-overlay-mounted', () => {
+    refreshFooterLocaleUI();
+  });
+
+  document.addEventListener('fragment:mounted', (event) => {
+    const name = event?.detail?.name || '';
+    if (name === 'footer' || name === 'country-overlay') {
+      refreshFooterLocaleUI();
+    }
   });
   // Defer-safe init
   if (document.readyState === 'loading') {

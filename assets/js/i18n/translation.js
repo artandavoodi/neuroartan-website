@@ -199,15 +199,33 @@ window.NEUROARTAN_TRANSLATION = (() => {
   const RTL_LANGS = ["ar", "fa", "ur", "he"];
   const applyDir = (lang) => {
     const nl = normalizeLang(lang) || "en";
+    const isRtl = RTL_LANGS.includes(nl);
+    const nextDir = isRtl ? "rtl" : "ltr";
+
     document.documentElement.lang = nl;
-
     document.documentElement.dir = "ltr";
-
-    document.documentElement.classList.toggle("lang-rtl", RTL_LANGS.includes(nl));
+    document.documentElement.classList.toggle("lang-rtl", isRtl);
     document.documentElement.setAttribute("data-lang", nl);
 
+    if (document.body) {
+      document.body.setAttribute("dir", nextDir);
+      document.body.setAttribute("data-dir", nextDir);
+    }
+
+    const siteMain = document.getElementById("site-main");
+    if (siteMain) {
+      siteMain.setAttribute("dir", nextDir);
+      siteMain.setAttribute("data-dir", nextDir);
+    }
+
+    const linksMount = document.getElementById("institutional-links-mount");
+    if (linksMount) {
+      linksMount.setAttribute("dir", nextDir);
+      linksMount.setAttribute("data-dir", nextDir);
+    }
+
     window.dispatchEvent(new CustomEvent("neuroartan:language-applied", {
-      detail: { lang: nl, rtl: RTL_LANGS.includes(nl) }
+      detail: { lang: nl, rtl: isRtl }
     }));
   };
 

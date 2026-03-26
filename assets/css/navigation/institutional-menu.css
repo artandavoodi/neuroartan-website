@@ -16,6 +16,8 @@
   padding-left: 0;
   padding-right: 0;
   isolation: isolate;
+  direction: ltr;
+  text-align: left;
   transition: padding-top 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -72,6 +74,7 @@ body.light-mode .institutional-menu::before{
   z-index: 3;
   min-height: 3.55rem;
   box-sizing: border-box;
+  direction: ltr;
 }
 
 .institutional-menu-brand{
@@ -154,6 +157,7 @@ body.light-mode .institutional-menu::before{
 .institutional-menu-utility{
   display: inline-flex;
   align-items: center;
+  direction: ltr;
 }
 
 .institutional-menu-nav{
@@ -392,6 +396,7 @@ body:not(.institutional-menu-panel-open) .institutional-menu-panel-shell{
   z-index: 2;
   isolation: isolate;
   box-sizing: border-box;
+  direction: ltr;
   pointer-events: auto;
   background: rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(18px) saturate(145%);

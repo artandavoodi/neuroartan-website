@@ -1,11 +1,12 @@
-// =================== Publications Renderer (Sovereign) ===================
-// Loads markdown from `content_sync` and renders it into single.html.
-// Works on custom domains and GitHub Pages project paths.
-// Expected query: single.html?p=Essays/ENGINE.md or other synced publication paths.
+// SECTION: PUBLICATION RENDERER
+// PURPOSE: Load markdown from PTW-approved content_sync and render it into single.html.
+// SCOPE: Support custom domains and GitHub Pages project paths.
+// INPUT: Expected query format is single.html?p=<content_sync-relative-markdown-path>.
 
 (function () {
   'use strict';
 
+  // SECTION: QUERY AND STATE HELPERS
   function getQueryParam(name) {
     try {
       return new URL(window.location.href).searchParams.get(name);
@@ -29,6 +30,7 @@
     if (c) c.innerHTML = `<p>${message}</p>`;
   }
 
+  // SECTION: TITLE AND FRONTMATTER HELPERS
   function stripMdExtension(display) {
     return String(display || '').replace(/\.md$/i, '');
   }
@@ -72,6 +74,7 @@
     return data;
   }
 
+  // SECTION: DOCUMENT META UPDATERS
   function updateDocumentMetadata(meta) {
     const title = String(meta.title || 'Publication').trim();
     const description = String(
@@ -122,6 +125,7 @@
     }
   }
 
+  // SECTION: FETCH AND LOAD HELPERS
   async function fetchText(url) {
     const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -142,6 +146,7 @@
     return { md, urlUsed: url };
   }
 
+  // SECTION: MARKDOWN RENDERING
   function renderMarkdown(md) {
     if (!window.marked) throw new Error('marked not loaded');
 
@@ -164,6 +169,7 @@
     return window.marked.parse(cleaned);
   }
 
+  // SECTION: BOOTSTRAP
   async function boot() {
     const p = getQueryParam('p');
     if (!p) {
@@ -195,6 +201,7 @@
     }
   }
 
+  // SECTION: INITIALIZATION
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 0));
   } else {

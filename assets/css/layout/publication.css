@@ -1,9 +1,9 @@
-/* ======================================================================== */
-/* PUBLICATION — SOVEREIGN MODULE                                           */
-/* Scoped publication styling. No global overrides.                          */
-/* Depends on: assets/css/style.css (tokens + typography variables)          */
-/* ======================================================================== */
+/* SECTION: PUBLICATION LAYOUT */
+/* PURPOSE: Scoped publication styling with no global overrides. */
+/* DEPENDENCY: Core website tokens and typography variables. */
 
+  
+/* BLOCK: PUBLICATION MAIN SHELL */
 .publication-main{
   position:relative;
   z-index:2;
@@ -20,6 +20,7 @@
   padding-right:var(--footer-gutter, 2rem);
 }
 
+/* BLOCK: PUBLICATION TEXT BASE */
 .publication-title{
   font-family:var(--font-base);
   color:var(--text-color);
@@ -54,6 +55,7 @@
   text-decoration:underline;
 }
 
+/* BLOCK: PUBLICATION HEADER */
 .publication-heading{
   font-family:var(--font-base);
   color:var(--text-color);
@@ -130,7 +132,7 @@
   color:var(--text-secondary-color);
 }
 
-/* -------------------- Publications Index — Minimal logo -------------------- */
+/* BLOCK: PUBLICATION IDENTITY MARKS */
 .publication-main img{
   width:auto;
   height:auto;
@@ -155,7 +157,7 @@
   max-height:72px;
 }
 
-/* -------------------- Item typography + theme-compatible colors -------------------- */
+/* BLOCK: PUBLICATION LIST TYPOGRAPHY */
 .publication-item-title{
   display:block;
   font-size:1.05rem;
@@ -171,7 +173,7 @@
   margin:0;
 }
 
-/* If the list renders plain <a> text without spans, keep it clean */
+/* BLOCK: PUBLICATION LINK FALLBACKS */
 .publication-link{
   color:var(--text-color);
 }

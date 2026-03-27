@@ -1,0 +1,244 @@
+{
+  "generated_from": "PTW-approved website content map",
+  "version": "1.0",
+  "entries": [
+    {
+      "id": "company",
+      "title": "Company",
+      "path": "/pages/company/index.html",
+      "scope": "institutional",
+      "keywords": ["company", "about", "institution", "neuroartan"]
+    },
+    {
+      "id": "brand",
+      "title": "Brand",
+      "path": "/pages/brand/index.html",
+      "scope": "institutional",
+      "keywords": ["brand", "identity", "aesthetic", "neuroartan"]
+    },
+    {
+      "id": "foundation",
+      "title": "Foundation",
+      "path": "/pages/foundation/index.html",
+      "scope": "institutional",
+      "keywords": ["foundation", "principles", "core", "institution"]
+    },
+    {
+      "id": "charter",
+      "title": "Charter",
+      "path": "/pages/charter/index.html",
+      "scope": "institutional",
+      "keywords": ["charter", "constitution", "governance", "authority"]
+    },
+    {
+      "id": "careers",
+      "title": "Careers",
+      "path": "/pages/careers/index.html",
+      "scope": "institutional",
+      "keywords": ["careers", "jobs", "roles", "hiring"]
+    },
+    {
+      "id": "updates",
+      "title": "Updates",
+      "path": "/pages/updates/index.html",
+      "scope": "institutional",
+      "keywords": ["updates", "announcements", "releases", "news"]
+    },
+    {
+      "id": "architecture",
+      "title": "Architecture",
+      "path": "/pages/infrastructure/architecture/index.html",
+      "scope": "infrastructure",
+      "keywords": ["architecture", "system", "structure", "infrastructure"]
+    },
+    {
+      "id": "infrastructure",
+      "title": "Infrastructure",
+      "path": "/pages/infrastructure/index.html",
+      "scope": "infrastructure",
+      "keywords": ["infrastructure", "platform", "systems", "stack"]
+    },
+    {
+      "id": "platform",
+      "title": "Platform",
+      "path": "/pages/platform/index.html",
+      "scope": "product",
+      "keywords": ["platform", "product", "software", "systems"]
+    },
+    {
+      "id": "knowledge_research",
+      "title": "Knowledge & Research",
+      "path": "/pages/knowledge-research/index.html",
+      "scope": "research",
+      "keywords": ["knowledge", "research", "publications", "thinking"]
+    },
+    {
+      "id": "publications",
+      "title": "Publications",
+      "path": "/pages/research/publications/index.html",
+      "scope": "research",
+      "keywords": ["publications", "essays", "notes", "research", "visual thinking"]
+    },
+    {
+      "id": "product_overview",
+      "title": "ICOS Overview",
+      "path": "/pages/products/overview/index.html",
+      "scope": "product",
+      "keywords": ["icos", "overview", "product", "operating system"]
+    },
+    {
+      "id": "product_capabilities",
+      "title": "Capabilities",
+      "path": "/pages/products/capabilities/index.html",
+      "scope": "product",
+      "keywords": ["capabilities", "functions", "features", "product"]
+    },
+    {
+      "id": "product_workflows",
+      "title": "Workflows",
+      "path": "/pages/products/workflows/index.html",
+      "scope": "product",
+      "keywords": ["workflows", "use", "flows", "product"]
+    },
+    {
+      "id": "software_downloads",
+      "title": "Downloads",
+      "path": "/pages/software/downloads/index.html",
+      "scope": "software",
+      "keywords": ["downloads", "software", "release", "install"]
+    },
+    {
+      "id": "software_docs",
+      "title": "Documentation",
+      "path": "/pages/software/docs/index.html",
+      "scope": "software",
+      "keywords": ["documentation", "docs", "software", "guides"]
+    },
+    {
+      "id": "business",
+      "title": "Business",
+      "path": "/pages/business/index.html",
+      "scope": "business",
+      "keywords": ["business", "enterprise", "institution", "commercial"]
+    },
+    {
+      "id": "pricing",
+      "title": "Pricing",
+      "path": "/pages/pricing/index.html",
+      "scope": "business",
+      "keywords": ["pricing", "plans", "business", "commercial"]
+    },
+    {
+      "id": "enterprise",
+      "title": "Enterprise",
+      "path": "/pages/business/enterprise/index.html",
+      "scope": "business",
+      "keywords": ["enterprise", "business", "organizations", "scale"]
+    },
+    {
+      "id": "investor_relations",
+      "title": "Investor Relations",
+      "path": "/pages/business/investor-relations/index.html",
+      "scope": "business",
+      "keywords": ["investor", "relations", "investment", "capital"]
+    },
+    {
+      "id": "partnerships",
+      "title": "Partnerships",
+      "path": "/pages/business/partnerships/index.html",
+      "scope": "business",
+      "keywords": ["partnerships", "partners", "alliances", "business"]
+    },
+    {
+      "id": "cognitive_science",
+      "title": "Cognitive Science",
+      "path": "/pages/research/cognitive-science/index.html",
+      "scope": "research",
+      "keywords": ["cognitive science", "mind", "cognition", "research"]
+    },
+    {
+      "id": "neuroscience",
+      "title": "Neuroscience",
+      "path": "/pages/research/neuroscience/index.html",
+      "scope": "research",
+      "keywords": ["neuroscience", "brain", "research", "cognition"]
+    },
+    {
+      "id": "psychology",
+      "title": "Psychology",
+      "path": "/pages/research/psychology/index.html",
+      "scope": "research",
+      "keywords": ["psychology", "behavior", "mind", "research"]
+    },
+    {
+      "id": "help_center",
+      "title": "Help Center",
+      "path": "/pages/support/help-center/index.html",
+      "scope": "support",
+      "keywords": ["help", "support", "center", "assistance"]
+    },
+    {
+      "id": "trust",
+      "title": "Trust",
+      "path": "/pages/trust/index.html",
+      "scope": "support",
+      "keywords": ["trust", "safety", "assurance", "governance"]
+    },
+    {
+      "id": "security",
+      "title": "Security",
+      "path": "/pages/security/index.html",
+      "scope": "support",
+      "keywords": ["security", "privacy", "protection", "systems"]
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility",
+      "path": "/pages/accessibility/index.html",
+      "scope": "support",
+      "keywords": ["accessibility", "inclusive", "support", "ux"]
+    },
+    {
+      "id": "privacy",
+      "title": "Privacy",
+      "path": "/pages/legal/privacy/index.html",
+      "scope": "legal",
+      "keywords": ["privacy", "legal", "data", "policy"]
+    },
+    {
+      "id": "terms",
+      "title": "Terms",
+      "path": "/pages/legal/terms/index.html",
+      "scope": "legal",
+      "keywords": ["terms", "legal", "conditions", "policy"]
+    },
+    {
+      "id": "policies",
+      "title": "Policies",
+      "path": "/pages/legal/policies/index.html",
+      "scope": "legal",
+      "keywords": ["policies", "legal", "rules", "framework"]
+    },
+    {
+      "id": "cookies",
+      "title": "Cookies",
+      "path": "/pages/legal/cookies/index.html",
+      "scope": "legal",
+      "keywords": ["cookies", "tracking", "legal", "policy"]
+    },
+    {
+      "id": "imprint",
+      "title": "Imprint",
+      "path": "/pages/legal/imprint/index.html",
+      "scope": "legal",
+      "keywords": ["imprint", "legal", "entity", "notice"]
+    },
+    {
+      "id": "profile",
+      "title": "Profile",
+      "path": "/profile.html",
+      "scope": "account",
+      "keywords": ["profile", "account", "sign in", "registration"]
+    }
+  ]
+}

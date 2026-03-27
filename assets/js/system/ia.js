@@ -1,10 +1,12 @@
-// =================== IA Loader (Information Architecture Backbone) ===================
-// Loads assets/data/ia.json and exposes it globally as window.ARTAN_IA
-// Emits: 'artan:ia:ready' and 'artan:ia:error'
+// SECTION: INFORMATION ARCHITECTURE LOADER
+// PURPOSE: Load the canonical IA registry and expose it globally as window.ARTAN_IA.
+// EVENTS: Emit 'artan:ia:ready' and 'artan:ia:error'.
 
 (() => {
-  const IA_URL = '/assets/data/ia.json';
+  // SECTION: CANONICAL IA SOURCE
+  const IA_URL = '/assets/data/system/ia.json';
 
+  // SECTION: IA FETCH AND REGISTRATION
   async function loadIA() {
     try {
       const res = await fetch(IA_URL, { cache: 'no-cache' });
@@ -19,5 +21,6 @@
     }
   }
 
+  // SECTION: INITIALIZATION
   document.addEventListener('DOMContentLoaded', loadIA);
 })();

@@ -5,13 +5,13 @@ Local → GitHub (Vault + Website)
 FULL UPDATE
 ==========================================================================
 
-cd /Users/artan/Documents/Neuroartan/I && git add -A && (git diff --cached --quiet || git commit -m "Vault update") && git push origin HEAD:main && cd /Users/artan/Documents/Neuroartan/website && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
+cd /Users/artan/Documents/Neuroartan/I && git status --short && git add -A && (git diff --cached --quiet || git commit -m "Vault update") && git push origin HEAD:main && cd /Users/artan/Documents/Neuroartan/website && git status --short && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml profile.html UPDATE.txt && git restore --staged archived pages/legacy pages/transitional publications/engine publications/engine-v2 content_sync/publications sync_from_vault.sh 2>/dev/null || true && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
 
 ==========================================================================
 CONTROLLED WEBSITE UPDATE
 ==========================================================================
 
-cd /Users/artan/Documents/Neuroartan/website && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
+cd /Users/artan/Documents/Neuroartan/website && git status --short && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml profile.html UPDATE.txt && git restore --staged archived pages/legacy pages/transitional publications/engine publications/engine-v2 content_sync/publications sync_from_vault.sh 2>/dev/null || true && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
 
 ==========================================================================
 CORE MODEL
@@ -24,8 +24,9 @@ CORE MODEL
 5) content_sync/ = governed PTW-approved export intake inside the public website.
 6) collections/ = website-facing curation and configuration layer.
 7) publications/ = rendered public publication surface.
-8) single.html = publication rendering engine.
+8) single.html = active publication rendering engine.
 9) Root-facing public website remains canonical at website root.
-10) office/, icos/, and investor/ are sovereign layers and are excluded from this public website update path unless later governed procedures explicitly authorize them.
+10) office/, icos/, investor/, jobs/, and software/ are sovereign layers and are excluded from this public website update path unless later governed procedures explicitly authorize them.
 11) PTW boundary rule = website push assumes PTW-approved website output already exists in the website repository.
-12) Legacy script rule = sync_from_vault.sh is deprecated and must not be called from this manual.
+12) Legacy exclusion rule = archived/, pages/legacy/, pages/transitional/, publications/engine/, publications/engine-v2/, content_sync/publications/, and sync_from_vault.sh must not be restaged through this manual.
+13) Safety rule = git status is printed before staging so unintended legacy surfaces can be seen before commit and push.

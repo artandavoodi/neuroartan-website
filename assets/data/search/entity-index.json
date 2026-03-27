@@ -1,0 +1,139 @@
+{
+  "generated_from": "PTW-approved website entity map",
+  "version": "1.0",
+  "entities": [
+    {
+      "id": "neuroartan",
+      "label": "Neuroartan",
+      "type": "organization",
+      "path": "/pages/company/index.html",
+      "keywords": ["neuroartan", "institution", "company", "organization"]
+    },
+    {
+      "id": "icos",
+      "label": "ICOS",
+      "type": "product",
+      "path": "/pages/products/overview/index.html",
+      "keywords": ["icos", "cognitive operating system", "product", "platform"]
+    },
+    {
+      "id": "platform",
+      "label": "Platform",
+      "type": "system",
+      "path": "/pages/platform/index.html",
+      "keywords": ["platform", "system", "software", "infrastructure"]
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture",
+      "type": "system",
+      "path": "/pages/infrastructure/architecture/index.html",
+      "keywords": ["architecture", "structure", "system", "framework"]
+    },
+    {
+      "id": "publications",
+      "label": "Publications",
+      "type": "collection",
+      "path": "/pages/research/publications/index.html",
+      "keywords": ["publications", "essays", "notes", "research", "visual thinking"]
+    },
+    {
+      "id": "knowledge_research",
+      "label": "Knowledge & Research",
+      "type": "section",
+      "path": "/pages/knowledge-research/index.html",
+      "keywords": ["knowledge", "research", "thinking", "publications"]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "type": "section",
+      "path": "/pages/business/index.html",
+      "keywords": ["business", "enterprise", "commercial", "institutional"]
+    },
+    {
+      "id": "investor_relations",
+      "label": "Investor Relations",
+      "type": "section",
+      "path": "/pages/business/investor-relations/index.html",
+      "keywords": ["investor", "relations", "capital", "investment"]
+    },
+    {
+      "id": "partnerships",
+      "label": "Partnerships",
+      "type": "section",
+      "path": "/pages/business/partnerships/index.html",
+      "keywords": ["partnerships", "partners", "alliances", "business"]
+    },
+    {
+      "id": "downloads",
+      "label": "Downloads",
+      "type": "resource",
+      "path": "/pages/software/downloads/index.html",
+      "keywords": ["downloads", "software", "install", "release"]
+    },
+    {
+      "id": "documentation",
+      "label": "Documentation",
+      "type": "resource",
+      "path": "/pages/software/docs/index.html",
+      "keywords": ["documentation", "docs", "guides", "software"]
+    },
+    {
+      "id": "help_center",
+      "label": "Help Center",
+      "type": "support",
+      "path": "/pages/support/help-center/index.html",
+      "keywords": ["help", "support", "center", "assistance"]
+    },
+    {
+      "id": "trust",
+      "label": "Trust",
+      "type": "support",
+      "path": "/pages/trust/index.html",
+      "keywords": ["trust", "safety", "assurance", "governance"]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "type": "support",
+      "path": "/pages/security/index.html",
+      "keywords": ["security", "privacy", "protection", "systems"]
+    },
+    {
+      "id": "privacy",
+      "label": "Privacy",
+      "type": "legal",
+      "path": "/pages/legal/privacy/index.html",
+      "keywords": ["privacy", "legal", "data", "policy"]
+    },
+    {
+      "id": "terms",
+      "label": "Terms",
+      "type": "legal",
+      "path": "/pages/legal/terms/index.html",
+      "keywords": ["terms", "legal", "conditions", "policy"]
+    },
+    {
+      "id": "cookies",
+      "label": "Cookies",
+      "type": "legal",
+      "path": "/pages/legal/cookies/index.html",
+      "keywords": ["cookies", "tracking", "policy", "legal"]
+    },
+    {
+      "id": "imprint",
+      "label": "Imprint",
+      "type": "legal",
+      "path": "/pages/legal/imprint/index.html",
+      "keywords": ["imprint", "entity", "legal", "notice"]
+    },
+    {
+      "id": "profile",
+      "label": "Profile",
+      "type": "account",
+      "path": "/profile.html",
+      "keywords": ["profile", "account", "sign in", "registration"]
+    }
+  ]
+}

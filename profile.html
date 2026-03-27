@@ -8,93 +8,29 @@
   <meta name="description" content="Legacy noindex profile access surface retained temporarily during the Neuroartan platform restructuring.">
   <link rel="canonical" href="https://neuroartan.com/">
   <link rel="stylesheet" href="assets/css/core/style.css">
-  <style>
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      background: #000;
-      color: #fff;
-      font-family: "Manrope", sans-serif;
-    }
+  <link rel="stylesheet" href="assets/css/system/auth.css">
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .profile-shell {
-      width: min(100%, 560px);
-      display: grid;
-      gap: 16px;
-      padding: 32px 24px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .profile-copy {
-      margin: 0;
-      color: rgba(255, 255, 255, 0.68);
-      line-height: 1.6;
-    }
-
-    .profile-label {
-      margin: 0;
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      opacity: 0.6;
-    }
-
-    .profile-name,
-    .profile-email {
-      margin: 0;
-    }
-
-    .profile-name {
-      font-size: 2rem;
-      line-height: 1.05;
-    }
-
-    .profile-email {
-      opacity: 0.7;
-    }
-
-    .profile-actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    .profile-button {
-      min-height: 44px;
-      padding: 0 18px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: transparent;
-      color: #fff;
-      font: inherit;
-      cursor: pointer;
-    }
-  </style>
-
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
   <script src="assets/js/system/firebase-config.js" defer></script>
   <script src="assets/js/system/auth.js" defer></script>
 </head>
-<body>
+<body class="profile-page">
   <main class="profile-shell">
-    <p class="profile-label">Legacy Profile Access</p>
+    <p class="profile-label" id="profile-label">Legacy Profile Access</p>
+    <img id="profile-avatar-image" src="assets/icons/brand/logos/neuroartan/logo-plain.svg" alt="Neuroartan" />
     <h1 class="profile-name" id="profile-name">Loading...</h1>
     <p class="profile-email" id="profile-email">Loading...</p>
-    <p class="profile-copy">This noindex legacy profile surface is being retained temporarily while Neuroartan restructures the public website, Office layer, ICOS layer, and Investor layer into sovereign platform architecture.</p>
-    <div class="profile-actions">
+    <p class="profile-copy" id="profile-copy">This noindex legacy profile surface is being retained temporarily while Neuroartan restructures the public website, Office layer, ICOS layer, and Investor layer into sovereign platform architecture.</p>
+
+    <div class="profile-actions" data-auth-state="user" hidden>
       <button class="profile-button" type="button" onclick="logout()">Logout</button>
     </div>
+
+    <div class="profile-actions" data-auth-state="guest" hidden>
+      <button class="profile-button" type="button" onclick="loginWithGoogle()">Continue with Google</button>
+    </div>
+
     <noscript>
       <p class="profile-copy">JavaScript is required for Firebase-authenticated profile state and logout handling.</p>
     </noscript>

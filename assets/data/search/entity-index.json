@@ -17,13 +17,6 @@
       "keywords": ["icos", "cognitive operating system", "product", "platform"]
     },
     {
-      "id": "platform",
-      "label": "Platform",
-      "type": "system",
-      "path": "/pages/platform/index.html",
-      "keywords": ["platform", "system", "software", "infrastructure"]
-    },
-    {
       "id": "architecture",
       "label": "Architecture",
       "type": "system",

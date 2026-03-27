@@ -11,7 +11,6 @@
     { "id": "updates", "path": "/pages/updates/index.html", "title": "Updates", "scope": "institutional" },
     { "id": "architecture", "path": "/pages/infrastructure/architecture/index.html", "title": "Architecture", "scope": "infrastructure" },
     { "id": "infrastructure", "path": "/pages/infrastructure/index.html", "title": "Infrastructure", "scope": "infrastructure" },
-    { "id": "platform", "path": "/pages/platform/index.html", "title": "Platform", "scope": "product" },
     { "id": "knowledge_research", "path": "/pages/knowledge-research/index.html", "title": "Knowledge & Research", "scope": "research" },
     { "id": "publications", "path": "/pages/research/publications/index.html", "title": "Publications", "scope": "research" },
     { "id": "product_overview", "path": "/pages/products/overview/index.html", "title": "ICOS Overview", "scope": "product" },

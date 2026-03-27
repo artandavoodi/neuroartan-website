@@ -59,13 +59,6 @@
       "keywords": ["infrastructure", "platform", "systems", "stack"]
     },
     {
-      "id": "platform",
-      "title": "Platform",
-      "path": "/pages/platform/index.html",
-      "scope": "product",
-      "keywords": ["platform", "product", "software", "systems"]
-    },
-    {
       "id": "knowledge_research",
       "title": "Knowledge & Research",
       "path": "/pages/knowledge-research/index.html",

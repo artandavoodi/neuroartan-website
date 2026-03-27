@@ -5,7 +5,13 @@ Local → GitHub (Vault + Website)
 FULL UPDATE
 ==========================================================================
 
-cd /Users/artan/Documents/Neuroartan/I && git add -A && (git diff --cached --quiet || git commit -m "Vault update") && git push && cd /Users/artan/Documents/Neuroartan/website && bash ./sync_from_vault.sh && git add -A && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
+cd /Users/artan/Documents/Neuroartan/I && git add -A && (git diff --cached --quiet || git commit -m "Vault update") && git push origin HEAD:main && cd /Users/artan/Documents/Neuroartan/website && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
+
+==========================================================================
+CONTROLLED WEBSITE UPDATE
+==========================================================================
+
+cd /Users/artan/Documents/Neuroartan/website && git add -- content_sync pages/publications pages/legal publications index.html single.html assets collections robots.txt sitemap.xml && (git diff --cached --quiet || git commit -m "Update site") && git push origin main
 
 ==========================================================================
 CORE MODEL
@@ -15,9 +21,11 @@ CORE MODEL
 2) Vault path = /Users/artan/Documents/Neuroartan/I
 3) Website path = /Users/artan/Documents/Neuroartan/website
 4) Obsidian vault = private writing and governance layer.
-5) content_sync/ = governed export intake from the Vault into the public website.
+5) content_sync/ = governed PTW-approved export intake inside the public website.
 6) collections/ = website-facing curation and configuration layer.
 7) publications/ = rendered public publication surface.
 8) single.html = publication rendering engine.
 9) Root-facing public website remains canonical at website root.
 10) office/, icos/, and investor/ are sovereign layers and are excluded from this public website update path unless later governed procedures explicitly authorize them.
+11) PTW boundary rule = website push assumes PTW-approved website output already exists in the website repository.
+12) Legacy script rule = sync_from_vault.sh is deprecated and must not be called from this manual.

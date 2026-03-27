@@ -29,3 +29,56 @@
     { "id": "tour", "path": "/pages/tour/index.html" }
   ]
 }
+
+{
+  "site": {
+    "name": "Neuroartan",
+    "type": "institutional-public-website",
+    "source": "PTW-approved website output"
+  },
+  "sections": [
+    { "id": "home", "path": "/index.html" },
+    { "id": "company", "path": "/pages/company/index.html" },
+    { "id": "brand", "path": "/pages/brand/index.html" },
+    { "id": "foundation", "path": "/pages/foundation/index.html" },
+    { "id": "charter", "path": "/pages/charter/index.html" },
+    { "id": "careers", "path": "/pages/careers/index.html" },
+    { "id": "updates", "path": "/pages/updates/index.html" },
+    { "id": "architecture", "path": "/pages/infrastructure/architecture/index.html" },
+    { "id": "platform", "path": "/pages/platform/index.html" },
+    { "id": "knowledge_research", "path": "/pages/knowledge-research/index.html" },
+    {
+      "id": "publications",
+      "path": "/pages/research/publications/index.html",
+      "source_root": "/content_sync",
+      "streams": [
+        { "id": "essays", "source": "publications/essays/" },
+        { "id": "research", "source": "publications/research/" },
+        { "id": "notes", "source": "publications/notes/" },
+        { "id": "visual", "source": "publications/visual/" }
+      ]
+    },
+    { "id": "product_overview", "path": "/pages/products/overview/index.html" },
+    { "id": "product_capabilities", "path": "/pages/products/capabilities/index.html" },
+    { "id": "product_workflows", "path": "/pages/products/workflows/index.html" },
+    { "id": "software_downloads", "path": "/pages/software/downloads/index.html" },
+    { "id": "software_docs", "path": "/pages/software/docs/index.html" },
+    { "id": "business", "path": "/pages/business/index.html" },
+    { "id": "pricing", "path": "/pages/pricing/index.html" },
+    { "id": "enterprise", "path": "/pages/business/enterprise/index.html" },
+    { "id": "investor_relations", "path": "/pages/business/investor-relations/index.html" },
+    { "id": "partnerships", "path": "/pages/business/partnerships/index.html" },
+    { "id": "cognitive_science", "path": "/pages/research/cognitive-science/index.html" },
+    { "id": "neuroscience", "path": "/pages/research/neuroscience/index.html" },
+    { "id": "psychology", "path": "/pages/research/psychology/index.html" },
+    { "id": "help_center", "path": "/pages/support/help-center/index.html" },
+    { "id": "trust", "path": "/pages/trust/index.html" },
+    { "id": "security", "path": "/pages/security/index.html" },
+    { "id": "accessibility", "path": "/pages/accessibility/index.html" },
+    { "id": "privacy", "path": "/pages/legal/privacy/index.html" },
+    { "id": "terms", "path": "/pages/legal/terms/index.html" },
+    { "id": "policies", "path": "/pages/legal/policies/index.html" },
+    { "id": "cookies", "path": "/pages/legal/cookies/index.html" },
+    { "id": "imprint", "path": "/pages/legal/imprint/index.html" }
+  ]
+}

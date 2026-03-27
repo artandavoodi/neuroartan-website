@@ -1,200 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- =================== Basic Meta =================== -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="../../../">
-    <title>Legal Page · Neuroartan</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
-    <link rel="stylesheet" href="assets/css/core/style.css">
-    <link rel="stylesheet" href="assets/css/system/loading-overlay.css">
-    <link rel="stylesheet" href="assets/css/components/components.css">
-    <link rel="stylesheet" href="assets/css/navigation/menu.css">
-    <link rel="stylesheet" href="assets/css/navigation/institutional-menu.css">
-    <link rel="stylesheet" href="assets/css/overlays/country-overlay.css">
-    <link rel="stylesheet" href="assets/css/navigation/footer.css">
-    <link rel="stylesheet" href="assets/css/navigation/institutional-links.css">
-    <link rel="stylesheet" href="assets/css/ui/custom-cursor.css">
-    <link rel="stylesheet" href="assets/css/sections/legal.css">
-    <meta name="description" content="Legal page for Neuroartan.">
-    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
-    <meta name="theme-color" content="#0a0a0a">
-    <meta name="keywords" content="Neuroartan, legal page, policy, terms, compliance">
-    <link rel="canonical" href="https://neuroartan.com/pages/legal/">
-    <meta name="application-name" content="Neuroartan">
-    <meta name="apple-mobile-web-app-title" content="Neuroartan">
+  <!-- SECTION: BASIC META -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust • Neuroartan</title>
 
-    <!-- =================== Open Graph =================== -->
-    <meta property="og:title" content="Legal Page · Neuroartan">
-    <meta property="og:description" content="Legal page for Neuroartan.">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Neuroartan">
-    <meta property="og:url" content="https://neuroartan.com/pages/legal/">
-    <meta property="og:image" content="https://neuroartan.com/assets/images/brand/logo.svg">
-    <meta property="og:image:alt" content="Neuroartan logo">
+  <!-- SECTION: STYLESHEETS -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
 
-    <!-- =================== Twitter Card =================== -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Legal Page · Neuroartan">
-    <meta name="twitter:description" content="Legal page for Neuroartan.">
-    <meta name="twitter:image" content="https://neuroartan.com/assets/images/brand/logo.svg">
-    <meta name="twitter:site" content="@artandavoodi">
+  <link rel="stylesheet" href="/assets/css/core/style.css">
+  <link rel="stylesheet" href="/assets/css/components/components.css">
+  <link rel="stylesheet" href="/assets/css/navigation/menu.css">
+  <link rel="stylesheet" href="/assets/css/navigation/institutional-menu.css">
+  <link rel="stylesheet" href="/assets/css/overlays/country-overlay.css">
+  <link rel="stylesheet" href="/assets/css/layout/publication.css">
 
-    <!-- =================== Structured Data =================== -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://neuroartan.com/#organization",
-          "name": "Neuroartan",
-          "alternateName": "Neuroartan Cognitive Systems",
-          "founder": {
-            "@id": "https://neuroartan.com/#founder"
-          },
-          "brand": "Neuroartan",
-          "email": "davoodi@neuroartan.com",
-          "url": "https://neuroartan.com/",
-          "logo": "https://neuroartan.com/assets/images/brand/logo.svg",
-          "description": "Neuroartan builds cognitive systems for reflection, continuity, and human self-understanding.",
-          "sameAs": [
-            "https://x.com/artandavoodi"
-          ],
-          "contactPoint": [{
-            "@type": "ContactPoint",
-            "contactType": "founder",
-            "email": "davoodi@neuroartan.com",
-            "availableLanguage": ["en"]
-          }]
-        },
-        {
-          "@type": "Person",
-          "@id": "https://neuroartan.com/#founder",
-          "name": "Artan Davoodi",
-          "alternateName": "Artan",
-          "jobTitle": "Founder",
-          "email": "davoodi@neuroartan.com",
-          "worksFor": {
-            "@id": "https://neuroartan.com/#organization"
-          },
-          "sameAs": [
-            "https://x.com/artandavoodi"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://neuroartan.com/#website",
-          "url": "https://neuroartan.com/",
-          "name": "Neuroartan",
-          "inLanguage": "en",
-          "publisher": {
-            "@id": "https://neuroartan.com/#organization"
-          },
-          "description": "Neuroartan builds cognitive systems for reflection, continuity, and human self-understanding.",
-          "about": {
-            "@id": "https://neuroartan.com/#organization"
-          }
-        },
-        {
-          "@type": "WebPage",
-          "@id": "https://neuroartan.com/pages/legal/#webpage",
-          "url": "https://neuroartan.com/pages/legal/",
-          "name": "Legal Page · Neuroartan",
-          "isPartOf": {
-            "@id": "https://neuroartan.com/#website"
-          },
-          "about": {
-            "@id": "https://neuroartan.com/#organization"
-          },
-          "primaryImageOfPage": {
-            "@id": "https://neuroartan.com/assets/images/brand/logo.svg"
-          },
-          "inLanguage": "en",
-          "description": "Legal page for Neuroartan."
-        }
-      ]
+  <!-- SECTION: SEO AND SOCIAL META -->
+  <meta name="description" content="Trust overview for Neuroartan governance surfaces, support pathways, and public institutional assurance interfaces.">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://neuroartan.com/pages/trust/index.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Trust • Neuroartan">
+  <meta property="og:description" content="Trust overview for Neuroartan governance surfaces, support pathways, and public institutional assurance interfaces.">
+  <meta property="og:url" content="https://neuroartan.com/pages/trust/index.html">
+  <meta property="og:site_name" content="Neuroartan">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Trust • Neuroartan">
+  <meta name="twitter:description" content="Trust overview for Neuroartan governance surfaces, support pathways, and public institutional assurance interfaces.">
+
+  <!-- SECTION: CORE SCRIPTS -->
+  <script src="/assets/js/system/ia.js" defer></script>
+  <script src="/assets/js/ui/darkmode.js" defer></script>
+  <script src="/assets/js/i18n/countries.js" defer></script>
+  <script src="/assets/js/i18n/translation.js" defer></script>
+  <script src="/assets/js/i18n/country-language.js" defer></script>
+  <script src="/assets/js/navigation/institutional-menu.js" defer></script>
+  <script src="/assets/js/navigation/menu.js" defer></script>
+  <script src="/assets/js/core/main.js" defer></script>
+
+  <!-- SECTION: FONTS AND STRUCTURED DATA -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Trust",
+    "url": "https://neuroartan.com/pages/trust/index.html",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Neuroartan",
+      "url": "https://neuroartan.com"
     }
-    </script>
-
-    <!-- =================== Fonts =================== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  }
+  </script>
+  <!-- END SECTION: HEAD -->
 </head>
-
 <body class="site-body">
-<div id="global-loading-overlay" class="loading-overlay" aria-hidden="true" aria-live="polite">
-  <div class="loading-overlay__backdrop"></div>
-  <div class="loading-overlay__surface" role="status" aria-label="Loading">
-    <div class="loading-overlay__spinner" aria-hidden="true"></div>
-    <p class="loading-overlay__label" data-i18n-key="loading.label">Loading</p>
-  </div>
-</div>
+  <!-- BLOCK: CUSTOM CURSOR -->
+  <div class="custom-cursor"></div>
 
-<!-- =================== Custom Cursor =================== -->
-<div class="custom-cursor"></div>
-
-<!-- =================== Hidden Page Name =================== -->
-<h1 style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">Legal Page · Neuroartan</h1>
-
-<!-- =================== Main Content =================== -->
-<main id="site-main">
-<!-- =================== Header Controls =================== -->
-<header id="header-controls" class="site-header">
+  <!-- BLOCK: HEADER CONTROLS -->
+  <header id="header-controls" class="site-header">
     <button id="menu-button" aria-label="Open secondary navigation">
-        <span class="line line-top"></span>
-        <span class="line line-bottom"></span>
+      <span class="line line-top"></span>
+      <span class="line line-bottom"></span>
     </button>
-</header>
-<!-- =================== Institutional Menu Mount =================== -->
-<div id="institutional-menu-mount" data-include="institutional-menu"></div>
-<!-- =================== Menu Mount =================== -->
-<div id="menu-mount"></div>
-
-<!-- =================== Legal Page Shell =================== -->
-<section class="legal-page-shell" data-legal-page="legal-page" data-legal-source="vault-sync" data-legal-document-id="LEGAL-DOCUMENT-ID" data-legal-sync-path="content/legal/legal-page.json">
-  <header class="legal-page-header">
-    <p class="legal-page-eyebrow" data-legal-eyebrow>Public Legal Page</p>
-    <h2 class="legal-page-title" data-legal-title>Legal Page</h2>
-    <p class="legal-page-intro" data-legal-intro></p>
-    <ul class="legal-page-meta" data-legal-meta></ul>
   </header>
 
-  <div class="legal-page-divider"></div>
+  <!-- BLOCK: INSTITUTIONAL MENU MOUNT -->
+  <div id="institutional-menu-mount" data-include="institutional-menu"></div>
 
-  <div class="legal-page-content" data-legal-content></div>
+  <!-- BLOCK: SECONDARY MENU MOUNT -->
+  <div id="menu-mount"></div>
 
-  <footer class="legal-page-footer" data-legal-footer></footer>
-</section>
+  <!-- SECTION: MAIN TRUST PAGE -->
+  <main class="publication-main" data-page="trust">
+    <!-- BLOCK: PAGE CONTAINER -->
+    <div class="publication-container home-inner home-rail">
+      <!-- BLOCK: PAGE HEADER -->
+      <header class="publication-header">
+        <p class="publication-kicker">Support</p>
+        <h1 class="publication-heading">Trust</h1>
+        <p class="publication-sub">Governance surfaces, assurance pathways, and public institutional trust interfaces across the Neuroartan website system.</p>
+      </header>
 
-<!-- =================== Institutional Links Mount =================== -->
-<div id="institutional-links-mount" data-include="institutional-links"></div>
-</main>
+      <!-- BLOCK: PAGE INDEX -->
+      <section class="publication-streams" aria-label="Trust index">
+        <ul class="publication-list">
+          <li class="publication-item">
+            <a class="publication-link" href="/pages/support/help-center/index.html">
+              <span class="publication-item-title">Help Center</span>
+            </a>
+          </li>
+          <li class="publication-item">
+            <a class="publication-link" href="/pages/security/index.html">
+              <span class="publication-item-title">Security</span>
+            </a>
+          </li>
+          <li class="publication-item">
+            <a class="publication-link" href="/pages/accessibility/index.html">
+              <span class="publication-item-title">Accessibility</span>
+            </a>
+          </li>
+          <li class="publication-item">
+            <a class="publication-link" href="/pages/legal/privacy/index.html">
+              <span class="publication-item-title">Privacy</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
 
-<!-- =================== Footer Mount =================== -->
-<div id="footer-mount"></div>
+  <!-- BLOCK: FOOTER MOUNT -->
+  <div id="footer-mount"></div>
 
-<!-- =================== Country Overlay Mount =================== -->
-<div id="country-overlay-mount"></div>
-
-<!-- =================== Scripts =================== -->
-<script src="assets/js/system/ia.js" defer></script>
-<script src="assets/js/ui/darkmode.js" defer></script>
-<script src="assets/js/i18n/countries.js" defer></script>
-<script src="assets/js/i18n/translation.js" defer></script>
-<script src="assets/js/i18n/country-language.js" defer></script>
-<script src="assets/js/system/loading-overlay.js" defer></script>
-<script src="assets/js/navigation/menu.js" defer></script>
-<script src="assets/js/navigation/footer.js" defer></script>
-<script src="assets/js/navigation/institutional-menu.js" defer></script>
-<script src="assets/js/ui/custom-cursor.js" defer></script>
-<script src="assets/js/sections/legal.js" defer></script>
-<script src="assets/js/core/main.js" defer></script>
-
+  <!-- BLOCK: COUNTRY OVERLAY MOUNT -->
+  <div id="country-overlay-mount"></div>
+  <!-- END SECTION: BODY -->
 </body>
 </html>

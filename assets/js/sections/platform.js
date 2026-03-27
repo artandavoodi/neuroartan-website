@@ -1,0 +1,98 @@
+// SECTION: PLATFORM PAGE CONTROLLER
+// PURPOSE: Provide the canonical runtime scaffold for the Platform page.
+// SCOPE: PTW-aligned page initialization, search-index awareness, and future section expansion.
+
+(() => {
+  'use strict';
+
+  // SECTION: CONSTANTS
+  const SECTION_ID = 'platform';
+  const SEARCH_ROUTE_INDEX_URL = '/assets/data/search/route-index.json';
+  const SEARCH_CONTENT_INDEX_URL = '/assets/data/search/content-index.json';
+  const SEARCH_ENTITY_INDEX_URL = '/assets/data/search/entity-index.json';
+  const SECTION_DATA_URL = '/assets/data/sections/platform.json';
+
+  // SECTION: STATE
+  const state = {
+    routeIndex: null,
+    contentIndex: null,
+    entityIndex: null,
+    sectionData: null,
+    isReady: false
+  };
+
+  // SECTION: HELPERS
+  function emit(name, detail = {}) {
+    window.dispatchEvent(new CustomEvent(name, { detail }));
+  }
+
+  function getSectionRoot() {
+    return document.querySelector('[data-page="platform"]');
+  }
+
+  async function fetchJson(url) {
+    const response = await fetch(url, { cache: 'no-cache' });
+    if (!response.ok) {
+      throw new Error(`Failed to load ${url} (${response.status})`);
+    }
+    return response.json();
+  }
+
+  // SECTION: INDEX LOADERS
+  async function loadPlatformResources() {
+    const [routeIndex, contentIndex, entityIndex, sectionData] = await Promise.all([
+      fetchJson(SEARCH_ROUTE_INDEX_URL),
+      fetchJson(SEARCH_CONTENT_INDEX_URL),
+      fetchJson(SEARCH_ENTITY_INDEX_URL),
+      fetchJson(SECTION_DATA_URL)
+    ]);
+
+    state.routeIndex = routeIndex;
+    state.contentIndex = contentIndex;
+    state.entityIndex = entityIndex;
+    state.sectionData = sectionData;
+  }
+
+  // SECTION: PAGE REGISTRATION
+  function registerPageState() {
+    const root = getSectionRoot();
+    if (!root) return;
+
+    root.setAttribute('data-section-ready', 'true');
+    root.setAttribute('data-section-id', SECTION_ID);
+    root.setAttribute('data-route-index-loaded', String(Boolean(state.routeIndex)));
+    root.setAttribute('data-content-index-loaded', String(Boolean(state.contentIndex)));
+    root.setAttribute('data-entity-index-loaded', String(Boolean(state.entityIndex)));
+    root.setAttribute('data-section-data-loaded', String(Boolean(state.sectionData)));
+  }
+
+  // SECTION: BOOTSTRAP
+  async function boot() {
+    try {
+      await loadPlatformResources();
+      registerPageState();
+      state.isReady = true;
+
+      emit('neuroartan:platform:ready', {
+        sectionId: SECTION_ID,
+        routeCount: Array.isArray(state.routeIndex?.routes) ? state.routeIndex.routes.length : 0,
+        contentCount: Array.isArray(state.contentIndex?.entries) ? state.contentIndex.entries.length : 0,
+        entityCount: Array.isArray(state.entityIndex?.entities) ? state.entityIndex.entities.length : 0,
+        hasSectionData: Boolean(state.sectionData)
+      });
+    } catch (error) {
+      console.error('[Platform] Initialization failed.', error);
+      emit('neuroartan:platform:error', {
+        sectionId: SECTION_ID,
+        message: error instanceof Error ? error.message : String(error)
+      });
+    }
+  }
+
+  // SECTION: INITIALIZATION
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+})();

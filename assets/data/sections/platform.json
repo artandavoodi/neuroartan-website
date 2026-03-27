@@ -1,0 +1,52 @@
+{
+  "section": {
+    "id": "platform",
+    "title": "Platform",
+    "scope": "product",
+    "status": "active",
+    "source": "PTW-aligned website section registry"
+  },
+  "hero": {
+    "kicker": "Platform",
+    "heading": "Platform",
+    "description": "Product direction, software systems, platform logic, and governed pathways across the Neuroartan public website."
+  },
+  "links": [
+    {
+      "id": "product_overview",
+      "title": "ICOS Overview",
+      "path": "/pages/products/overview/index.html",
+      "type": "page"
+    },
+    {
+      "id": "product_capabilities",
+      "title": "Capabilities",
+      "path": "/pages/products/capabilities/index.html",
+      "type": "page"
+    },
+    {
+      "id": "product_workflows",
+      "title": "Workflows",
+      "path": "/pages/products/workflows/index.html",
+      "type": "page"
+    },
+    {
+      "id": "software_docs",
+      "title": "Documentation",
+      "path": "/pages/software/docs/index.html",
+      "type": "page"
+    },
+    {
+      "id": "software_downloads",
+      "title": "Downloads",
+      "path": "/pages/software/downloads/index.html",
+      "type": "page"
+    },
+    {
+      "id": "architecture",
+      "title": "Architecture",
+      "path": "/pages/infrastructure/architecture/index.html",
+      "type": "page"
+    }
+  ]
+}

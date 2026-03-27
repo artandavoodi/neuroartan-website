@@ -1,0 +1,52 @@
+{
+  "section": {
+    "id": "infrastructure",
+    "title": "Infrastructure",
+    "scope": "infrastructure",
+    "status": "active",
+    "source": "PTW-aligned website section registry"
+  },
+  "hero": {
+    "kicker": "Infrastructure",
+    "heading": "Infrastructure",
+    "description": "System surfaces, architecture layers, governed pathways, and operational foundations across the Neuroartan public website."
+  },
+  "links": [
+    {
+      "id": "architecture",
+      "title": "Architecture",
+      "path": "/pages/infrastructure/architecture/index.html",
+      "type": "page"
+    },
+    {
+      "id": "platform",
+      "title": "Platform",
+      "path": "/pages/platform/index.html",
+      "type": "page"
+    },
+    {
+      "id": "software_docs",
+      "title": "Documentation",
+      "path": "/pages/software/docs/index.html",
+      "type": "page"
+    },
+    {
+      "id": "software_downloads",
+      "title": "Downloads",
+      "path": "/pages/software/downloads/index.html",
+      "type": "page"
+    },
+    {
+      "id": "knowledge_research",
+      "title": "Knowledge & Research",
+      "path": "/pages/knowledge-research/index.html",
+      "type": "page"
+    },
+    {
+      "id": "publications",
+      "title": "Publications",
+      "path": "/pages/research/publications/index.html",
+      "type": "page"
+    }
+  ]
+}

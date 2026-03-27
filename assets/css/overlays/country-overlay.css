@@ -5,6 +5,7 @@
    03) OVERLAY SURFACE TOKENS
    04) BASE SHELL
    05) OPEN / CLOSE MOTION
+   05A) PAGE SCROLL LOCK
    06) INNER LAYOUT
    07) HEADINGS + SEPARATORS
    08) COUNTRY LIST + ITEMS
@@ -100,6 +101,17 @@
   opacity: 1;
   visibility: visible;
   pointer-events: all;
+}
+
+/* =============================================================================
+   05A) PAGE SCROLL LOCK
+============================================================================= */
+body.country-open,
+body.country-active,
+body.country-overlay-open,
+body.country-selector-open{
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* While country overlay is open, soften/hide stage circle behind it */

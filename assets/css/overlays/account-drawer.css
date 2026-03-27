@@ -4,6 +4,7 @@
    02) ROOT TOKENS
    03) BASE DRAWER SHELL
    04) OPEN / CLOSE STATES
+   04A) PAGE SCROLL LOCK
    05) BACKDROP
    06) DRAWER PANEL
    07) HEADER
@@ -26,10 +27,18 @@
 ============================================================================= */
 :root{
   --account-drawer-panel-width: min(34rem, calc(100vw - (2 * var(--site-gutter, 24px))));
-  --account-drawer-surface: color-mix(in srgb, var(--bg-primary-color) 94%, transparent);
-  --account-drawer-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 74%, transparent);
+  --account-drawer-surface: #ffffff;
+  --account-drawer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-drawer-backdrop: rgba(0, 0, 0, 0.14);
+}
+
+body.light-mode{
+  --account-drawer-surface: rgba(255, 255, 255, 0.82);
+}
+
+body.dark-mode{
+  --account-drawer-surface: rgba(0, 0, 0, 0.82);
 }
 
 /* =============================================================================
@@ -48,10 +57,20 @@
 /* =============================================================================
    04) OPEN / CLOSE STATES
 ============================================================================= */
-body.account-drawer-open .account-drawer{
+body.account-drawer-open .account-drawer,
+body.account-drawer-closing .account-drawer{
   pointer-events: auto;
   opacity: 1;
   visibility: visible;
+}
+
+/* =============================================================================
+   04A) PAGE SCROLL LOCK
+============================================================================= */
+body.account-drawer-open,
+body.account-drawer-closing{
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* =============================================================================
@@ -71,6 +90,10 @@ body.account-drawer-open .account-drawer-backdrop{
   opacity: 1;
 }
 
+body.account-drawer-closing .account-drawer-backdrop{
+  opacity: 0;
+}
+
 /* =============================================================================
    06) DRAWER PANEL
 ============================================================================= */
@@ -80,10 +103,11 @@ body.account-drawer-open .account-drawer-backdrop{
   width: var(--account-drawer-panel-width);
   max-width: 100%;
   height: 100%;
-  padding: 1.2rem 1.2rem 1.22rem;
-  background: var(--account-drawer-surface);
+  padding: 1.52rem 1.52rem 1.42rem;
+  background-color: var(--account-drawer-surface);
+  background-image: none;
   border-right: 1px solid var(--account-drawer-border);
-  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.08);
   transform: translateX(-100%);
   transition:
     transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -93,11 +117,15 @@ body.account-drawer-open .account-drawer-backdrop{
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  overflow: hidden;
+  overflow: visible;
 }
 
 body.account-drawer-open .account-drawer-shell{
   transform: translateX(0);
+}
+
+body.account-drawer-closing .account-drawer-shell{
+  transform: translateX(-100%);
 }
 
 /* =============================================================================
@@ -109,9 +137,9 @@ body.account-drawer-open .account-drawer-shell{
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0.3rem;
-  padding: 0 3rem 1rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  gap: 0.42rem;
+  padding: 0 0 1.22rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-primary-color) 6%, transparent);
 }
 
 /* =============================================================================
@@ -119,8 +147,8 @@ body.account-drawer-open .account-drawer-shell{
 ============================================================================= */
 .account-drawer-close{
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 1.52rem;
+  left: calc(100% + 2.14rem);
   width: 1rem;
   min-width: 1rem;
   height: 1rem;
@@ -130,6 +158,11 @@ body.account-drawer-open .account-drawer-shell{
   background: transparent;
   color: var(--text-primary-color);
   cursor: pointer;
+  z-index: 2;
+  opacity: 1;
+  transition:
+    opacity 150ms ease,
+    color 220ms ease;
 }
 
 .account-drawer-close-line{
@@ -140,7 +173,11 @@ body.account-drawer-open .account-drawer-shell{
   height: 1px;
   background: currentColor;
   transform-origin: center;
-  opacity: 0.84;
+  opacity: 1;
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    opacity 220ms ease;
 }
 
 .account-drawer-close-line--first{
@@ -151,10 +188,34 @@ body.account-drawer-open .account-drawer-shell{
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
+.account-drawer-close:hover,
+.account-drawer-close:focus-visible,
+.account-drawer-close:active{
+  color: var(--color-primary7);
+  outline: none;
+}
+
+body.account-drawer-closing .account-drawer-close{
+  opacity: 0;
+  pointer-events: none;
+}
+
 .account-drawer-close:hover .account-drawer-close-line,
 .account-drawer-close:focus-visible .account-drawer-close-line,
 .account-drawer-close:active .account-drawer-close-line{
   opacity: 1;
+}
+
+.account-drawer-close:hover .account-drawer-close-line--first,
+.account-drawer-close:focus-visible .account-drawer-close-line--first,
+.account-drawer-close:active .account-drawer-close-line--first{
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.account-drawer-close:hover .account-drawer-close-line--second,
+.account-drawer-close:focus-visible .account-drawer-close-line--second,
+.account-drawer-close:active .account-drawer-close-line--second{
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 /* =============================================================================
@@ -165,8 +226,8 @@ body.account-drawer-open .account-drawer-shell{
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 1rem;
-  padding-top: 1rem;
+  gap: 1.34rem;
+  padding-top: 1.28rem;
 }
 
 /* =============================================================================
@@ -174,10 +235,10 @@ body.account-drawer-open .account-drawer-shell{
 ============================================================================= */
 .account-drawer-eyebrow{
   margin: 0;
-  color: color-mix(in srgb, var(--text-primary-color) 16%, transparent);
-  font-size: 0.7rem;
+  color: color-mix(in srgb, var(--text-primary-color) 14%, transparent);
+  font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   line-height: 1.2;
   text-transform: uppercase;
 }
@@ -185,20 +246,20 @@ body.account-drawer-open .account-drawer-shell{
 .account-drawer-title{
   margin: 0;
   color: var(--text-primary-color);
-  font-size: 1.42rem;
+  font-size: 1.68rem;
   font-weight: 300;
-  letter-spacing: -0.032em;
-  line-height: 1.02;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 .account-drawer-copy,
 .account-drawer-note{
   margin: 0;
   color: var(--account-drawer-muted);
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-weight: 300;
-  letter-spacing: -0.012em;
-  line-height: 1.5;
+  letter-spacing: -0.015em;
+  line-height: 1.62;
 }
 
 /* =============================================================================
@@ -208,22 +269,22 @@ body.account-drawer-open .account-drawer-shell{
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.42rem;
+  gap: 0.58rem;
 }
 
 .account-drawer-action{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.7rem;
-  padding: 0.72rem 0.96rem;
-  border: 1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  min-height: 3rem;
+  padding: 0.82rem 1.02rem;
+  border: 1px solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   color: var(--text-primary-color);
   background: transparent;
   text-decoration: none;
-  font-size: 0.94rem;
+  font-size: 0.96rem;
   font-weight: 300;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.015em;
   line-height: 1.2;
   transition:
     background-color 220ms ease,
@@ -253,7 +314,7 @@ body.account-drawer-open .account-drawer-shell{
    12) NOTES
 ============================================================================= */
 .account-drawer-notes{
-  padding-top: 0.1rem;
+  padding-top: 0.26rem;
 }
 
 /* =============================================================================
@@ -274,7 +335,11 @@ body.account-drawer-open .account-drawer-shell{
 ============================================================================= */
 @media (max-width:1024px){
   .account-drawer-shell{
-    padding: 1rem 1rem 1rem;
+    padding: 1.24rem 1.24rem 1.14rem;
+  }
+  .account-drawer-close{
+    top: 1.24rem;
+    left: calc(100% + 1.72rem);
   }
 }
 
@@ -287,19 +352,23 @@ body.account-drawer-open .account-drawer-shell{
   }
 
   .account-drawer-shell{
-    padding: 0.9rem 0.9rem 0.92rem;
+    padding: 1.08rem 1.08rem 1rem;
+  }
+  .account-drawer-close{
+    top: 1.08rem;
+    left: calc(100% + 1.24rem);
   }
 
   .account-drawer-header{
-    padding: 0 2.2rem 0.9rem 0;
+    padding: 0 0 1.04rem 0;
   }
 
   .account-drawer-body{
-    gap: 0.9rem;
-    padding-top: 0.9rem;
+    gap: 1.04rem;
+    padding-top: 1.02rem;
   }
 
   .account-drawer-title{
-    font-size: 1.26rem;
+    font-size: 1.42rem;
   }
 }

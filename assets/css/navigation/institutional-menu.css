@@ -13,6 +13,7 @@
    07A) ACCOUNT TRIGGER
    08) SECONDARY TOGGLE
    09) MENU PANELS
+   09A) PAGE SCROLL LOCK
    10) PANEL SHELL
    11) PANEL TYPOGRAPHY AND LINKS
    12) SEARCH FIELD
@@ -484,6 +485,14 @@ body.institutional-menu-panel-open .institutional-menu-panel-shell{
 body:not(.institutional-menu-panel-open) .institutional-menu-panel-shell{
   transform: translateY(-0.95rem) scale(0.988);
   opacity: 0.001;
+}
+
+/* =============================================================================
+   09A) PAGE SCROLL LOCK
+============================================================================= */
+body.institutional-menu-panel-open{
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* =============================================================================

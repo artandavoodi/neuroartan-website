@@ -4,6 +4,7 @@
    02) DOM HELPERS
    03) DRAWER QUERIES
    04) STATE FLAGS
+   04A) TIMING CONSTANTS
    05) CLOSE CONTROL QUERIES
    06) OPEN STATE APPLICATION
    07) CLOSE STATE APPLICATION
@@ -42,11 +43,23 @@
     return drawer ? q('.account-drawer-shell', drawer) : null;
   }
 
+  function clearCloseTimer() {
+    if (!closeTimer) return;
+    window.clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+
   /* =============================================================================
      04) STATE FLAGS
   ============================================================================= */
   let isOpen = false;
   let isBound = false;
+
+  /* =============================================================================
+     04A) TIMING CONSTANTS
+  ============================================================================= */
+  const CLOSE_DURATION_MS = 460;
+  let closeTimer = null;
 
   /* =============================================================================
      05) CLOSE CONTROL QUERIES
@@ -63,8 +76,12 @@
     const drawer = getDrawer();
     if (!drawer) return;
 
-    document.body.classList.add('account-drawer-open');
+    clearCloseTimer();
+    drawer.removeAttribute('hidden');
     drawer.setAttribute('aria-hidden', 'false');
+    drawer.dataset.accountDrawerState = 'open';
+    document.body.classList.remove('account-drawer-closing');
+    document.body.classList.add('account-drawer-open');
     isOpen = true;
 
     document.dispatchEvent(new CustomEvent('account-drawer:opened', {
@@ -81,15 +98,25 @@
     const drawer = getDrawer();
     if (!drawer) return;
 
+    clearCloseTimer();
+    drawer.dataset.accountDrawerState = 'closing';
     document.body.classList.remove('account-drawer-open');
+    document.body.classList.add('account-drawer-closing');
     drawer.setAttribute('aria-hidden', 'true');
     isOpen = false;
 
-    document.dispatchEvent(new CustomEvent('account-drawer:closed', {
-      detail: {
-        source: 'account-drawer'
-      }
-    }));
+    closeTimer = window.setTimeout(() => {
+      drawer.dataset.accountDrawerState = 'closed';
+      drawer.setAttribute('hidden', 'hidden');
+      document.body.classList.remove('account-drawer-closing');
+      closeTimer = null;
+
+      document.dispatchEvent(new CustomEvent('account-drawer:closed', {
+        detail: {
+          source: 'account-drawer'
+        }
+      }));
+    }, CLOSE_DURATION_MS);
   }
 
   /* =============================================================================
@@ -143,6 +170,8 @@
     if (isBound) return;
 
     drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('hidden', 'hidden');
+    drawer.dataset.accountDrawerState = 'closed';
     isBound = true;
 
     bindEscapeKey();

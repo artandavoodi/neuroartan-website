@@ -8,6 +8,10 @@
     return root.querySelector(selector);
   }
 
+  function qa(selector, root = document) {
+    return Array.from(root.querySelectorAll(selector));
+  }
+
   function setText(selector, value, root = document) {
     const element = q(selector, root);
     if (!element) return;
@@ -18,6 +22,29 @@
     const element = q(selector, root);
     if (!element) return;
     element.innerHTML = value;
+  }
+
+  function setAttr(selector, attribute, value, root = document) {
+    const element = q(selector, root);
+    if (!element) return;
+    element.setAttribute(attribute, value);
+  }
+
+  function upsertMeta(selector, attribute, value) {
+    if (!value) return;
+    const element = q(selector);
+    if (!element) return;
+    element.setAttribute(attribute, value);
+  }
+
+  function requireDocumentId(data) {
+    const documentId = String(data?.document_id || data?.source_document_id || '').trim();
+
+    if (!documentId) {
+      throw new Error('Legal sync source is missing required document_id.');
+    }
+
+    return documentId;
   }
 
   function createMetaItem(text) {
@@ -140,20 +167,95 @@
     }
   }
 
-  /* =================== Render =================== */
-  function renderLegalPage(data) {
+  /* =================== Metadata Sync =================== */
+  function applyDocumentMetadata(data) {
     if (!data) return;
-
-    document.documentElement.classList.add('legal-page');
-    document.body.classList.add('legal-page');
+    const documentId = requireDocumentId(data);
 
     if (data.pageTitle) {
       document.title = data.pageTitle;
+      setText('h1[style*="position:absolute"]', data.pageTitle);
     }
+
+    if (data.description) {
+      upsertMeta('meta[name="description"]', 'content', data.description);
+      upsertMeta('meta[property="og:description"]', 'content', data.description);
+      upsertMeta('meta[name="twitter:description"]', 'content', data.description);
+    }
+
+    if (data.pageTitle) {
+      upsertMeta('meta[property="og:title"]', 'content', data.pageTitle);
+      upsertMeta('meta[name="twitter:title"]', 'content', data.pageTitle);
+    }
+
+    if (data.canonicalUrl) {
+      setAttr('link[rel="canonical"]', 'href', data.canonicalUrl);
+      upsertMeta('meta[property="og:url"]', 'content', data.canonicalUrl);
+    }
+
+    if (data.robots) {
+      upsertMeta('meta[name="robots"]', 'content', data.robots);
+    }
+    upsertMeta('meta[name="document-id"]', 'content', documentId);
+
+    if (data.lang) {
+      document.documentElement.lang = data.lang;
+    }
+
+    if (data.structuredData) {
+      const script = q('script[type="application/ld+json"]');
+      if (script) {
+        const structuredData = {
+          ...data.structuredData,
+          identifier: data.structuredData.identifier || documentId
+        };
+
+        if (data.lastUpdated && !structuredData.dateModified) {
+          structuredData.dateModified = data.lastUpdated;
+        }
+
+        script.textContent = JSON.stringify(structuredData, null, 2);
+      }
+    }
+  }
+
+  /* =================== Render =================== */
+  function renderLegalPage(data) {
+    if (!data) return;
+    const documentId = requireDocumentId(data);
+
+    const shell = getLegalShell();
+    if (shell) {
+      shell.setAttribute('data-legal-render-state', 'ready');
+      shell.setAttribute('data-legal-document-id', documentId);
+
+      if (data.effectiveDate) {
+        shell.setAttribute('data-effective-date', data.effectiveDate);
+      }
+
+      if (data.lastUpdated) {
+        shell.setAttribute('data-last-updated', data.lastUpdated);
+      }
+    }
+
+    applyDocumentMetadata(data);
 
     setText('[data-legal-eyebrow]', data.eyebrow || 'Public Legal Page');
     setText('[data-legal-title]', data.title || 'Legal Page');
     setText('[data-legal-intro]', data.intro || '');
+
+    const siteMain = q('#site-main');
+    if (siteMain) {
+      siteMain.setAttribute('data-document-id', documentId);
+
+      if (data.effectiveDate) {
+        siteMain.setAttribute('data-effective-date', data.effectiveDate);
+      }
+
+      if (data.lastUpdated) {
+        siteMain.setAttribute('data-last-updated', data.lastUpdated);
+      }
+    }
 
     const metaList = q('[data-legal-meta]');
     if (metaList) {
@@ -174,6 +276,19 @@
     if (data.footerHtml) {
       setHTML('[data-legal-footer]', data.footerHtml);
     }
+
+    if (shell) {
+      shell.dispatchEvent(new CustomEvent('legal:rendered', {
+        bubbles: true,
+        detail: {
+          page: shell.dataset.legalPage || '',
+          syncPath: shell.dataset.legalSyncPath || '',
+          documentId,
+          effectiveDate: data.effectiveDate || '',
+          lastUpdated: data.lastUpdated || ''
+        }
+      }));
+    }
   }
 
   /* =================== Init =================== */
@@ -181,9 +296,19 @@
     const shell = getLegalShell();
     if (!shell) return;
 
-    const data = await loadLegalData(shell);
-    if (!data) return;
+    shell.setAttribute('data-legal-render-state', 'loading');
 
-    renderLegalPage(data);
+    try {
+      const data = await loadLegalData(shell);
+      if (!data) {
+        shell.setAttribute('data-legal-render-state', 'failed');
+        return;
+      }
+
+      renderLegalPage(data);
+    } catch (error) {
+      console.error('Failed to render legal page:', error);
+      shell.setAttribute('data-legal-render-state', 'failed');
+    }
   });
 })();

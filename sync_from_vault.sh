@@ -102,6 +102,20 @@ normalize_bool() {
   printf '%s' "$value"
 }
 
+require_document_id() {
+  local rel="$1"
+  local document_id_val
+
+  document_id_val="$(extract_yaml_field "$rel" "document_id" | xargs)"
+
+  if [[ -z "$document_id_val" ]]; then
+    echo "[ERROR] Missing required document_id in publishable source: $DEST_CANON/$rel" >&2
+    exit 1
+  fi
+
+  printf '%s' "$document_id_val"
+}
+
 is_publishable_publication() {
   local rel="$1"
   local type_val published_val visibility_val approval_val status_val
@@ -172,6 +186,7 @@ for rel in "${MD_FILES[@]}"; do
   if [[ -z "$title_val" ]]; then
     continue
   fi
+  document_id_val="$(require_document_id "$rel")"
 
   slug_val="$(extract_yaml_field "$rel" "slug")"
   if [[ -z "$slug_val" ]]; then
@@ -390,6 +405,9 @@ for rel in "${MD_FILES[@]}"; do
   title_val="$(extract_yaml_field "$rel" "title")"
   subtitle_val="$(extract_yaml_field "$rel" "subtitle")"
   slug_val="$(extract_yaml_field "$rel" "slug")"
+  document_id_val="$(require_document_id "$rel")"
+  effective_date_val="$(extract_yaml_field "$rel" "effective_date")"
+  last_updated_val="$(extract_yaml_field "$rel" "last_updated")"
 
   title_html="$(escape_html "$title_val")"
   subtitle_html="$(escape_html "$subtitle_val")"
@@ -397,6 +415,10 @@ for rel in "${MD_FILES[@]}"; do
   subtitle_attr="$(escape_attr "$subtitle_val")"
   title_json="$(escape_json_string "$title_val")"
   subtitle_json="$(escape_json_string "$subtitle_val")"
+  document_id_attr="$(escape_attr "$document_id_val")"
+  document_id_html="$(escape_html "$document_id_val")"
+  effective_date_attr="$(escape_attr "$effective_date_val")"
+  last_updated_attr="$(escape_attr "$last_updated_val")"
 
   # Required fields
   [[ -n "$title_val" ]] || continue
@@ -466,6 +488,8 @@ for rel in "${MD_FILES[@]}"; do
     "headline": "${title_json}",
     "description": "${subtitle_json:-Publication from Neuroartan institutional writing, research, and publications.}",
     "mainEntityOfPage": "${SITE_BASE}/publications/${slug_val}/",
+    "identifier": "${document_id_attr}",
+    "dateModified": "${last_updated_attr}",
     "publisher": {
       "@type": "Organization",
       "name": "Neuroartan",
@@ -476,6 +500,8 @@ for rel in "${MD_FILES[@]}"; do
 </head>
 
 <body class="site-body">
+
+  <!-- source_document_id: ${document_id_html} -->
 
   <div class="custom-cursor"></div>
 
@@ -489,7 +515,7 @@ for rel in "${MD_FILES[@]}"; do
   <!-- =================== Menu Mount =================== -->
   <div id="menu-mount"></div>
 
-  <main class="publication-main home-inner home-rail" id="publication">
+  <main class="publication-main home-inner home-rail" id="publication" data-document-id="${document_id_attr}" data-effective-date="${effective_date_attr}" data-last-updated="${last_updated_attr}">
     <h1 class="publication-heading">${title_html}</h1>
 EOF
 
@@ -554,6 +580,13 @@ if [[ -f "$SITEMAP_FILE" ]]; then
   ' "$SITEMAP_FILE" > "$tmp_sm"
   mv "$tmp_sm" "$SITEMAP_FILE"
 fi
+
+# 2c) Publication traceability rule
+# Every publishable source must preserve document_id into the final destination file.
+# Current implementation stamps hidden traceability into generated publication HTML via:
+# - HTML comment source_document_id
+# - data-document-id on the publication root
+# - JSON-LD identifier
 
 # 3) Commit and push (PUBLICATIONS ONLY — preserves shared runtime fragments and homepage/UI modules)
 cd "$SITE_ROOT"

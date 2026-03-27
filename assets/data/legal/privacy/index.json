@@ -1,0 +1,59 @@
+{
+  "document_id": "NA-LEGAL-WEB-PRIV-0001",
+  "source_document_id": "NA-LEGAL-WEB-PRIV-0001",
+  "page": "privacy",
+  "destination_class": "legal_page",
+  "lang": "en",
+  "pageTitle": "Privacy Policy | Neuroartan",
+  "title": "Privacy Policy",
+  "eyebrow": "Public Legal Page",
+  "description": "Privacy Policy for Neuroartan website services, public surfaces, and related digital interactions.",
+  "canonicalUrl": "https://neuroartan.com/pages/legal/privacy/",
+  "robots": "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+  "effectiveDate": "2026-03-27",
+  "lastUpdated": "2026-03-27",
+  "intro": "This page is the public legal destination for Neuroartan’s privacy policy. It is now routed through the synced legal content layer so final public rendering can remain traceable, governed, and structurally consistent with the website baseline.",
+  "meta": [
+    "Document ID: NA-LEGAL-WEB-PRIV-0001",
+    "Effective date: 2026-03-27",
+    "Last updated: 2026-03-27",
+    "Language: English"
+  ],
+  "sections": [
+    {
+      "id": "privacy-scope",
+      "title": "Scope",
+      "paragraphs": [
+        "This synced file is the first legal publication object in the website-side legal data layer.",
+        "Its current role is to establish the canonical JSON structure for routed legal publication, metadata preservation, and future PTW execution."
+      ]
+    },
+    {
+      "id": "privacy-status",
+      "title": "Current Status",
+      "paragraphs": [
+        "This content object is an infrastructure-stage placeholder and not the final approved privacy policy text.",
+        "Final policy language must be synchronized from the governed Vault source only after review, publication-gate validation, and destination-specific public-language approval are complete."
+      ]
+    },
+    {
+      "id": "privacy-traceability",
+      "title": "Traceability",
+      "paragraphs": [
+        "Document traceability is preserved in this synced object through the source document identifier and publication metadata fields.",
+        "The final destination page must also preserve hidden machine-readable traceability so the public file remains linked to its institutional source record."
+      ]
+    }
+  ],
+  "footerHtml": "<p>This page is rendered from the website legal data layer and remains subject to governed source synchronization.</p>",
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Privacy Policy | Neuroartan",
+    "identifier": "NA-LEGAL-WEB-PRIV-0001",
+    "url": "https://neuroartan.com/pages/legal/privacy/",
+    "description": "Privacy Policy for Neuroartan website services, public surfaces, and related digital interactions.",
+    "dateModified": "2026-03-27",
+    "inLanguage": "en"
+  }
+}

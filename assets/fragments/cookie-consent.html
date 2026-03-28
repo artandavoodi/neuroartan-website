@@ -10,6 +10,9 @@
      01G) SETTINGS SURFACE
      01H) EDUCATION SURFACE
      01I) GRANULAR CONSENT ITEMS
+     01IA) ESSENTIAL ROW
+     01IB) ANALYTICS ROW
+     01IC) EXPERIENCE ROW
      01J) SETTINGS ACTIONS
 ============================================================================= -->
 
@@ -74,17 +77,25 @@
           <p class="cookie-consent-note">Review each category, expand rows to understand why it is used, and choose the level of consent you want to grant.</p>
         </div>
 
+        <!-- =============================================================================
+             01IA) ESSENTIAL ROW
+        ============================================================================= -->
         <section class="cookie-consent-row" data-cookie-consent-row="essential">
-          <button type="button" class="cookie-consent-row-summary" data-cookie-consent-expand="essential" aria-expanded="false" aria-controls="cookie-consent-detail-essential">
-            <span class="cookie-consent-row-icon" aria-hidden="true">
-              <img src="./assets/icons/system/Essential.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--essential">
-            </span>
-            <span class="cookie-consent-row-copy">
-              <strong>Essential</strong>
-              <span>Required for core website operation, security, and accessibility.</span>
-            </span>
-            <span class="cookie-consent-row-status">Always active</span>
-          </button>
+          <div class="cookie-consent-row-topline">
+            <div class="cookie-consent-row-summary" aria-hidden="true">
+              <span class="cookie-consent-row-icon" aria-hidden="true">
+                <img src="./assets/icons/system/Essential.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--essential">
+              </span>
+              <span class="cookie-consent-row-copy">
+                <strong>Essential</strong>
+                <span>Required for core website operation, security, and accessibility.</span>
+              </span>
+              <span class="cookie-consent-row-status">Always active</span>
+            </div>
+            <button type="button" class="cookie-consent-row-expand" data-cookie-consent-expand="essential" aria-expanded="false" aria-controls="cookie-consent-detail-essential" aria-label="Expand essential cookie details">
+              <img src="./assets/icons/system/drop-down.svg" alt="" class="cookie-consent-row-expand-icon">
+            </button>
+          </div>
           <div id="cookie-consent-detail-essential" class="cookie-consent-row-detail" hidden>
             <p class="cookie-consent-row-detail-copy">These cookies support core functionality such as page rendering, security, session continuity, and critical preference handling. They cannot be disabled because the website depends on them to operate correctly.</p>
             <div class="cookie-consent-subitems" data-cookie-consent-subitems="essential">
@@ -110,13 +121,15 @@
                 <span class="cookie-consent-subitem-state">Always active</span>
               </div>
             </div>
-            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-row-link">Learn more</a>
           </div>
         </section>
 
+        <!-- =============================================================================
+             01IB) ANALYTICS ROW
+        ============================================================================= -->
         <section class="cookie-consent-row" data-cookie-consent-row="analytics">
           <div class="cookie-consent-row-topline">
-            <button type="button" class="cookie-consent-row-summary" data-cookie-consent-expand="analytics" aria-expanded="false" aria-controls="cookie-consent-detail-analytics">
+            <div class="cookie-consent-row-summary" aria-hidden="true">
               <span class="cookie-consent-row-icon" aria-hidden="true">
                 <img src="./assets/icons/system/analytics.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--analytics">
               </span>
@@ -124,9 +137,12 @@
                 <strong>Analytics</strong>
                 <span>Helps us understand performance and usage patterns.</span>
               </span>
-            </button>
+            </div>
             <button type="button" class="cookie-consent-toggle" data-cookie-consent-toggle="analytics" data-cookie-consent-enabled="false" aria-pressed="false" aria-label="Toggle analytics cookies">
               <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
+            </button>
+            <button type="button" class="cookie-consent-row-expand" data-cookie-consent-expand="analytics" aria-expanded="false" aria-controls="cookie-consent-detail-analytics" aria-label="Expand analytics cookie details">
+              <img src="./assets/icons/system/drop-down.svg" alt="" class="cookie-consent-row-expand-icon">
             </button>
             <input type="checkbox" data-cookie-consent-category="analytics" hidden>
           </div>
@@ -154,13 +170,15 @@
                 <input type="checkbox" data-cookie-consent-subcategory="analytics-usage" data-cookie-consent-parent="analytics" checked hidden>
               </div>
             </div>
-            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-row-link">Learn more</a>
           </div>
         </section>
 
+        <!-- =============================================================================
+             01IC) EXPERIENCE ROW
+        ============================================================================= -->
         <section class="cookie-consent-row" data-cookie-consent-row="experience">
           <div class="cookie-consent-row-topline">
-            <button type="button" class="cookie-consent-row-summary" data-cookie-consent-expand="experience" aria-expanded="false" aria-controls="cookie-consent-detail-experience">
+            <div class="cookie-consent-row-summary" aria-hidden="true">
               <span class="cookie-consent-row-icon" aria-hidden="true">
                 <img src="./assets/icons/system/experience.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--experience">
               </span>
@@ -168,9 +186,12 @@
                 <strong>Experience</strong>
                 <span>Supports remembered preferences and refined interaction behavior.</span>
               </span>
-            </button>
+            </div>
             <button type="button" class="cookie-consent-toggle" data-cookie-consent-toggle="experience" data-cookie-consent-enabled="false" aria-pressed="false" aria-label="Toggle experience cookies">
               <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
+            </button>
+            <button type="button" class="cookie-consent-row-expand" data-cookie-consent-expand="experience" aria-expanded="false" aria-controls="cookie-consent-detail-experience" aria-label="Expand experience cookie details">
+              <img src="./assets/icons/system/drop-down.svg" alt="" class="cookie-consent-row-expand-icon">
             </button>
             <input type="checkbox" data-cookie-consent-category="experience" hidden>
           </div>
@@ -198,7 +219,6 @@
                 <input type="checkbox" data-cookie-consent-subcategory="experience-continuity" data-cookie-consent-parent="experience" checked hidden>
               </div>
             </div>
-            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-row-link">Learn more</a>
           </div>
         </section>
 
@@ -208,9 +228,6 @@
         <div class="cookie-consent-education">
           <p class="cookie-consent-note"><strong>What are cookies?</strong> Small data files stored on your device to support security, continuity, and selected website functions.</p>
           <p class="cookie-consent-note"><strong>Why we use them</strong> To keep Neuroartan secure, stable, and better informed about how the experience can improve.</p>
-        </div>
-        <div class="cookie-consent-actions cookie-consent-actions--inline-single">
-          <button type="button" class="cookie-consent-action cookie-consent-action--tertiary cookie-consent-action--inline" data-cookie-consent-settings="true">Customize choices</button>
         </div>
 
         <!-- =============================================================================

@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.63654473"
-     inkscape:cx="150.02873"
-     inkscape:cy="193.23073"
+     inkscape:zoom="0.27013981"
+     inkscape:cx="-512.69749"
+     inkscape:cy="-299.84474"
      inkscape:window-width="1472"
      inkscape:window-height="895"
      inkscape:window-x="0"
@@ -346,4 +346,31 @@
        d="m 140.39119,-9.2783721 v 0 c -0.37114,0.214232 -0.81169,0.271875 -1.22568,0.161079 l -4.5181,-1.2121999 c -0.86165,-0.23089 -1.37279,-1.116158 -1.14192,-1.977854 0.23184,-0.865224 1.1191,-1.372993 1.97844,-1.142263 l 2.95732,0.79384 2.05962,-7.686674 c 0.23091,-0.86166 1.11621,-1.372798 1.97845,-1.142255 0.86202,0.23153 1.37316,1.116763 1.14226,1.978431 l -2.47762,9.246586 c -0.11088,0.4138439 -0.3811,0.7667119 -0.75277,0.9813099"
        style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0235185;stroke-dasharray:none" />
   </g>
+  <path
+     id="path157"
+     d="m 47.460825,-43.731112 -0.181708,-0.178441 -22.365364,22.283248 c -0.177217,0.263783 -0.619401,0.263783 -0.885921,0 L 1.747484,-43.909553 1.570267,-43.731112 c -0.266642,0.266642 -0.266642,0.6252 0,0.88882 l 22.457525,22.543969 c 0.266641,0.266642 0.708744,0.266642 0.88592,0 L 47.46058,-42.842292 c 0.265008,-0.263784 0.265008,-0.6223 0,-0.88882 v 0"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.0352778" />
+  <rect
+     style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     id="rect7"
+     width="37"
+     height="37"
+     x="20.001286"
+     y="103.76862"
+     transform="rotate(-135)" />
+  <path
+     id="path7-2-9"
+     style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     d="m -89.901123,-262.68205 28.42857,21 m 28.57143,-21 -28.42858,21"
+     inkscape:label="Nav down"
+     inkscape:export-filename="drop-down.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96" />
+  <rect
+     style="fill:#000000;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     id="rect8"
+     width="40"
+     height="21.433962"
+     x="-37.085922"
+     y="-148.90639" />
 </svg>

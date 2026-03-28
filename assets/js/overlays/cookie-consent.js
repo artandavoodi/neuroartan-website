@@ -296,13 +296,20 @@
   }
 
   function setExpandedState(key, expanded) {
-    const trigger = getExpandByKey(key);
-    const detail = getDetailByKey(key);
-    if (!trigger || !detail) return;
+    const overlay = getOverlay();
+    if (!overlay || !key) return;
 
+    const triggers = qa(`[data-cookie-consent-expand="${key}"]`, overlay);
+    const detail = q(`#cookie-consent-detail-${key}`, overlay);
     const value = Boolean(expanded);
-    trigger.setAttribute('aria-expanded', value ? 'true' : 'false');
-    detail.hidden = !value;
+
+    triggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', value ? 'true' : 'false');
+    });
+
+    if (detail) {
+      detail.hidden = !value;
+    }
   }
 
   function collapseExpandedRows(exceptKey = '') {
@@ -314,7 +321,11 @@
   }
 
   function resetExpandedRows() {
-    collapseExpandedRows();
+    getExpandControls().forEach((control) => {
+      const key = control.dataset.cookieConsentExpand;
+      if (!key) return;
+      setExpandedState(key, false);
+    });
   }
 
   /* =============================================================================
@@ -426,12 +437,7 @@
 
     applyStoredConsentToInputs();
 
-    if (surface === 'settings') {
-      resetExpandedRows();
-      setExpandedState('essential', true);
-    } else {
-      resetExpandedRows();
-    }
+    resetExpandedRows();
 
     document.body.classList.remove(CLOSING_CLASS);
     document.body.classList.add(OPEN_CLASS);
@@ -567,13 +573,24 @@
       if (control.dataset.cookieConsentExpandBound === 'true') return;
       control.dataset.cookieConsentExpandBound = 'true';
 
-      control.addEventListener('click', () => {
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
         const key = control.dataset.cookieConsentExpand;
         if (!key) return;
 
         const isExpanded = control.getAttribute('aria-expanded') === 'true';
         collapseExpandedRows(key);
         setExpandedState(key, !isExpanded);
+      });
+
+      control.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        control.click();
       });
     });
   }

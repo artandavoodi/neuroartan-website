@@ -1,9 +1,27 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) GLOBAL COUNTRY / REGION OVERLAY
+     01A) OVERLAY INNER
+     01B) OVERLAY HEADER
+     01C) REGIONS MOUNT
+============================================================================= -->
 
-
-<!-- =================== Country/Region Overlay =================== -->
+<!-- =============================================================================
+     01) GLOBAL COUNTRY / REGION OVERLAY
+     Purpose: site-wide country/region selector for global website entry points such
+     as footer-level region access and other non-cookie global triggers.
+     Scope boundary: this fragment is not the dedicated cookie-settings language /
+     region selector layer. Cookie-settings language selection must use its own
+     sovereign overlay layer to avoid lifecycle conflict with cookie-consent state.
+============================================================================= -->
 <div id="country-overlay" class="country-overlay" aria-hidden="true">
+    <!-- =============================================================================
+         01A) OVERLAY INNER
+    ============================================================================= -->
     <div class="country-overlay-inner">
-        <!-- Overlay Header -->
+        <!-- =============================================================================
+             01B) OVERLAY HEADER
+        ============================================================================= -->
         <div class="overlay-header-container">
             <h2 class="country-overlay-title" data-i18n-key="overlay.chooseRegion">Choose your country or region</h2>
             <button id="country-overlay-close" class="global-close-button" aria-label="Close country selector">
@@ -13,7 +31,10 @@
         </div>
         <hr class="footer-separator">
 
-        <!-- Country Regions will be dynamically injected here by countries.js -->
+        <!-- =============================================================================
+             01C) REGIONS MOUNT
+             Country / region entries are dynamically injected here by countries.js.
+        ============================================================================= -->
         <div id="country-regions"></div>
     </div>
 </div>

@@ -29,6 +29,7 @@
      20) FOOTER MOUNT
      21) COUNTRY OVERLAY MOUNT
      21A) COOKIE CONSENT MOUNT
+     21B) COOKIE LANGUAGE OVERLAY MOUNT
      22) SCRIPTS
 ============================================================================= -->
 <!DOCTYPE html>
@@ -56,6 +57,7 @@
     <link rel="stylesheet" href="assets/css/overlays/country-overlay.css">
     <link rel="stylesheet" href="assets/css/overlays/account-drawer.css">
     <link rel="stylesheet" href="assets/css/overlays/cookie-consent.css">
+    <link rel="stylesheet" href="assets/css/overlays/cookie-language-overlay.css">
     <link rel="stylesheet" href="assets/css/navigation/footer.css">
     <link rel="stylesheet" href="assets/css/navigation/institutional-links.css">
     <link rel="stylesheet" href="assets/css/ui/custom-cursor.css">
@@ -455,6 +457,13 @@
      aria-hidden="true"></div>
 
 <!-- =============================================================================
+     21B) COOKIE LANGUAGE OVERLAY MOUNT
+============================================================================= -->
+<div id="cookie-language-overlay-mount"
+     data-include="cookie-language-overlay"
+     aria-hidden="true"></div>
+
+<!-- =============================================================================
      22) SCRIPTS
 ============================================================================= -->
 <script src="assets/js/system/ia.js" defer></script>
@@ -473,6 +482,7 @@
 <script src="assets/js/navigation/institutional-menu.js" defer></script>
 <script src="assets/js/overlays/account-drawer.js" defer></script>
 <script src="assets/js/overlays/cookie-consent.js" defer></script>
+<script src="assets/js/overlays/cookie-language-overlay.js" defer></script>
 <!-- Future auth/profile mount orchestration attaches here. -->
 <!-- Future cookie consent / settings orchestration attaches here. -->
 <script src="assets/js/ui/custom-cursor.js" defer></script>

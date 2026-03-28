@@ -22,6 +22,7 @@
    12CA) GRANULAR SUBITEMS
    12CB) SUBITEM TOGGLE ALIGNMENT
    12D) STICKY ACTION BAR
+   12E) LEGAL / LANGUAGE FOOTER BAR
    13) REDUCED MOTION
    14) RESPONSIVE — 1024PX
    15) RESPONSIVE — 768PX
@@ -91,6 +92,13 @@
   --cookie-consent-subitem-title-color: var(--text-primary-color);
   --cookie-consent-subitem-copy-color-strong: color-mix(in srgb, var(--text-primary-color) 66%, transparent);
   --cookie-consent-subitem-status-color-strong: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --cookie-consent-footer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-consent-footer-link-color: color-mix(in srgb, var(--text-primary-color) 74%, transparent);
+  --cookie-consent-footer-link-hover: var(--text-primary-color);
+  --cookie-consent-footer-language-surface: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-consent-footer-language-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-footer-language-label: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-footer-language-value: var(--text-primary-color);
 }
 
 body.light-mode{
@@ -138,6 +146,13 @@ body.dark-mode{
   --cookie-consent-subitem-title-color: rgba(255, 255, 255, 0.96);
   --cookie-consent-subitem-copy-color-strong: rgba(255, 255, 255, 0.72);
   --cookie-consent-subitem-status-color-strong: rgba(255, 255, 255, 0.66);
+  --cookie-consent-footer-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-footer-link-color: rgba(255, 255, 255, 0.74);
+  --cookie-consent-footer-link-hover: rgba(255, 255, 255, 0.96);
+  --cookie-consent-footer-language-surface: rgba(255, 255, 255, 0.03);
+  --cookie-consent-footer-language-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-consent-footer-language-label: rgba(255, 255, 255, 0.58);
+  --cookie-consent-footer-language-value: rgba(255, 255, 255, 0.96);
 }
 
 /* =============================================================================
@@ -883,6 +898,76 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
+   12E) LEGAL / LANGUAGE FOOTER BAR
+============================================================================= */
+.cookie-consent-footer-bar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.94rem;
+  border-top: 1px solid var(--cookie-consent-footer-border);
+}
+
+.cookie-consent-footer-links{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.82rem 1rem;
+}
+
+.cookie-consent-footer-link{
+  color: var(--cookie-consent-footer-link-color);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.cookie-consent-footer-link:hover,
+.cookie-consent-footer-link:focus-visible,
+.cookie-consent-footer-link:active{
+  color: var(--cookie-consent-footer-link-hover);
+  outline: none;
+}
+
+.cookie-consent-footer-language{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  min-height: 2.2rem;
+  padding: 0.56rem 0.82rem;
+  border: 1px solid var(--cookie-consent-footer-language-border);
+  border-radius: 999px;
+  background: var(--cookie-consent-footer-language-surface);
+  cursor: pointer;
+}
+
+.cookie-consent-footer-language-label{
+  color: var(--cookie-consent-footer-language-label);
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.cookie-consent-footer-language-value{
+  color: var(--cookie-consent-footer-language-value);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.cookie-consent-footer-language:hover,
+.cookie-consent-footer-language:focus-visible,
+.cookie-consent-footer-language:active{
+  outline: none;
+}
+
+/* =============================================================================
    13) REDUCED MOTION
 ============================================================================= */
 @media (prefers-reduced-motion: reduce){
@@ -954,6 +1039,16 @@ body.cookie-consent-closing .cookie-consent-close{
 
   .cookie-consent-actions{
     flex-direction: column;
+  }
+
+  .cookie-consent-footer-bar{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cookie-consent-footer-language{
+    width: 100%;
+    justify-content: space-between;
   }
 
   .cookie-consent-row-summary{

@@ -9,6 +9,8 @@
    06) SURFACE HELPERS
    07) ROW / TOGGLE HELPERS
    07A) GRANULAR SUBTOGGLE HELPERS
+   07B) LANGUAGE / REGION HELPERS
+   07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
    08) STORAGE HELPERS
    08A) DISPLAY DECISION HELPERS
    09) OPEN / CLOSE STATE
@@ -126,6 +128,16 @@
   function getSubcheckboxes() {
     const overlay = getOverlay();
     return overlay ? qa('[data-cookie-consent-subcategory]', overlay) : [];
+  }
+
+  function getLanguageControls() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-language="true"]', overlay) : [];
+  }
+
+  function getLanguageValueNode() {
+    const overlay = getOverlay();
+    return overlay ? q('[data-cookie-consent-language-value="true"]', overlay) : null;
   }
 
   function getCheckboxByKey(key) {
@@ -293,6 +305,49 @@
       const subkey = checkbox.dataset.cookieConsentSubcategory;
       if (subkey) setSubtoggleVisualState(subkey, checkbox.checked);
     });
+  }
+
+  /* =============================================================================
+     07B) LANGUAGE / REGION HELPERS
+  ============================================================================= */
+  function getPreferredLanguageLabel() {
+    const docLang = (document.documentElement.getAttribute('lang') || '').trim();
+    const navLang = (navigator.language || '').trim();
+    const raw = docLang || navLang;
+    if (!raw) return 'Auto';
+
+    const normalized = raw.replace('_', '-');
+
+    try {
+      const [label] = new Intl.DisplayNames([normalized], { type: 'language' }).of(normalized.split('-')[0])
+        ? [new Intl.DisplayNames([normalized], { type: 'language' }).of(normalized.split('-')[0])]
+        : ['Auto'];
+
+      return label || normalized.toUpperCase();
+    } catch {
+      return normalized.toUpperCase();
+    }
+  }
+
+  function syncLanguageValue() {
+    const valueNode = getLanguageValueNode();
+    if (!valueNode) return;
+    valueNode.textContent = getPreferredLanguageLabel();
+  }
+
+  /* =============================================================================
+     07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
+     Dedicated cookie-settings trigger only. This must not open the global footer
+     country overlay. It must dispatch its own sovereign event for the future
+     cookie language / region layer.
+  ============================================================================= */
+  function requestCookieLanguageOverlay() {
+    document.dispatchEvent(new CustomEvent('cookie-language-overlay:open-request', {
+      detail: {
+        source: MODULE_ID,
+        reason: 'cookie-consent-language'
+      }
+    }));
   }
 
   function setExpandedState(key, expanded) {
@@ -568,6 +623,30 @@
     });
   }
 
+  function bindLanguageControls() {
+    getLanguageControls().forEach((control) => {
+      if (control.dataset.cookieConsentLanguageBound === 'true') return;
+      control.dataset.cookieConsentLanguageBound = 'true';
+
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        control.setAttribute('aria-expanded', 'true');
+        closeConsent();
+        requestCookieLanguageOverlay();
+      });
+
+      control.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        control.click();
+      });
+    });
+  }
+
   function bindExpandControls() {
     getExpandControls().forEach((control) => {
       if (control.dataset.cookieConsentExpandBound === 'true') return;
@@ -695,6 +774,7 @@
     bindRejectControls();
     bindSettingsControls();
     bindSaveControls();
+    bindLanguageControls();
     bindExpandControls();
     bindToggleControls();
     bindSubtoggleControls();
@@ -765,6 +845,7 @@
     }
 
     applyStoredConsentToInputs();
+    syncLanguageValue();
     syncToggleStates();
     bindControls();
     bindOpenRequests();

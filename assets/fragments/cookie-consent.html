@@ -14,6 +14,9 @@
      01IB) ANALYTICS ROW
      01IC) EXPERIENCE ROW
      01J) SETTINGS ACTIONS
+     01K) LEGAL / LANGUAGE FOOTER BAR
+     01KA) LEGAL LINKS
+     01KB) COOKIE LANGUAGE / REGION TRIGGER
 ============================================================================= -->
 
 <!-- =============================================================================
@@ -237,6 +240,31 @@
           <button type="button" class="cookie-consent-action cookie-consent-action--primary" data-cookie-consent-save="true">Save choices</button>
           <button type="button" class="cookie-consent-action cookie-consent-action--secondary" data-cookie-consent-accept="true">Allow all cookies</button>
           <button type="button" class="cookie-consent-action cookie-consent-action--tertiary" data-cookie-consent-reject="true">Decline all cookies</button>
+        </div>
+
+        <!-- =============================================================================
+             01K) LEGAL / LANGUAGE FOOTER BAR
+        ============================================================================= -->
+        <div class="cookie-consent-footer-bar">
+
+          <!-- =============================================================================
+               01KA) LEGAL LINKS
+          ============================================================================= -->
+          <div class="cookie-consent-footer-links" aria-label="Cookie consent legal links">
+            <a href="/pages/legal/terms-of-use/index.html" class="cookie-consent-footer-link">Terms of Use</a>
+            <a href="/pages/legal/privacy-policy/index.html" class="cookie-consent-footer-link">Privacy Policy</a>
+            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-footer-link">Cookie Policy</a>
+          </div>
+
+          <!-- =============================================================================
+               01KB) COOKIE LANGUAGE / REGION TRIGGER
+               Dedicated trigger only. This control must open the sovereign cookie
+               language / region layer, not the global footer country overlay.
+          ============================================================================= -->
+          <button type="button" class="cookie-consent-footer-language" data-cookie-consent-language="true" aria-haspopup="dialog" aria-expanded="false" aria-label="Change language and region for cookie settings">
+            <span class="cookie-consent-footer-language-label">Language</span>
+            <span class="cookie-consent-footer-language-value" data-cookie-consent-language-value="true">Auto</span>
+          </button>
         </div>
       </div>
     </div>

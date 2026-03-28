@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.27013981"
-     inkscape:cx="-512.69749"
-     inkscape:cy="-299.84474"
+     inkscape:zoom="0.57820451"
+     inkscape:cx="-357.14007"
+     inkscape:cy="-925.27814"
      inkscape:window-width="1472"
      inkscape:window-height="895"
      inkscape:window-x="0"
@@ -361,7 +361,7 @@
   <path
      id="path7-2-9"
      style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-     d="m -89.901123,-262.68205 28.42857,21 m 28.57143,-21 -28.42858,21"
+     d="m -203.86819,-169.10909 28.42857,21 m 28.57143,-21 -28.42858,21"
      inkscape:label="Nav down"
      inkscape:export-filename="drop-down.svg"
      inkscape:export-xdpi="96"
@@ -373,4 +373,28 @@
      height="21.433962"
      x="-37.085922"
      y="-148.90639" />
+  <path
+     id="path159"
+     d="m 11.383366,-211.5404 v -57.82655 c 0,-2.31096 -1.8816673,-4.19496 -4.1950273,-4.19496 h -2.31336 c -2.31336,0 -4.19030497,1.884 -4.19030497,4.19496 v 57.82655 c 0,2.45629 1.87694497,4.34048 4.19030497,4.34048 h 2.31336 c 2.31336,0 4.1950273,-1.88419 4.1950273,-4.34048 z m 31.950554,-53.19723 -23.710739,23.70296 c -0.288638,0.29595 -0.288638,0.72778 0,1.01635 l 23.710739,23.70575 c 0.28864,0.2913 0.72027,0.2913 1.00884,0 l 3.03835,-3.0289 -18.79545,-18.79705 h 51.32315 c 1.44525,0 2.60193,-1.15761 2.60193,-2.60006 v 0 c 0,-1.45277 -1.15668,-2.60666 -2.60193,-2.60666 H 29.01974 l 18.36137,-18.35711 -3.03835,-3.03528 c -0.28864,-0.2933 -0.72027,-0.2933 -1.00884,0 v 0"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.0352778" />
+  <g
+     id="g8"
+     transform="matrix(0,0.6215876,-0.71670984,0,-329.42366,-203.80861)"
+     style="stroke-width:1.49823"
+     inkscape:export-filename="back.svg"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96">
+    <path
+       id="path7-2-9-5"
+       style="fill:none;stroke:#000000;stroke-width:7.49112;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="m -153.23887,-259.53615 28.42857,27 m 28.571433,-27 -28.428583,27"
+       inkscape:label="Nav down"
+       inkscape:export-filename="drop-down.svg"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:7.49112;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="m -124.73887,-308.58383 v 76.04768"
+       id="path8" />
+  </g>
 </svg>

@@ -1,0 +1,66 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) COOKIE LANGUAGE / REGION OVERLAY
+     01A) OVERLAY INNER
+     01B) OVERLAY HEADER
+     01C) SEARCH / STATUS BAR
+     01D) REGIONS MOUNT
+============================================================================= -->
+
+<!-- =============================================================================
+     01) COOKIE LANGUAGE / REGION OVERLAY
+     Purpose: sovereign language / region selector layer dedicated to cookie
+     settings only.
+     Scope boundary: this fragment must not replace, override, or conflict with
+     the global footer country / region overlay.
+============================================================================= -->
+<div id="cookie-language-overlay" class="cookie-language-overlay" aria-hidden="true">
+
+  <!-- =============================================================================
+       01A) OVERLAY INNER
+  ============================================================================= -->
+  <div class="cookie-language-overlay-inner">
+
+    <!-- =============================================================================
+         01B) OVERLAY HEADER
+    ============================================================================= -->
+    <div class="cookie-language-overlay-header">
+      <div class="cookie-language-overlay-header-copy">
+        <p class="cookie-language-overlay-eyebrow">Cookie Settings</p>
+        <h2 class="cookie-language-overlay-title">Choose language and region</h2>
+        <p class="cookie-language-overlay-copy">Select the language and region you want to use for cookie-related information and legal documents.</p>
+      </div>
+
+      <button type="button" class="cookie-language-overlay-close" aria-label="Close cookie language and region selector" data-cookie-language-overlay-close="true">
+        <span class="cookie-language-overlay-close-line cookie-language-overlay-close-line--first"></span>
+        <span class="cookie-language-overlay-close-line cookie-language-overlay-close-line--second"></span>
+      </button>
+    </div>
+
+    <!-- =============================================================================
+         01C) SEARCH / STATUS BAR
+    ============================================================================= -->
+    <div class="cookie-language-overlay-toolbar">
+      <div class="cookie-language-overlay-search-shell">
+        <input
+          type="search"
+          class="cookie-language-overlay-search"
+          data-cookie-language-overlay-search="true"
+          placeholder="Search language or region"
+          aria-label="Search language or region"
+        >
+      </div>
+
+      <div class="cookie-language-overlay-status" data-cookie-language-overlay-status="true">
+        Auto-detected selection will appear here.
+      </div>
+    </div>
+
+    <!-- =============================================================================
+         01D) REGIONS MOUNT
+         Cookie language / region entries must be mounted here by the dedicated
+         sovereign cookie-language overlay runtime.
+    ============================================================================= -->
+    <div class="cookie-language-overlay-regions" data-cookie-language-overlay-regions="true"></div>
+  </div>
+</div>

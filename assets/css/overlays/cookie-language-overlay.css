@@ -1,0 +1,418 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) ROOT TOKENS
+   03) BASE OVERLAY SHELL
+   04) OPEN / CLOSE STATES
+   04A) PAGE SCROLL LOCK
+   05) PANEL
+   06) HEADER
+   07) CLOSE CONTROL
+   08) TOOLBAR
+   09) SEARCH FIELD
+   10) STATUS BAR
+   11) REGIONS MOUNT
+   11A) COUNTRY ITEM
+   12) PLACEHOLDER STATE
+   13) REDUCED MOTION
+   14) RESPONSIVE — 768PX
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+
+/* =============================================================================
+   02) ROOT TOKENS
+============================================================================= */
+:root{
+  --cookie-language-overlay-backdrop: rgba(0, 0, 0, 0.16);
+  --cookie-language-overlay-surface: rgba(255, 255, 255, 0.96);
+  --cookie-language-overlay-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  --cookie-language-overlay-width: min(44rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --cookie-language-overlay-max-height: min(46rem, calc(100vh - 3rem));
+  --cookie-language-overlay-radius: 1.9rem;
+  --cookie-language-overlay-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-muted: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-language-overlay-soft: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-soft-strong: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-search-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-status-surface: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-country-surface: color-mix(in srgb, var(--text-primary-color) 2%, transparent);
+  --cookie-language-overlay-country-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-country-hover: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 10%, transparent);
+  --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 28%, transparent);
+  --cookie-language-overlay-country-copy: color-mix(in srgb, var(--text-primary-color) 68%, transparent);
+  --cookie-language-overlay-country-code: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
+}
+
+body.light-mode{
+  --cookie-language-overlay-surface: rgba(255, 255, 255, 0.96);
+}
+
+body.dark-mode{
+  --cookie-language-overlay-backdrop: rgba(0, 0, 0, 0.28);
+  --cookie-language-overlay-surface: rgba(10, 10, 10, 0.96);
+  --cookie-language-overlay-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-language-overlay-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  --cookie-language-overlay-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-muted: rgba(255, 255, 255, 0.68);
+  --cookie-language-overlay-soft: rgba(255, 255, 255, 0.03);
+  --cookie-language-overlay-soft-strong: rgba(255, 255, 255, 0.05);
+  --cookie-language-overlay-search-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-language-overlay-status-surface: rgba(255, 255, 255, 0.03);
+  --cookie-language-overlay-country-surface: rgba(255, 255, 255, 0.022);
+  --cookie-language-overlay-country-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-country-hover: rgba(255, 255, 255, 0.04);
+  --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 14%, transparent);
+  --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 32%, transparent);
+  --cookie-language-overlay-country-copy: rgba(255, 255, 255, 0.72);
+  --cookie-language-overlay-country-code: rgba(255, 255, 255, 0.56);
+}
+
+/* =============================================================================
+   03) BASE OVERLAY SHELL
+============================================================================= */
+.cookie-language-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 1460;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--cookie-language-overlay-backdrop);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   04) OPEN / CLOSE STATES
+============================================================================= */
+body.cookie-language-overlay-open .cookie-language-overlay,
+body.cookie-language-overlay-closing .cookie-language-overlay{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* =============================================================================
+   04A) PAGE SCROLL LOCK
+============================================================================= */
+body.cookie-language-overlay-open,
+body.cookie-language-overlay-closing{
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* =============================================================================
+   05) PANEL
+============================================================================= */
+.cookie-language-overlay-inner{
+  width: var(--cookie-language-overlay-width);
+  max-width: 100%;
+  max-height: var(--cookie-language-overlay-max-height);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.5rem;
+  border: 1px solid var(--cookie-language-overlay-border);
+  border-radius: var(--cookie-language-overlay-radius);
+  background: var(--cookie-language-overlay-surface);
+  box-shadow: var(--cookie-language-overlay-shadow);
+  transform: translateY(1rem) scale(0.985);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+}
+
+body.cookie-language-overlay-open .cookie-language-overlay-inner{
+  transform: translateY(0) scale(1);
+}
+
+body.cookie-language-overlay-closing .cookie-language-overlay-inner{
+  transform: translateY(1rem) scale(0.985);
+}
+
+/* =============================================================================
+   06) HEADER
+============================================================================= */
+.cookie-language-overlay-header{
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--cookie-language-overlay-divider);
+}
+
+.cookie-language-overlay-header-copy{
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.cookie-language-overlay-eyebrow{
+  margin: 0;
+  color: color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.cookie-language-overlay-title{
+  margin: 0;
+  color: var(--text-primary-color);
+  font-size: 1.56rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.cookie-language-overlay-copy{
+  margin: 0;
+  color: var(--cookie-language-overlay-muted);
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.58;
+  max-width: 40rem;
+}
+
+/* =============================================================================
+   07) CLOSE CONTROL
+============================================================================= */
+.cookie-language-overlay-close{
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+  min-width: 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary-color);
+  cursor: pointer;
+}
+
+.cookie-language-overlay-close-line{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform-origin: center;
+  transition: transform 220ms ease;
+}
+
+.cookie-language-overlay-close-line--first{
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cookie-language-overlay-close-line--second{
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.cookie-language-overlay-close:hover,
+.cookie-language-overlay-close:focus-visible,
+.cookie-language-overlay-close:active{
+  outline: none;
+}
+
+/* =============================================================================
+   08) TOOLBAR
+============================================================================= */
+.cookie-language-overlay-toolbar{
+  display: flex;
+  flex-direction: column;
+  gap: 0.82rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* =============================================================================
+   09) SEARCH FIELD
+============================================================================= */
+.cookie-language-overlay-search-shell{
+  display: flex;
+}
+
+.cookie-language-overlay-search{
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.82rem 1rem;
+  border: 1px solid var(--cookie-language-overlay-search-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-primary-color);
+  font-size: 0.94rem;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.cookie-language-overlay-search::placeholder{
+  color: var(--cookie-language-overlay-muted);
+}
+
+.cookie-language-overlay-search:focus-visible{
+  outline: none;
+}
+
+/* =============================================================================
+   10) STATUS BAR
+============================================================================= */
+.cookie-language-overlay-status{
+  display: flex;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0.72rem 0.92rem;
+  border: 1px solid var(--cookie-language-overlay-divider);
+  border-radius: 1rem;
+  background: var(--cookie-language-overlay-status-surface);
+  color: var(--cookie-language-overlay-muted);
+  font-size: 0.84rem;
+  font-weight: 300;
+  letter-spacing: -0.012em;
+  line-height: 1.5;
+}
+
+/* =============================================================================
+   11) REGIONS MOUNT
+============================================================================= */
+.cookie-language-overlay-regions{
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  border-top: 1px solid var(--cookie-language-overlay-divider);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.68rem;
+}
+
+/* =============================================================================
+   11A) COUNTRY ITEM
+============================================================================= */
+.cookie-language-overlay-country{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 0.96rem 1rem;
+  border: 1px solid var(--cookie-language-overlay-country-border);
+  border-radius: 1rem;
+  background: var(--cookie-language-overlay-country-surface);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.cookie-language-overlay-country-copy{
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.cookie-language-overlay-country-copy strong{
+  color: var(--text-primary-color);
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: -0.014em;
+  line-height: 1.2;
+}
+
+.cookie-language-overlay-country-copy span{
+  color: var(--cookie-language-overlay-country-copy);
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+.cookie-language-overlay-country-code{
+  color: var(--cookie-language-overlay-country-code);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.cookie-language-overlay-country:hover,
+.cookie-language-overlay-country:focus-visible,
+.cookie-language-overlay-country:active{
+  background: var(--cookie-language-overlay-country-hover);
+  outline: none;
+}
+
+.cookie-language-overlay-country.is-selected{
+  background: var(--cookie-language-overlay-country-selected);
+  border-color: var(--cookie-language-overlay-country-selected-border);
+}
+
+/* =============================================================================
+   12) PLACEHOLDER STATE
+============================================================================= */
+.cookie-language-overlay-regions:empty::before{
+  content: "Cookie language and region entries will be mounted here.";
+  display: block;
+  padding: 1rem;
+  border: 1px dashed var(--cookie-language-overlay-divider);
+  border-radius: 1rem;
+  color: var(--cookie-language-overlay-muted);
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: -0.012em;
+  line-height: 1.5;
+}
+
+/* =============================================================================
+   13) REDUCED MOTION
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .cookie-language-overlay,
+  .cookie-language-overlay-inner,
+  .cookie-language-overlay-close-line{
+    transition: none !important;
+  }
+}
+
+/* =============================================================================
+   14) RESPONSIVE — 768PX
+============================================================================= */
+@media (max-width:768px){
+  .cookie-language-overlay{
+    padding: 1rem;
+  }
+
+  .cookie-language-overlay-inner{
+    padding: 1rem;
+    border-radius: 1.5rem;
+  }
+
+  .cookie-language-overlay-header{
+    gap: 0.82rem;
+  }
+
+  .cookie-language-overlay-country{
+    grid-template-columns: minmax(0, 1fr);
+    align-items: flex-start;
+  }
+
+  .cookie-language-overlay-country-code{
+    margin-top: 0.08rem;
+  }
+
+  .cookie-language-overlay-title{
+    font-size: 1.4rem;
+  }
+}

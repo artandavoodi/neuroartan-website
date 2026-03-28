@@ -8,6 +8,7 @@
    06) GLOBAL LAYOUT INJECTION EXECUTION
    06A) ACCOUNT DRAWER MOUNT DISPATCH
    06B) COOKIE CONSENT MOUNT DISPATCH
+   06C) OVERLAY MOUNT RE-DISPATCH
    07) FOOTER FRAGMENT INJECTION
    08) REVEAL GROUP INITIALIZATION
    09) INSTITUTIONAL LINKS REVEAL
@@ -29,6 +30,7 @@ const NEURO_MAIN_RUNTIME = (window.__NEURO_MAIN_RUNTIME__ ||= {
   footerInjected: false,
   lifecycleBound: false,
   hoverObserverBound: false,
+  overlayMountObserverBound: false,
   accountDrawerMountDispatched: false,
   cookieConsentMountDispatched: false
 });
@@ -114,13 +116,12 @@ async function fetchTextFromCandidates(path, cache = 'no-store') {
    06A) ACCOUNT DRAWER MOUNT DISPATCH
 ============================================================================= */
 function dispatchAccountDrawerMount(mount) {
-  if (NEURO_MAIN_RUNTIME.accountDrawerMountDispatched) return;
-
-  const root = mount || document.querySelector('[data-include="account-drawer"]');
+  const host = mount || document.querySelector('[data-include="account-drawer"]');
+  const root = host?.querySelector?.('.account-drawer, [data-account-drawer="root"], #account-drawer') || host;
   if (!root) return;
 
   document.dispatchEvent(new CustomEvent('account-drawer:mounted', {
-    detail: { name: 'account-drawer', root, mount: root }
+    detail: { name: 'account-drawer', root, mount: host || root }
   }));
 
   NEURO_MAIN_RUNTIME.accountDrawerMountDispatched = true;
@@ -129,17 +130,24 @@ function dispatchAccountDrawerMount(mount) {
 /* =============================================================================
    06B) COOKIE CONSENT MOUNT DISPATCH
 ============================================================================= */
-function dispatchCookieConsentMount() {
-  if (NEURO_MAIN_RUNTIME.cookieConsentMountDispatched) return;
-
-  const mount = document.getElementById('cookie-consent-mount');
-  if (!mount) return;
+function dispatchCookieConsentMount(mount) {
+  const host = mount || document.getElementById('cookie-consent-mount');
+  const root = host?.querySelector?.('[data-cookie-consent="root"]') || host;
+  if (!host || !root) return;
 
   document.dispatchEvent(new CustomEvent('cookie-consent:mounted', {
-    detail: { name: 'cookie-consent', root: mount, mount }
+    detail: { name: 'cookie-consent', root, mount: host }
   }));
 
   NEURO_MAIN_RUNTIME.cookieConsentMountDispatched = true;
+}
+
+/* =============================================================================
+   06C) OVERLAY MOUNT RE-DISPATCH
+============================================================================= */
+function dispatchOverlayMounts() {
+  dispatchAccountDrawerMount();
+  dispatchCookieConsentMount();
 }
 
 /* =============================================================================
@@ -169,10 +177,14 @@ async function injectGlobalLayout() {
         detail: { name, root: el, mount: el }
       }));
       /* =============================================================================
-         06A) ACCOUNT DRAWER MOUNT DISPATCH
+         06A) ACCOUNT DRAWER / COOKIE CONSENT MOUNT DISPATCH
       ============================================================================= */
       if (name === 'account-drawer') {
         dispatchAccountDrawerMount(el);
+      }
+
+      if (name === 'cookie-consent') {
+        dispatchCookieConsentMount(el);
       }
     } catch (_) {}
   }
@@ -186,7 +198,10 @@ injectGlobalLayout().then(() => {
   initLetterHover(document);
   loadStylesheetOnce(CUSTOM_CURSOR_CSS_URL);
   loadScriptOnce(CUSTOM_CURSOR_JS_URL);
-  dispatchCookieConsentMount();
+
+  window.requestAnimationFrame(() => {
+    dispatchOverlayMounts();
+  });
 });
 
 /* =============================================================================
@@ -433,6 +448,10 @@ document.addEventListener("DOMContentLoaded", () => {
       itemSelector: '.home-closing-line',
       initializedKey: 'motionClosingInitialized'
     });
+
+    window.requestAnimationFrame(() => {
+      dispatchOverlayMounts();
+    });
   });
 
   window.addEventListener('load', () => {
@@ -441,8 +460,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { once: true });
 
   initLetterHover(document);
-  dispatchAccountDrawerMount();
-  dispatchCookieConsentMount();
+
+  window.requestAnimationFrame(() => {
+    dispatchOverlayMounts();
+  });
 
   if (!NEURO_MAIN_RUNTIME.hoverObserverBound) {
     const hoverMO = new MutationObserver((mutations) => {
@@ -457,5 +478,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     hoverMO.observe(document.body, { childList: true, subtree: true });
     NEURO_MAIN_RUNTIME.hoverObserverBound = true;
+  }
+
+  if (!NEURO_MAIN_RUNTIME.overlayMountObserverBound) {
+    const overlayMountMO = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type !== 'childList' || !(mutation.addedNodes?.length > 0)) continue;
+
+        let shouldDispatch = false;
+
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return;
+
+          if (
+            node.matches?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"]')
+            || node.querySelector?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"]')
+          ) {
+            shouldDispatch = true;
+          }
+        });
+
+        if (shouldDispatch) {
+          window.requestAnimationFrame(() => {
+            dispatchOverlayMounts();
+          });
+        }
+      }
+    });
+
+    overlayMountMO.observe(document.body, { childList: true, subtree: true });
+    NEURO_MAIN_RUNTIME.overlayMountObserverBound = true;
   }
 });

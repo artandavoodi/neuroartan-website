@@ -2,20 +2,20 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) ROOT CONSTANTS
-   03) STATE FLAGS
+   03) STATE
    04) QUERY HELPERS
-   04A) EVENT DETAIL HELPERS
    05) MOUNT HELPERS
-   06) RENDER HELPERS
-   07) STATE METADATA APPLICATION
-   08) OPEN STATE APPLICATION
-   09) CLOSE STATE APPLICATION
-   10) COOKIE STORAGE HELPERS
-   11) CONSENT ACTIONS
-   12) EVENT BINDING
-   13) OPEN REQUEST BINDING
-   13A) OVERLAY COORDINATION
-   14) INITIALIZATION
+   05A) INIT RETRY HELPERS
+   06) SURFACE HELPERS
+   07) ROW / TOGGLE HELPERS
+   07A) GRANULAR SUBTOGGLE HELPERS
+   08) STORAGE HELPERS
+   08A) DISPLAY DECISION HELPERS
+   09) OPEN / CLOSE STATE
+   10) CONSENT ACTIONS
+   11) EVENT BINDING
+   12) OVERLAY COORDINATION
+   13) INITIALIZATION
 ============================================================================= */
 
 /* =============================================================================
@@ -33,24 +33,22 @@
   const CLOSE_DELAY_MS = 360;
 
   /* =============================================================================
-     03) STATE FLAGS
+     03) STATE
   ============================================================================= */
   let closeTimer = null;
+  let escapeBound = false;
+  let requestBound = false;
+  let coordinationBound = false;
+  let initScheduled = false;
+  let initCompleted = false;
+  let initAttempts = 0;
+  const MAX_INIT_ATTEMPTS = 24;
 
   /* =============================================================================
      04) QUERY HELPERS
   ============================================================================= */
   const q = (selector, scope = document) => scope.querySelector(selector);
   const qa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
-
-  /* =============================================================================
-     04A) EVENT DETAIL HELPERS
-  ============================================================================= */
-  function getEventDetail(event) {
-    return event && event.detail && typeof event.detail === 'object'
-      ? event.detail
-      : {};
-  }
 
   function getMount() {
     return document.getElementById('cookie-consent-mount');
@@ -61,11 +59,18 @@
   }
 
   function getPanel() {
-    return q('[data-cookie-consent="panel"]');
+    const overlay = getOverlay();
+    return overlay ? q('[data-cookie-consent="panel"]', overlay) : null;
+  }
+
+  function getBody() {
+    const overlay = getOverlay();
+    return overlay ? q('.cookie-consent-body', overlay) : null;
   }
 
   function getBackdrop() {
-    return q('[data-cookie-consent="backdrop"]');
+    const overlay = getOverlay();
+    return overlay ? q('[data-cookie-consent="backdrop"]', overlay) : null;
   }
 
   function getCloseControls() {
@@ -93,15 +98,79 @@
     return overlay ? qa('[data-cookie-consent-save="true"]', overlay) : [];
   }
 
+  function getSurfaceNodes() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-surface]', overlay) : [];
+  }
+
   function getCheckboxes() {
     const overlay = getOverlay();
     return overlay ? qa('[data-cookie-consent-category]', overlay) : [];
   }
 
+  function getExpandControls() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-expand]', overlay) : [];
+  }
+
+  function getToggleControls() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-toggle]', overlay) : [];
+  }
+
+  function getSubtoggleControls() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-subtoggle]', overlay) : [];
+  }
+
+  function getSubcheckboxes() {
+    const overlay = getOverlay();
+    return overlay ? qa('[data-cookie-consent-subcategory]', overlay) : [];
+  }
+
+  function getCheckboxByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`[data-cookie-consent-category="${key}"]`, overlay) : null;
+  }
+
+  function getToggleByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`[data-cookie-consent-toggle="${key}"]`, overlay) : null;
+  }
+
+  function getSubtoggleByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`[data-cookie-consent-subtoggle="${key}"]`, overlay) : null;
+  }
+
+  function getSubcheckboxByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`[data-cookie-consent-subcategory="${key}"]`, overlay) : null;
+  }
+
+  function getExpandByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`[data-cookie-consent-expand="${key}"]`, overlay) : null;
+  }
+
+  function getDetailByKey(key) {
+    const overlay = getOverlay();
+    return overlay ? q(`#cookie-consent-detail-${key}`, overlay) : null;
+  }
+
+  function getEventDetail(event) {
+    return event && event.detail && typeof event.detail === 'object' ? event.detail : {};
+  }
+
+  function isHomePage() {
+    const path = window.location.pathname || '';
+    return path === '/' || path.endsWith('/index.html');
+  }
+
   /* =============================================================================
      05) MOUNT HELPERS
   ============================================================================= */
-  function ensureMountAttributes() {
+  function ensureMountMetadata() {
     const mount = getMount();
     if (!mount) return;
 
@@ -110,143 +179,146 @@
     if (!mount.dataset.consentSettings) mount.dataset.consentSettings = 'available';
   }
 
-  /* =============================================================================
-     06) RENDER HELPERS
-  ============================================================================= */
-  function renderConsentShell() {
+  function ensureOverlayReady() {
     const mount = getMount();
-    if (!mount || mount.dataset.cookieConsentRendered === 'true') return;
-
-    mount.innerHTML = `
-      <div class="cookie-consent" data-cookie-consent="root" aria-hidden="true">
-        <button class="cookie-consent-backdrop" data-cookie-consent="backdrop" data-cookie-consent-close="true" aria-label="Close cookie settings"></button>
-        <aside class="cookie-consent-panel" data-cookie-consent="panel" role="dialog" aria-modal="true" aria-labelledby="cookie-consent-title">
-          <div class="cookie-consent-header">
-            <p class="cookie-consent-eyebrow">Privacy Controls</p>
-            <h2 id="cookie-consent-title" class="cookie-consent-title">Cookie settings</h2>
-            <p class="cookie-consent-copy">Review and manage cookie preferences with clear, consent-aware control.</p>
-            <button class="cookie-consent-close" type="button" data-cookie-consent-close="true" aria-label="Close cookie settings">
-              <span class="cookie-consent-close-line cookie-consent-close-line--first"></span>
-              <span class="cookie-consent-close-line cookie-consent-close-line--second"></span>
-            </button>
-          </div>
-
-          <div class="cookie-consent-body">
-            <div class="cookie-consent-banner" data-cookie-consent-surface="banner">
-              <p class="cookie-consent-note">Neuroartan uses cookies for essential functionality and, when permitted, for analytics and experience refinement.</p>
-              <div class="cookie-consent-actions">
-                <button type="button" class="cookie-consent-action cookie-consent-action--primary" data-cookie-consent-accept="true">Accept all</button>
-                <button type="button" class="cookie-consent-action cookie-consent-action--secondary" data-cookie-consent-reject="true">Reject non-essential</button>
-                <button type="button" class="cookie-consent-action cookie-consent-action--tertiary" data-cookie-consent-settings="true">Review settings</button>
-              </div>
-            </div>
-
-            <div class="cookie-consent-settings" data-cookie-consent-surface="settings" hidden>
-              <label class="cookie-consent-row">
-                <span class="cookie-consent-row-copy">
-                  <strong>Essential</strong>
-                  <span>Required for core website operation.</span>
-                </span>
-                <input type="checkbox" data-cookie-consent-category="essential" checked disabled>
-              </label>
-
-              <label class="cookie-consent-row">
-                <span class="cookie-consent-row-copy">
-                  <strong>Analytics</strong>
-                  <span>Helps improve performance and understand usage patterns.</span>
-                </span>
-                <input type="checkbox" data-cookie-consent-category="analytics">
-              </label>
-
-              <label class="cookie-consent-row">
-                <span class="cookie-consent-row-copy">
-                  <strong>Experience</strong>
-                  <span>Supports preference memory and refined interaction behavior.</span>
-                </span>
-                <input type="checkbox" data-cookie-consent-category="experience">
-              </label>
-
-              <div class="cookie-consent-actions">
-                <button type="button" class="cookie-consent-action cookie-consent-action--primary" data-cookie-consent-save="true">Save settings</button>
-                <button type="button" class="cookie-consent-action cookie-consent-action--secondary" data-cookie-consent-accept="true">Accept all</button>
-                <button type="button" class="cookie-consent-action cookie-consent-action--tertiary" data-cookie-consent-reject="true">Reject non-essential</button>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
-    `;
+    const overlay = getOverlay();
+    if (!mount || !overlay) return false;
 
     mount.dataset.cookieConsentRendered = 'true';
+    return true;
   }
 
   /* =============================================================================
-     07) STATE METADATA APPLICATION
+     05A) INIT RETRY HELPERS
   ============================================================================= */
-  function applySurface(surface = 'banner') {
-    const mount = getMount();
-    const overlay = getOverlay();
-    if (!mount || !overlay) return;
+  function resetInitScheduling() {
+    initScheduled = false;
+  }
 
-    const normalizedSurface = surface === 'settings' ? 'settings' : 'banner';
-    mount.dataset.consentSurface = normalizedSurface;
+  function scheduleInitRetry() {
+    if (initCompleted || initScheduled || initAttempts >= MAX_INIT_ATTEMPTS) return;
 
-    qa('[data-cookie-consent-surface]', overlay).forEach((node) => {
-      node.hidden = node.dataset.cookieConsentSurface !== normalizedSurface;
+    initScheduled = true;
+    initAttempts += 1;
+
+    window.requestAnimationFrame(() => {
+      resetInitScheduling();
+      initCookieConsent();
     });
   }
 
+  /* =============================================================================
+     06) SURFACE HELPERS
+  ============================================================================= */
   function applyState(state = 'pending') {
     const mount = getMount();
     if (!mount) return;
     mount.dataset.consentState = state;
   }
 
-  /* =============================================================================
-     08) OPEN STATE APPLICATION
-  ============================================================================= */
-  function clearCloseTimer() {
-    if (!closeTimer) return;
-    window.clearTimeout(closeTimer);
-    closeTimer = null;
-  }
-
-  function openConsent(surface = 'banner') {
+  function applySurface(surface = 'banner') {
+    const mount = getMount();
     const overlay = getOverlay();
-    if (!overlay) return;
+    if (!mount || !overlay) return;
 
-    clearCloseTimer();
-    applySurface(surface);
+    const normalized = surface === 'settings' ? 'settings' : 'banner';
+    mount.dataset.consentSurface = normalized;
 
-    document.body.classList.remove(CLOSING_CLASS);
-    document.body.classList.add(OPEN_CLASS);
-    overlay.setAttribute('aria-hidden', 'false');
-
-    document.dispatchEvent(new CustomEvent('cookie-consent:opened', {
-      detail: { surface }
-    }));
+    getSurfaceNodes().forEach((node) => {
+      node.hidden = node.dataset.cookieConsentSurface !== normalized;
+    });
   }
 
   /* =============================================================================
-     09) CLOSE STATE APPLICATION
+     07) ROW / TOGGLE HELPERS
   ============================================================================= */
-  function closeConsent() {
-    const overlay = getOverlay();
-    if (!overlay) return;
+  function setToggleVisualState(key, enabled) {
+    const toggle = getToggleByKey(key);
+    if (!toggle) return;
 
-    clearCloseTimer();
-    document.body.classList.remove(OPEN_CLASS);
-    document.body.classList.add(CLOSING_CLASS);
-    overlay.setAttribute('aria-hidden', 'true');
+    const value = Boolean(enabled);
+    toggle.dataset.cookieConsentEnabled = value ? 'true' : 'false';
+    toggle.setAttribute('aria-pressed', value ? 'true' : 'false');
+    toggle.setAttribute('aria-checked', value ? 'true' : 'false');
+  }
 
-    closeTimer = window.setTimeout(() => {
-      document.body.classList.remove(CLOSING_CLASS);
-      document.dispatchEvent(new CustomEvent('cookie-consent:closed'));
-    }, CLOSE_DELAY_MS);
+  function syncToggleStates() {
+    getCheckboxes().forEach((checkbox) => {
+      const key = checkbox.dataset.cookieConsentCategory;
+      if (!key || key === 'essential') return;
+      setToggleVisualState(key, checkbox.checked);
+    });
   }
 
   /* =============================================================================
-     10) COOKIE STORAGE HELPERS
+     07A) GRANULAR SUBTOGGLE HELPERS
+  ============================================================================= */
+  function setSubtoggleVisualState(key, enabled) {
+    const toggle = getSubtoggleByKey(key);
+    if (!toggle) return;
+
+    const value = Boolean(enabled);
+    toggle.dataset.cookieConsentEnabled = value ? 'true' : 'false';
+    toggle.setAttribute('aria-pressed', value ? 'true' : 'false');
+    toggle.setAttribute('aria-checked', value ? 'true' : 'false');
+  }
+
+  function syncSubtoggleStates() {
+    getSubcheckboxes().forEach((checkbox) => {
+      const key = checkbox.dataset.cookieConsentSubcategory;
+      if (!key) return;
+      setSubtoggleVisualState(key, checkbox.checked);
+    });
+  }
+
+  function syncParentToggleFromSubitems(parentKey) {
+    if (!parentKey) return;
+
+    const children = getSubcheckboxes().filter((checkbox) => checkbox.dataset.cookieConsentParent === parentKey);
+    if (!children.length) return;
+
+    const parentCheckbox = getCheckboxByKey(parentKey);
+    if (!parentCheckbox) return;
+
+    parentCheckbox.checked = children.some((checkbox) => checkbox.checked);
+    setToggleVisualState(parentKey, parentCheckbox.checked);
+  }
+
+  function setSubitemsForParent(parentKey, enabled) {
+    if (!parentKey) return;
+
+    getSubcheckboxes().forEach((checkbox) => {
+      if (checkbox.dataset.cookieConsentParent !== parentKey) return;
+      checkbox.checked = Boolean(enabled);
+      const subkey = checkbox.dataset.cookieConsentSubcategory;
+      if (subkey) setSubtoggleVisualState(subkey, checkbox.checked);
+    });
+  }
+
+  function setExpandedState(key, expanded) {
+    const trigger = getExpandByKey(key);
+    const detail = getDetailByKey(key);
+    if (!trigger || !detail) return;
+
+    const value = Boolean(expanded);
+    trigger.setAttribute('aria-expanded', value ? 'true' : 'false');
+    detail.hidden = !value;
+  }
+
+  function collapseExpandedRows(exceptKey = '') {
+    getExpandControls().forEach((control) => {
+      const key = control.dataset.cookieConsentExpand;
+      if (!key || key === exceptKey) return;
+      setExpandedState(key, false);
+    });
+  }
+
+  function resetExpandedRows() {
+    collapseExpandedRows();
+  }
+
+  /* =============================================================================
+     08) STORAGE HELPERS
   ============================================================================= */
   function readStoredConsent() {
     try {
@@ -265,11 +337,47 @@
     }
   }
 
+  function applyStoredConsentToInputs() {
+    const stored = readStoredConsent();
+
+    getCheckboxes().forEach((checkbox) => {
+      const key = checkbox.dataset.cookieConsentCategory;
+      if (!key || key === 'essential') return;
+
+      if (stored && stored.preferences) {
+        checkbox.checked = Boolean(stored.preferences[key]);
+        return;
+      }
+
+      checkbox.checked = true;
+    });
+
+    getSubcheckboxes().forEach((checkbox) => {
+      const key = checkbox.dataset.cookieConsentSubcategory;
+      const parentKey = checkbox.dataset.cookieConsentParent;
+      if (!key || !parentKey) return;
+
+      const storedValue = stored?.preferences?.[key];
+      checkbox.checked = typeof storedValue === 'boolean'
+        ? storedValue
+        : Boolean(getCheckboxByKey(parentKey)?.checked);
+    });
+
+    syncToggleStates();
+    syncSubtoggleStates();
+    syncParentToggleFromSubitems('analytics');
+    syncParentToggleFromSubitems('experience');
+  }
+
   function getSettingsPayload() {
     const payload = {
       essential: true,
-      analytics: false,
-      experience: false
+      analytics: true,
+      experience: true,
+      'analytics-performance': true,
+      'analytics-usage': true,
+      'experience-preferences': true,
+      'experience-continuity': true
     };
 
     getCheckboxes().forEach((checkbox) => {
@@ -278,102 +386,261 @@
       payload[key] = Boolean(checkbox.checked);
     });
 
+    getSubcheckboxes().forEach((checkbox) => {
+      const key = checkbox.dataset.cookieConsentSubcategory;
+      if (!key) return;
+      payload[key] = Boolean(checkbox.checked);
+    });
+
     return payload;
   }
 
-  function applyStoredConsentToInputs() {
-    const stored = readStoredConsent();
-    if (!stored || !stored.preferences) return;
+  /* =============================================================================
+     08A) DISPLAY DECISION HELPERS
+  ============================================================================= */
+  function shouldAutoOpenBanner(stored) {
+    if (!stored) return true;
 
-    getCheckboxes().forEach((checkbox) => {
-      const key = checkbox.dataset.cookieConsentCategory;
-      if (!key || key === 'essential') return;
-      checkbox.checked = Boolean(stored.preferences[key]);
-    });
+    const mount = getMount();
+    const mountState = mount?.dataset?.consentState || 'pending';
+    if (isHomePage() && mountState === 'pending') return true;
+
+    return stored.state === 'pending';
   }
 
   /* =============================================================================
-     11) CONSENT ACTIONS
+     09) OPEN / CLOSE STATE
+  ============================================================================= */
+  function clearCloseTimer() {
+    if (!closeTimer) return;
+    window.clearTimeout(closeTimer);
+    closeTimer = null;
+  }
+
+  function openConsent(surface = 'banner') {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    clearCloseTimer();
+    applySurface(surface);
+
+    applyStoredConsentToInputs();
+
+    if (surface === 'settings') {
+      resetExpandedRows();
+      setExpandedState('essential', true);
+    } else {
+      resetExpandedRows();
+    }
+
+    document.body.classList.remove(CLOSING_CLASS);
+    document.body.classList.add(OPEN_CLASS);
+    overlay.setAttribute('aria-hidden', 'false');
+
+    const body = getBody();
+    if (body) {
+      body.scrollTop = 0;
+    }
+
+    document.dispatchEvent(new CustomEvent('cookie-consent:opened', {
+      detail: { source: MODULE_ID, surface }
+    }));
+  }
+
+  function closeConsent() {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    clearCloseTimer();
+    document.body.classList.remove(OPEN_CLASS);
+    document.body.classList.add(CLOSING_CLASS);
+    overlay.setAttribute('aria-hidden', 'true');
+
+    closeTimer = window.setTimeout(() => {
+      document.body.classList.remove(CLOSING_CLASS);
+      document.dispatchEvent(new CustomEvent('cookie-consent:closed', {
+        detail: { source: MODULE_ID }
+      }));
+    }, CLOSE_DELAY_MS);
+  }
+
+  /* =============================================================================
+     10) CONSENT ACTIONS
   ============================================================================= */
   function acceptAll() {
-    const payload = {
+    writeStoredConsent({
       state: 'accepted',
       preferences: {
         essential: true,
         analytics: true,
-        experience: true
+        experience: true,
+        'analytics-performance': true,
+        'analytics-usage': true,
+        'experience-preferences': true,
+        'experience-continuity': true
       },
       updatedAt: new Date().toISOString()
-    };
+    });
 
-    writeStoredConsent(payload);
     applyState('accepted');
     applyStoredConsentToInputs();
     closeConsent();
   }
 
   function rejectNonEssential() {
-    const payload = {
+    writeStoredConsent({
       state: 'rejected',
       preferences: {
         essential: true,
         analytics: false,
-        experience: false
+        experience: false,
+        'analytics-performance': false,
+        'analytics-usage': false,
+        'experience-preferences': false,
+        'experience-continuity': false
       },
       updatedAt: new Date().toISOString()
-    };
+    });
 
-    writeStoredConsent(payload);
     applyState('rejected');
     applyStoredConsentToInputs();
     closeConsent();
   }
 
   function saveSettings() {
-    const payload = {
+    writeStoredConsent({
       state: 'customized',
       preferences: getSettingsPayload(),
       updatedAt: new Date().toISOString()
-    };
+    });
 
-    writeStoredConsent(payload);
     applyState('customized');
+    syncToggleStates();
     closeConsent();
   }
 
   /* =============================================================================
-     12) EVENT BINDING
+     11) EVENT BINDING
   ============================================================================= */
-  function bindControls() {
+  function bindCloseControls() {
     getCloseControls().forEach((control) => {
       if (control.dataset.cookieConsentCloseBound === 'true') return;
       control.dataset.cookieConsentCloseBound = 'true';
       control.addEventListener('click', () => closeConsent());
     });
+  }
 
+  function bindAcceptControls() {
     getAcceptControls().forEach((control) => {
       if (control.dataset.cookieConsentAcceptBound === 'true') return;
       control.dataset.cookieConsentAcceptBound = 'true';
       control.addEventListener('click', () => acceptAll());
     });
+  }
 
+  function bindRejectControls() {
     getRejectControls().forEach((control) => {
       if (control.dataset.cookieConsentRejectBound === 'true') return;
       control.dataset.cookieConsentRejectBound = 'true';
       control.addEventListener('click', () => rejectNonEssential());
     });
+  }
 
+  function bindSettingsControls() {
     getSettingsControls().forEach((control) => {
       if (control.dataset.cookieConsentSettingsBound === 'true') return;
       control.dataset.cookieConsentSettingsBound = 'true';
       control.addEventListener('click', () => openConsent('settings'));
     });
+  }
 
+  function bindSaveControls() {
     getSaveControls().forEach((control) => {
       if (control.dataset.cookieConsentSaveBound === 'true') return;
       control.dataset.cookieConsentSaveBound = 'true';
       control.addEventListener('click', () => saveSettings());
     });
+  }
+
+  function bindExpandControls() {
+    getExpandControls().forEach((control) => {
+      if (control.dataset.cookieConsentExpandBound === 'true') return;
+      control.dataset.cookieConsentExpandBound = 'true';
+
+      control.addEventListener('click', () => {
+        const key = control.dataset.cookieConsentExpand;
+        if (!key) return;
+
+        const isExpanded = control.getAttribute('aria-expanded') === 'true';
+        collapseExpandedRows(key);
+        setExpandedState(key, !isExpanded);
+      });
+    });
+  }
+
+  function bindToggleControls() {
+    getToggleControls().forEach((control) => {
+      if (control.dataset.cookieConsentToggleBound === 'true') return;
+      control.dataset.cookieConsentToggleBound = 'true';
+
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const key = control.dataset.cookieConsentToggle;
+        if (!key) return;
+
+        const checkbox = getCheckboxByKey(key);
+        if (!checkbox) return;
+
+        checkbox.checked = !checkbox.checked;
+        setSubitemsForParent(key, checkbox.checked);
+        setToggleVisualState(key, checkbox.checked);
+      });
+
+      control.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        control.click();
+      });
+    });
+  }
+
+  function bindSubtoggleControls() {
+    getSubtoggleControls().forEach((control) => {
+      if (control.dataset.cookieConsentSubtoggleBound === 'true') return;
+      control.dataset.cookieConsentSubtoggleBound = 'true';
+
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const key = control.dataset.cookieConsentSubtoggle;
+        if (!key) return;
+
+        const checkbox = getSubcheckboxByKey(key);
+        if (!checkbox) return;
+
+        checkbox.checked = !checkbox.checked;
+        setSubtoggleVisualState(key, checkbox.checked);
+        syncParentToggleFromSubitems(checkbox.dataset.cookieConsentParent || '');
+      });
+
+      control.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        control.click();
+      });
+    });
+  }
+
+  function bindEscapeKey() {
+    if (escapeBound) return;
+    escapeBound = true;
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
@@ -382,12 +649,48 @@
     });
   }
 
+  function bindScrollContainment() {
+    const overlay = getOverlay();
+    const panel = getPanel();
+    const body = getBody();
+    const backdrop = getBackdrop();
+
+    if (!overlay || !panel || !body || !backdrop) return;
+    if (overlay.dataset.cookieConsentScrollBound === 'true') return;
+    overlay.dataset.cookieConsentScrollBound = 'true';
+
+    panel.style.touchAction = 'pan-y';
+    body.style.touchAction = 'pan-y';
+    body.style.overscrollBehavior = 'contain';
+    body.style.webkitOverflowScrolling = 'touch';
+
+    panel.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true });
+    body.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true });
+    panel.addEventListener('touchmove', (event) => event.stopPropagation(), { passive: true });
+    body.addEventListener('touchmove', (event) => event.stopPropagation(), { passive: true });
+    backdrop.addEventListener('wheel', (event) => event.stopPropagation(), { passive: true });
+    backdrop.addEventListener('touchmove', (event) => event.stopPropagation(), { passive: true });
+  }
+
+  function bindControls() {
+    bindCloseControls();
+    bindAcceptControls();
+    bindRejectControls();
+    bindSettingsControls();
+    bindSaveControls();
+    bindExpandControls();
+    bindToggleControls();
+    bindSubtoggleControls();
+    bindEscapeKey();
+    bindScrollContainment();
+  }
+
   /* =============================================================================
-     13) OPEN REQUEST BINDING
+     12) OVERLAY COORDINATION
   ============================================================================= */
   function bindOpenRequests() {
-    if (document.documentElement.dataset.cookieConsentRequestBound === 'true') return;
-    document.documentElement.dataset.cookieConsentRequestBound = 'true';
+    if (requestBound) return;
+    requestBound = true;
 
     document.addEventListener('cookie-consent:open-request', (event) => {
       const detail = getEventDetail(event);
@@ -395,59 +698,81 @@
     });
   }
 
-  /* =============================================================================
-     13A) OVERLAY COORDINATION
-  ============================================================================= */
   function bindOverlayCoordination() {
-    if (document.documentElement.dataset.cookieConsentOverlayCoordinationBound === 'true') return;
-    document.documentElement.dataset.cookieConsentOverlayCoordinationBound = 'true';
+    if (coordinationBound) return;
+    coordinationBound = true;
 
     document.addEventListener('cookie-consent:open-request', () => {
       document.dispatchEvent(new CustomEvent('account-drawer:close-request', {
-        detail: {
-          source: MODULE_ID,
-          reason: 'cookie-consent-open'
-        }
+        detail: { source: MODULE_ID, reason: 'cookie-consent-open' }
       }));
     });
 
     document.addEventListener('cookie-consent:opened', () => {
       document.dispatchEvent(new CustomEvent('account-drawer:close-request', {
-        detail: {
-          source: MODULE_ID,
-          reason: 'cookie-consent-opened'
-        }
+        detail: { source: MODULE_ID, reason: 'cookie-consent-opened' }
       }));
     });
   }
 
+  function bindMountLifecycle() {
+    if (document.documentElement.dataset.cookieConsentLifecycleBound === 'true') return;
+    document.documentElement.dataset.cookieConsentLifecycleBound = 'true';
+
+    document.addEventListener('cookie-consent:mounted', () => {
+      scheduleInitRetry();
+    });
+
+    document.addEventListener('fragment:mounted', (event) => {
+      const detail = getEventDetail(event);
+      if (detail.name !== 'cookie-consent') return;
+      scheduleInitRetry();
+    });
+  }
+
   /* =============================================================================
-     14) INITIALIZATION
+     13) INITIALIZATION
   ============================================================================= */
-  function initCookieConsent() {
+  async function initCookieConsent() {
     const mount = getMount();
-    if (!mount) return;
-
-    ensureMountAttributes();
-    renderConsentShell();
-    applyStoredConsentToInputs();
-    bindControls();
-    bindOpenRequests();
-    bindOverlayCoordination();
-
-    const stored = readStoredConsent();
-    if (!stored) {
-      window.requestAnimationFrame(() => {
-        openConsent('banner');
-      });
+    if (!mount) {
+      scheduleInitRetry();
       return;
     }
 
-    applyState(stored.state || 'pending');
+    ensureMountMetadata();
+
+    if (!ensureOverlayReady()) {
+      scheduleInitRetry();
+      return;
+    }
+
+    applyStoredConsentToInputs();
+    syncToggleStates();
+    bindControls();
+    bindOpenRequests();
+    bindOverlayCoordination();
+    bindMountLifecycle();
+
+    const stored = readStoredConsent();
+    if (shouldAutoOpenBanner(stored)) {
+      window.requestAnimationFrame(() => {
+        openConsent('banner');
+      });
+      initCompleted = true;
+      return;
+    }
+
+    applyState(stored?.state || 'pending');
+    initCompleted = true;
   }
 
+  bindMountLifecycle();
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCookieConsent, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      initCookieConsent();
+    }, { once: true });
   } else {
     initCookieConsent();
   }

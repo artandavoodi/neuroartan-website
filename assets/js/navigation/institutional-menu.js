@@ -124,7 +124,17 @@
   }
 
   function getAccountDrawerTrigger(menu = getMenu()) {
-    return menu ? q('[data-account-drawer-trigger="true"]', menu) : null;
+    return menu
+      ? q(
+          '[data-account-drawer-trigger="true"], '
+          + '#account-drawer-trigger, '
+          + '[aria-controls="account-drawer"], '
+          + '[data-panel-target="account"], '
+          + '[data-nav-panel-target="account"], '
+          + '[data-account-trigger]',
+          menu
+        )
+      : null;
   }
 
   function getSearchPanel(menu = getMenu()) {
@@ -403,23 +413,45 @@
     /* =============================================================================
        15C) ACCOUNT DRAWER TRIGGER BINDING
     ============================================================================= */
+    function openAccountDrawerFromMenu(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      clearCloseTimer();
+      closePanels();
+
+      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+        detail: {
+          source: 'institutional-menu',
+          state: 'guest',
+          surface: 'entry'
+        }
+      }));
+    }
+
     if (accountDrawerTrigger && accountDrawerTrigger.dataset.accountDrawerBound !== 'true') {
       accountDrawerTrigger.dataset.accountDrawerBound = 'true';
       accountDrawerTrigger.setAttribute('aria-expanded', 'false');
+      accountDrawerTrigger.addEventListener('click', openAccountDrawerFromMenu);
+    }
 
-      accountDrawerTrigger.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        clearCloseTimer();
-        closePanels();
+    if (menu && menu.dataset.accountDrawerDelegateBound !== 'true') {
+      menu.dataset.accountDrawerDelegateBound = 'true';
 
-        document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-          detail: {
-            source: 'institutional-menu',
-            state: 'guest',
-            surface: 'entry'
-          }
-        }));
+      menu.addEventListener('click', (event) => {
+        const trigger = event.target.closest(
+          '[data-account-drawer-trigger="true"], '
+          + '#account-drawer-trigger, '
+          + '[aria-controls="account-drawer"], '
+          + '[data-panel-target="account"], '
+          + '[data-nav-panel-target="account"], '
+          + '[data-account-trigger]'
+        );
+
+        if (!trigger || !menu.contains(trigger)) return;
+        openAccountDrawerFromMenu(event);
       });
     }
 

@@ -1,62 +1,52 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) DOM HELPERS
-   03) DRAWER QUERIES
-   03A) AUTH / PROFILE QUERIES
-   03B) AUTH / PROFILE STATE APPLICATION
-   03C) STATE METADATA APPLICATION
-   03D) EVENT DETAIL NORMALIZATION
-   04) STATE FLAGS
-   04A) TIMING CONSTANTS
-   04B) STATE GUARDS
-   05) CLOSE CONTROL QUERIES
-   05A) SUPPORT LINK QUERIES
-   06) OPEN STATE APPLICATION
-   07) CLOSE STATE APPLICATION
-   08) ESCAPE KEY BINDING
-   09) CLOSE CONTROL BINDING
-   10) OPEN REQUEST BINDING
-   10A) AUTH / PROFILE REQUEST BINDING
-   10B) GUEST ENTRY REQUEST BINDING
-   10C) OPEN REQUEST DETAIL ROUTING
-   10D) CONSENT SETTINGS REQUEST BINDING
-   10E) CLOSE REQUEST BINDING
+   02) STATE
+   03) QUERY HELPERS
+   04) VIEW HELPERS
+   05) TIMER HELPERS
+   06) OPEN / CLOSE STATE
+   07) TRIGGER MATCHING
+   08) GLOBAL CLICK BINDING
+   09) GLOBAL REQUEST BINDING
+   10) ESCAPE BINDING
    11) INITIALIZATION
 ============================================================================= */
 
-/* =============================================================================
-   01) MODULE IDENTITY
-============================================================================= */
 (() => {
-  'use strict';
+  /* =============================================================================
+     01) MODULE IDENTITY
+  ============================================================================= */
+  const MODULE_ID = 'account-drawer';
 
   /* =============================================================================
-     02) DOM HELPERS
+     02) STATE
   ============================================================================= */
-  function q(selector, root = document) {
-    return root.querySelector(selector);
-  }
-
-  function qa(selector, root = document) {
-    return Array.from(root.querySelectorAll(selector));
-  }
+  const OPEN_CLASS = 'account-drawer-open';
+  const CLOSING_CLASS = 'account-drawer-closing';
+  const CLOSE_DURATION_MS = 460;
+  let closeTimer = null;
 
   /* =============================================================================
-     03) DRAWER QUERIES
+     03) QUERY HELPERS
   ============================================================================= */
+  const q = (selector, scope = document) => scope.querySelector(selector);
+  const qa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
+
   function getDrawer() {
-    return q('[data-account-drawer="true"]');
+    return q('#account-drawer') || q('.account-drawer');
   }
 
-  function getDrawerShell() {
+  function getBackdrop() {
     const drawer = getDrawer();
-    return drawer ? q('.account-drawer-shell', drawer) : null;
+    return drawer ? q('.account-drawer-backdrop', drawer) : null;
   }
 
-  /* =============================================================================
-     03A) AUTH / PROFILE QUERIES
-  ============================================================================= */
+  function getCloseControls() {
+    const drawer = getDrawer();
+    return drawer ? qa('[data-account-drawer-close="true"]', drawer) : [];
+  }
+
   function getAuthState() {
     const drawer = getDrawer();
     return drawer ? q('[data-auth-state]', drawer) : null;
@@ -68,28 +58,37 @@
   }
 
   /* =============================================================================
-     03B) AUTH / PROFILE STATE APPLICATION
+     04) VIEW HELPERS
   ============================================================================= */
-  function showAuthState() {
+  function applyAuthView(surface = 'entry') {
+    const drawer = getDrawer();
     const authState = getAuthState();
     const profileState = getProfileState();
+
+    if (!drawer) return;
+
+    drawer.dataset.accountDrawerView = 'auth';
 
     if (authState) {
       authState.hidden = false;
       authState.dataset.authState = 'guest';
-      authState.dataset.authSurface = 'entry';
+      authState.dataset.authSurface = surface;
     }
 
     if (profileState) {
       profileState.hidden = true;
       profileState.dataset.profileState = 'empty';
     }
-    applyDrawerStateMetadata('auth');
   }
 
-  function showProfileState() {
+  function applyProfileView() {
+    const drawer = getDrawer();
     const authState = getAuthState();
     const profileState = getProfileState();
+
+    if (!drawer) return;
+
+    drawer.dataset.accountDrawerView = 'profile';
 
     if (authState) {
       authState.hidden = true;
@@ -99,33 +98,11 @@
       profileState.hidden = false;
       profileState.dataset.profileState = 'ready';
     }
-    applyDrawerStateMetadata('profile');
   }
 
   /* =============================================================================
-     03C) STATE METADATA APPLICATION
+     05) TIMER HELPERS
   ============================================================================= */
-  function applyDrawerStateMetadata(state) {
-    const drawer = getDrawer();
-    if (!drawer) return;
-
-    if (state === 'profile') {
-      drawer.dataset.accountDrawerView = 'profile';
-      return;
-    }
-
-    drawer.dataset.accountDrawerView = 'auth';
-  }
-
-  /* =============================================================================
-     03D) EVENT DETAIL NORMALIZATION
-  ============================================================================= */
-  function getEventDetail(event) {
-    return event && event.detail && typeof event.detail === 'object'
-      ? event.detail
-      : {};
-  }
-
   function clearCloseTimer() {
     if (!closeTimer) return;
     window.clearTimeout(closeTimer);
@@ -133,231 +110,169 @@
   }
 
   /* =============================================================================
-     04) STATE FLAGS
+     06) OPEN / CLOSE STATE
   ============================================================================= */
-  let isOpen = false;
-  let isBound = false;
-
-  /* =============================================================================
-     04A) TIMING CONSTANTS
-  ============================================================================= */
-  const CLOSE_DURATION_MS = 460;
-  let closeTimer = null;
-
-  /* =============================================================================
-     04B) STATE GUARDS
-  ============================================================================= */
-  function isDrawerClosing() {
-    return document.body.classList.contains('account-drawer-closing');
-  }
-
-  /* =============================================================================
-     05) CLOSE CONTROL QUERIES
-  ============================================================================= */
-  function getCloseControls() {
-    const drawer = getDrawer();
-    return drawer ? qa('[data-account-drawer-close="true"]', drawer) : [];
-  }
-
-  /* =============================================================================
-     05A) SUPPORT LINK QUERIES
-  ============================================================================= */
-  function getConsentSettingsLinks() {
-    const drawer = getDrawer();
-    return drawer ? qa('a[href="#cookie-consent-mount"]', drawer) : [];
-  }
-
-  /* =============================================================================
-     06) OPEN STATE APPLICATION
-  ============================================================================= */
-  function openDrawer() {
+  function openDrawer(detail = {}) {
     const drawer = getDrawer();
     if (!drawer) return;
 
-    if (isOpen && !isDrawerClosing()) return;
-
     clearCloseTimer();
-    drawer.removeAttribute('hidden');
+
+    if (detail.state === 'profile') {
+      applyProfileView();
+    } else {
+      applyAuthView(detail.surface === 'settings' ? 'settings' : 'entry');
+    }
+
+    document.body.classList.remove(CLOSING_CLASS);
+    document.body.classList.add(OPEN_CLASS);
     drawer.setAttribute('aria-hidden', 'false');
-    drawer.dataset.accountDrawerState = 'open';
-    document.body.classList.remove('account-drawer-closing');
-    document.body.classList.add('account-drawer-open');
-    isOpen = true;
 
     document.dispatchEvent(new CustomEvent('account-drawer:opened', {
-      detail: {
-        source: 'account-drawer'
-      }
+      detail: { source: detail.source || MODULE_ID }
     }));
   }
 
-  /* =============================================================================
-     07) CLOSE STATE APPLICATION
-  ============================================================================= */
-  function closeDrawer() {
+  function closeDrawer(source = MODULE_ID) {
     const drawer = getDrawer();
     if (!drawer) return;
 
-    if (!isOpen && !isDrawerClosing()) return;
+    if (!document.body.classList.contains(OPEN_CLASS) && !document.body.classList.contains(CLOSING_CLASS)) {
+      drawer.setAttribute('aria-hidden', 'true');
+      return;
+    }
 
     clearCloseTimer();
-    drawer.dataset.accountDrawerState = 'closing';
-    document.body.classList.remove('account-drawer-open');
-    document.body.classList.add('account-drawer-closing');
+
+    document.body.classList.remove(OPEN_CLASS);
+    document.body.classList.add(CLOSING_CLASS);
     drawer.setAttribute('aria-hidden', 'true');
-    isOpen = false;
 
     closeTimer = window.setTimeout(() => {
-      drawer.dataset.accountDrawerState = 'closed';
-      drawer.setAttribute('hidden', 'hidden');
-      document.body.classList.remove('account-drawer-closing');
-      closeTimer = null;
-
+      document.body.classList.remove(CLOSING_CLASS);
       document.dispatchEvent(new CustomEvent('account-drawer:closed', {
-        detail: {
-          source: 'account-drawer'
-        }
+        detail: { source }
       }));
     }, CLOSE_DURATION_MS);
   }
 
   /* =============================================================================
-     08) ESCAPE KEY BINDING
+     07) TRIGGER MATCHING
   ============================================================================= */
-  function bindEscapeKey() {
+  function matchesAccountTrigger(target) {
+    if (!(target instanceof Element)) return null;
+
+    return target.closest(
+      '[data-account-drawer-trigger="true"], '
+      + '#account-drawer-trigger, '
+      + '[data-account-trigger], '
+      + '[data-panel-target="account"], '
+      + '[data-nav-panel-target="account"], '
+      + '[aria-controls="account-drawer"]'
+    );
+  }
+
+  /* =============================================================================
+     08) GLOBAL CLICK BINDING
+  ============================================================================= */
+  function bindGlobalClicks() {
+    if (document.documentElement.dataset.accountDrawerClicksBound === 'true') return;
+    document.documentElement.dataset.accountDrawerClicksBound = 'true';
+
+    document.addEventListener('click', (event) => {
+      const trigger = matchesAccountTrigger(event.target);
+      if (trigger) {
+        event.preventDefault();
+        event.stopPropagation();
+        openDrawer({
+          source: 'direct-trigger',
+          state: 'guest',
+          surface: 'entry'
+        });
+        return;
+      }
+
+      const backdrop = getBackdrop();
+      if (backdrop && event.target === backdrop) {
+        event.preventDefault();
+        closeDrawer('backdrop');
+        return;
+      }
+
+      const closeControl = event.target instanceof Element
+        ? event.target.closest('[data-account-drawer-close="true"]')
+        : null;
+
+      if (closeControl) {
+        event.preventDefault();
+        closeDrawer('close-control');
+        return;
+      }
+
+      const consentLink = event.target instanceof Element
+        ? event.target.closest('a[href="#cookie-consent-mount"]')
+        : null;
+
+      if (consentLink) {
+        event.preventDefault();
+        closeDrawer('cookie-consent-link');
+        document.dispatchEvent(new CustomEvent('cookie-consent:open-request', {
+          detail: {
+            source: MODULE_ID,
+            surface: 'settings'
+          }
+        }));
+      }
+    });
+  }
+
+  /* =============================================================================
+     09) GLOBAL REQUEST BINDING
+  ============================================================================= */
+  function bindGlobalRequests() {
+    if (document.documentElement.dataset.accountDrawerRequestsBound === 'true') return;
+    document.documentElement.dataset.accountDrawerRequestsBound = 'true';
+
+    document.addEventListener('account-drawer:open-request', (event) => {
+      const detail = event && event.detail && typeof event.detail === 'object'
+        ? event.detail
+        : {};
+      openDrawer(detail);
+    });
+
+    document.addEventListener('account-drawer:guest-entry', (event) => {
+      const detail = event && event.detail && typeof event.detail === 'object'
+        ? event.detail
+        : {};
+      openDrawer({
+        source: detail.source || MODULE_ID,
+        state: 'guest',
+        surface: detail.surface || 'entry'
+      });
+    });
+
+    document.addEventListener('account-drawer:show-profile', () => {
+      openDrawer({
+        source: MODULE_ID,
+        state: 'profile'
+      });
+    });
+
+    document.addEventListener('account-drawer:close-request', () => {
+      closeDrawer('request');
+    });
+  }
+
+  /* =============================================================================
+     10) ESCAPE BINDING
+  ============================================================================= */
+  function bindEscape() {
     if (document.documentElement.dataset.accountDrawerEscapeBound === 'true') return;
     document.documentElement.dataset.accountDrawerEscapeBound = 'true';
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
-      if (!isOpen) return;
-      closeDrawer();
-    });
-  }
-
-  /* =============================================================================
-     09) CLOSE CONTROL BINDING
-  ============================================================================= */
-  function bindCloseControls() {
-    getCloseControls().forEach((control) => {
-      if (control.dataset.accountDrawerCloseBound === 'true') return;
-      control.dataset.accountDrawerCloseBound = 'true';
-
-      control.addEventListener('click', (event) => {
-        event.preventDefault();
-        closeDrawer();
-      });
-    });
-  }
-
-  /* =============================================================================
-     10) OPEN REQUEST BINDING
-  ============================================================================= */
-  function bindOpenRequests() {
-    if (document.documentElement.dataset.accountDrawerOpenRequestBound === 'true') return;
-    document.documentElement.dataset.accountDrawerOpenRequestBound = 'true';
-
-    document.addEventListener('account-drawer:open-request', (event) => {
-      routeOpenRequest(event);
-    });
-  }
-
-  /* =============================================================================
-     10A) AUTH / PROFILE REQUEST BINDING
-  ============================================================================= */
-  function bindAuthProfileRequests() {
-    if (document.documentElement.dataset.accountDrawerStateRequestBound === 'true') return;
-    document.documentElement.dataset.accountDrawerStateRequestBound = 'true';
-
-    document.addEventListener('account-drawer:show-auth', (event) => {
-      const detail = getEventDetail(event);
-      showAuthState();
-
-      const authState = getAuthState();
-      if (authState && detail.surface) {
-        authState.dataset.authSurface = detail.surface;
-      }
-    });
-
-    document.addEventListener('account-drawer:show-profile', () => {
-      showProfileState();
-    });
-  }
-
-  /* =============================================================================
-     10B) GUEST ENTRY REQUEST BINDING
-  ============================================================================= */
-  function bindGuestEntryRequests() {
-    if (document.documentElement.dataset.accountDrawerGuestEntryBound === 'true') return;
-    document.documentElement.dataset.accountDrawerGuestEntryBound = 'true';
-
-    document.addEventListener('account-drawer:guest-entry', (event) => {
-      const detail = getEventDetail(event);
-      showAuthState();
-
-      const authState = getAuthState();
-      if (authState && detail.surface) {
-        authState.dataset.authSurface = detail.surface;
-      }
-
-      openDrawer();
-    });
-  }
-
-  /* =============================================================================
-     10C) OPEN REQUEST DETAIL ROUTING
-  ============================================================================= */
-  function routeOpenRequest(event) {
-    const detail = getEventDetail(event);
-    const requestedState = detail.state;
-    const requestedSurface = detail.surface;
-
-    if (requestedState === 'profile') {
-      showProfileState();
-      openDrawer();
-      return;
-    }
-
-    showAuthState();
-
-    const authState = getAuthState();
-    if (authState && requestedSurface) {
-      authState.dataset.authSurface = requestedSurface;
-    }
-
-    openDrawer();
-  }
-
-  /* =============================================================================
-     10D) CONSENT SETTINGS REQUEST BINDING
-  ============================================================================= */
-  function bindConsentSettingsRequests() {
-    getConsentSettingsLinks().forEach((link) => {
-      if (link.dataset.cookieConsentBound === 'true') return;
-      link.dataset.cookieConsentBound = 'true';
-
-      link.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        document.dispatchEvent(new CustomEvent('cookie-consent:open-request', {
-          detail: {
-            source: 'account-drawer',
-            surface: 'settings'
-          }
-        }));
-      });
-    });
-  }
-
-  /* =============================================================================
-     10E) CLOSE REQUEST BINDING
-  ============================================================================= */
-  function bindCloseRequests() {
-    if (document.documentElement.dataset.accountDrawerCloseRequestBound === 'true') return;
-    document.documentElement.dataset.accountDrawerCloseRequestBound = 'true';
-
-    document.addEventListener('account-drawer:close-request', () => {
-      closeDrawer();
+      closeDrawer('escape');
     });
   }
 
@@ -366,30 +281,42 @@
   ============================================================================= */
   function initAccountDrawer() {
     const drawer = getDrawer();
-    const shell = getDrawerShell();
-    if (!drawer || !shell) return;
-    if (isBound) return;
+    if (!drawer) return;
 
-    drawer.setAttribute('aria-hidden', 'true');
-    drawer.setAttribute('hidden', 'hidden');
-    drawer.dataset.accountDrawerState = 'closed';
-    showAuthState();
-    isBound = true;
+    if (!drawer.hasAttribute('aria-hidden')) {
+      drawer.setAttribute('aria-hidden', 'true');
+    }
 
-    bindEscapeKey();
-    bindCloseControls();
-    bindOpenRequests();
-    bindAuthProfileRequests();
-    bindGuestEntryRequests();
-    bindConsentSettingsRequests();
-    bindCloseRequests();
+    applyAuthView('entry');
+
+    const backdrop = getBackdrop();
+    if (backdrop) {
+      backdrop.dataset.accountDrawerClose = 'true';
+    }
+
+    getCloseControls().forEach((control) => {
+      control.dataset.accountDrawerClose = 'true';
+    });
   }
+
+  bindGlobalClicks();
+  bindGlobalRequests();
+  bindEscape();
+
+  document.addEventListener('account-drawer:mounted', () => {
+    initAccountDrawer();
+  });
+
+  document.addEventListener('fragment:mounted', (event) => {
+    const name = event?.detail?.name;
+    if (name === 'account-drawer') {
+      initAccountDrawer();
+    }
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAccountDrawer, { once: true });
   } else {
     initAccountDrawer();
   }
-
-  document.addEventListener('account-drawer:mounted', initAccountDrawer);
 })();

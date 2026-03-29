@@ -2,6 +2,8 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) COUNTRY AND REGION REGISTRY
+   02A) COUNTRY CODE REGISTRY
+   02B) NORMALIZED COUNTRY DATA HELPERS
    03) GLOBAL DATA EXPOSURE
    04) COUNTRY REGION BUILD
    05) INITIAL DOMCONTENTLOADED BINDING
@@ -177,9 +179,171 @@
   ];
 
   /* =============================================================================
+     02A) COUNTRY CODE REGISTRY
+  ============================================================================= */
+  const COUNTRY_CODE_REGISTRY = {
+    "Algeria": "DZ",
+    "Andorra": "AD",
+    "Angola": "AO",
+    "Argentina": "AR",
+    "Armenia": "AM",
+    "Australia": "AU",
+    "Austria": "AT",
+    "Azerbaijan": "AZ",
+    "Bahamas": "BS",
+    "Bahrain": "BH",
+    "Bangladesh": "BD",
+    "Barbados": "BB",
+    "Belarus": "BY",
+    "Belgium": "BE",
+    "Belize": "BZ",
+    "Bermuda": "BM",
+    "Bolivia": "BO",
+    "Bosnia and Herzegovina": "BA",
+    "Botswana": "BW",
+    "Brazil": "BR",
+    "Brunei": "BN",
+    "Bulgaria": "BG",
+    "Cambodia": "KH",
+    "Cameroon": "CM",
+    "Canada": "CA",
+    "Cayman Islands": "KY",
+    "Chile": "CL",
+    "China Mainland": "CN",
+    "Colombia": "CO",
+    "Costa Rica": "CR",
+    "Croatia": "HR",
+    "Cyprus": "CY",
+    "Czech Republic": "CZ",
+    "Denmark": "DK",
+    "Dominican Republic": "DO",
+    "Ecuador": "EC",
+    "Egypt": "EG",
+    "El Salvador": "SV",
+    "Estonia": "EE",
+    "Finland": "FI",
+    "France": "FR",
+    "Georgia": "GE",
+    "Germany": "DE",
+    "Ghana": "GH",
+    "Greece": "GR",
+    "Guatemala": "GT",
+    "Hong Kong": "HK",
+    "Honduras": "HN",
+    "Hungary": "HU",
+    "Iceland": "IS",
+    "India": "IN",
+    "Indonesia": "ID",
+    "Iran": "IR",
+    "Ireland": "IE",
+    "Israel": "IL",
+    "Italy": "IT",
+    "Ivory Coast": "CI",
+    "Jamaica": "JM",
+    "Japan": "JP",
+    "Jordan": "JO",
+    "Kazakhstan": "KZ",
+    "Kenya": "KE",
+    "Kosovo": "XK",
+    "Kuwait": "KW",
+    "Latvia": "LV",
+    "Lebanon": "LB",
+    "Liechtenstein": "LI",
+    "Lithuania": "LT",
+    "Luxembourg": "LU",
+    "Macau": "MO",
+    "Malaysia": "MY",
+    "Malta": "MT",
+    "Mexico": "MX",
+    "Moldova": "MD",
+    "Monaco": "MC",
+    "Montenegro": "ME",
+    "Morocco": "MA",
+    "Mozambique": "MZ",
+    "Namibia": "NA",
+    "Netherlands": "NL",
+    "New Zealand": "NZ",
+    "Nicaragua": "NI",
+    "Nigeria": "NG",
+    "North Macedonia": "MK",
+    "Norway": "NO",
+    "Oman": "OM",
+    "Pakistan": "PK",
+    "Panama": "PA",
+    "Paraguay": "PY",
+    "Peru": "PE",
+    "Philippines": "PH",
+    "Poland": "PL",
+    "Portugal": "PT",
+    "Puerto Rico": "PR",
+    "Qatar": "QA",
+    "Romania": "RO",
+    "Russia": "RU",
+    "San Marino": "SM",
+    "Saudi Arabia": "SA",
+    "Senegal": "SN",
+    "Serbia": "RS",
+    "Singapore": "SG",
+    "Slovakia": "SK",
+    "Slovenia": "SI",
+    "South Africa": "ZA",
+    "South Korea": "KR",
+    "Spain": "ES",
+    "Sri Lanka": "LK",
+    "Sweden": "SE",
+    "Switzerland": "CH",
+    "Taiwan": "TW",
+    "Tanzania": "TZ",
+    "Thailand": "TH",
+    "Trinidad and Tobago": "TT",
+    "Tunisia": "TN",
+    "Turkey": "TR",
+    "Uganda": "UG",
+    "Ukraine": "UA",
+    "United Arab Emirates": "AE",
+    "United Kingdom": "GB",
+    "United States": "US",
+    "Uruguay": "UY",
+    "Vatican City": "VA",
+    "Venezuela": "VE",
+    "Vietnam": "VN"
+  };
+
+  /* =============================================================================
+     02B) NORMALIZED COUNTRY DATA HELPERS
+  ============================================================================= */
+  function normalizeCountryEntry(country, regionName) {
+    const native = String(country.languageCode || country.language || 'en').toLowerCase();
+    const langs = Array.isArray(country.languages) && country.languages.length
+      ? country.languages.map((value) => String(value || '').toLowerCase())
+      : [native];
+
+    if (!langs.includes('en')) langs.push('en');
+
+    const name = String(country.name || '').trim();
+    const code = COUNTRY_CODE_REGISTRY[name] || '';
+
+    return {
+      ...country,
+      code,
+      countryCode: code,
+      region: regionName,
+      language: native,
+      primaryLanguage: native,
+      languages: langs
+    };
+  }
+
+  const NORMALIZED_COUNTRIES_DATA = COUNTRIES_DATA.map((region) => ({
+    ...region,
+    countries: region.countries.map((country) => normalizeCountryEntry(country, region.region))
+  }));
+
+  /* =============================================================================
      03) GLOBAL DATA EXPOSURE
   ============================================================================= */
-  window.ARTAN_COUNTRIES_DATA = COUNTRIES_DATA;
+  window.ARTAN_COUNTRIES_DATA = NORMALIZED_COUNTRIES_DATA;
+  window.ARTAN_COUNTRY_CODE_REGISTRY = COUNTRY_CODE_REGISTRY;
 
   /* =============================================================================
      04) COUNTRY REGION BUILD
@@ -192,7 +356,7 @@
     if (container.dataset.built === 'true') return;
     container.dataset.built = 'true';
 
-    COUNTRIES_DATA.forEach((region, idx) => {
+    NORMALIZED_COUNTRIES_DATA.forEach((region, idx) => {
       const regionEl = document.createElement('div');
       regionEl.className = 'country-region';
       regionEl.dataset.region = region.region;
@@ -221,6 +385,7 @@
 
         btn.dataset.country = country.name;
         btn.dataset.label = country.label;
+        btn.dataset.countryCode = country.countryCode || country.code || '';
         btn.dataset.language = native;
         btn.dataset.languages = langs.join(',');
 
@@ -249,6 +414,7 @@
 
       const name = btn.dataset.country || btn.textContent || '';
       const label = btn.dataset.label || btn.textContent || name;
+      const countryCode = String(btn.dataset.countryCode || '').trim().toUpperCase();
       const language = (btn.dataset.language || 'en').toLowerCase();
       const languages = String(btn.dataset.languages || language || 'en')
         .split(',')
@@ -256,7 +422,9 @@
         .filter(Boolean);
 
       document.dispatchEvent(
-        new CustomEvent('country-selected', { detail: { name, label, language, languages } })
+        new CustomEvent('country-selected', {
+          detail: { name, label, language, languages, countryCode, code: countryCode }
+        })
       );
     });
   }

@@ -11,6 +11,7 @@
    07A) GRANULAR SUBTOGGLE HELPERS
    07B) LANGUAGE / REGION HELPERS
    07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
+   07D) COOKIE LANGUAGE RETURN HELPERS
    08) STORAGE HELPERS
    08A) DISPLAY DECISION HELPERS
    09) OPEN / CLOSE STATE
@@ -350,6 +351,17 @@
     }));
   }
 
+  /* =============================================================================
+     07D) COOKIE LANGUAGE RETURN HELPERS
+  ============================================================================= */
+  function requestReturnFromCookieLanguageOverlay() {
+    openConsent('settings');
+
+    getLanguageControls().forEach((control) => {
+      control.setAttribute('aria-expanded', 'false');
+    });
+  }
+
   function setExpandedState(key, expanded) {
     const overlay = getOverlay();
     if (!overlay || !key) return;
@@ -516,6 +528,9 @@
     document.body.classList.remove(OPEN_CLASS);
     document.body.classList.add(CLOSING_CLASS);
     overlay.setAttribute('aria-hidden', 'true');
+    getLanguageControls().forEach((control) => {
+      control.setAttribute('aria-expanded', 'false');
+    });
 
     closeTimer = window.setTimeout(() => {
       document.body.classList.remove(CLOSING_CLASS);
@@ -584,9 +599,20 @@
      11) EVENT BINDING
   ============================================================================= */
   function bindCloseControls() {
+    const backdrop = getBackdrop();
+
     getCloseControls().forEach((control) => {
       if (control.dataset.cookieConsentCloseBound === 'true') return;
       control.dataset.cookieConsentCloseBound = 'true';
+
+      if (backdrop && control === backdrop) {
+        control.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+        return;
+      }
+
       control.addEventListener('click', () => closeConsent());
     });
   }
@@ -809,6 +835,10 @@
       document.dispatchEvent(new CustomEvent('account-drawer:close-request', {
         detail: { source: MODULE_ID, reason: 'cookie-consent-opened' }
       }));
+    });
+
+    document.addEventListener('cookie-language-overlay:return-to-cookie-consent', () => {
+      requestReturnFromCookieLanguageOverlay();
     });
   }
 

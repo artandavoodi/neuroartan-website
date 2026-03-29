@@ -7,13 +7,12 @@
    04A) PAGE SCROLL LOCK
    05) PANEL
    06) HEADER
-   07) CLOSE CONTROL
+   07) BACK CONTROL
    08) TOOLBAR
    09) SEARCH FIELD
-   10) STATUS BAR
-   11) REGIONS MOUNT
-   11A) COUNTRY ITEM
-   12) PLACEHOLDER STATE
+   10) REGIONS MOUNT
+   10A) COUNTRY ITEM
+   11) PLACEHOLDER STATE
    13) REDUCED MOTION
    14) RESPONSIVE — 768PX
 ============================================================================= */
@@ -30,8 +29,9 @@
   --cookie-language-overlay-surface: rgba(255, 255, 255, 0.96);
   --cookie-language-overlay-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-language-overlay-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-  --cookie-language-overlay-width: min(44rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --cookie-language-overlay-width: min(42rem, calc(100vw - (2 * var(--site-gutter, 24px))));
   --cookie-language-overlay-max-height: min(46rem, calc(100vh - 3rem));
+  --cookie-language-overlay-min-height: 24rem;
   --cookie-language-overlay-radius: 1.9rem;
   --cookie-language-overlay-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --cookie-language-overlay-muted: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
@@ -44,8 +44,11 @@
   --cookie-language-overlay-country-hover: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
   --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 10%, transparent);
   --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 28%, transparent);
+  --cookie-language-overlay-country-selected-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary1) 18%, transparent) inset;
   --cookie-language-overlay-country-copy: color-mix(in srgb, var(--text-primary-color) 68%, transparent);
   --cookie-language-overlay-country-code: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
+  --cookie-language-overlay-back-icon-size: 1rem;
+  --cookie-language-overlay-back-icon-filter: none;
 }
 
 body.light-mode{
@@ -68,8 +71,10 @@ body.dark-mode{
   --cookie-language-overlay-country-hover: rgba(255, 255, 255, 0.04);
   --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 14%, transparent);
   --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 32%, transparent);
+  --cookie-language-overlay-country-selected-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary1) 22%, transparent) inset;
   --cookie-language-overlay-country-copy: rgba(255, 255, 255, 0.72);
   --cookie-language-overlay-country-code: rgba(255, 255, 255, 0.56);
+  --cookie-language-overlay-back-icon-filter: invert(1);
 }
 
 /* =============================================================================
@@ -117,6 +122,8 @@ body.cookie-language-overlay-closing{
   width: var(--cookie-language-overlay-width);
   max-width: 100%;
   max-height: var(--cookie-language-overlay-max-height);
+  height: var(--cookie-language-overlay-max-height);
+  min-height: var(--cookie-language-overlay-min-height);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -154,17 +161,32 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   display: flex;
   flex-direction: column;
   gap: 0.28rem;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
-.cookie-language-overlay-eyebrow{
-  margin: 0;
-  color: color-mix(in srgb, var(--text-primary-color) 16%, transparent);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  line-height: 1.2;
-  text-transform: uppercase;
+.cookie-language-overlay-title-group{
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.82rem;
+  min-width: 0;
 }
+
+.cookie-language-overlay-title-icon{
+  display: block;
+  width: 1.34rem;
+  height: 1.34rem;
+  min-width: 1.34rem;
+  min-height: 1.34rem;
+  object-fit: contain;
+  object-position: center;
+  filter: var(--cookie-language-overlay-back-icon-filter);
+  opacity: 0.96;
+  flex-shrink: 0;
+  align-self: center;
+}
+
 
 .cookie-language-overlay-title{
   margin: 0;
@@ -172,57 +194,39 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   font-size: 1.56rem;
   font-weight: 300;
   letter-spacing: -0.04em;
-  line-height: 1;
+  line-height: 1.08;
+  min-width: 0;
 }
 
-.cookie-language-overlay-copy{
-  margin: 0;
-  color: var(--cookie-language-overlay-muted);
-  font-size: 0.95rem;
-  font-weight: 300;
-  letter-spacing: -0.015em;
-  line-height: 1.58;
-  max-width: 40rem;
-}
 
 /* =============================================================================
-   07) CLOSE CONTROL
+   07) BACK CONTROL
 ============================================================================= */
 .cookie-language-overlay-close{
   position: relative;
-  width: 1rem;
-  height: 1rem;
-  min-width: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.12rem;
+  height: 1.12rem;
+  min-width: 1.12rem;
+  min-height: 1.12rem;
   padding: 0;
   border: 0;
   background: transparent;
   color: var(--text-primary-color);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-.cookie-language-overlay-close-line{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform-origin: center;
-  transition: transform 220ms ease;
-}
-
-.cookie-language-overlay-close-line--first{
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.cookie-language-overlay-close-line--second{
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.cookie-language-overlay-close:hover,
-.cookie-language-overlay-close:focus-visible,
-.cookie-language-overlay-close:active{
-  outline: none;
+.cookie-language-overlay-back-icon{
+  display: block;
+  width: var(--cookie-language-overlay-back-icon-size);
+  height: var(--cookie-language-overlay-back-icon-size);
+  object-fit: contain;
+  object-position: center;
+  filter: var(--cookie-language-overlay-back-icon-filter);
+  pointer-events: none;
 }
 
 /* =============================================================================
@@ -231,9 +235,12 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
 .cookie-language-overlay-toolbar{
   display: flex;
   flex-direction: column;
-  gap: 0.82rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  gap: 0.44rem;
+  padding-top: 0.68rem;
+  padding-bottom: 0.32rem;
+  flex: 0 0 auto;
+  min-height: 0;
+  overflow: visible;
 }
 
 /* =============================================================================
@@ -241,6 +248,7 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
 ============================================================================= */
 .cookie-language-overlay-search-shell{
   display: flex;
+  align-items: stretch;
 }
 
 .cookie-language-overlay-search{
@@ -249,12 +257,13 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   padding: 0.82rem 1rem;
   border: 1px solid var(--cookie-language-overlay-search-border);
   border-radius: 999px;
-  background: transparent;
+  background: var(--cookie-language-overlay-soft);
   color: var(--text-primary-color);
   font-size: 0.94rem;
   font-weight: 300;
   letter-spacing: -0.015em;
   line-height: 1.2;
+  transition: background-color 200ms ease, border-color 200ms ease;
 }
 
 .cookie-language-overlay-search::placeholder{
@@ -265,102 +274,116 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   outline: none;
 }
 
-/* =============================================================================
-   10) STATUS BAR
-============================================================================= */
-.cookie-language-overlay-status{
-  display: flex;
-  align-items: center;
-  min-height: 2.6rem;
-  padding: 0.72rem 0.92rem;
-  border: 1px solid var(--cookie-language-overlay-divider);
-  border-radius: 1rem;
-  background: var(--cookie-language-overlay-status-surface);
-  color: var(--cookie-language-overlay-muted);
-  font-size: 0.84rem;
-  font-weight: 300;
-  letter-spacing: -0.012em;
-  line-height: 1.5;
+.cookie-language-overlay-search:hover{
+  background: var(--cookie-language-overlay-soft-strong);
 }
 
+.cookie-language-overlay-search:focus-visible{
+  border-color: var(--cookie-language-overlay-country-selected-border);
+  background: var(--cookie-language-overlay-soft-strong);
+}
+
+
 /* =============================================================================
-   11) REGIONS MOUNT
+   10) REGIONS MOUNT
 ============================================================================= */
 .cookie-language-overlay-regions{
-  min-height: 0;
+  min-height: 14rem;
+  height: auto;
   flex: 1 1 auto;
+  overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
   border-top: 1px solid var(--cookie-language-overlay-divider);
-  padding-top: 1rem;
+  padding-top: 0.38rem;
+  padding-right: 0;
   display: flex;
+  align-items: stretch;
+  align-content: flex-start;
   flex-direction: column;
-  gap: 0.68rem;
+  gap: 0.56rem;
+}
+
+.cookie-language-overlay-regions::-webkit-scrollbar{
+  width: 0;
+  height: 0;
 }
 
 /* =============================================================================
-   11A) COUNTRY ITEM
+   10A) COUNTRY ITEM
 ============================================================================= */
 .cookie-language-overlay-country{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: space-between;
+  gap: 1rem;
   width: 100%;
-  padding: 0.96rem 1rem;
+  min-width: 100%;
+  align-self: stretch;
+  flex: 0 0 auto;
+  padding: 0.98rem 1rem;
   border: 1px solid var(--cookie-language-overlay-country-border);
   border-radius: 1rem;
   background: var(--cookie-language-overlay-country-surface);
+  color: var(--text-primary-color);
   text-align: left;
   cursor: pointer;
-  transition: background-color 200ms ease, border-color 200ms ease, transform 200ms ease;
+  box-sizing: border-box;
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
 .cookie-language-overlay-country-copy{
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   min-width: 0;
 }
 
 .cookie-language-overlay-country-copy strong{
-  color: var(--text-primary-color);
-  font-size: 0.92rem;
-  font-weight: 400;
-  letter-spacing: -0.014em;
-  line-height: 1.2;
+  color: inherit;
+  font-size: 1.08rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  min-width: 0;
 }
 
 .cookie-language-overlay-country-copy span{
   color: var(--cookie-language-overlay-country-copy);
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.45;
+  letter-spacing: -0.012em;
+  line-height: 1.35;
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .cookie-language-overlay-country-code{
-  color: var(--cookie-language-overlay-country-code);
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  white-space: nowrap;
+  display: none;
 }
 
 .cookie-language-overlay-country:hover,
 .cookie-language-overlay-country:focus-visible,
 .cookie-language-overlay-country:active{
   background: var(--cookie-language-overlay-country-hover);
+  border-color: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   outline: none;
 }
 
 .cookie-language-overlay-country.is-selected{
   background: var(--cookie-language-overlay-country-selected);
   border-color: var(--cookie-language-overlay-country-selected-border);
+  box-shadow: var(--cookie-language-overlay-country-selected-shadow);
 }
 
 /* =============================================================================
-   12) PLACEHOLDER STATE
+   11) PLACEHOLDER STATE
 ============================================================================= */
 .cookie-language-overlay-regions:empty::before{
   content: "Cookie language and region entries will be mounted here.";
@@ -380,8 +403,7 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
 ============================================================================= */
 @media (prefers-reduced-motion: reduce){
   .cookie-language-overlay,
-  .cookie-language-overlay-inner,
-  .cookie-language-overlay-close-line{
+  .cookie-language-overlay-inner{
     transition: none !important;
   }
 }
@@ -390,8 +412,18 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
    14) RESPONSIVE — 768PX
 ============================================================================= */
 @media (max-width:768px){
-  .cookie-language-overlay{
-    padding: 1rem;
+  :root{
+    --cookie-language-overlay-min-height: 24rem;
+    --cookie-language-overlay-max-height: min(42rem, calc(100vh - 1.6rem));
+  }
+
+  .cookie-language-overlay-inner{
+    height: var(--cookie-language-overlay-max-height);
+  }
+
+  .cookie-language-overlay-regions{
+    min-height: 12rem;
+    padding-top: 0.32rem;
   }
 
   .cookie-language-overlay-inner{
@@ -404,15 +436,37 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   }
 
   .cookie-language-overlay-country{
-    grid-template-columns: minmax(0, 1fr);
-    align-items: flex-start;
+    align-items: center;
   }
 
-  .cookie-language-overlay-country-code{
-    margin-top: 0.08rem;
+  .cookie-language-overlay-country-copy{
+    gap: 0.82rem;
+  }
+
+  .cookie-language-overlay-country-copy strong{
+    font-size: 1rem;
+  }
+
+  .cookie-language-overlay-country-copy span{
+    font-size: 0.84rem;
+  }
+
+  .cookie-language-overlay-title-group{
+    gap: 0.68rem;
+  }
+
+  .cookie-language-overlay-title-icon{
+    width: 1.14rem;
+    height: 1.14rem;
+    min-width: 1.14rem;
+    min-height: 1.14rem;
   }
 
   .cookie-language-overlay-title{
     font-size: 1.4rem;
+  }
+
+  .cookie-language-overlay{
+    padding: 1rem;
   }
 }

@@ -44,7 +44,7 @@
         </span>
         <img src="./assets/icons/brand/logos/neuroartan/logo-typo.svg" alt="Neuroartan" class="cookie-consent-brand-wordmark">
       </div>
-      <p class="cookie-consent-eyebrow">Privacy Preferences</p>
+      <p class="cookie-consent-eyebrow" data-i18n-key="cookieConsent.privacyPreferences">Privacy Preferences</p>
 
       <!-- =============================================================================
            01D) CLOSE CONTROL
@@ -65,10 +65,10 @@
       ============================================================================= -->
       <div class="cookie-consent-banner" data-cookie-consent-surface="banner">
         <div class="cookie-consent-banner-copy">
-          <h2 id="cookie-consent-title" class="cookie-consent-title">We value your privacy</h2>
-          <p class="cookie-consent-copy">We use cookies to keep Neuroartan secure, reliable, and refined. You can accept all cookies, decline non-essential cookies, or review categories in detail before choosing.</p>
-          <p class="cookie-consent-note cookie-consent-note--legal">Consent text pending final General Counsel approval.</p>
-          <p class="cookie-consent-note">Essential cookies are always active. Optional categories can be reviewed in more detail before you decide.</p>
+          <h2 id="cookie-consent-title" class="cookie-consent-title" data-i18n-key="cookieConsent.title">We value your privacy</h2>
+          <p class="cookie-consent-copy" data-i18n-key="cookieConsent.copy">We use cookies to keep Neuroartan secure, reliable, and refined. You can accept all cookies, decline non-essential cookies, or review categories in detail before choosing.</p>
+          <p class="cookie-consent-note cookie-consent-note--legal" data-i18n-key="cookieConsent.legalPending">Consent text pending final General Counsel approval.</p>
+          <p class="cookie-consent-note" data-i18n-key="cookieConsent.essentialNote">Essential cookies are always active. Optional categories can be reviewed in more detail before you decide.</p>
         </div>
       </div>
 
@@ -77,7 +77,7 @@
       ============================================================================= -->
       <div class="cookie-consent-settings" data-cookie-consent-surface="settings" hidden>
         <div class="cookie-consent-settings-intro">
-          <p class="cookie-consent-note">Review each category, expand rows to understand why it is used, and choose the level of consent you want to grant.</p>
+          <p class="cookie-consent-note" data-i18n-key="cookieConsent.settingsIntro">Review each category, expand rows to understand why it is used, and choose the level of consent you want to grant.</p>
         </div>
 
         <!-- =============================================================================
@@ -90,38 +90,38 @@
                 <img src="./assets/icons/system/Essential.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--essential">
               </span>
               <span class="cookie-consent-row-copy">
-                <strong>Essential</strong>
-                <span>Required for core website operation, security, and accessibility.</span>
+                <strong data-i18n-key="cookieConsent.essential.title">Essential</strong>
+                <span data-i18n-key="cookieConsent.essential.summary">Required for core website operation, security, and accessibility.</span>
               </span>
-              <span class="cookie-consent-row-status">Always active</span>
+              <span class="cookie-consent-row-status" data-i18n-key="cookieConsent.alwaysActive">Always active</span>
             </div>
             <button type="button" class="cookie-consent-row-expand" data-cookie-consent-expand="essential" aria-expanded="false" aria-controls="cookie-consent-detail-essential" aria-label="Expand essential cookie details">
               <img src="./assets/icons/system/drop-down.svg" alt="" class="cookie-consent-row-expand-icon">
             </button>
           </div>
           <div id="cookie-consent-detail-essential" class="cookie-consent-row-detail" hidden>
-            <p class="cookie-consent-row-detail-copy">These cookies support core functionality such as page rendering, security, session continuity, and critical preference handling. They cannot be disabled because the website depends on them to operate correctly.</p>
+            <p class="cookie-consent-row-detail-copy" data-i18n-key="cookieConsent.essential.detail">These cookies support core functionality such as page rendering, security, session continuity, and critical preference handling. They cannot be disabled because the website depends on them to operate correctly.</p>
             <div class="cookie-consent-subitems" data-cookie-consent-subitems="essential">
               <div class="cookie-consent-subitem cookie-consent-subitem--locked">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Security & abuse prevention</strong>
-                  <span>Protects the website against misuse, malicious requests, and integrity threats.</span>
+                  <strong data-i18n-key="cookieConsent.essential.security.title">Security & abuse prevention</strong>
+                  <span data-i18n-key="cookieConsent.essential.security.copy">Protects the website against misuse, malicious requests, and integrity threats.</span>
                 </div>
-                <span class="cookie-consent-subitem-state">Always active</span>
+                <span class="cookie-consent-subitem-state" data-i18n-key="cookieConsent.alwaysActive">Always active</span>
               </div>
               <div class="cookie-consent-subitem cookie-consent-subitem--locked">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Session continuity</strong>
-                  <span>Maintains critical continuity while you navigate protected or state-aware areas.</span>
+                  <strong data-i18n-key="cookieConsent.essential.session.title">Session continuity</strong>
+                  <span data-i18n-key="cookieConsent.essential.session.copy">Maintains critical continuity while you navigate protected or state-aware areas.</span>
                 </div>
-                <span class="cookie-consent-subitem-state">Always active</span>
+                <span class="cookie-consent-subitem-state" data-i18n-key="cookieConsent.alwaysActive">Always active</span>
               </div>
               <div class="cookie-consent-subitem cookie-consent-subitem--locked">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Interface integrity</strong>
-                  <span>Preserves language, consent, and core interface behavior required for stable operation.</span>
+                  <strong data-i18n-key="cookieConsent.essential.integrity.title">Interface integrity</strong>
+                  <span data-i18n-key="cookieConsent.essential.integrity.copy">Preserves language, consent, and core interface behavior required for stable operation.</span>
                 </div>
-                <span class="cookie-consent-subitem-state">Always active</span>
+                <span class="cookie-consent-subitem-state" data-i18n-key="cookieConsent.alwaysActive">Always active</span>
               </div>
             </div>
           </div>
@@ -137,8 +137,8 @@
                 <img src="./assets/icons/system/analytics.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--analytics">
               </span>
               <span class="cookie-consent-row-copy">
-                <strong>Analytics</strong>
-                <span>Helps us understand performance and usage patterns.</span>
+                <strong data-i18n-key="cookieConsent.analytics.title">Analytics</strong>
+                <span data-i18n-key="cookieConsent.analytics.summary">Helps us understand performance and usage patterns.</span>
               </span>
             </div>
             <button type="button" class="cookie-consent-toggle" data-cookie-consent-toggle="analytics" data-cookie-consent-enabled="false" aria-pressed="false" aria-label="Toggle analytics cookies">
@@ -150,12 +150,12 @@
             <input type="checkbox" data-cookie-consent-category="analytics" hidden>
           </div>
           <div id="cookie-consent-detail-analytics" class="cookie-consent-row-detail" hidden>
-            <p class="cookie-consent-row-detail-copy">Analytics cookies help us understand how the website performs, which sections are most useful, and where the experience can be improved. They do not need to be enabled for the website to function.</p>
+            <p class="cookie-consent-row-detail-copy" data-i18n-key="cookieConsent.analytics.detail">Analytics cookies help us understand how the website performs, which sections are most useful, and where the experience can be improved. They do not need to be enabled for the website to function.</p>
             <div class="cookie-consent-subitems" data-cookie-consent-subitems="analytics">
               <div class="cookie-consent-subitem">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Performance measurement</strong>
-                  <span>Helps us understand speed, load behavior, and technical reliability across pages.</span>
+                  <strong data-i18n-key="cookieConsent.analytics.performance.title">Performance measurement</strong>
+                  <span data-i18n-key="cookieConsent.analytics.performance.copy">Helps us understand speed, load behavior, and technical reliability across pages.</span>
                 </div>
                 <button type="button" class="cookie-consent-toggle cookie-consent-toggle--subitem" data-cookie-consent-subtoggle="analytics-performance" data-cookie-consent-enabled="true" aria-pressed="true" aria-label="Toggle performance measurement cookies">
                   <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
@@ -164,8 +164,8 @@
               </div>
               <div class="cookie-consent-subitem">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Usage insights</strong>
-                  <span>Shows which sections are visited most and where interaction patterns indicate friction.</span>
+                  <strong data-i18n-key="cookieConsent.analytics.usage.title">Usage insights</strong>
+                  <span data-i18n-key="cookieConsent.analytics.usage.copy">Shows which sections are visited most and where interaction patterns indicate friction.</span>
                 </div>
                 <button type="button" class="cookie-consent-toggle cookie-consent-toggle--subitem" data-cookie-consent-subtoggle="analytics-usage" data-cookie-consent-enabled="true" aria-pressed="true" aria-label="Toggle usage insights cookies">
                   <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
@@ -186,8 +186,8 @@
                 <img src="./assets/icons/system/experience.svg" alt="" class="cookie-consent-row-icon-image cookie-consent-row-icon-image--experience">
               </span>
               <span class="cookie-consent-row-copy">
-                <strong>Experience</strong>
-                <span>Supports remembered preferences and refined interaction behavior.</span>
+                <strong data-i18n-key="cookieConsent.experience.title">Experience</strong>
+                <span data-i18n-key="cookieConsent.experience.summary">Supports remembered preferences and refined interaction behavior.</span>
               </span>
             </div>
             <button type="button" class="cookie-consent-toggle" data-cookie-consent-toggle="experience" data-cookie-consent-enabled="false" aria-pressed="false" aria-label="Toggle experience cookies">
@@ -199,12 +199,12 @@
             <input type="checkbox" data-cookie-consent-category="experience" hidden>
           </div>
           <div id="cookie-consent-detail-experience" class="cookie-consent-row-detail" hidden>
-            <p class="cookie-consent-row-detail-copy">Experience cookies support preference memory, selected interface behavior, and a more continuous browsing experience. They are optional and can be turned on or off at any time.</p>
+            <p class="cookie-consent-row-detail-copy" data-i18n-key="cookieConsent.experience.detail">Experience cookies support preference memory, selected interface behavior, and a more continuous browsing experience. They are optional and can be turned on or off at any time.</p>
             <div class="cookie-consent-subitems" data-cookie-consent-subitems="experience">
               <div class="cookie-consent-subitem">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Preference memory</strong>
-                  <span>Remembers selected interface preferences to create a more continuous return visit.</span>
+                  <strong data-i18n-key="cookieConsent.experience.preferences.title">Preference memory</strong>
+                  <span data-i18n-key="cookieConsent.experience.preferences.copy">Remembers selected interface preferences to create a more continuous return visit.</span>
                 </div>
                 <button type="button" class="cookie-consent-toggle cookie-consent-toggle--subitem" data-cookie-consent-subtoggle="experience-preferences" data-cookie-consent-enabled="true" aria-pressed="true" aria-label="Toggle preference memory cookies">
                   <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
@@ -213,8 +213,8 @@
               </div>
               <div class="cookie-consent-subitem">
                 <div class="cookie-consent-subitem-copy">
-                  <strong>Refined interaction continuity</strong>
-                  <span>Supports smoother repeated interactions and non-essential convenience behavior.</span>
+                  <strong data-i18n-key="cookieConsent.experience.continuity.title">Refined interaction continuity</strong>
+                  <span data-i18n-key="cookieConsent.experience.continuity.copy">Supports smoother repeated interactions and non-essential convenience behavior.</span>
                 </div>
                 <button type="button" class="cookie-consent-toggle cookie-consent-toggle--subitem" data-cookie-consent-subtoggle="experience-continuity" data-cookie-consent-enabled="true" aria-pressed="true" aria-label="Toggle refined interaction continuity cookies">
                   <span class="cookie-consent-toggle-track"><span class="cookie-consent-toggle-thumb"></span></span>
@@ -229,17 +229,17 @@
              01H) EDUCATION SURFACE
         ============================================================================= -->
         <div class="cookie-consent-education">
-          <p class="cookie-consent-note"><strong>What are cookies?</strong> Small data files stored on your device to support security, continuity, and selected website functions.</p>
-          <p class="cookie-consent-note"><strong>Why we use them</strong> To keep Neuroartan secure, stable, and better informed about how the experience can improve.</p>
+          <p class="cookie-consent-note"><strong data-i18n-key="cookieConsent.education.whatAreCookies.title">What are cookies?</strong> <span data-i18n-key="cookieConsent.education.whatAreCookies.copy">Small data files stored on your device to support security, continuity, and selected website functions.</span></p>
+          <p class="cookie-consent-note"><strong data-i18n-key="cookieConsent.education.whyWeUseThem.title">Why we use them</strong> <span data-i18n-key="cookieConsent.education.whyWeUseThem.copy">To keep Neuroartan secure, stable, and better informed about how the experience can improve.</span></p>
         </div>
 
         <!-- =============================================================================
              01J) SETTINGS ACTIONS
         ============================================================================= -->
         <div class="cookie-consent-actions">
-          <button type="button" class="cookie-consent-action cookie-consent-action--primary" data-cookie-consent-save="true">Save choices</button>
-          <button type="button" class="cookie-consent-action cookie-consent-action--secondary" data-cookie-consent-accept="true">Allow all cookies</button>
-          <button type="button" class="cookie-consent-action cookie-consent-action--tertiary" data-cookie-consent-reject="true">Decline all cookies</button>
+          <button type="button" class="cookie-consent-action cookie-consent-action--primary" data-cookie-consent-save="true" data-i18n-key="cookieConsent.actions.saveChoices">Save choices</button>
+          <button type="button" class="cookie-consent-action cookie-consent-action--secondary" data-cookie-consent-accept="true" data-i18n-key="cookieConsent.actions.allowAll">Allow all cookies</button>
+          <button type="button" class="cookie-consent-action cookie-consent-action--tertiary" data-cookie-consent-reject="true" data-i18n-key="cookieConsent.actions.declineAll">Decline all cookies</button>
         </div>
 
         <!-- =============================================================================
@@ -251,9 +251,9 @@
                01KA) LEGAL LINKS
           ============================================================================= -->
           <div class="cookie-consent-footer-links" aria-label="Cookie consent legal links">
-            <a href="/pages/legal/terms-of-use/index.html" class="cookie-consent-footer-link">Terms of Use</a>
-            <a href="/pages/legal/privacy-policy/index.html" class="cookie-consent-footer-link">Privacy Policy</a>
-            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-footer-link">Cookie Policy</a>
+            <a href="/pages/legal/terms-of-use/index.html" class="cookie-consent-footer-link" data-i18n-key="cookieConsent.links.termsOfUse">Terms of Use</a>
+            <a href="/pages/legal/privacy-policy/index.html" class="cookie-consent-footer-link" data-i18n-key="cookieConsent.links.privacyPolicy">Privacy Policy</a>
+            <a href="/pages/legal/cookie-policy/index.html" class="cookie-consent-footer-link" data-i18n-key="cookieConsent.links.cookiePolicy">Cookie Policy</a>
           </div>
 
           <!-- =============================================================================
@@ -262,8 +262,8 @@
                language / region layer, not the global footer country overlay.
           ============================================================================= -->
           <button type="button" class="cookie-consent-footer-language" data-cookie-consent-language="true" aria-haspopup="dialog" aria-expanded="false" aria-label="Change language and region for cookie settings">
-            <span class="cookie-consent-footer-language-label">Language</span>
-            <span class="cookie-consent-footer-language-value" data-cookie-consent-language-value="true">Auto</span>
+            <span class="cookie-consent-footer-language-label" data-i18n-key="cookieConsent.language.label">Language</span>
+            <span class="cookie-consent-footer-language-value" data-cookie-consent-language-value="true" data-i18n-key="cookieConsent.language.auto">Auto</span>
           </button>
         </div>
       </div>

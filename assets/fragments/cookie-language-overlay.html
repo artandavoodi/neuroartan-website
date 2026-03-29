@@ -3,7 +3,10 @@
      01) COOKIE LANGUAGE / REGION OVERLAY
      01A) OVERLAY INNER
      01B) OVERLAY HEADER
-     01C) SEARCH / STATUS BAR
+     01BB) HEADER TITLE GROUP
+     01BA) BACK CONTROL
+     01C) SEARCH BAR
+     01CA) TRANSLATABLE UI LABELS
      01D) REGIONS MOUNT
 ============================================================================= -->
 
@@ -26,19 +29,28 @@
     ============================================================================= -->
     <div class="cookie-language-overlay-header">
       <div class="cookie-language-overlay-header-copy">
-        <p class="cookie-language-overlay-eyebrow">Cookie Settings</p>
-        <h2 class="cookie-language-overlay-title">Choose language and region</h2>
-        <p class="cookie-language-overlay-copy">Select the language and region you want to use for cookie-related information and legal documents.</p>
+        <!-- =============================================================================
+             01CA) TRANSLATABLE UI LABELS
+        ============================================================================= -->
+        <!-- =============================================================================
+             01BB) HEADER TITLE GROUP
+        ============================================================================= -->
+        <div class="cookie-language-overlay-title-group">
+          <img src="./assets/icons/system/globe.svg" alt="" class="cookie-language-overlay-title-icon">
+          <h2 class="cookie-language-overlay-title" data-i18n-key="cookieLanguageOverlay.title">Choose language and region</h2>
+        </div>
       </div>
 
-      <button type="button" class="cookie-language-overlay-close" aria-label="Close cookie language and region selector" data-cookie-language-overlay-close="true">
-        <span class="cookie-language-overlay-close-line cookie-language-overlay-close-line--first"></span>
-        <span class="cookie-language-overlay-close-line cookie-language-overlay-close-line--second"></span>
+      <!-- =============================================================================
+           01BA) BACK CONTROL
+      ============================================================================= -->
+      <button type="button" class="cookie-language-overlay-close" aria-label="Back to cookie settings" data-cookie-language-overlay-close="true">
+        <img src="./assets/icons/system/back.svg" alt="" class="cookie-language-overlay-back-icon">
       </button>
     </div>
 
     <!-- =============================================================================
-         01C) SEARCH / STATUS BAR
+         01C) SEARCH BAR
     ============================================================================= -->
     <div class="cookie-language-overlay-toolbar">
       <div class="cookie-language-overlay-search-shell">
@@ -46,13 +58,11 @@
           type="search"
           class="cookie-language-overlay-search"
           data-cookie-language-overlay-search="true"
+          data-i18n-placeholder-key="cookieLanguageOverlay.searchPlaceholder"
+          data-i18n-aria-label-key="cookieLanguageOverlay.searchAriaLabel"
           placeholder="Search language or region"
           aria-label="Search language or region"
         >
-      </div>
-
-      <div class="cookie-language-overlay-status" data-cookie-language-overlay-status="true">
-        Auto-detected selection will appear here.
       </div>
     </div>
 

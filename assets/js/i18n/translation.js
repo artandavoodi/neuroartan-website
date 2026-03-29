@@ -5,10 +5,12 @@
    03) LANGUAGE NORMALIZATION
    04) DIRECTION HANDLING
    05) ENGLISH BASELINE CAPTURE
+   05A) TRANSLATABLE ATTRIBUTE HELPERS
    06) DOM READINESS
    07) TRANSLATION LIFECYCLE EVENTS
    08) GOOGLE TRANSLATE FETCH
    09) RTL TEXT-ONLY STYLING
+   09A) TRANSLATION PAYLOAD PREPARATION
    10) LANGUAGE APPLICATION
    11) CURRENT LANGUAGE REFRESH
    12) PUBLIC HELPER
@@ -243,30 +245,64 @@ window.NEUROARTAN_TRANSLATION = (() => {
   };
 
   /* =============================================================================
+     05A) TRANSLATABLE ATTRIBUTE HELPERS
+  ============================================================================= */
+  function collectUniqueTranslatableNodes(scope) {
+    const nodes = [];
+    const seen = new Set();
+
+    const pushNode = (node) => {
+      if (!(node instanceof Element)) return;
+      if (seen.has(node)) return;
+      seen.add(node);
+      nodes.push(node);
+    };
+
+    if (scope instanceof Element) {
+      if (
+        scope.matches('[data-i18n-key]') ||
+        scope.matches('[data-i18n-placeholder-key]') ||
+        scope.matches('[data-i18n-aria-label-key]') ||
+        scope.matches('[data-i18n-title-key]')
+      ) {
+        pushNode(scope);
+      }
+    }
+
+    scope.querySelectorAll('[data-i18n-key], [data-i18n-placeholder-key], [data-i18n-aria-label-key], [data-i18n-title-key]').forEach(pushNode);
+    return nodes;
+  }
+
+  /* =============================================================================
      05) ENGLISH BASELINE CAPTURE
   ============================================================================= */
   function ensureEnglishBaselineCaptured(root = document) {
     const scope = root instanceof Element || root instanceof Document ? root : document;
-    const nodes = [];
-
-    if (scope instanceof Element && scope.matches("[data-i18n-key]")) {
-      nodes.push(scope);
-    }
-    nodes.push(...scope.querySelectorAll("[data-i18n-key]"));
+    const nodes = collectUniqueTranslatableNodes(scope);
 
     for (const el of nodes) {
-      if (!el.dataset.i18nEn) {
-        el.dataset.i18nEn = (el.textContent || "").trim();
+      if (el.hasAttribute('data-i18n-key') && !el.dataset.i18nEn) {
+        el.dataset.i18nEn = (el.textContent || '').trim();
       }
 
-      if (el.hasAttribute("aria-label") && !el.dataset.i18nAriaEn) {
-        el.dataset.i18nAriaEn = (el.getAttribute("aria-label") || "").trim();
+      if (el.hasAttribute('data-i18n-aria-label-key') && !el.dataset.i18nAriaEn) {
+        el.dataset.i18nAriaEn = (el.getAttribute('aria-label') || '').trim();
       }
-      if (el.hasAttribute("title") && !el.dataset.i18nTitleEn) {
-        el.dataset.i18nTitleEn = (el.getAttribute("title") || "").trim();
+      if (el.hasAttribute('data-i18n-title-key') && !el.dataset.i18nTitleEn) {
+        el.dataset.i18nTitleEn = (el.getAttribute('title') || '').trim();
       }
-      if (el.hasAttribute("placeholder") && !el.dataset.i18nPlaceholderEn) {
-        el.dataset.i18nPlaceholderEn = (el.getAttribute("placeholder") || "").trim();
+      if (el.hasAttribute('data-i18n-placeholder-key') && !el.dataset.i18nPlaceholderEn) {
+        el.dataset.i18nPlaceholderEn = (el.getAttribute('placeholder') || '').trim();
+      }
+
+      if (el.hasAttribute('aria-label') && !el.dataset.i18nAriaEn) {
+        el.dataset.i18nAriaEn = (el.getAttribute('aria-label') || '').trim();
+      }
+      if (el.hasAttribute('title') && !el.dataset.i18nTitleEn) {
+        el.dataset.i18nTitleEn = (el.getAttribute('title') || '').trim();
+      }
+      if (el.hasAttribute('placeholder') && !el.dataset.i18nPlaceholderEn) {
+        el.dataset.i18nPlaceholderEn = (el.getAttribute('placeholder') || '').trim();
       }
     }
   }
@@ -338,6 +374,49 @@ window.NEUROARTAN_TRANSLATION = (() => {
   };
 
   /* =============================================================================
+     09A) TRANSLATION PAYLOAD PREPARATION
+  ============================================================================= */
+  async function prepareNodeTranslationPayload(el, lang) {
+    const payload = {
+      textContent: null,
+      ariaLabel: null,
+      title: null,
+      placeholder: null,
+    };
+
+    const enText = (el.dataset.i18nEn || '').trim();
+
+    if (el.hasAttribute('data-i18n-key')) {
+      if (lang === 'en') {
+        payload.textContent = enText || null;
+      } else {
+        const source = enText || (el.textContent || '').trim();
+        payload.textContent = source ? await translate(source, lang) : null;
+      }
+    }
+
+    if (el.dataset.i18nAriaEn) {
+      payload.ariaLabel = lang === 'en'
+        ? el.dataset.i18nAriaEn
+        : await translate(el.dataset.i18nAriaEn, lang);
+    }
+
+    if (el.dataset.i18nTitleEn) {
+      payload.title = lang === 'en'
+        ? el.dataset.i18nTitleEn
+        : await translate(el.dataset.i18nTitleEn, lang);
+    }
+
+    if (el.dataset.i18nPlaceholderEn) {
+      payload.placeholder = lang === 'en'
+        ? el.dataset.i18nPlaceholderEn
+        : await translate(el.dataset.i18nPlaceholderEn, lang);
+    }
+
+    return payload;
+  }
+
+  /* =============================================================================
      10) LANGUAGE APPLICATION
   ============================================================================= */
   async function applyLanguage(lang, root = document) {
@@ -370,46 +449,29 @@ window.NEUROARTAN_TRANSLATION = (() => {
           keyCache.clear();
         }
 
-        const nodes = [];
-        if (scope instanceof Element && scope.matches("[data-i18n-key]")) {
-          nodes.push(scope);
-        }
-        nodes.push(...scope.querySelectorAll("[data-i18n-key]"));
+        const nodes = collectUniqueTranslatableNodes(scope);
+        const payloads = await Promise.all(
+          nodes.map(async (el) => ({
+            el,
+            payload: await prepareNodeTranslationPayload(el, lang),
+          }))
+        );
 
-        for (const el of nodes) {
-          const enText = (el.dataset.i18nEn || "").trim();
-
-          if (lang === "en") {
-            if (enText) el.textContent = enText;
-          } else {
-            const source = enText || (el.textContent || "").trim();
-            if (source) {
-              el.textContent = await translate(source, lang);
-            }
+        for (const { el, payload } of payloads) {
+          if (el.hasAttribute('data-i18n-key') && payload.textContent !== null) {
+            el.textContent = payload.textContent;
           }
 
-          if (el.dataset.i18nAriaEn) {
-            if (lang === "en") {
-              el.setAttribute("aria-label", el.dataset.i18nAriaEn);
-            } else {
-              el.setAttribute("aria-label", await translate(el.dataset.i18nAriaEn, lang));
-            }
+          if (payload.ariaLabel !== null) {
+            el.setAttribute('aria-label', payload.ariaLabel);
           }
 
-          if (el.dataset.i18nTitleEn) {
-            if (lang === "en") {
-              el.setAttribute("title", el.dataset.i18nTitleEn);
-            } else {
-              el.setAttribute("title", await translate(el.dataset.i18nTitleEn, lang));
-            }
+          if (payload.title !== null) {
+            el.setAttribute('title', payload.title);
           }
 
-          if (el.dataset.i18nPlaceholderEn) {
-            if (lang === "en") {
-              el.setAttribute("placeholder", el.dataset.i18nPlaceholderEn);
-            } else {
-              el.setAttribute("placeholder", await translate(el.dataset.i18nPlaceholderEn, lang));
-            }
+          if (payload.placeholder !== null) {
+            el.setAttribute('placeholder', payload.placeholder);
           }
 
           applyTextRTL(el, isRtl);

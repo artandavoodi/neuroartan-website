@@ -6,15 +6,18 @@
    04) DEFAULTS AND LANGUAGE NORMALIZATION
    05) STORAGE AND CACHE HELPERS
    06) LANGUAGE STATE HELPERS
+   06A) CANONICAL COUNTRY DATA HELPERS
    07) LOCALE STATE EXPOSURE
    08) UI LABELS
    09) FOOTER LOCALE UI REFRESH
    10) TRANSLATION BRIDGE
+   10A) LOADING OVERLAY BRIDGE
    11) COUNTRY OVERLAY
    12) LANGUAGE DROPDOWN
    13) IP DETECTION
    14) COUNTRY RESOLUTION
    15) FOOTER AND OVERLAY BINDINGS
+   15A) COOKIE LANGUAGE OVERLAY BRIDGE
    16) MAIN INITIALIZATION
    17) FRAGMENT-MOUNTED REBINDING
    18) DEFER-SAFE BOOTSTRAP
@@ -100,11 +103,18 @@
   const normalizeLang = (code) => {
     const raw = String(code || '').trim();
     if (!raw) return DEFAULT_LANGUAGE;
+
     let c = raw.split('-')[0].toLowerCase();
+
     // Norway variants sometimes appear as "nno" / "nob" / "nn" / "nb"; treat as "no".
     if (c === 'nno' || c === 'nob' || c === 'nn' || c === 'nb') c = 'no';
-    if (c.length === 3 && ISO639_3_TO_1[c]) c = ISO639_3_TO_1[c];
-    if (!c || c.length < 2) return DEFAULT_LANGUAGE;
+
+    if (c.length === 3 && ISO639_3_TO_1[c]) {
+      c = ISO639_3_TO_1[c];
+    }
+
+    // Only accept normalized ISO-639-1 language codes at runtime.
+    if (!/^[a-z]{2}$/.test(c)) return DEFAULT_LANGUAGE;
     return c;
   };
 
@@ -182,6 +192,66 @@
   };
 
   /* =============================================================================
+     06A) CANONICAL COUNTRY DATA HELPERS
+  ============================================================================= */
+  const getCanonicalCountries = () => {
+    const raw = Array.isArray(window.ARTAN_COUNTRIES_DATA) ? window.ARTAN_COUNTRIES_DATA : [];
+    if (!raw.length) return [];
+
+    const looksFlat = raw.some((entry) => {
+      const code = String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim();
+      const name = String(entry?.name || entry?.country || entry?.label || '').trim();
+      return Boolean(code || name);
+    });
+
+    if (looksFlat) {
+      return raw.map((entry) => ({
+        ...entry,
+        code: String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim().toUpperCase(),
+        name: String(entry?.name || entry?.country || entry?.label || '').trim(),
+        language: normalizeLang(entry?.language || entry?.primaryLanguage || ''),
+        languages: Array.isArray(entry?.languages) ? entry.languages.map(normalizeLang).filter(Boolean) : []
+      })).filter((entry) => entry.code || entry.name);
+    }
+
+    return raw.flatMap((group) => {
+      const countries = Array.isArray(group?.countries) ? group.countries : [];
+      return countries.map((entry) => ({
+        ...entry,
+        code: String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim().toUpperCase(),
+        name: String(entry?.name || entry?.country || entry?.label || '').trim(),
+        language: normalizeLang(entry?.language || entry?.primaryLanguage || ''),
+        languages: Array.isArray(entry?.languages) ? entry.languages.map(normalizeLang).filter(Boolean) : []
+      })).filter((entry) => entry.code || entry.name);
+    });
+  };
+
+  const getCanonicalCountryByCode = (countryCode) => {
+    const code = String(countryCode || '').trim().toUpperCase();
+    if (!code) return null;
+    return getCanonicalCountries().find((entry) => entry.code === code) || null;
+  };
+
+  const inferLanguageForCountry = (countryCode, fallback = DEFAULT_LANGUAGE) => {
+    const normalizedFallback = normalizeLang(fallback || DEFAULT_LANGUAGE);
+    const canonical = getCanonicalCountryByCode(countryCode);
+
+    if (canonical) {
+      if (Array.isArray(canonical.languages) && canonical.languages.length) {
+        return canonical.languages[0];
+      }
+      if (canonical.language) {
+        return canonical.language;
+      }
+    }
+
+    const browserLanguage = normalizeLang(navigator.language || '');
+    if (browserLanguage) return browserLanguage;
+
+    return normalizedFallback;
+  };
+
+  /* =============================================================================
      07) LOCALE STATE EXPOSURE
   ============================================================================= */
   Object.defineProperty(window, 'NEUROARTAN_LOCALE', {
@@ -217,9 +287,24 @@
 
   const hydrateStateFromStorage = () => {
     state.countryCode = (getLS(STORAGE.COUNTRY_CODE, LEGACY_STORAGE.COUNTRY_CODE) || DEFAULT_COUNTRY_CODE).toUpperCase();
-    state.language = normalizeLang(getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE) || DEFAULT_LANGUAGE);
-    state.countryLabel = getLS(STORAGE.COUNTRY_LABEL, LEGACY_STORAGE.COUNTRY_LABEL) || nativeCountryName(state.countryCode, state.language);
+
+    const storedLanguage = normalizeLang(getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE) || '');
+    state.language = inferLanguageForCountry(state.countryCode, storedLanguage || DEFAULT_LANGUAGE);
+
+    const storedLabel = getLS(STORAGE.COUNTRY_LABEL, LEGACY_STORAGE.COUNTRY_LABEL) || '';
+    state.countryLabel = storedLabel && storedLabel !== '—'
+      ? storedLabel
+      : nativeCountryName(state.countryCode, state.language);
+
     state.languages = getStoredLanguages();
+    if (!state.languages || !state.languages.length) {
+      const canonical = getCanonicalCountryByCode(state.countryCode);
+      if (canonical && Array.isArray(canonical.languages) && canonical.languages.length) {
+        state.languages = canonical.languages;
+      } else {
+        state.languages = [state.language];
+      }
+    }
   };
 
   /* =============================================================================
@@ -238,60 +323,89 @@
   };
 
   /* =============================================================================
+     10A) LOADING OVERLAY BRIDGE
+  ============================================================================= */
+  const startLoadingOverlay = (reason = 'locale-translation') => {
+    const api = window.ARTAN_LOADING_OVERLAY;
+    if (!api || typeof api.start !== 'function') return;
+    try { api.start(reason); } catch {}
+  };
+
+  const stopLoadingOverlay = (reason = 'locale-translation') => {
+    const api = window.ARTAN_LOADING_OVERLAY;
+    if (!api || typeof api.stop !== 'function') return;
+    try { api.stop(reason); } catch {}
+  };
+
+  /* =============================================================================
      10) TRANSLATION BRIDGE
   ============================================================================= */
 
   let pendingLang = null;
 
-  const applyTranslationNow = (lang) => {
+  const applyTranslationNow = async (lang) => {
     const api = window.NEUROARTAN_TRANSLATION || window.ARTAN_TRANSLATION;
     if (!api || typeof api.applyLanguage !== 'function') return false;
 
     try {
       const out = api.applyLanguage(normalizeLang(lang));
       if (out === false) return false;
+      if (out && typeof out.then === 'function') {
+        await out;
+      }
       return true;
     } catch {
       return false;
     }
   };
 
-  const forceEnglishFallback = () => {
+  const forceEnglishFallback = async () => {
     state.language = DEFAULT_LANGUAGE;
     setLS(STORAGE.LANGUAGE, DEFAULT_LANGUAGE, LEGACY_STORAGE.LANGUAGE);
     setLabels();
     buildLanguageDropdown(DEFAULT_LANGUAGE, state.languages);
-    applyTranslationNow(DEFAULT_LANGUAGE);
+    await applyTranslationNow(DEFAULT_LANGUAGE);
   };
 
-  const applyTranslation = (lang) => {
+  const applyTranslation = async (lang) => {
     const normalized = normalizeLang(lang);
     pendingLang = normalized;
+    startLoadingOverlay('locale-translation');
 
-    if (applyTranslationNow(normalized)) {
+    if (await applyTranslationNow(normalized)) {
       pendingLang = null;
-      return;
+      stopLoadingOverlay('locale-translation');
+      return true;
     }
 
-    // Retry briefly (translation.js may initialize after this file).
-    let tries = 0;
-    const t = setInterval(() => {
-      tries += 1;
-      if (!pendingLang) { clearInterval(t); return; }
+    return await new Promise((resolve) => {
+      let tries = 0;
+      const t = setInterval(async () => {
+        tries += 1;
+        if (!pendingLang) {
+          clearInterval(t);
+          stopLoadingOverlay('locale-translation');
+          resolve(true);
+          return;
+        }
 
-      if (applyTranslationNow(pendingLang)) {
-        pendingLang = null;
-        clearInterval(t);
-        return;
-      }
+        if (await applyTranslationNow(pendingLang)) {
+          pendingLang = null;
+          clearInterval(t);
+          stopLoadingOverlay('locale-translation');
+          resolve(true);
+          return;
+        }
 
-      // After retries, keep UI consistent by falling back to English.
-      if (tries >= 30) {
-        pendingLang = null;
-        clearInterval(t);
-        forceEnglishFallback();
-      }
-    }, 80);
+        if (tries >= 30) {
+          pendingLang = null;
+          clearInterval(t);
+          await forceEnglishFallback();
+          stopLoadingOverlay('locale-translation');
+          resolve(false);
+        }
+      }, 80);
+    });
   };
 
   /* =============================================================================
@@ -425,12 +539,11 @@
       btn.className = 'language-option';
       btn.setAttribute('data-lang', code);
       btn.textContent = code.toUpperCase();
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         state.language = code;
         setLS(STORAGE.LANGUAGE, code, LEGACY_STORAGE.LANGUAGE);
         closeLanguageDropdown();
         setLabels();
-        applyTranslation(code);
 
         // Keep country label native to current language.
         if (state.countryCode) {
@@ -438,8 +551,10 @@
           setLS(STORAGE.COUNTRY_LABEL, state.countryLabel);
           setLabels();
         }
+
         // Rebuild dropdown with current stored languages.
         buildLanguageDropdown(state.language, state.languages);
+        await applyTranslation(code);
       });
       dd.appendChild(btn);
     });
@@ -603,8 +718,66 @@
       closeLanguageDropdown();
       setLabels();
       buildLanguageDropdown(state.language, state.languages);
-      applyTranslation(state.language);
+      await applyTranslation(state.language);
     }, { passive: true });
+  };
+
+  /* =============================================================================
+     15A) COOKIE LANGUAGE OVERLAY BRIDGE
+  ============================================================================= */
+
+  const bindCookieLanguageOverlayBridge = () => {
+    if (document.body.dataset.cookieLanguageOverlayBridgeBound === 'true') return;
+    document.body.dataset.cookieLanguageOverlayBridgeBound = 'true';
+
+    document.addEventListener('country-selected', async (event) => {
+      const detail = event?.detail || {};
+      if (detail.source !== 'cookie-language-overlay') return;
+
+      const selectedCountry = detail.country && typeof detail.country === 'object' ? detail.country : null;
+      const selectedCode = String(detail.countryCode || detail.code || selectedCountry?.code || '').trim().toUpperCase();
+      if (!selectedCode) return;
+
+      const explicitLanguage = normalizeLang(detail.language || '');
+      const canonical = getCanonicalCountryByCode(selectedCode);
+      const canonicalLanguages = canonical && Array.isArray(canonical.languages) ? canonical.languages : [];
+      const canonicalPrimary = canonical?.language ? normalizeLang(canonical.language) : '';
+      const countryLanguages = Array.isArray(selectedCountry?.languages)
+        ? selectedCountry.languages.map(normalizeLang).filter(Boolean)
+        : [];
+      const singleCountryLanguage = normalizeLang(selectedCountry?.language || '');
+      const storedLanguage = normalizeLang(getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE) || state.language || DEFAULT_LANGUAGE);
+
+      const nextLanguage = (
+        explicitLanguage ||
+        canonicalLanguages[0] ||
+        canonicalPrimary ||
+        countryLanguages[0] ||
+        singleCountryLanguage ||
+        inferLanguageForCountry(selectedCode, storedLanguage || DEFAULT_LANGUAGE)
+      );
+
+      state.countryCode = selectedCode;
+      state.language = nextLanguage;
+      state.countryLabel = nativeCountryName(selectedCode, nextLanguage);
+
+      if (canonicalLanguages.length) {
+        setStoredLanguages(canonicalLanguages);
+      } else if (countryLanguages.length) {
+        setStoredLanguages(countryLanguages);
+      } else {
+        setStoredLanguages([nextLanguage]);
+      }
+
+      setLS(STORAGE.COUNTRY_CODE, state.countryCode, LEGACY_STORAGE.COUNTRY_CODE);
+      setLS(STORAGE.COUNTRY_LABEL, state.countryLabel, LEGACY_STORAGE.COUNTRY_LABEL);
+      setLS(STORAGE.LANGUAGE, state.language, LEGACY_STORAGE.LANGUAGE);
+
+      closeLanguageDropdown();
+      setLabels();
+      buildLanguageDropdown(state.language, state.languages);
+      await applyTranslation(state.language);
+    });
   };
 
   /* =============================================================================
@@ -613,7 +786,7 @@
 
   async function init() {
     hydrateStateFromStorage();
-    await refreshFooterLocaleUI();
+    bindCookieLanguageOverlayBridge();
 
     const isNewSession = !sessionStorage.getItem(STORAGE.SESSION);
 
@@ -621,12 +794,18 @@
       const ip = await detectIP();
 
       const code = (ip.code || DEFAULT_COUNTRY_CODE).toUpperCase();
-      const lang = normalizeLang(ip.lang || DEFAULT_LANGUAGE);
+      const lang = inferLanguageForCountry(code, normalizeLang(ip.lang || DEFAULT_LANGUAGE));
 
       state.countryCode = code;
       state.language = lang;
       state.countryLabel = nativeCountryName(code, lang);
-      setStoredLanguages([lang]);
+
+      const canonical = getCanonicalCountryByCode(code);
+      if (canonical && Array.isArray(canonical.languages) && canonical.languages.length) {
+        setStoredLanguages(canonical.languages);
+      } else {
+        setStoredLanguages([lang]);
+      }
 
       setLS(STORAGE.COUNTRY_CODE, code, LEGACY_STORAGE.COUNTRY_CODE);
       setLS(STORAGE.COUNTRY_LABEL, state.countryLabel, LEGACY_STORAGE.COUNTRY_LABEL);
@@ -636,7 +815,7 @@
     }
 
     await refreshFooterLocaleUI();
-    applyTranslation(state.language);
+    await applyTranslation(state.language);
   }
 
   /* =============================================================================

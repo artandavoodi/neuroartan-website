@@ -276,8 +276,8 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-bottom-stack::before{
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
+  left: var(--cookie-consent-body-edge-inset);
+  right: var(--cookie-consent-body-edge-inset);
   top: 0;
   height: 1px;
   background: var(--cookie-consent-header-divider);

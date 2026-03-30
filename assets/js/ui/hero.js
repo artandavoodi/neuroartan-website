@@ -25,9 +25,11 @@
   const ENTER_SCROLL_THRESHOLD = 24;
   const ENTER_TOUCH_THRESHOLD = 18;
   const EXIT_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
-  const EXIT_DURATION = 760;
-  const SCROLL_DELAY = 140;
-  const STAGE_HIDE_DELAY = 980;
+  const EXIT_DURATION = 920;
+  const SCROLL_DELAY = 220;
+  const STAGE_HIDE_DELAY = 1480;
+  const OVERLAY_FADE_DELAY = 520;
+  const OVERLAY_TARGET_OPACITY = '0.42';
 
   let isEntering = false;
   let touchStartY = null;
@@ -63,11 +65,11 @@
     const circle = document.querySelector('.stage-circle');
     const overlay = document.querySelector('.stage-video-overlay');
 
-    animateOut(logo, 'translate3d(0, -10px, 0) scale(1.035)', '0', '0px');
-    animateOut(announcement, 'translate3d(0, -8px, 0) scale(1.02)', '0', '0px');
-    animateOut(essence, 'translate3d(0, -6px, 0) scale(1.02)', '0', '0px');
-    animateOut(cta, 'translate3d(0, -4px, 0) scale(1.018)', '0', '0px');
-    animateOut(enter, 'translate3d(0, -2px, 0) scale(1.016)', '0', '0px');
+    animateOut(logo, 'translate3d(0, -6px, 0) scale(1.018)', '0', '0px');
+    animateOut(announcement, 'translate3d(0, -5px, 0) scale(1.012)', '0', '0px');
+    animateOut(essence, 'translate3d(0, -4px, 0) scale(1.012)', '0', '0px');
+    animateOut(cta, 'translate3d(0, -3px, 0) scale(1.01)', '0', '0px');
+    animateOut(enter, 'translate3d(0, -2px, 0) scale(1.01)', '0', '0px');
 
     if (circle instanceof HTMLElement) {
       circle.style.transition = [
@@ -77,7 +79,7 @@
       ].join(', ');
       circle.style.willChange = 'opacity, transform, filter';
       circle.style.transformOrigin = 'center center';
-      circle.style.transform = 'translate3d(0, 0, 0) scale(1.08)';
+      circle.style.transform = 'translate3d(0, 0, 0) scale(1.03)';
       circle.style.opacity = '0';
       circle.style.filter = 'blur(0px)';
       circle.style.pointerEvents = 'none';
@@ -88,8 +90,12 @@
         `opacity ${EXIT_DURATION}ms ${EXIT_EASE}`,
         `transform ${EXIT_DURATION}ms ${EXIT_EASE}`
       ].join(', ');
-      overlay.style.transform = 'scale(1.04)';
-      overlay.style.opacity = '0';
+      overlay.style.transform = 'scale(1.015)';
+      overlay.style.opacity = '1';
+
+      window.setTimeout(() => {
+        overlay.style.opacity = OVERLAY_TARGET_OPACITY;
+      }, OVERLAY_FADE_DELAY);
     }
   };
 

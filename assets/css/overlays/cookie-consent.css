@@ -285,6 +285,18 @@ body.cookie-consent-closing .cookie-consent-panel{
   z-index: 2;
 }
 
+.cookie-consent-bottom-stack::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--cookie-consent-surface);
+  pointer-events: none;
+  z-index: 1;
+}
+
 /* =============================================================================
    08) CLOSE CONTROL
 ============================================================================= */
@@ -356,6 +368,7 @@ body.cookie-consent-closing .cookie-consent-close{
   flex: 1 1 0;
   padding-bottom: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-top: 0.64rem;
@@ -391,16 +404,20 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 .cookie-consent-bottom-stack{
-  position: sticky;
-  bottom: 0;
-  z-index: 1;
+  position: relative;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   gap: 0;
   flex-shrink: 0;
   isolation: isolate;
-  background: var(--cookie-consent-surface);
+  background: transparent;
 }
+
+.cookie-consent-learning-layer + .cookie-consent-bottom-stack{
+  margin-top: 0;
+}
+
 /* =============================================================================
    EXTERNAL COOKIE FOOTER BAR
 ============================================================================= */
@@ -865,6 +882,11 @@ body.cookie-consent-closing .cookie-consent-close{
 /* =============================================================================
    12C) SOVEREIGN LEARNING LAYER HANDOFF
 ============================================================================= */
+.cookie-consent-panel > .cookie-consent-learning-layer{
+  position: relative;
+  z-index: 2;
+}
+
 /* Education surface styling now lives in:
    assets/css/overlays/cookie-consent-learning.css */
 
@@ -938,7 +960,7 @@ body.cookie-consent-closing .cookie-consent-close{
 ============================================================================= */
 .cookie-consent-actions{
   position: relative;
-  z-index: 1;
+  z-index: 3;
   margin-top: 0;
   padding-top: 0.72rem;
   padding-bottom: 0.72rem;
@@ -1145,6 +1167,7 @@ body.cookie-consent-closing .cookie-consent-close{
     padding-top: 0.51rem;
     padding-left: 0.36rem;
     padding-right: 0.36rem;
+    padding-bottom: 0.62rem;
   }
 
   .cookie-consent-banner{

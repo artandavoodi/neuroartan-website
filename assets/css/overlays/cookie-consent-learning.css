@@ -2,15 +2,16 @@
    00) FILE INDEX
    01) LEARNING ROOT
    02) EXTERNAL LEARNING LAYER
-   03) EDUCATION SHELL
-   04) HORIZONTAL RAIL
-   05) LEARNING CARDS
-   06) CARD ICON
-   07) CARD COPY
-   08) EXPAND CONTROL
-   09) DETAIL PANEL
-   10) REDUCED MOTION
-   11) RESPONSIVE — 768PX
+   03) DRAWER STATES
+   04) EDUCATION SHELL
+   05) HORIZONTAL RAIL
+   06) LEARNING CARDS
+   07) CARD ICON
+   08) CARD COPY
+   09) EXPAND CONTROL
+   10) DETAIL PANEL
+   11) REDUCED MOTION
+   12) RESPONSIVE — 768PX
 ============================================================================= */
 
 /* =============================================================================
@@ -21,6 +22,9 @@
   --cookie-consent-learning-bleed: 1.25rem;
   --cookie-consent-learning-card-width-min: 14.8rem;
   --cookie-consent-learning-card-width-max: 16.6rem;
+  --cookie-consent-learning-drawer-offset: 1.2rem;
+  --cookie-consent-learning-drawer-duration: 320ms;
+  --cookie-consent-learning-drawer-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* =============================================================================
@@ -37,14 +41,56 @@
   margin-left: calc(-1 * var(--cookie-consent-learning-bleed));
   margin-right: calc(-1 * var(--cookie-consent-learning-bleed));
   margin-bottom: 0;
-  padding-top: 0.72rem;
-  padding-bottom: 0.72rem;
-  background: var(--cookie-consent-surface);
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
   overflow-x: hidden;
+  overflow-y: hidden;
+  max-height: 0;
 }
 
 /* =============================================================================
-   03) EDUCATION SHELL
+   03) DRAWER STATES
+============================================================================= */
+.cookie-consent-learning-layer{
+  opacity: 0;
+  transform: translateY(var(--cookie-consent-learning-drawer-offset));
+  pointer-events: none;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  visibility: hidden;
+}
+.cookie-consent-learning-layer[data-cookie-consent-drawer-state="hidden"]{
+  opacity: 0;
+  transform: translateY(var(--cookie-consent-learning-drawer-offset));
+  pointer-events: none;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  visibility: hidden;
+}
+
+.cookie-consent-learning-layer[data-cookie-consent-drawer-state="visible"]{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: 32rem;
+  padding-top: 0.72rem;
+  padding-bottom: 0.72rem;
+  visibility: visible;
+}
+
+.cookie-consent-learning-layer{
+  transition:
+    opacity var(--cookie-consent-learning-drawer-duration) var(--cookie-consent-learning-drawer-ease),
+    transform var(--cookie-consent-learning-drawer-duration) var(--cookie-consent-learning-drawer-ease),
+    max-height var(--cookie-consent-learning-drawer-duration) var(--cookie-consent-learning-drawer-ease);
+  will-change: opacity, transform, max-height;
+}
+
+/* =============================================================================
+   04) EDUCATION SHELL
 ============================================================================= */
 .cookie-consent-education{
   display: flex;
@@ -62,7 +108,7 @@
 }
 
 /* =============================================================================
-   04) HORIZONTAL RAIL
+   05) HORIZONTAL RAIL
 ============================================================================= */
 .cookie-consent-learning-rail{
   display: grid;
@@ -94,7 +140,7 @@
 }
 
 /* =============================================================================
-   05) LEARNING CARDS
+   06) LEARNING CARDS
 ============================================================================= */
 .cookie-consent-learning-card{
   position: relative;
@@ -117,7 +163,7 @@
 }
 
 /* =============================================================================
-   06) CARD ICON
+   07) CARD ICON
 ============================================================================= */
 .cookie-consent-learning-icon{
   display: inline-flex;
@@ -130,7 +176,7 @@
 }
 
 /* =============================================================================
-   07) CARD COPY
+   08) CARD COPY
 ============================================================================= */
 .cookie-consent-learning-copy{
   display: flex;
@@ -159,7 +205,7 @@
 }
 
 /* =============================================================================
-   08) EXPAND CONTROL
+   09) EXPAND CONTROL
 ============================================================================= */
 .cookie-consent-learning-expand,
 .cookie-consent-learning-close{
@@ -234,7 +280,7 @@
 }
 
 /* =============================================================================
-   09) DETAIL PANEL
+   10) DETAIL PANEL
 ============================================================================= */
 .cookie-consent-learning-details{
   display: block;
@@ -285,9 +331,10 @@
 }
 
 /* =============================================================================
-   10) REDUCED MOTION
+   11) REDUCED MOTION
 ============================================================================= */
 @media (prefers-reduced-motion: reduce){
+  .cookie-consent-learning-layer,
   .cookie-consent-learning-expand-line,
   .cookie-consent-learning-close-line{
     transition: none !important;
@@ -296,7 +343,7 @@
 }
 
 /* =============================================================================
-   11) RESPONSIVE — 768PX
+   12) RESPONSIVE — 768PX
 ============================================================================= */
 @media (max-width:768px){
   :root{

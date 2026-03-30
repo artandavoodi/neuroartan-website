@@ -32,8 +32,16 @@
   /* =============================================================================
      02) COUNTRY OVERLAY FRAGMENT INJECTION
   ============================================================================= */
+  const WEBSITE_BASE_PATH = window.location.pathname.includes('/website/') ? '/website' : '';
+
+  function assetPath(path) {
+    const normalized = String(path || '').trim();
+    if (!normalized) return '';
+    return `${WEBSITE_BASE_PATH}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
+  }
+
   const COUNTRY_FRAGMENT_URLS = [
-    '/assets/fragments/country/country-overlay.html',
+    assetPath('/assets/fragments/country/country-overlay.html'),
     'assets/fragments/country/country-overlay.html'
   ];
 

@@ -6,10 +6,11 @@
    04) HEADER
    05) BACK CONTROL
    06) TITLE
-   07) BODY
-   08) ARTICLE SURFACE
-   09) TYPOGRAPHY
-   10) RESPONSIVE
+   07) CLOSE CONTROL SUPPRESSION
+   08) BODY
+   09) ARTICLE SURFACE
+   10) TYPOGRAPHY
+   11) RESPONSIVE
 ============================================================================= */
 
 /* =============================================================================
@@ -17,13 +18,9 @@
 ============================================================================= */
 :root{
   --cookie-learning-overlay-z-index: 1400;
-  --cookie-learning-overlay-panel-width: min(100vw - 2.4rem, 32rem);
-  --cookie-learning-overlay-panel-height: min(100vh - 2.4rem, 46rem);
-  --cookie-learning-overlay-radius: 1.9rem;
-  --cookie-learning-overlay-header-height: 4rem;
-  --cookie-learning-overlay-body-padding-x: 1.5rem;
-  --cookie-learning-overlay-body-padding-y: 1.25rem;
-  --cookie-learning-overlay-divider: rgba(255, 255, 255, 0.08);
+  --cookie-learning-overlay-panel-width: var(--cookie-language-overlay-width);
+  --cookie-learning-overlay-panel-height: var(--cookie-language-overlay-max-height);
+  --cookie-learning-overlay-radius: var(--cookie-language-overlay-radius);
   --cookie-learning-overlay-surface: rgba(10, 10, 10, 0.96);
   --cookie-learning-overlay-backdrop: rgba(0, 0, 0, 0.52);
 }
@@ -63,12 +60,13 @@
   width: var(--cookie-learning-overlay-panel-width);
   height: var(--cookie-learning-overlay-panel-height);
   max-width: 100%;
-  max-height: 100%;
+  max-height: var(--cookie-learning-overlay-panel-height);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--cookie-learning-overlay-radius);
   background: var(--cookie-learning-overlay-surface);
   box-shadow: 0 32px 90px rgba(0, 0, 0, 0.42);
   overflow: hidden;
+  padding: 1.25rem;
 }
 
 /* =============================================================================
@@ -76,22 +74,12 @@
 ============================================================================= */
 .cookie-learning-overlay-header{
   position: relative;
-  display: grid;
-  grid-template-columns: var(--cookie-consent-control-size) 1fr var(--cookie-consent-control-size);
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
-  min-height: var(--cookie-learning-overlay-header-height);
-  padding: 1.25rem 1.5rem 1rem;
-}
-
-.cookie-learning-overlay-header::after{
-  content: "";
-  position: absolute;
-  left: 1.5rem;
-  right: 1.5rem;
-  bottom: 0;
-  height: 1px;
-  background: var(--cookie-learning-overlay-divider);
+  padding-bottom: 1.42rem;
+  border-bottom: 1px solid var(--cookie-language-overlay-divider);
 }
 
 /* =============================================================================
@@ -102,53 +90,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--cookie-consent-control-size);
-  height: var(--cookie-consent-control-size);
-  min-width: var(--cookie-consent-control-size);
-  min-height: var(--cookie-consent-control-size);
+  width: 1.12rem;
+  height: 1.12rem;
+  min-width: 1.12rem;
+  min-height: 1.12rem;
   padding: 0;
   border: 0;
   background: transparent;
   appearance: none;
-  color: var(--text-primary-color);
   cursor: pointer;
-  transition: color 200ms ease, opacity 160ms ease;
-}
-
-.cookie-learning-overlay-back:hover,
-.cookie-learning-overlay-back:focus-visible,
-.cookie-learning-overlay-back:active{
-  color: var(--color-primary7);
-  outline: none;
+  flex: 0 0 auto;
 }
 
 .cookie-learning-overlay-back-icon{
-  position: relative;
   display: block;
-  width: var(--cookie-consent-control-line-width);
-  height: var(--cookie-consent-control-line-width);
+  width: var(--cookie-language-overlay-back-icon-size);
+  height: var(--cookie-language-overlay-back-icon-size);
+  min-width: var(--cookie-language-overlay-back-icon-size);
+  min-height: var(--cookie-language-overlay-back-icon-size);
+  object-fit: contain;
+  object-position: center;
+  filter: var(--cookie-language-overlay-back-icon-filter);
+  opacity: 1;
+  visibility: visible;
   pointer-events: none;
-}
-
-.cookie-learning-overlay-back-icon::before,
-.cookie-learning-overlay-back-icon::after{
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 0.55rem;
-  height: var(--cookie-consent-control-stroke);
-  background: currentColor;
-  transform-origin: left center;
-}
-
-.cookie-learning-overlay-back-icon::before{
-  top: calc(50% - 0.02rem);
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.cookie-learning-overlay-back-icon::after{
-  top: calc(50% + 0.02rem);
-  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 /* =============================================================================
@@ -157,28 +122,35 @@
 .cookie-learning-overlay-title{
   margin: 0;
   color: var(--text-primary-color);
-  text-align: center;
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
-  text-transform: uppercase;
+  font-size: 1.56rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 /* =============================================================================
-   07) BODY
+   07) CLOSE CONTROL SUPPRESSION
+============================================================================= */
+.cookie-learning-overlay-header .cookie-consent-close{
+  display: none;
+}
+
+/* =============================================================================
+   08) BODY
 ============================================================================= */
 .cookie-learning-overlay-body{
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: var(--cookie-learning-overlay-body-padding-y) var(--cookie-learning-overlay-body-padding-x) 1.5rem;
+  padding: 1.02rem 0 0;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
 }
 
 /* =============================================================================
-   08) ARTICLE SURFACE
+   09) ARTICLE SURFACE
 ============================================================================= */
 .cookie-learning-overlay-article{
   display: flex;
@@ -196,12 +168,15 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+  padding-bottom: 1.02rem;
+  border-bottom: 1px solid var(--cookie-language-overlay-divider);
 }
 
 .cookie-learning-overlay-article-body{
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-top: 1.02rem;
 }
 
 .cookie-learning-overlay-points{
@@ -217,7 +192,7 @@
 }
 
 /* =============================================================================
-   09) TYPOGRAPHY
+   10) TYPOGRAPHY
 ============================================================================= */
 .cookie-learning-overlay-article-topline strong,
 .cookie-learning-overlay-point strong{
@@ -239,26 +214,31 @@
 }
 
 /* =============================================================================
-   10) RESPONSIVE
+   11) RESPONSIVE
 ============================================================================= */
 @media (max-width: 768px){
-  :root{
-    --cookie-learning-overlay-panel-width: min(100vw - 1.2rem, 32rem);
-    --cookie-learning-overlay-panel-height: min(100vh - 1.2rem, 100vh - 1.2rem);
-    --cookie-learning-overlay-body-padding-x: 1rem;
-    --cookie-learning-overlay-body-padding-y: 1rem;
-  }
-
   .cookie-learning-overlay{
     padding: 0.6rem;
   }
 
-  .cookie-learning-overlay-header{
-    padding: 1rem 1rem 0.9rem;
+  .cookie-learning-overlay-panel{
+    padding: 0.95rem;
   }
 
-  .cookie-learning-overlay-header::after{
-    left: 1rem;
-    right: 1rem;
+  .cookie-learning-overlay-header{
+    gap: 0.82rem;
+    padding-bottom: 1.12rem;
+  }
+
+  .cookie-learning-overlay-article-topline{
+    padding-bottom: 0.82rem;
+  }
+
+  .cookie-learning-overlay-article-body{
+    padding-top: 0.82rem;
+  }
+
+  .cookie-learning-overlay-title{
+    font-size: 1.4rem;
   }
 }

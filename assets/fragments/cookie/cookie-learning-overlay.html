@@ -6,10 +6,9 @@
      01C) HEADER
      01D) BACK CONTROL
      01E) TITLE
-     01F) CLOSE CONTROL
-     01G) BODY
-     01H) WHAT ARE COOKIES PANEL
-     01I) WHY WE USE THEM PANEL
+     01F) BODY
+     01G) WHAT ARE COOKIES PANEL
+     01H) WHY WE USE THEM PANEL
 ============================================================================= -->
 
 <!-- =============================================================================
@@ -32,12 +31,6 @@
     ============================================================================= -->
     <div class="cookie-learning-overlay-header">
 
-      <!-- =============================================================================
-           01D) BACK CONTROL
-      ============================================================================= -->
-      <button type="button" class="cookie-learning-overlay-back" data-cookie-learning-overlay-back="true" aria-label="Return to cookie settings">
-        <span class="cookie-learning-overlay-back-icon" aria-hidden="true"></span>
-      </button>
 
       <!-- =============================================================================
            01E) TITLE
@@ -45,21 +38,21 @@
       <p class="cookie-learning-overlay-title" id="cookie-learning-overlay-title" data-cookie-learning-overlay-title="true">Cookie information</p>
 
       <!-- =============================================================================
-           01F) CLOSE CONTROL
+           01D) BACK CONTROL
       ============================================================================= -->
-      <button class="cookie-consent-close" type="button" data-cookie-learning-overlay-close="true" aria-label="Close cookie learning">
-        <span class="cookie-consent-close-line cookie-consent-close-line--first"></span>
-        <span class="cookie-consent-close-line cookie-consent-close-line--second"></span>
+      <button type="button" class="cookie-learning-overlay-back" data-cookie-learning-overlay-back="true" aria-label="Return to cookie settings">
+        <img src="./assets/icons/system/back.svg" alt="" class="cookie-learning-overlay-back-icon">
       </button>
+
     </div>
 
     <!-- =============================================================================
-         01G) BODY
+         01F) BODY
     ============================================================================= -->
     <div class="cookie-learning-overlay-body">
 
       <!-- =============================================================================
-           01H) WHAT ARE COOKIES PANEL
+           01G) WHAT ARE COOKIES PANEL
       ============================================================================= -->
       <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-cookies" data-cookie-learning-overlay-article="cookies" hidden>
         <div class="cookie-learning-overlay-article-topline">
@@ -85,7 +78,7 @@
       </article>
 
       <!-- =============================================================================
-           01I) WHY WE USE THEM PANEL
+           01H) WHY WE USE THEM PANEL
       ============================================================================= -->
       <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-why-we-use-them" data-cookie-learning-overlay-article="why-we-use-them" hidden>
         <div class="cookie-learning-overlay-article-topline">

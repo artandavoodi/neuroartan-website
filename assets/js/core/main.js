@@ -20,23 +20,31 @@
 /* =============================================================================
    01) GLOBAL LAYOUT INJECTION
 ============================================================================= */
-const CUSTOM_CURSOR_CSS_URL = '/assets/css/ui/custom-cursor.css';
-const CUSTOM_CURSOR_JS_URL = '/assets/js/ui/custom-cursor.js';
-const COOKIE_LEARNING_OVERLAY_CSS_URL = '/assets/css/overlays/cookie/cookie-learning-overlay.css';
-const COOKIE_LEARNING_OVERLAY_JS_URL = '/assets/js/overlays/cookie/cookie-learning-overlay.js';
+const WEBSITE_BASE_PATH = window.location.pathname.includes('/website/') ? '/website' : '';
+
+function assetPath(path) {
+  const normalized = String(path || '').trim();
+  if (!normalized) return '';
+  return `${WEBSITE_BASE_PATH}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
+}
+
+const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/ui/custom-cursor.css');
+const CUSTOM_CURSOR_JS_URL = assetPath('/assets/js/ui/custom-cursor.js');
+const COOKIE_LEARNING_OVERLAY_CSS_URL = assetPath('/assets/css/overlays/cookie/cookie-learning-overlay.css');
+const COOKIE_LEARNING_OVERLAY_JS_URL = assetPath('/assets/js/overlays/cookie/cookie-learning-overlay.js');
 
 const FRAGMENT_PATHS = {
-  'account-drawer': '/assets/fragments/account/account-drawer.html',
-  'cookie-consent': '/assets/fragments/cookie/cookie-consent.html',
-  'cookie-language-overlay': '/assets/fragments/cookie/cookie-language-overlay.html',
-  'cookie-learning-overlay': '/assets/fragments/cookie/cookie-learning-overlay.html',
-  'country-overlay': '/assets/fragments/country/country-overlay.html',
-  'institutional-links': '/assets/fragments/navigation/institutional-links.html',
-  'institutional-menu': '/assets/fragments/navigation/institutional-menu.html',
-  'menu': '/assets/fragments/navigation/menu.html',
-  'footer': '/assets/fragments/footer/footer.html',
-  'brain-activity': '/assets/fragments/system/brain-activity.html',
-  'system-node': '/assets/fragments/system/system-node.html'
+  'account-drawer': assetPath('/assets/fragments/account/account-drawer.html'),
+  'cookie-consent': assetPath('/assets/fragments/cookie/cookie-consent.html'),
+  'cookie-language-overlay': assetPath('/assets/fragments/cookie/cookie-language-overlay.html'),
+  'cookie-learning-overlay': assetPath('/assets/fragments/cookie/cookie-learning-overlay.html'),
+  'country-overlay': assetPath('/assets/fragments/country/country-overlay.html'),
+  'institutional-links': assetPath('/assets/fragments/navigation/institutional-links.html'),
+  'institutional-menu': assetPath('/assets/fragments/navigation/institutional-menu.html'),
+  'menu': assetPath('/assets/fragments/navigation/menu.html'),
+  'footer': assetPath('/assets/fragments/footer/footer.html'),
+  'brain-activity': assetPath('/assets/fragments/system/brain-activity.html'),
+  'system-node': assetPath('/assets/fragments/system/system-node.html')
 };
 
 /* =============================================================================
@@ -149,7 +157,7 @@ async function fetchTextFromCandidates(path, cache = 'no-store') {
 }
 
 function resolveFragmentPath(name) {
-  return FRAGMENT_PATHS[name] || `/assets/fragments/${name}.html`;
+  return FRAGMENT_PATHS[name] || assetPath(`/assets/fragments/${name}.html`);
 }
 
 /* =============================================================================
@@ -262,7 +270,7 @@ injectGlobalLayout().then(() => {
 /* =============================================================================
    07) FOOTER FRAGMENT INJECTION
 ============================================================================= */
-const FOOTER_FRAGMENT_URL = '/assets/fragments/footer/footer.html';
+const FOOTER_FRAGMENT_URL = assetPath('/assets/fragments/footer/footer.html');
 
 async function injectFooterIfNeeded() {
   const existing = document.querySelector('footer.site-footer');

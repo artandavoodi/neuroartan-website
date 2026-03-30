@@ -32,6 +32,14 @@
   const q = (selector, scope = document) => scope.querySelector(selector);
   const qa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
 
+  const WEBSITE_BASE_PATH = window.location.pathname.includes('/website/') ? '/website' : '';
+
+  function assetPath(path) {
+    const normalized = String(path || '').trim();
+    if (!normalized) return '';
+    return `${WEBSITE_BASE_PATH}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
+  }
+
   function getRoot() {
     return q('[data-cookie-learning-overlay="root"]');
   }
@@ -73,6 +81,10 @@
 
   function getConsentRoot() {
     return q('[data-cookie-consent="root"]');
+  }
+
+  function getMount() {
+    return document.getElementById('cookie-learning-overlay-mount');
   }
 
   /* =============================================================================
@@ -171,10 +183,39 @@
     if (STATE.requestBound) return;
     STATE.requestBound = true;
 
-    document.addEventListener('cookie-learning-overlay:open-request', (event) => {
+    document.addEventListener('cookie-learning-overlay:open-request', async (event) => {
       const detail = event?.detail && typeof event.detail === 'object' ? event.detail : {};
       const key = String(detail.key || '').trim();
       if (!key) return;
+
+      let root = getRoot();
+      if (!(root instanceof HTMLElement)) {
+        const mount = getMount();
+        if (!(mount instanceof HTMLElement)) return;
+
+        if (mount.dataset.includeMounted !== 'true') {
+          try {
+            const response = await fetch(assetPath('/assets/fragments/cookie/cookie-learning-overlay.html'), { cache: 'no-store' });
+            if (!response.ok) return;
+            mount.innerHTML = await response.text();
+            mount.dataset.includeMounted = 'true';
+            mount.dispatchEvent(new CustomEvent('fragment:mounted', {
+              bubbles: true,
+              detail: {
+                name: 'cookie-learning-overlay',
+                root: mount,
+                mount
+              }
+            }));
+          } catch (_) {
+            return;
+          }
+        }
+
+        initCookieLearningOverlay();
+        root = getRoot();
+        if (!(root instanceof HTMLElement)) return;
+      }
 
       initCookieLearningOverlay();
       openOverlay(key);

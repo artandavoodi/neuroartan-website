@@ -2,6 +2,7 @@
    HERO.JS — ARTAN HOME HERO SYSTEM (SOVEREIGN)
 
    Owns (in-file order):
+   00) Pre-home threshold entry
    01) Run-after-enter helper (gate)
    02) Hero logo stick + scale (post-enter)
    03) Scroll gradient states
@@ -13,6 +14,98 @@
    - Boots ONLY after `body.site-entered`.
    - Downstream sections in home.js may call `window.__artanRunAfterEnter`.
 ============================================================================= */
+
+/* =============================================================================
+   00) PRE-HOME THRESHOLD ENTRY
+============================================================================= */
+
+(() => {
+  const ENTER_TARGET_SELECTOR = '#site-main';
+  const ENTER_TRIGGER_SELECTOR = '#enter-button';
+  const ENTER_SCROLL_THRESHOLD = 24;
+  const ENTER_TOUCH_THRESHOLD = 18;
+
+  let isEntering = false;
+  let touchStartY = null;
+
+  const getTarget = () => document.querySelector(ENTER_TARGET_SELECTOR);
+
+  const shouldInterceptThresholdEntry = () => {
+    if (document.body.classList.contains('site-entered')) return false;
+    return (window.scrollY || window.pageYOffset || 0) < 40;
+  };
+
+  const enterSite = () => {
+    if (isEntering) return;
+
+    const target = getTarget();
+    if (!target) return;
+
+    isEntering = true;
+
+    document.body.classList.add('site-entered');
+    document.body.classList.add('hero-lock-released');
+    document.body.classList.add('hero-released');
+    window.setTimeout(() => {
+      document.body.classList.add('hero-stage-hidden');
+    }, 1200);
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    window.setTimeout(() => {
+      isEntering = false;
+    }, 1200);
+  };
+
+  document.addEventListener('click', (event) => {
+    const trigger = event.target instanceof Element ? event.target.closest(ENTER_TRIGGER_SELECTOR) : null;
+    if (!trigger) return;
+
+    event.preventDefault();
+    enterSite();
+  }, { passive: false });
+
+  window.addEventListener('wheel', (event) => {
+    if (!shouldInterceptThresholdEntry()) return;
+    if (event.deltaY <= ENTER_SCROLL_THRESHOLD) return;
+
+    event.preventDefault();
+    enterSite();
+  }, { passive: false });
+
+  window.addEventListener('keydown', (event) => {
+    if (!shouldInterceptThresholdEntry()) return;
+    if (!['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(event.key)) return;
+
+    event.preventDefault();
+    enterSite();
+  }, { passive: false });
+
+  window.addEventListener('touchstart', (event) => {
+    if (!shouldInterceptThresholdEntry()) return;
+    const point = event.touches && event.touches[0];
+    touchStartY = point ? point.clientY : null;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (event) => {
+    if (!shouldInterceptThresholdEntry()) return;
+    if (touchStartY == null) return;
+
+    const point = event.touches && event.touches[0];
+    if (!point) return;
+
+    const deltaY = touchStartY - point.clientY;
+    if (deltaY <= ENTER_TOUCH_THRESHOLD) return;
+
+    event.preventDefault();
+    touchStartY = null;
+    enterSite();
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    touchStartY = null;
+  }, { passive: true });
+})();
 
 /* =============================================================================
    01) HOME — RUN AFTER ENTER (GATE HELPER)

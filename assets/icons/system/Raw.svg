@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="1.0373702"
-     inkscape:cx="1060.8556"
-     inkscape:cy="-817.45163"
+     inkscape:zoom="0.28657877"
+     inkscape:cx="-322.77339"
+     inkscape:cy="-708.35674"
      inkscape:window-width="1472"
      inkscape:window-height="895"
      inkscape:window-x="0"
@@ -379,9 +379,9 @@
      style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.0352778" />
   <g
      id="g8"
-     transform="matrix(0,0.6215876,-0.71670984,0,-329.42366,-203.80861)"
+     transform="matrix(0.6215876,0,0,0.71670984,-152.83851,-163.93495)"
      style="stroke-width:1.49823"
-     inkscape:export-filename="back.svg"
+     inkscape:export-filename="scroll-down.svg"
      inkscape:export-xdpi="96"
      inkscape:export-ydpi="96">
     <path

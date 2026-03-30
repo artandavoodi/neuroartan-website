@@ -18,11 +18,11 @@
    12AB) ROW EXPAND CONTROL
    12A) SURFACE BLOCKS
    12B) TOGGLE SYSTEM
-   12C) EDUCATION BLOCK
+   12C) SOVEREIGN LEARNING LAYER HANDOFF
    12CA) GRANULAR SUBITEMS
    12CB) SUBITEM TOGGLE ALIGNMENT
    12D) STICKY ACTION BAR
-   12E) LEGAL / LANGUAGE FOOTER BAR
+   12E) EXTERNAL COOKIE FOOTER BAR
    13) REDUCED MOTION
    14) RESPONSIVE — 1024PX
    15) RESPONSIVE — 768PX
@@ -40,7 +40,9 @@
   --cookie-consent-surface: rgb(255, 255, 255);
   --cookie-consent-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-consent-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-  --cookie-consent-width: min(42rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --cookie-consent-width: min(36rem, calc(100vw - (2 * var(--cookie-consent-min-viewport-gap))));
+  --cookie-consent-min-viewport-gap: 24px;
+  --cookie-consent-footer-links-max-width: 100%;
   --cookie-consent-max-height: min(46rem, calc(100vh - 3rem));
   --cookie-consent-radius: 1.9rem;
   --cookie-consent-card-radius: 1rem;
@@ -165,9 +167,11 @@ body.dark-mode{
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  gap: 0.9rem;
 }
 
 /* =============================================================================
@@ -218,14 +222,14 @@ body.cookie-consent-closing .cookie-consent-backdrop{
 .cookie-consent-panel{
   position: relative;
   width: var(--cookie-consent-width);
-  max-width: calc(100vw - (2 * var(--site-gutter, 24px)));
+  max-width: calc(100vw - (2 * var(--cookie-consent-min-viewport-gap)));
   height: var(--cookie-consent-max-height);
   min-height: 24rem;
   display: flex;
   gap: 0;
   flex-direction: column;
   overflow: hidden;
-  padding: 1.4rem;
+  padding: 1.25rem;
   border: 1px solid var(--cookie-consent-border);
   border-radius: var(--cookie-consent-radius);
   background: var(--cookie-consent-surface);
@@ -395,10 +399,17 @@ body.cookie-consent-closing .cookie-consent-close{
   gap: 0;
   flex-shrink: 0;
   isolation: isolate;
-  overflow: hidden;
   background: var(--cookie-consent-surface);
 }
-
+/* =============================================================================
+   EXTERNAL COOKIE FOOTER BAR
+============================================================================= */
+.cookie-consent-external-footer{
+  width: min(100%, var(--cookie-consent-width));
+  max-width: calc(100vw - (2 * var(--cookie-consent-min-viewport-gap)));
+  margin: 0 auto;
+  pointer-events: auto;
+}
 
 /* =============================================================================
    10) TYPOGRAPHY
@@ -852,57 +863,10 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12C) EDUCATION BLOCK
+   12C) SOVEREIGN LEARNING LAYER HANDOFF
 ============================================================================= */
-.cookie-consent-education{
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 0.92rem var(--cookie-consent-content-gutter);
-  border: 1px solid var(--cookie-consent-education-border);
-  border-radius: var(--cookie-consent-card-radius);
-  background: transparent;
-}
-
-.cookie-consent-education-grid{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 0.82rem;
-  width: 100%;
-}
-
-.cookie-consent-education-card{
-  display: flex;
-  flex-direction: column;
-  gap: 0.38rem;
-  min-width: 0;
-  padding: 0.88rem 0.96rem;
-  border: 1px solid var(--cookie-consent-education-border);
-  border-radius: 0.92rem;
-  background: var(--cookie-consent-subitem-surface);
-}
-
-.cookie-consent-education-card .cookie-consent-note{
-  margin: 0;
-}
-
-.cookie-consent-education-card .cookie-consent-note strong{
-  display: block;
-  color: var(--text-primary-color);
-  font-size: 0.88rem;
-  font-weight: 400;
-  letter-spacing: -0.014em;
-  line-height: 1.25;
-}
-
-.cookie-consent-education-card .cookie-consent-note span{
-  display: block;
-  color: var(--cookie-consent-support-text);
-  font-size: 0.82rem;
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.5;
-}
+/* Education surface styling now lives in:
+   assets/css/overlays/cookie-consent-learning.css */
 
 /* =============================================================================
    12CA) GRANULAR SUBITEMS
@@ -1012,12 +976,13 @@ body.cookie-consent-closing .cookie-consent-close{
   z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
-  padding-top: 0.94rem;
-  padding-bottom: 0.12rem;
-  padding-left: var(--cookie-consent-body-edge-inset);
-  padding-right: var(--cookie-consent-body-edge-inset);
+  flex-wrap: wrap;
+  width: min(100%, var(--cookie-consent-width));
+  max-width: calc(100vw - (2 * var(--cookie-consent-min-viewport-gap)));
+  margin: 0 auto;
+  padding: 0;
   border-top: 0;
   background: transparent;
 }
@@ -1025,9 +990,19 @@ body.cookie-consent-closing .cookie-consent-close{
 .cookie-consent-footer-links{
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
   flex-wrap: wrap;
-  row-gap: 0.82rem;
+  row-gap: 0.5rem;
   column-gap: 0;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+}
+
+.cookie-consent-footer-links > *{
+  flex: 0 0 auto;
 }
 
 .cookie-consent-footer-separator{
@@ -1047,7 +1022,6 @@ body.cookie-consent-closing .cookie-consent-close{
   vertical-align: middle;
 }
 
-
 .cookie-consent-footer-link{
   color: var(--cookie-consent-footer-link-color);
   text-decoration: none;
@@ -1066,6 +1040,7 @@ body.cookie-consent-closing .cookie-consent-close{
 
 .cookie-consent-footer-language{
   display: inline-flex;
+  flex: 0 1 auto;
   align-items: center;
   justify-content: center;
   gap: 0.42rem;
@@ -1121,7 +1096,6 @@ body.cookie-consent-closing .cookie-consent-close{
 ============================================================================= */
 @media (max-width:1024px){
   .cookie-consent-panel{
-    padding: 1.2rem;
     max-height: min(44rem, calc(100vh - 2.4rem));
   }
 }
@@ -1130,15 +1104,10 @@ body.cookie-consent-closing .cookie-consent-close{
    15) RESPONSIVE — 768PX
 ============================================================================= */
 @media (max-width:768px){
-  .cookie-consent-education-grid{
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cookie-consent-education-card{
-    padding: 0.82rem 0.9rem;
-  }
   :root{
-    --cookie-consent-width: min(100vw, calc(100vw - (1.05 * var(--site-gutter, 20px))));
+    --cookie-consent-width: min(39rem, calc(100vw - (2 * 20px)));
+    --cookie-consent-min-viewport-gap: 20px;
+    --cookie-consent-footer-links-max-width: min(100%, 31rem);
     --cookie-consent-toggle-track-width: 2.5rem;
     --cookie-consent-toggle-track-height: 1.3rem;
     --cookie-consent-toggle-thumb-size: 1.06rem;
@@ -1150,8 +1119,8 @@ body.cookie-consent-closing .cookie-consent-close{
   }
 
   .cookie-consent-panel{
-    padding: 1rem;
     max-height: min(42rem, calc(100vh - 1.6rem));
+    padding: 0.95rem;
     border-radius: 1.5rem;
   }
 
@@ -1200,12 +1169,22 @@ body.cookie-consent-closing .cookie-consent-close{
 
   .cookie-consent-footer-bar{
     flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.78rem;
+  }
+
+  .cookie-consent-footer-links{
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    white-space: normal;
   }
 
   .cookie-consent-footer-language{
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
+    min-width: 0;
+    justify-content: center;
   }
 
   .cookie-consent-row-summary{

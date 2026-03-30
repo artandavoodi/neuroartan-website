@@ -29,7 +29,7 @@
   --cookie-language-overlay-surface: rgba(255, 255, 255, 0.96);
   --cookie-language-overlay-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-language-overlay-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-  --cookie-language-overlay-width: min(42rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --cookie-language-overlay-width: min(36rem, calc(100vw - (2 * var(--site-gutter, 24px))));
   --cookie-language-overlay-max-height: min(46rem, calc(100vh - 3rem));
   --cookie-language-overlay-min-height: 24rem;
   --cookie-language-overlay-radius: 1.9rem;
@@ -131,7 +131,7 @@ body.cookie-language-overlay-closing{
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 1.92rem 1.5rem;
+  padding: 1.25rem;
   border: 1px solid var(--cookie-language-overlay-border);
   border-radius: var(--cookie-language-overlay-radius);
   background: var(--cookie-language-overlay-surface);
@@ -437,7 +437,7 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   }
 
   .cookie-language-overlay-inner{
-    padding: 1.28rem 1rem;
+    padding: 0.95rem;
     border-radius: 1.5rem;
   }
 

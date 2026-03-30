@@ -1,0 +1,290 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) LEARNING ROOT
+   02) HORIZONTAL RAIL
+   03) LEARNING CARDS
+   04) CARD ICON
+   05) CARD COPY
+   06) EXPAND CONTROL
+   07) DETAIL PANEL
+   08) REDUCED MOTION
+   09) RESPONSIVE — 768PX
+============================================================================= */
+
+/* =============================================================================
+   01) LEARNING ROOT
+============================================================================= */
+.cookie-consent-education{
+  display: flex;
+  flex-direction: column;
+  gap: 0.82rem;
+  width: calc(100% + (2 * (var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset))));
+  margin-left: calc(-1 * (var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset)));
+  margin-right: calc(-1 * (var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset)));
+  padding-top: 0.92rem;
+  padding-bottom: 0.92rem;
+  padding-left: 0;
+  padding-right: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* =============================================================================
+   02) HORIZONTAL RAIL
+============================================================================= */
+.cookie-consent-learning-rail{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(14.8rem, 16.6rem);
+  gap: 0.82rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
+  padding-right: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.12rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+
+.cookie-consent-learning-rail::-webkit-scrollbar{
+  display: none;
+}
+
+/* =============================================================================
+   03) LEARNING CARDS
+============================================================================= */
+.cookie-consent-learning-card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 13.6rem;
+  padding: 1rem;
+  border: 1px solid var(--cookie-consent-education-border);
+  border-radius: 1rem;
+  background: var(--cookie-consent-subitem-surface);
+  scroll-snap-align: start;
+}
+
+.cookie-consent-learning-card:first-child{
+  margin-left: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
+}
+
+.cookie-consent-learning-card-topline{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.82rem;
+}
+
+/* =============================================================================
+   04) CARD ICON
+============================================================================= */
+.cookie-consent-learning-icon{
+  display: inline-flex;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid var(--cookie-consent-education-border);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  flex: 0 0 auto;
+}
+
+/* =============================================================================
+   05) CARD COPY
+============================================================================= */
+.cookie-consent-learning-copy{
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  margin-top: auto;
+  min-width: 0;
+}
+
+.cookie-consent-learning-copy strong{
+  display: block;
+  color: var(--text-primary-color);
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: -0.014em;
+  line-height: 1.25;
+}
+
+.cookie-consent-learning-copy span{
+  display: block;
+  color: var(--cookie-consent-support-text);
+  font-size: 0.82rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.48;
+}
+
+/* =============================================================================
+   06) EXPAND CONTROL
+============================================================================= */
+.cookie-consent-learning-expand,
+.cookie-consent-learning-close{
+  position: relative;
+  width: 1.125rem;
+  height: 1.125rem;
+  min-width: 1.125rem;
+  min-height: 1.125rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary-color);
+  cursor: pointer;
+  transition: color 200ms ease, opacity 160ms ease;
+  flex: 0 0 auto;
+}
+
+.cookie-consent-learning-expand:hover,
+.cookie-consent-learning-expand:focus-visible,
+.cookie-consent-learning-expand:active,
+.cookie-consent-learning-close:hover,
+.cookie-consent-learning-close:focus-visible,
+.cookie-consent-learning-close:active{
+  color: var(--color-primary7);
+  outline: none;
+}
+
+.cookie-consent-learning-expand-line,
+.cookie-consent-learning-close-line{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform-origin: center;
+  transition: transform 220ms ease;
+}
+
+.cookie-consent-learning-expand-line--horizontal{
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.cookie-consent-learning-expand-line--vertical{
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.cookie-consent-learning-expand:hover .cookie-consent-learning-expand-line--horizontal,
+.cookie-consent-learning-expand:focus-visible .cookie-consent-learning-expand-line--horizontal,
+.cookie-consent-learning-expand:active .cookie-consent-learning-expand-line--horizontal,
+.cookie-consent-learning-expand:hover .cookie-consent-learning-expand-line--vertical,
+.cookie-consent-learning-expand:focus-visible .cookie-consent-learning-expand-line--vertical,
+.cookie-consent-learning-expand:active .cookie-consent-learning-expand-line--vertical{
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.cookie-consent-learning-close-line--first{
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cookie-consent-learning-close-line--second{
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.cookie-consent-learning-close:hover .cookie-consent-learning-close-line--first,
+.cookie-consent-learning-close:focus-visible .cookie-consent-learning-close-line--first,
+.cookie-consent-learning-close:active .cookie-consent-learning-close-line--first,
+.cookie-consent-learning-close:hover .cookie-consent-learning-close-line--second,
+.cookie-consent-learning-close:focus-visible .cookie-consent-learning-close-line--second,
+.cookie-consent-learning-close:active .cookie-consent-learning-close-line--second{
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+/* =============================================================================
+   07) DETAIL PANEL
+============================================================================= */
+.cookie-consent-learning-details{
+  display: block;
+}
+
+.cookie-consent-learning-details{
+  padding-left: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
+  padding-right: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
+}
+
+.cookie-consent-learning-details[hidden]{
+  display: none;
+}
+
+.cookie-consent-learning-detail{
+  display: flex;
+  flex-direction: column;
+  gap: 0.72rem;
+  padding: 1rem;
+  border: 1px solid var(--cookie-consent-education-border);
+  border-radius: 1rem;
+  background: var(--cookie-consent-subitem-surface);
+}
+
+.cookie-consent-learning-detail[hidden]{
+  display: none;
+}
+
+.cookie-consent-learning-detail-topline{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.82rem;
+}
+
+.cookie-consent-learning-detail-topline strong{
+  color: var(--text-primary-color);
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: -0.014em;
+  line-height: 1.25;
+}
+
+.cookie-consent-learning-detail p{
+  margin: 0;
+  color: var(--cookie-consent-support-text);
+  font-size: 0.84rem;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.52;
+}
+
+/* =============================================================================
+   08) REDUCED MOTION
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .cookie-consent-learning-expand-line,
+  .cookie-consent-learning-close-line{
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* =============================================================================
+   09) RESPONSIVE — 768PX
+============================================================================= */
+@media (max-width:768px){
+  .cookie-consent-learning-rail{
+    grid-auto-columns: minmax(13.4rem, 15rem);
+    gap: 0.72rem;
+  }
+
+  .cookie-consent-learning-card,
+  .cookie-consent-learning-detail{
+    padding: 0.9rem;
+  }
+
+  .cookie-consent-learning-card{
+    min-height: 12.6rem;
+  }
+
+  .cookie-consent-learning-icon{
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}

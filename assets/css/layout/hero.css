@@ -8,6 +8,7 @@
    4) STAGE VIDEO OVERLAY (THEME-ADAPTABLE GLASS)
    5) HERO / LANDING STACK (LUXURY SPACING)
    5A) STAGE REGION LAYOUT
+   5B) STAGE GLASS VESSEL
    6) HERO — ON ENTER: HIDE STAGE INTRO GROUP
    7) HERO — MOBILE / TABLET REFINEMENTS
    8) HERO SEAL — CLIP + PAINT CONTAIN
@@ -550,6 +551,59 @@ body.site-entered #institutional-menu-mount{
   margin-right:auto;
 }
 
+/* =============================================================================
+   5B) STAGE GLASS VESSEL
+============================================================================= */
+#stage-glass-vessel{
+  position:relative;
+  width:min(21rem, 58vw, 46vh);
+  height:min(21rem, 58vw, 46vh);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto;
+  pointer-events:none;
+  isolation:isolate;
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+}
+
+#stage-glass-vessel-ring,
+#stage-glass-vessel-inner,
+#stage-glass-vessel-highlight{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+#stage-glass-vessel-ring{
+  border:1px solid rgba(255,255,255,0.22);
+  opacity:1;
+}
+
+#stage-glass-vessel-inner{
+  inset:0;
+  border-radius:50%;
+  background:rgba(0,0,0,0.12);
+  opacity:1;
+}
+
+#stage-glass-vessel-highlight{
+  display:none;
+}
+
+body.light-mode #stage-glass-vessel-ring,
+body.theme-light #stage-glass-vessel-ring{
+  border-color:rgba(0,0,0,0.14);
+}
+
+body.light-mode #stage-glass-vessel-inner,
+body.theme-light #stage-glass-vessel-inner{
+  background:rgba(0,0,0,0.08);
+}
+
 #stage #stage-cta{
   display:flex;
   align-items:center;
@@ -695,6 +749,10 @@ body:not(.site-entered) .stage-circle{
   #stage-center-core{
     width:min(18rem, 72vw);
     height:min(18rem, 30vh);
+  }
+  #stage-glass-vessel{
+    width:min(17rem, 66vw, 31vh);
+    height:min(17rem, 66vw, 31vh);
   }
 
   #stage-actions{

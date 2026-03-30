@@ -9,6 +9,7 @@
    06A) ACCOUNT DRAWER MOUNT DISPATCH
    06B) COOKIE CONSENT MOUNT DISPATCH
    06C) OVERLAY MOUNT RE-DISPATCH
+   06D) COUNTRY OVERLAY MOUNT DISPATCH
    07) FOOTER FRAGMENT INJECTION
    08) REVEAL GROUP INITIALIZATION
    09) INSTITUTIONAL LINKS REVEAL
@@ -21,6 +22,22 @@
 ============================================================================= */
 const CUSTOM_CURSOR_CSS_URL = '/assets/css/ui/custom-cursor.css';
 const CUSTOM_CURSOR_JS_URL = '/assets/js/ui/custom-cursor.js';
+const COOKIE_LEARNING_OVERLAY_CSS_URL = '/assets/css/overlays/cookie/cookie-learning-overlay.css';
+const COOKIE_LEARNING_OVERLAY_JS_URL = '/assets/js/overlays/cookie/cookie-learning-overlay.js';
+
+const FRAGMENT_PATHS = {
+  'account-drawer': '/assets/fragments/account/account-drawer.html',
+  'cookie-consent': '/assets/fragments/cookie/cookie-consent.html',
+  'cookie-language-overlay': '/assets/fragments/cookie/cookie-language-overlay.html',
+  'cookie-learning-overlay': '/assets/fragments/cookie/cookie-learning-overlay.html',
+  'country-overlay': '/assets/fragments/country/country-overlay.html',
+  'institutional-links': '/assets/fragments/navigation/institutional-links.html',
+  'institutional-menu': '/assets/fragments/navigation/institutional-menu.html',
+  'menu': '/assets/fragments/navigation/menu.html',
+  'footer': '/assets/fragments/footer/footer.html',
+  'brain-activity': '/assets/fragments/system/brain-activity.html',
+  'system-node': '/assets/fragments/system/system-node.html'
+};
 
 /* =============================================================================
    02) RUNTIME STATE
@@ -32,8 +49,23 @@ const NEURO_MAIN_RUNTIME = (window.__NEURO_MAIN_RUNTIME__ ||= {
   hoverObserverBound: false,
   overlayMountObserverBound: false,
   accountDrawerMountDispatched: false,
-  cookieConsentMountDispatched: false
+  cookieConsentMountDispatched: false,
+  countryOverlayMountDispatched: false
 });
+/* =============================================================================
+   06D) COUNTRY OVERLAY MOUNT DISPATCH
+============================================================================= */
+function dispatchCountryOverlayMount(mount) {
+  const host = mount || document.getElementById('country-overlay-mount') || document.querySelector('[data-include="country-overlay"]');
+  const root = host?.querySelector?.('#country-overlay, [data-country-overlay="root"]') || host;
+  if (!host || !root) return;
+
+  document.dispatchEvent(new CustomEvent('country-overlay-mounted', {
+    detail: { name: 'country-overlay', root, mount: host }
+  }));
+
+  NEURO_MAIN_RUNTIME.countryOverlayMountDispatched = true;
+}
 
 /* =============================================================================
    03) ASSET LOADERS
@@ -59,7 +91,7 @@ function loadStylesheetOnce(href) {
 
 function loadScriptOnce(src) {
   const resolvedSrc = new URL(src, window.location.origin).href;
-  const alreadyLoaded = Array.from(document.querySelectorAll('script[src]')).some((script) => {
+  const existingScript = Array.from(document.querySelectorAll('script[src]')).find((script) => {
     const currentSrc = script.getAttribute('src') || '';
     try {
       return new URL(currentSrc, window.location.origin).href === resolvedSrc;
@@ -68,12 +100,16 @@ function loadScriptOnce(src) {
     }
   });
 
-  if (alreadyLoaded) return;
+  if (existingScript) return existingScript;
 
   const script = document.createElement('script');
   script.src = src;
   script.defer = true;
+  script.addEventListener('load', () => {
+    script.dataset.scriptLoaded = 'true';
+  }, { once: true });
   document.body.appendChild(script);
+  return script;
 }
 
 /* =============================================================================
@@ -112,6 +148,10 @@ async function fetchTextFromCandidates(path, cache = 'no-store') {
   return { ok: false, text: '', url: '' };
 }
 
+function resolveFragmentPath(name) {
+  return FRAGMENT_PATHS[name] || `/assets/fragments/${name}.html`;
+}
+
 /* =============================================================================
    06A) ACCOUNT DRAWER MOUNT DISPATCH
 ============================================================================= */
@@ -148,6 +188,7 @@ function dispatchCookieConsentMount(mount) {
 function dispatchOverlayMounts() {
   dispatchAccountDrawerMount();
   dispatchCookieConsentMount();
+  dispatchCountryOverlayMount();
 }
 
 /* =============================================================================
@@ -156,37 +197,49 @@ function dispatchOverlayMounts() {
 async function injectGlobalLayout() {
   if (NEURO_MAIN_RUNTIME.globalLayoutInjected) return;
 
-  const targets = document.querySelectorAll('[data-include]');
-  for (const el of targets) {
-    if (el.dataset.includeMounted === 'true') continue;
+  let foundUnrenderedInclude = true;
 
-    const name = el.getAttribute('data-include');
-    try {
-      const result = await fetchTextFromCandidates(`/assets/fragments/${name}.html`, 'no-store');
-      if (!result.ok) continue;
-      const html = result.text;
-      el.innerHTML = html;
-      el.dataset.includeMounted = 'true';
+  while (foundUnrenderedInclude) {
+    foundUnrenderedInclude = false;
 
-      if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
-        window.NeuroMotion.scan(el);
-      }
+    const targets = document.querySelectorAll('[data-include]');
+    for (const el of targets) {
+      if (el.dataset.includeMounted === 'true') continue;
 
-      el.dispatchEvent(new CustomEvent('fragment:mounted', {
-        bubbles: true,
-        detail: { name, root: el, mount: el }
-      }));
-      /* =============================================================================
-         06A) ACCOUNT DRAWER / COOKIE CONSENT MOUNT DISPATCH
-      ============================================================================= */
-      if (name === 'account-drawer') {
-        dispatchAccountDrawerMount(el);
-      }
+      foundUnrenderedInclude = true;
 
-      if (name === 'cookie-consent') {
-        dispatchCookieConsentMount(el);
-      }
-    } catch (_) {}
+      const name = el.getAttribute('data-include');
+      try {
+        const result = await fetchTextFromCandidates(resolveFragmentPath(name), 'no-store');
+        if (!result.ok) continue;
+        const html = result.text;
+        el.innerHTML = html;
+        el.dataset.includeMounted = 'true';
+
+        if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
+          window.NeuroMotion.scan(el);
+        }
+
+        el.dispatchEvent(new CustomEvent('fragment:mounted', {
+          bubbles: true,
+          detail: { name, root: el, mount: el }
+        }));
+        /* =============================================================================
+           06A) ACCOUNT DRAWER / COOKIE CONSENT MOUNT DISPATCH
+        ============================================================================= */
+        if (name === 'account-drawer') {
+          dispatchAccountDrawerMount(el);
+        }
+
+        if (name === 'cookie-consent') {
+          dispatchCookieConsentMount(el);
+        }
+
+        if (name === 'country-overlay') {
+          dispatchCountryOverlayMount(el);
+        }
+      } catch (_) {}
+    }
   }
 
   NEURO_MAIN_RUNTIME.globalLayoutInjected = true;
@@ -198,6 +251,8 @@ injectGlobalLayout().then(() => {
   initLetterHover(document);
   loadStylesheetOnce(CUSTOM_CURSOR_CSS_URL);
   loadScriptOnce(CUSTOM_CURSOR_JS_URL);
+  loadStylesheetOnce(COOKIE_LEARNING_OVERLAY_CSS_URL);
+  loadScriptOnce(COOKIE_LEARNING_OVERLAY_JS_URL);
 
   window.requestAnimationFrame(() => {
     dispatchOverlayMounts();
@@ -207,7 +262,7 @@ injectGlobalLayout().then(() => {
 /* =============================================================================
    07) FOOTER FRAGMENT INJECTION
 ============================================================================= */
-const FOOTER_FRAGMENT_URL = '/assets/fragments/footer.html';
+const FOOTER_FRAGMENT_URL = '/assets/fragments/footer/footer.html';
 
 async function injectFooterIfNeeded() {
   const existing = document.querySelector('footer.site-footer');
@@ -491,8 +546,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!(node instanceof Element)) return;
 
           if (
-            node.matches?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"]')
-            || node.querySelector?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"]')
+            node.matches?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"], #country-overlay-mount, #country-overlay, [data-country-overlay="root"]')
+            || node.querySelector?.('.account-drawer, [data-account-drawer="root"], #account-drawer, #cookie-consent-mount, [data-cookie-consent="root"], #country-overlay-mount, #country-overlay, [data-country-overlay="root"]')
           ) {
             shouldDispatch = true;
           }

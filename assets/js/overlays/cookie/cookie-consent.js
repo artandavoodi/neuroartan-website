@@ -12,6 +12,7 @@
    07B) LANGUAGE / REGION HELPERS
    07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
    07D) COOKIE LANGUAGE RETURN HELPERS
+   07E) LEARNING PANEL HELPERS
    08) STORAGE HELPERS
    08A) DISPLAY DECISION HELPERS
    09) OPEN / CLOSE STATE
@@ -385,9 +386,6 @@
 
   /* =============================================================================
      07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
-     Dedicated cookie-settings trigger only. This must not open the global footer
-     country overlay. It must dispatch its own sovereign event for the future
-     cookie language / region layer.
   ============================================================================= */
   function requestCookieLanguageOverlay() {
     document.dispatchEvent(new CustomEvent('cookie-language-overlay:open-request', {
@@ -408,6 +406,33 @@
     getLanguageControls().forEach((control) => {
       control.setAttribute('aria-expanded', 'false');
     });
+  }
+
+  /* =============================================================================
+     07E) LEARNING PANEL HELPERS
+  ============================================================================= */
+  function requestCookieLearningOverlay(key) {
+    if (!key) return;
+
+    document.dispatchEvent(new CustomEvent('cookie-learning-overlay:open-request', {
+      detail: {
+        source: MODULE_ID,
+        key
+      }
+    }));
+  }
+
+  function requestReturnFromCookieLearningOverlay() {
+    openConsent('settings');
+
+    qa('[data-cookie-consent-learning-expand]', getOverlay() || document).forEach((control) => {
+      if (!(control instanceof HTMLElement)) return;
+      control.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function hasOpenLearningPanel() {
+    return document.body.classList.contains('cookie-learning-overlay-open');
   }
 
   function setExpandedState(key, expanded) {
@@ -707,8 +732,41 @@
         event.stopPropagation();
 
         control.setAttribute('aria-expanded', 'true');
-        closeConsent();
         requestCookieLanguageOverlay();
+      });
+
+      control.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        control.click();
+      });
+    });
+  }
+
+  function bindLearningControls() {
+    const overlay = getOverlay();
+    if (!overlay) return;
+
+    qa('[data-cookie-consent-learning-expand]', overlay).forEach((control) => {
+      if (!(control instanceof HTMLElement)) return;
+      if (control.dataset.cookieConsentLearningBound === 'true') return;
+      control.dataset.cookieConsentLearningBound = 'true';
+
+      control.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const key = control.dataset.cookieConsentLearningExpand || '';
+        if (!key) return;
+
+        qa('[data-cookie-consent-learning-expand]', overlay).forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+          node.setAttribute('aria-expanded', node === control ? 'true' : 'false');
+        });
+
+        requestCookieLearningOverlay(key);
       });
 
       control.addEventListener('keydown', (event) => {
@@ -815,6 +873,11 @@
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       if (!document.body.classList.contains(OPEN_CLASS)) return;
+
+      if (hasOpenLearningPanel()) {
+        return;
+      }
+
       closeConsent();
     });
   }
@@ -849,6 +912,7 @@
     bindSettingsControls();
     bindSaveControls();
     bindLanguageControls();
+    bindLearningControls();
     bindExpandControls();
     bindToggleControls();
     bindSubtoggleControls();
@@ -885,8 +949,19 @@
       }));
     });
 
+    document.addEventListener('cookie-language-overlay:opened', () => {
+      closeConsent();
+    });
+
+    document.addEventListener('cookie-learning-overlay:opened', () => {
+      closeConsent();
+    });
+
     document.addEventListener('cookie-language-overlay:return-to-cookie-consent', () => {
       requestReturnFromCookieLanguageOverlay();
+    });
+    document.addEventListener('cookie-learning-overlay:return', () => {
+      requestReturnFromCookieLearningOverlay();
     });
     document.addEventListener('country-selected', (event) => {
       const detail = getEventDetail(event);

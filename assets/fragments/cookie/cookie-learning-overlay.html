@@ -1,0 +1,114 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) COOKIE LEARNING OVERLAY ROOT
+     01A) BACKDROP
+     01B) PANEL
+     01C) HEADER
+     01D) BACK CONTROL
+     01E) TITLE
+     01F) CLOSE CONTROL
+     01G) BODY
+     01H) WHAT ARE COOKIES PANEL
+     01I) WHY WE USE THEM PANEL
+============================================================================= -->
+
+<!-- =============================================================================
+     01) COOKIE LEARNING OVERLAY ROOT
+============================================================================= -->
+<div class="cookie-learning-overlay" data-cookie-learning-overlay="root" aria-hidden="true" hidden>
+
+  <!-- =============================================================================
+       01A) BACKDROP
+  ============================================================================= -->
+  <div class="cookie-learning-overlay-backdrop" data-cookie-learning-overlay="backdrop" aria-hidden="true"></div>
+
+  <!-- =============================================================================
+       01B) PANEL
+  ============================================================================= -->
+  <aside class="cookie-learning-overlay-panel" data-cookie-learning-overlay="panel" role="dialog" aria-modal="true" aria-labelledby="cookie-learning-overlay-title">
+
+    <!-- =============================================================================
+         01C) HEADER
+    ============================================================================= -->
+    <div class="cookie-learning-overlay-header">
+
+      <!-- =============================================================================
+           01D) BACK CONTROL
+      ============================================================================= -->
+      <button type="button" class="cookie-learning-overlay-back" data-cookie-learning-overlay-back="true" aria-label="Return to cookie settings">
+        <span class="cookie-learning-overlay-back-icon" aria-hidden="true"></span>
+      </button>
+
+      <!-- =============================================================================
+           01E) TITLE
+      ============================================================================= -->
+      <p class="cookie-learning-overlay-title" id="cookie-learning-overlay-title" data-cookie-learning-overlay-title="true">Cookie information</p>
+
+      <!-- =============================================================================
+           01F) CLOSE CONTROL
+      ============================================================================= -->
+      <button class="cookie-consent-close" type="button" data-cookie-learning-overlay-close="true" aria-label="Close cookie learning">
+        <span class="cookie-consent-close-line cookie-consent-close-line--first"></span>
+        <span class="cookie-consent-close-line cookie-consent-close-line--second"></span>
+      </button>
+    </div>
+
+    <!-- =============================================================================
+         01G) BODY
+    ============================================================================= -->
+    <div class="cookie-learning-overlay-body">
+
+      <!-- =============================================================================
+           01H) WHAT ARE COOKIES PANEL
+      ============================================================================= -->
+      <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-cookies" data-cookie-learning-overlay-article="cookies" hidden>
+        <div class="cookie-learning-overlay-article-topline">
+          <strong data-i18n-key="cookieConsent.education.whatAreCookies.title">What are cookies?</strong>
+        </div>
+        <div class="cookie-learning-overlay-article-body">
+          <p data-i18n-key="cookieConsent.education.whatAreCookies.detail.intro">Cookies and similar technologies are small data tools stored or read by a website to remember selected states, preserve security-sensitive continuity, and support core interface behavior during and across visits.</p>
+          <div class="cookie-learning-overlay-points">
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whatAreCookies.detail.point1.title">They do not all serve the same purpose</strong>
+              <p data-i18n-key="cookieConsent.education.whatAreCookies.detail.point1.copy">Some are strictly necessary for security, session continuity, consent integrity, and accessibility. Others may support analytics or a more refined experience only when you allow them.</p>
+            </div>
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whatAreCookies.detail.point2.title">They can remember selected states</strong>
+              <p data-i18n-key="cookieConsent.education.whatAreCookies.detail.point2.copy">For example, they may preserve language choices, maintain protected-session continuity, or retain privacy preferences so the website behaves consistently.</p>
+            </div>
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whatAreCookies.detail.point3.title">Optional cookies remain your decision</strong>
+              <p data-i18n-key="cookieConsent.education.whatAreCookies.detail.point3.copy">Neuroartan separates strictly necessary cookies from optional categories so you can review, allow, or decline non-essential use with greater clarity.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- =============================================================================
+           01I) WHY WE USE THEM PANEL
+      ============================================================================= -->
+      <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-why-we-use-them" data-cookie-learning-overlay-article="why-we-use-them" hidden>
+        <div class="cookie-learning-overlay-article-topline">
+          <strong data-i18n-key="cookieConsent.education.whyWeUseThem.title">Why we use them</strong>
+        </div>
+        <div class="cookie-learning-overlay-article-body">
+          <p data-i18n-key="cookieConsent.education.whyWeUseThem.detail.intro">We use cookies and similar technologies to keep Neuroartan secure, preserve essential functionality, respect your saved consent state, and, where you permit it, understand performance and improve continuity.</p>
+          <div class="cookie-learning-overlay-points">
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point1.title">Security and integrity</strong>
+              <p data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point1.copy">Some cookies help defend the website against abuse, preserve request integrity, and maintain the trustworthiness of critical flows.</p>
+            </div>
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point2.title">Core continuity</strong>
+              <p data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point2.copy">Some cookies preserve session continuity, consent choices, and essential interface behavior so the website can operate as expected.</p>
+            </div>
+            <div class="cookie-learning-overlay-point">
+              <strong data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point3.title">Optional improvement insights</strong>
+              <p data-i18n-key="cookieConsent.education.whyWeUseThem.detail.point3.copy">Where you allow it, optional cookies can help us understand performance, identify friction, and refine the experience without being required for the website to function.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </aside>
+</div>

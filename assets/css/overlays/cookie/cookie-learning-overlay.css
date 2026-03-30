@@ -1,0 +1,264 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) OVERLAY ROOT
+   02) BACKDROP
+   03) PANEL
+   04) HEADER
+   05) BACK CONTROL
+   06) TITLE
+   07) BODY
+   08) ARTICLE SURFACE
+   09) TYPOGRAPHY
+   10) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) OVERLAY ROOT
+============================================================================= */
+:root{
+  --cookie-learning-overlay-z-index: 1400;
+  --cookie-learning-overlay-panel-width: min(100vw - 2.4rem, 32rem);
+  --cookie-learning-overlay-panel-height: min(100vh - 2.4rem, 46rem);
+  --cookie-learning-overlay-radius: 1.9rem;
+  --cookie-learning-overlay-header-height: 4rem;
+  --cookie-learning-overlay-body-padding-x: 1.5rem;
+  --cookie-learning-overlay-body-padding-y: 1.25rem;
+  --cookie-learning-overlay-divider: rgba(255, 255, 255, 0.08);
+  --cookie-learning-overlay-surface: rgba(10, 10, 10, 0.96);
+  --cookie-learning-overlay-backdrop: rgba(0, 0, 0, 0.52);
+}
+
+.cookie-learning-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: var(--cookie-learning-overlay-z-index);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+}
+
+.cookie-learning-overlay[hidden]{
+  display: none;
+}
+
+/* =============================================================================
+   02) BACKDROP
+============================================================================= */
+.cookie-learning-overlay-backdrop{
+  position: absolute;
+  inset: 0;
+  background: var(--cookie-learning-overlay-backdrop);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* =============================================================================
+   03) PANEL
+============================================================================= */
+.cookie-learning-overlay-panel{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: var(--cookie-learning-overlay-panel-width);
+  height: var(--cookie-learning-overlay-panel-height);
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--cookie-learning-overlay-radius);
+  background: var(--cookie-learning-overlay-surface);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.42);
+  overflow: hidden;
+}
+
+/* =============================================================================
+   04) HEADER
+============================================================================= */
+.cookie-learning-overlay-header{
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--cookie-consent-control-size) 1fr var(--cookie-consent-control-size);
+  align-items: center;
+  gap: 1rem;
+  min-height: var(--cookie-learning-overlay-header-height);
+  padding: 1.25rem 1.5rem 1rem;
+}
+
+.cookie-learning-overlay-header::after{
+  content: "";
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 0;
+  height: 1px;
+  background: var(--cookie-learning-overlay-divider);
+}
+
+/* =============================================================================
+   05) BACK CONTROL
+============================================================================= */
+.cookie-learning-overlay-back{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cookie-consent-control-size);
+  height: var(--cookie-consent-control-size);
+  min-width: var(--cookie-consent-control-size);
+  min-height: var(--cookie-consent-control-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  color: var(--text-primary-color);
+  cursor: pointer;
+  transition: color 200ms ease, opacity 160ms ease;
+}
+
+.cookie-learning-overlay-back:hover,
+.cookie-learning-overlay-back:focus-visible,
+.cookie-learning-overlay-back:active{
+  color: var(--color-primary7);
+  outline: none;
+}
+
+.cookie-learning-overlay-back-icon{
+  position: relative;
+  display: block;
+  width: var(--cookie-consent-control-line-width);
+  height: var(--cookie-consent-control-line-width);
+  pointer-events: none;
+}
+
+.cookie-learning-overlay-back-icon::before,
+.cookie-learning-overlay-back-icon::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 0.55rem;
+  height: var(--cookie-consent-control-stroke);
+  background: currentColor;
+  transform-origin: left center;
+}
+
+.cookie-learning-overlay-back-icon::before{
+  top: calc(50% - 0.02rem);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.cookie-learning-overlay-back-icon::after{
+  top: calc(50% + 0.02rem);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* =============================================================================
+   06) TITLE
+============================================================================= */
+.cookie-learning-overlay-title{
+  margin: 0;
+  color: var(--text-primary-color);
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* =============================================================================
+   07) BODY
+============================================================================= */
+.cookie-learning-overlay-body{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--cookie-learning-overlay-body-padding-y) var(--cookie-learning-overlay-body-padding-x) 1.5rem;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =============================================================================
+   08) ARTICLE SURFACE
+============================================================================= */
+.cookie-learning-overlay-article{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.cookie-learning-overlay-article[hidden]{
+  display: none;
+}
+
+.cookie-learning-overlay-article-topline{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cookie-learning-overlay-article-body{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cookie-learning-overlay-points{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cookie-learning-overlay-point{
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+}
+
+/* =============================================================================
+   09) TYPOGRAPHY
+============================================================================= */
+.cookie-learning-overlay-article-topline strong,
+.cookie-learning-overlay-point strong{
+  color: var(--text-primary-color);
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: -0.014em;
+  line-height: 1.4;
+}
+
+.cookie-learning-overlay-article-body p,
+.cookie-learning-overlay-point p{
+  margin: 0;
+  color: var(--text-secondary-color);
+  font-size: 0.86rem;
+  font-weight: 300;
+  letter-spacing: -0.012em;
+  line-height: 1.65;
+}
+
+/* =============================================================================
+   10) RESPONSIVE
+============================================================================= */
+@media (max-width: 768px){
+  :root{
+    --cookie-learning-overlay-panel-width: min(100vw - 1.2rem, 32rem);
+    --cookie-learning-overlay-panel-height: min(100vh - 1.2rem, 100vh - 1.2rem);
+    --cookie-learning-overlay-body-padding-x: 1rem;
+    --cookie-learning-overlay-body-padding-y: 1rem;
+  }
+
+  .cookie-learning-overlay{
+    padding: 0.6rem;
+  }
+
+  .cookie-learning-overlay-header{
+    padding: 1rem 1rem 0.9rem;
+  }
+
+  .cookie-learning-overlay-header::after{
+    left: 1rem;
+    right: 1rem;
+  }
+}

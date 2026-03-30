@@ -438,4 +438,16 @@
      06) FRAGMENT-MOUNTED REBUILD
   ============================================================================= */
   document.addEventListener('country-overlay-mounted', buildCountryRegions);
+
+  document.addEventListener('fragment:mounted', (event) => {
+    const detail = event?.detail && typeof event.detail === 'object' ? event.detail : {};
+    if (detail.name !== 'country-overlay') return;
+
+    const container = document.getElementById('country-regions');
+    if (container) {
+      delete container.dataset.built;
+    }
+
+    buildCountryRegions();
+  });
 })();

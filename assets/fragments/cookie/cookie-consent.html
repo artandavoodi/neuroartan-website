@@ -1,8 +1,7 @@
 <!-- =============================================================================
      00) FILE INDEX
-     01) SOVEREIGN LEARNING LAYER MOUNTS
-     01A) SOVEREIGN LEARNING CSS
-     01B) SOVEREIGN LEARNING JS
+     01) SOVEREIGN LEARNING STYLE MOUNT
+     01A) SOVEREIGN LEARNING CARD STYLE
      02) COOKIE CONSENT ROOT
      02A) BACKDROP
      02B) PANEL
@@ -16,6 +15,7 @@
      02GC) EXPERIENCE ROW
      02H) BASELINE EDUCATION SURFACE
      02I) SETTINGS ACTIONS
+     02J) COOKIE LEARNING OVERLAY MOUNT
      03) EXTERNAL COOKIE FOOTER BAR
      03A) LEGAL LINKS
      03B) COOKIE LANGUAGE / REGION TRIGGER
@@ -23,18 +23,13 @@
 ============================================================================= -->
 
 <!-- =============================================================================
-     01) SOVEREIGN LEARNING LAYER MOUNTS
+     01) SOVEREIGN LEARNING STYLE MOUNT
 ============================================================================= -->
 
 <!-- =============================================================================
-     01A) SOVEREIGN LEARNING CSS
+     01A) SOVEREIGN LEARNING CARD STYLE
 ============================================================================= -->
 <link rel="stylesheet" href="./assets/css/overlays/cookie-consent-learning.css">
-
-<!-- =============================================================================
-     01B) SOVEREIGN LEARNING JS
-============================================================================= -->
-<script src="./assets/js/overlays/cookie-consent-learning.js" defer></script>
 
 <!-- =============================================================================
      02) COOKIE CONSENT ROOT
@@ -248,7 +243,7 @@
               <article class="cookie-consent-learning-card" data-cookie-consent-learning-card="cookies">
                 <div class="cookie-consent-learning-card-topline">
                   <span class="cookie-consent-learning-icon" aria-hidden="true"></span>
-                  <button type="button" class="cookie-consent-learning-expand" data-cookie-consent-learning-expand="cookies" aria-expanded="false" aria-controls="cookie-consent-learning-detail-cookies" aria-label="Open what are cookies panel">
+                  <button type="button" class="cookie-consent-learning-expand" data-cookie-consent-learning-expand="cookies" aria-expanded="false" aria-haspopup="dialog" aria-label="Open what are cookies panel">
                     <span class="cookie-consent-learning-expand-line cookie-consent-learning-expand-line--horizontal"></span>
                     <span class="cookie-consent-learning-expand-line cookie-consent-learning-expand-line--vertical"></span>
                   </button>
@@ -262,7 +257,7 @@
               <article class="cookie-consent-learning-card" data-cookie-consent-learning-card="why-we-use-them">
                 <div class="cookie-consent-learning-card-topline">
                   <span class="cookie-consent-learning-icon" aria-hidden="true"></span>
-                  <button type="button" class="cookie-consent-learning-expand" data-cookie-consent-learning-expand="why-we-use-them" aria-expanded="false" aria-controls="cookie-consent-learning-detail-why-we-use-them" aria-label="Open why we use them panel">
+                  <button type="button" class="cookie-consent-learning-expand" data-cookie-consent-learning-expand="why-we-use-them" aria-expanded="false" aria-haspopup="dialog" aria-label="Open why we use them panel">
                     <span class="cookie-consent-learning-expand-line cookie-consent-learning-expand-line--horizontal"></span>
                     <span class="cookie-consent-learning-expand-line cookie-consent-learning-expand-line--vertical"></span>
                   </button>
@@ -274,29 +269,6 @@
               </article>
             </div>
 
-            <div class="cookie-consent-learning-details" data-cookie-consent-learning-details="true" hidden>
-              <article class="cookie-consent-learning-detail" id="cookie-consent-learning-detail-cookies" data-cookie-consent-learning-detail="cookies" hidden>
-                <div class="cookie-consent-learning-detail-topline">
-                  <strong data-i18n-key="cookieConsent.education.whatAreCookies.title">What are cookies?</strong>
-                  <button type="button" class="cookie-consent-learning-close" data-cookie-consent-learning-close="cookies" aria-label="Close what are cookies panel">
-                    <span class="cookie-consent-learning-close-line cookie-consent-learning-close-line--first"></span>
-                    <span class="cookie-consent-learning-close-line cookie-consent-learning-close-line--second"></span>
-                  </button>
-                </div>
-                <p>Cookies and similar technologies are small data tools that allow a website to remember selected states, preserve security-sensitive information, and maintain continuity while you move through important parts of the platform.</p>
-              </article>
-
-              <article class="cookie-consent-learning-detail" id="cookie-consent-learning-detail-why-we-use-them" data-cookie-consent-learning-detail="why-we-use-them" hidden>
-                <div class="cookie-consent-learning-detail-topline">
-                  <strong data-i18n-key="cookieConsent.education.whyWeUseThem.title">Why we use them</strong>
-                  <button type="button" class="cookie-consent-learning-close" data-cookie-consent-learning-close="why-we-use-them" aria-label="Close why we use them panel">
-                    <span class="cookie-consent-learning-close-line cookie-consent-learning-close-line--first"></span>
-                    <span class="cookie-consent-learning-close-line cookie-consent-learning-close-line--second"></span>
-                  </button>
-                </div>
-                <p>We use them to keep Neuroartan secure, preserve core functionality, stabilize continuity, and, where you allow it, understand performance and improve the quality of the experience.</p>
-              </article>
-            </div>
           </div>
         </div>
       </div>
@@ -314,6 +286,7 @@
       </div>
     </div>
   </aside>
+
 
   <!-- =============================================================================
        03) EXTERNAL COOKIE FOOTER BAR
@@ -361,3 +334,8 @@
     </div>
   </div>
 </div>
+
+<!-- =============================================================================
+     02J) COOKIE LEARNING OVERLAY MOUNT
+============================================================================= -->
+<div id="cookie-learning-overlay-mount" data-include="cookie-learning-overlay"></div>

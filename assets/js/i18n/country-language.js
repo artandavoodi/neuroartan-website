@@ -33,8 +33,8 @@
      02) COUNTRY OVERLAY FRAGMENT INJECTION
   ============================================================================= */
   const COUNTRY_FRAGMENT_URLS = [
-    '/assets/fragments/country-overlay.html',
-    'assets/fragments/country-overlay.html'
+    '/assets/fragments/country/country-overlay.html',
+    'assets/fragments/country/country-overlay.html'
   ];
 
   const injectCountryOverlayIfNeeded = async () => {

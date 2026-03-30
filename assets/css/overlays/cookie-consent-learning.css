@@ -72,9 +72,6 @@
   scroll-snap-align: start;
 }
 
-.cookie-consent-learning-card:first-child{
-  margin-left: calc(var(--cookie-consent-panel-padding-inline) + var(--cookie-consent-body-edge-inset));
-}
 
 .cookie-consent-learning-card-topline{
   display: flex;

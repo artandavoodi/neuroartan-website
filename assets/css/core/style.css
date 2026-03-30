@@ -7,7 +7,8 @@
    03) RESET + BASE
    04) TYPOGRAPHY + LINKS
    04A) CLICKABLE TEXT HOVER (GLOBAL — NO JUMP)
-   04B) RTL TEXT OVERRIDES (TEXT-ONLY, NO LAYOUT FLIP)
+   04B) CTA TEXT EXCEPTION — TRY ICOS
+   04C) RTL TEXT OVERRIDES (TEXT-ONLY, NO LAYOUT FLIP)
    05) UTILITIES
    06) HEADER + RIBBON (TRANSPARENT BASELINE)
    07) FOOTER
@@ -189,7 +190,25 @@ body.light-mode div[style*='flex-direction:column'] p{color:var(--color-black);}
 }
 
 /* =============================================================================
-   04B) RTL TEXT OVERRIDES (TEXT-ONLY, NO LAYOUT FLIP)
+   04B) CTA TEXT EXCEPTION — TRY ICOS
+============================================================================= */
+#try-icos-button .pf-text,
+#stage .stage-cta-button .pf-text{
+  font-family:var(--font-base) !important;
+  font-size:inherit !important;
+  font-weight:500 !important;
+  letter-spacing:0.015em !important;
+  word-spacing:0 !important;
+  text-transform:none !important;
+  line-height:1 !important;
+  font-kerning:normal;
+  font-feature-settings:"kern" 1, "liga" 1, "calt" 1;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* =============================================================================
+   04C) RTL TEXT OVERRIDES (TEXT-ONLY, NO LAYOUT FLIP)
 ============================================================================= */
 
 /* When a RTL language is active, keep layout LTR but fix script typography */

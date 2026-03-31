@@ -4,23 +4,25 @@
    02) CONSTANTS / STATE
    03) DOM HELPERS
    04) OVERLAY RESOLUTION
-   05) OPEN / CLOSE STATE
-   06) LANGUAGE VALUE / STATUS
-   06A) STATUS MESSAGE HELPERS
-   06B) COUNTRY DATA HELPERS
-   06BA) LANGUAGE LABEL HELPERS
-   06BB) COUNTRY LABEL HELPERS
-   06C) REGIONS RENDERING
-   06D) SEARCH FILTERING
-   06DA) REGIONS SCROLL BEHAVIOR
-   06E) COUNTRY SELECTION BRIDGE
-   06F) COOKIE RETURN FLOW
-   06G) PLACEHOLDER / INITIAL RENDER STATE
-   07) BINDINGS
-   08) EVENT BRIDGE
-   08A) OVERLAY COORDINATION
-   09) INITIALIZATION
-   09A) INIT RETRY
+   05) BODY SCROLL LOCK
+   06) SCROLL GUARD
+   07) OPEN / CLOSE STATE
+   08) LANGUAGE VALUE / STATUS
+   08A) STATUS MESSAGE HELPERS
+   08B) COUNTRY DATA HELPERS
+   08BA) LANGUAGE LABEL HELPERS
+   08BB) COUNTRY LABEL HELPERS
+   08C) REGIONS RENDERING
+   08D) SEARCH FILTERING
+   08DA) REGIONS SCROLL BEHAVIOR
+   08E) COUNTRY SELECTION BRIDGE
+   08F) COOKIE RETURN FLOW
+   08G) PLACEHOLDER / INITIAL RENDER STATE
+   09) BINDINGS
+   10) EVENT BRIDGE
+   10A) OVERLAY COORDINATION
+   11) INITIALIZATION
+   11A) INIT RETRY
 ============================================================================= */
 
 /* =============================================================================
@@ -44,6 +46,7 @@
   let closeTimer = null;
   let initRetryTimer = null;
   let initialized = false;
+  let scrollGuardBound = false;
 
   /* =============================================================================
      03) DOM HELPERS
@@ -94,7 +97,71 @@
   }
 
   /* =============================================================================
-     05) OPEN / CLOSE STATE
+     05) BODY SCROLL LOCK
+  ============================================================================= */
+  function lockBodyScroll() {
+    const body = document.body;
+    const docEl = document.documentElement;
+    if (!(body instanceof HTMLElement) || !(docEl instanceof HTMLElement)) return;
+
+    if (!body.dataset.cookieLanguageOverlayPrevOverflow) {
+      body.dataset.cookieLanguageOverlayPrevOverflow = body.style.overflow || '';
+    }
+    if (!docEl.dataset.cookieLanguageOverlayPrevOverflow) {
+      docEl.dataset.cookieLanguageOverlayPrevOverflow = docEl.style.overflow || '';
+    }
+
+    body.style.overflow = 'hidden';
+    docEl.style.overflow = 'hidden';
+    body.classList.add(BODY_OPEN_CLASS);
+  }
+
+  function unlockBodyScroll() {
+    const body = document.body;
+    const docEl = document.documentElement;
+    if (!(body instanceof HTMLElement) || !(docEl instanceof HTMLElement)) return;
+
+    body.style.overflow = body.dataset.cookieLanguageOverlayPrevOverflow || '';
+    docEl.style.overflow = docEl.dataset.cookieLanguageOverlayPrevOverflow || '';
+
+    delete body.dataset.cookieLanguageOverlayPrevOverflow;
+    delete docEl.dataset.cookieLanguageOverlayPrevOverflow;
+    body.classList.remove(BODY_OPEN_CLASS);
+  }
+
+  /* =============================================================================
+     06) SCROLL GUARD
+  ============================================================================= */
+  function overlayIsActivelyOpen() {
+    const overlay = getOverlay();
+    if (!(overlay instanceof HTMLElement)) return false;
+    return overlay.getAttribute('aria-hidden') === 'false';
+  }
+
+  function handleScrollGuard(event) {
+    if (!overlayIsActivelyOpen()) return;
+
+    const inner = getInner();
+    const target = event.target;
+
+    if (inner instanceof HTMLElement && target instanceof Node && inner.contains(target)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function bindScrollGuard() {
+    if (scrollGuardBound) return;
+    scrollGuardBound = true;
+
+    window.addEventListener('wheel', handleScrollGuard, { passive: false, capture: true });
+    window.addEventListener('touchmove', handleScrollGuard, { passive: false, capture: true });
+  }
+
+  /* =============================================================================
+     07) OPEN / CLOSE STATE
   ============================================================================= */
   function clearCloseTimer() {
     if (!closeTimer) return;
@@ -119,7 +186,7 @@
 
     clearCloseTimer();
     document.body.classList.remove(BODY_CLOSING_CLASS);
-    document.body.classList.add(BODY_OPEN_CLASS);
+    lockBodyScroll();
     setOverlayVisibility(true);
     renderRegions();
     syncStatusNode();
@@ -146,12 +213,12 @@
     if (!ensureOverlayReady()) return;
 
     clearCloseTimer();
-    document.body.classList.remove(BODY_OPEN_CLASS);
     document.body.classList.add(BODY_CLOSING_CLASS);
 
     closeTimer = window.setTimeout(() => {
       document.body.classList.remove(BODY_CLOSING_CLASS);
       setOverlayVisibility(false);
+      unlockBodyScroll();
       document.dispatchEvent(new CustomEvent('cookie-language-overlay:closed', {
         detail: {
           source: MODULE_ID
@@ -162,11 +229,11 @@
   }
 
   function isOpen() {
-    return document.body.classList.contains(BODY_OPEN_CLASS);
+    return overlayIsActivelyOpen();
   }
 
   /* =============================================================================
-     06) LANGUAGE VALUE / STATUS
+     08) LANGUAGE VALUE / STATUS
   ============================================================================= */
   function getPreferredLanguageLabel() {
     const docLang = (document.documentElement.getAttribute('lang') || '').trim();
@@ -201,7 +268,7 @@
   }
 
   /* =============================================================================
-     06A) STATUS MESSAGE HELPERS
+     08A) STATUS MESSAGE HELPERS
   ============================================================================= */
   function formatStatusMessage(template, replacements = {}) {
     return String(template || '').replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, (_, token) => {
@@ -246,7 +313,7 @@
   }
 
   /* =============================================================================
-     06B) COUNTRY DATA HELPERS
+     08B) COUNTRY DATA HELPERS
   ============================================================================= */
   function getCountriesData() {
     const raw = Array.isArray(window.ARTAN_COUNTRIES_DATA) ? window.ARTAN_COUNTRIES_DATA : [];
@@ -281,7 +348,7 @@
   }
 
   /* =============================================================================
-     06BA) LANGUAGE LABEL HELPERS
+     08BA) LANGUAGE LABEL HELPERS
   ============================================================================= */
   function getLanguageCodes(country) {
     const codes = [];
@@ -329,7 +396,7 @@
   }
 
   /* =============================================================================
-     06BB) COUNTRY LABEL HELPERS
+     08BB) COUNTRY LABEL HELPERS
   ============================================================================= */
   function getCountryCode(country) {
     return String(country?.code || country?.countryCode || '').trim().toUpperCase();
@@ -378,7 +445,7 @@
   }
 
   /* =============================================================================
-     06C) REGIONS RENDERING
+     08C) REGIONS RENDERING
   ============================================================================= */
   function buildCountryItemMarkup(country) {
     const countryMeta = getCountrySearchMeta(country);
@@ -435,7 +502,7 @@
   }
 
   /* =============================================================================
-     06D) SEARCH FILTERING
+     08D) SEARCH FILTERING
   ============================================================================= */
   function filterRegions(query) {
     const normalized = String(query || '').trim().toLowerCase();
@@ -483,7 +550,7 @@
   }
 
   /* =============================================================================
-     06DA) REGIONS SCROLL BEHAVIOR
+     08DA) REGIONS SCROLL BEHAVIOR
   ============================================================================= */
   function bindRegionsScrollBehavior() {
     const mount = getRegionsMount();
@@ -501,7 +568,7 @@
   }
 
   /* =============================================================================
-     06E) COUNTRY SELECTION BRIDGE
+     08E) COUNTRY SELECTION BRIDGE
   ============================================================================= */
   function dispatchCountrySelection(code) {
     if (!code) return;
@@ -526,7 +593,7 @@
   }
 
   /* =============================================================================
-     06F) COOKIE RETURN FLOW
+     08F) COOKIE RETURN FLOW
   ============================================================================= */
   function requestReturnToCookieConsent() {
     document.dispatchEvent(new CustomEvent('cookie-language-overlay:return-to-cookie-consent', {
@@ -537,7 +604,7 @@
   }
 
   /* =============================================================================
-     06G) PLACEHOLDER / INITIAL RENDER STATE
+     08G) PLACEHOLDER / INITIAL RENDER STATE
   ============================================================================= */
   function syncPlaceholderState() {
     const mount = getRegionsMount();
@@ -549,7 +616,7 @@
   }
 
   /* =============================================================================
-     07) BINDINGS
+     09) BINDINGS
   ============================================================================= */
   function bindCloseControls() {
     getCloseControls().forEach((control) => {
@@ -639,7 +706,7 @@
   }
 
   /* =============================================================================
-     08) EVENT BRIDGE
+     10) EVENT BRIDGE
   ============================================================================= */
   function bindOpenRequests() {
     if (document.body.dataset.cookieLanguageOverlayOpenRequestBound === 'true') return;
@@ -651,7 +718,7 @@
   }
 
   /* =============================================================================
-     08A) OVERLAY COORDINATION
+     10A) OVERLAY COORDINATION
   ============================================================================= */
   function bindOverlayCoordination() {
     if (document.body.dataset.cookieLanguageOverlayCoordinationBound === 'true') return;
@@ -669,7 +736,7 @@
   }
 
   /* =============================================================================
-     09A) INIT RETRY
+     11A) INIT RETRY
   ============================================================================= */
   function scheduleInitRetry() {
     clearInitRetryTimer();
@@ -680,7 +747,7 @@
   }
 
   /* =============================================================================
-     09) INITIALIZATION
+     11) INITIALIZATION
   ============================================================================= */
   function initCookieLanguageOverlay() {
     if (initialized) return;
@@ -693,9 +760,11 @@
     syncStatusNode();
     syncPlaceholderState();
     setOverlayVisibility(false);
+    unlockBodyScroll();
     bindCloseControls();
     bindBackdropClose();
     bindEscapeKey();
+    bindScrollGuard();
     bindSearchInput();
     bindRegionsScrollBehavior();
     bindRegionSelection();

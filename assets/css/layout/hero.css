@@ -9,7 +9,9 @@
    5) HERO / LANDING STACK (LUXURY SPACING)
    5A) STAGE REGION LAYOUT
    5B) STAGE GLASS VESSEL
-   5C) STAGE MICROPHONE TRIGGER
+   5C) STAGE COGNITIVE CORE SHELL
+   5D) STAGE MICROPHONE TRIGGER
+   5E) STAGE VOICE INTERACTION SHELL
    6) HERO — ON ENTER: HIDE STAGE INTRO GROUP
    7) HERO — MOBILE / TABLET REFINEMENTS
    8) HERO SEAL — CLIP + PAINT CONTAIN
@@ -56,6 +58,7 @@ body{margin:0;overflow-x:hidden;}
   display:inline-block;
   will-change:transform, background-position;
   transform:translateY(0);
+  padding-block:0.14em;
   background-repeat:no-repeat;
   color:var(--text-color);
   background:
@@ -443,7 +446,7 @@ body.site-entered #institutional-menu-mount{
   font-size:clamp(1.8rem, 3.9vw, 3.4rem);
   font-weight:300;
   letter-spacing:0.01em;
-  line-height:1.04;
+  line-height:1.12;
   text-transform:none;
   max-width:min(18ch, 94vw);
 }
@@ -601,7 +604,62 @@ body.theme-light #stage-glass-vessel-inner{
 }
 
 /* =============================================================================
-   5C) STAGE MICROPHONE TRIGGER
+   5C) STAGE COGNITIVE CORE SHELL
+============================================================================= */
+#stage-cognitive-core-shell{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  z-index:3;
+}
+
+#stage-cognitive-core-signal,
+#stage-cognitive-core-ring,
+#stage-cognitive-core-pulse{
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(1);
+  transition:opacity 0.28s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+#stage-cognitive-core-signal{
+  width:58%;
+  aspect-ratio:1 / 1;
+  background:radial-gradient(circle, rgba(145,124,111,0.10) 0%, rgba(145,124,111,0.05) 48%, rgba(145,124,111,0) 100%);
+  filter:blur(16px);
+  -webkit-filter:blur(16px);
+}
+
+#stage-cognitive-core-ring{
+  width:72%;
+  aspect-ratio:1 / 1;
+  border:1px solid rgba(255,255,255,0.10);
+  box-sizing:border-box;
+}
+
+#stage-cognitive-core-pulse{
+  width:34%;
+  aspect-ratio:1 / 1;
+  background:radial-gradient(circle, rgba(145,124,111,0.12) 0%, rgba(145,124,111,0.06) 44%, rgba(145,124,111,0) 100%);
+  filter:blur(10px);
+  -webkit-filter:blur(10px);
+}
+
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-signal,
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-ring,
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-pulse{
+  opacity:0;
+}
+
+/* =============================================================================
+   5D) STAGE MICROPHONE TRIGGER
 ============================================================================= */
 #stage #stage-microphone{
   display:flex;
@@ -681,6 +739,30 @@ body.theme-light #stage-glass-vessel-inner{
 #stage #stage-microphone-button .stage-microphone-icon svg,
 #stage .stage-microphone-icon img,
 #stage #stage-microphone-button .stage-microphone-icon img{
+  display:none;
+}
+
+/* =============================================================================
+   5E) STAGE VOICE INTERACTION SHELL
+============================================================================= */
+#stage-voice-interaction-shell{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0.5rem;
+  width:min(34rem, 86vw);
+  margin:0 auto;
+  padding:0;
+}
+
+#stage-voice-interaction-shell[hidden]{
+  display:none !important;
+}
+
+#stage-voice-status,
+#stage-voice-transcript,
+#stage-voice-response{
   display:none;
 }
 
@@ -779,6 +861,18 @@ body:not(.site-entered) .stage-circle{
     margin:0 auto 0.85rem auto;
   }
 
+  #stage-cognitive-core-signal{
+    width:58%;
+  }
+
+  #stage-cognitive-core-ring{
+    width:72%;
+  }
+
+  #stage-cognitive-core-pulse{
+    width:34%;
+  }
+
   #stage .stage-microphone-button,
   #stage #stage-microphone-button{
     width:4rem;
@@ -813,6 +907,7 @@ body:not(.site-entered) .stage-circle{
   #stage .site-essence{
     font-size:1.18rem;
     letter-spacing:0.02em;
+    line-height:1.16;
   }
 
   .enter-button{

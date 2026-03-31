@@ -131,7 +131,10 @@ body.cookie-language-overlay-closing{
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 1.25rem;
+  padding-top: 1.25rem;
+  padding-right: 1.25rem;
+  padding-bottom: 0;
+  padding-left: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--cookie-language-overlay-radius);
   background: var(--cookie-language-overlay-surface);
@@ -316,13 +319,13 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   scrollbar-width: none;
   padding-top: 1.02rem;
   padding-right: 0;
-  padding-bottom: 1.02rem;
+  padding-bottom: 0;
   display: flex;
   align-items: stretch;
   align-content: flex-start;
   flex-direction: column;
   gap: 0.56rem;
-  border-bottom: 1px solid var(--cookie-language-overlay-sticky-toolbar-divider);
+  border-bottom: 0;
 }
 
 .cookie-language-overlay-regions::-webkit-scrollbar{
@@ -400,6 +403,10 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   box-shadow: var(--cookie-language-overlay-country-selected-shadow);
 }
 
+.cookie-language-overlay-country:last-child{
+  margin-bottom: 1rem;
+}
+
 /* =============================================================================
    11) HIDDEN STATUS CARRIER
 ============================================================================= */
@@ -433,11 +440,14 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
   .cookie-language-overlay-regions{
     min-height: 12rem;
     padding-top: 0.82rem;
-    padding-bottom: 0.82rem;
+    padding-bottom: 0;
   }
 
   .cookie-language-overlay-inner{
-    padding: 0.95rem;
+    padding-top: 0.95rem;
+    padding-right: 0.95rem;
+    padding-bottom: 0;
+    padding-left: 0.95rem;
     border-radius: 1.5rem;
   }
 
@@ -470,6 +480,10 @@ body.cookie-language-overlay-closing .cookie-language-overlay-inner{
 
   .cookie-language-overlay-country-copy span{
     font-size: 0.84rem;
+  }
+
+  .cookie-language-overlay-country:last-child{
+    margin-bottom: 0.82rem;
   }
 
   .cookie-language-overlay-title-group{

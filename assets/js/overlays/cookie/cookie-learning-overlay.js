@@ -4,9 +4,11 @@
    02) STATE
    03) QUERY HELPERS
    04) PANEL STATE HELPERS
-   05) OPEN / CLOSE FLOW
-   06) EVENT BINDING
-   07) INITIALIZATION
+   05) BODY SCROLL LOCK
+   06) SCROLL GUARD
+   07) OPEN / CLOSE FLOW
+   08) EVENT BINDING
+   09) INITIALIZATION
 ============================================================================= */
 
 (() => {
@@ -24,6 +26,7 @@
     requestBound: false,
     returnBound: false,
     mountBound: false,
+    scrollGuardBound: false,
   };
 
   /* =============================================================================
@@ -119,7 +122,63 @@
   }
 
   /* =============================================================================
-     05) OPEN / CLOSE FLOW
+     05) BODY SCROLL LOCK
+  ============================================================================= */
+  function lockBodyScroll() {
+    const body = document.body;
+    const docEl = document.documentElement;
+    if (!(body instanceof HTMLElement) || !(docEl instanceof HTMLElement)) return;
+
+    if (!body.dataset.cookieLearningOverlayPrevOverflow) {
+      body.dataset.cookieLearningOverlayPrevOverflow = body.style.overflow || '';
+    }
+    if (!docEl.dataset.cookieLearningOverlayPrevOverflow) {
+      docEl.dataset.cookieLearningOverlayPrevOverflow = docEl.style.overflow || '';
+    }
+
+    body.style.overflow = 'hidden';
+    docEl.style.overflow = 'hidden';
+    body.classList.add('cookie-learning-overlay-open');
+  }
+
+  function unlockBodyScroll() {
+    const body = document.body;
+    const docEl = document.documentElement;
+    if (!(body instanceof HTMLElement) || !(docEl instanceof HTMLElement)) return;
+
+    body.style.overflow = body.dataset.cookieLearningOverlayPrevOverflow || '';
+    docEl.style.overflow = docEl.dataset.cookieLearningOverlayPrevOverflow || '';
+
+    delete body.dataset.cookieLearningOverlayPrevOverflow;
+    delete docEl.dataset.cookieLearningOverlayPrevOverflow;
+    body.classList.remove('cookie-learning-overlay-open');
+  }
+
+  /* =============================================================================
+     06) SCROLL GUARD
+  ============================================================================= */
+  function isOverlayOpen() {
+    const root = getRoot();
+    if (!(root instanceof HTMLElement)) return false;
+    return !root.hidden && root.getAttribute('aria-hidden') !== 'true';
+  }
+
+  function handleScrollGuard(event) {
+    if (!isOverlayOpen()) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  function bindScrollGuard() {
+    if (STATE.scrollGuardBound) return;
+    STATE.scrollGuardBound = true;
+
+    window.addEventListener('wheel', handleScrollGuard, { passive: false, capture: true });
+    window.addEventListener('touchmove', handleScrollGuard, { passive: false, capture: true });
+  }
+
+  /* =============================================================================
+     07) OPEN / CLOSE FLOW
   ============================================================================= */
   function openOverlay(key = '') {
     const root = getRoot();
@@ -136,7 +195,7 @@
       consentRoot.dataset.cookieLearningOverlayOpen = 'true';
     }
 
-    document.body.classList.add('cookie-learning-overlay-open');
+    lockBodyScroll();
 
     document.dispatchEvent(new CustomEvent('cookie-learning-overlay:opened', {
       detail: {
@@ -154,14 +213,13 @@
 
     root.hidden = true;
     root.setAttribute('aria-hidden', 'true');
+    unlockBodyScroll();
     hideAllArticles();
     delete root.dataset.cookieLearningOverlayOpen;
 
     if (consentRoot instanceof HTMLElement) {
       delete consentRoot.dataset.cookieLearningOverlayOpen;
     }
-
-    document.body.classList.remove('cookie-learning-overlay-open');
 
     document.dispatchEvent(new CustomEvent('cookie-learning-overlay:closed', {
       detail: {
@@ -177,7 +235,7 @@
   }
 
   /* =============================================================================
-     06) EVENT BINDING
+     08) EVENT BINDING
   ============================================================================= */
   function bindOpenRequests() {
     if (STATE.requestBound) return;
@@ -293,7 +351,7 @@
   }
 
   /* =============================================================================
-     07) INITIALIZATION
+     09) INITIALIZATION
   ============================================================================= */
   function initCookieLearningOverlay() {
     const root = getRoot();
@@ -302,10 +360,12 @@
     hideAllArticles();
     root.hidden = true;
     root.setAttribute('aria-hidden', 'true');
+    unlockBodyScroll();
     bindOpenRequests();
     bindReturnControls();
     bindEscapeKey();
     bindMountLifecycle();
+    bindScrollGuard();
     STATE.initialized = true;
   }
 

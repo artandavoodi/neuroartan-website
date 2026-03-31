@@ -11,6 +11,8 @@
      09) HIDDEN SITE NAME
      10) LANDING STAGE
      10A) STAGE BACKGROUND VIDEO
+     10B) STAGE COGNITIVE CORE SHELL
+     10C) STAGE VOICE INTERACTION SHELL
      11) MAIN CONTENT
      11A) HEADER CONTROLS
      11B) INSTITUTIONAL MENU MOUNT
@@ -235,26 +237,38 @@
                 </div>
 
                 <div class="stage-region stage-region-center" id="stage-center">
-                    <div class="stage-center-core" id="stage-center-core" aria-hidden="true">
+                    <div class="stage-center-core" id="stage-center-core">
                         <div class="stage-glass-vessel" id="stage-glass-vessel" aria-hidden="true">
                             <div class="stage-glass-vessel-ring" id="stage-glass-vessel-ring"></div>
                             <div class="stage-glass-vessel-inner" id="stage-glass-vessel-inner"></div>
                             <div class="stage-glass-vessel-highlight" id="stage-glass-vessel-highlight"></div>
                         </div>
+
+                        <div class="stage-cognitive-core-shell" id="stage-cognitive-core-shell" data-core-state="idle" aria-live="polite">
+                            <div class="stage-cognitive-core-signal" id="stage-cognitive-core-signal" aria-hidden="true"></div>
+                            <div class="stage-cognitive-core-ring" id="stage-cognitive-core-ring" aria-hidden="true"></div>
+                            <div class="stage-cognitive-core-pulse" id="stage-cognitive-core-pulse" aria-hidden="true"></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="stage-region stage-region-copy" id="stage-copy">
-                    <p class="site-essence stage-fade-on-enter" id="stage-essence" data-i18n-key="site.essence">What is in my mind?</p>
+                    <p class="site-essence stage-fade-on-enter" id="stage-essence" data-i18n-key="site.essence">What's in my mind?</p>
                 </div>
 
                 <div class="stage-region stage-region-actions" id="stage-actions">
                     <div class="stage-container-gap stage-fade-on-enter" id="stage-microphone">
-                        <button id="stage-microphone-button" class="stage-microphone-button" type="button" aria-label="Activate voice input">
+                        <button id="stage-microphone-button" class="stage-microphone-button" type="button" aria-label="Activate voice input" aria-controls="stage-voice-interaction-shell" aria-expanded="false">
                             <span class="stage-microphone-icon" aria-hidden="true">
                                 <img src="assets/icons/system/mic.svg" alt="">
                             </span>
                         </button>
+                    </div>
+
+                    <div class="stage-voice-interaction-shell" id="stage-voice-interaction-shell" data-voice-state="idle" hidden>
+                        <div class="stage-voice-status" id="stage-voice-status" aria-live="polite">Idle</div>
+                        <div class="stage-voice-transcript" id="stage-voice-transcript" aria-live="polite"></div>
+                        <div class="stage-voice-response" id="stage-voice-response" aria-live="polite"></div>
                     </div>
                 </div>
 
@@ -510,6 +524,11 @@
 <script src="assets/js/system/loading-overlay.js" defer></script>
 <script src="collections/config/core/collections.js" defer></script>
 <script src="assets/js/navigation/menu.js" defer></script>
+<script src="assets/js/voice/icos-voice-engine.js" defer></script>
+<script src="assets/js/voice/icos-realtime-session.js" defer></script>
+<script src="assets/js/voice/icos-transcript-controller.js" defer></script>
+<script src="assets/js/ui/effects/icos-cognitive-core.js" defer></script>
+<script src="assets/js/ui/hero-mic-controller.js" defer></script>
 <script src="assets/js/ui/hero.js" defer></script>
 <script src="assets/js/ui/effects/shader-core.js" defer></script>
 <script src="assets/js/ui/effects/home-hero-shader.js" defer></script>

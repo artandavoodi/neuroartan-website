@@ -1,12 +1,19 @@
 /* =============================================================================
-   FOOTER MODULE — REVEAL CONTROLLER (SOVEREIGN)
-   - Waits for fragment mount
-   - Uses IntersectionObserver
-   - Adds .footer-visible when footer enters viewport
-   - Removes when scrolling back up (bidirectional)
+   FILE INDEX
+   01) MODULE IDENTITY
+   02) FOOTER REVEAL CONTROLLER
+   03) INITIAL ATTEMPT
+   04) MUTATION FALLBACK
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
 ============================================================================= */
 
 (() => {
+  /* =============================================================================
+     02) FOOTER REVEAL CONTROLLER
+  ============================================================================= */
   const initFooterReveal = () => {
     const footer = document.querySelector('.site-footer');
     if (!footer) return false;
@@ -28,9 +35,15 @@
     return true;
   };
 
+  /* =============================================================================
+     03) INITIAL ATTEMPT
+  ============================================================================= */
   // Try immediately
   if (initFooterReveal()) return;
 
+  /* =============================================================================
+     04) MUTATION FALLBACK
+  ============================================================================= */
   // If footer fragment not yet mounted, observe DOM
   const mo = new MutationObserver(() => {
     if (initFooterReveal()) {

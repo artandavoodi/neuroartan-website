@@ -60,8 +60,7 @@
   min-height: 1px;
   background: rgba(128, 128, 128, 0.28);
   pointer-events: none;
-  opacity: 1;
-  transform: translateY(0);
+  transform-origin: center;
 }
 
 body.light-mode .institutional-links-separator{
@@ -71,6 +70,7 @@ body.light-mode .institutional-links-separator{
 body.dark-mode .institutional-links-separator{
   background: rgba(255, 255, 255, 0.16);
 }
+
 
 /* =============================================================================
    04) SOCIAL LINKS ROW
@@ -92,6 +92,7 @@ body.dark-mode .institutional-links-separator{
 ============================================================================= */
 .institutional-links-column.motion-init,
 .institutional-links-social-row.motion-init,
+.institutional-links-separator-row.motion-init,
 .institutional-links-separator.motion-init{
   opacity: 0;
   transform: translateY(22px);
@@ -103,6 +104,7 @@ body.dark-mode .institutional-links-separator{
 
 .institutional-links-column.motion-visible,
 .institutional-links-social-row.motion-visible,
+.institutional-links-separator-row.motion-visible,
 .institutional-links-separator.motion-visible{
   opacity: 1;
   transform: translateY(0);

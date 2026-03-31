@@ -370,7 +370,7 @@ function initRevealGroup(root = document, config = {}) {
 function initInstitutionalLinksReveal(root = document) {
   initRevealGroup(root, {
     sectionSelector: '.institutional-links',
-    itemSelector: '.institutional-links-column, .institutional-links-social-row',
+    itemSelector: '.institutional-links-column, .institutional-links-social-row, .institutional-links-separator-row, .institutional-links-separator',
     initializedKey: 'motionInitialized'
   });
 }

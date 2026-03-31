@@ -28,9 +28,7 @@
     '.home-ink-reveal',
     '.home-ink-stack',
     '.home-ink-layer',
-    '.ink-line',
-    '.site-footer',
-    '.site-footer *'
+    '.ink-line'
   ];
 
   const observed = new WeakSet();
@@ -74,7 +72,7 @@
         entries.forEach((entry) => {
           const el = entry.target;
 
-          if (entry.isIntersecting && entry.intersectionRatio > 0.14) {
+          if (entry.isIntersecting) {
             el.classList.add('motion-visible');
           } else {
             el.classList.remove('motion-visible');
@@ -82,7 +80,7 @@
         });
       },
       {
-        threshold: [0, 0.14, 0.28, 0.45],
+        threshold: 0,
         rootMargin: '0px 0px -8% 0px'
       }
     );
@@ -125,7 +123,12 @@
     scan(document);
 
     document.addEventListener('fragment:mounted', (event) => {
-      const root = isElement(event?.target) ? event.target : document;
+      const detailRoot = event?.detail?.root;
+      const root = isElement(detailRoot)
+        ? detailRoot
+        : isElement(event?.target)
+          ? event.target
+          : document;
       scan(root);
     });
   };

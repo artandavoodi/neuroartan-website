@@ -4,6 +4,7 @@
      01A) BACKDROP
      01B) DRAWER SHELL
      01C) DRAWER HEADER
+     01CA) HEADER TITLE STAGE
      01D) CLOSE CONTROL
      01E) DRAWER BODY
      01F) AUTH STATE
@@ -31,18 +32,23 @@
   <div class="account-drawer-shell" role="dialog" aria-modal="true" aria-labelledby="account-drawer-title">
 
     <!-- =============================================================================
+         01D) CLOSE CONTROL
+    ============================================================================= -->
+    <button type="button" class="account-drawer-close" aria-label="Close account drawer" data-account-drawer-close="true">
+      <span class="account-drawer-close-line account-drawer-close-line--first" aria-hidden="true"></span>
+      <span class="account-drawer-close-line account-drawer-close-line--second" aria-hidden="true"></span>
+    </button>
+
+    <!-- =============================================================================
          01C) DRAWER HEADER
     ============================================================================= -->
     <div class="account-drawer-header">
-      <h2 id="account-drawer-title" class="account-drawer-title">Create your Neuroartan profile</h2>
-
       <!-- =============================================================================
-           01D) CLOSE CONTROL
+           01CA) HEADER TITLE STAGE
       ============================================================================= -->
-      <button type="button" class="account-drawer-close" aria-label="Close account drawer" data-account-drawer-close="true">
-        <span class="account-drawer-close-line account-drawer-close-line--first" aria-hidden="true"></span>
-        <span class="account-drawer-close-line account-drawer-close-line--second" aria-hidden="true"></span>
-      </button>
+      <div class="account-drawer-header-title-stage">
+        <h2 id="account-drawer-title" class="account-drawer-title">Create your Neuroartan profile</h2>
+      </div>
     </div>
 
     <!-- =============================================================================
@@ -115,7 +121,7 @@
         </div>
 
         <div class="account-drawer-support">
-          <a href="/pages/contact/index.html" class="account-drawer-support-link">Need help?</a>
+          <a href="/404.html" class="account-drawer-support-link">Need help?</a>
         </div>
       </section>
 

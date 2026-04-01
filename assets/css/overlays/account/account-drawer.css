@@ -202,8 +202,8 @@ body.account-drawer-closing .account-drawer-shell{
 ============================================================================= */
 .account-drawer-header-title-stage{
   width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
@@ -311,7 +311,8 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 .account-drawer-title{
   margin: 0;
-  width: 100%;
+  grid-column: 2;
+  width: auto;
   color: var(--text-primary-color);
   font-size: 1.68rem;
   font-weight: 300;
@@ -726,8 +727,8 @@ body.dark-mode .account-drawer-identity-icon--theme-aware{
 
   .account-drawer-header-title-stage{
     width: 100%;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
   }
 
@@ -737,7 +738,8 @@ body.dark-mode .account-drawer-identity-icon--theme-aware{
   }
 
   .account-drawer-title{
-    width: 100%;
+    grid-column: 2;
+    width: auto;
     font-size: 1.42rem;
     white-space: normal;
     text-align: center;

@@ -140,11 +140,15 @@ body.account-drawer-closing{
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   opacity: 0;
-  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: none;
 }
 
 body.account-drawer-open .account-drawer-backdrop{
   opacity: 1;
+}
+
+body.account-drawer-closing .account-drawer-backdrop{
+  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body.account-drawer-closing .account-drawer-backdrop{
@@ -165,9 +169,8 @@ body.account-drawer-closing .account-drawer-backdrop{
   background-image: var(--account-drawer-shell-highlight);
   border-right: 1px solid var(--account-drawer-border);
   box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
-  transform: translateX(-100%);
+  transform: none;
   transition:
-    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 220ms ease,
     border-color 220ms ease;
   display: flex;
@@ -180,10 +183,14 @@ body.account-drawer-closing .account-drawer-backdrop{
 }
 
 body.account-drawer-open .account-drawer-shell{
-  transform: translateX(0);
+  transform: none;
 }
 
 body.account-drawer-closing .account-drawer-shell{
+  transition:
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    border-color 220ms ease;
   transform: translateX(-100%);
 }
 
@@ -620,18 +627,24 @@ body.dark-mode .account-drawer-identity-icon--theme-aware{
   transition: color 220ms ease, text-decoration-color 220ms ease, opacity 220ms ease;
 }
 
+
 .account-drawer-legal-link:hover,
 .account-drawer-legal-link:focus-visible,
 .account-drawer-legal-link:active,
-.account-drawer-support-link:hover,
-.account-drawer-support-link:focus-visible,
-.account-drawer-support-link:active,
 .account-drawer-legal-note-link:hover,
 .account-drawer-legal-note-link:focus-visible,
 .account-drawer-legal-note-link:active{
   color: var(--account-drawer-legal-hover);
   text-decoration-color: var(--account-drawer-legal-hover);
   opacity: 1;
+  outline: none;
+}
+
+.account-drawer-support-link:hover,
+.account-drawer-support-link:focus-visible,
+.account-drawer-support-link:active{
+  color: var(--color-primary1);
+  text-decoration-color: var(--color-primary1);
   outline: none;
 }
 

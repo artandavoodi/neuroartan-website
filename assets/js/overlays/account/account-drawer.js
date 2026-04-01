@@ -10,6 +10,7 @@
    08) GLOBAL CLICK BINDING
    09) GLOBAL REQUEST BINDING
    10) ESCAPE BINDING
+   10A) ENTRY-LAYER ROUTING HELPERS
    11) INITIALIZATION
 ============================================================================= */
 
@@ -25,6 +26,13 @@
   const OPEN_CLASS = 'account-drawer-open';
   const CLOSING_CLASS = 'account-drawer-closing';
   const CLOSE_DURATION_MS = 460;
+  const ENTRY_ACTION_SIGN_IN = 'sign-in';
+  const ENTRY_ACTION_APPLE = 'apple';
+  const ENTRY_ACTION_GOOGLE = 'google';
+  const ENTRY_ACTION_EMAIL = 'email';
+  const ENTRY_ACTION_PHONE = 'phone';
+  const ENTRY_ACTION_ENTRY = 'entry';
+
   let closeTimer = null;
 
   /* =============================================================================
@@ -209,6 +217,46 @@
         return;
       }
 
+      const signInAction = event.target instanceof Element
+        ? event.target.closest('.account-drawer-action')
+        : null;
+
+      if (signInAction) {
+        event.preventDefault();
+        event.stopPropagation();
+        requestNextAccountLayer(ENTRY_ACTION_SIGN_IN);
+        return;
+      }
+
+      const identityAction = event.target instanceof Element
+        ? event.target.closest('.account-drawer-identity-option')
+        : null;
+
+      if (identityAction) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (identityAction.classList.contains('account-drawer-identity-option--apple')) {
+          requestNextAccountLayer(ENTRY_ACTION_APPLE);
+          return;
+        }
+
+        if (identityAction.classList.contains('account-drawer-identity-option--google')) {
+          requestNextAccountLayer(ENTRY_ACTION_GOOGLE);
+          return;
+        }
+
+        if (identityAction.classList.contains('account-drawer-identity-option--email')) {
+          requestNextAccountLayer(ENTRY_ACTION_EMAIL);
+          return;
+        }
+
+        if (identityAction.classList.contains('account-drawer-identity-option--phone')) {
+          requestNextAccountLayer(ENTRY_ACTION_PHONE);
+          return;
+        }
+      }
+
       const consentLink = event.target instanceof Element
         ? event.target.closest('a[href="#cookie-consent-mount"]')
         : null;
@@ -261,6 +309,18 @@
     document.addEventListener('account-drawer:close-request', () => {
       closeDrawer('request');
     });
+
+    document.addEventListener('account-layer:route-request', (event) => {
+      if (!(event instanceof CustomEvent)) return;
+      const action = event.detail?.action;
+      if (action !== ENTRY_ACTION_ENTRY) return;
+
+      openDrawer({
+        source: event.detail?.source || MODULE_ID,
+        state: 'guest',
+        surface: 'entry'
+      });
+    });
   }
 
   /* =============================================================================
@@ -274,6 +334,28 @@
       if (event.key !== 'Escape') return;
       closeDrawer('escape');
     });
+  }
+
+  /* =============================================================================
+     10A) ENTRY-LAYER ROUTING HELPERS
+  ============================================================================= */
+  function requestNextAccountLayer(action) {
+    if (!action) return;
+
+    const drawer = getDrawer();
+    if (drawer) {
+      clearCloseTimer();
+      document.body.classList.remove(OPEN_CLASS);
+      document.body.classList.remove(CLOSING_CLASS);
+      drawer.setAttribute('aria-hidden', 'true');
+    }
+
+    document.dispatchEvent(new CustomEvent('account-layer:route-request', {
+      detail: {
+        source: MODULE_ID,
+        action
+      }
+    }));
   }
 
   /* =============================================================================

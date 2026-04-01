@@ -18,8 +18,14 @@
      11B) INSTITUTIONAL MENU MOUNT
      11C) SECONDARY MENU MOUNT
      11D) ACCOUNT DRAWER MOUNT
-     11E) AUTH FLOW MOUNT
-     11F) PROFILE SHELL MOUNT
+     11E) SIGN-IN DRAWER MOUNT
+     11F) SIGN-UP DRAWER MOUNT
+     11G) APPLE PROVIDER SHEET MOUNT
+     11H) GOOGLE PROVIDER SHEET MOUNT
+     11I) EMAIL AUTH DRAWER MOUNT
+     11J) PHONE AUTH DRAWER MOUNT
+     11K) AUTH FLOW MOUNT
+     11L) PROFILE SHELL MOUNT
      12) HOME HERO
      13) HOME ESSENCE
      14) HOME ICOS CHAPTER
@@ -60,6 +66,12 @@
     <link rel="stylesheet" href="assets/css/navigation/institutional-menu.css">
     <link rel="stylesheet" href="assets/css/overlays/country/country-overlay.css">
     <link rel="stylesheet" href="assets/css/overlays/account/account-drawer.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-sign-in-drawer.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-sign-up-drawer.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-provider-apple-sheet.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-provider-google-sheet.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-email-auth-drawer.css">
+    <link rel="stylesheet" href="assets/css/overlays/account/account-phone-auth-drawer.css">
     <link rel="stylesheet" href="assets/css/overlays/cookie/cookie-consent.css">
     <link rel="stylesheet" href="assets/css/overlays/cookie/cookie-language-overlay.css">
     <link rel="stylesheet" href="assets/css/navigation/footer.css">
@@ -312,7 +324,37 @@
 <div id="account-drawer-mount" data-include="account-drawer"></div>
 
 <!-- =============================================================================
-     11E) AUTH FLOW MOUNT
+     11E) SIGN-IN DRAWER MOUNT
+============================================================================= -->
+<div id="account-sign-in-drawer-mount" data-include="account-sign-in-drawer"></div>
+
+<!-- =============================================================================
+     11F) SIGN-UP DRAWER MOUNT
+============================================================================= -->
+<div id="account-sign-up-drawer-mount" data-include="account-sign-up-drawer"></div>
+
+<!-- =============================================================================
+     11G) APPLE PROVIDER SHEET MOUNT
+============================================================================= -->
+<div id="account-provider-apple-sheet-mount" data-include="account-provider-apple-sheet"></div>
+
+<!-- =============================================================================
+     11H) GOOGLE PROVIDER SHEET MOUNT
+============================================================================= -->
+<div id="account-provider-google-sheet-mount" data-include="account-provider-google-sheet"></div>
+
+<!-- =============================================================================
+     11I) EMAIL AUTH DRAWER MOUNT
+============================================================================= -->
+<div id="account-email-auth-drawer-mount" data-include="account-email-auth-drawer"></div>
+
+<!-- =============================================================================
+     11J) PHONE AUTH DRAWER MOUNT
+============================================================================= -->
+<div id="account-phone-auth-drawer-mount" data-include="account-phone-auth-drawer"></div>
+
+<!-- =============================================================================
+     11K) AUTH FLOW MOUNT
 ============================================================================= -->
 <div id="auth-flow-mount"
      data-auth-state="guest"
@@ -321,7 +363,7 @@
      aria-hidden="true"></div>
 
 <!-- =============================================================================
-     11F) PROFILE SHELL MOUNT
+     11L) PROFILE SHELL MOUNT
 ============================================================================= -->
 <div id="profile-shell-mount"
      data-profile-state="empty"
@@ -537,6 +579,12 @@
 <script src="assets/js/navigation/footer.js" defer></script>
 <script src="assets/js/navigation/institutional-menu.js" defer></script>
 <script src="assets/js/overlays/account/account-drawer.js" defer></script>
+<script src="assets/js/overlays/account/account-sign-in-drawer.js" defer></script>
+<script src="assets/js/overlays/account/account-sign-up-drawer.js" defer></script>
+<script src="assets/js/overlays/account/account-provider-apple-sheet.js" defer></script>
+<script src="assets/js/overlays/account/account-provider-google-sheet.js" defer></script>
+<script src="assets/js/overlays/account/account-email-auth-drawer.js" defer></script>
+<script src="assets/js/overlays/account/account-phone-auth-drawer.js" defer></script>
 <script src="assets/js/overlays/cookie/cookie-consent.js" defer></script>
 <script src="assets/js/overlays/cookie/cookie-language-overlay.js" defer></script>
 <!-- Future auth/profile mount orchestration attaches here. -->

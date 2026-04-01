@@ -1,0 +1,108 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) APPLE PROVIDER SHEET
+     01A) BACKDROP
+     01B) SHEET SHELL
+     01C) CLOSE CONTROL
+     01D) SHEET HEADER
+     01DA) HEADER TITLE STAGE
+     01E) SHEET BODY
+     01F) PROVIDER STATE
+     01G) CONTENT STAGE
+     01H) PROVIDER ICON
+     01I) PROVIDER COPY
+     01J) PRIMARY ACTIONS
+     01K) SECONDARY ACTIONS
+     01KA) BACK CONTROL
+============================================================================= -->
+
+<!-- =============================================================================
+     01) APPLE PROVIDER SHEET
+============================================================================= -->
+<aside id="account-provider-apple-sheet" class="account-provider-apple-sheet" aria-hidden="true" aria-labelledby="account-provider-apple-sheet-title" data-account-provider-apple-sheet="true">
+
+  <!-- =============================================================================
+       01A) BACKDROP
+  ============================================================================= -->
+  <div class="account-provider-apple-sheet-backdrop" data-account-provider-apple-sheet-close="true"></div>
+
+  <!-- =============================================================================
+       01B) SHEET SHELL
+  ============================================================================= -->
+  <div class="account-provider-apple-sheet-shell" role="dialog" aria-modal="true" aria-labelledby="account-provider-apple-sheet-title">
+
+    <!-- =============================================================================
+         01C) CLOSE CONTROL
+    ============================================================================= -->
+    <button type="button" class="account-provider-apple-sheet-close" aria-label="Close Apple sign in sheet" data-account-provider-apple-sheet-close="true">
+      <span class="account-provider-apple-sheet-close-line account-provider-apple-sheet-close-line--first" aria-hidden="true"></span>
+      <span class="account-provider-apple-sheet-close-line account-provider-apple-sheet-close-line--second" aria-hidden="true"></span>
+    </button>
+
+    <!-- =============================================================================
+         01D) SHEET HEADER
+    ============================================================================= -->
+    <div class="account-provider-apple-sheet-header">
+      <!-- =============================================================================
+           01DA) HEADER TITLE STAGE
+      ============================================================================= -->
+      <div class="account-provider-apple-sheet-header-title-stage">
+        <h2 id="account-provider-apple-sheet-title" class="account-provider-apple-sheet-title" data-i18n-key="account_provider_apple_title">Continue with Apple</h2>
+      </div>
+    </div>
+
+    <!-- =============================================================================
+         01E) SHEET BODY
+    ============================================================================= -->
+    <div class="account-provider-apple-sheet-body">
+
+      <!-- =============================================================================
+           01F) PROVIDER STATE
+      ============================================================================= -->
+      <section class="account-provider-apple-sheet-state" data-account-provider-apple-state="entry">
+
+        <!-- =============================================================================
+             01G) CONTENT STAGE
+        ============================================================================= -->
+        <div class="account-provider-apple-sheet-content-stage">
+
+          <!-- =============================================================================
+               01H) PROVIDER ICON
+          ============================================================================= -->
+          <div class="account-provider-apple-sheet-provider-mark" aria-hidden="true">
+            <img src="assets/icons/brand/apple.svg" alt="" class="account-provider-apple-sheet-provider-icon account-provider-apple-sheet-provider-icon--theme-aware">
+          </div>
+
+          <!-- =============================================================================
+               01I) PROVIDER COPY
+          ============================================================================= -->
+          <div class="account-provider-apple-sheet-copy-group">
+            <p class="account-provider-apple-sheet-note" data-i18n-key="account_provider_apple_intro">Continue with your Apple identity to sign in or complete your profile setup if this is your first time here.</p>
+            <p class="account-provider-apple-sheet-note" data-i18n-key="account_provider_apple_secondary">Your Apple account will be used only to verify identity and continue securely into the next account step.</p>
+          </div>
+
+          <!-- =============================================================================
+               01J) PRIMARY ACTIONS
+          ============================================================================= -->
+          <div class="account-provider-apple-sheet-actions">
+            <button type="button" class="account-provider-apple-sheet-action account-provider-apple-sheet-action--primary" data-account-provider-apple-continue="true">
+              <span class="account-provider-apple-sheet-action-label" data-i18n-key="account_provider_apple_continue">Continue with Apple</span>
+            </button>
+          </div>
+
+          <!-- =============================================================================
+               01K) SECONDARY ACTIONS
+          ============================================================================= -->
+          <div class="account-provider-apple-sheet-secondary-actions">
+            <!-- =============================================================================
+                 01KA) BACK CONTROL
+            ============================================================================= -->
+            <button type="button" class="account-provider-apple-sheet-back-control" data-account-provider-apple-back="true" aria-label="Back">
+              <img src="assets/icons/system/back.svg" alt="" class="account-provider-apple-sheet-back-icon" aria-hidden="true">
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</aside>

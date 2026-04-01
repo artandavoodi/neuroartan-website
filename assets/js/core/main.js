@@ -35,6 +35,12 @@ const COOKIE_LEARNING_OVERLAY_JS_URL = assetPath('/assets/js/overlays/cookie/coo
 
 const FRAGMENT_PATHS = {
   'account-drawer': assetPath('/assets/fragments/account/account-drawer.html'),
+  'account-sign-in-drawer': assetPath('/assets/fragments/account/account-sign-in-drawer.html'),
+  'account-sign-up-drawer': assetPath('/assets/fragments/account/account-sign-up-drawer.html'),
+  'account-provider-apple-sheet': assetPath('/assets/fragments/account/account-provider-apple-sheet.html'),
+  'account-provider-google-sheet': assetPath('/assets/fragments/account/account-provider-google-sheet.html'),
+  'account-email-auth-drawer': assetPath('/assets/fragments/account/account-email-auth-drawer.html'),
+  'account-phone-auth-drawer': assetPath('/assets/fragments/account/account-phone-auth-drawer.html'),
   'cookie-consent': assetPath('/assets/fragments/cookie/cookie-consent.html'),
   'cookie-language-overlay': assetPath('/assets/fragments/cookie/cookie-language-overlay.html'),
   'cookie-learning-overlay': assetPath('/assets/fragments/cookie/cookie-learning-overlay.html'),

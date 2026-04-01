@@ -1,168 +1,312 @@
-.site-header__actions{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
+/* =========================================================
+   00. FILE INDEX
+   01. HEADER AUTH ACTIONS
+   02. PROFILE PAGE ROOT
+   03. PROFILE PAGE SHELL
+   04. PROFILE IDENTITY
+   05. PROFILE BODY
+   06. PROFILE ACTIONS
+   07. PROFILE AVATAR
+   08. LIGHT MODE
+   09. RESPONSIVE
+   ========================================================= */
+
+/* =========================================================
+   01. HEADER AUTH ACTIONS
+   ========================================================= */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-#auth-access-button{
-  appearance:none;
-  -webkit-appearance:none;
-  min-height:36px;
-  padding:0 14px;
-  border:1px solid var(--border-color);
-  background:rgba(255,255,255,0.04);
-  color:var(--text-color);
-  font-family:var(--font-base);
-  font-size:0.78rem;
-  font-weight:500;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:background-color 0.25s ease,border-color 0.25s ease,opacity 0.25s ease;
+#auth-access-button {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-color);
+  font-family: var(--font-base);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
 }
 
 #auth-access-button:hover,
-#auth-access-button:focus-visible{
-  background:rgba(255,255,255,0.08);
-  border-color:rgba(255,255,255,0.22);
-  opacity:1;
+#auth-access-button:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  opacity: 1;
 }
 
-body.light-mode #auth-access-button{
-  background:rgba(0,0,0,0.03);
+body.light-mode #auth-access-button {
+  background: rgba(0, 0, 0, 0.03);
 }
 
 body.light-mode #auth-access-button:hover,
-body.light-mode #auth-access-button:focus-visible{
-  background:rgba(0,0,0,0.06);
-  border-color:rgba(0,0,0,0.18);
+body.light-mode #auth-access-button:focus-visible {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.18);
 }
 
+/* =========================================================
+   02. PROFILE PAGE ROOT
+   ========================================================= */
 html.profile-page,
-body.profile-page{
-  margin:0;
-  min-height:100%;
-  background:#000;
-  color:#fff;
-  font-family:"Manrope",sans-serif;
+body.profile-page {
+  margin: 0;
+  min-height: 100%;
+  background: #050505;
+  color: #f5f5f7;
+  font-family: var(--font-base, "Manrope", sans-serif);
 }
 
-body.profile-page{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
+body.profile-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  box-sizing: border-box;
 }
 
-.profile-shell{
-  width:min(100%,640px);
-  display:grid;
-  gap:18px;
-  padding:36px 28px;
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.03);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  box-sizing:border-box;
+/* =========================================================
+   03. PROFILE PAGE SHELL
+   ========================================================= */
+.profile-shell {
+  width: min(100%, 920px);
+  position: relative;
+  z-index: 1;
 }
 
-.profile-label{
-  margin:0;
-  font-size:0.78rem;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  opacity:0.62;
+.profile-surface {
+  width: 100%;
+  display: grid;
+  gap: 28px;
+  padding: 40px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-sizing: border-box;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   04. PROFILE IDENTITY
+   ========================================================= */
+.profile-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "label label"
+    "avatar identity";
+  column-gap: 22px;
+  row-gap: 20px;
+  align-items: center;
+}
+
+.profile-label {
+  grid-area: label;
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 247, 0.54);
+}
+
+.profile-avatar-wrap {
+  grid-area: avatar;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-identity-copy {
+  grid-area: identity;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
 }
 
 .profile-name,
 .profile-email,
-.profile-copy{
-  margin:0;
+.profile-copy {
+  margin: 0;
 }
 
-.profile-name{
-  font-size:2.1rem;
-  line-height:1.04;
-  letter-spacing:-0.03em;
+.profile-name {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  color: #f5f5f7;
+  text-wrap: balance;
 }
 
-.profile-email{
-  font-size:0.98rem;
-  opacity:0.76;
+.profile-email {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(245, 245, 247, 0.7);
+  overflow-wrap: anywhere;
 }
 
-.profile-copy{
-  color:rgba(255,255,255,0.68);
-  line-height:1.65;
+/* =========================================================
+   05. PROFILE BODY
+   ========================================================= */
+.profile-body {
+  display: grid;
+  gap: 14px;
 }
 
-.profile-actions{
-  display:flex;
-  justify-content:flex-start;
-  gap:12px;
-  flex-wrap:wrap;
+.profile-copy {
+  max-width: 640px;
+  font-size: 1rem;
+  line-height: 1.72;
+  color: rgba(245, 245, 247, 0.76);
 }
 
-.profile-button{
-  appearance:none;
-  -webkit-appearance:none;
-  min-height:44px;
-  padding:0 18px;
-  border:1px solid rgba(255,255,255,0.18);
-  background:transparent;
-  color:#fff;
-  font:inherit;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  cursor:pointer;
-  transition:background-color 0.25s ease,border-color 0.25s ease,opacity 0.25s ease;
+/* =========================================================
+   06. PROFILE ACTIONS
+   ========================================================= */
+.profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.profile-button {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  color: #f5f5f7;
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
 }
 
 .profile-button:hover,
-.profile-button:focus-visible{
-  background:rgba(255,255,255,0.08);
-  border-color:rgba(255,255,255,0.24);
+.profile-button:focus-visible {
+  opacity: 0.92;
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-#profile-avatar-image{
-  width:88px;
-  height:88px;
-  object-fit:cover;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.04);
+.profile-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 4px;
 }
 
-body.light-mode.profile-page{
-  background:#f6f3ee;
-  color:var(--text-color);
+/* =========================================================
+   07. PROFILE AVATAR
+   ========================================================= */
+#profile-avatar-image,
+.profile-avatar-image {
+  width: 104px;
+  height: 104px;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
 }
 
-body.light-mode .profile-shell{
-  background:rgba(0,0,0,0.03);
-  border-color:rgba(0,0,0,0.12);
+/* =========================================================
+   08. LIGHT MODE
+   ========================================================= */
+body.light-mode.profile-page {
+  background: #f6f3ee;
+  color: var(--text-color);
 }
 
-body.light-mode .profile-copy,
+body.light-mode .profile-surface {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .profile-label {
+  color: rgba(0, 0, 0, 0.52);
+}
+
+body.light-mode .profile-name {
+  color: var(--text-color);
+}
+
 body.light-mode .profile-email,
-body.light-mode .profile-label{
-  color:rgba(0,0,0,0.62);
+body.light-mode .profile-copy {
+  color: rgba(0, 0, 0, 0.64);
 }
 
-body.light-mode .profile-button{
-  border-color:rgba(0,0,0,0.18);
-  color:var(--text-color);
+body.light-mode .profile-button {
+  border-color: rgba(0, 0, 0, 0.16);
+  color: var(--text-color);
 }
 
 body.light-mode .profile-button:hover,
-body.light-mode .profile-button:focus-visible{
-  background:rgba(0,0,0,0.05);
-  border-color:rgba(0,0,0,0.22);
+body.light-mode .profile-button:focus-visible {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.22);
 }
 
-body.light-mode #profile-avatar-image{
-  border-color:rgba(0,0,0,0.12);
-  background:rgba(0,0,0,0.03);
+body.light-mode #profile-avatar-image,
+body.light-mode .profile-avatar-image {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================================================
+   09. RESPONSIVE
+   ========================================================= */
+@media (max-width: 720px) {
+  body.profile-page {
+    padding: 20px 16px;
+  }
+
+  .profile-surface {
+    padding: 28px 22px;
+    border-radius: 26px;
+    gap: 22px;
+  }
+
+  .profile-header {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "label"
+      "avatar"
+      "identity";
+    row-gap: 16px;
+    justify-items: start;
+  }
+
+  .profile-actions {
+    width: 100%;
+  }
+
+  .profile-button {
+    width: 100%;
+  }
 }

@@ -1,39 +1,84 @@
 <!DOCTYPE html>
+<!-- =========================================================
+     00. FILE INDEX
+     01. DOCUMENT HEAD
+     02. CUSTOM CURSOR
+     03. PROFILE PAGE SHELL
+     04. PROFILE SURFACE
+     05. PROFILE IDENTITY
+     06. PROFILE BODY
+     07. PROFILE ACTIONS
+     08. PAGE SCRIPTS
+     ========================================================= -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legacy Profile Access · Neuroartan</title>
+  <title>Profile · Neuroartan</title>
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="description" content="Legacy noindex profile access surface retained temporarily during the Neuroartan platform restructuring.">
+  <meta name="description" content="Private profile access surface for Neuroartan account state and authenticated platform continuity.">
   <link rel="canonical" href="https://neuroartan.com/">
+  <link rel="icon" href="assets/icons/brand/logos/neuroartan/logo-plain.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/core/style.css">
+  <link rel="stylesheet" href="assets/css/ui/custom-cursor.css">
   <link rel="stylesheet" href="assets/css/system/auth.css">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
   <script src="assets/js/system/firebase-config.js" defer></script>
   <script src="assets/js/system/auth.js" defer></script>
+  <script src="assets/js/ui/custom-cursor.js" defer></script>
 </head>
 <body class="profile-page">
-  <main class="profile-shell">
-    <p class="profile-label" id="profile-label">Legacy Profile Access</p>
-    <img id="profile-avatar-image" src="assets/icons/brand/logos/neuroartan/logo-plain.svg" alt="Neuroartan" />
-    <h1 class="profile-name" id="profile-name">Loading...</h1>
-    <p class="profile-email" id="profile-email">Loading...</p>
-    <p class="profile-copy" id="profile-copy">This noindex legacy profile surface is being retained temporarily while Neuroartan restructures the public website, Office layer, ICOS layer, and Investor layer into sovereign platform architecture.</p>
+  <!-- =========================================================
+       02. CUSTOM CURSOR
+       ========================================================= -->
+  <div class="custom-cursor" aria-hidden="true"></div>
 
-    <div class="profile-actions" data-auth-state="user" hidden>
-      <button class="profile-button" type="button" onclick="logout()">Logout</button>
-    </div>
+  <!-- =========================================================
+       03. PROFILE PAGE SHELL
+       ========================================================= -->
+  <main class="profile-shell" aria-labelledby="profile-name">
+    <!-- =========================================================
+         04. PROFILE SURFACE
+         ========================================================= -->
+    <section class="profile-surface">
+      <!-- =========================================================
+           05. PROFILE IDENTITY
+           ========================================================= -->
+      <header class="profile-header">
+        <p class="profile-label" id="profile-label">Profile</p>
+        <div class="profile-avatar-wrap" aria-hidden="true">
+          <img id="profile-avatar-image" class="profile-avatar-image" src="assets/icons/brand/logos/neuroartan/logo-plain.svg" alt="Neuroartan" />
+        </div>
+        <div class="profile-identity-copy">
+          <h1 class="profile-name" id="profile-name">Loading...</h1>
+          <p class="profile-email" id="profile-email">Loading...</p>
+        </div>
+      </header>
 
-    <div class="profile-actions" data-auth-state="guest" hidden>
-      <button class="profile-button" type="button" onclick="loginWithGoogle()">Continue with Google</button>
-    </div>
+      <!-- =========================================================
+           06. PROFILE BODY
+           ========================================================= -->
+      <div class="profile-body">
+        <p class="profile-copy" id="profile-copy">This profile surface is being restructured into the Neuroartan sovereign platform architecture while authenticated access and continuity systems remain active.</p>
+      </div>
 
-    <noscript>
-      <p class="profile-copy">JavaScript is required for Firebase-authenticated profile state and logout handling.</p>
-    </noscript>
+      <!-- =========================================================
+           07. PROFILE ACTIONS
+           ========================================================= -->
+      <div class="profile-actions" data-auth-state="user" hidden>
+        <button class="profile-button" type="button" onclick="logout()">Logout</button>
+      </div>
+
+      <div class="profile-actions" data-auth-state="guest" hidden>
+        <button class="profile-button" type="button" onclick="loginWithGoogle()">Continue with Google</button>
+      </div>
+
+      <noscript>
+        <p class="profile-copy">JavaScript is required for Firebase-authenticated profile state and account access handling.</p>
+      </noscript>
+    </section>
   </main>
 </body>
 </html>

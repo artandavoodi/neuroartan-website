@@ -7,17 +7,11 @@
      01D) CLOSE CONTROL
      01E) DRAWER BODY
      01F) AUTH STATE
-     01G) ENTRY CARD
-     01GA) ENTRY CONTEXT
-     01GB) ENTRY DISTINCTION
-     01H) IDENTITY OPTIONS
-     01HA) ENTRY PATHS LABEL
-     01HB) ENTRY PATHS INTRO
-     01I) PRIMARY ACTIONS
-     01J) LEGAL / SUPPORT META
-     01JA) CONSENT SETTINGS LINK
-     01JB) ACCESS SUPPORT LINK
-     01K) SECONDARY NOTES
+     01G) CONTENT STAGE
+     01H) ENTRY CARD
+     01I) IDENTITY OPTIONS
+     01J) PRIMARY ACTIONS
+     01K) LEGAL / SUPPORT META
      01L) PROFILE PLACEHOLDER
 ============================================================================= -->
 
@@ -40,8 +34,7 @@
          01C) DRAWER HEADER
     ============================================================================= -->
     <div class="account-drawer-header">
-      <p class="account-drawer-eyebrow">Private Access</p>
-      <h2 id="account-drawer-title" class="account-drawer-title">Private access to your Neuroartan profile</h2>
+      <h2 id="account-drawer-title" class="account-drawer-title">Create your Neuroartan profile</h2>
 
       <!-- =============================================================================
            01D) CLOSE CONTROL
@@ -61,101 +54,50 @@
            01F) AUTH STATE
       ============================================================================= -->
       <section class="account-drawer-state account-drawer-auth" data-auth-state="guest" data-auth-surface="entry">
-        <div class="account-drawer-intro">
-          <p class="account-drawer-copy">A private entry layer for your profile, continuity, and future system access across the Neuroartan environment.</p>
-        </div>
+        <div class="account-drawer-intro"></div>
 
-        <!-- =============================================================================
-             01G) ENTRY CARD
-        ============================================================================= -->
-        <div class="account-drawer-entry-card">
-          <span class="account-drawer-entry-badge">Private Access</span>
-          <h3 class="account-drawer-entry-title">Continue into your private Neuroartan space.</h3>
-          <p class="account-drawer-entry-copy">Sign in to continue with your existing access, or begin creating your account through a premium identity flow designed for continuity, clarity, and governed entry.</p>
+        <div class="account-drawer-content-stage">
+          <!-- =============================================================================
+               01H) ENTRY CARD
+          ============================================================================= -->
+          <div class="account-drawer-entry-card">
+            <h3 class="account-drawer-entry-title">Already have an account?</h3>
+          </div>
 
           <!-- =============================================================================
-               01GA) ENTRY CONTEXT
+               01I) IDENTITY OPTIONS
           ============================================================================= -->
-          <p class="account-drawer-note">For first-time access, create your account. For returning access, continue through your preferred sign-in pathway.</p>
+          <div class="account-drawer-identity-options" aria-label="Available sign-in pathways">
+            <a href="/pages/account/sign-in/index.html?provider=apple" class="account-drawer-identity-option">
+              <p class="account-drawer-identity-label">Continue with Apple</p>
+            </a>
+            <a href="/pages/account/sign-in/index.html?provider=google" class="account-drawer-identity-option">
+              <p class="account-drawer-identity-label">Continue with Google</p>
+            </a>
+            <a href="/pages/account/sign-in/index.html?provider=email" class="account-drawer-identity-option">
+              <p class="account-drawer-identity-label">Continue with email</p>
+            </a>
+            <a href="/pages/account/sign-in/index.html?provider=phone" class="account-drawer-identity-option">
+              <p class="account-drawer-identity-label">Continue with phone number</p>
+            </a>
+          </div>
 
           <!-- =============================================================================
-               01GB) ENTRY DISTINCTION
+               01J) PRIMARY ACTIONS
           ============================================================================= -->
-          <p class="account-drawer-note">Apple and Google support fast entry. Email and phone number support direct account-based access.</p>
+          <div class="account-drawer-actions">
+            <a href="/pages/account/sign-in/index.html" class="account-drawer-action account-drawer-action--primary">Continue to Sign In</a>
+            <a href="/pages/account/create/index.html" class="account-drawer-action account-drawer-action--secondary">Create Your Account</a>
+          </div>
+
+          <!-- =============================================================================
+               01K) LEGAL / SUPPORT META
+          ============================================================================= -->
+          <p class="account-drawer-note">By creating an account, you agree to the <a href="/pages/legal/terms-of-use/index.html" class="account-drawer-legal-link">Terms of Use</a> and <a href="/pages/legal/privacy-policy/index.html" class="account-drawer-legal-link">Privacy Policy</a>. For more information about Neuroartan’s data practices, please review the <a href="/pages/legal/privacy-policy/index.html" class="account-drawer-legal-link">Privacy Policy Statement</a>. We may occasionally send you account-related emails.</p>
         </div>
 
-        <!-- =============================================================================
-             01HA) ENTRY PATHS LABEL
-        ============================================================================= -->
         <div class="account-drawer-support">
-          <p class="account-drawer-note">Choose the entry pathway that fits your access preference.</p>
-        </div>
-
-        <!-- =============================================================================
-             01HB) ENTRY PATHS INTRO
-        ============================================================================= -->
-        <div class="account-drawer-support">
-          <a href="/pages/account/sign-in/index.html" class="account-drawer-support-link">View all sign-in pathways</a>
-        </div>
-
-        <!-- =============================================================================
-             01H) IDENTITY OPTIONS
-        ============================================================================= -->
-        <div class="account-drawer-identity-options" aria-label="Available sign-in pathways">
-          <a href="/pages/account/sign-in/index.html?provider=apple" class="account-drawer-identity-option">
-            <p class="account-drawer-identity-label">Continue with Apple</p>
-            <p class="account-drawer-identity-meta">Private · Recommended</p>
-          </a>
-          <a href="/pages/account/sign-in/index.html?provider=google" class="account-drawer-identity-option">
-            <p class="account-drawer-identity-label">Continue with Google</p>
-            <p class="account-drawer-identity-meta">Fast access</p>
-          </a>
-          <a href="/pages/account/sign-in/index.html?provider=email" class="account-drawer-identity-option">
-            <p class="account-drawer-identity-label">Continue with email</p>
-            <p class="account-drawer-identity-meta">Direct sign in</p>
-          </a>
-          <a href="/pages/account/sign-in/index.html?provider=phone" class="account-drawer-identity-option">
-            <p class="account-drawer-identity-label">Continue with phone number</p>
-            <p class="account-drawer-identity-meta">Secure entry</p>
-          </a>
-        </div>
-
-        <!-- =============================================================================
-             01I) PRIMARY ACTIONS
-        ============================================================================= -->
-        <div class="account-drawer-actions">
-          <a href="/pages/account/sign-in/index.html" class="account-drawer-action account-drawer-action--primary">Continue to Sign In</a>
-          <a href="/pages/account/create/index.html" class="account-drawer-action account-drawer-action--secondary">Create Your Account</a>
-        </div>
-
-        <!-- =============================================================================
-             01J) LEGAL / SUPPORT META
-        ============================================================================= -->
-        <div class="account-drawer-legal">
-          <a href="/pages/legal/privacy-policy/index.html" class="account-drawer-legal-link">Privacy Policy</a>
-          <a href="/pages/legal/cookie-policy/index.html" class="account-drawer-legal-link">Cookie Policy</a>
-          <a href="/pages/legal/terms-of-use/index.html" class="account-drawer-legal-link">Terms of Use</a>
-        </div>
-
-        <!-- =============================================================================
-             01JA) CONSENT SETTINGS LINK
-        ============================================================================= -->
-        <div class="account-drawer-support">
-          <a href="#cookie-consent-mount" class="account-drawer-support-link">Review cookie settings</a>
-        </div>
-
-        <!-- =============================================================================
-             01JB) ACCESS SUPPORT LINK
-        ============================================================================= -->
-        <div class="account-drawer-support">
-          <a href="/pages/contact/index.html" class="account-drawer-support-link">Need help with access or account setup?</a>
-        </div>
-
-        <!-- =============================================================================
-             01K) SECONDARY NOTES
-        ============================================================================= -->
-        <div class="account-drawer-notes">
-          <p class="account-drawer-note">Account access is being introduced as a sovereign website layer with profile continuity, future authentication, governed entry control, and consent-aware identity architecture.</p>
+          <a href="/pages/contact/index.html" class="account-drawer-support-link">Need help?</a>
         </div>
       </section>
 

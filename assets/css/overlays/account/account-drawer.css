@@ -14,6 +14,7 @@
    11) ACTIONS
    12) NOTES
    12A) AUTH / PROFILE SHELLS
+   12AA) CONTENT STAGE
    12B) AUTH ENTRY CARD
    12C) IDENTITY OPTIONS
    12D) LEGAL / SUPPORT META
@@ -34,7 +35,7 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-drawer-panel-width: min(34rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --account-drawer-panel-width: min(40rem, calc(100vw - (2 * var(--site-gutter, 24px))));
   --account-drawer-surface: #ffffff;
   --account-drawer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
@@ -77,9 +78,6 @@
 
 body.light-mode{
   --account-drawer-surface: rgba(255, 255, 255, 0.82);
-}
-
-body.light-mode{
   --account-drawer-card-surface: rgba(255, 255, 255, 0.52);
   --account-drawer-card-border: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
   --account-drawer-card-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
@@ -112,9 +110,6 @@ body.light-mode{
 
 body.dark-mode{
   --account-drawer-surface: rgba(0, 0, 0, 0.82);
-}
-
-body.dark-mode{
   --account-drawer-card-surface: rgba(255, 255, 255, 0.03);
   --account-drawer-card-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-drawer-card-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
@@ -204,14 +199,14 @@ body.account-drawer-closing .account-drawer-backdrop{
 .account-drawer-shell{
   position: absolute;
   inset: 0 auto 0 0;
-  width: var(--account-drawer-panel-width);
+  width: min(40rem, 100vw);
   max-width: 100%;
   height: 100%;
-  padding: 1.52rem 1.52rem 1.42rem;
+  padding: 1.6rem 2rem;
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
   border-right: 1px solid var(--account-drawer-border);
-  box-shadow: var(--account-drawer-primary-shadow);
+  box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
   transform: translateX(-100%);
   transition:
     transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -221,8 +216,16 @@ body.account-drawer-closing .account-drawer-backdrop{
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  overflow: visible;
-  box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.account-drawer-shell::-webkit-scrollbar{
+  display: none;
 }
 
 body.account-drawer-open .account-drawer-shell{
@@ -244,6 +247,7 @@ body.account-drawer-closing .account-drawer-shell{
   justify-content: flex-start;
   gap: 0.42rem;
   padding: 0 0 1.22rem 0;
+  padding-right: 2.6rem;
   border-bottom: 1px solid var(--account-drawer-header-divider);
 }
 
@@ -252,12 +256,13 @@ body.account-drawer-closing .account-drawer-shell{
 ============================================================================= */
 .account-drawer-close{
   position: absolute;
-  top: 1.52rem;
-  left: calc(100% + 2.14rem);
-  width: 1rem;
-  min-width: 1rem;
-  height: 1rem;
-  min-height: 1rem;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 1.2rem;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  min-height: 1.2rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -267,7 +272,8 @@ body.account-drawer-closing .account-drawer-shell{
   opacity: 1;
   transition:
     opacity 150ms ease,
-    color 220ms ease;
+    color 220ms ease,
+    transform 220ms ease;
 }
 
 .account-drawer-close-line{
@@ -275,7 +281,7 @@ body.account-drawer-closing .account-drawer-shell{
   top: 50%;
   left: 50%;
   width: 100%;
-  height: 1px;
+  height: 1.2px;
   background: currentColor;
   transform-origin: center;
   opacity: 1;
@@ -297,6 +303,7 @@ body.account-drawer-closing .account-drawer-shell{
 .account-drawer-close:focus-visible,
 .account-drawer-close:active{
   color: var(--color-primary7);
+  transform: scale(1.08);
   outline: none;
 }
 
@@ -459,6 +466,16 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 /* =============================================================================
+   12AA) CONTENT STAGE
+============================================================================= */
+.account-drawer-content-stage{
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-drawer-section-gap);
+  padding-inline: 1rem;
+}
+
+/* =============================================================================
    12B) AUTH ENTRY CARD
 ============================================================================= */
 .account-drawer-entry-card{
@@ -522,15 +539,16 @@ body.account-drawer-closing .account-drawer-close{
   flex-direction: column;
   align-items: stretch;
   gap: 0;
+  padding-inline: 0.5rem;
 }
 
 .account-drawer-identity-option{
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.78rem;
   min-height: 3.1rem;
-  padding: 0.88rem 0.94rem;
+  padding: 0.82rem 0.9rem;
   border-top: 1px solid var(--account-drawer-card-divider);
   color: var(--text-primary-color);
   background: transparent;
@@ -556,6 +574,7 @@ body.account-drawer-closing .account-drawer-close{
   font-weight: 300;
   letter-spacing: -0.015em;
   line-height: 1.2;
+  width: 100%;
 }
 
 .account-drawer-identity-meta{
@@ -699,6 +718,7 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-legal + .account-drawer-support:focus-within{
   background: var(--account-drawer-support-hover-surface);
 }
+
 /* =============================================================================
    12H) PREMIUM SURFACE REFINEMENT
 ============================================================================= */
@@ -752,11 +772,17 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 @media (max-width:1024px){
   .account-drawer-shell{
-    padding: 1.24rem 1.24rem 1.14rem;
+    padding: 1.36rem 1.7rem;
   }
+
+  .account-drawer-content-stage{
+    padding-inline: 0.78rem;
+  }
+
   .account-drawer-close{
-    top: 1.24rem;
-    left: calc(100% + 1.72rem);
+    top: 0;
+    right: 0;
+    left: auto;
   }
 }
 
@@ -769,15 +795,22 @@ body.account-drawer-closing .account-drawer-close{
   }
 
   .account-drawer-shell{
-    padding: 1.08rem 1.08rem 1rem;
+    padding: 1.2rem 1.28rem;
   }
+
+  .account-drawer-content-stage{
+    padding-inline: 0.46rem;
+  }
+
   .account-drawer-close{
-    top: 1.08rem;
-    left: calc(100% + 1.24rem);
+    top: 0;
+    right: 0;
+    left: auto;
   }
 
   .account-drawer-header{
     padding: 0 0 1.04rem 0;
+    padding-right: 2.6rem;
   }
 
   .account-drawer-body{
@@ -789,9 +822,14 @@ body.account-drawer-closing .account-drawer-close{
     font-size: 1.42rem;
   }
 
+  .account-drawer-identity-options{
+    padding-inline: 0.28rem;
+  }
+
   .account-drawer-entry-card{
     padding: 0.96rem;
   }
+
   .account-drawer-action{
     min-height: 2.86rem;
     padding: 0.78rem 0.94rem;
@@ -821,6 +859,7 @@ body.account-drawer-closing .account-drawer-close{
   .account-drawer-legal + .account-drawer-support .account-drawer-support-link{
     font-size: 0.76rem;
   }
+
   .account-drawer-legal + .account-drawer-support{
     padding: 0.38rem 0.72rem;
   }

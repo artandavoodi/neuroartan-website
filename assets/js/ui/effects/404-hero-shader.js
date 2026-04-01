@@ -32,7 +32,7 @@
   const VEIL_SELECTOR = '[data-404-hero-shader-veil]';
   const MATTE_SELECTOR = '[data-404-hero-shader-matte]';
   const READY_CLASS = 'page-404-hero-shader-active';
-  const DPR_LIMIT = 2;
+  const DPR_LIMIT = 1;
   const PARTICLE_COUNT = 11;
   const BASE_RADIUS_MIN = 180;
   const BASE_RADIUS_MAX = 360;
@@ -67,11 +67,15 @@
   const canvas = root.querySelector(CANVAS_SELECTOR);
   const veil = root.querySelector(VEIL_SELECTOR);
   const matte = root.querySelector(MATTE_SELECTOR);
-  const context = canvas ? canvas.getContext('2d') : null;
+  const context = canvas ? canvas.getContext('2d', { alpha: true, desynchronized: true }) : null;
 
   if (!canvas || !context) {
     return;
   }
+
+  canvas.style.willChange = 'transform, opacity';
+  canvas.style.transform = 'translateZ(0)';
+  root.style.willChange = 'transform';
 
   const state = {
     width: 0,
@@ -178,6 +182,7 @@
     canvas.style.height = `${height}px`;
     canvas.style.left = '0px';
     canvas.style.top = '0px';
+    context.imageSmoothingEnabled = true;
 
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
   }

@@ -53,6 +53,9 @@
   const CENTER_TRAVEL_SPEED_X_MAX = 0.00018;
   const CENTER_TRAVEL_SPEED_Y_MIN = 0.00012;
   const CENTER_TRAVEL_SPEED_Y_MAX = 0.00026;
+  const FLEE_TRIGGER_RADIUS = 220;
+  const FLEE_FORCE_MAX = 220;
+  const FLEE_SHRINK_STRENGTH = 0.34;
 
   /* =========================================================
      03. SHADER STATE
@@ -96,7 +99,12 @@
     centerTravelSpeedX: randomBetween(CENTER_TRAVEL_SPEED_X_MIN, CENTER_TRAVEL_SPEED_X_MAX),
     centerTravelSpeedY: randomBetween(CENTER_TRAVEL_SPEED_Y_MIN, CENTER_TRAVEL_SPEED_Y_MAX),
     centerTravelPhaseX: randomBetween(0, Math.PI * 2),
-    centerTravelPhaseY: randomBetween(0, Math.PI * 2)
+    centerTravelPhaseY: randomBetween(0, Math.PI * 2),
+    fleeOffsetX: 0,
+    fleeOffsetY: 0,
+    fleeVelocityX: 0,
+    fleeVelocityY: 0,
+    fleeShrink: 0
   };
 
   function randomBetween(min, max) {
@@ -213,6 +221,35 @@
     state.pointerTargetY = 0.5;
   }
 
+  function applyFleeInteraction() {
+    const organismCenterX = (state.width * 0.5) + state.centerTravelX + state.fleeOffsetX;
+    const organismCenterY = (state.height * 0.52) + state.centerTravelY + state.fleeOffsetY;
+    const pointerX = state.pointerX * state.width;
+    const pointerY = state.pointerY * state.height;
+    const dx = organismCenterX - pointerX;
+    const dy = organismCenterY - pointerY;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < FLEE_TRIGGER_RADIUS) {
+      const normalizedDistance = 1 - (distance / FLEE_TRIGGER_RADIUS);
+      const force = normalizedDistance * FLEE_FORCE_MAX;
+      const directionX = distance > 0.0001 ? dx / distance : (Math.random() - 0.5);
+      const directionY = distance > 0.0001 ? dy / distance : (Math.random() - 0.5);
+
+      state.fleeVelocityX += directionX * force * 0.02;
+      state.fleeVelocityY += directionY * force * 0.02;
+      state.fleeShrink = Math.max(state.fleeShrink, normalizedDistance * FLEE_SHRINK_STRENGTH);
+    }
+
+    state.fleeVelocityX *= 0.92;
+    state.fleeVelocityY *= 0.92;
+    state.fleeOffsetX += state.fleeVelocityX;
+    state.fleeOffsetY += state.fleeVelocityY;
+    state.fleeOffsetX *= 0.985;
+    state.fleeOffsetY *= 0.985;
+    state.fleeShrink += (0 - state.fleeShrink) * 0.08;
+  }
+
   function easePointer() {
     state.pointerX += (state.pointerTargetX - state.pointerX) * 0.05;
     state.pointerY += (state.pointerTargetY - state.pointerY) * 0.05;
@@ -243,11 +280,11 @@
     const localTravelX = Math.sin(time * particle.localTravelSpeedX + particle.localTravelPhaseX) * particle.localTravelRadiusX;
     const localTravelY = Math.cos(time * particle.localTravelSpeedY + particle.localTravelPhaseY) * particle.localTravelRadiusY;
     const floatPulse = (Math.sin(time * particle.pulseSpeed + particle.pulsePhase) + 1) * 0.5;
-    const pulse = 0.72 + floatPulse * 0.64;
+    const pulse = (0.72 + floatPulse * 0.64) * (1 - state.fleeShrink);
     const pointerOffsetX = (state.pointerX - 0.5) * PARALLAX_STRENGTH;
     const pointerOffsetY = (state.pointerY - 0.5) * (PARALLAX_STRENGTH * 0.72);
-    const centerX = (state.width * 0.5) + state.centerTravelX + Math.cos(orbitPhase) * particle.orbitRadius + localTravelX + pointerOffsetX + particle.driftX;
-    const centerY = (state.height * 0.52) + state.centerTravelY + Math.sin(orbitPhase) * (particle.orbitRadius * 0.36) + localTravelY + pointerOffsetY + particle.driftY;
+    const centerX = (state.width * 0.5) + state.centerTravelX + state.fleeOffsetX + Math.cos(orbitPhase) * particle.orbitRadius + localTravelX + pointerOffsetX + particle.driftX;
+    const centerY = (state.height * 0.52) + state.centerTravelY + state.fleeOffsetY + Math.sin(orbitPhase) * (particle.orbitRadius * 0.36) + localTravelY + pointerOffsetY + particle.driftY;
     const radiusX = particle.blobRadius * particle.stretchX * (0.8 + floatPulse * 0.34);
     const radiusY = particle.blobRadius * particle.stretchY * pulse;
     const maxRadius = Math.max(radiusX, radiusY);
@@ -285,6 +322,7 @@
 
     easePointer();
     updateCenterTravel(time);
+    applyFleeInteraction();
     drawBackground();
 
     context.globalCompositeOperation = 'screen';

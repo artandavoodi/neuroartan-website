@@ -1,11 +1,23 @@
-/* =================== Sovereign Custom Cursor =================== */
+/* =========================================================
+   00. FILE INDEX
+   01. GLOBAL CURSOR OVERRIDE
+   02. CURSOR NODE
+   03. TOUCH / MOBILE FALLBACK
+   04. RTL SAFETY
+   ========================================================= */
 
+/* =========================================================
+   01. GLOBAL CURSOR OVERRIDE
+   ========================================================= */
 html,
 body,
 body * {
   cursor: none !important;
 }
 
+/* =========================================================
+   02. CURSOR NODE
+   ========================================================= */
 .custom-cursor {
   position: fixed;
   top: 0;
@@ -30,6 +42,9 @@ body * {
   will-change: left, top, transform, opacity;
 }
 
+/* =========================================================
+   03. TOUCH / MOBILE FALLBACK
+   ========================================================= */
 @media (hover: none) and (pointer: coarse), (max-width: 768px) {
   .custom-cursor {
     display: none !important;
@@ -42,6 +57,9 @@ body * {
   }
 }
 
+/* =========================================================
+   04. RTL SAFETY
+   ========================================================= */
 html[dir="rtl"] .custom-cursor,
 body[dir="rtl"] .custom-cursor {
   direction: ltr;

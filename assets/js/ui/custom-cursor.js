@@ -1,8 +1,26 @@
-/* =================== Sovereign Custom Cursor =================== */
+/* =========================================================
+   00. FILE INDEX
+   01. MODULE IDENTITY
+   02. SELECTORS & STATE
+   03. CURSOR NODE RECOVERY
+   04. VISUAL STATE
+   05. RENDER LOOP
+   06. POINTER SYNCHRONIZATION
+   07. POINTER EVENTS
+   08. LAYOUT RECOVERY
+   09. EVENT BINDING
+   10. INITIALIZATION
+   ========================================================= */
 
+/* =========================================================
+   01. MODULE IDENTITY
+   ========================================================= */
 (function () {
   'use strict';
 
+  /* =========================================================
+     02. SELECTORS & STATE
+     ========================================================= */
   const CURSOR_SELECTOR = '.custom-cursor';
   const INTERACTIVE_SELECTOR = [
     'button',
@@ -35,6 +53,9 @@
     initialized: false
   };
 
+  /* =========================================================
+     03. CURSOR NODE RECOVERY
+     ========================================================= */
   function ensureCursorNode() {
     let node = document.querySelector(CURSOR_SELECTOR);
 
@@ -44,9 +65,16 @@
       document.body.appendChild(node);
     }
 
+    node.style.display = '';
+    node.style.visibility = 'visible';
+    node.style.opacity = '1';
+
     return node;
   }
 
+  /* =========================================================
+     04. VISUAL STATE
+     ========================================================= */
   function applyVisualState() {
     if (!customCursor) return;
 
@@ -62,6 +90,9 @@
       : 'translate3d(-50%, -50%, 0) scale(1)';
   }
 
+  /* =========================================================
+     05. RENDER LOOP
+     ========================================================= */
   function renderCursor() {
     if (!customCursor) return;
 
@@ -88,6 +119,9 @@
     rafId = null;
   }
 
+  /* =========================================================
+     06. POINTER SYNCHRONIZATION
+     ========================================================= */
   function syncToPointer(x, y, snap = false) {
     state.pointerX = x;
     state.pointerY = y;
@@ -99,6 +133,9 @@
     }
   }
 
+  /* =========================================================
+     07. POINTER EVENTS
+     ========================================================= */
   function resolvePointerTarget(target) {
     if (!(target instanceof Element)) return null;
     return target.closest(INTERACTIVE_SELECTOR);
@@ -160,12 +197,18 @@
     applyVisualState();
   }
 
+  /* =========================================================
+     08. LAYOUT RECOVERY
+     ========================================================= */
   function handleLayoutMutation() {
     customCursor = ensureCursorNode();
     startLoop();
     applyVisualState();
   }
 
+  /* =========================================================
+     09. EVENT BINDING
+     ========================================================= */
   function bindEvents() {
     if (isBound) return;
     isBound = true;
@@ -208,8 +251,12 @@
     });
   }
 
+  /* =========================================================
+     10. INITIALIZATION
+     ========================================================= */
   function initCustomCursor() {
     customCursor = ensureCursorNode();
+    customCursor = document.querySelector(CURSOR_SELECTOR) || customCursor;
     if (!customCursor) return;
 
     customCursor.style.display = '';

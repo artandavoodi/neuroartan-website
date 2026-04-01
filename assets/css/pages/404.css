@@ -20,6 +20,13 @@
   background: #050505;
   color: #f5f5f7;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  cursor: none;
+}
+
+.page-404 a,
+.page-404 button,
+.page-404 [role="button"] {
+  cursor: none;
 }
 
 /* =========================================================
@@ -165,31 +172,38 @@
   flex-wrap: wrap;
 }
 
-.error404-primary-link {
+.error404-actions .error404-primary-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
+  height: 48px;
+  line-height: 1;
   padding: 0 22px;
   border-radius: 999px;
-  background: #f5f5f7;
-  color: #050505;
+  background: var(--color-primary1);
+  color: #ffffff;
   font-size: 15px;
   font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
   letter-spacing: -0.01em;
   text-decoration: none;
-  transition: transform 180ms ease, opacity 180ms ease;
+  transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 /* =========================================================
    06. INTERACTION STATES
    ========================================================= */
-.error404-primary-link:hover {
+.error404-actions .error404-primary-link:hover {
   transform: translateY(-1px);
   opacity: 0.92;
+  background: var(--color-primary1);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
 }
 
-.error404-primary-link:focus-visible {
+.error404-actions .error404-primary-link:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.55);
   outline-offset: 4px;
 }
@@ -210,11 +224,11 @@
   font-weight: 500;
   letter-spacing: -0.01em;
   cursor: pointer;
-  transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
 }
 
 .error404-secondary-button:hover {
-  transform: translateY(-1px);
+  transform: none;
   opacity: 0.92;
   border-color: rgba(255, 255, 255, 0.2);
 }

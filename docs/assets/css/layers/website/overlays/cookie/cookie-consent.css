@@ -4,28 +4,28 @@
    02) ROOT TOKENS
    03) BASE OVERLAY SHELL
    04) OPEN / CLOSE STATES
-   04A) PAGE SCROLL LOCK
-   05) BACKDROP
-   06) PANEL
-   07) HEADER
-   08) CLOSE CONTROL
-   09) BODY
-   10) TYPOGRAPHY
-   10A) BRAND SYSTEM
-   11) ACTIONS
-   12) SETTINGS ROWS
-   12A) SURFACE BLOCKS
-   12AA) ROW ICON IMAGES
-   12AB) ROW EXPAND CONTROL
-   12B) TOGGLE SYSTEM
-   12C) LEARNING CARDS
-   12CA) GRANULAR SUBITEMS
-   12CB) SUBITEM TOGGLE ALIGNMENT
-   12D) STICKY ACTION BAR
-   12E) EXTERNAL COOKIE FOOTER BAR
-   13) REDUCED MOTION
-   14) RESPONSIVE — 1024PX
-   15) RESPONSIVE — 768PX
+   05) PAGE SCROLL LOCK
+   06) BACKDROP
+   07) PANEL
+   08) HEADER
+   09) CLOSE CONTROL
+   10) BODY
+   11) TYPOGRAPHY
+   12) BRAND SYSTEM
+   13) ACTIONS
+   14) SETTINGS ROWS
+   15) SURFACE BLOCKS
+   16) ROW ICON IMAGES
+   17) ROW EXPAND CONTROL
+   18) TOGGLE SYSTEM
+   19) LEARNING CARDS
+   20) GRANULAR SUBITEMS
+   21) SUBITEM TOGGLE ALIGNMENT
+   22) STICKY ACTION BAR
+   23) EXTERNAL COOKIE FOOTER BAR
+   24) REDUCED MOTION
+   25) RESPONSIVE — 1024PX
+   26) RESPONSIVE — 768PX
 ============================================================================= */
 
 /* =============================================================================
@@ -196,7 +196,7 @@ body.cookie-consent-closing .cookie-consent{
 }
 
 /* =============================================================================
-   04A) PAGE SCROLL LOCK
+   05) PAGE SCROLL LOCK
 ============================================================================= */
 body.cookie-consent-open,
 body.cookie-consent-closing{
@@ -205,7 +205,7 @@ body.cookie-consent-closing{
 }
 
 /* =============================================================================
-   05) BACKDROP
+   06) BACKDROP
 ============================================================================= */
 .cookie-consent-backdrop{
   position: absolute;
@@ -228,7 +228,7 @@ body.cookie-consent-closing .cookie-consent-backdrop{
 }
 
 /* =============================================================================
-   06) PANEL
+   07) PANEL
 ============================================================================= */
 .cookie-consent-panel{
   position: relative;
@@ -260,7 +260,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 /* =============================================================================
-   07) HEADER
+   08) HEADER
 ============================================================================= */
 .cookie-consent-header{
   position: relative;
@@ -285,7 +285,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 /* =============================================================================
-   08) CLOSE CONTROL
+   09) CLOSE CONTROL
 ============================================================================= */
 
 .cookie-consent-bottom-stack::before{
@@ -377,7 +377,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   09) BODY
+   10) BODY
 ============================================================================= */
 .cookie-consent-body{
   position: relative;
@@ -446,7 +446,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   10) TYPOGRAPHY
+   11) TYPOGRAPHY
 ============================================================================= */
 .cookie-consent-eyebrow{
   margin: 0;
@@ -483,7 +483,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   10A) BRAND SYSTEM
+   12) BRAND SYSTEM
 ============================================================================= */
 .cookie-consent-brand{
   display: inline-flex;
@@ -546,7 +546,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   11) ACTIONS
+   13) ACTIONS
 ============================================================================= */
 .cookie-consent-actions{
   display: flex;
@@ -608,7 +608,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12) SETTINGS ROWS
+   14) SETTINGS ROWS
 ============================================================================= */
 .cookie-consent-row{
   display: flex;
@@ -711,7 +711,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12AA) ROW ICON IMAGES
+   16) ROW ICON IMAGES
 ============================================================================= */
 .cookie-consent-row-icon-image,
 .cookie-consent-row-icon-image--essential,
@@ -726,7 +726,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12AB) ROW EXPAND CONTROL
+   17) ROW EXPAND CONTROL
 ============================================================================= */
 .cookie-consent-row-expand{
   display: inline-flex;
@@ -809,7 +809,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12A) SURFACE BLOCKS
+   15) SURFACE BLOCKS
 ============================================================================= */
 .cookie-consent-banner{
   padding: 1rem var(--cookie-consent-content-gutter);
@@ -843,7 +843,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12B) TOGGLE SYSTEM
+   18) TOGGLE SYSTEM
 ============================================================================= */
 .cookie-consent-toggle{
   display: inline-flex;
@@ -897,7 +897,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12C) LEARNING CARDS
+   19) LEARNING CARDS
 ============================================================================= */
 .cookie-consent-panel > .cookie-consent-learning-layer{
   position: relative;
@@ -1031,7 +1031,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12CA) GRANULAR SUBITEMS
+   20) GRANULAR SUBITEMS
 ============================================================================= */
 .cookie-consent-subitems{
   display: flex;
@@ -1089,14 +1089,14 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12CB) SUBITEM TOGGLE ALIGNMENT
+   21) SUBITEM TOGGLE ALIGNMENT
 ============================================================================= */
 .cookie-consent-toggle--subitem{
   align-self: center;
 }
 
 /* =============================================================================
-   12D) STICKY ACTION BAR
+   22) STICKY ACTION BAR
 ============================================================================= */
 .cookie-consent-actions{
   position: relative;
@@ -1131,7 +1131,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   12E) EXTERNAL COOKIE FOOTER BAR
+   23) EXTERNAL COOKIE FOOTER BAR
 ============================================================================= */
 .cookie-consent-footer-bar{
   position: relative;
@@ -1237,7 +1237,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   13) REDUCED MOTION
+   24) REDUCED MOTION
 ============================================================================= */
 @media (prefers-reduced-motion: reduce){
   .cookie-consent-brand-symbol,
@@ -1254,7 +1254,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   14) RESPONSIVE — 1024PX
+   25) RESPONSIVE — 1024PX
 ============================================================================= */
 @media (max-width:1024px){
   .cookie-consent-panel{
@@ -1263,7 +1263,7 @@ body.cookie-consent-closing .cookie-consent-close{
 }
 
 /* =============================================================================
-   15) RESPONSIVE — 768PX
+   26) RESPONSIVE — 768PX
 ============================================================================= */
 @media (max-width:768px){
   :root{

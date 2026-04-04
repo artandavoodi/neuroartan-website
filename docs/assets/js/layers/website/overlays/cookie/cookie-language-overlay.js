@@ -8,21 +8,21 @@
    06) SCROLL GUARD
    07) OPEN / CLOSE STATE
    08) LANGUAGE VALUE / STATUS
-   08A) STATUS MESSAGE HELPERS
-   08B) COUNTRY DATA HELPERS
-   08BA) LANGUAGE LABEL HELPERS
-   08BB) COUNTRY LABEL HELPERS
-   08C) REGIONS RENDERING
-   08D) SEARCH FILTERING
-   08DA) REGIONS SCROLL BEHAVIOR
-   08E) COUNTRY SELECTION BRIDGE
-   08F) COOKIE RETURN FLOW
-   08G) PLACEHOLDER / INITIAL RENDER STATE
-   09) BINDINGS
-   10) EVENT BRIDGE
-   10A) OVERLAY COORDINATION
-   11) INITIALIZATION
-   11A) INIT RETRY
+   09) STATUS MESSAGE HELPERS
+   10) COUNTRY DATA HELPERS
+   11) LANGUAGE LABEL HELPERS
+   12) COUNTRY LABEL HELPERS
+   13) REGIONS RENDERING
+   14) SEARCH FILTERING
+   15) REGIONS SCROLL BEHAVIOR
+   16) COUNTRY SELECTION BRIDGE
+   17) COOKIE RETURN FLOW
+   18) PLACEHOLDER / INITIAL RENDER STATE
+   19) BINDINGS
+   20) EVENT BRIDGE
+   21) OVERLAY COORDINATION
+   22) INITIALIZATION
+   23) INIT RETRY
 ============================================================================= */
 
 /* =============================================================================
@@ -268,7 +268,7 @@
   }
 
   /* =============================================================================
-     08A) STATUS MESSAGE HELPERS
+     09) STATUS MESSAGE HELPERS
   ============================================================================= */
   function formatStatusMessage(template, replacements = {}) {
     return String(template || '').replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, (_, token) => {
@@ -313,7 +313,7 @@
   }
 
   /* =============================================================================
-     08B) COUNTRY DATA HELPERS
+     10) COUNTRY DATA HELPERS
   ============================================================================= */
   function getCountriesData() {
     const raw = Array.isArray(window.ARTAN_COUNTRIES_DATA) ? window.ARTAN_COUNTRIES_DATA : [];
@@ -348,7 +348,7 @@
   }
 
   /* =============================================================================
-     08BA) LANGUAGE LABEL HELPERS
+     11) LANGUAGE LABEL HELPERS
   ============================================================================= */
   function getLanguageCodes(country) {
     const codes = [];
@@ -396,7 +396,7 @@
   }
 
   /* =============================================================================
-     08BB) COUNTRY LABEL HELPERS
+     12) COUNTRY LABEL HELPERS
   ============================================================================= */
   function getCountryCode(country) {
     return String(country?.code || country?.countryCode || '').trim().toUpperCase();
@@ -445,7 +445,7 @@
   }
 
   /* =============================================================================
-     08C) REGIONS RENDERING
+     13) REGIONS RENDERING
   ============================================================================= */
   function buildCountryItemMarkup(country) {
     const countryMeta = getCountrySearchMeta(country);
@@ -502,7 +502,7 @@
   }
 
   /* =============================================================================
-     08D) SEARCH FILTERING
+     14) SEARCH FILTERING
   ============================================================================= */
   function filterRegions(query) {
     const normalized = String(query || '').trim().toLowerCase();
@@ -550,7 +550,7 @@
   }
 
   /* =============================================================================
-     08DA) REGIONS SCROLL BEHAVIOR
+     15) REGIONS SCROLL BEHAVIOR
   ============================================================================= */
   function bindRegionsScrollBehavior() {
     const mount = getRegionsMount();
@@ -568,7 +568,7 @@
   }
 
   /* =============================================================================
-     08E) COUNTRY SELECTION BRIDGE
+     16) COUNTRY SELECTION BRIDGE
   ============================================================================= */
   function dispatchCountrySelection(code) {
     if (!code) return;
@@ -593,7 +593,7 @@
   }
 
   /* =============================================================================
-     08F) COOKIE RETURN FLOW
+     17) COOKIE RETURN FLOW
   ============================================================================= */
   function requestReturnToCookieConsent() {
     document.dispatchEvent(new CustomEvent('cookie-language-overlay:return-to-cookie-consent', {
@@ -604,7 +604,7 @@
   }
 
   /* =============================================================================
-     08G) PLACEHOLDER / INITIAL RENDER STATE
+     18) PLACEHOLDER / INITIAL RENDER STATE
   ============================================================================= */
   function syncPlaceholderState() {
     const mount = getRegionsMount();
@@ -616,7 +616,7 @@
   }
 
   /* =============================================================================
-     09) BINDINGS
+     19) BINDINGS
   ============================================================================= */
   function bindCloseControls() {
     getCloseControls().forEach((control) => {
@@ -706,7 +706,7 @@
   }
 
   /* =============================================================================
-     10) EVENT BRIDGE
+     20) EVENT BRIDGE
   ============================================================================= */
   function bindOpenRequests() {
     if (document.body.dataset.cookieLanguageOverlayOpenRequestBound === 'true') return;
@@ -718,7 +718,7 @@
   }
 
   /* =============================================================================
-     10A) OVERLAY COORDINATION
+     21) OVERLAY COORDINATION
   ============================================================================= */
   function bindOverlayCoordination() {
     if (document.body.dataset.cookieLanguageOverlayCoordinationBound === 'true') return;
@@ -736,7 +736,7 @@
   }
 
   /* =============================================================================
-     11A) INIT RETRY
+     23) INIT RETRY
   ============================================================================= */
   function scheduleInitRetry() {
     clearInitRetryTimer();
@@ -747,7 +747,7 @@
   }
 
   /* =============================================================================
-     11) INITIALIZATION
+     22) INITIALIZATION
   ============================================================================= */
   function initCookieLanguageOverlay() {
     if (initialized) return;

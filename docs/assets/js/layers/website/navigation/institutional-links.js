@@ -1,12 +1,12 @@
 /* =============================================================================
-   FILE INDEX
+   00) FILE INDEX
    01) MODULE IDENTITY
    02) SELECTORS / STATE
    03) TYPE HELPERS
    04) MOTION RESCAN BRIDGE
    05) INSTITUTIONAL LINKS INITIALIZER
-   06) INITIAL ATTEMPT
-   07) MUTATION FALLBACK
+   06) IMMEDIATE INITIALIZATION
+   07) MUTATION OBSERVER FALLBACK
 ============================================================================= */
 
 /* =============================================================================
@@ -55,12 +55,18 @@
   };
 
   /* =============================================================================
-     06) INITIAL ATTEMPT
+     06) IMMEDIATE INITIALIZATION
   ============================================================================= */
-  if (initInstitutionalLinks()) return;
+  initInstitutionalLinks();
+
+  document.addEventListener('fragment:mounted', (event) => {
+    const name = event?.detail?.name;
+    if (name !== 'institutional-links') return;
+    initInstitutionalLinks();
+  });
 
   /* =============================================================================
-     07) MUTATION FALLBACK
+     07) MUTATION OBSERVER FALLBACK
   ============================================================================= */
   const mo = new MutationObserver(() => {
     if (!initialized && initInstitutionalLinks()) {

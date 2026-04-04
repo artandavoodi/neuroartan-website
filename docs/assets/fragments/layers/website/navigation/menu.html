@@ -1,117 +1,126 @@
-<!-- SECTION: SECONDARY NAVIGATION OVERLAY -->
+<!-- =============================================================================
+00) FILE INDEX
+01) OVERLAY SHELL
+02) MENU WRAPPER
+03) PACK TOGGLE
+04) MENU COLUMNS
+05) COLUMN A — IDENTITY AND CONTROLS
+06) COLUMN B — PRIMARY MENU
+07) END OF OVERLAY
+============================================================================= -->
+
+<!-- =============================================================================
+01) OVERLAY SHELL
+============================================================================= -->
 <div id="menu-overlay" class="menu-overlay" aria-hidden="true" data-pack-state="social">
+  <!-- ===========================================================================
+  02) MENU WRAPPER
+  =========================================================================== -->
   <div class="menu-overlay-inner">
 
-    <!-- STRUCTURE: MENU WRAPPER -->
+    <!-- =======================================================================
+    03) PACK TOGGLE
+    ======================================================================= -->
     <div class="menu-wrapper">
 
-      <!-- CONTROL: PACK TOGGLE -->
       <button id="menu-pack-toggle" class="menu-pack-toggle" aria-label="Pack toggle" aria-pressed="false" type="button" hidden aria-hidden="true">
-        <img src="/assets/icons/utilities/hover-to-social-media-and-music.svg" alt="" aria-hidden="true">
+        <img src="assets/icons/layers/website/legacy/hover-to-social-media-and-music.svg" alt="" aria-hidden="true">
       </button>
 
-      <!-- STRUCTURE: MENU COLUMNS -->
+      <!-- =======================================================================
+      04) MENU COLUMNS
+      ======================================================================= -->
       <div class="menu-columns">
 
-        <!-- COLUMN: IDENTITY AND CONTROLS -->
+        <!-- =====================================================================
+        05) COLUMN A — IDENTITY AND CONTROLS
+        ===================================================================== -->
         <div class="menu-col-a">
 
-          <!-- BLOCK: CONTROLS, PACKS, AND SYMBOL -->
-          <div class="menu-col-a-section-a">
-
-            <!-- GROUP: CONTROLS -->
             <div class="menu-controls">
               <a class="menu-control-icon" aria-label="Profile" href="/profile.html">
-                <img src="/assets/icons/utilities/profile.svg" alt="" aria-hidden="true">
+                <img src="assets/icons/layers/website/system/navigation/profile.svg" alt="" aria-hidden="true">
               </a>
               <a class="menu-control-icon" aria-label="Email" href="#" data-contact="email">
-                <img src="/assets/icons/utilities/email-me.svg" alt="" aria-hidden="true">
+                <img src="assets/icons/core/communication/contact/email.svg" alt="" aria-hidden="true">
               </a>
               <button id="theme-toggle" class="menu-control-icon theme-toggle" aria-label="Toggle dark and light mode" type="button"></button>
             </div>
 
-            <!-- GROUP: PACKS -->
             <div class="menu-packs-split" aria-label="Links">
 
-              <!-- PACK: MUSIC -->
-              <div class="menu-pack-slot" data-pack-slot="music">
-                <div id="menu-pack-music" class="menu-pack" data-pack="music" aria-label="Music platforms" aria-hidden="true"></div>
-              </div>
-
-              <!-- PACK: SOCIAL -->
-              <div class="menu-pack-slot" data-pack-slot="social">
-                <div id="menu-pack-social" class="menu-pack" data-pack="social" aria-label="Social" aria-hidden="false">
-                  <a class="menu-pack-icon" aria-label="YouTube" href="https://www.youtube.com/@neuroartan" data-social="youtube">
-                    <img class="menu-pack-img" src="/assets/icons/brands/youtube.svg" alt="YouTube">
-                  </a>
-                  <a class="menu-pack-icon" aria-label="X" href="https://x.com/neuroartan" data-social="x">
-                    <img class="menu-pack-img" src="/assets/icons/brands/x.svg" alt="X">
-                  </a>
+                <div class="menu-pack-slot" data-pack-slot="music">
+                  <div id="menu-pack-music" class="menu-pack" data-pack="music" aria-label="Music platforms" aria-hidden="true"></div>
                 </div>
-              </div>
+
+                <div class="menu-pack-slot" data-pack-slot="social">
+                  <div id="menu-pack-social" class="menu-pack" data-pack="social" aria-label="Social" aria-hidden="false">
+                    <a class="menu-pack-icon" aria-label="YouTube" href="https://www.youtube.com/@neuroartan" data-social="youtube">
+                      <img class="menu-pack-img" src="assets/icons/layers/website/social/platforms/youtube.svg" alt="YouTube">
+                    </a>
+                    <a class="menu-pack-icon" aria-label="X" href="https://x.com/neuroartan" data-social="x">
+                      <img class="menu-pack-img" src="assets/icons/layers/website/social/platforms/x.svg" alt="X">
+                    </a>
+                  </div>
+                </div>
 
             </div>
 
-            <!-- BLOCK: PLAIN LOGO -->
             <div class="menu-plain-logo-wrap">
-              <img src="/assets/images/brand/logo.svg" alt="Neuroartan symbol" class="menu-plain-logo">
+              <img src="assets/images/layers/website/brand/logo.svg" alt="Neuroartan symbol" class="menu-plain-logo">
             </div>
 
-          </div>
-
-          <!-- DIVIDER: COLUMN SEPARATOR -->
           <div class="menu-col-a-sep" aria-hidden="true"></div>
 
-          <!-- BLOCK: WORDMARK AND SITE ESSENCE -->
           <div class="menu-col-a-section-b" aria-label="Identity">
-            <img src="/assets/icons/brand/logos/neuroartan/logo-typo.svg" alt="Neuroartan wordmark" class="menu-typo-logo">
+            <img src="assets/icons/core/identity/brand/neuroartan/logo-typo.svg" alt="Neuroartan wordmark" class="menu-typo-logo">
             <p class="menu-site-essence" data-i18n-key="site.essence">INTELLIGENCE COGNITIVE • OPERATING SYSTEM • RESEARCH INFRASTRUCTURE</p>
           </div>
 
         </div>
 
-        <!-- COLUMN: PRIMARY MENU -->
+        <!-- =====================================================================
+        06) COLUMN B — PRIMARY MENU
+        ===================================================================== -->
         <div class="menu-col-b">
 
-          <!-- BLOCK: MENU PREVIEW -->
           <div class="menu-col-b-section-a" aria-label="Menu preview">
             <div class="menu-preview" aria-label="Preview">
               <h3 id="menu-preview-title" class="menu-preview-title">
-                <img id="menu-preview-icon" class="menu-preview-icon" src="/assets/icons/utilities/project.svg" alt="Menu preview icon" data-preview-icon-default="/assets/icons/utilities/project.svg">
+                <img id="menu-preview-icon" class="menu-preview-icon" src="assets/icons/layers/website/system/navigation/project.svg" alt="Menu preview icon" data-preview-icon-default="assets/icons/layers/website/system/navigation/project.svg">
                 <span id="menu-preview-title-text" class="menu-preview-title-text sr-only" data-i18n-key="menu.preview.title">Architecture</span>
               </h3>
               <p id="menu-preview-sub" class="menu-preview-sub" data-i18n-key="menu.preview.sub">Institutional structure and system architecture</p>
             </div>
           </div>
 
-          <!-- BLOCK: MENU LIST -->
           <div class="menu-col-b-section-b" aria-label="Menu list">
             <ul class="menu-list" aria-label="Primary">
 
   <li class="menu-sep" aria-hidden="true"></li>
-  <li class="menu-item" data-preview-title="ARCHITECTURE" data-preview-sub="Institutional structure and system architecture" data-preview-icon="/assets/icons/utilities/project.svg">
-    <a href="/pages/infrastructure/architecture/index.html" class="menu-link menu-link--nojump" data-text="Architecture" data-preview-title="ARCHITECTURE" data-preview-sub="Institutional structure and system architecture" data-preview-icon="/assets/icons/utilities/project.svg">
+  <li class="menu-item" data-preview-title="ARCHITECTURE" data-preview-sub="Institutional structure and system architecture" data-preview-icon="assets/icons/layers/website/system/navigation/project.svg">
+    <a href="/pages/infrastructure/architecture/index.html" class="menu-link menu-link--nojump" data-text="Architecture" data-preview-title="ARCHITECTURE" data-preview-sub="Institutional structure and system architecture" data-preview-icon="assets/icons/layers/website/system/navigation/project.svg">
       <span class="menu-link-inner"><span class="menu-link-text">Architecture</span></span>
     </a>
   </li>
 
   <li class="menu-sep" aria-hidden="true"></li>
-  <li class="menu-item" data-preview-title="PLATFORM" data-preview-sub="Product direction, software systems, and platform logic" data-preview-icon="/assets/icons/utilities/brain.svg">
-    <a href="/pages/platform/index.html" class="menu-link menu-link--nojump" data-text="Platform" data-preview-title="PLATFORM" data-preview-sub="Product direction, software systems, and platform logic" data-preview-icon="/assets/icons/utilities/brain.svg">
+  <li class="menu-item" data-preview-title="PLATFORM" data-preview-sub="Product direction, software systems, and platform logic" data-preview-icon="assets/icons/layers/website/system/content/brain.svg">
+    <a href="/pages/platform/index.html" class="menu-link menu-link--nojump" data-text="Platform" data-preview-title="PLATFORM" data-preview-sub="Product direction, software systems, and platform logic" data-preview-icon="assets/icons/layers/website/system/content/brain.svg">
       <span class="menu-link-inner"><span class="menu-link-text">Platform</span></span>
     </a>
   </li>
 
   <li class="menu-sep" aria-hidden="true"></li>
-  <li class="menu-item" data-preview-title="PUBLICATIONS" data-preview-sub="Essays, notes, research, and institutional writing" data-preview-icon="/assets/icons/utilities/book.svg">
-    <a href="/pages/research/publications/index.html" class="menu-link menu-link--nojump" data-text="Publications" data-preview-title="PUBLICATIONS" data-preview-sub="Essays, notes, research, and institutional writing" data-preview-icon="/assets/icons/utilities/book.svg">
+  <li class="menu-item" data-preview-title="PUBLICATIONS" data-preview-sub="Essays, notes, research, and institutional writing" data-preview-icon="assets/icons/layers/website/system/navigation/book.svg">
+    <a href="/pages/research/publications/index.html" class="menu-link menu-link--nojump" data-text="Publications" data-preview-title="PUBLICATIONS" data-preview-sub="Essays, notes, research, and institutional writing" data-preview-icon="assets/icons/layers/website/system/navigation/book.svg">
       <span class="menu-link-inner"><span class="menu-link-text">Publications</span></span>
     </a>
   </li>
 
   <li class="menu-sep" aria-hidden="true"></li>
-  <li class="menu-item" data-preview-title="UPDATES" data-preview-sub="Announcements, releases, and institutional signals" data-preview-icon="/assets/icons/utilities/project.svg">
-    <a href="/pages/updates/index.html" class="menu-link menu-link--nojump" data-text="Updates" data-preview-title="UPDATES" data-preview-sub="Announcements, releases, and institutional signals" data-preview-icon="/assets/icons/utilities/project.svg">
+  <li class="menu-item" data-preview-title="UPDATES" data-preview-sub="Announcements, releases, and institutional signals" data-preview-icon="assets/icons/layers/website/system/navigation/project.svg">
+    <a href="/pages/updates/index.html" class="menu-link menu-link--nojump" data-text="Updates" data-preview-title="UPDATES" data-preview-sub="Announcements, releases, and institutional signals" data-preview-icon="assets/icons/layers/website/system/navigation/project.svg">
       <span class="menu-link-inner"><span class="menu-link-text">Updates</span></span>
     </a>
   </li>
@@ -128,5 +137,7 @@
     </div>
 
   </div>
-<!-- END SECTION: SECONDARY NAVIGATION OVERLAY -->
+<!-- =============================================================================
+07) END OF OVERLAY
+============================================================================= -->
 </div>

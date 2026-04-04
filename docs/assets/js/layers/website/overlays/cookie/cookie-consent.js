@@ -5,21 +5,21 @@
    03) STATE
    04) QUERY HELPERS
    05) MOUNT HELPERS
-   05A) INIT RETRY HELPERS
-   06) SURFACE HELPERS
-   07) ROW / TOGGLE HELPERS
-   07A) GRANULAR SUBTOGGLE HELPERS
-   07B) LANGUAGE / REGION HELPERS
-   07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
-   07D) COOKIE LANGUAGE RETURN HELPERS
-   07E) LEARNING PANEL HELPERS
-   08) STORAGE HELPERS
-   08A) DISPLAY DECISION HELPERS
-   09) OPEN / CLOSE STATE
-   10) CONSENT ACTIONS
-   11) EVENT BINDING
-   12) OVERLAY COORDINATION
-   13) INITIALIZATION
+   06) INIT RETRY HELPERS
+   07) SURFACE HELPERS
+   08) ROW / TOGGLE HELPERS
+   09) GRANULAR SUBTOGGLE HELPERS
+   10) LANGUAGE / REGION HELPERS
+   11) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
+   12) COOKIE LANGUAGE RETURN HELPERS
+   13) LEARNING PANEL HELPERS
+   14) STORAGE HELPERS
+   15) DISPLAY DECISION HELPERS
+   16) OPEN / CLOSE STATE
+   17) CONSENT ACTIONS
+   18) EVENT BINDING
+   19) OVERLAY COORDINATION
+   20) INITIALIZATION
 ============================================================================= */
 
 /* =============================================================================
@@ -216,7 +216,7 @@
   }
 
   /* =============================================================================
-     05A) INIT RETRY HELPERS
+     06) INIT RETRY HELPERS
   ============================================================================= */
   function resetInitScheduling() {
     initScheduled = false;
@@ -235,7 +235,7 @@
   }
 
   /* =============================================================================
-     06) SURFACE HELPERS
+     07) SURFACE HELPERS
   ============================================================================= */
   function applyState(state = 'pending') {
     const mount = getMount();
@@ -272,7 +272,7 @@
   }
 
   /* =============================================================================
-     07) ROW / TOGGLE HELPERS
+     08) ROW / TOGGLE HELPERS
   ============================================================================= */
   function setToggleVisualState(key, enabled) {
     const toggle = getToggleByKey(key);
@@ -293,7 +293,7 @@
   }
 
   /* =============================================================================
-     07A) GRANULAR SUBTOGGLE HELPERS
+     09) GRANULAR SUBTOGGLE HELPERS
   ============================================================================= */
   function setSubtoggleVisualState(key, enabled) {
     const toggle = getSubtoggleByKey(key);
@@ -338,7 +338,7 @@
   }
 
   /* =============================================================================
-     07B) LANGUAGE / REGION HELPERS
+     10) LANGUAGE / REGION HELPERS
   ============================================================================= */
   function getPreferredLanguageLabel(preferredLanguageCode = '') {
     const explicitCode = String(preferredLanguageCode || '').trim().toLowerCase();
@@ -401,7 +401,7 @@
   }
 
   /* =============================================================================
-     07C) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
+     11) COOKIE LANGUAGE OVERLAY TRIGGER HELPERS
   ============================================================================= */
   function requestCookieLanguageOverlay() {
     document.dispatchEvent(new CustomEvent('cookie-language-overlay:open-request', {
@@ -413,7 +413,7 @@
   }
 
   /* =============================================================================
-     07D) COOKIE LANGUAGE RETURN HELPERS
+     12) COOKIE LANGUAGE RETURN HELPERS
   ============================================================================= */
   function requestReturnFromCookieLanguageOverlay() {
     openConsent('settings');
@@ -425,7 +425,7 @@
   }
 
   /* =============================================================================
-     07E) LEARNING PANEL HELPERS
+     13) LEARNING PANEL HELPERS
   ============================================================================= */
   function requestCookieLearningOverlay(key) {
     if (!key) return;
@@ -487,7 +487,7 @@
   }
 
   /* =============================================================================
-     08) STORAGE HELPERS
+     14) STORAGE HELPERS
   ============================================================================= */
   function readStoredConsent() {
     try {
@@ -565,7 +565,7 @@
   }
 
   /* =============================================================================
-     08A) DISPLAY DECISION HELPERS
+     15) DISPLAY DECISION HELPERS
   ============================================================================= */
   function shouldAutoOpenBanner(stored) {
     if (!stored) return true;
@@ -578,7 +578,7 @@
   }
 
   /* =============================================================================
-     09) OPEN / CLOSE STATE
+     16) OPEN / CLOSE STATE
   ============================================================================= */
   function clearCloseTimer() {
     if (!closeTimer) return;
@@ -632,7 +632,7 @@
   }
 
   /* =============================================================================
-     10) CONSENT ACTIONS
+     17) CONSENT ACTIONS
   ============================================================================= */
   function acceptAll() {
     writeStoredConsent({
@@ -687,7 +687,7 @@
   }
 
   /* =============================================================================
-     11) EVENT BINDING
+     18) EVENT BINDING
   ============================================================================= */
   function bindCloseControls() {
     const backdrop = getBackdrop();
@@ -939,7 +939,7 @@
   }
 
   /* =============================================================================
-     12) OVERLAY COORDINATION
+     19) OVERLAY COORDINATION
   ============================================================================= */
   function bindOpenRequests() {
     if (requestBound) return;
@@ -1011,7 +1011,7 @@
   }
 
   /* =============================================================================
-     13) INITIALIZATION
+     20) INITIALIZATION
   ============================================================================= */
   async function initCookieConsent() {
     const mount = getMount();

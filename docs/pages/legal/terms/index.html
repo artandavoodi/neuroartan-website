@@ -1,3 +1,24 @@
+<!-- =============================================================================
+00) FILE INDEX
+01) DOCUMENT HEAD
+02) PAGE BODY
+03) GLOBAL LOADING OVERLAY
+04) CUSTOM CURSOR
+05) HIDDEN PAGE NAME
+06) MAIN CONTENT
+07) HEADER CONTROLS
+08) INSTITUTIONAL MENU MOUNT
+09) SECONDARY MENU MOUNT
+10) LEGAL PAGE SHELL
+11) INSTITUTIONAL LINKS MOUNT
+12) FOOTER MOUNT
+13) COUNTRY OVERLAY MOUNT
+14) PAGE SCRIPTS
+15) END OF DOCUMENT
+============================================================================= -->
+<!-- =============================================================================
+01) DOCUMENT HEAD
+============================================================================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +27,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../../../">
     <title>Legal Page · Neuroartan</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/layers/website/app/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/layers/website/app/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/layers/website/app/touch/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/layers/website/app/favicon/favicon.svg">
     <link rel="stylesheet" href="assets/css/core/style.css">
-    <link rel="stylesheet" href="assets/css/system/loading-overlay.css">
-    <link rel="stylesheet" href="assets/css/components/components.css">
-    <link rel="stylesheet" href="assets/css/navigation/menu.css">
-    <link rel="stylesheet" href="assets/css/navigation/institutional-menu.css">
-    <link rel="stylesheet" href="assets/css/overlays/country-overlay.css">
-    <link rel="stylesheet" href="assets/css/navigation/footer.css">
-    <link rel="stylesheet" href="assets/css/navigation/institutional-links.css">
-    <link rel="stylesheet" href="assets/css/ui/custom-cursor.css">
-    <link rel="stylesheet" href="assets/css/sections/legal.css">
+    <link rel="stylesheet" href="assets/css/layers/website/system/loading-overlay.css">
+    <link rel="stylesheet" href="assets/css/layers/website/components/components.css">
+    <link rel="stylesheet" href="assets/css/layers/website/navigation/menu.css">
+    <link rel="stylesheet" href="assets/css/layers/website/navigation/institutional-menu.css">
+    <link rel="stylesheet" href="assets/css/layers/website/overlays/country/country-overlay.css">
+    <link rel="stylesheet" href="assets/css/layers/website/navigation/footer.css">
+    <link rel="stylesheet" href="assets/css/layers/website/navigation/institutional-links.css">
+    <link rel="stylesheet" href="assets/css/layers/website/ui/custom-cursor.css">
+    <link rel="stylesheet" href="assets/css/layers/website/sections/legal.css">
     <meta name="description" content="Legal page for Neuroartan.">
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
     <meta name="theme-color" content="#0a0a0a">
@@ -127,7 +148,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
+<!-- =============================================================================
+02) PAGE BODY
+============================================================================= -->
 <body class="site-body">
+<!-- ==========================================================================
+03) GLOBAL LOADING OVERLAY
+========================================================================== -->
 <div id="global-loading-overlay" class="loading-overlay" aria-hidden="true" aria-live="polite">
   <div class="loading-overlay__backdrop"></div>
   <div class="loading-overlay__surface" role="status" aria-label="Loading">
@@ -136,27 +163,41 @@
   </div>
 </div>
 
-<!-- =================== Custom Cursor =================== -->
+<!-- ==========================================================================
+04) CUSTOM CURSOR
+========================================================================== -->
 <div class="custom-cursor"></div>
 
-<!-- =================== Hidden Page Name =================== -->
+<!-- ==========================================================================
+05) HIDDEN PAGE NAME
+========================================================================== -->
 <h1 style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">Legal Page · Neuroartan</h1>
 
-<!-- =================== Main Content =================== -->
+<!-- ==========================================================================
+06) MAIN CONTENT
+========================================================================== -->
 <main id="site-main">
-<!-- =================== Header Controls =================== -->
+<!-- ========================================================================
+07) HEADER CONTROLS
+======================================================================= -->
 <header id="header-controls" class="site-header">
     <button id="menu-button" aria-label="Open secondary navigation">
         <span class="line line-top"></span>
         <span class="line line-bottom"></span>
     </button>
 </header>
-<!-- =================== Institutional Menu Mount =================== -->
+<!-- ========================================================================
+08) INSTITUTIONAL MENU MOUNT
+======================================================================= -->
 <div id="institutional-menu-mount" data-include="institutional-menu"></div>
-<!-- =================== Menu Mount =================== -->
-<div id="menu-mount"></div>
+<!-- ========================================================================
+09) SECONDARY MENU MOUNT
+======================================================================= -->
+<div id="menu-mount" data-include="menu"></div>
 
-<!-- =================== Legal Page Shell =================== -->
+<!-- ========================================================================
+10) LEGAL PAGE SHELL
+======================================================================= -->
 <section class="legal-page-shell" data-legal-page="legal-page" data-legal-source="vault-sync" data-legal-document-id="LEGAL-DOCUMENT-ID" data-legal-sync-path="content/legal/legal-page.json">
   <header class="legal-page-header">
     <p class="legal-page-eyebrow" data-legal-eyebrow>Public Legal Page</p>
@@ -172,29 +213,40 @@
   <footer class="legal-page-footer" data-legal-footer></footer>
 </section>
 
-<!-- =================== Institutional Links Mount =================== -->
+<!-- ========================================================================
+11) INSTITUTIONAL LINKS MOUNT
+======================================================================= -->
 <div id="institutional-links-mount" data-include="institutional-links"></div>
 </main>
 
-<!-- =================== Footer Mount =================== -->
-<div id="footer-mount"></div>
+<!-- ==========================================================================
+12) FOOTER MOUNT
+========================================================================== -->
+<div id="footer-mount" data-include="footer"></div>
 
-<!-- =================== Country Overlay Mount =================== -->
-<div id="country-overlay-mount"></div>
+<!-- ==========================================================================
+13) COUNTRY OVERLAY MOUNT
+========================================================================== -->
+<div id="country-overlay-mount" data-include="country-overlay"></div>
 
-<!-- =================== Scripts =================== -->
-<script src="assets/js/system/ia.js" defer></script>
-<script src="assets/js/ui/darkmode.js" defer></script>
-<script src="assets/js/i18n/countries.js" defer></script>
-<script src="assets/js/i18n/translation.js" defer></script>
-<script src="assets/js/i18n/country-language.js" defer></script>
-<script src="assets/js/system/loading-overlay.js" defer></script>
-<script src="assets/js/navigation/menu.js" defer></script>
-<script src="assets/js/navigation/footer.js" defer></script>
-<script src="assets/js/navigation/institutional-menu.js" defer></script>
-<script src="assets/js/ui/custom-cursor.js" defer></script>
-<script src="assets/js/sections/legal.js" defer></script>
+<!-- ==========================================================================
+14) PAGE SCRIPTS
+========================================================================== -->
+<script src="assets/js/layers/website/system/ia.js" defer></script>
+<script src="assets/js/layers/website/ui/darkmode.js" defer></script>
+<script src="assets/js/layers/website/i18n/countries.js" defer></script>
+<script src="assets/js/layers/website/i18n/translation.js" defer></script>
+<script src="assets/js/layers/website/i18n/country-language.js" defer></script>
+<script src="assets/js/layers/website/system/loading-overlay.js" defer></script>
+<script src="assets/js/layers/website/navigation/menu.js" defer></script>
+<script src="assets/js/layers/website/navigation/footer.js" defer></script>
+<script src="assets/js/layers/website/navigation/institutional-menu.js" defer></script>
+<script src="assets/js/layers/website/ui/custom-cursor.js" defer></script>
+<script src="assets/js/layers/website/sections/legal.js" defer></script>
 <script src="assets/js/core/main.js" defer></script>
 
 </body>
 </html>
+<!-- =============================================================================
+15) END OF DOCUMENT
+============================================================================= -->

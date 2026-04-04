@@ -1,16 +1,50 @@
-// /website/assets/js/system/auth.js
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) FIREBASE STATE
+   03) PROFILE ROUTES
+   04) ROUTE HELPERS
+   05) REDIRECT HELPERS
+   06) DOM TEXT HELPERS
+   07) DOM IMAGE HELPERS
+   08) PROFILE SURFACE — SIGNED IN
+   09) PROFILE SURFACE — SIGNED OUT
+   10) AUTH STATE HANDLERS
+   11) AUTH BINDING
+   12) SIGN OUT FLOW
+   13) GOOGLE SIGN-IN FLOW
+   14) INITIALIZATION
+============================================================================= */
 
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+// /website/docs/assets/js/layers/website/system/auth.js
+
+/* =============================================================================
+   02) FIREBASE STATE
+============================================================================= */
 const firebaseReady = typeof window !== 'undefined' && typeof window.firebase !== 'undefined';
 const authInstance = firebaseReady ? firebase.auth() : null;
 
+/* =============================================================================
+   03) PROFILE ROUTES
+============================================================================= */
 const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
 const PROFILE_ROUTE = '/profile.html';
 const INDEX_ROUTE = '/';
+const CORE_NEUROARTAN_LOGO = 'assets/icons/core/identity/brand/neuroartan/logo-plain.svg';
 
+/* =============================================================================
+   04) ROUTE HELPERS
+============================================================================= */
 function isProfileRoute(pathname) {
   return PROFILE_ROUTE_MATCHERS.some((route) => pathname.endsWith(route));
 }
 
+/* =============================================================================
+   05) REDIRECT HELPERS
+============================================================================= */
 function redirectToIndex() {
   window.location.href = INDEX_ROUTE;
 }
@@ -19,12 +53,18 @@ function redirectToProfile() {
   window.location.href = PROFILE_ROUTE;
 }
 
+/* =============================================================================
+   06) DOM TEXT HELPERS
+============================================================================= */
 function setText(id, value) {
   const element = document.getElementById(id);
   if (!element) return;
   element.textContent = value;
 }
 
+/* =============================================================================
+   07) DOM IMAGE HELPERS
+============================================================================= */
 function setImage(id, src, alt) {
   const element = document.getElementById(id);
   if (!element || element.tagName !== 'IMG') return;
@@ -32,12 +72,15 @@ function setImage(id, src, alt) {
   element.alt = alt;
 }
 
+/* =============================================================================
+   08) PROFILE SURFACE — SIGNED IN
+============================================================================= */
 function updateProfileSurface(user) {
   if (!user) return;
 
   const displayName = user.displayName || 'Neuroartan User';
   const email = user.email || 'No email available';
-  const photoURL = user.photoURL || 'assets/icons/brand/logos/neuroartan/logo-plain.svg';
+  const photoURL = user.photoURL || CORE_NEUROARTAN_LOGO;
 
   setText('profile-label', 'Profile');
   setText('profile-name', displayName);
@@ -60,6 +103,9 @@ function updateProfileSurface(user) {
   });
 }
 
+/* =============================================================================
+   09) PROFILE SURFACE — SIGNED OUT
+============================================================================= */
 function updateSignedOutSurface() {
   if (!isProfileRoute(window.location.pathname)) return;
 
@@ -70,7 +116,7 @@ function updateSignedOutSurface() {
     'profile-copy',
     'This profile surface is being upgraded into the unified Neuroartan account layer for website, Office, ICOS, Investor, and Jobs.'
   );
-  setImage('profile-avatar-image', 'assets/icons/brand/logos/neuroartan/logo-plain.svg', 'Neuroartan');
+  setImage('profile-avatar-image', CORE_NEUROARTAN_LOGO, 'Neuroartan');
 
   const guestOnly = document.querySelectorAll('[data-auth-state="guest"]');
   const userOnly = document.querySelectorAll('[data-auth-state="user"]');
@@ -84,6 +130,9 @@ function updateSignedOutSurface() {
   });
 }
 
+/* =============================================================================
+   10) AUTH STATE HANDLERS
+============================================================================= */
 function handleSignedOutState() {
   console.log('No user signed in');
   updateSignedOutSurface();
@@ -94,6 +143,9 @@ function handleSignedInState(user) {
   updateProfileSurface(user);
 }
 
+/* =============================================================================
+   11) AUTH BINDING
+============================================================================= */
 function bindAuthState() {
   if (!authInstance) {
     console.warn('Firebase auth is not available.');
@@ -111,6 +163,9 @@ function bindAuthState() {
   });
 }
 
+/* =============================================================================
+   12) SIGN OUT FLOW
+============================================================================= */
 function logout() {
   if (!authInstance) return;
 
@@ -125,6 +180,9 @@ function logout() {
     });
 }
 
+/* =============================================================================
+   13) GOOGLE SIGN-IN FLOW
+============================================================================= */
 function loginWithGoogle() {
   if (!authInstance) return;
 
@@ -141,6 +199,9 @@ function loginWithGoogle() {
     });
 }
 
+/* =============================================================================
+   14) INITIALIZATION
+============================================================================= */
 bindAuthState();
 
 window.logout = logout;

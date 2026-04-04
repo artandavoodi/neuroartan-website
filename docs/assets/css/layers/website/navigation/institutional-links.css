@@ -1,22 +1,22 @@
 /* =============================================================================
    00) FILE INDEX
-   01) INSTITUTIONAL LINKS
-   02) LINKS GRID
-   03) SEPARATOR ROWS
-   03A) SEPARATOR LINES
-   04) SOCIAL LINKS ROW
-   05) REVEAL STATES
-   06) COLUMN LAYOUT
-   07) COLUMN TITLES
-   08) NAVIGATION STACK
-   09) NAVIGATION LINKS
-   10) SOCIAL LINKS
-   11) RESPONSIVE — 1280PX
-   12) RESPONSIVE — 900PX
+   01) LINKS SHELL
+   02) LINKS INNER RAIL
+   03) TOP AND BOTTOM SEPARATOR ROWS
+   04) SEPARATOR LINES
+   05) SOCIAL LINKS ROW
+   06) REVEAL STATES
+   07) COLUMN LAYOUT
+   08) COLUMN TITLES
+   09) NAVIGATION STACK
+   10) NAVIGATION LINKS
+   11) SOCIAL LINKS
+   12) RESPONSIVE — 1280PX
+   13) RESPONSIVE — 900PX
 ============================================================================= */
 
 /* =============================================================================
-   01) INSTITUTIONAL LINKS
+   01) LINKS SHELL
 ============================================================================= */
 .institutional-links{
   width: 100%;
@@ -25,7 +25,7 @@
 }
 
 /* =============================================================================
-   02) LINKS GRID
+   02) LINKS INNER RAIL
 ============================================================================= */
 .institutional-links-inner{
   display: grid;
@@ -39,7 +39,7 @@
 }
 
 /* =============================================================================
-   03) SEPARATOR ROWS
+   03) TOP AND BOTTOM SEPARATOR ROWS
 ============================================================================= */
 .institutional-links-separator-row{
   grid-column: 1 / -1;
@@ -52,7 +52,7 @@
 }
 
 /* =============================================================================
-   03A) SEPARATOR LINES
+   04) SEPARATOR LINES
 ============================================================================= */
 .institutional-links-separator{
   display: block;
@@ -74,7 +74,7 @@ body.dark-mode .institutional-links-separator{
 
 
 /* =============================================================================
-   04) SOCIAL LINKS ROW
+   05) SOCIAL LINKS ROW
 ============================================================================= */
 .institutional-links-social-row{
   grid-column: 1 / -1;
@@ -89,7 +89,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   05) REVEAL STATES
+   06) REVEAL STATES
 ============================================================================= */
 .institutional-links-column.motion-init,
 .institutional-links-social-row.motion-init,
@@ -118,7 +118,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   06) COLUMN LAYOUT
+   07) COLUMN LAYOUT
 ============================================================================= */
 .institutional-links-column{
   display: flex;
@@ -128,7 +128,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   07) COLUMN TITLES
+   08) COLUMN TITLES
 ============================================================================= */
 .institutional-links-title{
   margin: 0;
@@ -141,7 +141,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   08) NAVIGATION STACK
+   09) NAVIGATION STACK
 ============================================================================= */
 .institutional-links-nav{
   display: flex;
@@ -152,7 +152,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   09) NAVIGATION LINKS
+   10) NAVIGATION LINKS
 ============================================================================= */
 .institutional-links-nav a{
   display: inline-flex;
@@ -186,7 +186,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   10) SOCIAL LINKS
+   11) SOCIAL LINKS
 ============================================================================= */
 .institutional-links-social{
   display: grid;
@@ -266,7 +266,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   11) RESPONSIVE — 1280PX
+   12) RESPONSIVE — 1280PX
 ============================================================================= */
 @media (max-width: 1280px){
   .institutional-links-inner{
@@ -285,7 +285,7 @@ body.dark-mode .institutional-links-separator{
 }
 
 /* =============================================================================
-   12) RESPONSIVE — 900PX
+   13) RESPONSIVE — 900PX
 ============================================================================= */
 @media (max-width: 900px){
   .institutional-links{

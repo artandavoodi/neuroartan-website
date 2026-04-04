@@ -15,14 +15,14 @@
    13) TRANSLATION APPLICATION
    14) COUNTRY SELECTOR BINDING
    15) PANEL SYSTEM BINDING
-   15A) SEARCH INDEX HELPERS
-   15B) SEARCH RESULTS RENDERING
-   15C) ACCOUNT DRAWER TRIGGER BINDING
-   15D) ACCOUNT DRAWER STATE SYNCHRONIZATION
-   15E) ACCOUNT DRAWER OPEN-REQUEST ROUTING
-   15F) COOKIE CONSENT OVERLAY COORDINATION
-   16) MAIN INITIALIZATION
-   17) LIFECYCLE HOOKS
+   16) SEARCH INDEX HELPERS
+   17) SEARCH RESULTS RENDERING
+   18) ACCOUNT DRAWER TRIGGER BINDING
+   19) ACCOUNT DRAWER STATE SYNCHRONIZATION
+   20) ACCOUNT DRAWER OPEN-REQUEST ROUTING
+   21) COOKIE CONSENT OVERLAY COORDINATION
+   22) MAIN INITIALIZATION
+   23) LIFECYCLE HOOKS
 ============================================================================= */
 
 /* =============================================================================
@@ -411,7 +411,7 @@
     const micButton = getMicButton(menu);
     const accountDrawerTrigger = getAccountDrawerTrigger(menu);
     /* =============================================================================
-       15C) ACCOUNT DRAWER TRIGGER BINDING
+       18) ACCOUNT DRAWER TRIGGER BINDING
     ============================================================================= */
     function openAccountDrawerFromMenu(event) {
       if (event) {
@@ -456,7 +456,7 @@
     }
 
     /* =============================================================================
-       15D) ACCOUNT DRAWER STATE SYNCHRONIZATION
+       19) ACCOUNT DRAWER STATE SYNCHRONIZATION
     ============================================================================= */
     if (!document.documentElement.dataset.accountDrawerMenuSyncBound) {
       document.documentElement.dataset.accountDrawerMenuSyncBound = 'true';
@@ -475,11 +475,11 @@
     }
 
     /* =============================================================================
-       15E) ACCOUNT DRAWER OPEN-REQUEST ROUTING
+       20) ACCOUNT DRAWER OPEN-REQUEST ROUTING
     ============================================================================= */
 
     /* =============================================================================
-       15F) COOKIE CONSENT OVERLAY COORDINATION
+       21) COOKIE CONSENT OVERLAY COORDINATION
     ============================================================================= */
     if (!document.documentElement.dataset.cookieConsentMenuSyncBound) {
       document.documentElement.dataset.cookieConsentMenuSyncBound = 'true';
@@ -508,7 +508,7 @@
     const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
     /* =============================================================================
-       15A) SEARCH INDEX HELPERS
+       16) SEARCH INDEX HELPERS
     ============================================================================= */
     function normalizeSearchValue(value) {
       return String(value || '')
@@ -653,7 +653,7 @@
     }
 
     /* =============================================================================
-       15B) SEARCH RESULTS RENDERING
+       17) SEARCH RESULTS RENDERING
     ============================================================================= */
     function renderSearchResults(query = '') {
       if (!searchLinksHost) return;
@@ -1039,7 +1039,7 @@
   }
 
   /* =============================================================================
-     16) MAIN INITIALIZATION
+     22) MAIN INITIALIZATION
   ============================================================================= */
   function initInstitutionalMenu() {
     bindSecondaryToggle();
@@ -1060,7 +1060,7 @@
   }
 
   /* =============================================================================
-     17) LIFECYCLE HOOKS
+     23) LIFECYCLE HOOKS
   ============================================================================= */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', scheduleInit, { once: true });
@@ -1069,5 +1069,9 @@
   }
 
   window.addEventListener('load', scheduleInit, { once: true });
-  document.addEventListener('institutional-menu:mounted', scheduleInit);
+  document.addEventListener('fragment:mounted', (event) => {
+    const name = event?.detail?.name;
+    if (name !== 'institutional-menu') return;
+    scheduleInit();
+  });
 })();

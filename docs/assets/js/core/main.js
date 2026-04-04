@@ -5,22 +5,28 @@
    03) ASSET LOADERS
    04) ASSET URL CANDIDATES
    05) TEXT FETCH HELPERS
-   06) GLOBAL LAYOUT INJECTION EXECUTION
-   06A) ACCOUNT DRAWER MOUNT DISPATCH
-   06B) COOKIE CONSENT MOUNT DISPATCH
-   06C) OVERLAY MOUNT RE-DISPATCH
-   06D) COUNTRY OVERLAY MOUNT DISPATCH
-   07) FOOTER FRAGMENT INJECTION
-   08) REVEAL GROUP INITIALIZATION
-   09) INSTITUTIONAL LINKS REVEAL
-   10) TEXT HOVER INITIALIZATION
-   11) DOMCONTENTLOADED LIFECYCLE
+   06) OVERLAY MOUNT DISPATCHERS
+   07) GLOBAL LAYOUT INJECTION EXECUTION
+   08) FOOTER FRAGMENT INJECTION
+   09) REVEAL GROUP INITIALIZATION
+   10) INSTITUTIONAL LINKS REVEAL
+   11) TEXT HOVER INITIALIZATION
+   12) DOMCONTENTLOADED LIFECYCLE
 ============================================================================= */
 
 /* =============================================================================
    01) GLOBAL LAYOUT INJECTION
 ============================================================================= */
-const WEBSITE_BASE_PATH = window.location.pathname.includes('/website/') ? '/website' : '';
+const WEBSITE_BASE_PATH = (() => {
+  const pathname = window.location.pathname || '';
+
+  if (pathname.includes('/website/docs/')) return '/website/docs';
+  if (pathname.endsWith('/website/docs')) return '/website/docs';
+  if (pathname.includes('/docs/')) return '/docs';
+  if (pathname.endsWith('/docs')) return '/docs';
+
+  return '';
+})();
 
 function assetPath(path) {
   const normalized = String(path || '').trim();
@@ -28,29 +34,29 @@ function assetPath(path) {
   return `${WEBSITE_BASE_PATH}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
 }
 
-const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/ui/custom-cursor.css');
-const CUSTOM_CURSOR_JS_URL = assetPath('/assets/js/ui/custom-cursor.js');
-const COOKIE_LEARNING_OVERLAY_CSS_URL = assetPath('/assets/css/overlays/cookie/cookie-learning-overlay.css');
-const COOKIE_LEARNING_OVERLAY_JS_URL = assetPath('/assets/js/overlays/cookie/cookie-learning-overlay.js');
+const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/layers/website/ui/custom-cursor.css');
+const CUSTOM_CURSOR_JS_URL = assetPath('/assets/js/layers/website/ui/custom-cursor.js');
+const COOKIE_LEARNING_OVERLAY_CSS_URL = assetPath('/assets/css/layers/website/overlays/cookie/cookie-learning-overlay.css');
+const COOKIE_LEARNING_OVERLAY_JS_URL = assetPath('/assets/js/layers/website/overlays/cookie/cookie-learning-overlay.js');
 
 const FRAGMENT_PATHS = {
-  'account-drawer': assetPath('/assets/fragments/account/account-drawer.html'),
-  'account-sign-in-drawer': assetPath('/assets/fragments/account/account-sign-in-drawer.html'),
-  'account-sign-up-drawer': assetPath('/assets/fragments/account/account-sign-up-drawer.html'),
-  'account-provider-apple-sheet': assetPath('/assets/fragments/account/account-provider-apple-sheet.html'),
-  'account-provider-google-sheet': assetPath('/assets/fragments/account/account-provider-google-sheet.html'),
-  'account-email-auth-drawer': assetPath('/assets/fragments/account/account-email-auth-drawer.html'),
-  'account-phone-auth-drawer': assetPath('/assets/fragments/account/account-phone-auth-drawer.html'),
-  'cookie-consent': assetPath('/assets/fragments/cookie/cookie-consent.html'),
-  'cookie-language-overlay': assetPath('/assets/fragments/cookie/cookie-language-overlay.html'),
-  'cookie-learning-overlay': assetPath('/assets/fragments/cookie/cookie-learning-overlay.html'),
-  'country-overlay': assetPath('/assets/fragments/country/country-overlay.html'),
-  'institutional-links': assetPath('/assets/fragments/navigation/institutional-links.html'),
-  'institutional-menu': assetPath('/assets/fragments/navigation/institutional-menu.html'),
-  'menu': assetPath('/assets/fragments/navigation/menu.html'),
-  'footer': assetPath('/assets/fragments/footer/footer.html'),
-  'brain-activity': assetPath('/assets/fragments/system/brain-activity.html'),
-  'system-node': assetPath('/assets/fragments/system/system-node.html')
+  'account-drawer': assetPath('/assets/fragments/layers/website/account/account-drawer.html'),
+  'account-sign-in-drawer': assetPath('/assets/fragments/layers/website/account/account-sign-in-drawer.html'),
+  'account-sign-up-drawer': assetPath('/assets/fragments/layers/website/account/account-sign-up-drawer.html'),
+  'account-provider-apple-sheet': assetPath('/assets/fragments/layers/website/account/account-provider-apple-sheet.html'),
+  'account-provider-google-sheet': assetPath('/assets/fragments/layers/website/account/account-provider-google-sheet.html'),
+  'account-email-auth-drawer': assetPath('/assets/fragments/layers/website/account/account-email-auth-drawer.html'),
+  'account-phone-auth-drawer': assetPath('/assets/fragments/layers/website/account/account-phone-auth-drawer.html'),
+  'cookie-consent': assetPath('/assets/fragments/layers/website/cookie/cookie-consent.html'),
+  'cookie-language-overlay': assetPath('/assets/fragments/layers/website/cookie/cookie-language-overlay.html'),
+  'cookie-learning-overlay': assetPath('/assets/fragments/layers/website/cookie/cookie-learning-overlay.html'),
+  'country-overlay': assetPath('/assets/fragments/layers/website/country/country-overlay.html'),
+  'institutional-links': assetPath('/assets/fragments/layers/website/navigation/institutional-links.html'),
+  'institutional-menu': assetPath('/assets/fragments/layers/website/navigation/institutional-menu.html'),
+  'menu': assetPath('/assets/fragments/layers/website/navigation/menu.html'),
+  'footer': assetPath('/assets/fragments/layers/website/footer/footer.html'),
+  'brain-activity': assetPath('/assets/fragments/layers/website/system/brain-activity.html'),
+  'system-node': assetPath('/assets/fragments/layers/website/system/system-node.html')
 };
 
 /* =============================================================================
@@ -67,7 +73,7 @@ const NEURO_MAIN_RUNTIME = (window.__NEURO_MAIN_RUNTIME__ ||= {
   countryOverlayMountDispatched: false
 });
 /* =============================================================================
-   06D) COUNTRY OVERLAY MOUNT DISPATCH
+   06) OVERLAY MOUNT DISPATCHERS
 ============================================================================= */
 function dispatchCountryOverlayMount(mount) {
   const host = mount || document.getElementById('country-overlay-mount') || document.querySelector('[data-include="country-overlay"]');
@@ -163,12 +169,9 @@ async function fetchTextFromCandidates(path, cache = 'no-store') {
 }
 
 function resolveFragmentPath(name) {
-  return FRAGMENT_PATHS[name] || assetPath(`/assets/fragments/${name}.html`);
+  return FRAGMENT_PATHS[name] || assetPath(`/assets/fragments/layers/website/${name}.html`);
 }
 
-/* =============================================================================
-   06A) ACCOUNT DRAWER MOUNT DISPATCH
-============================================================================= */
 function dispatchAccountDrawerMount(mount) {
   const host = mount || document.querySelector('[data-include="account-drawer"]');
   const root = host?.querySelector?.('.account-drawer, [data-account-drawer="root"], #account-drawer') || host;
@@ -180,10 +183,6 @@ function dispatchAccountDrawerMount(mount) {
 
   NEURO_MAIN_RUNTIME.accountDrawerMountDispatched = true;
 }
-
-/* =============================================================================
-   06B) COOKIE CONSENT MOUNT DISPATCH
-============================================================================= */
 function dispatchCookieConsentMount(mount) {
   const host = mount || document.getElementById('cookie-consent-mount');
   const root = host?.querySelector?.('[data-cookie-consent="root"]') || host;
@@ -195,10 +194,6 @@ function dispatchCookieConsentMount(mount) {
 
   NEURO_MAIN_RUNTIME.cookieConsentMountDispatched = true;
 }
-
-/* =============================================================================
-   06C) OVERLAY MOUNT RE-DISPATCH
-============================================================================= */
 function dispatchOverlayMounts() {
   dispatchAccountDrawerMount();
   dispatchCookieConsentMount();
@@ -206,7 +201,7 @@ function dispatchOverlayMounts() {
 }
 
 /* =============================================================================
-   06) GLOBAL LAYOUT INJECTION EXECUTION
+   07) GLOBAL LAYOUT INJECTION EXECUTION
 ============================================================================= */
 async function injectGlobalLayout() {
   if (NEURO_MAIN_RUNTIME.globalLayoutInjected) return;
@@ -239,7 +234,7 @@ async function injectGlobalLayout() {
           detail: { name, root: el, mount: el }
         }));
         /* =============================================================================
-           06A) ACCOUNT DRAWER / COOKIE CONSENT MOUNT DISPATCH
+           07A) OVERLAY-SPECIFIC MOUNT DISPATCH
         ============================================================================= */
         if (name === 'account-drawer') {
           dispatchAccountDrawerMount(el);
@@ -274,9 +269,9 @@ injectGlobalLayout().then(() => {
 });
 
 /* =============================================================================
-   07) FOOTER FRAGMENT INJECTION
+   08) FOOTER FRAGMENT INJECTION
 ============================================================================= */
-const FOOTER_FRAGMENT_URL = assetPath('/assets/fragments/footer/footer.html');
+const FOOTER_FRAGMENT_URL = assetPath('/assets/fragments/layers/website/footer/footer.html');
 
 async function injectFooterIfNeeded() {
   const existing = document.querySelector('footer.site-footer');
@@ -319,7 +314,7 @@ async function injectFooterIfNeeded() {
 }
 
 /* =============================================================================
-   08) REVEAL GROUP INITIALIZATION
+   09) REVEAL GROUP INITIALIZATION
 ============================================================================= */
 function initRevealGroup(root = document, config = {}) {
   const {
@@ -371,7 +366,7 @@ function initRevealGroup(root = document, config = {}) {
 }
 
 /* =============================================================================
-   09) INSTITUTIONAL LINKS REVEAL
+   10) INSTITUTIONAL LINKS REVEAL
 ============================================================================= */
 function initInstitutionalLinksReveal(root = document) {
   initRevealGroup(root, {
@@ -382,7 +377,7 @@ function initInstitutionalLinksReveal(root = document) {
 }
 
 /* =============================================================================
-   10) TEXT HOVER INITIALIZATION
+   11) TEXT HOVER INITIALIZATION
 ============================================================================= */
 
 function initLetterHover(root = document) {
@@ -444,7 +439,7 @@ function initLetterHover(root = document) {
 }
 
 /* =============================================================================
-   11) DOMCONTENTLOADED LIFECYCLE
+   12) DOMCONTENTLOADED LIFECYCLE
 ============================================================================= */
 document.addEventListener("DOMContentLoaded", () => {
   if (NEURO_MAIN_RUNTIME.lifecycleBound) return;

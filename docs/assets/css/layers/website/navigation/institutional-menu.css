@@ -1,31 +1,31 @@
 /* =============================================================================
    00) FILE INDEX
-   01) INSTITUTIONAL PRIMARY MENU
-   01A) MENU SURFACE
-   01B) MENU BACKDROP STATES
-   01C) LIGHT MODE SURFACE
-   02) MENU INNER LAYOUT
-   03) BRAND
-   04) MENU GROUP
-   05) NAVIGATION AND UTILITY LAYOUT
-   06) LINKS AND UTILITY BUTTONS
-   07) SEARCH TRIGGER
-   07A) ACCOUNT TRIGGER
-   08) SECONDARY TOGGLE
-   09) MENU PANELS
-   09A) PAGE SCROLL LOCK
-   10) PANEL SHELL
-   11) PANEL TYPOGRAPHY AND LINKS
-   12) SEARCH FIELD
-   12A) SEARCH RESULTS
-   13) GLOBAL HEADER SUPPRESSION
-   14) CARET ANIMATION
-   15) RESPONSIVE — 1100PX
-   16) RESPONSIVE — 760PX
+   01) PRIMARY MENU SHELL
+   02) MENU SURFACE
+   03) MENU BACKDROP STATES
+   04) LIGHT MODE SURFACE
+   05) MENU INNER LAYOUT
+   06) BRAND
+   07) MENU GROUP
+   08) NAVIGATION AND UTILITY LAYOUT
+   09) LINKS AND UTILITY BUTTONS
+   10) SEARCH TRIGGER
+   11) ACCOUNT TRIGGER
+   12) SECONDARY TOGGLE
+   13) MENU PANELS
+   14) PAGE SCROLL LOCK
+   15) PANEL SHELL
+   16) PANEL TYPOGRAPHY AND LINKS
+   17) SEARCH FIELD
+   18) SEARCH RESULTS
+   19) GLOBAL HEADER SUPPRESSION
+   20) CARET ANIMATION
+   21) RESPONSIVE — 1100PX
+   22) RESPONSIVE — 760PX
 ============================================================================= */
 
 /* =============================================================================
-   01) INSTITUTIONAL PRIMARY MENU
+   01) PRIMARY MENU SHELL
 ============================================================================= */
 
 .institutional-menu{
@@ -48,7 +48,7 @@
 }
 
 /* =============================================================================
-   01A) MENU SURFACE
+   02) MENU SURFACE
 ============================================================================= */
 .institutional-menu::before{
   content: "";
@@ -74,7 +74,7 @@
 }
 
 /* =============================================================================
-   01B) MENU BACKDROP STATES
+   03) MENU BACKDROP STATES
 ============================================================================= */
 body.menu-ribbon-active .institutional-menu::before{
   opacity: 1;
@@ -88,7 +88,7 @@ body.institutional-menu-panel-open .institutional-menu::before{
 }
 
 /* =============================================================================
-   01C) LIGHT MODE SURFACE
+   04) LIGHT MODE SURFACE
 ============================================================================= */
 body.light-mode .institutional-menu::before{
   background: color-mix(in srgb, white 26%, transparent);
@@ -97,7 +97,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   02) MENU INNER LAYOUT
+   05) MENU INNER LAYOUT
 ============================================================================= */
 .institutional-menu-inner{
   width: var(--site-rail-width);
@@ -116,7 +116,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   03) BRAND
+   06) BRAND
 ============================================================================= */
 .institutional-menu-brand{
   display: flex !important;
@@ -185,7 +185,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   04) MENU GROUP
+   07) MENU GROUP
 ============================================================================= */
 .institutional-menu-group{
   display: inline-flex;
@@ -198,7 +198,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   05) NAVIGATION AND UTILITY LAYOUT
+   08) NAVIGATION AND UTILITY LAYOUT
 ============================================================================= */
 .institutional-menu-nav,
 .institutional-menu-utility{
@@ -228,7 +228,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   06) LINKS AND UTILITY BUTTONS
+   09) LINKS AND UTILITY BUTTONS
 ============================================================================= */
 .institutional-menu-link,
 .institutional-menu-utility-button{
@@ -277,7 +277,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   07) SEARCH TRIGGER
+   10) SEARCH TRIGGER
 ============================================================================= */
 .institutional-menu-search-trigger{
   width: 1.12rem;
@@ -309,11 +309,11 @@ body.light-mode .institutional-menu::before{
   flex: 0 0 auto;
   opacity: 0.82;
   background-color: currentColor;
-  -webkit-mask-image: url('../../icons/system/search.svg');
+  -webkit-mask-image: url('../../../../icons/core/interface/navigation/search.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  mask-image: url('../../icons/system/search.svg');
+  mask-image: url('../../../../icons/core/interface/navigation/search.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -331,7 +331,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   07A) ACCOUNT TRIGGER
+   11) ACCOUNT TRIGGER
 ============================================================================= */
 .institutional-menu-account-trigger{
   width: 1.46rem;
@@ -354,11 +354,11 @@ body.light-mode .institutional-menu::before{
   flex: 0 0 auto;
   opacity: 0.82;
   background-color: currentColor;
-  -webkit-mask-image: url('../../icons/system/account-icon.svg');
+  -webkit-mask-image: url('../../../../icons/core/identity/generic/account-icon.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: 100% 100%;
-  mask-image: url('../../icons/system/account-icon.svg');
+  mask-image: url('../../../../icons/core/identity/generic/account-icon.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: 100% 100%;
@@ -375,7 +375,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   08) SECONDARY TOGGLE
+   12) SECONDARY TOGGLE
 ============================================================================= */
 .institutional-menu-secondary-toggle{
   display: none !important;
@@ -398,7 +398,7 @@ body.light-mode .institutional-menu::before{
 }
 
 /* =============================================================================
-   09) MENU PANELS
+   13) MENU PANELS
 ============================================================================= */
 .institutional-menu-panels{
   position: fixed;
@@ -488,7 +488,7 @@ body:not(.institutional-menu-panel-open) .institutional-menu-panel-shell{
 }
 
 /* =============================================================================
-   09A) PAGE SCROLL LOCK
+   14) PAGE SCROLL LOCK
 ============================================================================= */
 body.institutional-menu-panel-open{
   overflow: hidden;
@@ -496,7 +496,7 @@ body.institutional-menu-panel-open{
 }
 
 /* =============================================================================
-   10) PANEL SHELL
+   15) PANEL SHELL
 ============================================================================= */
 .institutional-menu-panel-shell{
   width: 100%;
@@ -552,7 +552,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   11) PANEL TYPOGRAPHY AND LINKS
+   16) PANEL TYPOGRAPHY AND LINKS
 ============================================================================= */
 .institutional-menu-panel-label{
   margin: 0 0 1.35rem;
@@ -615,7 +615,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   12) SEARCH FIELD
+   17) SEARCH FIELD
 ============================================================================= */
 .institutional-menu-search-field{
   display: inline-flex;
@@ -644,11 +644,11 @@ body.light-mode .institutional-menu-search-field{
   align-self: center;
   line-height: 0;
   background-color: currentColor;
-  -webkit-mask-image: url('../../icons/system/search.svg');
+  -webkit-mask-image: url('../../../../icons/core/interface/navigation/search.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  mask-image: url('../../icons/system/search.svg');
+  mask-image: url('../../../../icons/core/interface/navigation/search.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -707,11 +707,11 @@ body.light-mode .institutional-menu-search-field{
   align-self: center;
   line-height: 0;
   background-color: currentColor;
-  -webkit-mask-image: url('../../icons/system/mic.svg');
+  -webkit-mask-image: url('../../../../icons/core/interface/actions/mic.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  mask-image: url('../../icons/system/mic.svg');
+  mask-image: url('../../../../icons/core/interface/actions/mic.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
@@ -785,7 +785,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   12A) SEARCH RESULTS
+   18) SEARCH RESULTS
 ============================================================================= */
 .institutional-menu-search-links{
   width: min(46rem, 100%);
@@ -853,7 +853,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   13) GLOBAL HEADER SUPPRESSION
+   19) GLOBAL HEADER SUPPRESSION
 ============================================================================= */
 #header-controls,
 #menu-button,
@@ -863,7 +863,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   14) CARET ANIMATION
+   20) CARET ANIMATION
 ============================================================================= */
 @keyframes institutional-menu-search-caret-blink{
   0%, 49%{
@@ -875,7 +875,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   15) RESPONSIVE — 1100PX
+   21) RESPONSIVE — 1100PX
 ============================================================================= */
 @media (max-width: 1100px){
   .institutional-menu-inner{
@@ -972,7 +972,7 @@ body.light-mode .institutional-menu-search-field{
 }
 
 /* =============================================================================
-   16) RESPONSIVE — 760PX
+   22) RESPONSIVE — 760PX
 ============================================================================= */
 @media (max-width: 760px){
   .institutional-menu{

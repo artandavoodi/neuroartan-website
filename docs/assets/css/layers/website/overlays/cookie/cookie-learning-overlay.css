@@ -4,8 +4,8 @@
    02) BACKDROP
    03) PANEL
    04) HEADER
-   05) BACK CONTROL
-   06) TITLE
+   05) TITLE
+   06) BACK CONTROL
    07) CLOSE CONTROL SUPPRESSION
    08) BODY
    09) ARTICLE SURFACE
@@ -86,7 +86,7 @@
 }
 
 /* =============================================================================
-   05) BACK CONTROL
+   06) BACK CONTROL
 ============================================================================= */
 .cookie-learning-overlay-back{
   position: relative;
@@ -120,7 +120,7 @@
 }
 
 /* =============================================================================
-   06) TITLE
+   05) TITLE
 ============================================================================= */
 .cookie-learning-overlay-title{
   margin: 0;

@@ -1,9 +1,9 @@
 /* =============================================================================
-   FILE INDEX
+   00) FILE INDEX
    01) MODULE IDENTITY
    02) FOOTER REVEAL CONTROLLER
-   03) INITIAL ATTEMPT
-   04) MUTATION FALLBACK
+   03) IMMEDIATE INITIALIZATION
+   04) MUTATION OBSERVER FALLBACK
 ============================================================================= */
 
 /* =============================================================================
@@ -36,13 +36,13 @@
   };
 
   /* =============================================================================
-     03) INITIAL ATTEMPT
+     03) IMMEDIATE INITIALIZATION
   ============================================================================= */
   // Try immediately
   if (initFooterReveal()) return;
 
   /* =============================================================================
-     04) MUTATION FALLBACK
+     04) MUTATION OBSERVER FALLBACK
   ============================================================================= */
   // If footer fragment not yet mounted, observe DOM
   const mo = new MutationObserver(() => {

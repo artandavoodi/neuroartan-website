@@ -1,59 +1,60 @@
 <!-- =============================================================================
-     00) FILE INDEX
-     01) COOKIE LEARNING OVERLAY ROOT
-     01A) BACKDROP
-     01B) PANEL
-     01C) HEADER
-     01D) BACK CONTROL
-     01E) TITLE
-     01F) BODY
-     01G) WHAT ARE COOKIES PANEL
-     01H) WHY WE USE THEM PANEL
+00) FILE INDEX
+01) OVERLAY ROOT
+02) BACKDROP
+03) PANEL
+04) HEADER
+05) TITLE
+06) BACK CONTROL
+07) BODY
+08) WHAT ARE COOKIES PANEL
+09) WHY WE USE THEM PANEL
+10) END OF OVERLAY
 ============================================================================= -->
 
 <!-- =============================================================================
-     01) COOKIE LEARNING OVERLAY ROOT
+01) OVERLAY ROOT
 ============================================================================= -->
 <div class="cookie-learning-overlay" data-cookie-learning-overlay="root" aria-hidden="true" hidden>
 
-  <!-- =============================================================================
-       01A) BACKDROP
-  ============================================================================= -->
+  <!-- ==========================================================================
+  02) BACKDROP
+  ========================================================================== -->
   <div class="cookie-learning-overlay-backdrop" data-cookie-learning-overlay="backdrop" aria-hidden="true"></div>
 
-  <!-- =============================================================================
-       01B) PANEL
-  ============================================================================= -->
+  <!-- ==========================================================================
+  03) PANEL
+  ========================================================================== -->
   <aside class="cookie-learning-overlay-panel" data-cookie-learning-overlay="panel" role="dialog" aria-modal="true" aria-labelledby="cookie-learning-overlay-title">
 
-    <!-- =============================================================================
-         01C) HEADER
-    ============================================================================= -->
+    <!-- ========================================================================
+    04) HEADER
+    ======================================================================== -->
     <div class="cookie-learning-overlay-header">
 
 
-      <!-- =============================================================================
-           01E) TITLE
-      ============================================================================= -->
+      <!-- ======================================================================
+      05) TITLE
+      ====================================================================== -->
       <p class="cookie-learning-overlay-title" id="cookie-learning-overlay-title" data-cookie-learning-overlay-title="true">Cookie information</p>
 
-      <!-- =============================================================================
-           01D) BACK CONTROL
-      ============================================================================= -->
+      <!-- ======================================================================
+      06) BACK CONTROL
+      ====================================================================== -->
       <button type="button" class="cookie-learning-overlay-back" data-cookie-learning-overlay-back="true" aria-label="Return to cookie settings">
-        <img src="./assets/icons/system/back.svg" alt="" class="cookie-learning-overlay-back-icon">
+        <img src="/assets/icons/core/interface/navigation/back.svg" alt="" class="cookie-learning-overlay-back-icon">
       </button>
 
     </div>
 
-    <!-- =============================================================================
-         01F) BODY
-    ============================================================================= -->
+    <!-- ========================================================================
+    07) BODY
+    ======================================================================== -->
     <div class="cookie-learning-overlay-body">
 
-      <!-- =============================================================================
-           01G) WHAT ARE COOKIES PANEL
-      ============================================================================= -->
+      <!-- ======================================================================
+      08) WHAT ARE COOKIES PANEL
+      ====================================================================== -->
       <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-cookies" data-cookie-learning-overlay-article="cookies" hidden>
         <div class="cookie-learning-overlay-article-topline">
           <strong data-i18n-key="cookieConsent.education.whatAreCookies.title">What are cookies?</strong>
@@ -77,9 +78,9 @@
         </div>
       </article>
 
-      <!-- =============================================================================
-           01H) WHY WE USE THEM PANEL
-      ============================================================================= -->
+      <!-- ======================================================================
+      09) WHY WE USE THEM PANEL
+      ====================================================================== -->
       <article class="cookie-learning-overlay-article" id="cookie-learning-overlay-why-we-use-them" data-cookie-learning-overlay-article="why-we-use-them" hidden>
         <div class="cookie-learning-overlay-article-topline">
           <strong data-i18n-key="cookieConsent.education.whyWeUseThem.title">Why we use them</strong>
@@ -105,3 +106,7 @@
     </div>
   </aside>
 </div>
+
+<!-- =============================================================================
+10) END OF OVERLAY
+============================================================================= -->

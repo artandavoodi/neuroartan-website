@@ -8,7 +8,8 @@
    06) SCROLL GUARD
    07) OPEN / CLOSE FLOW
    08) EVENT BINDING
-   09) INITIALIZATION
+   09) FRAGMENT FETCH PATH
+   10) INITIALIZATION
 ============================================================================= */
 
 (() => {
@@ -251,31 +252,31 @@
         const mount = getMount();
         if (!(mount instanceof HTMLElement)) return;
 
-        if (mount.dataset.includeMounted !== 'true') {
-          try {
-            const response = await fetch(assetPath('/assets/fragments/cookie/cookie-learning-overlay.html'), { cache: 'no-store' });
-            if (!response.ok) return;
-            mount.innerHTML = await response.text();
-            mount.dataset.includeMounted = 'true';
-            mount.dispatchEvent(new CustomEvent('fragment:mounted', {
-              bubbles: true,
-              detail: {
-                name: 'cookie-learning-overlay',
-                root: mount,
-                mount
-              }
-            }));
-          } catch (_) {
-            return;
-          }
+        /* =============================================================================
+           09) FRAGMENT FETCH PATH
+        ============================================================================= */
+        try {
+          const response = await fetch(assetPath('/assets/fragments/layers/website/cookie/cookie-learning-overlay.html'), { cache: 'no-store' });
+          if (!response.ok) return;
+          mount.innerHTML = await response.text();
+          mount.dataset.includeMounted = 'true';
+          mount.dispatchEvent(new CustomEvent('fragment:mounted', {
+            bubbles: true,
+            detail: {
+              name: 'cookie-learning-overlay',
+              root: mount,
+              mount
+            }
+          }));
+        } catch (_) {
+          return;
         }
-
-        initCookieLearningOverlay();
-        root = getRoot();
-        if (!(root instanceof HTMLElement)) return;
       }
 
       initCookieLearningOverlay();
+      root = getRoot();
+      if (!(root instanceof HTMLElement)) return;
+
       openOverlay(key);
     });
   }
@@ -351,7 +352,7 @@
   }
 
   /* =============================================================================
-     09) INITIALIZATION
+     10) INITIALIZATION
   ============================================================================= */
   function initCookieLearningOverlay() {
     const root = getRoot();

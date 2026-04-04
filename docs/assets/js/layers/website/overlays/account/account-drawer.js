@@ -10,8 +10,8 @@
    08) GLOBAL CLICK BINDING
    09) GLOBAL REQUEST BINDING
    10) ESCAPE BINDING
-   10A) ENTRY-LAYER ROUTING HELPERS
-   11) INITIALIZATION
+   11) ENTRY-LAYER ROUTING HELPERS
+   12) INITIALIZATION
 ============================================================================= */
 
 (() => {
@@ -337,7 +337,7 @@
   }
 
   /* =============================================================================
-     10A) ENTRY-LAYER ROUTING HELPERS
+     11) ENTRY-LAYER ROUTING HELPERS
   ============================================================================= */
   function requestNextAccountLayer(action) {
     if (!action) return;
@@ -359,7 +359,7 @@
   }
 
   /* =============================================================================
-     11) INITIALIZATION
+     12) INITIALIZATION
   ============================================================================= */
   function initAccountDrawer() {
     const drawer = getDrawer();

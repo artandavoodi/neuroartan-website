@@ -1,8 +1,8 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) BASE FOOTER LAYOUT
-   03) FOOTER INNER LAYOUT
+   02) FOOTER INNER LAYOUT
+   03) BASE FOOTER LAYOUT
    04) FOOTER LOCALE SYSTEM
    05) REVEAL ANIMATION
    06) RESPONSIVE — 768PX
@@ -27,7 +27,7 @@
 }
 
 /* =============================================================================
-   03) FOOTER INNER LAYOUT
+   02) FOOTER INNER LAYOUT
 ============================================================================= */
 .footer-flex{
   width: min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
@@ -42,7 +42,7 @@
 }
 
 /* =============================================================================
-   02) BASE FOOTER LAYOUT
+   03) BASE FOOTER LAYOUT
 ============================================================================= */
 .footer-separator{
   opacity:0.35;

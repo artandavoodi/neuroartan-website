@@ -1,0 +1,259 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) SHELL TOKENS
+   03) GLOBAL SHELL LAYOUT
+   04) PAGE FRAME
+   05) RESOURCE CENTER GRID
+   06) SHELL SECTIONS
+   07) CONTENT RAILS
+   08) RESPONSIVE ADJUSTMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+   - Sovereign shell layer for the Neuroartan brand development environment.
+   - This file defines only shared shell structure for brand pages.
+   - It must not redefine core typography, color tokens, or fragment-specific logic.
+============================================================================= */
+
+/* =============================================================================
+   02) SHELL TOKENS
+============================================================================= */
+:root{
+  --brand-shell-max-width: 1440px;
+  --brand-shell-page-gutter: 4vw;
+  --brand-shell-page-gutter-min: 18px;
+  --brand-shell-page-gutter-max: 96px;
+  --brand-shell-rail-width: calc(100% - (var(--brand-shell-page-gutter) * 2));
+  --brand-shell-section-gap: 2.4rem;
+  --brand-shell-block-gap: 1.4rem;
+  --brand-shell-card-radius: 22px;
+  --brand-shell-card-border: var(--border-color);
+  --brand-shell-card-bg: transparent;
+}
+
+@media (max-width: 520px){
+  :root{
+    --brand-shell-page-gutter: var(--brand-shell-page-gutter-min);
+  }
+}
+
+@media (min-width: 2400px){
+  :root{
+    --brand-shell-page-gutter: var(--brand-shell-page-gutter-max);
+  }
+}
+
+/* =============================================================================
+   03) GLOBAL SHELL LAYOUT
+============================================================================= */
+.brand-shell,
+.brand-page-shell{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.brand-shell__inner,
+.brand-page-shell__inner{
+  width: var(--brand-shell-rail-width);
+  max-width: var(--brand-shell-max-width);
+  margin: 0 auto;
+}
+
+.brand-shell__main,
+.brand-page-shell__main{
+  width: 100%;
+  padding-top: 8.5rem;
+  padding-bottom: 4rem;
+}
+
+/* =============================================================================
+   04) PAGE FRAME
+============================================================================= */
+.brand-page-frame{
+  display: flex;
+  flex-direction: column;
+  gap: var(--brand-shell-section-gap);
+  width: 100%;
+}
+
+.brand-page-hero,
+.brand-page-section,
+.brand-page-footer-block{
+  width: 100%;
+}
+
+.brand-page-hero{
+  padding-top: 0;
+  padding-bottom: 0.4rem;
+}
+
+.brand-page-eyebrow{
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary-color);
+}
+
+.brand-page-title{
+  max-width: 12ch;
+  margin-bottom: 1rem;
+}
+
+.brand-page-intro{
+  max-width: 760px;
+  margin-bottom: 0;
+}
+
+/* =============================================================================
+   05) RESOURCE CENTER GRID
+============================================================================= */
+.brand-resource-grid{
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.brand-resource-card{
+  grid-column: span 12;
+  min-height: 220px;
+  padding: 1.4rem;
+  border: 1px solid var(--brand-shell-card-border);
+  border-radius: var(--brand-shell-card-radius);
+  background: var(--brand-shell-card-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--brand-shell-block-gap);
+}
+
+.brand-resource-card--half{
+  grid-column: span 6;
+}
+
+.brand-resource-card--third{
+  grid-column: span 4;
+}
+
+.brand-resource-card--quarter{
+  grid-column: span 3;
+}
+
+.brand-resource-card__meta{
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary-color);
+}
+
+.brand-resource-card__title{
+  margin-bottom: 0;
+}
+
+.brand-resource-card__text{
+  max-width: 62ch;
+  margin-bottom: 0;
+}
+
+/* =============================================================================
+   06) SHELL SECTIONS
+============================================================================= */
+.brand-section-stack{
+  display: flex;
+  flex-direction: column;
+  gap: var(--brand-shell-block-gap);
+}
+
+.brand-section-header{
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.brand-section-title{
+  margin-bottom: 0;
+}
+
+.brand-section-copy{
+  max-width: 72ch;
+  margin-bottom: 0;
+}
+
+.brand-section-separator{
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background-color: var(--border-color);
+}
+
+/* =============================================================================
+   07) CONTENT RAILS
+============================================================================= */
+.brand-content-rail{
+  width: 100%;
+  max-width: 960px;
+}
+
+.brand-content-rail--wide{
+  max-width: 1200px;
+}
+
+.brand-content-rail--narrow{
+  max-width: 720px;
+}
+
+.brand-note-block{
+  padding: 1.2rem 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+}
+
+/* =============================================================================
+   08) RESPONSIVE ADJUSTMENTS
+============================================================================= */
+@media (max-width: 1100px){
+  .brand-resource-card--quarter{
+    grid-column: span 6;
+  }
+
+  .brand-resource-card--third{
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 820px){
+  .brand-shell__main,
+  .brand-page-shell__main{
+    padding-top: 7.25rem;
+    padding-bottom: 3rem;
+  }
+
+  .brand-resource-card--half,
+  .brand-resource-card--third,
+  .brand-resource-card--quarter{
+    grid-column: span 12;
+  }
+}
+
+@media (max-width: 640px){
+  .brand-page-title{
+    max-width: none;
+  }
+
+  .brand-resource-grid{
+    gap: 1rem;
+  }
+
+  .brand-resource-card{
+    padding: 1.15rem;
+    min-height: 0;
+  }
+}

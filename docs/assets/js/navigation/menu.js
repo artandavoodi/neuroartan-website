@@ -1,13 +1,32 @@
-(function () {
-  // ============================
-  // Single-Source Menu Injection
-  // ============================
-  // If a page does not include the menu overlay markup inline, we inject it from:
-  //   /assets/fragments/menu.html
-  // Pages should provide a mount point:
-  //   <div id="menu-mount"></div>
-  // This is additive and preserves existing baseline behavior where markup is already present.
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) MENU FRAGMENT INJECTION
+   03) MENU INITIALIZATION
+   04) MENU LINK + RAIL PREPARATION
+   05) LEGACY PACK FLIP LAYER
+   06) PACK VISIBILITY + ANIMATION HELPERS
+   07) ACTIVE ITEM + STAGGER HELPERS
+   08) LETTER HOVER PREPARATION
+   09) MENU OPEN / CLOSE LIFECYCLE
+   10) MENU EVENT BINDINGS
+   11) OVERLAY COORDINATION
+   12) HOVER PREVIEW LOGIC
+   13) HOVER STABILIZER
+   14) BOOT SEQUENCE
+============================================================================= */
 
+(function () {
+  /* =============================================================================
+     01) MODULE IDENTITY
+     - Expressive menu system for the legacy/artistic menu experience.
+     - Injects the shared menu fragment when inline markup is absent.
+     - Preserves hover preview, pack logic, overlay coordination, and animated open/close behavior.
+  ============================================================================= */
+
+  /* =============================================================================
+     02) MENU FRAGMENT INJECTION
+  ============================================================================= */
   const MENU_FRAGMENT_URL = '/assets/fragments/menu.html';
 
   const injectMenuIfNeeded = async () => {
@@ -32,6 +51,9 @@
     }
   };
 
+  /* =============================================================================
+     03) MENU INITIALIZATION
+  ============================================================================= */
   const initMenu = () => {
     const menuButton = document.getElementById('menu-button');
     const menuOverlay = document.getElementById('menu-overlay');
@@ -43,6 +65,9 @@
   // Hard hide overlay at boot to eliminate any ghost hitboxes
   menuOverlay.style.display = 'none';
 
+  /* =============================================================================
+     04) MENU LINK + RAIL PREPARATION
+  ============================================================================= */
   const menuLinks = menuOverlay.querySelectorAll('.menu-link');
   const menuItems = menuOverlay.querySelectorAll('.menu-item');
   // Opt menu rail links out of any global "jump" hover transforms (defined elsewhere).
@@ -59,10 +84,10 @@
   const menuPackToggle = document.getElementById('menu-pack-toggle');
   let overlaySyncBound = false;
 
-  // ==========================
-  // Legacy Pack Flip Layer
-  // ==========================
-  // Legacy music/social pack logic is intentionally kept dormant until the menu ontology is fully remapped.
+  /* =============================================================================
+     05) LEGACY PACK FLIP LAYER
+     - Legacy music/social pack logic is intentionally kept dormant until the menu ontology is fully remapped.
+  ============================================================================= */
   const packMusic = document.getElementById('menu-pack-music');
   const packSocial = document.getElementById('menu-pack-social');
   const PACK_FLIP_ENABLED = false;
@@ -112,6 +137,9 @@
   const PACK_IN_DURATION = 720;
   const PACK_STAGGER = 70;
 
+  /* =============================================================================
+     06) PACK VISIBILITY + ANIMATION HELPERS
+  ============================================================================= */
   const getPackIcons = (packEl) =>
     packEl ? Array.from(packEl.querySelectorAll('.menu-pack-icon')) : [];
 
@@ -318,6 +346,9 @@
     document.body.classList.add('menu-packs-unified');
   };
 
+  /* =============================================================================
+     07) ACTIVE ITEM + STAGGER HELPERS
+  ============================================================================= */
   function setActiveItem(next) {
     menuItems.forEach((it) => it.classList.toggle('is-active', it === next));
   }
@@ -338,6 +369,9 @@
     });
   }
 
+  /* =============================================================================
+     08) LETTER HOVER PREPARATION
+  ============================================================================= */
   function letterify(el) {
     if (el.dataset.letterified === 'true') return;
 
@@ -377,6 +411,9 @@
   const STAGGER_IN_STEP = 95;
   const STAGGER_OUT_STEP = 70;
 
+  /* =============================================================================
+     09) MENU OPEN / CLOSE LIFECYCLE
+  ============================================================================= */
   function openMenu() {
     if (isAnimating) return;
     isAnimating = true;
@@ -431,6 +468,9 @@
     }, CLOSE_DURATION);
   }
 
+  /* =============================================================================
+     10) MENU EVENT BINDINGS
+  ============================================================================= */
   menuButton.addEventListener('click', (e) => {
     e.stopPropagation();
     isOpen ? closeMenu() : openMenu();
@@ -476,11 +516,11 @@
     if (e.key === 'Escape' && isOpen) closeMenu();
   });
 
-  // ==================================
-  // Overlay Coordination
-  // ==================================
-  // When premium overlays open, the legacy menu overlay must close cleanly
-  // so panel systems never compete for focus, pointer, or scroll state.
+  /* =============================================================================
+     11) OVERLAY COORDINATION
+     - When premium overlays open, the expressive menu overlay must close cleanly
+       so panel systems never compete for focus, pointer, or scroll state.
+  ============================================================================= */
   if (!overlaySyncBound) {
     overlaySyncBound = true;
 
@@ -505,9 +545,9 @@
     });
   }
 
-  /* ===================
-     Hover Preview Logic
-     =================== */
+  /* =============================================================================
+     12) HOVER PREVIEW LOGIC
+  ============================================================================= */
 
   if ((previewTitle || previewSub) && menuItems.length) {
     menuItems.forEach((item) => {
@@ -611,9 +651,9 @@
     });
   }
 
-  // =======================
-  // Hover Stabilizer (Rail)
-  // =======================
+  /* =============================================================================
+     13) HOVER STABILIZER
+  ============================================================================= */
   if (menuList && menuItems.length) {
     let active = null;
     let raf = 0;
@@ -662,8 +702,10 @@
   }
   };
 
-  // Boot: inject (if needed) then init.
-  // If the fragment is injected, ensure we init after it exists in DOM.
+  /* =============================================================================
+     14) BOOT SEQUENCE
+     - Injects the menu fragment if needed, then initializes the expressive menu runtime.
+  ============================================================================= */
   const boot = async () => {
     await injectMenuIfNeeded();
     initMenu();

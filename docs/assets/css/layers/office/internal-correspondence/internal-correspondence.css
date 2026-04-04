@@ -1,0 +1,310 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) OFFICE TOKENS
+   03) BASE SHELL
+   04) LAYOUT
+   05) HEADER
+   06) MAIN + FOOTER
+   07) GRID + CARDS
+   08) LINKS
+   09) SUBGRID
+   10) RESPONSIVE ADJUSTMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+   - Office internal-correspondence layer stylesheet.
+   - Lives in the website canonical source under the Office layer branch.
+   - Preserves sovereign Office composition while consuming canonical core tokens.
+============================================================================= */
+
+/* =============================================================================
+   02) OFFICE TOKENS
+============================================================================= */
+:root {
+  color-scheme: dark;
+  --ic-bg: var(--bg-color, #050505);
+  --ic-panel: rgba(255, 255, 255, 0.04);
+  --ic-panel-border: var(--border-color, rgba(255, 255, 255, 0.08));
+  --ic-text: var(--text-color, rgba(255, 255, 255, 0.92));
+  --ic-muted: var(--text-secondary-color, rgba(255, 255, 255, 0.62));
+  --ic-soft: var(--border-color, rgba(255, 255, 255, 0.12));
+  --ic-max-width: 1200px;
+  --ic-radius: 24px;
+  --ic-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+  --ic-shell-gap: 32px;
+  --ic-shell-padding-top: 56px;
+  --ic-shell-padding-inline: 24px;
+  --ic-shell-padding-bottom: 80px;
+  --ic-surface-max-width: 1440px;
+  --ic-menu-gap: 24px;
+  --ic-footer-gap: 32px;
+  --ic-layout-gap: 24px;
+  --ic-sidebar-width: 320px;
+  --ic-content-min-width: 0;
+  --ic-sidebar-top-offset: 110px;
+  --ic-section-gap: 24px;
+}
+
+/* =============================================================================
+   03) BASE SHELL
+============================================================================= */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--ic-bg);
+  color: var(--ic-text);
+  font-family: var(--font-base, "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+}
+
+body.internal-correspondence-page {
+  background-image:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 32%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.03), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+}
+
+/* =============================================================================
+   04) LAYOUT
+============================================================================= */
+#internal-correspondence-shell {
+  width: min(100%, var(--ic-surface-max-width));
+  margin: 0 auto;
+  padding: var(--ic-menu-gap) var(--ic-shell-padding-inline) var(--ic-shell-padding-bottom);
+  display: grid;
+  gap: var(--ic-shell-gap);
+}
+
+#menu-mount,
+#footer-mount {
+  width: 100%;
+}
+
+#footer-mount {
+  margin-top: var(--ic-footer-gap);
+}
+
+.internal-correspondence-layout {
+  display: grid;
+  grid-template-columns: minmax(0, var(--ic-sidebar-width)) minmax(0, 1fr);
+  gap: var(--ic-layout-gap);
+  align-items: start;
+}
+
+#sidebar-mount {
+  min-width: 0;
+  position: sticky;
+  top: var(--ic-sidebar-top-offset);
+  align-self: start;
+}
+
+.internal-correspondence-content {
+  min-width: var(--ic-content-min-width);
+  display: grid;
+  gap: var(--ic-shell-gap);
+}
+
+/* =============================================================================
+   05) HEADER
+============================================================================= */
+.internal-correspondence-header {
+  border: 1px solid var(--ic-panel-border);
+  border-radius: calc(var(--ic-radius) + 4px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+  box-shadow: var(--ic-shadow);
+}
+
+.internal-correspondence-header__inner {
+  padding: 40px;
+}
+
+.internal-correspondence-header__eyebrow {
+  margin: 0 0 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ic-muted);
+}
+
+.internal-correspondence-header__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 4vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  font-weight: 600;
+  max-width: 900px;
+}
+
+.internal-correspondence-header__copy {
+  margin: 20px 0 0;
+  max-width: 760px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ic-muted);
+}
+
+/* =============================================================================
+   06) MAIN + FOOTER
+============================================================================= */
+.internal-correspondence-main {
+  display: grid;
+  gap: var(--ic-shell-gap);
+}
+
+.internal-correspondence-main > section {
+  min-width: 0;
+}
+
+.internal-correspondence-page .footer,
+.internal-correspondence-page .site-footer,
+.internal-correspondence-page footer {
+  margin-top: 0;
+}
+
+/* =============================================================================
+   07) GRID + CARDS
+============================================================================= */
+.internal-correspondence-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.internal-correspondence-grid--two-up {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.internal-correspondence-card,
+.internal-correspondence-subcard {
+  border: 1px solid var(--ic-panel-border);
+  background: var(--ic-panel);
+  box-shadow: var(--ic-shadow);
+}
+
+.internal-correspondence-card {
+  border-radius: var(--ic-radius);
+  padding: 28px;
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.internal-correspondence-card__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.internal-correspondence-card__copy {
+  margin: 0;
+  color: var(--ic-muted);
+  line-height: 1.65;
+  font-size: 0.96rem;
+}
+
+/* =============================================================================
+   08) LINKS
+============================================================================= */
+.internal-correspondence-link-list {
+  display: grid;
+  gap: 10px;
+}
+
+.internal-correspondence-link-list a,
+.internal-correspondence-subcard a {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  color: var(--ic-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 180ms ease, opacity 180ms ease, color 180ms ease, background-color 180ms ease;
+  opacity: 0.92;
+}
+
+.internal-correspondence-link-list a:hover,
+.internal-correspondence-link-list a:focus-visible,
+.internal-correspondence-subcard a:hover,
+.internal-correspondence-subcard a:focus-visible {
+  border-color: var(--ic-soft);
+  opacity: 1;
+  outline: none;
+}
+
+.internal-correspondence-link-list a[aria-current="page"],
+.internal-correspondence-subcard a[aria-current="page"],
+.internal-correspondence-link-list a.is-active,
+.internal-correspondence-subcard a.is-active {
+  border-color: var(--ic-soft);
+  opacity: 1;
+}
+
+/* =============================================================================
+   09) SUBGRID
+============================================================================= */
+.internal-correspondence-subgrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.internal-correspondence-subcard {
+  border-radius: 18px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.025);
+  display: grid;
+  gap: 12px;
+}
+
+.internal-correspondence-subcard h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.internal-correspondence-subcard p {
+  margin: 0;
+  color: var(--ic-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* =============================================================================
+   10) RESPONSIVE ADJUSTMENTS
+============================================================================= */
+@media (max-width: 980px) {
+  #internal-correspondence-shell {
+    padding: 18px 16px 48px;
+  }
+
+  .internal-correspondence-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #sidebar-mount {
+    position: static;
+    top: auto;
+  }
+
+  .internal-correspondence-grid--two-up,
+  .internal-correspondence-subgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .internal-correspondence-header__inner,
+  .internal-correspondence-card {
+    padding: 24px;
+  }
+
+  .internal-correspondence-header__title {
+    font-size: 2.4rem;
+  }
+}

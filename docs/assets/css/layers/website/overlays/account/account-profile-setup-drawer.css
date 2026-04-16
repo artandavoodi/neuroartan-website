@@ -275,8 +275,7 @@
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
 }
@@ -301,7 +300,6 @@
   opacity: var(--hover-opacity-strong);
   border-color: var(--account-profile-setup-action-border-hover);
   background: var(--account-profile-setup-action-background-hover);
-  transform: translateY(var(--account-profile-setup-action-hover-lift-y)) scale(var(--account-profile-setup-action-hover-scale));
   outline: none;
 }
 

@@ -17,11 +17,6 @@
 (function () {
   'use strict';
 
-  if (window.__neuroartan404HeroShaderInitialized) {
-    return;
-  }
-
-  window.__neuroartan404HeroShaderInitialized = true;
 
   /* =========================================================
      02. CONSTANTS
@@ -66,6 +61,9 @@
   if (!root) {
     return;
   }
+  if (root.dataset.shaderInitialized === 'true') {
+    return;
+  }
 
   const canvas = root.querySelector(CANVAS_SELECTOR);
   const veil = root.querySelector(VEIL_SELECTOR);
@@ -75,6 +73,7 @@
   if (!canvas || !context) {
     return;
   }
+  root.dataset.shaderInitialized = 'true';
 
   canvas.style.willChange = 'transform, opacity';
   canvas.style.transform = 'translateZ(0)';
@@ -265,14 +264,7 @@
   }
 
   function drawBackground() {
-    const gradient = context.createLinearGradient(0, 0, 0, state.height);
-    gradient.addColorStop(0, 'rgba(4, 3, 8, 1)');
-    gradient.addColorStop(0.5, 'rgba(8, 8, 14, 1)');
-    gradient.addColorStop(1, 'rgba(2, 2, 4, 1)');
-
     context.clearRect(0, 0, state.width, state.height);
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, state.width, state.height);
   }
 
   function drawParticle(particle, time) {

@@ -172,8 +172,7 @@ body.dark-mode{
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
 }
@@ -198,7 +197,6 @@ body.dark-mode{
   opacity: var(--hover-opacity-strong);
   border-color: var(--account-provider-apple-button-border-hover);
   background: var(--account-provider-apple-button-background-hover);
-  transform: translateY(var(--account-provider-apple-button-hover-lift-y)) scale(var(--account-provider-apple-button-hover-scale));
   outline: none;
 }
 

@@ -1,14 +1,40 @@
 /* =========================================================
    00. FILE INDEX
+   00A. ROOT TOKENS
    01. PAGE ROOT
    02. PAGE SHELL
-   03. SHADER LAYER
+   03. OPTIONAL VISUAL LAYER
    04. TYPOGRAPHY
-   05. ACTIONS
-   06. INTERACTION STATES
+   05. ACTIONS LAYOUT
+   06. ACTIONS WIDTH RULES
    07. RESPONSIVE — TABLET
-   08. RESPONSIVE — MOBILE
+   08. CANONICAL LAYOUT HARDENING
+   09. RESPONSIVE — MOBILE
    ========================================================= */
+
+/* =========================================================
+   00A. ROOT TOKENS
+   ========================================================= */
+:root{
+  --error404-page-background: #050505;
+  --error404-page-text: var(--text-primary-color, #f5f5f7);
+  --error404-shell-max-width: 760px;
+  --error404-shell-padding-y: 56px;
+  --error404-shell-padding-x: 40px;
+  --error404-shell-radius: 28px;
+  --error404-shell-border: rgba(255, 255, 255, 0.08);
+  --error404-shell-surface: rgba(255, 255, 255, 0.02);
+  --error404-mark-color: rgba(245, 245, 247, 0.6);
+  --error404-eyebrow-color: rgba(245, 245, 247, 0.5);
+  --error404-body-color: rgba(245, 245, 247, 0.72);
+  --error404-primary-text: #ffffff;
+  --error404-secondary-border: rgba(255, 255, 255, 0.12);
+  --error404-secondary-text: var(--text-primary-color, #f5f5f7);
+  --error404-secondary-border-hover: rgba(255, 255, 255, 0.2);
+  --error404-focus-outline: rgba(255, 255, 255, 0.55);
+  --error404-page-padding-y: 48px;
+  --error404-page-padding-x: 24px;
+}
 
 /* =========================================================
    01. PAGE ROOT
@@ -17,47 +43,42 @@
   min-height: 100vh;
   margin: 0;
   position: relative;
-  background: #050505;
-  color: #f5f5f7;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  cursor: none;
+  background: var(--error404-page-background);
+  color: var(--error404-page-text);
 }
 
-.page-404 a,
-.page-404 button,
-.page-404 [role="button"] {
-  cursor: none;
-}
 
 /* =========================================================
    02. PAGE SHELL
    ========================================================= */
-.error404 {
+.error404,
+.page-404-content {
   position: relative;
   z-index: 1;
   min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: var(--error404-page-padding-y) var(--error404-page-padding-x);
   box-sizing: border-box;
   background: transparent;
 }
 
 .error404-shell {
   width: 100%;
-  max-width: 760px;
+  max-width: var(--error404-shell-max-width);
   position: relative;
   z-index: 2;
-  padding: 56px 40px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.02);
+  padding: var(--error404-shell-padding-y) var(--error404-shell-padding-x);
+  border: 1px solid var(--error404-shell-border);
+  border-radius: var(--error404-shell-radius);
+  background: var(--error404-shell-surface);
   box-sizing: border-box;
 }
 
 /* =========================================================
-   03. SHADER LAYER
+   03. OPTIONAL VISUAL LAYER
    ========================================================= */
 [data-404-shader-mount] {
   position: fixed;
@@ -130,7 +151,7 @@
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(245, 245, 247, 0.6);
+  color: var(--error404-mark-color);
 }
 
 .error404-copy {
@@ -143,7 +164,7 @@
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 245, 247, 0.5);
+  color: var(--error404-eyebrow-color);
 }
 
 .error404-title {
@@ -158,11 +179,11 @@
   margin: 0 0 14px;
   font-size: 18px;
   line-height: 1.65;
-  color: rgba(245, 245, 247, 0.72);
+  color: var(--error404-body-color);
 }
 
 /* =========================================================
-   05. ACTIONS
+   05. ACTIONS LAYOUT
    ========================================================= */
 .error404-actions {
   margin-top: 34px;
@@ -172,78 +193,17 @@
   flex-wrap: wrap;
 }
 
-.error404-actions .error404-primary-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  line-height: 1;
-  padding: 0 22px;
-  border-radius: 999px;
-  background: var(--color-primary1);
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  transition: transform 180ms ease, opacity 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
-}
-
 /* =========================================================
-   06. INTERACTION STATES
+   06. ACTIONS WIDTH RULES
    ========================================================= */
-.error404-actions .error404-primary-link:hover {
-  transform: translateY(-1px);
-  opacity: 0.92;
-  background: var(--color-primary1);
-  color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
-}
-
-.error404-actions .error404-primary-link:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.55);
-  outline-offset: 4px;
-}
-
-.error404-secondary-button {
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  background: transparent;
-  color: #f5f5f7;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  transition: transform 180ms ease, opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
-}
-
-.error404-secondary-button:hover {
-  transform: none;
-  opacity: 0.92;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.error404-secondary-button:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.55);
-  outline-offset: 4px;
-}
 
 /* =========================================================
    07. RESPONSIVE — TABLET
    ========================================================= */
 @media (max-width: 900px) {
-  .error404-shell {
-    padding: 48px 32px;
+  :root{
+    --error404-shell-padding-y: 48px;
+    --error404-shell-padding-x: 32px;
   }
 
   .error404-title {
@@ -252,16 +212,29 @@
 }
 
 /* =========================================================
-   08. RESPONSIVE — MOBILE
+   08. CANONICAL LAYOUT HARDENING
+   ========================================================= */
+body.page-404 main.page-404-content {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+body.page-404 .error404-shell {
+  display: block;
+  width: 100%;
+}
+
+/* =========================================================
+   09. RESPONSIVE — MOBILE
    ========================================================= */
 @media (max-width: 640px) {
-  .error404 {
-    padding: 24px 16px;
-  }
-
-  .error404-shell {
-    padding: 36px 24px;
-    border-radius: 22px;
+  :root{
+    --error404-page-padding-y: 24px;
+    --error404-page-padding-x: 16px;
+    --error404-shell-padding-y: 36px;
+    --error404-shell-padding-x: 24px;
+    --error404-shell-radius: 22px;
   }
 
   .error404-title {
@@ -273,8 +246,12 @@
     line-height: 1.55;
   }
 
-  .error404-primary-link,
-  .error404-secondary-button {
+  .error404,
+  .page-404-content {
+    padding: 24px 16px;
+  }
+
+  .error404-actions .ui-button {
     width: 100%;
   }
 }

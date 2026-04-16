@@ -272,8 +272,7 @@ body.dark-mode{
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
 }
@@ -298,7 +297,6 @@ body.dark-mode{
   opacity: var(--hover-opacity-strong);
   border-color: var(--control-border-strong);
   background: var(--control-bg-hover);
-  transform: translateY(var(--account-sign-in-button-hover-lift-y)) scale(var(--account-sign-in-button-hover-scale));
   outline: none;
 }
 

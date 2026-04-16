@@ -4,9 +4,10 @@
    02) SHARED BUTTON / CONTROL BASE
    03) HOVER / FOCUS STATES
    04) PRIMARY BUTTON VARIANT
-   05) SECONDARY BUTTON VARIANT
-   06) GHOST BUTTON VARIANT
-   07) END OF FILE
+   05) BRAND BUTTON VARIANT
+   06) SECONDARY BUTTON VARIANT
+   07) GHOST BUTTON VARIANT
+   08) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -32,6 +33,7 @@
   font-weight:var(--button-font-weight);
   letter-spacing:var(--button-letter-spacing);
   line-height:var(--button-line-height);
+  text-align:center;
   text-decoration:none;
   display:inline-flex;
   align-items:center;
@@ -58,7 +60,6 @@
   background:var(--control-bg-hover);
   border-color:var(--control-border-strong);
   opacity:var(--hover-opacity-strong);
-  transform:translateY(var(--hover-lift-y));
 }
 
 .ui-button:focus-visible,
@@ -79,18 +80,33 @@
 
 .ui-button--primary:hover{
   opacity:0.94;
-  transform:translateY(var(--hover-lift-y-strong));
 }
 
 /* =============================================================================
-   05) SECONDARY BUTTON VARIANT
+   05) BRAND BUTTON VARIANT
+============================================================================= */
+.ui-button--brand{
+  background:var(--color-primary1);
+  color:var(--text-color);
+  border-color:transparent;
+}
+
+.ui-button--brand:hover{
+  background:var(--color-primary1);
+  color:var(--text-color);
+  border-color:transparent;
+  opacity:0.94;
+}
+
+/* =============================================================================
+   06) SECONDARY BUTTON VARIANT
 ============================================================================= */
 .ui-button--secondary{
   background:var(--surface-secondary);
 }
 
 /* =============================================================================
-   06) GHOST BUTTON VARIANT
+   07) GHOST BUTTON VARIANT
 ============================================================================= */
 .ui-button--ghost{
   background:transparent;
@@ -102,5 +118,5 @@
 }
 
 /* =============================================================================
-   07) END OF FILE
+   08) END OF FILE
 ============================================================================= */

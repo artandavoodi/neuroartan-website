@@ -60,7 +60,7 @@ function assetPath(path) {
   return `${base}${normalized.startsWith('/') ? normalized : `/${normalized}`}`;
 }
 
-const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/layers/website/ui/custom-cursor.css');
+const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/core/04-systems/custom-cursor.css');
 
 /* =============================================================================
    03) STYLE ASSET OWNERSHIP

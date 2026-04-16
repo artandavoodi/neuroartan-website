@@ -3,12 +3,11 @@
 01) DOCUMENT HEAD
 02) PAGE BODY
 03) SHADER MOUNT
-04) CUSTOM CURSOR
-05) ERROR 404 SHELL
-06) ERROR 404 COPY
-07) ERROR 404 ACTIONS
-08) PAGE SCRIPTS
-09) END OF DOCUMENT
+04) ERROR 404 SHELL
+05) ERROR 404 COPY
+06) ERROR 404 ACTIONS
+07) PAGE SCRIPTS
+08) END OF DOCUMENT
 ============================================================================= -->
 <!DOCTYPE html>
 <!-- =============================================================================
@@ -22,9 +21,7 @@
   <meta name="description" data-i18n-key="404.meta.description" content="This destination is intentionally unavailable while Neuroartan is under active development and selected public sections are being prepared.">
   <meta name="robots" content="noindex, follow">
   <link rel="icon" href="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/assets/css/core/style.css">
-  <link rel="stylesheet" href="/assets/css/layers/website/pages/404.css">
-  <link rel="stylesheet" href="/assets/css/layers/website/ui/custom-cursor.css">
+  <link rel="stylesheet" href="/assets/css/core/00-orchestrator/core.css">
 </head>
 <!-- =============================================================================
 02) PAGE BODY
@@ -35,18 +32,14 @@
   ========================================================================== -->
   <div data-404-shader-mount aria-hidden="true"></div>
   <!-- ==========================================================================
-  04) CUSTOM CURSOR
+  04) ERROR 404 SHELL
   ========================================================================== -->
-  <div class="custom-cursor" aria-hidden="true"></div>
-  <!-- ==========================================================================
-  05) ERROR 404 SHELL
-  ========================================================================== -->
-  <main class="error404" aria-labelledby="error404-title">
+  <main class="page-404-content" aria-labelledby="error404-title">
     <section class="error404-shell">
       <div class="error404-mark">404</div>
 
       <!-- ======================================================================
-      06) ERROR 404 COPY
+      05) ERROR 404 COPY
       ====================================================================== -->
       <div class="error404-copy">
         <p class="error404-eyebrow">Neuroartan</p>
@@ -60,25 +53,21 @@
       </div>
 
       <!-- ======================================================================
-      07) ERROR 404 ACTIONS
+      06) ERROR 404 ACTIONS
       ====================================================================== -->
-      <div class="error404-actions" aria-label="404 recovery actions">
-        <a href="/" class="error404-primary-link" data-404-home-link data-i18n-key="404.actions.home">Return to Active Homepage</a>
-        <button type="button" class="error404-secondary-button" data-404-back-button data-i18n-key="404.actions.back">Go Back</button>
+      <div class="error404-actions" aria-label="404 recovery actions" data-i18n-aria-label="404.actions.ariaLabel">
+        <a href="/" class="ui-button ui-button--brand" data-404-home-link data-i18n-key="404.actions.home">Return to Active Homepage</a>
+        <button type="button" class="ui-button ui-button--secondary" data-404-back-button data-i18n-key="404.actions.back">Go Back</button>
       </div>
     </section>
   </main>
 
   <!-- ==========================================================================
-  08) PAGE SCRIPTS
+  07) PAGE SCRIPTS
   ========================================================================== -->
-  <script src="/assets/js/layers/website/i18n/countries.js" defer></script>
-  <script src="/assets/js/layers/website/i18n/translation.js" defer></script>
-  <script src="/assets/js/layers/website/i18n/country-language.js" defer></script>
-  <script src="/assets/js/layers/website/ui/custom-cursor.js" defer></script>
-  <script src="/assets/js/layers/website/pages/404.js" defer></script>
+  <script type="module" src="/assets/js/core/00-orchestrator/core.js"></script>
 </body>
 <!-- =============================================================================
-09) END OF DOCUMENT
+08) END OF DOCUMENT
 ============================================================================= -->
 </html>

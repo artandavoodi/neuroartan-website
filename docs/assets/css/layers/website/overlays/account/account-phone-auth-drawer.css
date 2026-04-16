@@ -240,7 +240,7 @@ body.dark-mode{
   color: #f5f5f7;
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
 }
 
 .account-phone-auth-drawer-action-label{
@@ -263,7 +263,6 @@ body.dark-mode{
   opacity: 0.92;
   border-color: rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(var(--account-phone-auth-button-hover-lift-y)) scale(var(--account-phone-auth-button-hover-scale));
   outline: none;
 }
 

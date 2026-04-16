@@ -86,14 +86,13 @@ export function initHoverPrimitive(root = document) {
     if (!text) return;
 
     el.dataset.letterified = 'true';
-    el.style.transition = 'color 220ms ease, opacity 220ms ease, transform 220ms ease';
+    el.style.transition = 'color 220ms ease, opacity 220ms ease';
     el.style.transformOrigin = 'center center';
 
     el.addEventListener(
       'mouseenter',
       () => {
         el.style.opacity = '1';
-        el.style.transform = 'scale(1.01)';
       },
       { passive: true }
     );
@@ -102,7 +101,6 @@ export function initHoverPrimitive(root = document) {
       'mouseleave',
       () => {
         el.style.opacity = '1';
-        el.style.transform = 'scale(1)';
       },
       { passive: true }
     );

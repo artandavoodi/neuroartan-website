@@ -219,8 +219,7 @@ body.light-mode{
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
 }
@@ -237,7 +236,6 @@ body.light-mode{
   opacity: var(--hover-opacity-strong);
   border-color: var(--account-email-auth-action-border-hover);
   background: var(--account-email-auth-action-background-hover);
-  transform: translateY(var(--account-email-auth-action-hover-lift-y)) scale(var(--account-email-auth-action-hover-scale));
   outline: none;
 }
 

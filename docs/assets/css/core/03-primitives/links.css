@@ -32,7 +32,7 @@ a:focus-visible{
 /* =============================================================================
    03) CLICKABLE TEXT HOVER SYSTEM
 ============================================================================= */
-a:not(.enter-button),
+ a:not(.enter-button):not(.ui-button),
 .country-option,
 #language-toggle,
 #country-selector,
@@ -48,7 +48,7 @@ a:not(.enter-button),
   text-decoration:none !important;
 }
 
-a:not(.enter-button):hover,
+ a:not(.enter-button):not(.ui-button):hover,
 .country-option:hover,
 #language-toggle:hover,
 #country-selector:hover,
@@ -59,7 +59,7 @@ a:not(.enter-button):hover,
 .language-dropdown .language-option:hover,
 .language-dropdown .lang-option:hover,
 
-a:not(.enter-button):focus-visible,
+ a:not(.enter-button):not(.ui-button):focus-visible,
 .country-option:focus-visible,
 #language-toggle:focus-visible,
 #country-selector:focus-visible,

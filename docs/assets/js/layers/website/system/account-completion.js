@@ -1,23 +1,23 @@
 /* =============================================================================
    00) FILE INDEX
-   01) MODULE IDENTITY
-   02) RUNTIME STATE
-   03) CONSTANTS
-   04) FIREBASE HELPERS
-   05) ROUTE AND DRAWER HELPERS
-   06) FORM AND FIELD HELPERS
-   07) NORMALIZATION HELPERS
+   01) MODULE IMPORTS
+   02) MODULE IDENTITY
+   03) RUNTIME STATE
+   04) CONSTANTS
+   05) FIREBASE HELPERS
+   06) ROUTE AND DRAWER HELPERS
+   07) FORM HELPERS
    08) FLOW STATE HELPERS
    09) ONBOARDING CONTEXT HELPERS
-   10) PROFILE STORE HELPERS
+   10) ACCOUNT STORE HELPERS
    11) PROFILE RESOLUTION HELPERS
    12) PROFILE SURFACE EVENTS
    13) ACCOUNT FLOW HELPERS
-   14) PROVIDER AUTH FLOW
-   15) EMAIL AND PASSWORD SIGN-IN FLOW
-   16) EMAIL ONBOARDING FLOW
-   17) PHONE AUTH FLOW
-   18) FORGOT PASSWORD FLOW
+   14) USERNAME STATUS FLOW
+   15) PROVIDER AUTH FLOW
+   16) EMAIL AND PASSWORD SIGN-IN FLOW
+   17) EMAIL ONBOARDING FLOW
+   18) PHONE AND PASSWORD RECOVERY FLOW
    19) PROFILE SETUP FLOW
    20) AUTH STATE HANDLERS
    21) EVENT BINDING
@@ -26,7 +26,29 @@
 ============================================================================= */
 
 /* =============================================================================
-   01) MODULE IDENTITY
+   01) MODULE IMPORTS
+============================================================================= */
+import {
+  assertUsernameAvailable,
+  buildDisplayName,
+  buildUsernameStatus,
+  buildUsernameSuggestion,
+  createUsernameError,
+  evaluateEligibility,
+  findProfileByUsername,
+  getUsernameAvailability,
+  loadProfileIdentityPolicy,
+  messageForUsernameError,
+  normalizeEmail,
+  normalizeString,
+  normalizeUsername,
+  reserveUsernameProfile,
+  splitFullName,
+  validateUsernameLocally
+} from './account-profile-identity.js';
+
+/* =============================================================================
+   02) MODULE IDENTITY
 ============================================================================= */
 /* /website/docs/assets/js/layers/website/system/account-completion.js */
 
@@ -34,7 +56,7 @@
   'use strict';
 
   /* =============================================================================
-     02) RUNTIME STATE
+     03) RUNTIME STATE
   ============================================================================= */
   const RUNTIME = (window.__NEUROARTAN_ACCOUNT_COMPLETION__ ||= {
     authBound: false,
@@ -42,11 +64,13 @@
     profileRequestId: 0,
     profileSaveInProgress: false,
     onboardingContext: {},
-    lastProviderContext: {}
+    lastProviderContext: {},
+    usernameValidationRequestId: 0,
+    usernameValidationTimer: null
   });
 
   /* =============================================================================
-     03) CONSTANTS
+     04) CONSTANTS
   ============================================================================= */
   const MODULE_ID = 'account-completion';
   const PROFILE_ROUTE = '/profile.html';
@@ -54,10 +78,14 @@
   const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
   const FLOW_STATE_STORAGE_KEY = 'neuroartan_account_flow_state';
   const PROFILE_COLLECTION = 'profiles';
+  const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
+  const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
+  const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
+  const USERNAME_VALIDATION_DEBOUNCE_MS = 240;
   const REQUIRED_PROFILE_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth'];
 
   /* =============================================================================
-     04) FIREBASE HELPERS
+     05) FIREBASE HELPERS
   ============================================================================= */
   function hasFirebaseAuth() {
     return !!(window.firebase && typeof window.firebase.auth === 'function');
@@ -119,7 +147,7 @@
   }
 
   /* =============================================================================
-     05) ROUTE AND DRAWER HELPERS
+     06) ROUTE AND DRAWER HELPERS
   ============================================================================= */
   function isProfileRoute(pathname = window.location.pathname) {
     return PROFILE_ROUTE_MATCHERS.some((route) => pathname.endsWith(route));
@@ -182,7 +210,7 @@
   }
 
   /* =============================================================================
-     06) FORM AND FIELD HELPERS
+     07) FORM HELPERS
   ============================================================================= */
   function getFieldFromForm(form, selector) {
     if (!(form instanceof HTMLFormElement)) return null;
@@ -255,87 +283,18 @@
     });
   }
 
-  /* =============================================================================
-     07) NORMALIZATION HELPERS
-  ============================================================================= */
-  function normalizeString(value) {
-    return String(value || '').trim();
-  }
-
-  function normalizeEmail(value) {
-    return normalizeString(value).toLowerCase();
-  }
-
-  function normalizeUsername(value) {
-    const raw = normalizeString(value).toLowerCase();
-
-    return raw
-      .replace(/[^a-z0-9_-]+/g, '-')
-      .replace(/-{2,}/g, '-')
-      .replace(/^[-_]+|[-_]+$/g, '');
-  }
-
   function isPhoneIdentity(value) {
     return /^\+?[0-9().\-\s]{7,}$/.test(normalizeString(value));
-  }
-
-  function splitFullName(value) {
-    const normalized = normalizeString(value);
-    if (!normalized) {
-      return {
-        first_name: '',
-        last_name: ''
-      };
-    }
-
-    const parts = normalized.split(/\s+/).filter(Boolean);
-    if (parts.length === 1) {
-      return {
-        first_name: parts[0],
-        last_name: ''
-      };
-    }
-
-    return {
-      first_name: parts[0],
-      last_name: parts.slice(1).join(' ')
-    };
-  }
-
-  function buildUsernameSuggestion(values = {}) {
-    const explicit = normalizeUsername(values.username || '');
-    if (explicit) return explicit;
-
-    const email = normalizeEmail(values.email || '');
-    const emailStem = normalizeUsername(email.split('@')[0] || '');
-    if (emailStem) return emailStem;
-
-    const displayName = normalizeUsername(values.display_name || '');
-    if (displayName) return displayName;
-
-    const combined = normalizeUsername(`${values.first_name || ''}-${values.last_name || ''}`);
-    if (combined) return combined;
-
-    return '';
-  }
-
-  function buildDisplayName(values = {}) {
-    return normalizeString(
-      values.display_name
-      || `${values.first_name || ''} ${values.last_name || ''}`.trim()
-      || values.name
-      || ''
-    );
   }
 
   function getPrimaryProviderId(user) {
     const providerId = user?.providerData?.find((entry) => entry?.providerId && entry.providerId !== 'firebase')?.providerId || '';
 
     switch (providerId) {
-      case 'google.com':
-        return 'google';
       case 'apple.com':
         return 'apple';
+      case 'google.com':
+        return 'google';
       case 'password':
         return 'email';
       case 'phone':
@@ -469,7 +428,7 @@
   }
 
   /* =============================================================================
-     10) PROFILE STORE HELPERS
+     10) ACCOUNT STORE HELPERS
   ============================================================================= */
   async function getProfileByUid(uid) {
     const firestore = getFirestore();
@@ -480,73 +439,25 @@
     return snapshot.data() || null;
   }
 
-  async function getProfileByUsername(username) {
-    const firestore = getFirestore();
-    const normalizedUsername = normalizeUsername(username);
-    if (!firestore || !normalizedUsername) return null;
+  async function resolveEmailIdentity(identity) {
+    const normalizedIdentity = normalizeString(identity);
+    if (!normalizedIdentity) return '';
 
-    const snapshot = await firestore
-      .collection(PROFILE_COLLECTION)
-      .where('username_lower', '==', normalizedUsername)
-      .limit(1)
-      .get();
-
-    if (snapshot.empty) return null;
-    return snapshot.docs[0]?.data() || null;
-  }
-
-  async function assertUsernameAvailable(username, currentUid) {
-    const firestore = getFirestore();
-    const normalizedUsername = normalizeUsername(username);
-    if (!firestore || !normalizedUsername) return;
-
-    const snapshot = await firestore
-      .collection(PROFILE_COLLECTION)
-      .where('username_lower', '==', normalizedUsername)
-      .limit(1)
-      .get();
-
-    if (snapshot.empty) return;
-
-    const conflicting = snapshot.docs.find((doc) => doc.id !== currentUid);
-    if (conflicting) {
-      throw new Error('USERNAME_TAKEN');
-    }
-  }
-
-  async function saveProfile(user, values, existingProfile = null) {
-    const firestore = getFirestore();
-    const fieldValue = window.firebase?.firestore?.FieldValue;
-    if (!firestore || !user?.uid) {
-      throw new Error('PROFILE_STORE_UNAVAILABLE');
+    if (normalizedIdentity.includes('@')) {
+      return normalizeEmail(normalizedIdentity);
     }
 
-    const timestamp = typeof fieldValue?.serverTimestamp === 'function'
-      ? fieldValue.serverTimestamp()
-      : new Date().toISOString();
-
-    const payload = {
-      uid: user.uid,
-      email: normalizeEmail(values.email || user.email || ''),
-      username: values.username,
-      username_lower: values.username,
-      first_name: values.first_name,
-      last_name: values.last_name,
-      display_name: values.display_name,
-      date_of_birth: values.date_of_birth,
-      gender: values.gender || '',
-      auth_provider: values.auth_provider,
-      photo_url: user.photoURL || existingProfile?.photo_url || '',
-      profile_complete: true,
-      updated_at: timestamp
-    };
-
-    if (!existingProfile?.created_at) {
-      payload.created_at = timestamp;
+    if (isPhoneIdentity(normalizedIdentity)) {
+      return '';
     }
 
-    await firestore.collection(PROFILE_COLLECTION).doc(user.uid).set(payload, { merge: true });
-    return payload;
+    const profile = await findProfileByUsername({
+      firestore: getFirestore(),
+      username: normalizedIdentity,
+      profileCollection: PROFILE_COLLECTION
+    });
+
+    return normalizeEmail(profile?.email || '');
   }
 
   /* =============================================================================
@@ -582,22 +493,6 @@
     return values;
   }
 
-  async function resolveEmailIdentity(identity) {
-    const normalizedIdentity = normalizeString(identity);
-    if (!normalizedIdentity) return '';
-
-    if (normalizedIdentity.includes('@')) {
-      return normalizeEmail(normalizedIdentity);
-    }
-
-    if (isPhoneIdentity(normalizedIdentity)) {
-      return '';
-    }
-
-    const profile = await getProfileByUsername(normalizedIdentity);
-    return normalizeEmail(profile?.email || '');
-  }
-
   /* =============================================================================
      12) PROFILE SURFACE EVENTS
   ============================================================================= */
@@ -615,19 +510,28 @@
     document.dispatchEvent(new CustomEvent('account:profile-signed-out'));
   }
 
+  function emitUsernameStatus(detail = {}) {
+    document.dispatchEvent(new CustomEvent(USERNAME_STATUS_EVENT, {
+      detail: {
+        source: MODULE_ID,
+        ...detail
+      }
+    }));
+  }
+
   /* =============================================================================
      13) ACCOUNT FLOW HELPERS
   ============================================================================= */
   async function ensureReadyOrThrow() {
     const ready = await ensureFirebaseServices();
     if (!ready) {
-      throw new Error('FIREBASE_NOT_READY');
+      throw createUsernameError('FIREBASE_NOT_READY');
     }
 
     const auth = getFirebaseAuth();
     const firestore = getFirestore();
     if (!auth || !firestore) {
-      throw new Error('FIREBASE_NOT_READY');
+      throw createUsernameError('FIREBASE_NOT_READY');
     }
 
     return { auth, firestore };
@@ -672,8 +576,8 @@
   async function updateFirebaseDisplayName(user, displayName) {
     const nextDisplayName = normalizeString(displayName);
     if (!user || !nextDisplayName || typeof user.updateProfile !== 'function') return;
-
     if (normalizeString(user.displayName) === nextDisplayName) return;
+
     await user.updateProfile({
       displayName: nextDisplayName,
       photoURL: user.photoURL || null
@@ -681,7 +585,84 @@
   }
 
   /* =============================================================================
-     14) PROVIDER AUTH FLOW
+     14) USERNAME STATUS FLOW
+  ============================================================================= */
+  function requestUsernameAvailability(detail = {}) {
+    const normalized = normalizeUsername(detail.username || detail.raw_username || '');
+    const requestId = ++RUNTIME.usernameValidationRequestId;
+    const currentUid = normalizeString(getFirebaseAuth()?.currentUser?.uid || '');
+
+    window.clearTimeout(RUNTIME.usernameValidationTimer);
+
+    loadProfileIdentityPolicy()
+      .then((policy) => {
+        if (requestId !== RUNTIME.usernameValidationRequestId) return;
+
+        if (!normalized) {
+          emitUsernameStatus({
+            state: 'idle',
+            normalized: '',
+            message: buildUsernameStatus('idle', '', policy)
+          });
+          return;
+        }
+
+        const localValidation = validateUsernameLocally(normalized, policy);
+        if (requestId !== RUNTIME.usernameValidationRequestId) return;
+
+        if (!localValidation.ok) {
+          emitUsernameStatus({
+            state: localValidation.state,
+            normalized: localValidation.normalized,
+            message: localValidation.message
+          });
+          return;
+        }
+
+        emitUsernameStatus({
+          state: 'checking',
+          normalized: localValidation.normalized,
+          message: localValidation.message
+        });
+
+        RUNTIME.usernameValidationTimer = window.setTimeout(async () => {
+          try {
+            const firestore = getFirestore() || (await waitForFirebaseReady(1500) ? getFirestore() : null);
+            const availability = await getUsernameAvailability({
+              firestore,
+              username: localValidation.normalized,
+              currentUid,
+              policy,
+              profileCollection: PROFILE_COLLECTION,
+              reservationCollection: USERNAME_RESERVATION_COLLECTION
+            });
+
+            if (requestId !== RUNTIME.usernameValidationRequestId) return;
+
+            emitUsernameStatus({
+              state: availability.state,
+              normalized: availability.normalized,
+              message: availability.message
+            });
+          } catch (error) {
+            if (requestId !== RUNTIME.usernameValidationRequestId) return;
+
+            console.error('Username availability check failed:', error);
+            emitUsernameStatus({
+              state: 'unavailable',
+              normalized: localValidation.normalized,
+              message: buildUsernameStatus('unavailable', localValidation.normalized, policy)
+            });
+          }
+        }, USERNAME_VALIDATION_DEBOUNCE_MS);
+      })
+      .catch((error) => {
+        console.error('Username policy load failed during validation:', error);
+      });
+  }
+
+  /* =============================================================================
+     15) PROVIDER AUTH FLOW
   ============================================================================= */
   async function handleProviderSubmit(detail = {}) {
     const provider = normalizeString(detail.provider || '');
@@ -689,6 +670,7 @@
 
     try {
       const { auth } = await ensureReadyOrThrow();
+
       setFlowState({
         resolveProfile: true,
         redirectToProfile: true
@@ -707,7 +689,7 @@
       }
 
       if (!providerInstance) {
-        throw new Error('UNSUPPORTED_PROVIDER');
+        throw createUsernameError('UNSUPPORTED_PROVIDER');
       }
 
       const result = await auth.signInWithPopup(providerInstance);
@@ -726,6 +708,10 @@
           display_name: result?.user?.displayName || providerProfile?.name || ''
         })
       });
+
+      if (result?.user) {
+        await handleSignedInState(result.user);
+      }
     } catch (error) {
       clearFlowState();
       const message = mapFirebaseError(error, `Unable to continue with ${provider} right now.`);
@@ -736,7 +722,7 @@
   }
 
   /* =============================================================================
-     15) EMAIL AND PASSWORD SIGN-IN FLOW
+     16) EMAIL AND PASSWORD SIGN-IN FLOW
   ============================================================================= */
   async function handleSignInSubmit(detail = {}) {
     const form = detail.form instanceof HTMLFormElement
@@ -783,7 +769,10 @@
         redirectToProfile: true
       });
 
-      await auth.signInWithEmailAndPassword(email, password);
+      const credential = await auth.signInWithEmailAndPassword(email, password);
+      if (credential?.user) {
+        await handleSignedInState(credential.user);
+      }
     } catch (error) {
       clearFlowState();
       const message = mapFirebaseError(error, 'Unable to sign in right now.');
@@ -797,11 +786,10 @@
   }
 
   /* =============================================================================
-     16) EMAIL ONBOARDING FLOW
+     17) EMAIL ONBOARDING FLOW
   ============================================================================= */
   function handleEmailOnboardingRequest(detail = {}) {
     const email = normalizeEmail(detail.email || '');
-
     if (!email) return;
 
     patchOnboardingContext({
@@ -818,7 +806,7 @@
   }
 
   /* =============================================================================
-     17) PHONE AUTH FLOW
+     18) PHONE AND PASSWORD RECOVERY FLOW
   ============================================================================= */
   function handlePhoneAuthRequest(detail = {}) {
     const form = document.querySelector('[data-account-phone-auth-form="true"]');
@@ -830,9 +818,6 @@
     console.warn('Phone auth request is not implemented:', detail);
   }
 
-  /* =============================================================================
-     18) FORGOT PASSWORD FLOW
-  ============================================================================= */
   async function handleForgotPasswordSubmit(detail = {}) {
     const form = document.querySelector('[data-account-forgot-password-form="true"]');
     const emailField = form instanceof HTMLFormElement
@@ -889,7 +874,7 @@
     const passwordConfirmField = form instanceof HTMLFormElement
       ? getFieldFromForm(form, '#account-profile-setup-password-confirm')
       : null;
-    const dobField = form instanceof HTMLFormElement
+    const dateOfBirthField = form instanceof HTMLFormElement
       ? getFieldFromForm(form, '#account-profile-setup-date-of-birth')
       : null;
 
@@ -897,11 +882,11 @@
 
     clearFormErrors(form);
 
+    const policy = await loadProfileIdentityPolicy();
     const context = patchOnboardingContext(detail);
     const auth = getFirebaseAuth();
     const currentUser = auth?.currentUser || null;
     const method = normalizeString(detail.method || context.method || getPrimaryProviderId(currentUser));
-
     const values = {
       method,
       auth_provider: method || getPrimaryProviderId(currentUser) || 'email',
@@ -941,7 +926,28 @@
     }
 
     if (!values.date_of_birth) {
-      setFieldError(dobField, 'Enter your date of birth.');
+      setFieldError(dateOfBirthField, 'Enter your date of birth.');
+      return;
+    }
+
+    const localUsernameValidation = validateUsernameLocally(values.username, policy);
+    if (!localUsernameValidation.ok) {
+      emitUsernameStatus({
+        state: localUsernameValidation.state,
+        normalized: localUsernameValidation.normalized,
+        message: localUsernameValidation.message
+      });
+      setFieldError(usernameField, messageForUsernameError(localUsernameValidation.code, policy));
+      return;
+    }
+
+    const eligibility = evaluateEligibility(values.date_of_birth, policy);
+    if (!eligibility.eligible) {
+      const dateOfBirthMessage = eligibility.reason === 'USER_INELIGIBLE'
+        ? `You must be at least ${eligibility.minimumAge} years old to create a Neuroartan account.`
+        : 'Enter a valid date of birth.';
+
+      setFieldError(dateOfBirthField, dateOfBirthMessage);
       return;
     }
 
@@ -971,8 +977,17 @@
     RUNTIME.profileSaveInProgress = true;
 
     try {
-      const { auth: authInstance } = await ensureReadyOrThrow();
+      const { auth: authInstance, firestore } = await ensureReadyOrThrow();
       let user = authInstance.currentUser || null;
+
+      await assertUsernameAvailable({
+        firestore,
+        username: values.username,
+        currentUid: user?.uid || '',
+        policy,
+        profileCollection: PROFILE_COLLECTION,
+        reservationCollection: USERNAME_RESERVATION_COLLECTION
+      });
 
       if (method === 'email' && !user) {
         const credential = await authInstance.createUserWithEmailAndPassword(values.email, values.password);
@@ -980,25 +995,75 @@
       }
 
       if (!user) {
-        throw new Error('AUTHENTICATED_USER_REQUIRED');
+        throw createUsernameError('AUTHENTICATED_USER_REQUIRED');
       }
 
-      const existingProfile = await getProfileByUid(user.uid);
-      await assertUsernameAvailable(values.username, user.uid);
+      await assertUsernameAvailable({
+        firestore,
+        username: values.username,
+        currentUid: user.uid,
+        policy,
+        profileCollection: PROFILE_COLLECTION,
+        reservationCollection: USERNAME_RESERVATION_COLLECTION
+      });
+
       await updateFirebaseDisplayName(user, values.display_name);
-      const savedProfile = await saveProfile(user, values, existingProfile);
+
+      const savedProfile = await reserveUsernameProfile({
+        firestore,
+        firebaseNamespace: window.firebase,
+        user,
+        values: {
+          ...values,
+          eligibility_age_years: eligibility.ageYears,
+          minimum_eligible_age_years: eligibility.minimumAge
+        },
+        policy,
+        profileCollection: PROFILE_COLLECTION,
+        reservationCollection: USERNAME_RESERVATION_COLLECTION
+      });
+
+      emitUsernameStatus({
+        state: 'available',
+        normalized: values.username,
+        message: buildUsernameStatus('available', values.username, policy)
+      });
 
       clearOnboardingContext();
       clearFlowState();
       emitProfileState(user, savedProfile);
       redirectToProfile();
     } catch (error) {
-      if (error instanceof Error && error.message === 'USERNAME_TAKEN') {
-        setFieldError(usernameField, 'That username is already taken.');
+      const usernameCode = normalizeString(error?.code || error?.message || '');
+
+      if (
+        usernameCode === 'USERNAME_INVALID'
+        || usernameCode === 'USERNAME_RESERVED'
+        || usernameCode === 'USERNAME_RESTRICTED'
+        || usernameCode === 'USERNAME_TAKEN'
+        || usernameCode === 'USERNAME_CHANGE_LOCKED'
+        || usernameCode === 'PROFILE_STORE_UNAVAILABLE'
+      ) {
+        const state = usernameCode === 'USERNAME_INVALID'
+          ? 'invalid-format'
+          : usernameCode === 'USERNAME_RESERVED'
+            ? 'reserved'
+            : usernameCode === 'USERNAME_RESTRICTED'
+              ? 'restricted'
+              : 'unavailable';
+
+        emitUsernameStatus({
+          state,
+          normalized: values.username,
+          message: buildUsernameStatus(state, values.username, policy)
+        });
+
+        setFieldError(usernameField, messageForUsernameError(usernameCode, policy));
       } else {
         const message = mapFirebaseError(error, 'Unable to complete profile setup right now.');
         setFieldError(usernameField, message);
       }
+
       console.error('Profile setup error:', error);
     } finally {
       RUNTIME.profileSaveInProgress = false;
@@ -1104,6 +1169,11 @@
       handlePhoneAuthRequest(detail);
     });
 
+    document.addEventListener(USERNAME_CHANGE_EVENT, (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      requestUsernameAvailability(detail);
+    });
+
     document.addEventListener('account:sign-out-request', async () => {
       try {
         const auth = getFirebaseAuth();
@@ -1158,6 +1228,18 @@
      22) INITIALIZATION
   ============================================================================= */
   function boot() {
+    void loadProfileIdentityPolicy()
+      .then((policy) => {
+        emitUsernameStatus({
+          state: 'idle',
+          normalized: '',
+          message: buildUsernameStatus('idle', '', policy)
+        });
+      })
+      .catch((error) => {
+        console.error('Profile identity policy boot load failed:', error);
+      });
+
     bindFirebaseReadyEvents();
     bindAccountEvents();
     bindAuthState();

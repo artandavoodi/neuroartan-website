@@ -24,6 +24,8 @@
 
   const MODULE_ID = 'account-profile-setup-drawer';
   const MODULE_PATH = '/website/docs/assets/js/layers/website/overlays/account/account-profile-setup-drawer.js';
+  const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
+  const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
 
   /* =============================================================================
      02) STATE
@@ -36,7 +38,9 @@
   const state = {
     method: '',
     provider: '',
-    username: ''
+    username: '',
+    usernameStatus: 'idle',
+    usernameIdleMessage: ''
   };
 
   /* =============================================================================
@@ -94,6 +98,31 @@
     return q('[data-account-profile-setup-username-status]', getDrawer() || document);
   }
 
+  function setUsernameStatus(statusKey, text) {
+    const status = getUsernameStatus();
+    if (!status) return;
+
+    state.usernameStatus = statusKey || (state.username ? 'draft' : 'idle');
+    status.dataset.accountProfileSetupUsernameStatus = state.usernameStatus;
+
+    if (typeof text === 'string') {
+      status.textContent = text;
+
+      if (state.usernameStatus === 'idle' && text) {
+        state.usernameIdleMessage = text;
+      }
+
+      return;
+    }
+
+    if (state.usernameStatus === 'idle') {
+      status.textContent = state.usernameIdleMessage || '';
+      return;
+    }
+
+    status.textContent = '';
+  }
+
   function setFieldValue(field, value, options = {}) {
     if (!field) return;
 
@@ -117,6 +146,7 @@
     setFieldValue(getDateOfBirthInput(), detail.date_of_birth || '', { overwrite: false });
     setFieldValue(getGenderSelect(), detail.gender || '', { overwrite: false });
     syncUsernamePreview();
+    emitUsernameChange();
   }
 
   /* =============================================================================
@@ -212,25 +242,63 @@
   function normalizeUsernamePreview(value) {
     const raw = String(value || '').trim().toLowerCase();
     const collapsed = raw
-      .replace(/[^a-z0-9_-]+/g, '-')
+      .replace(/[^a-z0-9]+/g, '-')
       .replace(/-{2,}/g, '-')
-      .replace(/^[-_]+|[-_]+$/g, '');
+      .replace(/^-+|-+$/g, '');
 
     return collapsed;
   }
 
+  function emitUsernameChange() {
+    document.dispatchEvent(new CustomEvent(USERNAME_CHANGE_EVENT, {
+      detail: {
+        source: MODULE_ID,
+        username: state.username,
+        raw_username: getUsernameInput()?.value || '',
+        method: state.method,
+        provider: state.provider
+      }
+    }));
+  }
+
   function syncUsernamePreview() {
     const input = getUsernameInput();
-    const status = getUsernameStatus();
-    if (!status) return;
-
-    const normalized = normalizeUsernamePreview(input?.value || '');
+    const rawValue = input?.value || '';
+    const normalized = normalizeUsernamePreview(rawValue);
     state.username = normalized;
 
-    status.dataset.accountProfileSetupUsernameStatus = normalized ? 'draft' : 'idle';
-    status.textContent = normalized
-      ? `neuroartan.com/${normalized}`
-      : 'neuroartan.com/username';
+    if (input && normalized !== rawValue) {
+      input.value = normalized;
+    }
+
+    setUsernameStatus(normalized ? 'draft' : 'idle');
+  }
+
+  function bindUsernameStatusEvents() {
+    if (document.documentElement.dataset.accountProfileSetupDrawerUsernameStatusBound === 'true') return;
+    document.documentElement.dataset.accountProfileSetupDrawerUsernameStatusBound = 'true';
+
+    document.addEventListener(USERNAME_STATUS_EVENT, (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      const normalized = normalizeUsernamePreview(detail.normalized || detail.username || '');
+
+      if (!normalized && detail.state === 'idle' && detail.message) {
+        state.usernameIdleMessage = detail.message;
+
+        if (state.username) {
+          return;
+        }
+      }
+
+      if (normalized && normalized !== state.username) {
+        return;
+      }
+
+      setUsernameStatus(
+        detail.state || (state.username ? 'draft' : 'idle'),
+        typeof detail.message === 'string' ? detail.message : undefined
+      );
+    });
   }
 
   /* =============================================================================
@@ -247,6 +315,7 @@
 
       applyRouteContext(event?.detail || {});
       syncUsernamePreview();
+      emitUsernameChange();
       scheduleFocusPrimaryField();
     };
 
@@ -267,6 +336,7 @@
       applyRouteContext(detail);
       applyPrefill(detail);
       syncUsernamePreview();
+      emitUsernameChange();
     });
   }
 
@@ -369,7 +439,7 @@
           source: MODULE_ID,
           method: state.method,
           provider: state.provider,
-          username: normalizeUsernamePreview(getUsernameInput()?.value || ''),
+          username: state.username,
           first_name: getFirstNameInput()?.value?.trim() || '',
           last_name: getLastNameInput()?.value?.trim() || '',
           display_name: getDisplayNameInput()?.value?.trim() || '',
@@ -395,6 +465,7 @@
 
       if (target.closest('#account-profile-setup-username')) {
         syncUsernamePreview();
+        emitUsernameChange();
       }
     });
   }
@@ -439,6 +510,7 @@
     bindRouteRequests();
     bindInnerRouteControls();
     bindInputs();
+    bindUsernameStatusEvents();
     bindEscape();
     syncCredentialVisibility();
     syncUsernamePreview();

@@ -39,6 +39,8 @@
   const DOT_SELECTOR = '[data-home-featured-functions-dot]';
   const PREVIOUS_SELECTOR = '[data-home-featured-functions-previous]';
   const NEXT_SELECTOR = '[data-home-featured-functions-next]';
+  const CONTROLS_SELECTOR = '.home-featured-functions-controls';
+  const DOTS_WRAPPER_SELECTOR = '.home-featured-functions-dots';
   const CARD_SELECTOR = '[data-home-featured-functions-card]';
   const READY_CLASS = 'home-featured-functions-ready';
   const INITIALIZED_ATTRIBUTE = 'data-home-featured-functions-initialized';
@@ -55,6 +57,17 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function createI18nKey(value, suffix = '') {
+    const normalized = String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '');
+
+    const base = normalized || 'item';
+    return suffix ? `home_featured_functions_${base}_${suffix}` : `home_featured_functions_${base}`;
   }
 
   async function loadFeaturedFunctionsData() {
@@ -172,10 +185,15 @@
     const sceneId = escapeHtml(item.scene?.id || item.id || '');
     const sceneType = escapeHtml(item.scene?.scene_type || '');
     const hasScene = Boolean(sceneId);
+    const i18nBase = createI18nKey(item.id || item.title || 'item');
+    const labelI18nKey = `${i18nBase}_label`;
+    const titleI18nKey = `${i18nBase}_title`;
+    const descriptionI18nKey = `${i18nBase}_description`;
+    const linkAriaI18nKey = `${i18nBase}_link_aria_label`;
 
     return `
       <article class="home-featured-functions-card" data-home-featured-functions-card data-feature-id="${id}" data-theme="${theme}">
-        <a class="home-featured-functions-card-visual-link" href="${href}" aria-label="${title}">
+        <a class="home-featured-functions-card-visual-link" href="${href}" aria-label="${title}" data-i18n-aria-label-key="${linkAriaI18nKey}">
           <div class="home-featured-functions-card-visual" aria-hidden="true">
             <div class="home-featured-functions-card-scene" data-home-featured-functions-scene data-scene-id="${sceneId}" data-scene-type="${sceneType}"></div>
             ${image
@@ -190,11 +208,11 @@
         <div class="home-featured-functions-card-copy">
           <div class="home-featured-functions-card-summary">
             ${icon ? `<span class="home-featured-functions-card-icon" aria-hidden="true"><img src="${icon}" alt="" loading="lazy"></span>` : ''}
-            <p class="home-featured-functions-card-label">${label}</p>
+            <p class="home-featured-functions-card-label" data-i18n-key="${labelI18nKey}">${label}</p>
           </div>
           <a class="home-featured-functions-card-text-link" href="${href}" aria-label="${title}">
-            <h3 class="home-featured-functions-card-title">${title}</h3>
-            <p class="home-featured-functions-card-description">${description}</p>
+            <h3 class="home-featured-functions-card-title" data-i18n-key="${titleI18nKey}">${title}</h3>
+            <p class="home-featured-functions-card-description" data-i18n-key="${descriptionI18nKey}">${description}</p>
           </a>
         </div>
       </article>
@@ -213,20 +231,34 @@
     const sectionData = data.section || {};
     const items = sortItems(Array.isArray(data.items) ? data.items : []);
 
-    if (title) title.textContent = sectionData.title || '';
-    if (description) description.textContent = sectionData.description || '';
+    if (title) {
+      title.textContent = sectionData.title || '';
+      title.setAttribute('data-i18n-key', 'home_featured_functions_section_title');
+    }
+
+    if (description) {
+      description.textContent = sectionData.description || '';
+      description.setAttribute('data-i18n-key', 'home_featured_functions_section_description');
+    }
+
     if (track) track.innerHTML = items.map(createCardMarkup).join('');
 
     if (dots) {
       dots.innerHTML = items
-        .map((item, index) => `
+        .map((item, index) => {
+          const dotLabel = `Go to ${escapeHtml(item.title || `slide ${index + 1}`)}`;
+          const dotI18nKey = `${createI18nKey(item.id || item.title || `slide_${index + 1}`)}_dot_aria_label`;
+
+          return `
           <button
             type="button"
             class="home-featured-functions-dot"
             data-home-featured-functions-dot
             data-slide-index="${index}"
-            aria-label="Go to ${escapeHtml(item.title || `slide ${index + 1}`)}"></button>
-        `)
+            aria-label="${dotLabel}"
+            data-i18n-aria-label-key="${dotI18nKey}"></button>
+        `;
+        })
         .join('');
     }
 
@@ -236,6 +268,50 @@
       section: sectionData,
       items
     };
+  }
+
+  function resolveInterfaceDirection() {
+    const rootDir = document.documentElement.getAttribute('dir');
+    const bodyDir = document.body?.getAttribute('dir');
+    const computedDir = window.getComputedStyle(document.documentElement).direction;
+    const normalized = String(rootDir || bodyDir || computedDir || 'ltr').toLowerCase();
+    return normalized === 'rtl' ? 'rtl' : 'ltr';
+  }
+
+  function enforcePhysicalLTR(section) {
+    if (!section) {
+      return;
+    }
+
+    const viewport = section.querySelector(VIEWPORT_SELECTOR);
+    const track = section.querySelector(TRACK_SELECTOR);
+    const controls = section.querySelector(CONTROLS_SELECTOR);
+    const dots = section.querySelector(DOTS_WRAPPER_SELECTOR);
+    const previousButton = section.querySelector(PREVIOUS_SELECTOR);
+    const nextButton = section.querySelector(NEXT_SELECTOR);
+    const uiDirection = resolveInterfaceDirection();
+
+    section.setAttribute('dir', 'ltr');
+    section.style.direction = 'ltr';
+    section.setAttribute('data-home-featured-functions-ui-direction', uiDirection);
+
+    [viewport, track].forEach((node) => {
+      if (!node) {
+        return;
+      }
+
+      node.setAttribute('dir', 'ltr');
+      node.style.direction = 'ltr';
+    });
+
+    [controls, dots, previousButton, nextButton].forEach((node) => {
+      if (!node) {
+        return;
+      }
+
+      node.setAttribute('dir', uiDirection);
+      node.style.direction = uiDirection;
+    });
   }
 
   /* ==========================================================================
@@ -438,6 +514,23 @@
     scheduleAutoplay(state);
   }
 
+  function watchDirectionChanges(section) {
+    if (!section || section.__featuredFunctionsDirectionObserver) {
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      enforcePhysicalLTR(section);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['dir', 'lang']
+    });
+
+    section.__featuredFunctionsDirectionObserver = observer;
+  }
+
   /* ==========================================================================
      09) INITIALIZATION BOOTSTRAP
      ========================================================================== */
@@ -502,6 +595,8 @@
         }
       }));
       const interactionState = createInteractionState(section, renderedData);
+      enforcePhysicalLTR(section);
+      watchDirectionChanges(section);
       bindControls(interactionState);
       markInitialized(section);
     } catch (error) {
@@ -536,6 +631,10 @@
 
       if (section) {
         section.style.removeProperty('--home-featured-functions-rail-offset');
+        if (section.__featuredFunctionsDirectionObserver) {
+          section.__featuredFunctionsDirectionObserver.disconnect();
+          section.__featuredFunctionsDirectionObserver = null;
+        }
       }
     }, { once: true });
   }

@@ -25,5 +25,4 @@ network_access = false
 [workspace]
 root = "/Users/artan/Documents/Neuroartan/website"
 
-[instructions]
-summary = "Operate only inside the Neuroartan website repository. Audit first. Preserve modular ownership. Edit the true owner file only. Keep HTML, CSS, JS, fragments, collections, and JSON responsibilities separate. No overlays, no hacks, no duplicate ownership, no hardcoded drift from structured data. Prefer root-cause corrections, minimal diffs, and reversible edits."
+instructions = "Operate only inside the Neuroartan website repository. Audit first. Preserve modular ownership. Edit the true owner file only. Keep HTML, CSS, JS, fragments, collections, and JSON responsibilities separate. No overlays, no hacks, no duplicate ownership, no hardcoded drift from structured data. Prefer root-cause corrections, minimal diffs, and reversible edits."

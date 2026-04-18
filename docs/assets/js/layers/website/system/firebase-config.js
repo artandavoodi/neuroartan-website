@@ -3,9 +3,12 @@
    01) MODULE IDENTITY
    02) MODULE STATE
    03) FIREBASE CONFIGURATION
-   04) FIREBASE AVAILABILITY HELPERS
-   05) FIREBASE INITIALIZATION
-   06) END OF FILE
+   04) FIREBASE SDK ASSETS
+   05) FIREBASE AVAILABILITY HELPERS
+   06) SCRIPT LOAD HELPERS
+   07) FIREBASE READINESS EVENTS
+   08) FIREBASE INITIALIZATION
+   09) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -19,9 +22,10 @@
   /* =============================================================================
      02) MODULE STATE
   ============================================================================= */
-  let bootBound = false;
   let readyWatchBound = false;
   let initialized = false;
+  let sdkLoadPromise = null;
+  let bootPromise = null;
 
   /* =============================================================================
      03) FIREBASE CONFIGURATION
@@ -37,16 +41,107 @@
   };
 
   /* =============================================================================
-     04) FIREBASE AVAILABILITY HELPERS
+     04) FIREBASE SDK ASSETS
+  ============================================================================= */
+  const FIREBASE_SDK_VERSION = '9.23.0';
+  const FIREBASE_SDK_SOURCES = [
+    `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app-compat.js`,
+    `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-auth-compat.js`,
+    `https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore-compat.js`
+  ];
+
+  /* =============================================================================
+     05) FIREBASE AVAILABILITY HELPERS
   ============================================================================= */
   function hasFirebaseRuntime() {
     return !!(window.firebase && Array.isArray(window.firebase.apps));
   }
 
+  function hasFirebaseAuthRuntime() {
+    return !!(hasFirebaseRuntime() && typeof window.firebase.auth === 'function');
+  }
+
+  function hasFirebaseFirestoreRuntime() {
+    return !!(hasFirebaseRuntime() && typeof window.firebase.firestore === 'function');
+  }
+
+  function hasRequiredFirebaseRuntime() {
+    return hasFirebaseAuthRuntime() && hasFirebaseFirestoreRuntime();
+  }
+
+  /* =============================================================================
+     06) SCRIPT LOAD HELPERS
+  ============================================================================= */
+  function findExistingScript(src) {
+    const resolved = new URL(src, window.location.origin).href;
+
+    return Array.from(document.querySelectorAll('script[src]')).find((script) => {
+      const currentSrc = script.getAttribute('src') || '';
+
+      try {
+        return new URL(currentSrc, window.location.origin).href === resolved;
+      } catch (_) {
+        return currentSrc === src;
+      }
+    }) || null;
+  }
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const existing = findExistingScript(src);
+      const onLoad = () => resolve();
+      const onError = () => reject(new Error(`Failed to load Firebase SDK: ${src}`));
+
+      if (existing) {
+        if (existing.dataset.scriptLoaded === 'true') {
+          resolve();
+          return;
+        }
+
+        existing.addEventListener('load', () => {
+          existing.dataset.scriptLoaded = 'true';
+          onLoad();
+        }, { once: true });
+        existing.addEventListener('error', onError, { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.defer = true;
+      script.addEventListener('load', () => {
+        script.dataset.scriptLoaded = 'true';
+        onLoad();
+      }, { once: true });
+      script.addEventListener('error', onError, { once: true });
+      document.head.appendChild(script);
+    });
+  }
+
+  async function ensureFirebaseSdk() {
+    if (hasRequiredFirebaseRuntime()) return true;
+
+    if (!sdkLoadPromise) {
+      sdkLoadPromise = Promise.all(FIREBASE_SDK_SOURCES.map((src) => loadScriptOnce(src)))
+        .catch((error) => {
+          sdkLoadPromise = null;
+          throw error;
+        });
+    }
+
+    await sdkLoadPromise;
+    return hasRequiredFirebaseRuntime();
+  }
+
+  /* =============================================================================
+     07) FIREBASE READINESS EVENTS
+  ============================================================================= */
   function dispatchFirebaseReady() {
     document.dispatchEvent(new CustomEvent('neuroartan:firebase-ready', {
       detail: {
-        appName: '[DEFAULT]'
+        appName: '[DEFAULT]',
+        hasAuth: hasFirebaseAuthRuntime(),
+        hasFirestore: hasFirebaseFirestoreRuntime()
       }
     }));
   }
@@ -56,42 +151,59 @@
     readyWatchBound = true;
 
     window.addEventListener('load', () => {
-      boot();
+      void boot();
     }, { once: true });
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState !== 'visible') return;
-      boot();
+      void boot();
     });
   }
 
   /* =============================================================================
-     05) FIREBASE INITIALIZATION
+     08) FIREBASE INITIALIZATION
   ============================================================================= */
-  function boot() {
+  async function boot() {
     if (initialized) return;
     if (typeof window === 'undefined') return;
 
     bindFirebaseReadyWatch();
-    if (!hasFirebaseRuntime()) return;
 
-    bootBound = true;
-
-    if (!window.firebase.apps.length) {
-      window.firebase.initializeApp(firebaseConfig);
+    if (bootPromise) {
+      await bootPromise;
+      return;
     }
 
-    initialized = true;
-    dispatchFirebaseReady();
+    bootPromise = (async () => {
+      const sdkReady = await ensureFirebaseSdk();
+      if (!sdkReady || !hasFirebaseRuntime()) return;
+
+      if (!window.firebase.apps.length) {
+        window.firebase.initializeApp(firebaseConfig);
+      }
+
+      initialized = true;
+      dispatchFirebaseReady();
+    })()
+      .catch((error) => {
+        console.error('Firebase bootstrap failed:', error);
+      })
+      .finally(() => {
+        bootPromise = null;
+      });
+
+    await bootPromise;
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      void boot();
+    }, { once: true });
   } else {
-    boot();
+    void boot();
   }
 })();
 
 /* =============================================================================
-   06) END OF FILE
+   09) END OF FILE
 ============================================================================= */

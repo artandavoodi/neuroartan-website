@@ -45,6 +45,10 @@
     return document.querySelector('[data-account-email-auth-form="true"]');
   }
 
+  function getEmailInput() {
+    return document.getElementById('account-email-auth-email');
+  }
+
   /* =============================================================================
      04) STATE VISIBILITY HELPERS
   ============================================================================= */
@@ -93,11 +97,24 @@
   }
 
   function requestProfileSetupView() {
+    const emailInput = getEmailInput();
+    const email = emailInput?.value?.trim() || '';
+
+    if (!email) {
+      emailInput?.setCustomValidity('Enter your email address.');
+      emailInput?.reportValidity();
+      return;
+    }
+
+    emailInput?.setCustomValidity('');
+
     document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
       detail: {
         source: 'account-email-auth-drawer',
         action: 'profile-setup',
-        method: 'email'
+        method: 'email',
+        provider: 'email',
+        email
       }
     }));
 
@@ -105,7 +122,10 @@
       detail: {
         source: 'account-email-auth-drawer',
         state: 'guest',
-        surface: 'profile-setup'
+        surface: 'profile-setup',
+        method: 'email',
+        provider: 'email',
+        email
       }
     }));
   }

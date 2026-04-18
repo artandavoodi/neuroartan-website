@@ -5,15 +5,15 @@
    03) FIREBASE STATE
    04) PROFILE ROUTES
    05) ROUTE HELPERS
-   06) REDIRECT HELPERS
-   07) DOM TEXT HELPERS
-   08) DOM IMAGE HELPERS
+   06) DOM TEXT HELPERS
+   07) DOM IMAGE HELPERS
+   08) PROFILE SURFACE RESOLUTION
    09) PROFILE SURFACE — SIGNED IN
    10) PROFILE SURFACE — SIGNED OUT
    11) AUTH STATE HANDLERS
    12) AUTH BINDING
-   13) SIGN OUT FLOW
-   14) GOOGLE SIGN-IN FLOW
+   13) ACCOUNT REQUEST HELPERS
+   14) PROFILE STATE EVENTS
    15) EVENT REBINDING
    16) INITIALIZATION
    17) END OF FILE
@@ -27,242 +27,255 @@
 (() => {
   'use strict';
 
-/* =============================================================================
-   02) MODULE STATE
-============================================================================= */
-let bootBound = false;
-let authBound = false;
-let firebaseReadyEventsBound = false;
+  /* =============================================================================
+     02) MODULE STATE
+  ============================================================================= */
+  let bootBound = false;
+  let authBound = false;
+  let firebaseReadyEventsBound = false;
+  let profileStateEventsBound = false;
 
-/* =============================================================================
-   03) FIREBASE STATE
-============================================================================= */
-function getFirebaseAuth() {
-  const firebaseReady = typeof window !== 'undefined' && typeof window.firebase !== 'undefined';
-  if (!firebaseReady || typeof window.firebase.auth !== 'function') return null;
+  /* =============================================================================
+     03) FIREBASE STATE
+  ============================================================================= */
+  function getFirebaseAuth() {
+    const firebaseReady = typeof window !== 'undefined' && typeof window.firebase !== 'undefined';
+    if (!firebaseReady || typeof window.firebase.auth !== 'function') return null;
 
-  try {
-    return window.firebase.auth();
-  } catch (_) {
-    return null;
+    try {
+      return window.firebase.auth();
+    } catch (_) {
+      return null;
+    }
   }
-}
 
-/* =============================================================================
-   04) PROFILE ROUTES
-============================================================================= */
-const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
-const PROFILE_ROUTE = '/profile.html';
-const INDEX_ROUTE = '/';
-const CORE_NEUROARTAN_LOGO = 'assets/icons/core/identity/brand/neuroartan/logo-plain.svg';
+  /* =============================================================================
+     04) PROFILE ROUTES
+  ============================================================================= */
+  const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
+  const CORE_NEUROARTAN_LOGO = 'assets/icons/core/identity/brand/neuroartan/logo-plain.svg';
 
-/* =============================================================================
-   05) ROUTE HELPERS
-============================================================================= */
-function isProfileRoute(pathname) {
-  return PROFILE_ROUTE_MATCHERS.some((route) => pathname.endsWith(route));
-}
+  /* =============================================================================
+     05) ROUTE HELPERS
+  ============================================================================= */
+  function isProfileRoute(pathname) {
+    return PROFILE_ROUTE_MATCHERS.some((route) => pathname.endsWith(route));
+  }
 
-/* =============================================================================
-   06) REDIRECT HELPERS
-============================================================================= */
-function redirectToIndex() {
-  window.location.href = INDEX_ROUTE;
-}
+  /* =============================================================================
+     06) DOM TEXT HELPERS
+  ============================================================================= */
+  function setText(id, value) {
+    const element = document.getElementById(id);
+    if (!element) return;
+    element.textContent = value;
+  }
 
-function redirectToProfile() {
-  window.location.href = PROFILE_ROUTE;
-}
+  /* =============================================================================
+     07) DOM IMAGE HELPERS
+  ============================================================================= */
+  function setImage(id, src, alt) {
+    const element = document.getElementById(id);
+    if (!element || element.tagName !== 'IMG') return;
+    element.src = src;
+    element.alt = alt;
+  }
 
-/* =============================================================================
-   07) DOM TEXT HELPERS
-============================================================================= */
-function setText(id, value) {
-  const element = document.getElementById(id);
-  if (!element) return;
-  element.textContent = value;
-}
+  /* =============================================================================
+     08) PROFILE SURFACE RESOLUTION
+  ============================================================================= */
+  function resolveDisplayName(user, profile) {
+    return profile?.display_name || user?.displayName || 'Neuroartan User';
+  }
 
-/* =============================================================================
-   08) DOM IMAGE HELPERS
-============================================================================= */
-function setImage(id, src, alt) {
-  const element = document.getElementById(id);
-  if (!element || element.tagName !== 'IMG') return;
-  element.src = src;
-  element.alt = alt;
-}
+  function resolveEmail(user, profile) {
+    return profile?.email || user?.email || 'No email available';
+  }
 
-/* =============================================================================
-   09) PROFILE SURFACE — SIGNED IN
-============================================================================= */
-function updateProfileSurface(user) {
-  if (!user) return;
+  function resolvePhotoUrl(user, profile) {
+    return profile?.photo_url || user?.photoURL || CORE_NEUROARTAN_LOGO;
+  }
 
-  const displayName = user.displayName || 'Neuroartan User';
-  const email = user.email || 'No email available';
-  const photoURL = user.photoURL || CORE_NEUROARTAN_LOGO;
+  function resolveSignedInCopy(profileComplete) {
+    if (profileComplete === false) {
+      return 'Your account is active, but profile completion is still required before the full Neuroartan profile layer is considered complete.';
+    }
 
-  setText('profile-label', 'Profile');
-  setText('profile-name', displayName);
-  setText('profile-email', email);
-  setText(
-    'profile-copy',
-    'Your unified Neuroartan identity is active across the current platform surfaces available to your access level.'
-  );
-  setImage('profile-avatar-image', photoURL, displayName);
+    return 'Your unified Neuroartan identity is active across the current platform surfaces available to your access level.';
+  }
 
-  const guestOnly = document.querySelectorAll('[data-auth-state="guest"]');
-  const userOnly = document.querySelectorAll('[data-auth-state="user"]');
+  /* =============================================================================
+     09) PROFILE SURFACE — SIGNED IN
+  ============================================================================= */
+  function updateProfileSurface(user, profile = null, profileComplete = true) {
+    if (!user) return;
 
-  guestOnly.forEach((element) => {
-    element.hidden = true;
-  });
+    const displayName = resolveDisplayName(user, profile);
+    const email = resolveEmail(user, profile);
+    const photoURL = resolvePhotoUrl(user, profile);
 
-  userOnly.forEach((element) => {
-    element.hidden = false;
-  });
-}
+    setText('profile-label', 'Profile');
+    setText('profile-name', displayName);
+    setText('profile-email', email);
+    setText('profile-copy', resolveSignedInCopy(profileComplete));
+    setImage('profile-avatar-image', photoURL, displayName);
 
-/* =============================================================================
-   10) PROFILE SURFACE — SIGNED OUT
-============================================================================= */
-function updateSignedOutSurface() {
-  if (!isProfileRoute(window.location.pathname)) return;
+    const guestOnly = document.querySelectorAll('[data-auth-state="guest"]');
+    const userOnly = document.querySelectorAll('[data-auth-state="user"]');
 
-  setText('profile-label', 'Account Access');
-  setText('profile-name', 'Sign in to Neuroartan');
-  setText('profile-email', 'Use your unified account to continue.');
-  setText(
-    'profile-copy',
-    'This profile surface is being upgraded into the unified Neuroartan account layer for website, Office, ICOS, Investor, and Jobs.'
-  );
-  setImage('profile-avatar-image', CORE_NEUROARTAN_LOGO, 'Neuroartan');
+    guestOnly.forEach((element) => {
+      element.hidden = true;
+    });
 
-  const guestOnly = document.querySelectorAll('[data-auth-state="guest"]');
-  const userOnly = document.querySelectorAll('[data-auth-state="user"]');
+    userOnly.forEach((element) => {
+      element.hidden = false;
+    });
+  }
 
-  guestOnly.forEach((element) => {
-    element.hidden = false;
-  });
+  /* =============================================================================
+     10) PROFILE SURFACE — SIGNED OUT
+  ============================================================================= */
+  function updateSignedOutSurface() {
+    if (!isProfileRoute(window.location.pathname)) return;
 
-  userOnly.forEach((element) => {
-    element.hidden = true;
-  });
-}
+    setText('profile-label', 'Account Access');
+    setText('profile-name', 'Sign in to Neuroartan');
+    setText('profile-email', 'Use your unified account to continue.');
+    setText(
+      'profile-copy',
+      'This profile surface is being upgraded into the unified Neuroartan account layer for website, Office, ICOS, Investor, and Jobs.'
+    );
+    setImage('profile-avatar-image', CORE_NEUROARTAN_LOGO, 'Neuroartan');
 
-/* =============================================================================
-   11) AUTH STATE HANDLERS
-============================================================================= */
-function handleSignedOutState() {
-  console.log('No user signed in');
-  updateSignedOutSurface();
-}
+    const guestOnly = document.querySelectorAll('[data-auth-state="guest"]');
+    const userOnly = document.querySelectorAll('[data-auth-state="user"]');
 
-function handleSignedInState(user) {
-  console.log('User signed in:', user);
-  updateProfileSurface(user);
-}
+    guestOnly.forEach((element) => {
+      element.hidden = false;
+    });
 
-/* =============================================================================
-   12) AUTH BINDING
-============================================================================= */
-function bindAuthState() {
-  if (authBound) return;
+    userOnly.forEach((element) => {
+      element.hidden = true;
+    });
+  }
 
-  const authInstance = getFirebaseAuth();
-  if (!authInstance) {
-    console.warn('Firebase auth is not available.');
+  /* =============================================================================
+     11) AUTH STATE HANDLERS
+  ============================================================================= */
+  function handleSignedOutState() {
     updateSignedOutSurface();
-    return;
   }
 
-  authBound = true;
+  function handleSignedInState(user) {
+    updateProfileSurface(user);
+  }
 
-  authInstance.onAuthStateChanged((user) => {
-    if (user) {
-      handleSignedInState(user);
+  /* =============================================================================
+     12) AUTH BINDING
+  ============================================================================= */
+  function bindAuthState() {
+    if (authBound) return;
+
+    const authInstance = getFirebaseAuth();
+    if (!authInstance) {
+      updateSignedOutSurface();
       return;
     }
 
-    handleSignedOutState();
-  });
-}
+    authBound = true;
 
-/* =============================================================================
-   13) SIGN OUT FLOW
-============================================================================= */
-function logout() {
-  const authInstance = getFirebaseAuth();
-  if (!authInstance) return;
+    authInstance.onAuthStateChanged((user) => {
+      if (user) {
+        handleSignedInState(user);
+        return;
+      }
 
-  authInstance
-    .signOut()
-    .then(() => {
-      console.log('User logged out');
-      redirectToIndex();
-    })
-    .catch((error) => {
-      console.error('Logout error:', error);
+      handleSignedOutState();
     });
-}
+  }
 
-/* =============================================================================
-   14) GOOGLE SIGN-IN FLOW
-============================================================================= */
-function loginWithGoogle() {
-  const authInstance = getFirebaseAuth();
-  if (!authInstance || !window.firebase?.auth?.GoogleAuthProvider) return;
+  /* =============================================================================
+     13) ACCOUNT REQUEST HELPERS
+  ============================================================================= */
+  function requestLogout() {
+    document.dispatchEvent(new CustomEvent('account:sign-out-request', {
+      detail: {
+        source: 'profile-shell'
+      }
+    }));
+  }
 
-  const provider = new window.firebase.auth.GoogleAuthProvider();
+  function requestGoogleLogin() {
+    document.dispatchEvent(new CustomEvent('account:provider-submit', {
+      detail: {
+        source: 'profile-shell',
+        provider: 'google'
+      }
+    }));
+  }
 
-  authInstance
-    .signInWithPopup(provider)
-    .then((result) => {
-      console.log('Google login success:', result.user);
-      redirectToProfile();
-    })
-    .catch((error) => {
-      console.error('Login error:', error);
+  /* =============================================================================
+     14) PROFILE STATE EVENTS
+  ============================================================================= */
+  function bindProfileStateEvents() {
+    if (profileStateEventsBound) return;
+    profileStateEventsBound = true;
+
+    document.addEventListener('account:profile-state-changed', (event) => {
+      const detail = event instanceof CustomEvent && event.detail
+        ? event.detail
+        : {};
+
+      if (!detail.user) {
+        updateSignedOutSurface();
+        return;
+      }
+
+      updateProfileSurface(detail.user, detail.profile || null, detail.profileComplete !== false);
     });
-}
 
-/* =============================================================================
-   15) EVENT REBINDING
-============================================================================= */
-function bindFirebaseReadyEvents() {
-  if (firebaseReadyEventsBound) return;
-  firebaseReadyEventsBound = true;
+    document.addEventListener('account:profile-signed-out', () => {
+      updateSignedOutSurface();
+    });
+  }
 
-  document.addEventListener('neuroartan:firebase-ready', () => {
-    authBound = false;
+  /* =============================================================================
+     15) EVENT REBINDING
+  ============================================================================= */
+  function bindFirebaseReadyEvents() {
+    if (firebaseReadyEventsBound) return;
+    firebaseReadyEventsBound = true;
+
+    document.addEventListener('neuroartan:firebase-ready', () => {
+      authBound = false;
+      bindAuthState();
+    });
+
+    window.addEventListener('load', () => {
+      authBound = false;
+      bindAuthState();
+    }, { once: true });
+  }
+
+  /* =============================================================================
+     16) INITIALIZATION
+  ============================================================================= */
+  function boot() {
+    if (bootBound) return;
+    bootBound = true;
+
+    bindFirebaseReadyEvents();
+    bindProfileStateEvents();
     bindAuthState();
-  });
+    window.logout = requestLogout;
+    window.loginWithGoogle = requestGoogleLogin;
+  }
 
-  window.addEventListener('load', () => {
-    authBound = false;
-    bindAuthState();
-  }, { once: true });
-}
-
-/* =============================================================================
-   16) INITIALIZATION
-============================================================================= */
-function boot() {
-  if (bootBound) return;
-  bootBound = true;
-
-  bindFirebaseReadyEvents();
-  bindAuthState();
-  window.logout = logout;
-  window.loginWithGoogle = loginWithGoogle;
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot, { once: true });
-} else {
-  boot();
-}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
 })();
 
 /* =============================================================================

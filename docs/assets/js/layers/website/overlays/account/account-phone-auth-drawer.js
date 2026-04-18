@@ -41,6 +41,14 @@
     return document.querySelector('[data-include="account-phone-auth-drawer"]');
   }
 
+  function getForm() {
+    return document.querySelector('[data-account-phone-auth-form="true"]');
+  }
+
+  function getPhoneInput() {
+    return document.getElementById('account-phone-auth-number');
+  }
+
   /* =============================================================================
      04) STATE VISIBILITY HELPERS
   ============================================================================= */
@@ -88,12 +96,22 @@
     }));
   }
 
-  function requestProfileSetupView() {
-    document.dispatchEvent(new CustomEvent('account-layer:view-request', {
+  function requestPhoneAuthSubmit() {
+    const phoneInput = getPhoneInput();
+    const phone = phoneInput?.value?.trim() || '';
+
+    if (!phone) {
+      phoneInput?.setCustomValidity('Enter your phone number.');
+      phoneInput?.reportValidity();
+      return;
+    }
+
+    phoneInput?.setCustomValidity('');
+
+    document.dispatchEvent(new CustomEvent('account:phone-auth-submit-request', {
       detail: {
         source: 'account-phone-auth-drawer',
-        action: 'profile-setup',
-        method: 'phone'
+        phone
       }
     }));
   }
@@ -214,11 +232,11 @@
     document.addEventListener('submit', (event) => {
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
-      if (form !== document.querySelector('[data-account-phone-auth-form="true"]')) return;
+      if (form !== getForm()) return;
 
       event.preventDefault();
       event.stopPropagation();
-      requestProfileSetupView();
+      requestPhoneAuthSubmit();
     });
   }
 

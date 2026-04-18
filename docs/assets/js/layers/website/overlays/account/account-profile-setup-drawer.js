@@ -94,6 +94,31 @@
     return q('[data-account-profile-setup-username-status]', getDrawer() || document);
   }
 
+  function setFieldValue(field, value, options = {}) {
+    if (!field) return;
+
+    const normalizedValue = value == null ? '' : String(value);
+    const shouldOverwrite = options.overwrite === true;
+
+    if (!shouldOverwrite && String(field.value || '').trim()) {
+      return;
+    }
+
+    field.value = normalizedValue;
+  }
+
+  function applyPrefill(detail = {}) {
+    setFieldValue(getUsernameInput(), detail.username || '', { overwrite: false });
+    setFieldValue(getFirstNameInput(), detail.first_name || '', { overwrite: false });
+    setFieldValue(getLastNameInput(), detail.last_name || '', { overwrite: false });
+    setFieldValue(getDisplayNameInput(), detail.display_name || '', { overwrite: false });
+    setFieldValue(getPasswordInput(), detail.password || '', { overwrite: false });
+    setFieldValue(getPasswordConfirmInput(), detail.password_confirm || detail.password || '', { overwrite: false });
+    setFieldValue(getDateOfBirthInput(), detail.date_of_birth || '', { overwrite: false });
+    setFieldValue(getGenderSelect(), detail.gender || '', { overwrite: false });
+    syncUsernamePreview();
+  }
+
   /* =============================================================================
      04) CONTEXT HELPERS
   ============================================================================= */
@@ -230,24 +255,18 @@
     document.addEventListener('account-layer:route-request', handleProfileSetupOpenRequest);
 
     document.addEventListener('account:profile-setup-open-request', (event) => {
-      applyRouteContext(event?.detail || {});
+      const detail = event?.detail || {};
+      applyRouteContext(detail);
+      applyPrefill(detail);
       syncUsernamePreview();
       scheduleFocusPrimaryField();
     });
 
-    document.addEventListener('account:provider-submit', (event) => {
-      const provider = normalizeMethod(event?.detail?.provider || '');
-      if (!PROVIDER_METHODS.has(provider)) return;
-
-      applyRouteContext({ method: provider, provider });
-      document.dispatchEvent(new CustomEvent('account-layer:view-request', {
-        detail: {
-          source: MODULE_ID,
-          action: ROUTE_NAME,
-          method: provider,
-          provider
-        }
-      }));
+    document.addEventListener('account:profile-setup-prefill', (event) => {
+      const detail = event?.detail || {};
+      applyRouteContext(detail);
+      applyPrefill(detail);
+      syncUsernamePreview();
     });
   }
 

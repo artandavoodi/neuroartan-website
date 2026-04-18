@@ -40,6 +40,22 @@
     return document.querySelector('[data-include="account-sign-up-drawer"]');
   }
 
+  function getForm() {
+    return document.querySelector('[data-account-sign-up-form="true"]');
+  }
+
+  function getNameInput() {
+    return document.getElementById('account-sign-up-name');
+  }
+
+  function getEmailInput() {
+    return document.getElementById('account-sign-up-email');
+  }
+
+  function getPasswordInput() {
+    return document.getElementById('account-sign-up-password');
+  }
+
   /* =============================================================================
      04) STATE VISIBILITY HELPERS
   ============================================================================= */
@@ -216,6 +232,77 @@
   }
 
   /* =============================================================================
+     09B) FORM SUBMIT BINDING
+  ============================================================================= */
+  function bindFormSubmit() {
+    if (document.documentElement.dataset.accountSignUpDrawerFormBound === 'true') return;
+    document.documentElement.dataset.accountSignUpDrawerFormBound = 'true';
+
+    document.addEventListener('submit', (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (form !== getForm()) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const nameInput = getNameInput();
+      const emailInput = getEmailInput();
+      const passwordInput = getPasswordInput();
+      const name = nameInput?.value?.trim() || '';
+      const email = emailInput?.value?.trim() || '';
+      const password = passwordInput?.value || '';
+
+      if (!name) {
+        nameInput?.setCustomValidity('Enter your name.');
+        nameInput?.reportValidity();
+        return;
+      }
+
+      if (!email) {
+        emailInput?.setCustomValidity('Enter your email address.');
+        emailInput?.reportValidity();
+        return;
+      }
+
+      if (!password) {
+        passwordInput?.setCustomValidity('Create a password.');
+        passwordInput?.reportValidity();
+        return;
+      }
+
+      nameInput?.setCustomValidity('');
+      emailInput?.setCustomValidity('');
+      passwordInput?.setCustomValidity('');
+
+      document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
+        detail: {
+          source: 'account-sign-up-drawer',
+          action: 'profile-setup',
+          method: 'email',
+          provider: 'email',
+          name,
+          display_name: name,
+          email,
+          password,
+          password_confirm: password
+        }
+      }));
+
+      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+        detail: {
+          source: 'account-sign-up-drawer',
+          state: 'guest',
+          surface: 'profile-setup',
+          method: 'email',
+          provider: 'email',
+          email
+        }
+      }));
+    });
+  }
+
+  /* =============================================================================
      10) ESCAPE BINDING
   ============================================================================= */
   function bindEscape() {
@@ -269,6 +356,7 @@
     bindGlobalClicks();
     bindRouteRequests();
     bindInnerRouteControls();
+    bindFormSubmit();
     bindEscape();
   }
 

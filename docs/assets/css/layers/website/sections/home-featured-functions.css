@@ -67,8 +67,8 @@
   --home-featured-functions-card-summary-gap: 52px;
   --home-featured-functions-card-summary-width: clamp(12rem, 18vw, 14rem);
 
-  --home-featured-functions-card-description-gap: var(--spacing-4xl);
-  --home-featured-functions-card-title-gap: var(--home-featured-functions-card-description-gap);
+  --home-featured-functions-card-description-gap: var(--spacing-md);
+  --home-featured-functions-card-title-gap: 0;
   --home-featured-functions-card-label-size: clamp(3.6rem, 5.8vw, 5.8rem);
   --home-featured-functions-card-label-line-height: 0.9;
   --home-featured-functions-card-label-weight: 100;
@@ -343,8 +343,7 @@ body.dark-mode .home-featured-functions{
 /* =============================================================================
    08) CARD LINKS
 ============================================================================= */
-.home-featured-functions-card-visual-link,
-.home-featured-functions-card-text-link{
+.home-featured-functions-card-visual-link{
   display: block;
   text-decoration: none;
   color: inherit;
@@ -372,7 +371,7 @@ body.dark-mode .home-featured-functions{
 .home-featured-functions-card-text-link{
   display: grid;
   align-content: center;
-  gap: var(--home-featured-functions-card-title-gap);
+  gap: 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -414,7 +413,7 @@ body.dark-mode .home-featured-functions-card-title{
 }
 
 .home-featured-functions-card-description{
-  margin: 0;
+  margin: var(--home-featured-functions-card-description-gap) 0 0 0;
   max-width: 100%;
   font-size: var(--home-featured-functions-card-description-size);
   line-height: var(--home-featured-functions-card-description-line-height);

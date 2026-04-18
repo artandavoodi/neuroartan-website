@@ -193,8 +193,8 @@
             <p class="home-featured-functions-card-label">${label}</p>
           </div>
           <a class="home-featured-functions-card-text-link" href="${href}" aria-label="${title}">
-            <h3 class="home-title home-featured-functions-card-title">${title}</h3>
-            <p class="home-text home-featured-functions-card-description">${description}</p>
+            <h3 class="home-featured-functions-card-title">${title}</h3>
+            <p class="home-featured-functions-card-description">${description}</p>
           </a>
         </div>
       </article>

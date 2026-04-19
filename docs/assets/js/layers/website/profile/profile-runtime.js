@@ -21,6 +21,7 @@ import {
   buildPublicProfilePath,
   buildPublicProfileUrl,
   loadProfileIdentityPolicy,
+  normalizeGenderValue,
   normalizeString,
   normalizeUsername
 } from '../system/account-profile-identity.js';
@@ -41,7 +42,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_RUNTIME__ ||= {
    03) CONSTANTS
    ============================================================================= */
 
-const PROFILE_COMPLETION_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth'];
+const PROFILE_COMPLETION_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth', 'gender'];
 
 /* =============================================================================
    04) ASSET HELPERS
@@ -118,6 +119,8 @@ function formatFieldLabel(value) {
       return 'Date of birth';
     case 'username':
       return 'Username';
+    case 'gender':
+      return 'Gender';
     default:
       return capitalizeWords(value);
   }
@@ -271,7 +274,7 @@ function buildPrivateProfileState(user = null, profile = null) {
     lastName: normalizeString(profile?.last_name || ''),
     birthDate: normalizeString(profile?.birth_date || profile?.date_of_birth || ''),
     formattedBirthDate: formatDate(profile?.birth_date || profile?.date_of_birth || ''),
-    gender: normalizeString(profile?.gender || ''),
+    gender: normalizeGenderValue(profile?.gender || ''),
     email,
     emailVerified: user?.emailVerified === true || profile?.auth_email_verified === true,
     providerId,
@@ -304,9 +307,13 @@ function buildPrivateProfileState(user = null, profile = null) {
       : completion.complete
         ? 'Edit Profile'
         : 'Complete Profile',
-    primaryAction: !user ? 'account' : 'edit-profile',
-    secondaryActionLabel: completion.complete ? 'Edit Username' : 'Edit Identity',
-    secondaryAction: 'edit-username',
+    primaryAction: !user
+      ? 'account'
+      : completion.complete
+        ? 'edit-profile'
+        : 'complete-profile',
+    secondaryActionLabel: completion.complete ? 'Edit Username' : 'Open Settings',
+    secondaryAction: completion.complete ? 'edit-username' : 'open-settings',
     publicActionLabel: publicViewAvailable
       ? 'View Public'
       : username.normalized
@@ -526,35 +533,21 @@ function openAccountDrawer() {
   }));
 }
 
-function openProfileSetup(intent) {
-  const state = getProfileRuntimeState();
-  const profile = state.profile || {};
-
-  document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
+function requestPrivateNavigation(section, settingsPane = 'identity') {
+  document.dispatchEvent(new CustomEvent('profile:navigate-request', {
     detail: {
-      source: 'profile-runtime',
-      route: 'profile-setup',
-      action: 'profile-setup',
-      intent,
-      email: state.email,
-      first_name: state.firstName,
-      last_name: state.lastName,
-      display_name: state.displayName,
-      username: profile.username_raw || state.username.raw || state.username.normalized,
-      date_of_birth: state.birthDate,
-      gender: state.gender,
-      provider: state.providerId,
-      method: state.providerId
+      section,
+      settingsPane
     }
   }));
+}
 
-  document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-    detail: {
-      source: 'profile-runtime',
-      state: 'user',
-      surface: 'profile-setup'
-    }
-  }));
+function resolveCompletionSettingsPane(state) {
+  const missingFields = Array.isArray(state?.completion?.missingFields)
+    ? state.completion.missingFields
+    : [];
+
+  return missingFields.includes('username') ? 'route' : 'identity';
 }
 
 async function copyProfileLink(state) {
@@ -589,11 +582,52 @@ export function requestProfileAction(action, detail = {}) {
     case 'account':
       openAccountDrawer();
       return;
+    case 'complete-profile':
+      if (state.viewerState !== 'authenticated') {
+        openAccountDrawer();
+        return;
+      }
+      requestPrivateNavigation('settings', resolveCompletionSettingsPane(state));
+      return;
     case 'edit-profile':
+      if (state.viewerState !== 'authenticated') {
+        openAccountDrawer();
+        return;
+      }
+      requestPrivateNavigation('settings', 'identity');
+      return;
     case 'edit-username':
+      if (state.viewerState !== 'authenticated') {
+        openAccountDrawer();
+        return;
+      }
+      requestPrivateNavigation('settings', 'route');
+      return;
     case 'change-avatar':
+      if (state.viewerState !== 'authenticated') {
+        openAccountDrawer();
+        return;
+      }
+      requestPrivateNavigation('settings', 'media');
+      return;
     case 'manage-visibility':
-      openProfileSetup(normalizedAction);
+      if (state.viewerState !== 'authenticated') {
+        openAccountDrawer();
+        return;
+      }
+      requestPrivateNavigation('settings', 'visibility');
+      return;
+    case 'open-overview':
+      requestPrivateNavigation('overview');
+      return;
+    case 'open-thought-bank':
+      requestPrivateNavigation('thought-bank');
+      return;
+    case 'open-dashboard':
+      requestPrivateNavigation('dashboard');
+      return;
+    case 'open-settings':
+      requestPrivateNavigation('settings', detail?.settingsPane || 'identity');
       return;
     case 'view-public':
       if (state.publicViewAvailable && state.publicRoutePath) {
@@ -611,6 +645,7 @@ export function requestProfileAction(action, detail = {}) {
       }));
       return;
     case 'settings':
+      requestPrivateNavigation('settings', 'identity');
       return;
     default:
       return;

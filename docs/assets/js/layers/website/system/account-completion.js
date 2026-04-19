@@ -40,12 +40,17 @@ import {
   loadProfileIdentityPolicy,
   messageForUsernameError,
   normalizeEmail,
+  normalizeGenderValue,
   normalizeString,
   normalizeUsername,
   reserveUsernameProfile,
   splitFullName,
   validateUsernameLocally
 } from './account-profile-identity.js';
+import {
+  evaluateAccountPassword,
+  loadAccountPasswordPolicy
+} from './account-password-policy.js';
 
 /* =============================================================================
    02) MODULE IDENTITY
@@ -82,7 +87,7 @@ import {
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
   const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
   const USERNAME_VALIDATION_DEBOUNCE_MS = 240;
-  const REQUIRED_PROFILE_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth'];
+  const REQUIRED_PROFILE_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth', 'gender'];
 
   /* =============================================================================
      05) FIREBASE HELPERS
@@ -306,6 +311,11 @@ import {
 
   function mapFirebaseError(error, fallbackMessage) {
     const code = normalizeString(error?.code || '');
+    const message = normalizeString(error?.message || '').toLowerCase();
+
+    if (code.startsWith('auth/requests-from-referer-') || message.includes('requests-from-referer-')) {
+      return `Firebase Auth is blocking ${window.location.origin}. Add this origin to the authorized domains or API referrer allowlist for neuroartan-core.`;
+    }
 
     switch (code) {
       case 'auth/popup-closed-by-user':
@@ -322,7 +332,7 @@ import {
       case 'auth/wrong-password':
         return 'The email address or password is not correct.';
       case 'auth/weak-password':
-        return 'Use a stronger password with at least 6 characters.';
+        return 'Use a stronger password that satisfies the current password requirements.';
       case 'auth/too-many-requests':
         return 'Too many attempts were made. Please wait and try again.';
       case 'permission-denied':
@@ -426,6 +436,7 @@ import {
       gender: normalizeString(detail.gender || RUNTIME.onboardingContext.gender || '')
     };
 
+    nextContext.gender = normalizeGenderValue(nextContext.gender);
     RUNTIME.onboardingContext = nextContext;
     return nextContext;
   }
@@ -508,7 +519,7 @@ import {
       password: onboarding.password || '',
       password_confirm: onboarding.password_confirm || onboarding.password || '',
       date_of_birth: profile?.date_of_birth || profile?.birth_date || onboarding.date_of_birth || '',
-      gender: profile?.gender || onboarding.gender || ''
+      gender: normalizeGenderValue(profile?.gender || onboarding.gender || '')
     };
 
     values.username = buildUsernameSuggestion(values);
@@ -539,6 +550,16 @@ import {
       detail: {
         source: MODULE_ID,
         ...detail
+      }
+    }));
+  }
+
+  function emitProfileSetupSubmitStatus(detail = {}) {
+    document.dispatchEvent(new CustomEvent('account:profile-setup-submit-status', {
+      detail: {
+        source: MODULE_ID,
+        state: detail.state || 'idle',
+        message: detail.message || ''
       }
     }));
   }
@@ -904,14 +925,23 @@ import {
       ? getFieldFromForm(form, '#account-profile-setup-password-confirm')
       : null;
     const dateOfBirthField = form instanceof HTMLFormElement
-      ? getFieldFromForm(form, '#account-profile-setup-date-of-birth')
+      ? (
+          getFieldFromForm(form, '[data-account-profile-setup-date-control="year"]')
+          || getFieldFromForm(form, '#account-profile-setup-date-of-birth')
+        )
+      : null;
+    const genderField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-profile-setup-gender')
       : null;
 
     if (!(form instanceof HTMLFormElement)) return;
 
     clearFormErrors(form);
 
-    const policy = await loadProfileIdentityPolicy();
+    const [policy, passwordPolicy] = await Promise.all([
+      loadProfileIdentityPolicy(),
+      loadAccountPasswordPolicy()
+    ]);
     const context = patchOnboardingContext(detail);
     const auth = getFirebaseAuth();
     const currentUser = auth?.currentUser || null;
@@ -931,7 +961,7 @@ import {
       password: normalizeString(detail.password || context.password || ''),
       password_confirm: normalizeString(detail.password_confirm || context.password_confirm || detail.password || context.password || ''),
       date_of_birth: normalizeString(detail.date_of_birth || context.date_of_birth || ''),
-      gender: normalizeString(detail.gender || context.gender || '')
+      gender: normalizeGenderValue(detail.gender || context.gender || '')
     };
 
     if (!values.username) {
@@ -956,6 +986,11 @@ import {
 
     if (!values.date_of_birth) {
       setFieldError(dateOfBirthField, 'Enter your date of birth.');
+      return;
+    }
+
+    if (!values.gender) {
+      setFieldError(genderField, 'Select your gender.');
       return;
     }
 
@@ -991,8 +1026,9 @@ import {
         return;
       }
 
-      if (values.password.length < 6) {
-        setFieldError(passwordField, 'Use a password with at least 6 characters.');
+      const passwordEvaluation = evaluateAccountPassword(values.password, passwordPolicy);
+      if (!passwordEvaluation.ok) {
+        setFieldError(passwordField, passwordEvaluation.message);
         return;
       }
 
@@ -1004,6 +1040,10 @@ import {
 
     setFormBusy(form, true);
     RUNTIME.profileSaveInProgress = true;
+    emitProfileSetupSubmitStatus({
+      state: 'saving',
+      message: 'Creating your account and profile…'
+    });
 
     try {
       const { auth: authInstance, firestore } = await ensureReadyOrThrow();
@@ -1061,6 +1101,10 @@ import {
       clearOnboardingContext();
       clearFlowState();
       emitProfileState(user, savedProfile);
+      emitProfileSetupSubmitStatus({
+        state: 'success',
+        message: 'Profile created. Opening your private profile…'
+      });
       redirectToProfile();
     } catch (error) {
       const usernameCode = normalizeString(error?.code || error?.message || '');
@@ -1086,17 +1130,30 @@ import {
           normalized: values.username,
           message: buildUsernameStatus(state, values.username, policy)
         });
-
-        setFieldError(usernameField, messageForUsernameError(usernameCode, policy));
+        const usernameMessage = messageForUsernameError(usernameCode, policy);
+        emitProfileSetupSubmitStatus({
+          state: 'error',
+          message: usernameMessage
+        });
+        setFieldError(usernameField, usernameMessage);
       } else if (isProfileStoreUnavailableError(error)) {
         emitUsernameStatus({
           state: 'unavailable',
           normalized: values.username,
           message: buildUsernameStatus('unavailable', values.username, policy)
         });
-        setFieldError(usernameField, 'Profile storage is not available right now. Please try again shortly.');
+        const unavailableMessage = 'Profile storage is not available right now. Please try again shortly.';
+        emitProfileSetupSubmitStatus({
+          state: 'error',
+          message: unavailableMessage
+        });
+        setFieldError(usernameField, unavailableMessage);
       } else {
         const message = mapFirebaseError(error, 'Unable to complete profile setup right now.');
+        emitProfileSetupSubmitStatus({
+          state: 'error',
+          message
+        });
         setFieldError(usernameField, message);
       }
 
@@ -1233,6 +1290,12 @@ import {
     document.addEventListener('account:profile-setup-skip', () => {
       clearOnboardingContext();
       clearFlowState();
+    });
+
+    document.addEventListener('account:profile-refresh-request', () => {
+      const user = getFirebaseAuth()?.currentUser || null;
+      if (!user) return;
+      void handleSignedInState(user);
     });
 
     document.addEventListener('submit', (event) => {

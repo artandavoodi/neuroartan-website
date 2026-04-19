@@ -10,6 +10,7 @@
    ============================================================================= */
 
 import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
+import { getProfileNavigationState, subscribeProfileNavigation } from './profile-navigation.js';
 
 /* =============================================================================
    02) PROFILE SECTIONS HELPERS
@@ -98,9 +99,14 @@ function renderPublicLinks(root, state) {
   });
 }
 
-function renderPrivateSections(root, state) {
+function renderPrivateSections(root, state, navigationState) {
   root.dataset.profileViewerState = state.viewerState;
   root.dataset.profileStateKey = state.stateKey;
+
+  root.querySelectorAll('[data-profile-section-panel]').forEach((panel) => {
+    const panelKey = panel.getAttribute('data-profile-section-panel') || '';
+    panel.hidden = panelKey !== navigationState.section;
+  });
 }
 
 function renderPublicSections(root, state) {
@@ -132,7 +138,7 @@ function renderPublicSections(root, state) {
    03) PROFILE SECTIONS RENDER
    ============================================================================= */
 
-function renderProfileSections(state = getProfileRuntimeState()) {
+function renderProfileSections(state = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
   getProfileSectionsRoots().forEach((root) => {
     const surface = root.getAttribute('data-profile-surface');
 
@@ -141,7 +147,7 @@ function renderProfileSections(state = getProfileRuntimeState()) {
       return;
     }
 
-    renderPrivateSections(root, state);
+    renderPrivateSections(root, state, navigationState);
   });
 }
 
@@ -150,14 +156,17 @@ function renderProfileSections(state = getProfileRuntimeState()) {
    ============================================================================= */
 
 function initProfileSections() {
-  subscribeProfileRuntime(renderProfileSections);
+  const render = () => renderProfileSections();
+
+  subscribeProfileRuntime(render);
+  subscribeProfileNavigation(render);
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-private-sections' && event?.detail?.name !== 'profile-public-sections') return;
-    renderProfileSections();
+    render();
   });
 
-  renderProfileSections();
+  render();
 }
 
 initProfileSections();

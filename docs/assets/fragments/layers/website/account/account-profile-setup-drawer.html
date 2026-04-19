@@ -136,6 +136,20 @@
                 data-i18n-placeholder-key="account_profile_setup_password_placeholder"
                 placeholder="Password"
               >
+              <div class="account-profile-setup-drawer-field-meta">
+                <p class="account-profile-setup-drawer-field-note" data-account-profile-setup-password-hint="true">
+                  Use at least 8 characters with uppercase and lowercase letters, a number, and a special character.
+                </p>
+                <div class="account-profile-setup-drawer-password-status" data-account-profile-setup-password-status-shell="idle">
+                  <div class="account-profile-setup-drawer-password-meter" aria-hidden="true">
+                    <span class="account-profile-setup-drawer-password-meter-segment" data-account-profile-setup-password-meter-segment="true"></span>
+                    <span class="account-profile-setup-drawer-password-meter-segment" data-account-profile-setup-password-meter-segment="true"></span>
+                    <span class="account-profile-setup-drawer-password-meter-segment" data-account-profile-setup-password-meter-segment="true"></span>
+                    <span class="account-profile-setup-drawer-password-meter-segment" data-account-profile-setup-password-meter-segment="true"></span>
+                  </div>
+                  <p class="account-profile-setup-drawer-field-status" data-account-profile-setup-password-status="true" aria-live="polite"></p>
+                </div>
+              </div>
             </div>
 
             <div class="account-profile-setup-drawer-field-group">
@@ -159,12 +173,42 @@
             <input
               id="account-profile-setup-date-of-birth"
               name="date_of_birth"
-              type="date"
-              class="account-profile-setup-drawer-input account-profile-setup-drawer-input--date"
+              type="hidden"
               autocomplete="bday"
               data-account-profile-setup-field="date-of-birth"
               required
             >
+            <div class="account-profile-setup-drawer-date-grid" data-account-profile-setup-date-grid="true">
+              <select
+                id="account-profile-setup-date-of-birth-month"
+                class="account-profile-setup-drawer-select account-profile-setup-drawer-select--date"
+                data-account-profile-setup-date-control="month"
+                aria-label="Birth month"
+                required
+              >
+                <option value="">Month</option>
+              </select>
+
+              <select
+                id="account-profile-setup-date-of-birth-day"
+                class="account-profile-setup-drawer-select account-profile-setup-drawer-select--date"
+                data-account-profile-setup-date-control="day"
+                aria-label="Birth day"
+                required
+              >
+                <option value="">Day</option>
+              </select>
+
+              <select
+                id="account-profile-setup-date-of-birth-year"
+                class="account-profile-setup-drawer-select account-profile-setup-drawer-select--date"
+                data-account-profile-setup-date-control="year"
+                aria-label="Birth year"
+                required
+              >
+                <option value="">Year</option>
+              </select>
+            </div>
             <div class="account-profile-setup-drawer-field-meta">
               <p class="account-profile-setup-drawer-field-note" data-i18n-key="account_profile_setup_dob_note">Used for eligibility and kept private by default.</p>
             </div>
@@ -179,16 +223,14 @@
               name="gender"
               class="account-profile-setup-drawer-select"
               data-account-profile-setup-field="gender"
+              required
             >
-              <option value="" data-i18n-key="account_profile_setup_gender_placeholder">Gender (optional)</option>
+              <option value="" data-i18n-key="account_profile_setup_gender_placeholder">Select gender</option>
               <option value="woman" data-i18n-key="account_profile_setup_gender_woman">Woman</option>
               <option value="man" data-i18n-key="account_profile_setup_gender_man">Man</option>
-              <option value="nonbinary" data-i18n-key="account_profile_setup_gender_nonbinary">Non-binary</option>
-              <option value="prefer_not_to_say" data-i18n-key="account_profile_setup_gender_prefer_not_to_say">Prefer not to say</option>
-              <option value="self_describe" data-i18n-key="account_profile_setup_gender_self_describe">Self-describe</option>
             </select>
             <div class="account-profile-setup-drawer-field-meta">
-              <p class="account-profile-setup-drawer-field-note" data-i18n-key="account_profile_setup_gender_note">Optional and private by default.</p>
+              <p class="account-profile-setup-drawer-field-note" data-i18n-key="account_profile_setup_gender_note">Required for the canonical profile record and kept private by default.</p>
             </div>
           </div>
 
@@ -202,6 +244,7 @@
         <button type="submit" form="account-profile-setup-drawer-form" class="account-profile-setup-drawer-action account-profile-setup-drawer-action--primary" data-account-profile-setup-submit="true">
           <span class="account-profile-setup-drawer-action-label" data-i18n-key="account_profile_setup_submit">Complete profile</span>
         </button>
+        <p class="account-profile-setup-drawer-submit-status" data-account-profile-setup-submit-status="idle" aria-live="polite"></p>
       </div>
 
       <!-- ======================================================================

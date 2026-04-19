@@ -155,6 +155,10 @@ import {
     return document.querySelector('[data-not-found-root]');
   }
 
+  function is404RouteEntryPage() {
+    return Boolean(getPublicRouteRoot() || getNotFoundRoot());
+  }
+
   function activatePublicRouteShell(state) {
     const publicRoot = getPublicRouteRoot();
     const notFoundRoot = getNotFoundRoot();
@@ -288,6 +292,10 @@ import {
      ========================================================= */
 
   async function init404Page() {
+    if (!is404RouteEntryPage()) {
+      return;
+    }
+
     document.body.classList.add(PAGE_READY_CLASS);
     bind404Actions();
     renderRouteEntry();

@@ -19,6 +19,12 @@
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
+import {
+  buildAccountPasswordHint,
+  evaluateAccountPassword,
+  loadAccountPasswordPolicy
+} from '../../system/account-password-policy.js';
+
 (() => {
   'use strict';
 
@@ -90,8 +96,36 @@
     return q('#account-profile-setup-date-of-birth', getDrawer() || document);
   }
 
+  function getDateOfBirthMonthSelect() {
+    return q('#account-profile-setup-date-of-birth-month', getDrawer() || document);
+  }
+
+  function getDateOfBirthDaySelect() {
+    return q('#account-profile-setup-date-of-birth-day', getDrawer() || document);
+  }
+
+  function getDateOfBirthYearSelect() {
+    return q('#account-profile-setup-date-of-birth-year', getDrawer() || document);
+  }
+
   function getGenderSelect() {
     return q('#account-profile-setup-gender', getDrawer() || document);
+  }
+
+  function getPasswordHint() {
+    return q('[data-account-profile-setup-password-hint="true"]', getDrawer() || document);
+  }
+
+  function getPasswordStatusShell() {
+    return q('[data-account-profile-setup-password-status-shell]', getDrawer() || document);
+  }
+
+  function getPasswordStatusMessage() {
+    return q('[data-account-profile-setup-password-status="true"]', getDrawer() || document);
+  }
+
+  function getSubmitStatus() {
+    return q('[data-account-profile-setup-submit-status]', getDrawer() || document);
   }
 
   function getUsernameStatus() {
@@ -123,6 +157,14 @@
     status.textContent = '';
   }
 
+  function setSubmitStatus(statusKey = 'idle', text = '') {
+    const node = getSubmitStatus();
+    if (!node) return;
+
+    node.dataset.accountProfileSetupSubmitStatus = statusKey;
+    node.textContent = text;
+  }
+
   function setFieldValue(field, value, options = {}) {
     if (!field) return;
 
@@ -145,6 +187,8 @@
     setFieldValue(getPasswordConfirmInput(), detail.password_confirm || detail.password || '', { overwrite: false });
     setFieldValue(getDateOfBirthInput(), detail.date_of_birth || '', { overwrite: false });
     setFieldValue(getGenderSelect(), detail.gender || '', { overwrite: false });
+    syncDateOfBirthControlsFromValue();
+    void syncPasswordFeedback();
     syncUsernamePreview();
     emitUsernameChange();
   }
@@ -234,6 +278,8 @@
         passwordConfirmInput.value = '';
       }
     }
+
+    void syncPasswordFeedback();
   }
 
   /* =============================================================================
@@ -302,6 +348,151 @@
   }
 
   /* =============================================================================
+     06A) DATE OF BIRTH HELPERS
+  ============================================================================= */
+  function buildLocalizedMonthLabel(monthIndex) {
+    try {
+      return new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+        month: 'long',
+        timeZone: 'UTC'
+      }).format(new Date(Date.UTC(2000, monthIndex, 1)));
+    } catch (_) {
+      return String(monthIndex + 1).padStart(2, '0');
+    }
+  }
+
+  function buildOptionMarkup(value, label) {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.textContent = label;
+    return option;
+  }
+
+  function populateMonthOptions() {
+    const monthSelect = getDateOfBirthMonthSelect();
+    if (!(monthSelect instanceof HTMLSelectElement) || monthSelect.options.length > 1) return;
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex += 1) {
+      monthSelect.appendChild(buildOptionMarkup(monthIndex + 1, buildLocalizedMonthLabel(monthIndex)));
+    }
+  }
+
+  function populateYearOptions() {
+    const yearSelect = getDateOfBirthYearSelect();
+    if (!(yearSelect instanceof HTMLSelectElement) || yearSelect.options.length > 1) return;
+
+    const currentYear = new Date().getUTCFullYear();
+    for (let year = currentYear; year >= currentYear - 110; year -= 1) {
+      yearSelect.appendChild(buildOptionMarkup(year, String(year)));
+    }
+  }
+
+  function syncDayOptions() {
+    const daySelect = getDateOfBirthDaySelect();
+    const monthSelect = getDateOfBirthMonthSelect();
+    const yearSelect = getDateOfBirthYearSelect();
+    if (!(daySelect instanceof HTMLSelectElement)) return;
+
+    const selectedDay = Number.parseInt(daySelect.value, 10) || 0;
+    const selectedMonth = Number.parseInt(monthSelect?.value || '', 10) || 0;
+    const selectedYear = Number.parseInt(yearSelect?.value || '', 10) || 2000;
+    const maxDay = selectedMonth
+      ? new Date(Date.UTC(selectedYear, selectedMonth, 0)).getUTCDate()
+      : 31;
+
+    while (daySelect.options.length > 1) {
+      daySelect.remove(1);
+    }
+
+    for (let day = 1; day <= maxDay; day += 1) {
+      daySelect.appendChild(buildOptionMarkup(day, String(day).padStart(2, '0')));
+    }
+
+    if (selectedDay) {
+      daySelect.value = String(Math.min(selectedDay, maxDay));
+    }
+  }
+
+  function syncDateOfBirthValue() {
+    const hiddenInput = getDateOfBirthInput();
+    const month = Number.parseInt(getDateOfBirthMonthSelect()?.value || '', 10) || 0;
+    const year = Number.parseInt(getDateOfBirthYearSelect()?.value || '', 10) || 0;
+
+    if (!(hiddenInput instanceof HTMLInputElement)) return;
+
+    syncDayOptions();
+    const day = Number.parseInt(getDateOfBirthDaySelect()?.value || '', 10) || 0;
+
+    if (!month || !day || !year) {
+      hiddenInput.value = '';
+      return;
+    }
+
+    hiddenInput.value = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
+  function syncDateOfBirthControlsFromValue() {
+    const hiddenInput = getDateOfBirthInput();
+    const monthSelect = getDateOfBirthMonthSelect();
+    const daySelect = getDateOfBirthDaySelect();
+    const yearSelect = getDateOfBirthYearSelect();
+
+    populateMonthOptions();
+    populateYearOptions();
+
+    const value = hiddenInput instanceof HTMLInputElement ? String(hiddenInput.value || '').trim() : '';
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+    if (!(monthSelect instanceof HTMLSelectElement) || !(daySelect instanceof HTMLSelectElement) || !(yearSelect instanceof HTMLSelectElement)) {
+      return;
+    }
+
+    if (!match) {
+      monthSelect.value = '';
+      yearSelect.value = '';
+      syncDayOptions();
+      daySelect.value = '';
+      return;
+    }
+
+    yearSelect.value = String(Number.parseInt(match[1], 10));
+    monthSelect.value = String(Number.parseInt(match[2], 10));
+    syncDayOptions();
+    daySelect.value = String(Number.parseInt(match[3], 10));
+  }
+
+  /* =============================================================================
+     06B) PASSWORD FEEDBACK HELPERS
+  ============================================================================= */
+  async function syncPasswordFeedback() {
+    const hintNode = getPasswordHint();
+    const statusShell = getPasswordStatusShell();
+    const statusMessage = getPasswordStatusMessage();
+    const passwordInput = getPasswordInput();
+    const credentialGroup = getCredentialGroup();
+
+    if (!(statusShell instanceof HTMLElement) || !(statusMessage instanceof HTMLElement)) {
+      return;
+    }
+
+    const policy = await loadAccountPasswordPolicy();
+    const evaluation = evaluateAccountPassword(passwordInput?.value || '', policy);
+
+    if (hintNode instanceof HTMLElement) {
+      hintNode.textContent = buildAccountPasswordHint(policy);
+    }
+
+    if (credentialGroup?.hidden) {
+      statusShell.dataset.accountProfileSetupPasswordStatusShell = 'idle';
+      statusMessage.textContent = '';
+      return;
+    }
+
+    statusShell.dataset.accountProfileSetupPasswordStatusShell = evaluation.status;
+    statusMessage.textContent = evaluation.message;
+  }
+
+  /* =============================================================================
      07) OPEN REQUEST BINDING
   ============================================================================= */
   function bindOpenRequests() {
@@ -327,6 +518,7 @@
       const detail = event?.detail || {};
       applyRouteContext(detail);
       applyPrefill(detail);
+      setSubmitStatus('idle', '');
       syncUsernamePreview();
       scheduleFocusPrimaryField();
     });
@@ -351,6 +543,7 @@
       state.method = '';
       state.provider = '';
       state.username = '';
+      setSubmitStatus('idle', '');
       syncCredentialVisibility();
       syncUsernamePreview();
     });
@@ -466,7 +659,37 @@
       if (target.closest('#account-profile-setup-username')) {
         syncUsernamePreview();
         emitUsernameChange();
+        return;
       }
+
+      if (target.closest('#account-profile-setup-password')) {
+        void syncPasswordFeedback();
+        return;
+      }
+
+      if (target.closest('[data-account-profile-setup-form="true"]')) {
+        setSubmitStatus('idle', '');
+      }
+    });
+
+    document.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      if (target.matches('[data-account-profile-setup-date-control]')) {
+        syncDateOfBirthValue();
+        setSubmitStatus('idle', '');
+      }
+    });
+  }
+
+  function bindSubmitStatusEvents() {
+    if (document.documentElement.dataset.accountProfileSetupDrawerSubmitStatusBound === 'true') return;
+    document.documentElement.dataset.accountProfileSetupDrawerSubmitStatusBound = 'true';
+
+    document.addEventListener('account:profile-setup-submit-status', (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      setSubmitStatus(detail.state || 'idle', String(detail.message || ''));
     });
   }
 
@@ -511,8 +734,11 @@
     bindInnerRouteControls();
     bindInputs();
     bindUsernameStatusEvents();
+    bindSubmitStatusEvents();
     bindEscape();
+    syncDateOfBirthControlsFromValue();
     syncCredentialVisibility();
+    void syncPasswordFeedback();
     syncUsernamePreview();
   }
 

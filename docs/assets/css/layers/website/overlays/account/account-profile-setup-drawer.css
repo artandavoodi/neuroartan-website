@@ -36,6 +36,13 @@
   --account-profile-setup-secondary-gap: var(--account-profile-setup-content-gap-sm);
   --account-profile-setup-credential-gap: var(--account-profile-setup-content-gap-md);
   --account-profile-setup-meta-gap: var(--account-profile-setup-content-gap-xs);
+  --account-profile-setup-date-grid-gap: var(--account-profile-setup-content-gap-sm);
+  --account-profile-setup-password-meter-gap: calc(var(--account-profile-setup-content-gap-xs) * 0.75);
+  --account-profile-setup-password-meter-segment-radius: var(--radius-pill);
+  --account-profile-setup-password-meter-track: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --account-profile-setup-password-meter-fill-weak: color-mix(in srgb, #c14e4e 82%, var(--text-primary-color));
+  --account-profile-setup-password-meter-fill-medium: color-mix(in srgb, #b08d3c 76%, var(--text-primary-color));
+  --account-profile-setup-password-meter-fill-strong: color-mix(in srgb, #4e9b74 82%, var(--text-primary-color));
 
   --account-profile-setup-field-height: var(--account-field-height);
   --account-profile-setup-field-radius: var(--account-field-radius);
@@ -74,6 +81,7 @@
   --account-profile-setup-action-background: var(--control-bg);
   --account-profile-setup-action-background-hover: var(--control-bg-hover);
   --account-profile-setup-action-foreground: var(--text-color);
+  --account-profile-setup-submit-status-color: var(--text-secondary-color);
 
   --account-profile-setup-back-control-size: var(--account-back-control-size);
   --account-profile-setup-back-icon-size: var(--account-back-icon-size);
@@ -183,6 +191,16 @@
   color-scheme: light dark;
 }
 
+.account-profile-setup-drawer-date-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--account-profile-setup-date-grid-gap);
+}
+
+.account-profile-setup-drawer-select--date{
+  min-width: 0;
+}
+
 /* =============================================================================
    05) FIELD META
 ============================================================================= */
@@ -214,6 +232,41 @@
   font-weight: 400;
   letter-spacing: var(--account-profile-setup-status-letter-spacing);
   line-height: var(--account-profile-setup-status-line-height);
+}
+
+.account-profile-setup-drawer-password-status{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--account-profile-setup-password-meter-gap);
+}
+
+.account-profile-setup-drawer-password-meter{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: calc(var(--account-profile-setup-password-meter-gap) * 0.75);
+}
+
+.account-profile-setup-drawer-password-meter-segment{
+  min-height: 0.28rem;
+  border-radius: var(--account-profile-setup-password-meter-segment-radius);
+  background: var(--account-profile-setup-password-meter-track);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.account-profile-setup-drawer-password-status[data-account-profile-setup-password-status-shell="weak"] .account-profile-setup-drawer-password-meter-segment:nth-child(-n+1){
+  background: var(--account-profile-setup-password-meter-fill-weak);
+}
+
+.account-profile-setup-drawer-password-status[data-account-profile-setup-password-status-shell="medium"] .account-profile-setup-drawer-password-meter-segment:nth-child(-n+2),
+.account-profile-setup-drawer-password-status[data-account-profile-setup-password-status-shell="strong"] .account-profile-setup-drawer-password-meter-segment{
+  background: var(--account-profile-setup-password-meter-fill-medium);
+}
+
+.account-profile-setup-drawer-password-status[data-account-profile-setup-password-status-shell="strong"] .account-profile-setup-drawer-password-meter-segment{
+  background: var(--account-profile-setup-password-meter-fill-strong);
 }
 
 /* =============================================================================
@@ -303,6 +356,25 @@
   outline: none;
 }
 
+.account-profile-setup-drawer-submit-status{
+  margin: 0;
+  min-height: calc(var(--account-profile-setup-status-line-height) * 1em);
+  color: var(--account-profile-setup-submit-status-color);
+  font-size: var(--account-profile-setup-status-font-size);
+  font-weight: 400;
+  letter-spacing: var(--account-profile-setup-status-letter-spacing);
+  line-height: var(--account-profile-setup-status-line-height);
+  text-align: center;
+}
+
+.account-profile-setup-drawer-submit-status[data-account-profile-setup-submit-status="error"]{
+  color: var(--account-profile-setup-password-meter-fill-weak);
+}
+
+.account-profile-setup-drawer-submit-status[data-account-profile-setup-submit-status="success"]{
+  color: var(--account-profile-setup-password-meter-fill-strong);
+}
+
 /* =============================================================================
    09) SECONDARY ACTIONS
 ============================================================================= */
@@ -365,7 +437,8 @@
 @media (prefers-reduced-motion: reduce){
   .account-profile-setup-drawer-action,
   .account-profile-setup-drawer-input,
-  .account-profile-setup-drawer-select{
+  .account-profile-setup-drawer-select,
+  .account-profile-setup-drawer-password-meter-segment{
     transition: none !important;
   }
 }
@@ -376,5 +449,9 @@
 @media (max-width:768px){
   .account-profile-setup-drawer-content-stage{
     padding-inline: 0;
+  }
+
+  .account-profile-setup-drawer-date-grid{
+    grid-template-columns: 1fr;
   }
 }

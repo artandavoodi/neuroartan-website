@@ -779,10 +779,10 @@ body.light-mode .institutional-menu-search-field{
    18) SEARCH RESULTS
 ============================================================================= */
 .institutional-menu-search-links{
-  width: min(46rem, 100%);
-  max-width: 100%;
+  width: 100%;
+  max-width: none;
   margin: 0.9rem 0 0;
-  align-self: flex-start;
+  align-self: stretch;
 }
 
 .institutional-menu-search-links .institutional-menu-panel-label{
@@ -952,10 +952,10 @@ body.light-mode .institutional-menu-search-field{
   }
   
   .institutional-menu-search-links{
-    width: min(40rem, 100%);
-    max-width: 100%;
+    width: 100%;
+    max-width: none;
     margin: 0.9rem 0 0;
-    align-self: flex-start;
+    align-self: stretch;
   }
 
   .institutional-menu-search-result-title{

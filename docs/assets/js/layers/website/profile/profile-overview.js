@@ -84,7 +84,7 @@ function renderOverview(state = getProfileRuntimeState()) {
     setText(root, '[data-profile-identity-last-name]', state.lastName || 'Pending');
     setText(root, '[data-profile-identity-display-name]', state.displayName || 'Pending');
     setText(root, '[data-profile-identity-birth-date]', state.birthDate ? state.formattedBirthDate : 'Pending');
-    setText(root, '[data-profile-identity-gender]', state.gender || 'Private by default');
+    setText(root, '[data-profile-identity-gender]', capitalizeWords(state.gender || '') || 'Pending');
 
     setText(root, '[data-profile-username-raw]', state.username.raw || 'Pending');
     setText(root, '[data-profile-username-normalized]', state.username.normalized || 'Not assigned');

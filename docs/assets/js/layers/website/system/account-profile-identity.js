@@ -144,7 +144,8 @@ const REQUIRED_PROFILE_FIELDS = Object.freeze([
   'first_name',
   'last_name',
   'display_name',
-  'date_of_birth'
+  'date_of_birth',
+  'gender'
 ]);
 
 const WEBSITE_BASE_PATH = (() => {
@@ -252,6 +253,21 @@ export function normalizeEmail(value) {
   return normalizeString(value).toLowerCase();
 }
 
+export function normalizeGenderValue(value) {
+  const normalized = normalizeString(value).toLowerCase();
+
+  switch (normalized) {
+    case 'female':
+    case 'woman':
+      return 'woman';
+    case 'male':
+    case 'man':
+      return 'man';
+    default:
+      return '';
+  }
+}
+
 export function normalizeUsername(value) {
   const raw = normalizeString(value).toLowerCase();
 
@@ -338,6 +354,12 @@ function resolveProfileFieldValue(field, values = {}, existingProfile = null) {
         || values.birth_date
         || existingProfile?.date_of_birth
         || existingProfile?.birth_date
+        || ''
+      );
+    case 'gender':
+      return normalizeGenderValue(
+        values.gender
+        || existingProfile?.gender
         || ''
       );
     default:
@@ -1082,7 +1104,7 @@ export function buildProfilePayload({
     display_name: values.display_name,
     birth_date: values.date_of_birth,
     date_of_birth: values.date_of_birth,
-    gender: values.gender || '',
+    gender: normalizeGenderValue(values.gender || existingProfile?.gender || ''),
     auth_provider: authProviderPrimary,
     avatar_state: normalizeString(values.avatar_state || existingProfile?.avatar_state || (avatarUrl ? 'active' : 'empty')),
     avatar_url: avatarUrl,

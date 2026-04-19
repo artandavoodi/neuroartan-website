@@ -3,12 +3,9 @@
      00. FILE INDEX
      01. DOCUMENT HEAD
      02. CUSTOM CURSOR
-     03. PROFILE PAGE SHELL
-     04. PROFILE SURFACE
-     05. PROFILE IDENTITY
-     06. PROFILE BODY
-     07. PROFILE ACTIONS
-     08. PAGE SCRIPTS
+     03. PROFILE PAGE ROOT
+     04. PROFILE MOUNT SHELL
+     05. PROFILE SCRIPT LAYER
      ========================================================= -->
 <html lang="en">
 <head>
@@ -16,67 +13,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile · Neuroartan</title>
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="description" content="Private profile access surface for Neuroartan account state and authenticated platform continuity.">
-  <link rel="canonical" href="https://neuroartan.com/">
+  <meta name="description" content="Private profile access surface for Neuroartan account state, profile completion, and authenticated platform continuity.">
+  <link rel="canonical" href="https://neuroartan.com/profile.html">
   <link rel="icon" href="assets/icons/core/identity/brand/neuroartan/logo-plain.svg" type="image/svg+xml">
+
   <link rel="stylesheet" href="assets/css/core/00-orchestrator/core.css">
   <link rel="stylesheet" href="assets/css/layers/website/system/auth.css">
+  <link rel="stylesheet" href="assets/css/layers/website/pages/profile.css">
+  <link rel="stylesheet" href="assets/css/layers/website/components/profile/profile-shell.css">
+  <link rel="stylesheet" href="assets/css/layers/website/components/profile/profile-header.css">
+  <link rel="stylesheet" href="assets/css/layers/website/components/profile/profile-sections.css">
 
   <script src="assets/js/core/01-foundation/cursor.js" defer></script>
   <script type="module" src="assets/js/layers/website/system/firebase-config.js"></script>
-  <script type="module" src="assets/js/layers/website/system/account-completion.js"></script>
   <script type="module" src="assets/js/layers/website/system/auth.js"></script>
+  <script type="module" src="assets/js/layers/website/system/account-completion.js"></script>
+  <script type="module" src="assets/js/layers/website/system/profile-state.js"></script>
+  <script type="module" src="assets/js/layers/website/system/profile-router.js"></script>
+  <script type="module" src="assets/js/layers/website/system/profile-save.js"></script>
+  <script type="module" src="assets/js/layers/website/pages/profile.js"></script>
 </head>
-<body class="profile-page">
+<body class="profile-page" data-profile-page="private">
   <!-- =========================================================
        02. CUSTOM CURSOR
        ========================================================= -->
   <div class="custom-cursor" aria-hidden="true"></div>
 
   <!-- =========================================================
-       03. PROFILE PAGE SHELL
+       03. PROFILE PAGE ROOT
        ========================================================= -->
-  <main class="profile-shell" aria-labelledby="profile-name">
-    <!-- =========================================================
-         04. PROFILE SURFACE
-         ========================================================= -->
-    <section class="profile-surface">
-      <!-- =========================================================
-           05. PROFILE IDENTITY
-           ========================================================= -->
-      <header class="profile-header">
-        <p class="profile-label" id="profile-label">Profile</p>
-        <div class="profile-avatar-wrap" aria-hidden="true">
-          <img id="profile-avatar-image" class="profile-avatar-image" src="assets/icons/core/identity/brand/neuroartan/logo-plain.svg" alt="Neuroartan" />
-        </div>
-        <div class="profile-identity-copy">
-          <h1 class="profile-name" id="profile-name">Loading...</h1>
-          <p class="profile-email" id="profile-email">Loading...</p>
-        </div>
-      </header>
-
-      <!-- =========================================================
-           06. PROFILE BODY
-           ========================================================= -->
-      <div class="profile-body">
-        <p class="profile-copy" id="profile-copy">This profile surface is being restructured into the Neuroartan sovereign platform architecture while authenticated access and continuity systems remain active.</p>
-      </div>
-
-      <!-- =========================================================
-           07. PROFILE ACTIONS
-           ========================================================= -->
-      <div class="profile-actions" data-auth-state="user" hidden>
-        <button class="profile-button" type="button" onclick="logout()">Logout</button>
-      </div>
-
-      <div class="profile-actions" data-auth-state="guest" hidden>
-        <button class="profile-button" type="button" onclick="loginWithGoogle()">Continue with Google</button>
-      </div>
-
-      <noscript>
-        <p class="profile-copy">JavaScript is required for Firebase-authenticated profile state and account access handling.</p>
-      </noscript>
+  <main class="profile-page-root" data-profile-page-root>
+    <!-- =======================================================
+         04. PROFILE MOUNT SHELL
+         ======================================================= -->
+    <section class="profile-page-shell" data-profile-page-shell>
+      <div class="profile-shell-mount" data-profile-shell-mount></div>
+      <div class="profile-header-mount" data-profile-header-mount></div>
+      <div class="profile-sections-mount" data-profile-sections-mount></div>
     </section>
+
+    <noscript>
+      <p>JavaScript is required for authenticated private profile state and profile continuity systems.</p>
+    </noscript>
   </main>
 </body>
 </html>

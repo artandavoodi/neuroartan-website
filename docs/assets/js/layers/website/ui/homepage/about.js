@@ -1,8 +1,8 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) ENTER GATE
-   03) ABOUT PAGE BASE AUTHORITY
+   02) PAGE IDENTITY
+   03) ABOUT POST-LANDING STATE
    04) END OF FILE
 ============================================================================= */
 
@@ -11,15 +11,18 @@
 ============================================================================= */
 (() => {
   /* =============================================================================
-     02) ENTER GATE
+     02) PAGE IDENTITY
   ============================================================================= */
-  window.__artanRunAfterEnter(() => {
-    /* =============================================================================
-       03) ABOUT PAGE BASE AUTHORITY
-       Legacy homepage scroll-gradient state logic has been removed from this file.
-       About-page matte/color state authority now belongs to sovereign layer files.
-    ============================================================================= */
-  });
+  const body = document.body;
+  if (!body || !body.classList.contains('about-page')) return;
+
+  /* =============================================================================
+     03) ABOUT POST-LANDING STATE
+     About owns the mature post-landing homepage state so shared post-landing
+     modules can boot without homepage threshold-entry ownership.
+  ============================================================================= */
+  body.classList.remove('intro-loading', 'intro-reveal', 'pre-home-entering');
+  body.classList.add('site-entered', 'hero-lock-released', 'hero-released');
 })();
 
 /* =============================================================================

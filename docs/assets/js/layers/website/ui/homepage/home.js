@@ -7,8 +7,8 @@
    02) Home landing logo layer disabled
 
    Contract:
-   - No hard-hide of logo (no opacity:0 or visibility:hidden).
-   - Boots ONLY after `body.site-entered`.
+   - Landing threshold entry is home-page only.
+   - Landing threshold entry owns ONLY in-page enter flows.
    - Home-owned behaviors must live in home.js and may call `window.__artanRunAfterEnter`.
 ============================================================================= */
 
@@ -31,9 +31,22 @@
   let isEntering = false;
   let touchStartY = null;
 
+  const isHomePage = () => document.body.classList.contains('home-page');
   const getTarget = () => document.querySelector(ENTER_TARGET_SELECTOR);
+  const getEnterTrigger = () => document.querySelector(ENTER_TRIGGER_SELECTOR);
+
+  const ownsInPageEnterFlow = () => {
+    if (!isHomePage()) return false;
+
+    const trigger = getEnterTrigger();
+    if (!(trigger instanceof HTMLAnchorElement)) return false;
+
+    const href = (trigger.getAttribute('href') || '').trim();
+    return href === ENTER_TARGET_SELECTOR;
+  };
 
   const shouldInterceptThresholdEntry = () => {
+    if (!ownsInPageEnterFlow()) return false;
     if (document.body.classList.contains('site-entered')) return false;
     return (window.scrollY || window.pageYOffset || 0) < 40;
   };
@@ -126,6 +139,7 @@
   document.addEventListener('click', (event) => {
     const trigger = event.target instanceof Element ? event.target.closest(ENTER_TRIGGER_SELECTOR) : null;
     if (!trigger) return;
+    if (!ownsInPageEnterFlow()) return;
 
     event.preventDefault();
     enterSite();
@@ -208,4 +222,3 @@ window.__artanRunAfterEnter = window.__artanRunAfterEnter || ((bootFn) => {
 /* =============================================================================
    END OF HOME.JS — HOME LANDING SYSTEM
 ============================================================================= */
-

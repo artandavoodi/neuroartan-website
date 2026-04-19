@@ -3,16 +3,13 @@
    01) ABOUT TOKENS
    02) LEGACY POSTS & COMMENTS
    03) ABOUT HERO (POST-LANDING) — FULL-BLEED VIDEO
-   04) ABOUT HERO LOGO LAYER — DISABLED
-   05) ABOUT RAIL ALIGNMENT (GLOBAL ABOUT SECTIONS)
-   06) RTL ABOUT ALIGNMENT (TEXT-ONLY, KEEP LTR RAIL)
-   07) ABOUT ESSENCE — LAYOUT RESET
-   07A) ABOUT ESSENCE — LEGACY CHROMA BACKDROP (DISABLED)
-   08) POST-ESSENCE SECTION REVEAL (SIMPLIFIED / STABLE)
-   09) ABOUT ICOS CHAPTER — CAPTURED INTRODUCTION
-   09A) ABOUT CHAPTER PROGRESSION — UPDATES / FEATURED / INSIGHTS / CLOSING
-   09B) ABOUT FEATURED TRANSITION SHELL — CORE CAPABILITIES / INSIGHTS HANDOFF
-   10) ABOUT CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
+   04) ABOUT RAIL ALIGNMENT (GLOBAL ABOUT SECTIONS)
+   05) RTL ABOUT ALIGNMENT (TEXT-ONLY, KEEP LTR RAIL)
+   06) ABOUT ESSENCE — LAYOUT RESET
+   07) ABOUT ICOS CHAPTER — CAPTURED INTRODUCTION
+   07A) ABOUT CHAPTER PROGRESSION — UPDATES / FEATURED / INSIGHTS / CLOSING
+   07B) ABOUT FEATURED TRANSITION SHELL — CORE CAPABILITIES / INSIGHTS HANDOFF
+   08) ABOUT CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
 ============================================================================= */
 
 /* =============================================================================
@@ -208,27 +205,7 @@ body.light-mode{
   z-index: 2;
 }
 
-/* Ensure hero logo sits above glass overlay */
-#home-hero .hero-logo,
-.home-hero .hero-logo,
-.hero-home .hero-logo,
-[data-hero="home"] .hero-logo{
-  position: relative;
-  z-index: 3;
-  pointer-events: auto;
-}
-
-/* Home Hero — Dedicated Logo Layer (always above glass) */
-#home-hero .home-hero-logo-layer,
-.home-hero .home-hero-logo-layer,
-.hero-home .home-hero-logo-layer,
-[data-hero="home"] .home-hero-logo-layer{
-  position: relative;
-  z-index: 3;
-  pointer-events: auto;
-}
-
-/* Defensive: if an explicit overlay node exists, keep it under logo + content */
+/* Defensive: if an explicit overlay node exists, keep it under content */
 #home-hero .home-hero-overlay,
 .home-hero .home-hero-overlay,
 .hero-home .home-hero-overlay,
@@ -273,21 +250,7 @@ body.light-mode{
 }
 
 /* =============================================================================
-   04) ABOUT HERO LOGO LAYER — DISABLED
-============================================================================= */
-
-.home-hero-logo-layer,
-.home-hero-logo,
-.hero-logo,
-.home-hero-logo-layer img,
-.home-hero-logo-layer svg{
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* =============================================================================
-   05) ABOUT RAIL ALIGNMENT (GLOBAL ABOUT SECTIONS)
+   04) ABOUT RAIL ALIGNMENT (GLOBAL ABOUT SECTIONS)
 ============================================================================= */
 
 .home-rail{
@@ -312,7 +275,7 @@ body.light-mode{
 }
 
 /* =============================================================================
-   06) RTL ABOUT ALIGNMENT (TEXT-ONLY, KEEP LTR RAIL)
+   05) RTL ABOUT ALIGNMENT (TEXT-ONLY, KEEP LTR RAIL)
 ============================================================================= */
 
 html.lang-rtl .home-inner,
@@ -333,7 +296,7 @@ html.lang-rtl .featured-grid [data-i18n-key]{
 }
 
 /* =============================================================================
-   07) ABOUT ESSENCE — LAYOUT RESET
+   06) ABOUT ESSENCE — LAYOUT RESET
 ============================================================================= */
 
 .home-essence,
@@ -356,40 +319,7 @@ html.lang-rtl .featured-grid [data-i18n-key]{
 }
 
 /* =============================================================================
-   07A) ABOUT ESSENCE — LEGACY CHROMA BACKDROP (DISABLED)
-============================================================================= */
-
-#essence-chroma,
-.essence-chroma,
-.essence-gradient,
-[data-essence-chroma]{
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  background: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-body.essence-pinned #essence-pin-backdrop{
-  background: transparent !important;
-  opacity: 0 !important;
-}
-
-/* =============================================================================
-   08) POST-ESSENCE SECTION REVEAL — STATIC RESET
-============================================================================= */
-
-#essence-scroll-spacer + section{
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  pointer-events: auto;
-}
-
-/* =============================================================================
-   09) ABOUT ICOS CHAPTER — CAPTURED INTRODUCTION
+   07) ABOUT ICOS CHAPTER — CAPTURED INTRODUCTION
 ============================================================================= */
 
 .home-icos-stack-shell{
@@ -626,7 +556,7 @@ body.essence-pinned #essence-pin-backdrop{
 }
 
 /* =============================================================================
-   09A) ABOUT CHAPTER PROGRESSION — UPDATES / FEATURED / INSIGHTS / CLOSING
+   07A) ABOUT CHAPTER PROGRESSION — UPDATES / FEATURED / INSIGHTS / CLOSING
 ============================================================================= */
 
 .home-updates-chapter,
@@ -702,7 +632,7 @@ body.essence-pinned #essence-pin-backdrop{
 }
 
 /* =============================================================================
-   09B) ABOUT FEATURED TRANSITION SHELL — CORE CAPABILITIES / INSIGHTS HANDOFF
+   07B) ABOUT FEATURED TRANSITION SHELL — CORE CAPABILITIES / INSIGHTS HANDOFF
 ============================================================================= */
 
 .home-featured-transition-shell{
@@ -795,7 +725,7 @@ body.essence-pinned #essence-pin-backdrop{
 }
 
 /* =============================================================================
-   10) ABOUT CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
+   08) ABOUT CLOSING — CENTERED INTELLECTUAL STATEMENT (SEO SAFE)
 ============================================================================= */
 
 .home-closing{

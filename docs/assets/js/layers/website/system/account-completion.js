@@ -170,6 +170,15 @@ import {
     window.location.href = PROFILE_ROUTE;
   }
 
+  function requestGuestAccountEntry(detail = {}) {
+    document.dispatchEvent(new CustomEvent('account-drawer:guest-entry', {
+      detail: {
+        source: detail.source || MODULE_ID,
+        surface: detail.surface || 'entry'
+      }
+    }));
+  }
+
   function hasAccountDrawer() {
     return !!document.querySelector('#account-drawer, [data-account-drawer="true"]');
   }
@@ -1233,6 +1242,27 @@ import {
   }
 
   function bindAccountEvents() {
+    document.addEventListener('account:entry-request', (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      const user = getFirebaseAuth()?.currentUser || null;
+
+      if (!user) {
+        requestGuestAccountEntry(detail);
+        return;
+      }
+
+      if (isProfileRoute()) {
+        document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+          detail: {
+            section: 'overview'
+          }
+        }));
+        return;
+      }
+
+      redirectToProfile();
+    });
+
     document.addEventListener('account:provider-submit', (event) => {
       const detail = event instanceof CustomEvent ? event.detail || {} : {};
       void handleProviderSubmit(detail);

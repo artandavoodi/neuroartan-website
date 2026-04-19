@@ -422,6 +422,15 @@
     );
   }
 
+  function requestAccountEntry(detail = {}) {
+    document.dispatchEvent(new CustomEvent('account:entry-request', {
+      detail: {
+        source: detail.source || MODULE_ID,
+        surface: detail.surface || 'entry'
+      }
+    }));
+  }
+
   /* =============================================================================
      09) GLOBAL CLICK BINDING
   ============================================================================= */
@@ -434,9 +443,8 @@
       if (trigger) {
         event.preventDefault();
         event.stopPropagation();
-        openDrawer({
+        requestAccountEntry({
           source: 'direct-trigger',
-          state: 'guest',
           surface: 'entry'
         });
         return;

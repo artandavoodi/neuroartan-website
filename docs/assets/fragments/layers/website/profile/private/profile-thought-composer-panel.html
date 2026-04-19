@@ -1,0 +1,62 @@
+<!-- =============================================================================
+     01) PRIVATE THOUGHT COMPOSER PANEL
+     02) COMPOSER HEADER
+     03) COMPOSER FORM
+============================================================================= -->
+<article class="profile-thought-composer ui-card ui-surface--glass" data-profile-thought-composer>
+  <div class="profile-thought-composer__header">
+    <div>
+      <h2 class="profile-thought-composer__title">Thought Bank</h2>
+      <p class="profile-thought-composer__intro" data-profile-thought-bank-copy>
+        Use this surface to capture private reflections or stage public writing for your company-domain route.
+      </p>
+    </div>
+
+    <button class="ui-button ui-button--ghost" type="button" data-profile-action="open-dashboard">
+      Open Dashboard
+    </button>
+  </div>
+
+  <form class="profile-thought-composer__form" data-profile-thought-compose-form="true">
+    <div class="profile-thought-composer__audiences" data-profile-thought-audience-controls>
+      <button class="profile-thought-composer__audience" type="button" data-profile-thought-audience-toggle="private">
+        Private bank
+      </button>
+      <button class="profile-thought-composer__audience" type="button" data-profile-thought-audience-toggle="public">
+        Public route
+      </button>
+    </div>
+
+    <div class="profile-thought-composer__field-grid">
+      <label class="profile-thought-composer__field">
+        <span class="profile-thought-composer__label">Category</span>
+        <select class="ui-field profile-thought-composer__select" data-profile-thought-category="true"></select>
+      </label>
+    </div>
+
+    <label class="profile-thought-composer__field profile-thought-composer__field--full">
+      <span class="profile-thought-composer__label">Thought</span>
+      <textarea
+        class="ui-field profile-thought-composer__textarea"
+        rows="7"
+        data-profile-thought-textarea="true"
+        placeholder="Capture a thought, reflection, or public idea for your profile surface."
+      ></textarea>
+    </label>
+
+    <div class="profile-thought-composer__footer">
+      <div class="profile-thought-composer__meta">
+        <p class="profile-thought-composer__status" data-profile-thought-bank-status>
+          Thought capture is active inside the private profile surface.
+        </p>
+        <p class="profile-thought-composer__submit-status" data-profile-thought-submit-status="idle"></p>
+      </div>
+
+      <div class="profile-thought-composer__actions">
+        <button class="ui-button ui-button--secondary" type="submit" data-profile-thought-submit="true">
+          <span data-profile-thought-submit-label>Save Privately</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</article>

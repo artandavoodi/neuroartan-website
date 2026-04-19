@@ -1,77 +1,9 @@
 <!-- =============================================================================
      01) PRIVATE THOUGHT BANK PANEL
-     02) THOUGHT BANK COMPOSER
-     03) THOUGHT BANK LANES
+     02) THOUGHT BANK COMPOSER MOUNT
+     03) THOUGHT BANK STREAM MOUNT
 ============================================================================= -->
 <div class="profile-thought-bank" data-profile-thought-bank-panel data-profile-surface="private">
-  <article class="profile-thought-bank__card ui-card ui-surface--glass">
-    <div class="profile-thought-bank__header">
-      <div>
-        <h2 class="profile-thought-bank__title">Thought Bank</h2>
-        <p class="profile-thought-bank__intro" data-profile-thought-bank-copy>
-          Private and public writing lanes are scaffolded here so the profile can mature into a true continuity surface instead of a static account page.
-        </p>
-      </div>
-
-      <button class="ui-button ui-button--secondary" type="button" data-profile-action="compose-thought">
-        Compose
-      </button>
-    </div>
-
-    <div class="profile-thought-bank__composer">
-      <div class="profile-thought-bank__composer-header">
-        <p class="profile-thought-bank__composer-title">Writing composer</p>
-        <div class="profile-thought-bank__audience">
-          <span class="ui-badge ui-badge--outline" data-profile-thought-bank-audience-private>Private bank</span>
-          <span class="ui-badge ui-badge--outline" data-profile-thought-bank-audience-public>Public writing</span>
-        </div>
-      </div>
-
-      <textarea
-        class="ui-field profile-thought-bank__textarea"
-        rows="6"
-        placeholder="Thought capture will connect here once the canonical ICOS thought system is integrated into the website profile surface."
-        readonly
-      ></textarea>
-
-      <p class="profile-thought-bank__status" data-profile-thought-bank-status>
-        Thought capture is structurally prepared, but publish/save actions remain deferred until the canonical writing system is connected.
-      </p>
-
-      <div class="profile-thought-bank__composer-actions">
-        <button class="ui-button ui-button--secondary" type="button" disabled aria-disabled="true">Save Privately</button>
-        <button class="ui-button ui-button--ghost" type="button" disabled aria-disabled="true">Publish Publicly</button>
-      </div>
-    </div>
-  </article>
-
-  <div class="profile-thought-bank__lanes">
-    <article class="profile-thought-bank__lane ui-card ui-surface--glass">
-      <div class="profile-thought-bank__lane-header">
-        <div>
-          <h3 class="profile-thought-bank__lane-title">Private bank</h3>
-          <p class="profile-thought-bank__lane-copy">Owner-only captured reflections and thought records.</p>
-        </div>
-        <span class="ui-badge ui-badge--outline" data-profile-thought-bank-private-count>0 entries</span>
-      </div>
-
-      <div class="profile-thought-bank__empty" data-profile-thought-bank-private-empty>
-        No canonical private thought entries are connected to this surface yet.
-      </div>
-    </article>
-
-    <article class="profile-thought-bank__lane ui-card ui-surface--glass">
-      <div class="profile-thought-bank__lane-header">
-        <div>
-          <h3 class="profile-thought-bank__lane-title">Public writing</h3>
-          <p class="profile-thought-bank__lane-copy">Thoughts intended for public company-domain presence.</p>
-        </div>
-        <span class="ui-badge ui-badge--outline" data-profile-thought-bank-public-count>0 entries</span>
-      </div>
-
-      <div class="profile-thought-bank__empty" data-profile-thought-bank-public-empty>
-        Public writing lanes will populate once canonical publication and thought modules are available.
-      </div>
-    </article>
-  </div>
+  <div data-include="profile-private-thought-composer-panel"></div>
+  <div data-include="profile-private-thought-stream-panel"></div>
 </div>

@@ -1,0 +1,36 @@
+{
+  "audiences": [
+    {
+      "key": "private",
+      "label": "Private bank",
+      "summary": "Owner-only captured reflections and thought records."
+    },
+    {
+      "key": "public",
+      "label": "Public route",
+      "summary": "Thoughts staged for company-domain public presence."
+    }
+  ],
+  "categories": [
+    {
+      "key": "identity",
+      "label": "Identity",
+      "summary": "Self-definition, role, and personal orientation."
+    },
+    {
+      "key": "memory",
+      "label": "Memory",
+      "summary": "Recollection, continuity, and remembered context."
+    },
+    {
+      "key": "strategy",
+      "label": "Strategy",
+      "summary": "Decision-making, direction, and long-range planning."
+    },
+    {
+      "key": "voice",
+      "label": "Voice",
+      "summary": "Language, articulation, and public expression."
+    }
+  ]
+}

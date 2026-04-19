@@ -1,87 +1,11 @@
 <!-- =============================================================================
      01) PRIVATE DASHBOARD PANEL
-     02) DASHBOARD METRIC GRID
-     03) DASHBOARD SYSTEM GRAPH
+     02) DASHBOARD METRICS MOUNT
+     03) DASHBOARD GRAPH MOUNT
 ============================================================================= -->
 <div class="profile-dashboard" data-profile-dashboard-panel data-profile-surface="private">
   <div class="profile-dashboard__grid">
-    <article class="profile-dashboard__card ui-card ui-surface--glass">
-      <div class="profile-dashboard__header">
-        <div>
-          <h2 class="profile-dashboard__title">Profile Dashboard</h2>
-          <p class="profile-dashboard__intro" data-profile-dashboard-copy>
-            This dashboard tracks how mature the private profile environment is becoming across identity, route readiness, and future continuity systems.
-          </p>
-        </div>
-      </div>
-
-      <div class="profile-dashboard__metrics">
-        <div class="profile-dashboard__metric">
-          <div class="profile-dashboard__metric-copy">
-            <p class="profile-dashboard__metric-label">Completion</p>
-            <p class="profile-dashboard__metric-value" data-profile-dashboard-value="completion">0%</p>
-          </div>
-          <div class="profile-dashboard__bar"><span data-profile-dashboard-bar="completion"></span></div>
-        </div>
-
-        <div class="profile-dashboard__metric">
-          <div class="profile-dashboard__metric-copy">
-            <p class="profile-dashboard__metric-label">Route readiness</p>
-            <p class="profile-dashboard__metric-value" data-profile-dashboard-value="route">0%</p>
-          </div>
-          <div class="profile-dashboard__bar"><span data-profile-dashboard-bar="route"></span></div>
-        </div>
-
-        <div class="profile-dashboard__metric">
-          <div class="profile-dashboard__metric-copy">
-            <p class="profile-dashboard__metric-label">Visibility control</p>
-            <p class="profile-dashboard__metric-value" data-profile-dashboard-value="visibility">0%</p>
-          </div>
-          <div class="profile-dashboard__bar"><span data-profile-dashboard-bar="visibility"></span></div>
-        </div>
-
-        <div class="profile-dashboard__metric">
-          <div class="profile-dashboard__metric-copy">
-            <p class="profile-dashboard__metric-label">Continuity readiness</p>
-            <p class="profile-dashboard__metric-value" data-profile-dashboard-value="continuity">0%</p>
-          </div>
-          <div class="profile-dashboard__bar"><span data-profile-dashboard-bar="continuity"></span></div>
-        </div>
-      </div>
-    </article>
-
-    <article class="profile-dashboard__card ui-card ui-surface--glass">
-      <div class="profile-dashboard__header">
-        <div>
-          <h2 class="profile-dashboard__title">Thought Map</h2>
-          <p class="profile-dashboard__intro">
-            Thought analytics will connect here once the canonical writing and reflection model is active across ICOS and website surfaces.
-          </p>
-        </div>
-      </div>
-
-      <div class="profile-dashboard__graph" data-profile-dashboard-thought-graph>
-        <div class="profile-dashboard__graph-row">
-          <span class="profile-dashboard__graph-label">Identity</span>
-          <span class="profile-dashboard__graph-track"><span data-profile-dashboard-thought-bar="identity"></span></span>
-        </div>
-        <div class="profile-dashboard__graph-row">
-          <span class="profile-dashboard__graph-label">Memory</span>
-          <span class="profile-dashboard__graph-track"><span data-profile-dashboard-thought-bar="memory"></span></span>
-        </div>
-        <div class="profile-dashboard__graph-row">
-          <span class="profile-dashboard__graph-label">Strategy</span>
-          <span class="profile-dashboard__graph-track"><span data-profile-dashboard-thought-bar="strategy"></span></span>
-        </div>
-        <div class="profile-dashboard__graph-row">
-          <span class="profile-dashboard__graph-label">Voice</span>
-          <span class="profile-dashboard__graph-track"><span data-profile-dashboard-thought-bar="voice"></span></span>
-        </div>
-      </div>
-
-      <p class="profile-dashboard__note" data-profile-dashboard-thought-note>
-        No canonical thought categories are connected yet.
-      </p>
-    </article>
+    <div data-include="profile-private-dashboard-metrics-panel"></div>
+    <div data-include="profile-private-dashboard-graph-panel"></div>
   </div>
 </div>

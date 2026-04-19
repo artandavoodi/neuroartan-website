@@ -398,11 +398,9 @@
       clearCloseTimer();
       closePanels();
 
-      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+      document.dispatchEvent(new CustomEvent('account:entry-request', {
         detail: {
-          source: 'institutional-menu',
-          state: 'guest',
-          surface: 'entry'
+          source: 'institutional-menu'
         }
       }));
     }

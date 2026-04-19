@@ -21,6 +21,7 @@ import './profile-shell.js';
 import './profile-header.js';
 import './profile-sections.js';
 import './profile-overview.js';
+import './profile-thought-store.js';
 import './profile-thought-bank.js';
 import './profile-dashboard.js';
 import './profile-settings.js';

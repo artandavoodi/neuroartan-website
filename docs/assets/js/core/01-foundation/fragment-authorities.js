@@ -81,6 +81,7 @@ function getFragmentPaths() {
     'profile-public-header': assetPath('/assets/fragments/layers/website/profile/public/profile-header.html'),
     'profile-public-sections': assetPath('/assets/fragments/layers/website/profile/public/profile-sections.html'),
     'profile-public-footer': assetPath('/assets/fragments/layers/website/profile/public/profile-footer.html'),
+    'home-featured-functions': assetPath('/assets/fragments/layers/website/sections/home-featured-functions.html'),
     'footer': assetPath('/assets/fragments/layers/website/footer/footer.html'),
     'home-dashboard-topbar': assetPath('/assets/fragments/layers/website/home/home-dashboard-topbar.html'),
     'home-sidebar': assetPath('/assets/fragments/layers/website/home/home-sidebar.html'),

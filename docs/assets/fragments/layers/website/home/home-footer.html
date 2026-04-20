@@ -9,34 +9,53 @@
 
 <footer class="home-footer" id="home-footer" aria-label="Home footer">
   <div class="home-footer__inner">
-    <div class="home-footer__brand-group">
-      <a class="home-footer__brand" href="/" aria-label="Neuroartan home">
-        <img
-          class="home-footer__brand-mark"
-          src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
-          alt="Neuroartan symbol">
-        <span class="home-footer__brand-text">Neuroartan</span>
-      </a>
-      <p class="home-footer__statement">
-        Voice-trained continuity, cognitive interaction, and profile-based intelligence.
-      </p>
+    <div class="home-footer__left">
+      <span class="home-footer__copy" data-home-footer-copy>© 2026 Neuroartan</span>
+
+      <nav class="home-footer__nav" aria-label="Home footer navigation">
+        <a class="home-footer__link" href="/pages/about/">About</a>
+        <a class="home-footer__link" href="/platform/">Platform</a>
+        <a class="home-footer__link" href="/knowledge-research/">Knowledge</a>
+        <a class="home-footer__link" href="/updates/">Updates</a>
+      </nav>
     </div>
 
-    <nav class="home-footer__nav" aria-label="Home footer navigation">
-      <a class="home-footer__link" href="/pages/about/">About</a>
-      <a class="home-footer__link" href="/platform/">Platform</a>
-      <a class="home-footer__link" href="/knowledge-research/">Knowledge</a>
-      <a class="home-footer__link" href="/updates/">Updates</a>
-    </nav>
+    <div class="footer-locale home-footer__locale">
+      <div class="locale-item">
+        <button
+          class="locale-button"
+          type="button"
+          aria-label="Select language"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          data-home-footer-language-toggle="true">
+          <span data-home-footer-language-value="true">EN</span>
+        </button>
+        <div class="language-dropdown" data-home-footer-language-dropdown="true" aria-hidden="true"></div>
+      </div>
 
-    <div class="home-footer__meta">
-      <button class="home-footer__meta-action" type="button" aria-controls="country-overlay-mount" aria-expanded="false">
-        Language
-      </button>
-      <button class="home-footer__meta-action" type="button" aria-controls="cookie-consent-mount" aria-expanded="false">
+      <span class="footer-separator-dot">•</span>
+
+      <div class="locale-item">
+        <button
+          class="locale-button"
+          type="button"
+          aria-label="Select country and region"
+          data-home-footer-country-selector="true">
+          <span data-home-footer-country-value="true">United States</span>
+        </button>
+      </div>
+
+      <span class="footer-separator-dot">•</span>
+
+      <button
+        class="locale-button home-footer__privacy-action"
+        data-home-footer-action="privacy"
+        type="button"
+        aria-controls="cookie-consent-mount"
+        aria-expanded="false">
         Privacy
       </button>
-      <span class="home-footer__meta-copy">© Neuroartan</span>
     </div>
   </div>
 </footer>

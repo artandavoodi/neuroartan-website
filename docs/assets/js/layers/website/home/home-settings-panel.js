@@ -1,3 +1,9 @@
+import {
+  buildPublicProfileDisplay,
+  buildPublicProfilePath,
+} from '../system/account-profile-identity.js';
+import { subscribeHomeSurfaceState } from './home-surface-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
@@ -16,6 +22,7 @@ const HOME_SETTINGS_PANEL_STATE = {
   isBound: false,
   isOpen: false,
   root: null,
+  snapshot: null,
 };
 
 /* =========================================================
@@ -27,6 +34,10 @@ function getHomeSettingsPanelNodes() {
     panel: document.querySelector('#home-settings-panel'),
     closeButton: document.querySelector('#home-settings-panel-close'),
     items: Array.from(document.querySelectorAll('#home-settings-panel .home-settings-panel__item')),
+    languageValue: document.querySelector('[data-home-settings-language-value]'),
+    countryValue: document.querySelector('[data-home-settings-country-value]'),
+    routeValue: document.querySelector('[data-home-settings-route-value]'),
+    themeSummary: document.querySelector('[data-home-settings-theme-summary]'),
   };
 }
 
@@ -69,6 +80,50 @@ function closeHomeSettingsPanel() {
   dispatchHomeSettingsPanelEvent('neuroartan:home-topbar-reset-triggers');
 }
 
+function resolveThemeSummary(theme) {
+  switch (String(theme || '').toLowerCase()) {
+    case 'dark':
+      return 'Dark mode removes the cinematic background and preserves the homepage interaction surface in a quiet black state.';
+    case 'light':
+      return 'Light mode removes the cinematic background and preserves the homepage interaction surface in a quiet white state.';
+    default:
+      return 'Color mode keeps the cinematic background and the full homepage interaction surface active.';
+  }
+}
+
+function resolveLanguageLabel(language) {
+  const code = String(language || 'en').trim().toLowerCase() || 'en';
+
+  try {
+    return new Intl.DisplayNames([code], { type: 'language' }).of(code) || code.toUpperCase();
+  } catch (_) {
+    return code.toUpperCase();
+  }
+}
+
+function renderHomeSettingsPanel(snapshot) {
+  HOME_SETTINGS_PANEL_STATE.snapshot = snapshot;
+
+  const nodes = getHomeSettingsPanelNodes();
+  const username = snapshot?.account?.profile?.username || '';
+
+  if (nodes.themeSummary) {
+    nodes.themeSummary.textContent = resolveThemeSummary(snapshot?.theme);
+  }
+
+  if (nodes.languageValue) {
+    nodes.languageValue.textContent = resolveLanguageLabel(snapshot?.locale?.language);
+  }
+
+  if (nodes.countryValue) {
+    nodes.countryValue.textContent = snapshot?.locale?.countryLabel || 'United States';
+  }
+
+  if (nodes.routeValue) {
+    nodes.routeValue.textContent = buildPublicProfileDisplay(username);
+  }
+}
+
 /* =========================================================
    04. ACTION HELPERS
    ========================================================= */
@@ -77,8 +132,8 @@ function normalizeHomeSettingsLabel(label) {
   return typeof label === 'string' ? label.trim().toLowerCase() : '';
 }
 
-function handleHomeSettingsPanelAction(label) {
-  const normalized = normalizeHomeSettingsLabel(label);
+function handleHomeSettingsPanelAction(action) {
+  const normalized = normalizeHomeSettingsLabel(action);
 
   if (normalized === 'language' || normalized === 'country') {
     dispatchHomeSettingsPanelEvent('neuroartan:country-overlay-open-requested', {
@@ -95,8 +150,28 @@ function handleHomeSettingsPanelAction(label) {
     return;
   }
 
+  if (normalized === 'profile') {
+    if (HOME_SETTINGS_PANEL_STATE.snapshot?.account?.signedIn) {
+      window.location.href = '/profile.html';
+      return;
+    }
+
+    dispatchHomeSettingsPanelEvent('account:entry-request', {
+      source: 'home-settings-panel',
+    });
+    closeHomeSettingsPanel();
+    return;
+  }
+
+  if (normalized === 'public-route') {
+    const username = HOME_SETTINGS_PANEL_STATE.snapshot?.account?.profile?.username || '';
+    const route = buildPublicProfilePath(username) || '/profile.html';
+    window.location.href = route;
+    return;
+  }
+
   dispatchHomeSettingsPanelEvent('neuroartan:home-settings-panel-item-selected', {
-    label: label?.trim() || '',
+    label: action?.trim() || '',
   });
 }
 
@@ -105,6 +180,8 @@ function handleHomeSettingsPanelAction(label) {
    ========================================================= */
 
 function bindHomeSettingsPanel() {
+  subscribeHomeSurfaceState(renderHomeSettingsPanel);
+
   document.addEventListener('click', (event) => {
     const root = getLiveSettingsPanelRoot();
     if (!root) return;
@@ -124,7 +201,11 @@ function bindHomeSettingsPanel() {
     }
 
     if (target.matches('.home-settings-panel__item')) {
-      handleHomeSettingsPanelAction(target.textContent || '');
+      handleHomeSettingsPanelAction(
+        target.getAttribute('data-home-settings-action')
+        || target.textContent
+        || ''
+      );
     }
   });
 
@@ -156,6 +237,7 @@ function bootHomeSettingsPanel() {
   HOME_SETTINGS_PANEL_STATE.root = root;
 
   if (HOME_SETTINGS_PANEL_STATE.isBound) {
+    renderHomeSettingsPanel(HOME_SETTINGS_PANEL_STATE.snapshot || {});
     return;
   }
 

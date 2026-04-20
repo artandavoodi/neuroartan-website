@@ -176,6 +176,12 @@ body.hero-stage-hidden .home-hero-shader{
   transition: opacity var(--home-hero-shader-transition);
 }
 
+body.theme-dark .home-hero-shader,
+body.theme-light .home-hero-shader{
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* =============================================================================
    09) RESPONSIVE
 ============================================================================= */

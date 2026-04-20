@@ -118,6 +118,28 @@ body.light-mode .home-hero-matte{
     );
 }
 
+body.theme-dark #home-hero .home-hero-matte,
+body.theme-dark .home-hero-matte{
+  --home-matte-opacity-top: 1;
+  --home-matte-opacity-mid: 1;
+  --home-matte-opacity-low: 1;
+  --home-matte-opacity-bottom: 1;
+  --home-matte-blur: 0px;
+  background-color: rgb(0, 0, 0);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+body.theme-light #home-hero .home-hero-matte,
+body.theme-light .home-hero-matte{
+  --home-matte-opacity-top: 1;
+  --home-matte-opacity-mid: 1;
+  --home-matte-opacity-low: 1;
+  --home-matte-opacity-bottom: 1;
+  --home-matte-blur: 0px;
+  background-color: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
 /* =============================================================================
    04) HOME MATTE STATE MODES
    Usage target for JS/body state switching:

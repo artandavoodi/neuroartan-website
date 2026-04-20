@@ -51,15 +51,29 @@
   };
 
   const getFooterCountryButton = () => {
-    return document.getElementById('country-selector') || document.querySelector('[data-footer-country-selector="true"]');
+    return document.getElementById('country-selector')
+      || document.querySelector('[data-footer-country-selector="true"]')
+      || document.querySelector('[data-home-footer-country-selector="true"]');
   };
 
   const getFooterLanguageToggle = () => {
-    return document.getElementById('language-toggle') || document.querySelector('[data-footer-language-toggle="true"]');
+    return document.getElementById('language-toggle')
+      || document.querySelector('[data-footer-language-toggle="true"]')
+      || document.querySelector('[data-home-footer-language-toggle="true"]');
   };
 
   const getFooterLanguageDropdown = () => {
-    return document.getElementById('language-dropdown') || document.querySelector('[data-footer-language-dropdown="true"]');
+    return document.getElementById('language-dropdown')
+      || document.querySelector('[data-footer-language-dropdown="true"]')
+      || document.querySelector('[data-home-footer-language-dropdown="true"]');
+  };
+
+  const getHomeFooterCountryValue = () => {
+    return document.querySelector('[data-home-footer-country-value="true"]');
+  };
+
+  const getHomeFooterLanguageValue = () => {
+    return document.querySelector('[data-home-footer-language-value="true"]');
   };
 
   /* =============================================================================
@@ -311,9 +325,13 @@
   const setLabels = () => {
     const countryEl = qs('#current-country');
     const langEl = qs('#current-language');
+    const homeCountryEl = getHomeFooterCountryValue();
+    const homeLangEl = getHomeFooterLanguageValue();
 
     if (countryEl) countryEl.textContent = state.countryLabel || '—';
     if (langEl) langEl.textContent = (state.language || DEFAULT_LANGUAGE).toUpperCase();
+    if (homeCountryEl) homeCountryEl.textContent = state.countryLabel || '—';
+    if (homeLangEl) homeLangEl.textContent = (state.language || DEFAULT_LANGUAGE).toUpperCase();
   };
 
   const dispatchLocaleStateChanged = () => {
@@ -519,6 +537,7 @@
 
   let languageDocCloserBound = false;
   let localeStateEventsBound = false;
+  let localeOpenRequestsBound = false;
 
   const buildLanguageDropdown = (primaryLang, availableLangs) => {
     const dd = getFooterLanguageDropdown();
@@ -802,6 +821,16 @@
     });
   };
 
+  const bindLocaleOpenRequests = () => {
+    if (localeOpenRequestsBound) return;
+    localeOpenRequestsBound = true;
+
+    document.addEventListener('neuroartan:country-overlay-open-requested', () => {
+      closeLanguageDropdown();
+      openCountryOverlay();
+    });
+  };
+
   /* =============================================================================
      15B) GLOBAL API EXPOSURE
   ============================================================================= */
@@ -840,6 +869,7 @@
   async function init() {
     hydrateStateFromStorage();
     bindLocaleStateEvents();
+    bindLocaleOpenRequests();
 
     const localeAPI = getLocaleAPI();
     const storedCountryCode = String(getLS(STORAGE.COUNTRY_CODE, LEGACY_STORAGE.COUNTRY_CODE) || '').trim().toUpperCase();

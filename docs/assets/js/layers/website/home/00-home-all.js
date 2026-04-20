@@ -8,6 +8,7 @@
    01. HOME LAYER AUTHORITY IMPORTS
    ========================================================= */
 
+import './home-surface-state.js';
 import './home-dashboard-topbar.js';
 import './home-sidebar.js';
 import './home-panel-left.js';

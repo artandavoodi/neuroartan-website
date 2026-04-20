@@ -27,29 +27,41 @@
     <section class="home-panel-right__section" aria-label="Identity surface">
       <p class="home-panel-right__section-title">Identity</p>
       <div class="home-panel-right__identity-card">
-        <div class="home-panel-right__avatar" aria-hidden="true">A</div>
-        <div class="home-panel-right__identity-copy">
-          <p class="home-panel-right__name">Profile name</p>
-          <p class="home-panel-right__meta">Voice-trained continuity profile</p>
+        <div class="home-panel-right__avatar" aria-hidden="true">
+          <img class="home-panel-right__avatar-image" data-home-profile-avatar alt="" hidden>
+          <span class="home-panel-right__avatar-fallback" data-home-profile-avatar-fallback>N</span>
         </div>
+        <div class="home-panel-right__identity-copy">
+          <p class="home-panel-right__name" data-home-profile-name>Sign in to Neuroartan</p>
+          <p class="home-panel-right__username" data-home-profile-username>@username</p>
+          <p class="home-panel-right__meta" data-home-profile-meta>Voice-trained continuity profile</p>
+        </div>
+      </div>
+      <div class="home-panel-right__route-card">
+        <p class="home-panel-right__route-label">Public route</p>
+        <a class="home-panel-right__route-link" data-home-profile-route href="/profile.html">neuroartan.com/username</a>
+        <p class="home-panel-right__route-status" data-home-profile-route-status>
+          Public identity becomes active once a canonical username is ready.
+        </p>
       </div>
     </section>
 
     <section class="home-panel-right__section" aria-label="Profile actions">
       <p class="home-panel-right__section-title">Profile actions</p>
       <div class="home-panel-right__stack">
-        <button class="home-panel-right__item" type="button">Open profile model</button>
-        <button class="home-panel-right__item" type="button">Create profile</button>
-        <button class="home-panel-right__item" type="button">Manage account</button>
+        <button class="home-panel-right__item" data-home-profile-action="open-profile" type="button">Open private profile</button>
+        <button class="home-panel-right__item" data-home-profile-action="public-route" type="button">View public route</button>
+        <button class="home-panel-right__item" data-home-profile-action="account-entry" type="button">Create account</button>
       </div>
     </section>
 
     <section class="home-panel-right__section" aria-label="System actions">
       <p class="home-panel-right__section-title">System</p>
       <div class="home-panel-right__stack">
-        <button class="home-panel-right__item" type="button">Settings</button>
-        <button class="home-panel-right__item" type="button">Language</button>
-        <button class="home-panel-right__item" type="button">Privacy</button>
+        <button class="home-panel-right__item" data-home-profile-action="settings" type="button">Settings</button>
+        <button class="home-panel-right__item" data-home-profile-action="language" type="button">Language</button>
+        <button class="home-panel-right__item" data-home-profile-action="privacy" type="button">Privacy</button>
+        <button class="home-panel-right__item" data-home-profile-action="sign-out" type="button">Sign out</button>
       </div>
     </section>
   </div>

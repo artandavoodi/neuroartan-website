@@ -25,7 +25,7 @@ function getHomeFooterNodes() {
 
   return {
     root,
-    actions: root ? Array.from(root.querySelectorAll('.home-footer__meta-action')) : [],
+    copy: root ? root.querySelector('[data-home-footer-copy]') : null,
   };
 }
 
@@ -37,19 +37,20 @@ function getLiveFooterRoot() {
   return document.querySelector('#home-footer');
 }
 
+function renderHomeFooter() {
+  const nodes = getHomeFooterNodes();
+
+  if (nodes.copy) {
+    nodes.copy.textContent = `© ${new Date().getFullYear()} Neuroartan`;
+  }
+}
+
 /* =========================================================
    03. ACTION HELPERS
    ========================================================= */
 
 function handleHomeFooterAction(actionLabel) {
   const normalized = typeof actionLabel === 'string' ? actionLabel.trim().toLowerCase() : '';
-
-  if (normalized === 'language') {
-    dispatchHomeFooterEvent('neuroartan:country-overlay-open-requested', {
-      source: 'home-footer',
-    });
-    return;
-  }
 
   if (normalized === 'privacy') {
     dispatchHomeFooterEvent('neuroartan:cookie-consent-open-requested', {
@@ -68,13 +69,17 @@ function bindHomeFooter() {
     const root = getLiveFooterRoot();
     if (!root) return;
 
-    const target = event.target.closest('#home-footer .home-footer__meta-action');
+    const target = event.target.closest('#home-footer [data-home-footer-action]');
 
     if (!target || !root.contains(target)) {
       return;
     }
 
-    handleHomeFooterAction(target.textContent || '');
+    handleHomeFooterAction(
+      target.getAttribute('data-home-footer-action')
+      || target.textContent
+      || ''
+    );
   });
 }
 
@@ -91,10 +96,12 @@ function bootHomeFooter() {
   HOME_FOOTER_STATE.root = root;
 
   if (HOME_FOOTER_STATE.isBound) {
+    renderHomeFooter();
     return;
   }
 
   HOME_FOOTER_STATE.isBound = true;
+  renderHomeFooter();
   bindHomeFooter();
 }
 

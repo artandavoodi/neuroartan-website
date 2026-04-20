@@ -2,9 +2,9 @@
    00) FILE INDEX
    01) HOME FOOTER SHELL
    02) INNER LAYOUT
-   03) BRAND GROUP
+   03) LEFT RAIL
    04) NAVIGATION LINKS
-   05) META ACTIONS
+   05) LOCALE RAIL
    06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 
@@ -21,58 +21,36 @@
    02) INNER LAYOUT
 ============================================================================= */
 .home-footer__inner{
-  display:grid;
-  grid-template-columns:minmax(0, 1.2fr) auto auto;
+  display:flex;
   align-items:center;
-  gap:1rem;
+  justify-content:space-between;
+  gap:0.9rem;
   width:var(--site-rail-width);
   max-width:calc(100% - (var(--site-gutter) * 2));
   margin:0 auto;
   padding:0.8rem 0 0.9rem;
-  border-top:1px solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  border-top:1px solid var(--home-chrome-border);
   background:transparent;
   pointer-events:auto;
 }
 
 /* =============================================================================
-   03) BRAND GROUP
+   03) LEFT RAIL
 ============================================================================= */
-.home-footer__brand-group{
+.home-footer__left{
+  display:flex;
+  align-items:center;
+  gap:0.72rem;
+  flex-wrap:wrap;
   min-width:0;
 }
 
-.home-footer__brand{
-  display:inline-flex;
-  align-items:center;
-  gap:0.7rem;
-  text-decoration:none;
-  color:inherit;
-  margin-bottom:0.4rem;
-  pointer-events:auto;
-}
-
-.home-footer__brand-mark{
-  display:block;
-  width:1.6rem;
-  height:1.6rem;
-  object-fit:contain;
-  object-position:center;
-  filter:var(--icon-image-filter, none);
-}
-
-.home-footer__brand-text{
-  font-size:0.82rem;
-  font-weight:500;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.94);
-}
-
-.home-footer__statement{
+.home-footer__copy{
   margin:0;
-  font-size:0.8rem;
-  line-height:1.45;
-  color:color-mix(in srgb, var(--text-primary-color) 56%, transparent);
+  color:var(--home-chrome-quiet);
+  font-size:0.76rem;
+  letter-spacing:0.04em;
+  white-space:nowrap;
 }
 
 /* =============================================================================
@@ -81,14 +59,14 @@
 .home-footer__nav{
   display:flex;
   flex-wrap:wrap;
-  gap:0.75rem 0.95rem;
+  gap:0.6rem 0.9rem;
   align-items:center;
 }
 
 .home-footer__link{
-  color:color-mix(in srgb, var(--text-primary-color) 82%, transparent);
+  color:var(--home-chrome-secondary);
   text-decoration:none;
-  font-size:0.8rem;
+  font-size:0.76rem;
   font-weight:400;
   letter-spacing:0.04em;
   white-space:nowrap;
@@ -96,39 +74,33 @@
 }
 
 /* =============================================================================
-   05) META ACTIONS
+   05) LOCALE RAIL
 ============================================================================= */
-.home-footer__meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:0.55rem 0.7rem;
-  align-items:center;
-  justify-content:flex-end;
-}
-
-.home-footer__meta-action{
+.home-footer__locale{
   display:inline-flex;
   align-items:center;
-  justify-content:center;
-  min-height:auto;
+  justify-content:flex-end;
+  gap:0.5rem;
+  flex-wrap:wrap;
+  min-width:0;
+}
+
+.home-footer__privacy-action{
   padding:0;
   border:0;
-  border-radius:0;
   background:transparent;
-  color:color-mix(in srgb, var(--text-primary-color) 82%, transparent);
+  color:var(--home-chrome-secondary);
+  font-family:inherit;
   font-size:0.76rem;
   font-weight:400;
   letter-spacing:0.04em;
+  line-height:1;
   cursor:pointer;
-  white-space:nowrap;
-  pointer-events:auto;
 }
 
-.home-footer__meta-copy{
-  color:color-mix(in srgb, var(--text-primary-color) 42%, transparent);
-  font-size:0.76rem;
-  letter-spacing:0.04em;
-  white-space:nowrap;
+.home-footer__privacy-action:hover,
+.home-footer__privacy-action:focus-visible{
+  color:var(--home-chrome-primary);
 }
 
 /* =============================================================================
@@ -136,11 +108,11 @@
 ============================================================================= */
 @media (max-width: 980px){
   .home-footer__inner{
-    grid-template-columns:1fr;
-    align-items:start;
+    flex-direction:column;
+    align-items:flex-start;
   }
 
-  .home-footer__meta{
+  .home-footer__locale{
     justify-content:flex-start;
   }
 }
@@ -150,10 +122,9 @@
     padding:0.78rem 0 0.82rem;
   }
 
-  .home-footer__statement,
+  .home-footer__copy,
   .home-footer__link,
-  .home-footer__meta-action,
-  .home-footer__meta-copy{
+  .home-footer__privacy-action{
     font-size:0.74rem;
   }
 }

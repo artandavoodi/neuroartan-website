@@ -1,3 +1,5 @@
+import { subscribeHomeSurfaceState } from './home-surface-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
@@ -14,6 +16,7 @@
 const HOME_SIDEBAR_STATE = {
   isBound: false,
   root: null,
+  snapshot: null,
 };
 
 /* =========================================================
@@ -28,6 +31,8 @@ function getHomeSidebarNodes() {
     closeButton: document.querySelector('#home-sidebar-close'),
     quickActionButtons: root ? Array.from(root.querySelectorAll('.home-sidebar__stack-item')) : [],
     navLinks: root ? Array.from(root.querySelectorAll('.home-sidebar__nav-link')) : [],
+    profileButton: root ? root.querySelector('[data-home-sidebar-action="profile"]') : null,
+    accountEntryButton: root ? root.querySelector('[data-home-sidebar-action="account-entry"]') : null,
   };
 }
 
@@ -72,10 +77,28 @@ function normalizeSidebarLabel(label) {
   return typeof label === 'string' ? label.trim().toLowerCase() : '';
 }
 
-function handleHomeSidebarQuickAction(label) {
-  const normalized = normalizeSidebarLabel(label);
+function isSignedIn() {
+  return !!HOME_SIDEBAR_STATE.snapshot?.account?.signedIn;
+}
 
-  if (normalized === 'open search') {
+function renderHomeSidebar(snapshot) {
+  HOME_SIDEBAR_STATE.snapshot = snapshot;
+
+  const nodes = getHomeSidebarNodes();
+
+  if (nodes.profileButton) {
+    nodes.profileButton.textContent = isSignedIn() ? 'My profile model' : 'Profile surface';
+  }
+
+  if (nodes.accountEntryButton) {
+    nodes.accountEntryButton.textContent = isSignedIn() ? 'Open private profile' : 'Create profile';
+  }
+}
+
+function handleHomeSidebarQuickAction(action) {
+  const normalized = normalizeSidebarLabel(action);
+
+  if (normalized === 'open-search') {
     dispatchHomeSidebarEvent('neuroartan:home-search-shell-open-requested', {
       source: 'home-sidebar',
     });
@@ -91,7 +114,12 @@ function handleHomeSidebarQuickAction(label) {
     return;
   }
 
-  if (normalized === 'create profile') {
+  if (normalized === 'account-entry') {
+    if (isSignedIn()) {
+      window.location.href = '/profile.html';
+      return;
+    }
+
     dispatchHomeSidebarEvent('neuroartan:home-panel-right-open-requested', {
       source: 'home-sidebar',
       intent: 'create-profile',
@@ -100,7 +128,7 @@ function handleHomeSidebarQuickAction(label) {
     return;
   }
 
-  if (normalized === 'my profile model') {
+  if (normalized === 'profile') {
     dispatchHomeSidebarEvent('neuroartan:home-panel-right-open-requested', {
       source: 'home-sidebar',
       intent: 'profile-model',
@@ -109,7 +137,7 @@ function handleHomeSidebarQuickAction(label) {
     return;
   }
 
-  if (normalized === 'saved continuities') {
+  if (normalized === 'saved-continuities') {
     dispatchHomeSidebarEvent('neuroartan:home-panel-left-open-requested', {
       source: 'home-sidebar',
       intent: 'saved-continuities',
@@ -118,7 +146,7 @@ function handleHomeSidebarQuickAction(label) {
     return;
   }
 
-  if (normalized === 'recent interactions') {
+  if (normalized === 'recent-interactions') {
     dispatchHomeSidebarEvent('neuroartan:home-panel-left-open-requested', {
       source: 'home-sidebar',
       intent: 'recent-interactions',
@@ -132,6 +160,8 @@ function handleHomeSidebarQuickAction(label) {
    ========================================================= */
 
 function bindHomeSidebar() {
+  subscribeHomeSurfaceState(renderHomeSidebar);
+
   document.addEventListener('click', (event) => {
     const root = getLiveSidebarRoot();
     if (!root) return;
@@ -152,7 +182,11 @@ function bindHomeSidebar() {
     }
 
     if (target.matches('.home-sidebar__stack-item')) {
-      handleHomeSidebarQuickAction(target.textContent || '');
+      handleHomeSidebarQuickAction(
+        target.getAttribute('data-home-sidebar-action')
+        || target.textContent
+        || ''
+      );
       return;
     }
 

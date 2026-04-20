@@ -26,29 +26,46 @@
     </div>
 
     <section class="home-settings-panel__section" aria-label="Display settings">
-      <p class="home-settings-panel__section-title">Display</p>
-      <div class="home-settings-panel__stack">
-        <button class="home-settings-panel__item" type="button">Theme</button>
-        <button class="home-settings-panel__item" type="button">Layout density</button>
-        <button class="home-settings-panel__item" type="button">Motion preferences</button>
+      <p class="home-settings-panel__section-title">Theme</p>
+      <div class="home-settings-panel__theme-grid" role="group" aria-label="Theme controls">
+        <button class="home-settings-panel__theme-option" data-theme-option="color" type="button">Color</button>
+        <button class="home-settings-panel__theme-option" data-theme-option="dark" type="button">Dark</button>
+        <button class="home-settings-panel__theme-option" data-theme-option="light" type="button">Light</button>
       </div>
+      <p class="home-settings-panel__context" data-home-settings-theme-summary>
+        Color mode keeps the cinematic homepage atmosphere active.
+      </p>
     </section>
 
     <section class="home-settings-panel__section" aria-label="Language and privacy settings">
       <p class="home-settings-panel__section-title">Language and privacy</p>
       <div class="home-settings-panel__stack">
-        <button class="home-settings-panel__item" type="button">Language</button>
-        <button class="home-settings-panel__item" type="button">Country</button>
-        <button class="home-settings-panel__item" type="button">Privacy</button>
+        <button class="home-settings-panel__item" data-home-settings-action="language" type="button">
+          <span>Language</span>
+          <span class="home-settings-panel__item-value" data-home-settings-language-value>English</span>
+        </button>
+        <button class="home-settings-panel__item" data-home-settings-action="country" type="button">
+          <span>Country</span>
+          <span class="home-settings-panel__item-value" data-home-settings-country-value>United States</span>
+        </button>
+        <button class="home-settings-panel__item" data-home-settings-action="privacy" type="button">
+          <span>Privacy</span>
+          <span class="home-settings-panel__item-value">Cookie and boundary controls</span>
+        </button>
       </div>
     </section>
 
-    <section class="home-settings-panel__section" aria-label="Profile settings">
-      <p class="home-settings-panel__section-title">Profile</p>
+    <section class="home-settings-panel__section" aria-label="Profile and account settings">
+      <p class="home-settings-panel__section-title">Profile and account</p>
       <div class="home-settings-panel__stack">
-        <button class="home-settings-panel__item" type="button">Voice permissions</button>
-        <button class="home-settings-panel__item" type="button">Profile defaults</button>
-        <button class="home-settings-panel__item" type="button">Account access</button>
+        <button class="home-settings-panel__item" data-home-settings-action="profile" type="button">
+          <span>Private profile</span>
+          <span class="home-settings-panel__item-value">Open account surface</span>
+        </button>
+        <button class="home-settings-panel__item" data-home-settings-action="public-route" type="button">
+          <span>Public route</span>
+          <span class="home-settings-panel__item-value" data-home-settings-route-value>neuroartan.com/username</span>
+        </button>
       </div>
     </section>
   </div>

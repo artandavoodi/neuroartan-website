@@ -1,3 +1,9 @@
+import {
+  buildPublicProfileDisplay,
+  buildPublicProfilePath,
+} from '../system/account-profile-identity.js';
+import { subscribeHomeSurfaceState } from './home-surface-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
@@ -17,6 +23,7 @@ const HOME_PANEL_RIGHT_STATE = {
   isOpen: false,
   activeIntent: null,
   root: null,
+  snapshot: null,
 };
 
 /* =========================================================
@@ -29,6 +36,15 @@ function getHomePanelRightNodes() {
     closeButton: document.querySelector('#home-panel-right-close'),
     title: document.querySelector('#home-panel-right .home-panel-right__title'),
     items: Array.from(document.querySelectorAll('#home-panel-right .home-panel-right__item')),
+    avatarImage: document.querySelector('[data-home-profile-avatar]'),
+    avatarFallback: document.querySelector('[data-home-profile-avatar-fallback]'),
+    name: document.querySelector('[data-home-profile-name]'),
+    username: document.querySelector('[data-home-profile-username]'),
+    meta: document.querySelector('[data-home-profile-meta]'),
+    route: document.querySelector('[data-home-profile-route]'),
+    routeStatus: document.querySelector('[data-home-profile-route-status]'),
+    accountEntryAction: document.querySelector('[data-home-profile-action="account-entry"]'),
+    signOutAction: document.querySelector('[data-home-profile-action="sign-out"]'),
   };
 }
 
@@ -97,6 +113,115 @@ function closeHomePanelRight() {
   dispatchHomePanelRightEvent('neuroartan:home-topbar-reset-triggers');
 }
 
+function resolveHomePanelRightName(snapshot) {
+  return (
+    snapshot?.account?.profile?.display_name
+    || snapshot?.account?.user?.displayName
+    || snapshot?.account?.profile?.email
+    || snapshot?.account?.user?.email
+    || 'Sign in to Neuroartan'
+  );
+}
+
+function resolveHomePanelRightUsername(snapshot) {
+  const username = snapshot?.account?.profile?.username || '';
+  return username ? `@${username}` : '@username';
+}
+
+function resolveHomePanelRightMeta(snapshot) {
+  if (!snapshot?.account?.signedIn) {
+    return 'Create a unified identity surface to activate continuity, profile control, and your public route.';
+  }
+
+  if (snapshot?.account?.profileComplete === false) {
+    return 'Your account is active. Complete the private profile to finalize your public identity surface.';
+  }
+
+  return 'Voice-trained continuity profile with account, route, and preference access.';
+}
+
+function resolveHomePanelRightRoute(snapshot) {
+  const username = snapshot?.account?.profile?.username || '';
+  return {
+    display: buildPublicProfileDisplay(username),
+    path: buildPublicProfilePath(username) || '/profile.html',
+    username,
+  };
+}
+
+function resolveHomePanelRightRouteStatus(snapshot, username) {
+  if (!snapshot?.account?.signedIn) {
+    return 'Create an account to activate a canonical company-domain route.';
+  }
+
+  if (!username) {
+    return 'Choose a canonical username before the public route can render.';
+  }
+
+  if (snapshot?.account?.profile?.public_profile_enabled) {
+    return 'Canonical company-domain route is active.';
+  }
+
+  return 'Username is reserved, but public route visibility is still private.';
+}
+
+function renderHomePanelRight(snapshot) {
+  HOME_PANEL_RIGHT_STATE.snapshot = snapshot;
+
+  const nodes = getHomePanelRightNodes();
+  const signedIn = !!snapshot?.account?.signedIn;
+  const route = resolveHomePanelRightRoute(snapshot);
+  const name = resolveHomePanelRightName(snapshot);
+  const photo = snapshot?.account?.profile?.photo_url || snapshot?.account?.user?.photoURL || '';
+  const fallback = (name.charAt(0) || 'N').toUpperCase();
+
+  if (nodes.name) {
+    nodes.name.textContent = name;
+  }
+
+  if (nodes.username) {
+    nodes.username.textContent = resolveHomePanelRightUsername(snapshot);
+  }
+
+  if (nodes.meta) {
+    nodes.meta.textContent = resolveHomePanelRightMeta(snapshot);
+  }
+
+  if (nodes.route) {
+    nodes.route.textContent = route.display;
+    nodes.route.setAttribute('href', route.path);
+  }
+
+  if (nodes.routeStatus) {
+    nodes.routeStatus.textContent = resolveHomePanelRightRouteStatus(snapshot, route.username);
+  }
+
+  if (nodes.avatarImage) {
+    if (photo) {
+      nodes.avatarImage.hidden = false;
+      nodes.avatarImage.src = photo;
+      nodes.avatarImage.alt = name;
+    } else {
+      nodes.avatarImage.hidden = true;
+      nodes.avatarImage.removeAttribute('src');
+      nodes.avatarImage.alt = '';
+    }
+  }
+
+  if (nodes.avatarFallback) {
+    nodes.avatarFallback.hidden = !!photo;
+    nodes.avatarFallback.textContent = fallback;
+  }
+
+  if (nodes.accountEntryAction) {
+    nodes.accountEntryAction.textContent = signedIn ? 'Open private profile' : 'Create account';
+  }
+
+  if (nodes.signOutAction) {
+    nodes.signOutAction.hidden = !signedIn;
+  }
+}
+
 /* =========================================================
    04. ACTION HELPERS
    ========================================================= */
@@ -105,8 +230,40 @@ function normalizeHomePanelRightLabel(label) {
   return typeof label === 'string' ? label.trim().toLowerCase() : '';
 }
 
-function handleHomePanelRightAction(label) {
-  const normalized = normalizeHomePanelRightLabel(label);
+function handleHomePanelRightAction(action) {
+  const normalized = normalizeHomePanelRightLabel(action);
+
+  if (normalized === 'open-profile') {
+    if (HOME_PANEL_RIGHT_STATE.snapshot?.account?.signedIn) {
+      window.location.href = '/profile.html';
+      return;
+    }
+
+    dispatchHomePanelRightEvent('account:entry-request', {
+      source: 'home-panel-right',
+    });
+    closeHomePanelRight();
+    return;
+  }
+
+  if (normalized === 'public-route') {
+    const path = resolveHomePanelRightRoute(HOME_PANEL_RIGHT_STATE.snapshot).path;
+    window.location.href = path;
+    return;
+  }
+
+  if (normalized === 'account-entry') {
+    if (HOME_PANEL_RIGHT_STATE.snapshot?.account?.signedIn) {
+      window.location.href = '/profile.html';
+      return;
+    }
+
+    dispatchHomePanelRightEvent('account:entry-request', {
+      source: 'home-panel-right',
+    });
+    closeHomePanelRight();
+    return;
+  }
 
   if (normalized === 'settings') {
     dispatchHomePanelRightEvent('neuroartan:home-settings-panel-open-requested', {
@@ -133,8 +290,16 @@ function handleHomePanelRightAction(label) {
     return;
   }
 
+  if (normalized === 'sign-out') {
+    dispatchHomePanelRightEvent('account:sign-out-request', {
+      source: 'home-panel-right',
+    });
+    closeHomePanelRight();
+    return;
+  }
+
   dispatchHomePanelRightEvent('neuroartan:home-panel-right-item-selected', {
-    label: label?.trim() || '',
+    label: action?.trim() || '',
     intent: HOME_PANEL_RIGHT_STATE.activeIntent,
   });
 }
@@ -144,6 +309,8 @@ function handleHomePanelRightAction(label) {
    ========================================================= */
 
 function bindHomePanelRight() {
+  subscribeHomeSurfaceState(renderHomePanelRight);
+
   document.addEventListener('click', (event) => {
     const root = getLivePanelRightRoot();
     if (!root) return;
@@ -163,7 +330,11 @@ function bindHomePanelRight() {
     }
 
     if (target.matches('.home-panel-right__item')) {
-      handleHomePanelRightAction(target.textContent || '');
+      handleHomePanelRightAction(
+        target.getAttribute('data-home-profile-action')
+        || target.textContent
+        || ''
+      );
     }
   });
 
@@ -195,6 +366,7 @@ function bootHomePanelRight() {
   HOME_PANEL_RIGHT_STATE.root = root;
 
   if (HOME_PANEL_RIGHT_STATE.isBound) {
+    renderHomePanelRight(HOME_PANEL_RIGHT_STATE.snapshot || {});
     return;
   }
 

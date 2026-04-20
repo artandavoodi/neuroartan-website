@@ -1392,6 +1392,18 @@
 
       openConsent('banner');
     });
+
+    document.addEventListener('neuroartan:cookie-consent-open-requested', (event) => {
+      const detail = getEventDetail(event);
+      const requestedSurface = String(detail.surface || '').trim();
+
+      if (requestedSurface === 'settings' || requestedSurface === 'language' || requestedSurface === 'learning') {
+        openConsent(requestedSurface);
+        return;
+      }
+
+      openConsent('banner');
+    });
   }
 
   function bindOverlayCoordination() {

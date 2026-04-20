@@ -62,13 +62,16 @@ function setAriaPressed(node, pressed) {
    03) STORAGE KEYS / CONSTANTS
 ============================================================================= */
 const STORAGE_KEY = 'neuroartan-theme';
+const THEME_COLOR = 'color';
 const THEME_DARK = 'dark';
 const THEME_LIGHT = 'light';
+const CLASS_COLOR = 'color-mode';
 const CLASS_DARK = 'dark-mode';
 const CLASS_LIGHT = 'light-mode';
+const CLASS_THEME_COLOR = 'theme-color';
 const CLASS_THEME_DARK = 'theme-dark';
 const CLASS_THEME_LIGHT = 'theme-light';
-const TOGGLE_SELECTORS = ['#theme-toggle', '.theme-toggle'].join(',');
+const TOGGLE_SELECTORS = ['#theme-toggle', '.theme-toggle', '[data-theme-option]'].join(',');
 
 /* =============================================================================
    04) THEME HELPERS
@@ -76,7 +79,7 @@ const TOGGLE_SELECTORS = ['#theme-toggle', '.theme-toggle'].join(',');
 function getStoredTheme() {
   try {
     const value = window.localStorage.getItem(STORAGE_KEY);
-    return value === THEME_LIGHT || value === THEME_DARK ? value : null;
+    return value === THEME_COLOR || value === THEME_LIGHT || value === THEME_DARK ? value : null;
   } catch (_) {
     return null;
   }
@@ -91,7 +94,7 @@ function setStoredTheme(value) {
 function getPreferredTheme() {
   const stored = getStoredTheme();
   if (stored) return stored;
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? THEME_LIGHT : THEME_DARK;
+  return THEME_COLOR;
 }
 
 export function getThemeToggles(root = document) {
@@ -104,30 +107,38 @@ export function getCurrentTheme() {
 }
 
 export function applyTheme(theme) {
-  const normalized = theme === THEME_LIGHT ? THEME_LIGHT : THEME_DARK;
+  const normalized = theme === THEME_LIGHT
+    ? THEME_LIGHT
+    : theme === THEME_DARK
+      ? THEME_DARK
+      : THEME_COLOR;
   const html = document.documentElement;
   const body = document.body;
 
   html.setAttribute('data-theme', normalized);
+  html.classList.toggle(CLASS_COLOR, normalized === THEME_COLOR);
   html.classList.toggle(CLASS_DARK, normalized === THEME_DARK);
   html.classList.toggle(CLASS_LIGHT, normalized === THEME_LIGHT);
+  html.classList.toggle(CLASS_THEME_COLOR, normalized === THEME_COLOR);
   html.classList.toggle(CLASS_THEME_DARK, normalized === THEME_DARK);
   html.classList.toggle(CLASS_THEME_LIGHT, normalized === THEME_LIGHT);
 
   if (body) {
     body.setAttribute('data-theme', normalized);
+    body.classList.toggle(CLASS_COLOR, normalized === THEME_COLOR);
     body.classList.toggle(CLASS_DARK, normalized === THEME_DARK);
     body.classList.toggle(CLASS_LIGHT, normalized === THEME_LIGHT);
+    body.classList.toggle(CLASS_THEME_COLOR, normalized === THEME_COLOR);
     body.classList.toggle(CLASS_THEME_DARK, normalized === THEME_DARK);
     body.classList.toggle(CLASS_THEME_LIGHT, normalized === THEME_LIGHT);
   }
   
   if (body?.style) {
-    body.style.colorScheme = normalized;
+    body.style.colorScheme = normalized === THEME_LIGHT ? THEME_LIGHT : THEME_DARK;
   }
 
   if (html?.style) {
-    html.style.colorScheme = normalized;
+    html.style.colorScheme = normalized === THEME_LIGHT ? THEME_LIGHT : THEME_DARK;
   }
 
   setSystemState('theme', normalized);
@@ -143,7 +154,12 @@ export function applyTheme(theme) {
 }
 
 export function toggleTheme() {
-  const next = getCurrentTheme() === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+  const current = getCurrentTheme();
+  const next = current === THEME_COLOR
+    ? THEME_DARK
+    : current === THEME_DARK
+      ? THEME_LIGHT
+      : THEME_COLOR;
   return applyTheme(next);
 }
 
@@ -152,9 +168,20 @@ export function toggleTheme() {
 ============================================================================= */
 function syncToggleNode(node) {
   if (!(node instanceof HTMLElement)) return;
-  const isLight = getCurrentTheme() === THEME_LIGHT;
+  const currentTheme = getCurrentTheme();
+  const explicitTheme = node.getAttribute('data-theme-option');
+
+  if (explicitTheme) {
+    const normalizedExplicitTheme = String(explicitTheme || '').trim().toLowerCase();
+    const isActive = normalizedExplicitTheme === currentTheme;
+    setAriaPressed(node, isActive);
+    node.setAttribute('aria-label', `Switch to ${normalizedExplicitTheme} mode`);
+    return;
+  }
+
+  const isLight = currentTheme === THEME_LIGHT;
   setAriaPressed(node, isLight);
-  node.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+  node.setAttribute('aria-label', 'Cycle theme');
   node.dataset.themePrimitiveBound = 'true';
 }
 
@@ -170,7 +197,14 @@ function bindToggleNode(node) {
   }
 
   node.addEventListener('click', () => {
-    toggleTheme();
+    const explicitTheme = node.getAttribute('data-theme-option');
+
+    if (explicitTheme) {
+      applyTheme(explicitTheme);
+    } else {
+      toggleTheme();
+    }
+
     getThemeToggles(document).forEach(syncToggleNode);
   });
 

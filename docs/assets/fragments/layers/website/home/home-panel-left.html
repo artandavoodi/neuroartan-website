@@ -25,21 +25,41 @@
       </button>
     </div>
 
-    <section class="home-panel-left__section" aria-label="Saved continuities">
-      <p class="home-panel-left__section-title">Saved continuities</p>
+    <section class="home-panel-left__section" aria-label="Current interaction">
+      <p class="home-panel-left__section-title">Current interaction</p>
+      <article class="home-panel-left__summary-card" aria-live="polite">
+        <div class="home-panel-left__summary-row">
+          <span class="home-panel-left__summary-label">Voice mode</span>
+          <span class="home-panel-left__summary-value" data-home-workspace-mode>Idle</span>
+        </div>
+        <div class="home-panel-left__summary-row">
+          <span class="home-panel-left__summary-label">Last route</span>
+          <span class="home-panel-left__summary-value" data-home-workspace-route>Awaiting a query</span>
+        </div>
+        <p class="home-panel-left__summary-body" data-home-workspace-query>
+          Ask a question by voice or search to create a continuity trace across the homepage surface.
+        </p>
+        <p class="home-panel-left__summary-body home-panel-left__summary-body--secondary" data-home-workspace-response>
+          Responses and route classification will appear here after your first interaction.
+        </p>
+      </article>
+    </section>
+
+    <section class="home-panel-left__section" aria-label="Continuity actions">
+      <p class="home-panel-left__section-title">Continuity actions</p>
       <div class="home-panel-left__stack">
-        <button class="home-panel-left__item" type="button">Founder continuity profile</button>
-        <button class="home-panel-left__item" type="button">Research reflection thread</button>
-        <button class="home-panel-left__item" type="button">Voice-trained model memory</button>
+        <button class="home-panel-left__item" data-home-workspace-action="voice" type="button">Continue by voice</button>
+        <button class="home-panel-left__item" data-home-workspace-action="search" type="button">Open search surface</button>
+        <button class="home-panel-left__item" data-home-workspace-action="profile" type="button">Open profile surface</button>
       </div>
     </section>
 
-    <section class="home-panel-left__section" aria-label="Recent interactions">
-      <p class="home-panel-left__section-title">Recent interactions</p>
+    <section class="home-panel-left__section" aria-label="Context routes">
+      <p class="home-panel-left__section-title">Context routes</p>
       <div class="home-panel-left__stack">
-        <button class="home-panel-left__item" type="button">Last profile dialogue</button>
-        <button class="home-panel-left__item" type="button">Search history</button>
-        <button class="home-panel-left__item" type="button">Knowledge retrieval thread</button>
+        <a class="home-panel-left__item home-panel-left__item--link" href="/pages/about/">Read the product direction</a>
+        <a class="home-panel-left__item home-panel-left__item--link" href="/pages/platform/">Open platform architecture</a>
+        <a class="home-panel-left__item home-panel-left__item--link" href="/knowledge-research/">Review knowledge and research</a>
       </div>
     </section>
   </div>

@@ -1,3 +1,5 @@
+import { subscribeHomeSurfaceState } from './home-surface-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
@@ -16,6 +18,7 @@ const HOME_SEARCH_SHELL_STATE = {
   isBound: false,
   isOpen: false,
   root: null,
+  snapshot: null,
 };
 
 /* =========================================================
@@ -79,12 +82,113 @@ function closeHomeSearchShell() {
   dispatchHomeSearchEvent('neuroartan:home-topbar-reset-triggers');
 }
 
+function getHomeSearchRouteLabel(route) {
+  switch (String(route || '').toLowerCase()) {
+    case 'knowledge':
+      return 'Knowledge';
+    case 'site-knowledge':
+      return 'Website knowledge';
+    case 'web':
+      return 'Web retrieval';
+    case 'platform-search':
+      return 'Platform search';
+    default:
+      return 'Interactive search';
+  }
+}
+
+function getHomeSearchCta(snapshot) {
+  const route = String(snapshot?.voice?.lastRoute || '').toLowerCase();
+
+  switch (route) {
+    case 'knowledge':
+    case 'site-knowledge':
+      return {
+        href: '/pages/about/',
+        label: 'Open About',
+      };
+    case 'platform-search':
+      return {
+        href: '/pages/platform/',
+        label: 'Open Platform',
+      };
+    case 'web':
+      return {
+        href: '/updates/',
+        label: 'Open Updates',
+      };
+    default:
+      return {
+        href: '/pages/about/',
+        label: 'Explore About',
+      };
+  }
+}
+
+function renderHomeSearchShell(snapshot) {
+  HOME_SEARCH_SHELL_STATE.snapshot = snapshot;
+
+  const nodes = getHomeSearchShellNodes();
+  if (!nodes.results) {
+    return;
+  }
+
+  const query = normalizeHomeSearchQuery(snapshot?.voice?.lastQuery || '');
+  const response = normalizeHomeSearchQuery(snapshot?.voice?.response || '');
+  const routeLabel = getHomeSearchRouteLabel(snapshot?.voice?.lastRoute || '');
+
+  if (!query) {
+    nodes.results.innerHTML = `
+      <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
+        <p class="home-search-shell__empty-title">Start with a query</p>
+        <p class="home-search-shell__empty-text">
+          Search across people, models, platform knowledge, and public product surfaces.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const cta = getHomeSearchCta(snapshot);
+  const responseMarkup = response
+    ? escapeHomeSearchHtml(response)
+    : 'The homepage engine is routing this query through the appropriate knowledge surface.';
+  const safeQuery = escapeHomeSearchHtml(query);
+  const safeRouteLabel = escapeHomeSearchHtml(routeLabel);
+  const safeCtaLabel = escapeHomeSearchHtml(cta.label);
+
+  nodes.results.innerHTML = `
+    <article class="home-search-shell__result-card">
+      <div class="home-search-shell__result-meta">
+        <span class="home-search-shell__result-route">${safeRouteLabel}</span>
+        <span class="home-search-shell__result-query">${safeQuery}</span>
+      </div>
+      <p class="home-search-shell__result-body">${responseMarkup}</p>
+      <div class="home-search-shell__result-actions">
+        <button class="home-search-shell__result-action" data-home-search-result-action="voice" type="button">
+          Continue by voice
+        </button>
+        <a class="home-search-shell__result-link" href="${cta.href}">${safeCtaLabel}</a>
+      </div>
+    </article>
+  `;
+}
+
 /* =========================================================
    04. SEARCH HELPERS
    ========================================================= */
 
 function normalizeHomeSearchQuery(value) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function escapeHomeSearchHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
 function setHomeSearchValue(value) {
@@ -120,6 +224,8 @@ function handleHomeSearchChipSelection(chipValue) {
    ========================================================= */
 
 function bindHomeSearchShell() {
+  subscribeHomeSurfaceState(renderHomeSearchShell);
+
   document.addEventListener('neuroartan:home-search-shell-open-requested', () => {
     openHomeSearchShell();
   });
@@ -135,7 +241,8 @@ function bindHomeSearchShell() {
     const target = event.target.closest(
       '#home-search-shell-close, ' +
       '#home-search-shell [data-home-search-close="true"], ' +
-      '#home-search-shell [data-home-search-chip]'
+      '#home-search-shell [data-home-search-chip], ' +
+      '#home-search-shell [data-home-search-result-action]'
     );
 
     if (!target || !root.contains(target)) {
@@ -144,6 +251,12 @@ function bindHomeSearchShell() {
 
     if (target.matches('#home-search-shell-close, [data-home-search-close="true"]')) {
       closeHomeSearchShell();
+      return;
+    }
+
+    if (target.matches('[data-home-search-result-action="voice"]')) {
+      closeHomeSearchShell();
+      document.querySelector('#stage-microphone-button')?.click();
       return;
     }
 
@@ -171,10 +284,6 @@ function bindHomeSearchShell() {
       closeHomeSearchShell();
     }
   });
-
-  document.addEventListener('neuroartan:home-stage-routing-resolved', () => {
-    closeHomeSearchShell();
-  });
 }
 
 /* =========================================================
@@ -190,6 +299,7 @@ function bootHomeSearchShell() {
   HOME_SEARCH_SHELL_STATE.root = root;
 
   if (HOME_SEARCH_SHELL_STATE.isBound) {
+    renderHomeSearchShell(HOME_SEARCH_SHELL_STATE.snapshot || {});
     return;
   }
 

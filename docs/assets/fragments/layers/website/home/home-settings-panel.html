@@ -1,0 +1,54 @@
+<!-- =============================================================================
+     HOME SETTINGS PANEL FRAGMENT
+     Purpose: modular settings surface for the home/dashboard layer.
+     Notes:
+     - distinct from global overlays
+     - acts as a local settings hub for dashboard/home surfaces
+     - delegates language/privacy to existing global systems
+============================================================================= -->
+
+<aside class="home-settings-panel" id="home-settings-panel" aria-label="Home settings panel" hidden>
+  <div class="home-settings-panel__inner">
+    <div class="home-settings-panel__header">
+      <div class="home-settings-panel__heading-group">
+        <p class="home-settings-panel__eyebrow">Settings</p>
+        <h2 class="home-settings-panel__title">Home surface preferences and controls</h2>
+      </div>
+
+      <button
+        class="home-settings-panel__close"
+        id="home-settings-panel-close"
+        type="button"
+        aria-label="Close settings panel">
+        ×
+      </button>
+    </div>
+
+    <section class="home-settings-panel__section" aria-label="Display settings">
+      <p class="home-settings-panel__section-title">Display</p>
+      <div class="home-settings-panel__stack">
+        <button class="home-settings-panel__item" type="button">Theme</button>
+        <button class="home-settings-panel__item" type="button">Layout density</button>
+        <button class="home-settings-panel__item" type="button">Motion preferences</button>
+      </div>
+    </section>
+
+    <section class="home-settings-panel__section" aria-label="Language and privacy settings">
+      <p class="home-settings-panel__section-title">Language and privacy</p>
+      <div class="home-settings-panel__stack">
+        <button class="home-settings-panel__item" type="button">Language</button>
+        <button class="home-settings-panel__item" type="button">Country</button>
+        <button class="home-settings-panel__item" type="button">Privacy</button>
+      </div>
+    </section>
+
+    <section class="home-settings-panel__section" aria-label="Profile settings">
+      <p class="home-settings-panel__section-title">Profile</p>
+      <div class="home-settings-panel__stack">
+        <button class="home-settings-panel__item" type="button">Voice permissions</button>
+        <button class="home-settings-panel__item" type="button">Profile defaults</button>
+        <button class="home-settings-panel__item" type="button">Account access</button>
+      </div>
+    </section>
+  </div>
+</aside>

@@ -5,6 +5,7 @@
    03) WEBSITE LAYER AUTHORITIES · OVERLAYS
    04) WEBSITE LAYER AUTHORITIES · PROFILE
    05) WEBSITE LAYER AUTHORITIES · RENDERERS
+   05A) WEBSITE LAYER AUTHORITIES · HOME
    06) WEBSITE LAYER AUTHORITIES · SECTIONS
    07) WEBSITE LAYER AUTHORITIES · SYSTEM
    08) WEBSITE LAYER AUTHORITIES · PAGES
@@ -38,6 +39,11 @@ import '../profile/00-profile-all.js';
    05) WEBSITE LAYER AUTHORITIES · RENDERERS
 ============================================================================= */
 import '../renderers/00-renderers-all.js';
+
+/* =============================================================================
+   05A) WEBSITE LAYER AUTHORITIES · HOME
+============================================================================= */
+import '../home/00-home-all.js';
 
 /* =============================================================================
    06) WEBSITE LAYER AUTHORITIES · SECTIONS

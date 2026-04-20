@@ -1,0 +1,55 @@
+<!-- =============================================================================
+     HOME PANEL RIGHT FRAGMENT
+     Purpose: right-side profile and account surface for the home/dashboard layer.
+     Notes:
+     - distinct from the left contextual workspace panel
+     - intended for profile state, identity, account, and model access
+============================================================================= -->
+
+<aside class="home-panel-right" id="home-panel-right" aria-label="Home right panel" hidden>
+  <div class="home-panel-right__inner">
+    <div class="home-panel-right__header">
+      <div class="home-panel-right__heading-group">
+        <p class="home-panel-right__eyebrow">Profile</p>
+        <h2 class="home-panel-right__title">Account, identity, and model access</h2>
+      </div>
+
+      <button
+        class="home-panel-right__close"
+        id="home-panel-right-close"
+        type="button"
+        aria-label="Close right panel">
+        ×
+      </button>
+    </div>
+
+    <section class="home-panel-right__section" aria-label="Identity surface">
+      <p class="home-panel-right__section-title">Identity</p>
+      <div class="home-panel-right__identity-card">
+        <div class="home-panel-right__avatar" aria-hidden="true">A</div>
+        <div class="home-panel-right__identity-copy">
+          <p class="home-panel-right__name">Profile name</p>
+          <p class="home-panel-right__meta">Voice-trained continuity profile</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-panel-right__section" aria-label="Profile actions">
+      <p class="home-panel-right__section-title">Profile actions</p>
+      <div class="home-panel-right__stack">
+        <button class="home-panel-right__item" type="button">Open profile model</button>
+        <button class="home-panel-right__item" type="button">Create profile</button>
+        <button class="home-panel-right__item" type="button">Manage account</button>
+      </div>
+    </section>
+
+    <section class="home-panel-right__section" aria-label="System actions">
+      <p class="home-panel-right__section-title">System</p>
+      <div class="home-panel-right__stack">
+        <button class="home-panel-right__item" type="button">Settings</button>
+        <button class="home-panel-right__item" type="button">Language</button>
+        <button class="home-panel-right__item" type="button">Privacy</button>
+      </div>
+    </section>
+  </div>
+</aside>

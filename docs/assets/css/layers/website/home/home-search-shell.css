@@ -1,0 +1,257 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) HOME SEARCH SHELL ROOT
+   02) BACKDROP
+   03) DIALOG SURFACE
+   04) HEADER
+   05) FORM + INPUT
+   06) QUICK ACTIONS
+   07) RESULTS + EMPTY STATE
+   08) RESPONSIVE REFINEMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) HOME SEARCH SHELL ROOT
+============================================================================= */
+.home-search-shell{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:start center;
+  padding:4.5rem 1rem 1rem;
+  z-index:1900;
+}
+
+.home-search-shell[hidden]{
+  display:none !important;
+}
+
+/* =============================================================================
+   02) BACKDROP
+============================================================================= */
+.home-search-shell__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.58);
+  backdrop-filter:blur(18px) saturate(1.04);
+  -webkit-backdrop-filter:blur(18px) saturate(1.04);
+}
+
+/* =============================================================================
+   03) DIALOG SURFACE
+============================================================================= */
+.home-search-shell__dialog{
+  position:relative;
+  width:min(100%, 62rem);
+  max-height:min(84vh, 52rem);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:1.75rem;
+  background:rgba(7,7,7,0.82);
+  box-shadow:
+    0 24px 80px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter:blur(28px) saturate(1.04);
+  -webkit-backdrop-filter:blur(28px) saturate(1.04);
+  z-index:1;
+}
+
+/* =============================================================================
+   04) HEADER
+============================================================================= */
+.home-search-shell__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1.25rem 1.25rem 1rem;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.home-search-shell__heading-group{
+  min-width:0;
+}
+
+.home-search-shell__eyebrow{
+  margin:0 0 0.35rem;
+  font-size:0.72rem;
+  font-weight:500;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.56);
+}
+
+.home-search-shell__title{
+  margin:0;
+  font-size:1.35rem;
+  font-weight:500;
+  line-height:1.1;
+  color:rgba(255,255,255,0.96);
+}
+
+.home-search-shell__close{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:2.8rem;
+  height:2.8rem;
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:999px;
+  background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.86);
+  font-size:1.3rem;
+  line-height:1;
+  cursor:pointer;
+}
+
+/* =============================================================================
+   05) FORM + INPUT
+============================================================================= */
+.home-search-shell__body{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  min-height:0;
+  padding:1.1rem 1.25rem 1.25rem;
+}
+
+.home-search-shell__form{
+  display:flex;
+  flex-direction:column;
+  gap:0.55rem;
+}
+
+.home-search-shell__label{
+  font-size:0.82rem;
+  font-weight:500;
+  letter-spacing:0.03em;
+  color:rgba(255,255,255,0.82);
+}
+
+.home-search-shell__input-row{
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  min-height:3.5rem;
+  padding:0.75rem 1rem;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:1.15rem;
+  background:rgba(255,255,255,0.04);
+}
+
+.home-search-shell__input-icon{
+  flex:0 0 auto;
+  font-size:1rem;
+  line-height:1;
+  color:rgba(255,255,255,0.62);
+}
+
+.home-search-shell__input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:rgba(255,255,255,0.96);
+  font-size:1rem;
+  font-weight:400;
+  line-height:1.25;
+}
+
+.home-search-shell__input::placeholder{
+  color:rgba(255,255,255,0.46);
+}
+
+.home-search-shell__hint{
+  margin:0;
+  font-size:0.84rem;
+  line-height:1.45;
+  color:rgba(255,255,255,0.56);
+}
+
+/* =============================================================================
+   06) QUICK ACTIONS
+============================================================================= */
+.home-search-shell__quick-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.55rem;
+}
+
+.home-search-shell__chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:2.35rem;
+  padding:0 0.88rem;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:999px;
+  background:rgba(255,255,255,0.03);
+  color:rgba(255,255,255,0.86);
+  font-size:0.8rem;
+  font-weight:500;
+  letter-spacing:0.03em;
+  cursor:pointer;
+}
+
+/* =============================================================================
+   07) RESULTS + EMPTY STATE
+============================================================================= */
+.home-search-shell__results{
+  min-height:15rem;
+  max-height:min(50vh, 28rem);
+  overflow:auto;
+  padding:0.2rem 0.1rem 0 0;
+}
+
+.home-search-shell__empty-state{
+  display:flex;
+  flex-direction:column;
+  gap:0.45rem;
+  padding:1rem 0.25rem 0.25rem;
+}
+
+.home-search-shell__empty-title{
+  margin:0;
+  font-size:0.96rem;
+  font-weight:500;
+  color:rgba(255,255,255,0.92);
+}
+
+.home-search-shell__empty-text{
+  margin:0;
+  font-size:0.88rem;
+  line-height:1.55;
+  color:rgba(255,255,255,0.6);
+}
+
+/* =============================================================================
+   08) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width: 720px){
+  .home-search-shell{
+    padding:4rem 0.75rem 0.75rem;
+  }
+
+  .home-search-shell__dialog{
+    width:100%;
+    border-radius:1.3rem;
+  }
+
+  .home-search-shell__header,
+  .home-search-shell__body{
+    padding-left:1rem;
+    padding-right:1rem;
+  }
+
+  .home-search-shell__title{
+    font-size:1.15rem;
+  }
+
+  .home-search-shell__input-row{
+    min-height:3.2rem;
+    padding:0.68rem 0.9rem;
+  }
+}

@@ -1,0 +1,45 @@
+<!-- =============================================================================
+     HOME PANEL LEFT FRAGMENT
+     Purpose: left-side secondary panel for saved continuities, recent interactions,
+     and structured dashboard lists.
+     Notes:
+     - distinct from the primary sidebar
+     - intended as a contextual panel surface for the home/dashboard layer
+============================================================================= -->
+
+<aside class="home-panel-left" id="home-panel-left" aria-label="Home left panel" hidden>
+  <div class="home-panel-left__inner">
+    <div class="home-panel-left__header">
+      <div class="home-panel-left__heading-group">
+        <p class="home-panel-left__eyebrow">Workspace</p>
+        <h2 class="home-panel-left__title">Continuities and recent interactions</h2>
+      </div>
+
+      <button
+        class="home-panel-left__close"
+        id="home-panel-left-close"
+        type="button"
+        aria-label="Close left panel">
+        ×
+      </button>
+    </div>
+
+    <section class="home-panel-left__section" aria-label="Saved continuities">
+      <p class="home-panel-left__section-title">Saved continuities</p>
+      <div class="home-panel-left__stack">
+        <button class="home-panel-left__item" type="button">Founder continuity profile</button>
+        <button class="home-panel-left__item" type="button">Research reflection thread</button>
+        <button class="home-panel-left__item" type="button">Voice-trained model memory</button>
+      </div>
+    </section>
+
+    <section class="home-panel-left__section" aria-label="Recent interactions">
+      <p class="home-panel-left__section-title">Recent interactions</p>
+      <div class="home-panel-left__stack">
+        <button class="home-panel-left__item" type="button">Last profile dialogue</button>
+        <button class="home-panel-left__item" type="button">Search history</button>
+        <button class="home-panel-left__item" type="button">Knowledge retrieval thread</button>
+      </div>
+    </section>
+  </div>
+</aside>

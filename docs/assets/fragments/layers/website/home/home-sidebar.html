@@ -1,0 +1,46 @@
+<!-- =============================================================================
+     HOME SIDEBAR FRAGMENT
+     Purpose: primary left-side navigation shell for the home/dashboard layer.
+     Notes:
+     - distinct from institutional menu ownership
+     - supports dashboard navigation, profile model access, saved spaces, and quick actions
+     - intended for authenticated or app-surface contexts
+============================================================================= -->
+
+<aside class="home-sidebar" id="home-sidebar" aria-label="Home sidebar">
+  <div class="home-sidebar__inner">
+    <div class="home-sidebar__brand-group">
+      <a class="home-sidebar__brand" href="/" aria-label="Neuroartan home">
+        <span class="home-sidebar__brand-mark">N</span>
+        <span class="home-sidebar__brand-text">Neuroartan</span>
+      </a>
+      <p class="home-sidebar__context">Dashboard</p>
+    </div>
+
+    <nav class="home-sidebar__nav" aria-label="Home sidebar navigation">
+      <a class="home-sidebar__nav-link home-sidebar__nav-link--active" href="/" aria-current="page">Home</a>
+      <a class="home-sidebar__nav-link" href="/pages/about/">About</a>
+      <a class="home-sidebar__nav-link" href="/platform/">Platform</a>
+      <a class="home-sidebar__nav-link" href="/knowledge-research/">Knowledge</a>
+      <a class="home-sidebar__nav-link" href="/updates/">Updates</a>
+    </nav>
+
+    <section class="home-sidebar__section" aria-label="Model spaces">
+      <p class="home-sidebar__section-title">Model spaces</p>
+      <div class="home-sidebar__stack">
+        <button class="home-sidebar__stack-item" type="button">My profile model</button>
+        <button class="home-sidebar__stack-item" type="button">Saved continuities</button>
+        <button class="home-sidebar__stack-item" type="button">Recent interactions</button>
+      </div>
+    </section>
+
+    <section class="home-sidebar__section" aria-label="Quick actions">
+      <p class="home-sidebar__section-title">Quick actions</p>
+      <div class="home-sidebar__stack">
+        <button class="home-sidebar__stack-item" type="button">Create profile</button>
+        <button class="home-sidebar__stack-item" type="button">Open search</button>
+        <button class="home-sidebar__stack-item" type="button">Settings</button>
+      </div>
+    </section>
+  </div>
+</aside>

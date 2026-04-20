@@ -7,10 +7,13 @@
 /* =============================================================================
    01) HOME LAYER AUTHORITY IMPORTS
 ============================================================================= */
+@import url('./home-dashboard-topbar.css');
 @import url('./home-sidebar.css');
 @import url('./home-panel-left.css');
 @import url('./home-panel-right.css');
+@import url('./home-search-shell.css');
 @import url('./home-settings-panel.css');
+@import url('./home-footer.css');
 
 /* =============================================================================
    02) END OF FILE

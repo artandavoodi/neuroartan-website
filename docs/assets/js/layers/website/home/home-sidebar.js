@@ -87,11 +87,11 @@ function renderHomeSidebar(snapshot) {
   const nodes = getHomeSidebarNodes();
 
   if (nodes.profileButton) {
-    nodes.profileButton.textContent = isSignedIn() ? 'My profile model' : 'Profile surface';
+    nodes.profileButton.textContent = isSignedIn() ? 'Private profile' : 'Profile surface';
   }
 
   if (nodes.accountEntryButton) {
-    nodes.accountEntryButton.textContent = isSignedIn() ? 'Open private profile' : 'Create profile';
+    nodes.accountEntryButton.textContent = isSignedIn() ? 'Open private profile' : 'Create private profile';
   }
 }
 

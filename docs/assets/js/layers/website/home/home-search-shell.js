@@ -142,7 +142,7 @@ function renderHomeSearchShell(snapshot) {
       <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
         <p class="home-search-shell__empty-title">Start with a query</p>
         <p class="home-search-shell__empty-text">
-          Search across people, models, platform knowledge, and public product surfaces.
+          Search public pages, platform knowledge, and future profile routes from one surface.
         </p>
       </div>
     `;

@@ -211,13 +211,17 @@
       this.root = null;
       this.canvas = null;
       this.interaction = null;
+      this.stage = null;
       this.core = null;
+      this.boundPointerMove = null;
+      this.boundPointerLeave = null;
     }
 
     resolveElements() {
       this.root = qs('#home-hero-shader');
       this.canvas = qs('#home-hero-shader-canvas');
       this.interaction = qs('#home-hero-shader-interaction');
+      this.stage = qs('#stage');
       return Boolean(this.root && this.canvas);
     }
 
@@ -238,18 +242,42 @@
     }
 
     bindInteractionSurface() {
-      if (!this.interaction || !this.canvas || !this.core) return;
+      if (!this.canvas || !this.core) return;
 
-      this.interaction.addEventListener('pointermove', (event) => {
+      const pointerSurface = this.stage || document;
+      this.boundPointerMove = (event) => {
         this.core.handlePointerMove(event);
-      }, { passive: true });
-
-      this.interaction.addEventListener('pointerleave', () => {
+      };
+      this.boundPointerLeave = () => {
         this.core.handlePointerLeave();
-      }, { passive: true });
+      };
+
+      pointerSurface.addEventListener('pointermove', this.boundPointerMove, { passive: true });
+
+      if (this.stage) {
+        this.stage.addEventListener('pointerleave', this.boundPointerLeave, { passive: true });
+      } else {
+        window.addEventListener('blur', this.boundPointerLeave, { passive: true });
+      }
     }
 
     destroy() {
+      const pointerSurface = this.stage || document;
+      if (this.boundPointerMove) {
+        pointerSurface.removeEventListener('pointermove', this.boundPointerMove);
+      }
+
+      if (this.boundPointerLeave) {
+        if (this.stage) {
+          this.stage.removeEventListener('pointerleave', this.boundPointerLeave);
+        } else {
+          window.removeEventListener('blur', this.boundPointerLeave);
+        }
+      }
+
+      this.boundPointerMove = null;
+      this.boundPointerLeave = null;
+
       if (this.core) {
         this.core.destroy();
         this.core = null;

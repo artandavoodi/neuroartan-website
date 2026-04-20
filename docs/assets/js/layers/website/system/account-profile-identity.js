@@ -139,13 +139,12 @@ const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
   }
 });
 
-const REQUIRED_PROFILE_FIELDS = Object.freeze([
+export const REQUIRED_PROFILE_FIELDS = Object.freeze([
   'username',
   'first_name',
   'last_name',
   'display_name',
-  'date_of_birth',
-  'gender'
+  'date_of_birth'
 ]);
 
 const WEBSITE_BASE_PATH = (() => {

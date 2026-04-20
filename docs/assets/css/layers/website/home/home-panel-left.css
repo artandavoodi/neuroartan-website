@@ -170,10 +170,22 @@
   text-align:left;
   cursor:pointer;
   pointer-events:auto;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
 }
 
 .home-panel-left__item--link{
   text-decoration:none;
+}
+
+.home-panel-left__item:hover,
+.home-panel-left__item:focus-visible{
+  border-color:var(--home-chrome-border-strong);
+  background:var(--home-chrome-item-active);
+  color:var(--home-chrome-primary);
+  outline:none;
 }
 
 /* =============================================================================

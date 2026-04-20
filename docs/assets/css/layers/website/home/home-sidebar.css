@@ -106,6 +106,10 @@
   font-weight:500;
   letter-spacing:0.02em;
   pointer-events:auto;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
 }
 
 .home-sidebar__nav-link--active,
@@ -113,6 +117,16 @@
   border-color:var(--home-chrome-border-strong);
   background:var(--home-chrome-item-active);
   color:var(--home-chrome-primary);
+}
+
+.home-sidebar__nav-link:hover,
+.home-sidebar__nav-link:focus-visible,
+.home-sidebar__stack-item:hover,
+.home-sidebar__stack-item:focus-visible{
+  border-color:var(--home-chrome-border-strong);
+  background:var(--home-chrome-item-active);
+  color:var(--home-chrome-primary);
+  outline:none;
 }
 
 /* =============================================================================
@@ -159,6 +173,10 @@
   text-align:left;
   cursor:pointer;
   pointer-events:auto;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
 }
 
 /* =============================================================================

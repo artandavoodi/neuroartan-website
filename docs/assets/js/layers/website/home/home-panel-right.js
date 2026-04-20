@@ -63,11 +63,11 @@ function getLivePanelRightRoot() {
 function getHomePanelRightTitleForIntent(intent) {
   switch (intent) {
     case 'create-profile':
-      return 'Create profile and initialize model access';
+      return 'Create private profile and route state';
     case 'profile-model':
-      return 'Profile model, account, and identity access';
+      return 'Identity, route, and account state';
     default:
-      return 'Account, identity, and model access';
+      return 'Identity, route, and account state';
   }
 }
 
@@ -130,14 +130,14 @@ function resolveHomePanelRightUsername(snapshot) {
 
 function resolveHomePanelRightMeta(snapshot) {
   if (!snapshot?.account?.signedIn) {
-    return 'Create a unified identity surface to activate continuity, profile control, and your public route.';
+    return 'Create a private profile to govern identity, public route, and future continuity access.';
   }
 
   if (snapshot?.account?.profileComplete === false) {
-    return 'Your account is active. Complete the private profile to finalize your public identity surface.';
+    return 'Your account is active. Complete the private profile to activate the public route and continuity surfaces.';
   }
 
-  return 'Voice-trained continuity profile with account, route, and preference access.';
+  return 'Private profile anchored for route control, continuity access, and voice-trained identity.';
 }
 
 function resolveHomePanelRightRoute(snapshot) {
@@ -151,18 +151,18 @@ function resolveHomePanelRightRoute(snapshot) {
 
 function resolveHomePanelRightRouteStatus(snapshot, username) {
   if (!snapshot?.account?.signedIn) {
-    return 'Create an account to activate a canonical company-domain route.';
+    return 'Create a private profile to activate a canonical company-domain route.';
   }
 
   if (!username) {
-    return 'Choose a canonical username before the public route can render.';
+    return 'Reserve a canonical username before the public route can resolve.';
   }
 
   if (snapshot?.account?.profile?.public_profile_enabled) {
     return 'Canonical company-domain route is active.';
   }
 
-  return 'Username is reserved, but public route visibility is still private.';
+  return 'Canonical username is reserved. Public visibility is still private.';
 }
 
 function renderHomePanelRight(snapshot) {
@@ -214,7 +214,7 @@ function renderHomePanelRight(snapshot) {
   }
 
   if (nodes.accountEntryAction) {
-    nodes.accountEntryAction.textContent = signedIn ? 'Open private profile' : 'Create account';
+    nodes.accountEntryAction.textContent = signedIn ? 'Open private profile' : 'Create private profile';
   }
 
   if (nodes.signOutAction) {

@@ -70,7 +70,7 @@
   --home-stack-panel-height: 100svh;
   --home-stack-shell-height: 200svh;
   --home-icos-stack-shell-height: calc(var(--home-stack-panel-height) + var(--home-stack-shell-height));
-  --home-stack-surface: #ffffff;
+  --home-stack-surface: #000000;
 }
 
 @supports (height: 100dvh){
@@ -82,6 +82,10 @@
 }
 
 body.dark-mode{
+  --home-stack-surface: #000000;
+}
+
+body.color-mode{
   --home-stack-surface: #000000;
 }
 

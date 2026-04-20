@@ -4,7 +4,7 @@
    02) GLOBAL RAIL SYSTEM
    03) SECTION HEIGHT SYSTEM
    04) HEADER CONTROLS RAIL
-   05) FOOTER RAIL SYSTEM
+   05) SITE CHROME RAIL SYSTEM
    06) RESPONSIVE RAIL ADJUSTMENTS
    07) END OF FILE
 ============================================================================= */
@@ -19,7 +19,7 @@
 ============================================================================= */
 .site-rail,
 .container{
-  width:var(--site-rail-width);
+  width:var(--site-rail-measure);
   max-width:none;
   margin-left:auto;
   margin-right:auto;
@@ -49,8 +49,7 @@
   top:0;
   left:50%;
   transform:translateX(-50%);
-  width:var(--site-rail-width);
-  max-width:1200px;
+  width:var(--chrome-rail-width);
   height:64px;
   padding:0;
   display:flex;
@@ -97,7 +96,7 @@ body.menu-open #header-controls .theme-toggle{
 }
 
 /* =============================================================================
-   05) FOOTER RAIL SYSTEM
+   05) SITE CHROME RAIL SYSTEM
 ============================================================================= */
 .footer-separator{
   width:var(--footer-rail-width);
@@ -130,18 +129,6 @@ body.menu-open #header-controls .theme-toggle{
 
   #header-controls #menu-button-container{
     height:60px;
-  }
-}
-
-@media (max-width:520px){
-  :root{
-    --footer-gutter:var(--footer-gutter-min);
-  }
-}
-
-@media (min-width:2400px){
-  :root{
-    --footer-gutter:var(--footer-gutter-max);
   }
 }
 

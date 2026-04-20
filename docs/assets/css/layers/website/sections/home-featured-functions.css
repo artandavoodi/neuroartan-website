@@ -57,6 +57,10 @@
   --home-featured-functions-card-surface-bg: rgba(255, 255, 255, 0.02);
   --home-featured-functions-card-surface-highlight-rest: rgba(255, 255, 255, 0.035);
   --home-featured-functions-card-surface-highlight-hover: rgba(255, 255, 255, 0.045);
+  --home-featured-functions-card-placeholder-glow-a: rgba(255, 255, 255, 0.08);
+  --home-featured-functions-card-placeholder-glow-b: rgba(145, 124, 111, 0.24);
+  --home-featured-functions-card-placeholder-fill-top: rgba(255, 255, 255, 0.04);
+  --home-featured-functions-card-placeholder-fill-bottom: rgba(255, 255, 255, 0.02);
   --home-featured-functions-card-padding: 0;
   --home-featured-functions-card-copy-padding-top: var(--spacing-xl);
   --home-featured-functions-card-copy-gap: clamp(var(--spacing-lg), 2.4vw, var(--spacing-xl));
@@ -105,6 +109,16 @@
 body.light-mode .home-featured-functions{
   --home-featured-functions-timeline-track: color-mix(in srgb, var(--text-color) 12%, transparent);
   --home-featured-functions-dot-opacity: 0.18;
+  --home-featured-functions-card-border-color: rgba(0, 0, 0, 0.08);
+  --home-featured-functions-card-border-color-hover: rgba(0, 0, 0, 0.12);
+  --home-featured-functions-card-surface-bg: rgba(0, 0, 0, 0.02);
+  --home-featured-functions-card-surface-highlight-rest: rgba(0, 0, 0, 0.03);
+  --home-featured-functions-card-surface-highlight-hover: rgba(0, 0, 0, 0.05);
+  --home-featured-functions-card-placeholder-glow-a: rgba(0, 0, 0, 0.04);
+  --home-featured-functions-card-placeholder-glow-b: rgba(145, 124, 111, 0.12);
+  --home-featured-functions-card-placeholder-fill-top: rgba(0, 0, 0, 0.03);
+  --home-featured-functions-card-placeholder-fill-bottom: rgba(0, 0, 0, 0.015);
+  --home-featured-functions-card-spectrum-opacity: 0.06;
 }
 
 body.dark-mode .home-featured-functions{
@@ -339,9 +353,9 @@ body.dark-mode .home-featured-functions{
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 42%),
-    radial-gradient(circle at 80% 30%, rgba(145, 124, 111, 0.24) 0%, transparent 36%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%);
+    radial-gradient(circle at 20% 20%, var(--home-featured-functions-card-placeholder-glow-a) 0%, transparent 42%),
+    radial-gradient(circle at 80% 30%, var(--home-featured-functions-card-placeholder-glow-b) 0%, transparent 36%),
+    linear-gradient(180deg, var(--home-featured-functions-card-placeholder-fill-top) 0%, var(--home-featured-functions-card-placeholder-fill-bottom) 100%);
 }
 
 /* =============================================================================
@@ -479,6 +493,7 @@ body.dark-mode .home-featured-functions-card-title{
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: var(--icon-image-filter);
 }
 
 /* =============================================================================

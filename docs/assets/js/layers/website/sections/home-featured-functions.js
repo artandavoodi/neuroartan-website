@@ -245,7 +245,7 @@
         </a>
         <div class="home-featured-functions-card-copy">
           <div class="home-featured-functions-card-summary">
-            ${icon ? `<span class="home-featured-functions-card-icon" aria-hidden="true"><img src="${icon}" alt="" loading="lazy"></span>` : ''}
+            ${icon ? `<span class="home-featured-functions-card-icon" aria-hidden="true"><img class="ui-icon-theme-aware" src="${icon}" alt="" decoding="async"></span>` : ''}
             <p class="home-featured-functions-card-label" data-i18n-key="${labelI18nKey}">${label}</p>
           </div>
           <a class="home-featured-functions-card-text-link" href="${href}" aria-label="${title}">

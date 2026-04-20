@@ -54,11 +54,11 @@ function getLivePanelLeftRoot() {
 function getHomePanelLeftTitleForIntent(intent) {
   switch (intent) {
     case 'saved-continuities':
-      return 'Continuities and saved memory surfaces';
+      return 'Continuity trace and saved memory surfaces';
     case 'recent-interactions':
-      return 'Recent interactions and active retrieval threads';
+      return 'Recent interaction and routing trace';
     default:
-      return 'Continuities and recent interactions';
+      return 'Continuity trace and current interaction';
   }
 }
 
@@ -160,12 +160,12 @@ function renderHomePanelLeft(snapshot) {
   if (nodes.responseValue) {
     nodes.responseValue.textContent = buildSummaryText(
       snapshot?.voice?.response,
-      'Responses and route classification will appear here after your first interaction.'
+      'Responses, route classification, and continuity traces appear here after the first interaction.'
     );
   }
 
   if (nodes.profileAction) {
-    nodes.profileAction.textContent = snapshot?.account?.signedIn ? 'Open profile surface' : 'Create account';
+    nodes.profileAction.textContent = snapshot?.account?.signedIn ? 'Open private profile' : 'Create private profile';
   }
 }
 

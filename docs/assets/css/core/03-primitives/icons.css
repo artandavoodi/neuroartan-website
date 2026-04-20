@@ -19,8 +19,18 @@
    02) ROOT ICON TOKENS
 ============================================================================= */
 :root{
-  --icon-image-filter:none;
-  --icon-image-filter-strong:none;
+  --icon-image-filter:brightness(0) invert(1);
+  --icon-image-filter-strong:brightness(0) invert(1);
+  --icon-color:var(--text-color);
+  --icon-color-muted:var(--text-secondary-color);
+  --icon-color-accent:var(--color-primary1);
+}
+
+:root.color-mode,
+html.color-mode,
+body.color-mode{
+  --icon-image-filter:brightness(0) invert(1);
+  --icon-image-filter-strong:brightness(0) invert(1);
   --icon-color:var(--text-color);
   --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);
@@ -29,8 +39,8 @@
 :root.light-mode,
 html.light-mode,
 body.light-mode{
-  --icon-image-filter:none;
-  --icon-image-filter-strong:none;
+  --icon-image-filter:brightness(0) saturate(100%);
+  --icon-image-filter-strong:brightness(0) saturate(100%);
   --icon-color:var(--text-color);
   --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);

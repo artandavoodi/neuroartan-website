@@ -84,7 +84,7 @@ function renderOverview(state = getProfileRuntimeState()) {
     setText(root, '[data-profile-identity-last-name]', state.lastName || 'Pending');
     setText(root, '[data-profile-identity-display-name]', state.displayName || 'Pending');
     setText(root, '[data-profile-identity-birth-date]', state.birthDate ? state.formattedBirthDate : 'Pending');
-    setText(root, '[data-profile-identity-gender]', capitalizeWords(state.gender || '') || 'Pending');
+    setText(root, '[data-profile-identity-gender]', capitalizeWords(state.gender || '') || 'Not provided');
 
     setText(root, '[data-profile-username-raw]', state.username.raw || 'Pending');
     setText(root, '[data-profile-username-normalized]', state.username.normalized || 'Not assigned');
@@ -114,7 +114,7 @@ function renderOverview(state = getProfileRuntimeState()) {
         : 'Profile image not yet connected'
     );
 
-    setText(root, '[data-profile-continuity-badge]', state.completion.complete ? 'Ready' : 'Scaffolded');
+    setText(root, '[data-profile-continuity-badge]', state.completion.complete ? 'Ready' : 'In Progress');
     setText(
       root,
       '[data-profile-continuity-copy]',

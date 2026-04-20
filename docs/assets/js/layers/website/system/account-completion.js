@@ -29,6 +29,7 @@
    01) MODULE IMPORTS
 ============================================================================= */
 import {
+  REQUIRED_PROFILE_FIELDS,
   assertUsernameAvailable,
   buildDisplayName,
   buildUsernameStatus,
@@ -87,8 +88,6 @@ import {
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
   const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
   const USERNAME_VALIDATION_DEBOUNCE_MS = 240;
-  const REQUIRED_PROFILE_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth', 'gender'];
-
   /* =============================================================================
      05) FIREBASE HELPERS
   ============================================================================= */
@@ -939,10 +938,6 @@ import {
           || getFieldFromForm(form, '#account-profile-setup-date-of-birth')
         )
       : null;
-    const genderField = form instanceof HTMLFormElement
-      ? getFieldFromForm(form, '#account-profile-setup-gender')
-      : null;
-
     if (!(form instanceof HTMLFormElement)) return;
 
     clearFormErrors(form);
@@ -995,11 +990,6 @@ import {
 
     if (!values.date_of_birth) {
       setFieldError(dateOfBirthField, 'Enter your date of birth.');
-      return;
-    }
-
-    if (!values.gender) {
-      setFieldError(genderField, 'Select your gender.');
       return;
     }
 

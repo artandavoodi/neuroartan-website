@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) GLOBAL RAIL TOKENS
-   03) FOOTER GUTTER TOKENS
+   03) SITE CHROME TOKENS
    04) SECTION HEIGHT TOKENS
    05) STAGE CIRCLE TOKENS
    06) DRAWER LAYOUT TOKENS
@@ -23,13 +23,29 @@
 }
 
 /* =============================================================================
-   03) FOOTER GUTTER TOKENS
+   03) SITE CHROME TOKENS
 ============================================================================= */
 :root{
-  --footer-gutter:4vw;
-  --footer-gutter-min:18px;
-  --footer-gutter-max:96px;
-  --footer-rail-width:calc(100% - (var(--footer-gutter) * 2));
+  --site-gutter-min:18px;
+  --site-gutter-max:96px;
+  --site-inline-gutter:clamp(var(--site-gutter-min), var(--site-gutter), var(--site-gutter-max));
+  --site-rail-measure:min(var(--site-rail-width), calc(100% - (var(--site-inline-gutter) * 2)));
+
+  --chrome-rail-width:var(--site-rail-measure);
+  --footer-rail-width:var(--site-rail-measure);
+  --menu-rail-width:var(--site-rail-measure);
+
+  --chrome-padding-y-sm:0.8rem;
+  --chrome-padding-y-md:0.9rem;
+  --chrome-gap-sm:0.9rem;
+  --chrome-gap-md:1rem;
+
+  --footer-margin-top:0.6rem;
+  --footer-padding-top:0.8rem;
+  --footer-padding-bottom:0.9rem;
+
+  --menu-padding-top:0.9rem;
+  --menu-padding-bottom:0.9rem;
 }
 
 /* =============================================================================

@@ -41,14 +41,17 @@
   position:sticky;
   top:calc(var(--spacing-xl) + var(--spacing-md));
   display:grid;
-  gap:var(--spacing-lg);
-  padding:var(--spacing-lg);
-  border-radius:var(--radius-xl);
+  gap:var(--spacing-md);
+  padding:0 0 var(--spacing-md);
+  border-top:var(--stroke-soft) solid var(--border-color);
+  border-bottom:var(--stroke-soft) solid var(--border-color);
+  background:transparent;
 }
 
 .profile-sidebar__header{
   display:grid;
   gap:var(--spacing-sm);
+  padding-top:var(--spacing-md);
 }
 
 .profile-sidebar__eyebrow,
@@ -81,32 +84,36 @@
 
 .profile-sidebar__nav{
   display:grid;
-  gap:var(--spacing-xs);
+  gap:0;
 }
 
 .profile-sidebar__nav-item{
   width:100%;
   display:grid;
   gap:0.2rem;
-  padding:0.95rem 1rem;
-  border:1px solid color-mix(in srgb, var(--text-color) 6%, transparent);
-  border-radius:var(--radius-lg);
+  padding:0.95rem 0;
+  border:0;
+  border-bottom:var(--stroke-soft) solid color-mix(in srgb, var(--text-color) 10%, transparent);
+  border-radius:0;
   background:transparent;
   color:var(--text-color);
   text-align:left;
   cursor:pointer;
   transition:
-    background-color var(--duration-base) var(--ease-standard),
+    color var(--duration-base) var(--ease-standard),
     border-color var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+    opacity var(--duration-base) var(--ease-standard);
+}
+
+.profile-sidebar__nav-item:last-child{
+  border-bottom:0;
 }
 
 .profile-sidebar__nav-item:hover,
 .profile-sidebar__nav-item:focus-visible,
 .profile-sidebar__nav-item[data-profile-nav-active="true"]{
-  background:color-mix(in srgb, var(--surface-secondary) 72%, transparent);
-  border-color:color-mix(in srgb, var(--text-color) 12%, transparent);
-  transform:translateY(-1px);
+  background:transparent;
+  border-color:color-mix(in srgb, var(--text-color) 20%, transparent);
   outline:none;
 }
 
@@ -128,10 +135,11 @@
 .profile-sidebar__footer{
   display:grid;
   gap:var(--spacing-sm);
+  padding-top:var(--spacing-sm);
 }
 
 .profile-sidebar__footer-action{
-  justify-content:center;
+  justify-content:flex-start;
 }
 
 /* =============================================================================
@@ -151,7 +159,7 @@
 
 @media (max-width:820px){
   .profile-sidebar__surface{
-    padding:var(--spacing-md);
+    padding:0 0 var(--spacing-md);
     gap:var(--spacing-md);
   }
 }

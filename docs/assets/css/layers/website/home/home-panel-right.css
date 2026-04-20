@@ -203,6 +203,13 @@
   text-decoration:none;
   font-size:0.92rem;
   line-height:1.3;
+  transition:color 220ms ease;
+}
+
+.home-panel-right__route-link:hover,
+.home-panel-right__route-link:focus-visible{
+  color:var(--home-chrome-primary);
+  outline:none;
 }
 
 .home-panel-right__route-status{
@@ -232,6 +239,18 @@
   text-align:left;
   cursor:pointer;
   pointer-events:auto;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.home-panel-right__item:hover,
+.home-panel-right__item:focus-visible{
+  border-color:var(--home-chrome-border-strong);
+  background:var(--home-chrome-item-active);
+  color:var(--home-chrome-primary);
+  outline:none;
 }
 
 /* =============================================================================

@@ -17,6 +17,7 @@
    ============================================================================= */
 
 import {
+  REQUIRED_PROFILE_FIELDS,
   buildPublicProfileDisplay,
   buildPublicProfilePath,
   buildPublicProfileUrl,
@@ -41,8 +42,6 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_RUNTIME__ ||= {
 /* =============================================================================
    03) CONSTANTS
    ============================================================================= */
-
-const PROFILE_COMPLETION_FIELDS = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth', 'gender'];
 
 /* =============================================================================
    04) ASSET HELPERS
@@ -157,7 +156,7 @@ function buildCompletionState(profile = null) {
       complete: false,
       percent: 0,
       status: 'missing_profile',
-      missingFields: PROFILE_COMPLETION_FIELDS.slice()
+      missingFields: REQUIRED_PROFILE_FIELDS.slice()
     };
   }
 
@@ -167,7 +166,7 @@ function buildCompletionState(profile = null) {
 
   const missingFields = canonicalMissing && canonicalMissing.length
     ? canonicalMissing
-    : PROFILE_COMPLETION_FIELDS.filter((field) => {
+    : REQUIRED_PROFILE_FIELDS.filter((field) => {
         switch (field) {
           case 'username':
             return !normalizeString(profile.username || profile.username_normalized || profile.username_lower);
@@ -180,7 +179,7 @@ function buildCompletionState(profile = null) {
 
   const explicitPercent = Number.isFinite(profile?.profile_completion_percent)
     ? Number(profile.profile_completion_percent)
-    : Math.round(((PROFILE_COMPLETION_FIELDS.length - missingFields.length) / PROFILE_COMPLETION_FIELDS.length) * 100);
+    : Math.round(((REQUIRED_PROFILE_FIELDS.length - missingFields.length) / REQUIRED_PROFILE_FIELDS.length) * 100);
 
   const explicitStatus = normalizeString(profile?.profile_completion_status);
   const complete = profile?.profile_complete === true
@@ -257,8 +256,8 @@ function buildPrivateProfileState(user = null, profile = null) {
   const summary = !user
     ? 'Continue with your Neuroartan account to activate a private owner environment for identity, route readiness, and continuity state.'
     : completion.complete
-      ? 'This surface anchors your display identity, account state, route readiness, and the future continuity modules that will extend across Neuroartan layers.'
-      : 'Complete the remaining identity fields and username governance steps to stabilize your private profile surface.';
+      ? 'This surface anchors your identity record, route governance, public-safe presence, and the continuity systems that extend across Neuroartan.'
+      : 'Complete identity and route governance to stabilize the private profile surface and prepare the company-domain public route.';
 
   return {
     surface: 'private',
@@ -299,9 +298,9 @@ function buildPrivateProfileState(user = null, profile = null) {
     menuStateLine: !user
       ? 'Owner environment awaiting account access'
       : completion.complete
-        ? 'Authenticated continuity surface'
-        : 'Authenticated profile completion',
-    accountButtonLabel: user ? 'Account' : 'Continue',
+        ? 'Private continuity surface active'
+        : 'Private profile completion in progress',
+    accountButtonLabel: user ? 'Private Profile' : 'Continue',
     primaryActionLabel: !user
       ? 'Continue with Account'
       : completion.complete
@@ -397,7 +396,7 @@ function buildPublicProfileState(detail = {}) {
       : outcome === 'reserved_but_disabled'
         ? 'Disabled'
         : 'Pending';
-  const continuityState = outcome === 'found_renderable' ? 'Active' : outcome === 'loading' ? 'Resolving' : 'Scaffolded';
+  const continuityState = outcome === 'found_renderable' ? 'Active' : outcome === 'loading' ? 'Resolving' : 'Pending';
   const summary = normalizeString(publicProfile?.public_summary || '')
     || buildPublicRouteCopy(outcome, normalizedUsername);
 

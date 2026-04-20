@@ -263,6 +263,23 @@
       if (typeof opacity === "number") mask.style.opacity = String(opacity);
     };
 
+    const syncStageVideoMaskToTheme = () => {
+      const mask = qs("#stage-video-mask");
+      if (!mask) return;
+
+      const computed = window.getComputedStyle(mask);
+      if (computed.display === "none") return;
+
+      const resolvedOpacity = Number.parseFloat(mask.style.opacity || computed.opacity || "1");
+      const opacity = Number.isFinite(resolvedOpacity) ? resolvedOpacity : 1;
+
+      setStageVideoMask({ opacity, hard: true });
+    };
+
+    document.addEventListener("neuroartan:theme-changed", () => {
+      requestAnimationFrame(syncStageVideoMaskToTheme);
+    });
+
     // Persist original essence placement so we can restore on ENTER.
     const essenceOriginal = essence
       ? { parent: essence.parentElement, next: essence.nextElementSibling }

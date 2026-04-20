@@ -14,6 +14,7 @@
 .home-footer{
   position:relative;
   width:100%;
+  margin:var(--footer-margin-top) 0 0 0;
   pointer-events:auto;
 }
 
@@ -25,10 +26,10 @@
   align-items:center;
   justify-content:space-between;
   gap:0.9rem;
-  width:var(--site-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
+  width:100%;
+  max-width:none;
   margin:0 auto;
-  padding:0.8rem 0 0.9rem;
+  padding:var(--footer-padding-top) 0 var(--footer-padding-bottom) 0;
   border-top:1px solid var(--home-chrome-border);
   background:transparent;
   pointer-events:auto;
@@ -48,8 +49,9 @@
 .home-footer__copy{
   margin:0;
   color:var(--home-chrome-quiet);
-  font-size:0.76rem;
-  letter-spacing:0.04em;
+  font-size:0.9rem;
+  line-height:1.2;
+  letter-spacing:0.02em;
   white-space:nowrap;
 }
 
@@ -66,11 +68,21 @@
 .home-footer__link{
   color:var(--home-chrome-secondary);
   text-decoration:none;
-  font-size:0.76rem;
+  font-size:0.9rem;
   font-weight:400;
-  letter-spacing:0.04em;
+  line-height:1.2;
+  letter-spacing:0.02em;
   white-space:nowrap;
   pointer-events:auto;
+  transition:
+    color 220ms ease,
+    opacity 220ms ease;
+}
+
+.home-footer__link:hover,
+.home-footer__link:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
 }
 
 /* =============================================================================
@@ -91,16 +103,17 @@
   background:transparent;
   color:var(--home-chrome-secondary);
   font-family:inherit;
-  font-size:0.76rem;
+  font-size:0.9rem;
   font-weight:400;
-  letter-spacing:0.04em;
-  line-height:1;
+  line-height:1.2;
+  letter-spacing:0.02em;
   cursor:pointer;
 }
 
 .home-footer__privacy-action:hover,
 .home-footer__privacy-action:focus-visible{
-  color:var(--home-chrome-primary);
+  color:var(--text-primary-color);
+  outline:none;
 }
 
 /* =============================================================================
@@ -119,12 +132,12 @@
 
 @media (max-width: 640px){
   .home-footer__inner{
-    padding:0.78rem 0 0.82rem;
+    padding:var(--footer-padding-top) 0 var(--footer-padding-bottom);
   }
 
   .home-footer__copy,
   .home-footer__link,
   .home-footer__privacy-action{
-    font-size:0.74rem;
+    font-size:0.9rem;
   }
 }

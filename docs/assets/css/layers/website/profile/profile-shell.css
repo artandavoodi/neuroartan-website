@@ -24,20 +24,15 @@
 
 .profile-shell__surface{
   position:relative;
-  overflow:hidden;
-  padding:var(--profile-shell-surface-padding, var(--spacing-xl));
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-medium);
+  overflow:visible;
+  padding:0;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
 }
 
 .profile-shell__ambient{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 16% 18%, color-mix(in srgb, var(--text-color) 7%, transparent) 0%, transparent 34%),
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-secondary) 85%, transparent) 0%, transparent 32%);
-  opacity:0.78;
-  pointer-events:none;
+  display:none;
 }
 
 /* =============================================================================
@@ -48,7 +43,7 @@
   position:relative;
   z-index:1;
   display:grid;
-  gap:var(--profile-shell-inner-gap, var(--spacing-xl));
+  gap:var(--profile-shell-inner-gap, var(--spacing-2xl));
 }
 
 .profile-shell__mount{

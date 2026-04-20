@@ -135,8 +135,8 @@ body.light-mode .products-local-nav::before {
   color: var(--text-primary-color);
   text-decoration: none;
   white-space: nowrap;
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 400;
   letter-spacing: 0.008em;
   line-height: 1;
   transform: none !important;
@@ -172,6 +172,7 @@ body.light-mode .products-local-nav::before {
   background: transparent;
   padding: 0;
   margin: 0;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -191,6 +192,18 @@ body.light-mode .products-local-nav::before {
     transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.products-local-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc((var(--products-local-nav-height, 3.55rem) - 100%) / -2);
+  height: 0.35px;
+  background: var(--text-primary-color);
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* =============================================================================
    09) LOCAL NAV STATES
 ============================================================================= */
@@ -206,6 +219,10 @@ body.light-mode .products-local-nav::before {
   transform: none !important;
   text-decoration: none;
   outline: none;
+}
+
+.products-local-nav__link--active::after {
+  opacity: 1;
 }
 
 /* =============================================================================

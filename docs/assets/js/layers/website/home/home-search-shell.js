@@ -15,6 +15,7 @@
 const HOME_SEARCH_SHELL_STATE = {
   isBound: false,
   isOpen: false,
+  root: null,
 };
 
 /* =========================================================
@@ -36,6 +37,10 @@ function getHomeSearchShellNodes() {
 
 function dispatchHomeSearchEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function getLiveSearchShellRoot() {
+  return document.querySelector('#home-search-shell');
 }
 
 /* =========================================================
@@ -115,35 +120,50 @@ function handleHomeSearchChipSelection(chipValue) {
    ========================================================= */
 
 function bindHomeSearchShell() {
-  const nodes = getHomeSearchShellNodes();
-
-  if (!nodes.shell || !nodes.form || !nodes.input) {
-    return;
-  }
-
   document.addEventListener('neuroartan:home-search-shell-open-requested', () => {
     openHomeSearchShell();
   });
 
-  nodes.form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    submitHomeSearchQuery(nodes.input.value, 'home-search-shell');
-  });
-
-  nodes.close?.addEventListener('click', () => {
+  document.addEventListener('neuroartan:home-search-shell-close-requested', () => {
     closeHomeSearchShell();
   });
 
-  nodes.closeTargets.forEach((node) => {
-    node.addEventListener('click', () => {
+  document.addEventListener('click', (event) => {
+    const root = getLiveSearchShellRoot();
+    if (!root) return;
+
+    const target = event.target.closest(
+      '#home-search-shell-close, ' +
+      '#home-search-shell [data-home-search-close="true"], ' +
+      '#home-search-shell [data-home-search-chip]'
+    );
+
+    if (!target || !root.contains(target)) {
+      return;
+    }
+
+    if (target.matches('#home-search-shell-close, [data-home-search-close="true"]')) {
       closeHomeSearchShell();
-    });
+      return;
+    }
+
+    if (target.matches('[data-home-search-chip]')) {
+      handleHomeSearchChipSelection(target.getAttribute('data-home-search-chip') || '');
+    }
   });
 
-  nodes.chips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      handleHomeSearchChipSelection(chip.getAttribute('data-home-search-chip') || '');
-    });
+  document.addEventListener('submit', (event) => {
+    const root = getLiveSearchShellRoot();
+    if (!root) return;
+
+    const form = event.target.closest('#home-search-shell-form');
+    if (!form || !root.contains(form)) {
+      return;
+    }
+
+    event.preventDefault();
+    const nodes = getHomeSearchShellNodes();
+    submitHomeSearchQuery(nodes.input?.value || '', 'home-search-shell');
   });
 
   document.addEventListener('keydown', (event) => {
@@ -162,12 +182,14 @@ function bindHomeSearchShell() {
    ========================================================= */
 
 function bootHomeSearchShell() {
-  if (HOME_SEARCH_SHELL_STATE.isBound) {
+  const root = getLiveSearchShellRoot();
+  if (!root) {
     return;
   }
 
-  const nodes = getHomeSearchShellNodes();
-  if (!nodes.shell || !nodes.form || !nodes.input) {
+  HOME_SEARCH_SHELL_STATE.root = root;
+
+  if (HOME_SEARCH_SHELL_STATE.isBound) {
     return;
   }
 

@@ -20,7 +20,7 @@
   width:min(42rem, 90vw);
   margin:0 auto;
   padding:0.2rem 0 0;
-  pointer-events:none;
+  pointer-events:auto;
 }
 
 #stage-voice-interaction-shell[hidden]{

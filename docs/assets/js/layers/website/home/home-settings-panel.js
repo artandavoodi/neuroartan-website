@@ -15,6 +15,7 @@
 const HOME_SETTINGS_PANEL_STATE = {
   isBound: false,
   isOpen: false,
+  root: null,
 };
 
 /* =========================================================
@@ -31,6 +32,10 @@ function getHomeSettingsPanelNodes() {
 
 function dispatchHomeSettingsPanelEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function getLiveSettingsPanelRoot() {
+  return document.querySelector('#home-settings-panel');
 }
 
 /* =========================================================
@@ -100,30 +105,41 @@ function handleHomeSettingsPanelAction(label) {
    ========================================================= */
 
 function bindHomeSettingsPanel() {
-  const nodes = getHomeSettingsPanelNodes();
+  document.addEventListener('click', (event) => {
+    const root = getLiveSettingsPanelRoot();
+    if (!root) return;
 
-  if (!nodes.panel) {
-    return;
-  }
+    const target = event.target.closest(
+      '#home-settings-panel-close, ' +
+      '#home-settings-panel .home-settings-panel__item'
+    );
 
-  nodes.closeButton?.addEventListener('click', () => {
-    closeHomeSettingsPanel();
+    if (!target || !root.contains(target)) {
+      return;
+    }
+
+    if (target.matches('#home-settings-panel-close')) {
+      closeHomeSettingsPanel();
+      return;
+    }
+
+    if (target.matches('.home-settings-panel__item')) {
+      handleHomeSettingsPanelAction(target.textContent || '');
+    }
   });
 
   document.addEventListener('neuroartan:home-settings-panel-open-requested', () => {
     openHomeSettingsPanel();
   });
 
+  document.addEventListener('neuroartan:home-settings-panel-close-requested', () => {
+    closeHomeSettingsPanel();
+  });
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && HOME_SETTINGS_PANEL_STATE.isOpen) {
       closeHomeSettingsPanel();
     }
-  });
-
-  nodes.items.forEach((button) => {
-    button.addEventListener('click', () => {
-      handleHomeSettingsPanelAction(button.textContent || '');
-    });
   });
 }
 
@@ -132,12 +148,14 @@ function bindHomeSettingsPanel() {
    ========================================================= */
 
 function bootHomeSettingsPanel() {
-  if (HOME_SETTINGS_PANEL_STATE.isBound) {
+  const root = getLiveSettingsPanelRoot();
+  if (!root) {
     return;
   }
 
-  const nodes = getHomeSettingsPanelNodes();
-  if (!nodes.panel) {
+  HOME_SETTINGS_PANEL_STATE.root = root;
+
+  if (HOME_SETTINGS_PANEL_STATE.isBound) {
     return;
   }
 

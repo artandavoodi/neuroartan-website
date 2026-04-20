@@ -14,25 +14,23 @@
      10B) STAGE COGNITIVE CORE SHELL
      10C) STAGE VOICE INTERACTION SHELL
      11) MAIN CONTENT
-     11A) HEADER CONTROLS
-     11B) INSTITUTIONAL MENU MOUNT
-     11C) SECONDARY MENU MOUNT
-     11D) ACCOUNT DRAWER MOUNT
-     11E) SIGN-IN DRAWER MOUNT
-     11F) SIGN-UP DRAWER MOUNT
-     11G) APPLE PROVIDER SHEET MOUNT
-     11H) GOOGLE PROVIDER SHEET MOUNT
-     11I) EMAIL AUTH DRAWER MOUNT
-     11J) PHONE AUTH DRAWER MOUNT
-     11K) AUTH FLOW MOUNT
-     11L) PROFILE SHELL MOUNT
-     11M) HOME DASHBOARD TOPBAR MOUNT
-     11N) HOME SIDEBAR MOUNT
-     11O) HOME PANEL LEFT MOUNT
-     11P) HOME PANEL RIGHT MOUNT
-     11Q) HOME SEARCH SHELL MOUNT
-     11R) HOME SETTINGS PANEL MOUNT
-     11S) HOME FOOTER MOUNT
+     11A) ACCOUNT DRAWER MOUNT
+     11B) SIGN-IN DRAWER MOUNT
+     11C) SIGN-UP DRAWER MOUNT
+     11D) APPLE PROVIDER SHEET MOUNT
+     11E) GOOGLE PROVIDER SHEET MOUNT
+     11F) EMAIL AUTH DRAWER MOUNT
+     11G) PHONE AUTH DRAWER MOUNT
+     11H) AUTH FLOW MOUNT
+     11I) PROFILE SHELL MOUNT
+     11J) HOME SHELL
+     11K) HOME DASHBOARD TOPBAR MOUNT
+     11L) HOME SIDEBAR MOUNT
+     11M) HOME PANEL LEFT MOUNT
+     11N) HOME PANEL RIGHT MOUNT
+     11O) HOME SEARCH SHELL MOUNT
+     11P) HOME SETTINGS PANEL MOUNT
+     11Q) HOME FOOTER MOUNT
      12) COUNTRY OVERLAY MOUNT
      12A) COOKIE CONSENT MOUNT
      13) HOME HERO SHADER SYSTEM
@@ -257,13 +255,6 @@
                     </div>
                 </div>
 
-                <div class="stage-region stage-region-bottom" id="stage-bottom">
-                    <div class="stage-container-gap stage-fade-on-enter" id="stage-enter">
-                        <a id="enter-button" class="enter-button enter-breathe" href="/pages/about/" aria-label="About">
-                            <span class="enter-button-label">About</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -274,60 +265,42 @@
 ============================================================================= -->
 <main id="site-main">
 <!-- =============================================================================
-     11A) HEADER CONTROLS
-============================================================================= -->
-<header id="header-controls" class="site-header">
-    <button id="menu-button" aria-label="Open secondary navigation">
-        <span class="line line-top"></span>
-        <span class="line line-bottom"></span>
-    </button>
-</header>
-<!-- =============================================================================
-     11B) INSTITUTIONAL MENU MOUNT
-============================================================================= -->
-<div id="institutional-menu-mount" data-include="institutional-menu"></div>
-<!-- =============================================================================
-     11C) SECONDARY MENU MOUNT
-============================================================================= -->
-<div id="menu-mount" data-include="menu"></div>
-
-<!-- =============================================================================
-     11D) ACCOUNT DRAWER MOUNT
+     11A) ACCOUNT DRAWER MOUNT
 ============================================================================= -->
 <div id="account-drawer-mount" data-include="account-drawer"></div>
 
 <!-- =============================================================================
-     11E) SIGN-IN DRAWER MOUNT
+     11B) SIGN-IN DRAWER MOUNT
 ============================================================================= -->
 <div id="account-sign-in-drawer-mount" data-include="account-sign-in-drawer"></div>
 
 <!-- =============================================================================
-     11F) SIGN-UP DRAWER MOUNT
+     11C) SIGN-UP DRAWER MOUNT
 ============================================================================= -->
 <div id="account-sign-up-drawer-mount" data-include="account-sign-up-drawer"></div>
 
 <!-- =============================================================================
-     11G) APPLE PROVIDER SHEET MOUNT
+     11D) APPLE PROVIDER SHEET MOUNT
 ============================================================================= -->
 <div id="account-provider-apple-sheet-mount" data-include="account-provider-apple-sheet"></div>
 
 <!-- =============================================================================
-     11H) GOOGLE PROVIDER SHEET MOUNT
+     11E) GOOGLE PROVIDER SHEET MOUNT
 ============================================================================= -->
 <div id="account-provider-google-sheet-mount" data-include="account-provider-google-sheet"></div>
 
 <!-- =============================================================================
-     11I) EMAIL AUTH DRAWER MOUNT
+     11F) EMAIL AUTH DRAWER MOUNT
 ============================================================================= -->
 <div id="account-email-auth-drawer-mount" data-include="account-email-auth-drawer"></div>
 
 <!-- =============================================================================
-     11J) PHONE AUTH DRAWER MOUNT
+     11G) PHONE AUTH DRAWER MOUNT
 ============================================================================= -->
 <div id="account-phone-auth-drawer-mount" data-include="account-phone-auth-drawer"></div>
 
 <!-- =============================================================================
-     11K) AUTH FLOW MOUNT
+     11H) AUTH FLOW MOUNT
 ============================================================================= -->
 <div id="auth-flow-mount"
      data-auth-state="guest"
@@ -336,7 +309,7 @@
      aria-hidden="true"></div>
 
 <!-- =============================================================================
-     11L) PROFILE SHELL MOUNT
+     11I) PROFILE SHELL MOUNT
 ============================================================================= -->
 <div id="profile-shell-mount"
      data-profile-state="empty"
@@ -344,39 +317,44 @@
      aria-hidden="true"></div>
 
 <!-- =============================================================================
-     11M) HOME DASHBOARD TOPBAR MOUNT
+     11J) HOME SHELL
 ============================================================================= -->
-<div id="home-dashboard-topbar-mount" data-include="home-dashboard-topbar"></div>
+<section class="home-shell" aria-label="Home dashboard surface">
+  <!-- =============================================================================
+       11K) HOME DASHBOARD TOPBAR MOUNT
+  ============================================================================= -->
+  <div class="home-shell__topbar" id="home-dashboard-topbar-mount" data-include="home-dashboard-topbar"></div>
 
-<!-- =============================================================================
-     11N) HOME SIDEBAR MOUNT
-============================================================================= -->
-<div id="home-sidebar-mount" data-include="home-sidebar"></div>
+  <!-- =============================================================================
+       11L) HOME SIDEBAR MOUNT
+  ============================================================================= -->
+  <div class="home-shell__panel-mount home-shell__panel-mount--sidebar" id="home-sidebar-mount" data-include="home-sidebar"></div>
 
-<!-- =============================================================================
-     11O) HOME PANEL LEFT MOUNT
-============================================================================= -->
-<div id="home-panel-left-mount" data-include="home-panel-left"></div>
+  <!-- =============================================================================
+       11M) HOME PANEL LEFT MOUNT
+  ============================================================================= -->
+  <div class="home-shell__panel-mount home-shell__panel-mount--workspace" id="home-panel-left-mount" data-include="home-panel-left"></div>
 
-<!-- =============================================================================
-     11P) HOME PANEL RIGHT MOUNT
-============================================================================= -->
-<div id="home-panel-right-mount" data-include="home-panel-right"></div>
+  <!-- =============================================================================
+       11N) HOME PANEL RIGHT MOUNT
+  ============================================================================= -->
+  <div class="home-shell__panel-mount home-shell__panel-mount--profile" id="home-panel-right-mount" data-include="home-panel-right"></div>
 
-<!-- =============================================================================
-     11Q) HOME SEARCH SHELL MOUNT
-============================================================================= -->
-<div id="home-search-shell-mount" data-include="home-search-shell"></div>
+  <!-- =============================================================================
+       11O) HOME SEARCH SHELL MOUNT
+  ============================================================================= -->
+  <div class="home-shell__overlay-mount home-shell__overlay-mount--search" id="home-search-shell-mount" data-include="home-search-shell"></div>
 
-<!-- =============================================================================
-     11R) HOME SETTINGS PANEL MOUNT
-============================================================================= -->
-<div id="home-settings-panel-mount" data-include="home-settings-panel"></div>
+  <!-- =============================================================================
+       11P) HOME SETTINGS PANEL MOUNT
+  ============================================================================= -->
+  <div class="home-shell__overlay-mount home-shell__overlay-mount--settings" id="home-settings-panel-mount" data-include="home-settings-panel"></div>
 
-<!-- =============================================================================
-     11S) HOME FOOTER MOUNT
-============================================================================= -->
-<div id="home-footer-mount" data-include="home-footer"></div>
+  <!-- =============================================================================
+       11Q) HOME FOOTER MOUNT
+  ============================================================================= -->
+  <div class="home-shell__footer" id="home-footer-mount" data-include="home-footer"></div>
+</section>
 
 <!-- =============================================================================
      END OF MAIN CONTENT

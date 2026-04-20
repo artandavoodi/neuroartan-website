@@ -13,6 +13,7 @@
 
 const HOME_FOOTER_STATE = {
   isBound: false,
+  root: null,
 };
 
 /* =========================================================
@@ -30,6 +31,10 @@ function getHomeFooterNodes() {
 
 function dispatchHomeFooterEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function getLiveFooterRoot() {
+  return document.querySelector('#home-footer');
 }
 
 /* =========================================================
@@ -59,16 +64,17 @@ function handleHomeFooterAction(actionLabel) {
    ========================================================= */
 
 function bindHomeFooter() {
-  const nodes = getHomeFooterNodes();
+  document.addEventListener('click', (event) => {
+    const root = getLiveFooterRoot();
+    if (!root) return;
 
-  if (!nodes.root) {
-    return;
-  }
+    const target = event.target.closest('#home-footer .home-footer__meta-action');
 
-  nodes.actions.forEach((button) => {
-    button.addEventListener('click', () => {
-      handleHomeFooterAction(button.textContent || '');
-    });
+    if (!target || !root.contains(target)) {
+      return;
+    }
+
+    handleHomeFooterAction(target.textContent || '');
   });
 }
 
@@ -77,12 +83,14 @@ function bindHomeFooter() {
    ========================================================= */
 
 function bootHomeFooter() {
-  if (HOME_FOOTER_STATE.isBound) {
+  const root = getLiveFooterRoot();
+  if (!root) {
     return;
   }
 
-  const nodes = getHomeFooterNodes();
-  if (!nodes.root) {
+  HOME_FOOTER_STATE.root = root;
+
+  if (HOME_FOOTER_STATE.isBound) {
     return;
   }
 

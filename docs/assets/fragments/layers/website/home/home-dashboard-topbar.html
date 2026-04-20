@@ -1,63 +1,101 @@
 <!-- =============================================================================
      HOME DASHBOARD TOPBAR FRAGMENT
-     Purpose: primary home-layer top navigation shell for dashboard surfaces.
+     Purpose: primary home-layer top navigation shell for homepage app surfaces.
      Notes:
-     - keeps homepage/app-level controls modular
-     - does not replace institutional menu ownership
-     - mounts search, settings, and profile triggers for the home surface only
+     - owns homepage top navigation independently from the institutional menu
+     - keeps the homepage stage primary while exposing on-demand panel controls
+     - routes search, settings, continuity, and profile access through home-layer modules
 ============================================================================= -->
 
 <header class="home-dashboard-topbar" id="home-dashboard-topbar" aria-label="Home dashboard topbar">
   <div class="home-dashboard-topbar__inner">
     <div class="home-dashboard-topbar__left">
       <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan home">
-        <span class="home-dashboard-topbar__brand-mark">N</span>
-        <span class="home-dashboard-topbar__brand-text">Neuroartan</span>
+        <img
+          class="home-dashboard-topbar__brand-mark"
+          src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
+          alt="Neuroartan symbol">
+        <span class="home-dashboard-topbar__brand-copy">
+          <span class="home-dashboard-topbar__brand-text">Neuroartan</span>
+          <span class="home-dashboard-topbar__brand-context">Voice-first continuity surface</span>
+        </span>
       </a>
-    </div>
 
-    <div class="home-dashboard-topbar__center">
       <button
-        class="home-dashboard-topbar__search-trigger"
-        id="home-dashboard-search-trigger"
+        class="home-dashboard-topbar__icon-action"
+        id="home-dashboard-sidebar-trigger"
         type="button"
-        aria-label="Open search"
-        aria-controls="home-search-shell-mount"
+        aria-label="Open navigation panel"
+        aria-controls="home-sidebar-mount"
         aria-expanded="false">
-        <span class="home-dashboard-topbar__search-icon" aria-hidden="true">⌕</span>
-        <span class="home-dashboard-topbar__search-text">Search models, people, and knowledge</span>
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="home-dashboard-topbar__icon-label">Menu</span>
+      </button>
+
+      <button
+        class="home-dashboard-topbar__icon-action"
+        id="home-dashboard-workspace-trigger"
+        type="button"
+        aria-label="Open continuity workspace"
+        aria-controls="home-panel-left-mount"
+        aria-expanded="false">
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path d="M5 6.5h14M5 12h14M5 17.5h9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="home-dashboard-topbar__icon-label">Continuity</span>
       </button>
     </div>
 
     <div class="home-dashboard-topbar__right">
       <button
-        class="home-dashboard-topbar__action"
-        id="home-dashboard-language-trigger"
+        class="home-dashboard-topbar__icon-action"
+        id="home-dashboard-search-trigger"
         type="button"
-        aria-label="Open language and country settings"
-        aria-controls="country-overlay-mount"
+        aria-label="Open search"
+        aria-controls="home-search-shell-mount"
         aria-expanded="false">
-        Language
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <circle cx="11" cy="11" r="5.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M16 16l3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="home-dashboard-topbar__icon-label">Search</span>
       </button>
 
       <button
-        class="home-dashboard-topbar__action"
+        class="home-dashboard-topbar__icon-action"
         id="home-dashboard-settings-trigger"
         type="button"
         aria-label="Open home settings"
         aria-controls="home-settings-panel-mount"
         aria-expanded="false">
-        Settings
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <img src="/assets/icons/core/interface/actions/settings.svg" alt="">
+        </span>
+        <span class="home-dashboard-topbar__icon-label">Settings</span>
       </button>
 
       <button
-        class="home-dashboard-topbar__action home-dashboard-topbar__action--primary"
+        class="home-dashboard-topbar__icon-action home-dashboard-topbar__icon-action--primary"
         id="home-dashboard-profile-trigger"
         type="button"
         aria-label="Open profile panel"
         aria-controls="home-panel-right-mount"
         aria-expanded="false">
-        Profile
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <circle cx="12" cy="8.2" r="3.3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M5.5 18.2c1.8-3.1 4.1-4.6 6.5-4.6s4.7 1.5 6.5 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="home-dashboard-topbar__icon-label">Profile</span>
       </button>
     </div>
   </div>

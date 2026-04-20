@@ -13,6 +13,7 @@
 
 const HOME_SIDEBAR_STATE = {
   isBound: false,
+  root: null,
 };
 
 /* =========================================================
@@ -24,6 +25,7 @@ function getHomeSidebarNodes() {
 
   return {
     root,
+    closeButton: document.querySelector('#home-sidebar-close'),
     quickActionButtons: root ? Array.from(root.querySelectorAll('.home-sidebar__stack-item')) : [],
     navLinks: root ? Array.from(root.querySelectorAll('.home-sidebar__nav-link')) : [],
   };
@@ -31,6 +33,35 @@ function getHomeSidebarNodes() {
 
 function dispatchHomeSidebarEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function getLiveSidebarRoot() {
+  return document.querySelector('#home-sidebar');
+}
+
+function openHomeSidebar() {
+  const nodes = getHomeSidebarNodes();
+
+  if (!nodes.root) {
+    return;
+  }
+
+  nodes.root.hidden = false;
+  document.documentElement.classList.add('home-sidebar-open');
+  document.body.classList.add('home-sidebar-open');
+}
+
+function closeHomeSidebar() {
+  const nodes = getHomeSidebarNodes();
+
+  if (!nodes.root) {
+    return;
+  }
+
+  nodes.root.hidden = true;
+  document.documentElement.classList.remove('home-sidebar-open');
+  document.body.classList.remove('home-sidebar-open');
+  dispatchHomeSidebarEvent('neuroartan:home-topbar-reset-triggers');
 }
 
 /* =========================================================
@@ -48,6 +79,7 @@ function handleHomeSidebarQuickAction(label) {
     dispatchHomeSidebarEvent('neuroartan:home-search-shell-open-requested', {
       source: 'home-sidebar',
     });
+    closeHomeSidebar();
     return;
   }
 
@@ -55,6 +87,7 @@ function handleHomeSidebarQuickAction(label) {
     dispatchHomeSidebarEvent('neuroartan:home-settings-panel-open-requested', {
       source: 'home-sidebar',
     });
+    closeHomeSidebar();
     return;
   }
 
@@ -63,6 +96,7 @@ function handleHomeSidebarQuickAction(label) {
       source: 'home-sidebar',
       intent: 'create-profile',
     });
+    closeHomeSidebar();
     return;
   }
 
@@ -71,6 +105,7 @@ function handleHomeSidebarQuickAction(label) {
       source: 'home-sidebar',
       intent: 'profile-model',
     });
+    closeHomeSidebar();
     return;
   }
 
@@ -79,6 +114,7 @@ function handleHomeSidebarQuickAction(label) {
       source: 'home-sidebar',
       intent: 'saved-continuities',
     });
+    closeHomeSidebar();
     return;
   }
 
@@ -87,6 +123,7 @@ function handleHomeSidebarQuickAction(label) {
       source: 'home-sidebar',
       intent: 'recent-interactions',
     });
+    closeHomeSidebar();
   }
 }
 
@@ -95,16 +132,47 @@ function handleHomeSidebarQuickAction(label) {
    ========================================================= */
 
 function bindHomeSidebar() {
-  const nodes = getHomeSidebarNodes();
+  document.addEventListener('click', (event) => {
+    const root = getLiveSidebarRoot();
+    if (!root) return;
 
-  if (!nodes.root) {
-    return;
-  }
+    const target = event.target.closest(
+      '#home-sidebar-close, ' +
+      '#home-sidebar .home-sidebar__stack-item, ' +
+      '#home-sidebar .home-sidebar__nav-link'
+    );
 
-  nodes.quickActionButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      handleHomeSidebarQuickAction(button.textContent || '');
-    });
+    if (!target || !root.contains(target)) {
+      return;
+    }
+
+    if (target.matches('#home-sidebar-close')) {
+      closeHomeSidebar();
+      return;
+    }
+
+    if (target.matches('.home-sidebar__stack-item')) {
+      handleHomeSidebarQuickAction(target.textContent || '');
+      return;
+    }
+
+    if (target.matches('.home-sidebar__nav-link')) {
+      closeHomeSidebar();
+    }
+  });
+
+  document.addEventListener('neuroartan:home-sidebar-open-requested', () => {
+    openHomeSidebar();
+  });
+
+  document.addEventListener('neuroartan:home-sidebar-close-requested', () => {
+    closeHomeSidebar();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.classList.contains('home-sidebar-open')) {
+      closeHomeSidebar();
+    }
   });
 }
 
@@ -113,12 +181,14 @@ function bindHomeSidebar() {
    ========================================================= */
 
 function bootHomeSidebar() {
-  if (HOME_SIDEBAR_STATE.isBound) {
+  const root = getLiveSidebarRoot();
+  if (!root) {
     return;
   }
 
-  const nodes = getHomeSidebarNodes();
-  if (!nodes.root) {
+  HOME_SIDEBAR_STATE.root = root;
+
+  if (HOME_SIDEBAR_STATE.isBound) {
     return;
   }
 

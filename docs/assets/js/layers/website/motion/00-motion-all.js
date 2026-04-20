@@ -7,4 +7,4 @@
    01. MOTION AUTHORITY IMPORTS
    ========================================================= */
 
-/*import './logo-animation.js';*/
+import './logo-animation.js';

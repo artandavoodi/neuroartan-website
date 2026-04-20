@@ -8,6 +8,7 @@
    01) HOME LAYER AUTHORITY IMPORTS
 ============================================================================= */
 @import url('./home-dashboard-topbar.css');
+@import url('./home-shell.css');
 @import url('./home-sidebar.css');
 @import url('./home-panel-left.css');
 @import url('./home-panel-right.css');

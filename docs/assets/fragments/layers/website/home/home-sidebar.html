@@ -1,20 +1,28 @@
 <!-- =============================================================================
      HOME SIDEBAR FRAGMENT
-     Purpose: primary left-side navigation shell for the home/dashboard layer.
+     Purpose: primary left-side navigation shell for the homepage/dashboard layer.
      Notes:
      - distinct from institutional menu ownership
-     - supports dashboard navigation, profile model access, saved spaces, and quick actions
-     - intended for authenticated or app-surface contexts
+     - hidden by default and opened from the home topbar
+     - supports navigation, quick actions, and continuity access
 ============================================================================= -->
 
-<aside class="home-sidebar" id="home-sidebar" aria-label="Home sidebar">
+<aside class="home-sidebar" id="home-sidebar" aria-label="Home sidebar" hidden>
   <div class="home-sidebar__inner">
-    <div class="home-sidebar__brand-group">
-      <a class="home-sidebar__brand" href="/" aria-label="Neuroartan home">
-        <span class="home-sidebar__brand-mark">N</span>
-        <span class="home-sidebar__brand-text">Neuroartan</span>
-      </a>
-      <p class="home-sidebar__context">Dashboard</p>
+    <div class="home-sidebar__header">
+      <div class="home-sidebar__heading-group">
+        <p class="home-sidebar__eyebrow">Navigation</p>
+        <h2 class="home-sidebar__title">Platform surfaces and quick access</h2>
+      </div>
+
+      <button
+        class="home-sidebar__close global-close-button"
+        id="home-sidebar-close"
+        type="button"
+        aria-label="Close navigation panel">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </div>
 
     <nav class="home-sidebar__nav" aria-label="Home sidebar navigation">

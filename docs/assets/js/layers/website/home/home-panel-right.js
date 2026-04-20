@@ -16,6 +16,7 @@ const HOME_PANEL_RIGHT_STATE = {
   isBound: false,
   isOpen: false,
   activeIntent: null,
+  root: null,
 };
 
 /* =========================================================
@@ -33,6 +34,10 @@ function getHomePanelRightNodes() {
 
 function dispatchHomePanelRightEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function getLivePanelRightRoot() {
+  return document.querySelector('#home-panel-right');
 }
 
 /* =========================================================
@@ -107,6 +112,7 @@ function handleHomePanelRightAction(label) {
     dispatchHomePanelRightEvent('neuroartan:home-settings-panel-open-requested', {
       source: 'home-panel-right',
     });
+    closeHomePanelRight();
     return;
   }
 
@@ -114,6 +120,7 @@ function handleHomePanelRightAction(label) {
     dispatchHomePanelRightEvent('neuroartan:country-overlay-open-requested', {
       source: 'home-panel-right',
     });
+    closeHomePanelRight();
     return;
   }
 
@@ -122,6 +129,7 @@ function handleHomePanelRightAction(label) {
       source: 'home-panel-right',
       surface: 'settings',
     });
+    closeHomePanelRight();
     return;
   }
 
@@ -136,30 +144,41 @@ function handleHomePanelRightAction(label) {
    ========================================================= */
 
 function bindHomePanelRight() {
-  const nodes = getHomePanelRightNodes();
+  document.addEventListener('click', (event) => {
+    const root = getLivePanelRightRoot();
+    if (!root) return;
 
-  if (!nodes.panel) {
-    return;
-  }
+    const target = event.target.closest(
+      '#home-panel-right-close, ' +
+      '#home-panel-right .home-panel-right__item'
+    );
 
-  nodes.closeButton?.addEventListener('click', () => {
-    closeHomePanelRight();
+    if (!target || !root.contains(target)) {
+      return;
+    }
+
+    if (target.matches('#home-panel-right-close')) {
+      closeHomePanelRight();
+      return;
+    }
+
+    if (target.matches('.home-panel-right__item')) {
+      handleHomePanelRightAction(target.textContent || '');
+    }
   });
 
   document.addEventListener('neuroartan:home-panel-right-open-requested', (event) => {
     openHomePanelRight(event?.detail?.intent || null);
   });
 
+  document.addEventListener('neuroartan:home-panel-right-close-requested', () => {
+    closeHomePanelRight();
+  });
+
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && HOME_PANEL_RIGHT_STATE.isOpen) {
       closeHomePanelRight();
     }
-  });
-
-  nodes.items.forEach((button) => {
-    button.addEventListener('click', () => {
-      handleHomePanelRightAction(button.textContent || '');
-    });
   });
 }
 
@@ -168,12 +187,14 @@ function bindHomePanelRight() {
    ========================================================= */
 
 function bootHomePanelRight() {
-  if (HOME_PANEL_RIGHT_STATE.isBound) {
+  const root = getLivePanelRightRoot();
+  if (!root) {
     return;
   }
 
-  const nodes = getHomePanelRightNodes();
-  if (!nodes.panel) {
+  HOME_PANEL_RIGHT_STATE.root = root;
+
+  if (HOME_PANEL_RIGHT_STATE.isBound) {
     return;
   }
 

@@ -1,0 +1,92 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) HOME SHELL FOUNDATION
+   02) TOPBAR AND FOOTER CHROME
+   03) PANEL MOUNTS
+   04) OVERLAY MOUNTS
+   05) RESPONSIVE REFINEMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) HOME SHELL FOUNDATION
+============================================================================= */
+.home-shell{
+  position:fixed;
+  inset:0;
+  z-index:var(--z-raised);
+  pointer-events:none;
+}
+
+/* =============================================================================
+   02) TOPBAR AND FOOTER CHROME
+============================================================================= */
+.home-shell__topbar,
+.home-shell__footer{
+  position:fixed;
+  left:max(var(--site-gutter), 1rem);
+  right:max(var(--site-gutter), 1rem);
+  pointer-events:none;
+}
+
+.home-shell__topbar{
+  top:calc(env(safe-area-inset-top, 0px) + 1rem);
+}
+
+.home-shell__footer{
+  bottom:calc(env(safe-area-inset-bottom, 0px) + 1rem);
+}
+
+.home-shell__topbar > *,
+.home-shell__footer > *{
+  pointer-events:auto;
+}
+
+/* =============================================================================
+   03) PANEL MOUNTS
+============================================================================= */
+.home-shell__panel-mount,
+.home-shell__overlay-mount{
+  position:fixed;
+  pointer-events:none;
+}
+
+.home-shell__panel-mount > *,
+.home-shell__overlay-mount > *{
+  pointer-events:auto;
+}
+
+.home-shell__panel-mount--sidebar,
+.home-shell__panel-mount--workspace,
+.home-shell__panel-mount--profile,
+.home-shell__overlay-mount--settings{
+  inset:0;
+}
+
+.home-shell__panel-mount--sidebar[hidden],
+.home-shell__panel-mount--workspace[hidden],
+.home-shell__panel-mount--profile[hidden],
+.home-shell__overlay-mount--settings[hidden],
+.home-shell__overlay-mount--search[hidden]{
+  display:none !important;
+}
+
+.home-shell__overlay-mount--search{
+  inset:0;
+}
+
+/* =============================================================================
+   05) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width: 760px){
+  .home-shell__topbar{
+    top:calc(env(safe-area-inset-top, 0px) + 0.85rem);
+    left:max(var(--site-gutter), 0.85rem);
+    right:max(var(--site-gutter), 0.85rem);
+  }
+
+  .home-shell__footer{
+    bottom:calc(env(safe-area-inset-bottom, 0px) + 0.85rem);
+    left:max(var(--site-gutter), 0.85rem);
+    right:max(var(--site-gutter), 0.85rem);
+  }
+}

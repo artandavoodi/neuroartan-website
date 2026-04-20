@@ -1,0 +1,64 @@
+<!-- =============================================================================
+     HOME DASHBOARD TOPBAR FRAGMENT
+     Purpose: primary home-layer top navigation shell for dashboard surfaces.
+     Notes:
+     - keeps homepage/app-level controls modular
+     - does not replace institutional menu ownership
+     - mounts search, settings, and profile triggers for the home surface only
+============================================================================= -->
+
+<header class="home-dashboard-topbar" id="home-dashboard-topbar" aria-label="Home dashboard topbar">
+  <div class="home-dashboard-topbar__inner">
+    <div class="home-dashboard-topbar__left">
+      <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan home">
+        <span class="home-dashboard-topbar__brand-mark">N</span>
+        <span class="home-dashboard-topbar__brand-text">Neuroartan</span>
+      </a>
+    </div>
+
+    <div class="home-dashboard-topbar__center">
+      <button
+        class="home-dashboard-topbar__search-trigger"
+        id="home-dashboard-search-trigger"
+        type="button"
+        aria-label="Open search"
+        aria-controls="home-search-shell-mount"
+        aria-expanded="false">
+        <span class="home-dashboard-topbar__search-icon" aria-hidden="true">⌕</span>
+        <span class="home-dashboard-topbar__search-text">Search models, people, and knowledge</span>
+      </button>
+    </div>
+
+    <div class="home-dashboard-topbar__right">
+      <button
+        class="home-dashboard-topbar__action"
+        id="home-dashboard-language-trigger"
+        type="button"
+        aria-label="Open language and country settings"
+        aria-controls="country-overlay-mount"
+        aria-expanded="false">
+        Language
+      </button>
+
+      <button
+        class="home-dashboard-topbar__action"
+        id="home-dashboard-settings-trigger"
+        type="button"
+        aria-label="Open home settings"
+        aria-controls="home-settings-panel-mount"
+        aria-expanded="false">
+        Settings
+      </button>
+
+      <button
+        class="home-dashboard-topbar__action home-dashboard-topbar__action--primary"
+        id="home-dashboard-profile-trigger"
+        type="button"
+        aria-label="Open profile panel"
+        aria-controls="home-panel-right-mount"
+        aria-expanded="false">
+        Profile
+      </button>
+    </div>
+  </div>
+</header>

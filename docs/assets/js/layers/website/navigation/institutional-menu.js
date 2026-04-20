@@ -300,7 +300,7 @@
           threshold = window.innerHeight || 0;
         }
       } else if (isAboutPage()) {
-        threshold = 12;
+        threshold = essence ? getPageTop(essence) : Math.max(12, getPageTop(siteMain || hero || menu) + 12);
       } else if (siteMain) {
         threshold = Math.max(12, getPageTop(siteMain) + 12);
       } else {
@@ -330,9 +330,6 @@
     window.addEventListener('load', requestApply, { passive: true, once: true });
 
     requestApply();
-    if (!isHomePage()) {
-      body.classList.add('menu-ribbon-active');
-    }
   }
 
   /* =============================================================================

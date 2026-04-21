@@ -71,6 +71,7 @@ const FRAGMENT_PATHS = {
   'profile-public-sections': assetPath('/assets/fragments/layers/website/profile/public/profile-sections.html'),
   'profile-public-footer': assetPath('/assets/fragments/layers/website/profile/public/profile-footer.html'),
   'home-featured-functions': assetPath('/assets/fragments/layers/website/sections/home-featured-functions.html'),
+  'scroll-to-top': assetPath('/assets/fragments/core/scroll-to-top/scroll-to-top.html'),
   'footer': assetPath('/assets/fragments/layers/website/footer/footer.html'),
   'brain-activity': assetPath('/assets/fragments/layers/website/system/brain-activity.html'),
   'system-node': assetPath('/assets/fragments/layers/website/system/system-node.html')

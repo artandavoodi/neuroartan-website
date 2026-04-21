@@ -336,7 +336,6 @@ body.light-mode .institutional-menu::before{
     background-color 220ms ease;
 }
 
-
 .institutional-menu-search-trigger:hover .institutional-menu-search-trigger-icon,
 .institutional-menu-search-trigger:focus-visible .institutional-menu-search-trigger-icon,
 .institutional-menu-search-trigger:active .institutional-menu-search-trigger-icon,
@@ -348,10 +347,10 @@ body.light-mode .institutional-menu::before{
    11) ACCOUNT TRIGGER
 ============================================================================= */
 .institutional-menu-account-trigger{
-  width: 1.46rem;
-  min-width: 1.46rem;
-  height: 1.46rem;
-  min-height: 1.46rem;
+  width: 1.12rem;
+  min-width: 1.12rem;
+  height: 1.12rem;
+  min-height: 1.12rem;
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -360,22 +359,19 @@ body.light-mode .institutional-menu::before{
 
 .institutional-menu-account-trigger-icon{
   display: block;
-  width: 1.46rem;
-  height: 1.46rem;
-  min-width: 1.46rem;
-  min-height: 1.46rem;
-  aspect-ratio: 1 / 1;
+  width: 1.12rem;
+  height: 1.12rem;
   flex: 0 0 auto;
   opacity: 0.82;
   background-color: currentColor;
-  -webkit-mask-image: url('../../../../icons/core/identity/generic/account-icon.svg');
+  -webkit-mask-image: url('../../../../icons/core/identity/unclassified/profile.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
-  -webkit-mask-size: 100% 100%;
-  mask-image: url('../../../../icons/core/identity/generic/account-icon.svg');
+  -webkit-mask-size: contain;
+  mask-image: url('../../../../icons/core/identity/unclassified/profile.svg');
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: 100% 100%;
+  mask-size: contain;
   transition:
     opacity 220ms ease,
     background-color 220ms ease;
@@ -679,7 +675,6 @@ body.light-mode .institutional-menu-search-field{
   opacity: 0.82;
 }
 
-
 .institutional-menu-mic-button{
   appearance: none;
   -webkit-appearance: none;
@@ -743,7 +738,6 @@ body.light-mode .institutional-menu-search-field{
   opacity: 1;
   transform: scale(1.03) !important;
 }
-
 
 .institutional-menu-search-input{
   appearance: none;
@@ -914,10 +908,10 @@ body.light-mode .institutional-menu-search-field{
   }
 
   .institutional-menu-account-trigger{
-    width: 1.28rem;
-    min-width: 1.28rem;
-    height: 1.28rem;
-    min-height: 1.28rem;
+    width: 1rem;
+    min-width: 1rem;
+    height: 1rem;
+    min-height: 1rem;
   }
 
   .institutional-menu-search-trigger-icon{
@@ -926,11 +920,8 @@ body.light-mode .institutional-menu-search-field{
   }
 
   .institutional-menu-account-trigger-icon{
-    width: 1.28rem;
-    height: 1.28rem;
-    min-width: 1.28rem;
-    min-height: 1.28rem;
-    aspect-ratio: 1 / 1;
+    width: 1rem;
+    height: 1rem;
   }
 
   .institutional-menu-search-icon,

@@ -2,12 +2,12 @@
   "id": "products-overview",
   "label": "Overview",
   "title": "Overview",
-  "description": "Section-local registry for the Overview product page. This file defines the internal navigation and anchor structure inside Overview itself, separate from the Products top-bar scope.",
+  "description": "",
   "defaultSection": "what-icos-is",
   "page": {
     "route": "/pages/products/overview/index.html",
     "title": "Overview",
-    "description": "ICOS is a voice-trained continuity system that helps a person structure reflection, preserve development across time, and build a governed profile intelligence layer rather than simply use a chatbot interface."
+    "description": ""
   },
   "sections": [
     {

@@ -1,5 +1,5 @@
 /* =============================================================================
-   FILE INDEX
+   00) FILE INDEX
    01) PRODUCTS SIDEBAR SHELL
    02) PRODUCTS SIDEBAR TOGGLE
    03) PRODUCTS SIDEBAR HEADER
@@ -15,13 +15,18 @@
 .products-page .products-sidebar {
   position: sticky;
   top: calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem) + var(--space-4, 1.5rem));
-  width: 100%;
-  z-index: 1;
+  align-self: start;
+  min-width: 0;
 }
 
 .products-page .products-sidebar__inner {
   display: grid;
   gap: var(--space-4, 1.5rem);
+  padding: var(--space-4, 1.5rem);
+  border: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
+  border-radius: var(--radius-xl, 1.5rem);
+  background: var(--control-bg, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-primary-color, #fff) 4%, transparent);
 }
 
 /* =============================================================================
@@ -37,7 +42,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: center;
   flex: 0 0 auto;
   width: 1.3rem;
   min-width: 1.3rem;
@@ -95,11 +99,13 @@
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-2, 0.75rem);
+  min-height: 1.3rem;
 }
 
 .products-page .products-sidebar__heading {
-  display: grid;
-  gap: 0;
+  display: flex;
+  align-items: center;
+  min-height: 1.3rem;
 }
 
 .products-page .products-sidebar__eyebrow {
@@ -108,10 +114,13 @@
 
 .products-page .products-sidebar__title {
   margin: 0;
+  display: flex;
+  align-items: center;
+  min-height: 1.3rem;
   color: var(--text-primary-color, var(--text-primary, #fff));
   font-size: var(--home-section-title-size);
   font-weight: 300;
-  line-height: var(--line-height-heading-tight);
+  line-height: 1;
   letter-spacing: var(--tracking-copy);
 }
 
@@ -136,21 +145,23 @@
 
 .products-page .products-sidebar__panel {
   width: 100%;
+  padding-top: var(--space-3, 1rem);
+  border-top: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
 }
 
 /* =============================================================================
    05) PRODUCTS SIDEBAR LIST
 ============================================================================= */
 .products-page .products-sidebar__nav {
-  display: block;
+  width: 100%;
 }
 
 .products-page .products-sidebar__list {
-  display: grid;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
   list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
 }
 
 /* =============================================================================
@@ -176,7 +187,6 @@
 /* =============================================================================
    07) PRODUCTS SIDEBAR COLLAPSED STATE
 ============================================================================= */
-
 .products-page[data-products-sidebar-open="false"] .products-sidebar__panel {
   display: none;
 }

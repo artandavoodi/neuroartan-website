@@ -9,9 +9,10 @@
    07) SIDEBAR CONTENT SYNC
    08) ACTIVE ANCHOR SYNC
    09) TOGGLE BINDING
-   10) FRAGMENT HYDRATION
-   11) BOOTSTRAP
-   12) INITIALIZATION
+   10) NAV LINK BINDING
+   11) FRAGMENT HYDRATION
+   12) BOOTSTRAP
+   13) INITIALIZATION
 ============================================================================= */
 
 /* =============================================================================
@@ -184,10 +185,9 @@
     if (!root || !registry) return false;
 
     const title = getTitle(root);
-    const description = getDescription(root);
     const navList = getNavList(root);
 
-    if (!title || !description || !navList) return false;
+    if (!title || !navList) return false;
 
     syncSidebarContent(root, registry);
     syncActiveAnchor(root, registry);
@@ -214,7 +214,28 @@
   }
 
   /* =============================================================================
-     10) FRAGMENT HYDRATION
+     10) NAV LINK BINDING
+  ============================================================================= */
+  function bindNavLinks(root) {
+    if (!root || root.getAttribute('data-products-sidebar-nav-bound') === 'true') return;
+
+    root.setAttribute('data-products-sidebar-nav-bound', 'true');
+    root.addEventListener('click', (event) => {
+      const link = event.target instanceof Element
+        ? event.target.closest('[data-products-nav]')
+        : null;
+
+      if (!(link instanceof HTMLAnchorElement)) return;
+
+      window.requestAnimationFrame(() => {
+        setState(root, false);
+        syncActiveAnchor(root);
+      });
+    });
+  }
+
+  /* =============================================================================
+     11) FRAGMENT HYDRATION
   ============================================================================= */
   function observeFragmentHydration(root, registry) {
     if (!root || !registry) return;
@@ -238,7 +259,7 @@
   }
 
   /* =============================================================================
-     11) BOOTSTRAP
+     12) BOOTSTRAP
   ============================================================================= */
   async function boot() {
     const root = getRoot();
@@ -252,6 +273,7 @@
 
     syncState(root);
     bindToggle(root);
+    bindNavLinks(root);
     observeFragmentHydration(root, registry);
 
     window.addEventListener('hashchange', () => {
@@ -260,7 +282,7 @@
   }
 
   /* =============================================================================
-     12) INITIALIZATION
+     13) INITIALIZATION
   ============================================================================= */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true });

@@ -1,63 +1,40 @@
 <!-- =============================================================================
-
      PRODUCTS SIDEBAR FRAGMENT
-
      PURPOSE: REUSABLE PRODUCTS SECTION SIDEBAR / LOCAL NAVIGATION
-
      OWNERSHIP: STRUCTURE ONLY
-
      STYLE OWNER: /assets/css/layers/website/sections/products-sidebar.css
-
      BEHAVIOR OWNER: /assets/js/layers/website/sections/products-sidebar.js
-
 ============================================================================= -->
-
 <aside class="products-sidebar" aria-label="Products index navigation">
-
   <div class="products-sidebar__inner">
-
     <header class="products-sidebar__header">
-
       <div class="products-sidebar__title-row">
-
-        <button class="products-sidebar__toggle" type="button" aria-label="Toggle products sidebar" aria-expanded="false" data-products-sidebar-toggle>
-
-          <img class="products-sidebar__toggle-icon" src="/assets/icons/core/navigation/unclassified/sidebar-left.svg" alt="" aria-hidden="true">
-
+        <button
+          class="products-sidebar__toggle"
+          type="button"
+          aria-label="Toggle products sidebar"
+          aria-expanded="false"
+          data-products-sidebar-toggle
+        >
+          <img
+            class="products-sidebar__toggle-icon"
+            src="/assets/icons/core/navigation/unclassified/sidebar-left.svg"
+            alt=""
+            aria-hidden="true"
+          >
         </button>
 
         <div class="products-sidebar__heading">
-
           <p class="products-sidebar__eyebrow">Products</p>
-
           <h2 class="products-sidebar__title" data-products-sidebar-title>Overview</h2>
-
         </div>
-
       </div>
-
     </header>
 
-    <div class="products-sidebar__summary">
-
-      <p class="products-sidebar__description" data-products-sidebar-description>
-
-        A governed products hub for ICOS systems, capabilities, workflows, integrations, and software pathways.
-
-      </p>
-
-    </div>
-
     <div class="products-sidebar__panel">
-
       <nav class="products-sidebar__nav" aria-label="Products sections">
-
         <ul class="products-sidebar__list" data-products-sidebar-list></ul>
-
       </nav>
-
     </div>
-
   </div>
-
 </aside>

@@ -2,6 +2,10 @@ import {
   buildPublicProfileDisplay,
   buildPublicProfilePath,
 } from '../system/account-profile-identity.js';
+import {
+  getPublicModels,
+  loadPublicModelRegistry
+} from '../system/public-model-registry.js';
 import { subscribeHomeSurfaceState } from './home-surface-state.js';
 
 /* =========================================================
@@ -40,10 +44,13 @@ function getHomePanelRightNodes() {
     avatarFallback: document.querySelector('[data-home-profile-avatar-fallback]'),
     name: document.querySelector('[data-home-profile-name]'),
     username: document.querySelector('[data-home-profile-username]'),
+    plan: document.querySelector('[data-home-profile-plan]'),
     meta: document.querySelector('[data-home-profile-meta]'),
     route: document.querySelector('[data-home-profile-route]'),
     routeStatus: document.querySelector('[data-home-profile-route-status]'),
-    accountEntryAction: document.querySelector('[data-home-profile-action="account-entry"]'),
+    verification: document.querySelector('[data-home-profile-verification]'),
+    modelCount: document.querySelector('[data-home-profile-model-count]'),
+    state: document.querySelector('[data-home-profile-state]'),
     signOutAction: document.querySelector('[data-home-profile-action="sign-out"]'),
   };
 }
@@ -63,11 +70,9 @@ function getLivePanelRightRoot() {
 function getHomePanelRightTitleForIntent(intent) {
   switch (intent) {
     case 'create-profile':
-      return 'Create private profile and route state';
-    case 'profile-model':
-      return 'Identity, route, and account state';
+      return 'Create private profile and account identity';
     default:
-      return 'Identity, route, and account state';
+      return 'Profile, plan, and account control';
   }
 }
 
@@ -130,14 +135,14 @@ function resolveHomePanelRightUsername(snapshot) {
 
 function resolveHomePanelRightMeta(snapshot) {
   if (!snapshot?.account?.signedIn) {
-    return 'Create a private profile to govern identity, public route, and future continuity access.';
+    return 'Authenticate to activate identity, verification, and owned-model control from one account surface.';
   }
 
   if (snapshot?.account?.profileComplete === false) {
-    return 'Your account is active. Complete the private profile to activate the public route and continuity surfaces.';
+    return 'Your account is active. Complete the private profile to stabilize route control, verification posture, and model ownership.';
   }
 
-  return 'Private profile anchored for route control, continuity access, and voice-trained identity.';
+  return 'Private profile anchored for account identity, subscription clarity, verification posture, and platform control.';
 }
 
 function resolveHomePanelRightRoute(snapshot) {
@@ -165,6 +170,67 @@ function resolveHomePanelRightRouteStatus(snapshot, username) {
   return 'Canonical username is reserved. Public visibility is still private.';
 }
 
+function capitalizeWords(value) {
+  return String(value || '')
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function resolveHomePanelRightPlan(snapshot) {
+  const explicitPlan = snapshot?.account?.profile?.subscription_plan || '';
+
+  if (explicitPlan) {
+    return capitalizeWords(explicitPlan);
+  }
+
+  if (!snapshot?.account?.signedIn) {
+    return 'Guest Access';
+  }
+
+  return 'Plan Pending';
+}
+
+function resolveHomePanelRightVerification(snapshot) {
+  if (!snapshot?.account?.signedIn) {
+    return 'Unverified';
+  }
+
+  if (snapshot?.account?.profile?.verification_state) {
+    return capitalizeWords(snapshot.account.profile.verification_state);
+  }
+
+  if (snapshot?.account?.profile?.auth_email_verified || snapshot?.account?.user?.emailVerified) {
+    return 'Verified';
+  }
+
+  return 'Verification Pending';
+}
+
+function resolveHomePanelRightState(snapshot) {
+  if (!snapshot?.account?.signedIn) {
+    return 'Private';
+  }
+
+  return snapshot?.account?.profile?.public_profile_enabled ? 'Public' : 'Private';
+}
+
+function resolveHomePanelRightModelCount(snapshot) {
+  const username = (snapshot?.account?.profile?.username || '').trim().toLowerCase();
+  if (!username) {
+    return '0';
+  }
+
+  const total = getPublicModels().filter((model) => {
+    const modelUsername = String(model?.username || '').trim().toLowerCase();
+    const creatorUsername = String(model?.creator?.username || '').trim().toLowerCase();
+    return modelUsername === username || creatorUsername === username;
+  }).length;
+
+  return String(total);
+}
+
 function renderHomePanelRight(snapshot) {
   HOME_PANEL_RIGHT_STATE.snapshot = snapshot;
 
@@ -183,6 +249,10 @@ function renderHomePanelRight(snapshot) {
     nodes.username.textContent = resolveHomePanelRightUsername(snapshot);
   }
 
+  if (nodes.plan) {
+    nodes.plan.textContent = resolveHomePanelRightPlan(snapshot);
+  }
+
   if (nodes.meta) {
     nodes.meta.textContent = resolveHomePanelRightMeta(snapshot);
   }
@@ -194,6 +264,18 @@ function renderHomePanelRight(snapshot) {
 
   if (nodes.routeStatus) {
     nodes.routeStatus.textContent = resolveHomePanelRightRouteStatus(snapshot, route.username);
+  }
+
+  if (nodes.verification) {
+    nodes.verification.textContent = resolveHomePanelRightVerification(snapshot);
+  }
+
+  if (nodes.modelCount) {
+    nodes.modelCount.textContent = resolveHomePanelRightModelCount(snapshot);
+  }
+
+  if (nodes.state) {
+    nodes.state.textContent = resolveHomePanelRightState(snapshot);
   }
 
   if (nodes.avatarImage) {
@@ -213,10 +295,6 @@ function renderHomePanelRight(snapshot) {
     nodes.avatarFallback.textContent = fallback;
   }
 
-  if (nodes.accountEntryAction) {
-    nodes.accountEntryAction.textContent = signedIn ? 'Open private profile' : 'Create private profile';
-  }
-
   if (nodes.signOutAction) {
     nodes.signOutAction.hidden = !signedIn;
   }
@@ -233,7 +311,7 @@ function normalizeHomePanelRightLabel(label) {
 function handleHomePanelRightAction(action) {
   const normalized = normalizeHomePanelRightLabel(action);
 
-  if (normalized === 'open-profile') {
+  if (normalized === 'account-identity' || normalized === 'verification' || normalized === 'linked-accounts') {
     if (HOME_PANEL_RIGHT_STATE.snapshot?.account?.signedIn) {
       window.location.href = '/profile.html';
       return;
@@ -246,45 +324,24 @@ function handleHomePanelRightAction(action) {
     return;
   }
 
-  if (normalized === 'public-route') {
-    const path = resolveHomePanelRightRoute(HOME_PANEL_RIGHT_STATE.snapshot).path;
-    window.location.href = path;
+  if (normalized === 'subscription-plan') {
+    window.location.href = '/pages/pricing/index.html';
     return;
   }
 
-  if (normalized === 'account-entry') {
-    if (HOME_PANEL_RIGHT_STATE.snapshot?.account?.signedIn) {
-      window.location.href = '/profile.html';
-      return;
-    }
+  if (normalized === 'my-models') {
+    window.location.href = '/pages/models/index.html';
+    return;
+  }
 
-    dispatchHomePanelRightEvent('account:entry-request', {
-      source: 'home-panel-right',
-    });
-    closeHomePanelRight();
+  if (normalized === 'dashboard') {
+    window.location.href = '/pages/dashboard/index.html';
     return;
   }
 
   if (normalized === 'settings') {
     dispatchHomePanelRightEvent('neuroartan:home-settings-panel-open-requested', {
       source: 'home-panel-right',
-    });
-    closeHomePanelRight();
-    return;
-  }
-
-  if (normalized === 'language') {
-    dispatchHomePanelRightEvent('neuroartan:country-overlay-open-requested', {
-      source: 'home-panel-right',
-    });
-    closeHomePanelRight();
-    return;
-  }
-
-  if (normalized === 'privacy') {
-    dispatchHomePanelRightEvent('neuroartan:cookie-consent-open-requested', {
-      source: 'home-panel-right',
-      surface: 'settings',
     });
     closeHomePanelRight();
     return;
@@ -309,6 +366,10 @@ function handleHomePanelRightAction(action) {
    ========================================================= */
 
 function bindHomePanelRight() {
+  void loadPublicModelRegistry().then(() => {
+    renderHomePanelRight(HOME_PANEL_RIGHT_STATE.snapshot || {});
+  });
+
   subscribeHomeSurfaceState(renderHomePanelRight);
 
   document.addEventListener('click', (event) => {

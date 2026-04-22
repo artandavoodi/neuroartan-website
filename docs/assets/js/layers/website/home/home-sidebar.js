@@ -30,9 +30,7 @@ function getHomeSidebarNodes() {
     root,
     closeButton: document.querySelector('#home-sidebar-close'),
     quickActionButtons: root ? Array.from(root.querySelectorAll('.home-sidebar__stack-item')) : [],
-    navLinks: root ? Array.from(root.querySelectorAll('.home-sidebar__nav-link')) : [],
     profileButton: root ? root.querySelector('[data-home-sidebar-action="profile"]') : null,
-    accountEntryButton: root ? root.querySelector('[data-home-sidebar-action="account-entry"]') : null,
   };
 }
 
@@ -83,28 +81,10 @@ function isSignedIn() {
 
 function renderHomeSidebar(snapshot) {
   HOME_SIDEBAR_STATE.snapshot = snapshot;
-
-  const nodes = getHomeSidebarNodes();
-
-  if (nodes.profileButton) {
-    nodes.profileButton.textContent = isSignedIn() ? 'Private profile' : 'Profile surface';
-  }
-
-  if (nodes.accountEntryButton) {
-    nodes.accountEntryButton.textContent = isSignedIn() ? 'Open private profile' : 'Create private profile';
-  }
 }
 
 function handleHomeSidebarQuickAction(action) {
   const normalized = normalizeSidebarLabel(action);
-
-  if (normalized === 'open-search') {
-    dispatchHomeSidebarEvent('neuroartan:home-search-shell-open-requested', {
-      source: 'home-sidebar',
-    });
-    closeHomeSidebar();
-    return;
-  }
 
   if (normalized === 'settings') {
     dispatchHomeSidebarEvent('neuroartan:home-settings-panel-open-requested', {
@@ -114,7 +94,7 @@ function handleHomeSidebarQuickAction(action) {
     return;
   }
 
-  if (normalized === 'account-entry') {
+  if (normalized === 'profile') {
     if (isSignedIn()) {
       window.location.href = '/profile.html';
       return;
@@ -128,16 +108,7 @@ function handleHomeSidebarQuickAction(action) {
     return;
   }
 
-  if (normalized === 'profile') {
-    dispatchHomeSidebarEvent('neuroartan:home-panel-right-open-requested', {
-      source: 'home-sidebar',
-      intent: 'profile-model',
-    });
-    closeHomeSidebar();
-    return;
-  }
-
-  if (normalized === 'saved-continuities') {
+  if (normalized === 'workspace') {
     dispatchHomeSidebarEvent('neuroartan:home-panel-left-open-requested', {
       source: 'home-sidebar',
       intent: 'saved-continuities',
@@ -146,10 +117,10 @@ function handleHomeSidebarQuickAction(action) {
     return;
   }
 
-  if (normalized === 'recent-interactions') {
-    dispatchHomeSidebarEvent('neuroartan:home-panel-left-open-requested', {
+  if (normalized === 'cookie-settings') {
+    dispatchHomeSidebarEvent('neuroartan:cookie-consent-open-requested', {
       source: 'home-sidebar',
-      intent: 'recent-interactions',
+      surface: 'settings',
     });
     closeHomeSidebar();
   }
@@ -168,8 +139,7 @@ function bindHomeSidebar() {
 
     const target = event.target.closest(
       '#home-sidebar-close, ' +
-      '#home-sidebar .home-sidebar__stack-item, ' +
-      '#home-sidebar .home-sidebar__nav-link'
+      '#home-sidebar .home-sidebar__stack-item'
     );
 
     if (!target || !root.contains(target)) {
@@ -190,8 +160,9 @@ function bindHomeSidebar() {
       return;
     }
 
-    if (target.matches('.home-sidebar__nav-link')) {
+    if (target.matches('a[href]')) {
       closeHomeSidebar();
+      return;
     }
   });
 

@@ -3,10 +3,9 @@
    01) HOME SIDEBAR SHELL
    02) INNER SURFACE
    03) HEADER
-   04) NAVIGATION LINKS
-   05) SECTION BLOCKS
-   06) STACK ITEMS
-   07) RESPONSIVE REFINEMENTS
+   04) SECTION BLOCKS
+   05) STACK ITEMS
+   06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 
 /* =============================================================================
@@ -85,53 +84,7 @@
 }
 
 /* =============================================================================
-   04) NAVIGATION LINKS
-============================================================================= */
-.home-sidebar__nav{
-  display:flex;
-  flex-direction:column;
-  gap:0.42rem;
-}
-
-.home-sidebar__nav-link{
-  display:flex;
-  align-items:center;
-  gap:0.72rem;
-  min-height:2.8rem;
-  padding:0.74rem 0.88rem;
-  border:1px solid transparent;
-  border-radius:1rem;
-  text-decoration:none;
-  color:var(--home-chrome-secondary);
-  font-size:0.85rem;
-  font-weight:500;
-  letter-spacing:0.02em;
-  pointer-events:auto;
-  transition:
-    color 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease;
-}
-
-.home-sidebar__nav-link--active,
-.home-sidebar__nav-link[aria-current="page"]{
-  border-color:var(--home-chrome-border-strong);
-  background:var(--home-chrome-item-active);
-  color:var(--home-chrome-primary);
-}
-
-.home-sidebar__nav-link:hover,
-.home-sidebar__nav-link:focus-visible,
-.home-sidebar__stack-item:hover,
-.home-sidebar__stack-item:focus-visible{
-  border-color:var(--home-chrome-border-strong);
-  background:var(--home-chrome-item-active);
-  color:var(--home-chrome-primary);
-  outline:none;
-}
-
-/* =============================================================================
-   05) SECTION BLOCKS
+   04) SECTION BLOCKS
 ============================================================================= */
 .home-sidebar__section{
   display:flex;
@@ -155,7 +108,7 @@
 }
 
 /* =============================================================================
-   06) STACK ITEMS
+   05) STACK ITEMS
 ============================================================================= */
 .home-sidebar__stack-item{
   display:flex;
@@ -175,10 +128,25 @@
   text-align:left;
   cursor:pointer;
   pointer-events:auto;
+  text-decoration:none;
   transition:
     color 220ms ease,
     border-color 220ms ease,
     background-color 220ms ease;
+}
+
+.home-sidebar__stack-item[aria-current="page"]{
+  border-color:var(--home-chrome-border-strong);
+  background:var(--home-chrome-item-active);
+  color:var(--home-chrome-primary);
+}
+
+.home-sidebar__stack-item:hover,
+.home-sidebar__stack-item:focus-visible{
+  border-color:var(--home-chrome-border-strong);
+  background:var(--home-chrome-item-active);
+  color:var(--home-chrome-primary);
+  outline:none;
 }
 
 .home-sidebar__item-icon{
@@ -202,7 +170,7 @@
 }
 
 /* =============================================================================
-   07) RESPONSIVE REFINEMENTS
+   06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 760px){
   .home-sidebar{

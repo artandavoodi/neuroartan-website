@@ -3,15 +3,15 @@
      Purpose: right-side profile and account surface for the home/dashboard layer.
      Notes:
      - distinct from the left contextual workspace panel
-     - intended for profile state, identity, account, and model access
+     - intended for identity, subscription, trust, and account-control access
 ============================================================================= -->
 
 <aside class="home-panel-right" id="home-panel-right" aria-label="Home right panel" hidden>
   <div class="home-panel-right__inner">
     <div class="home-panel-right__header">
       <div class="home-panel-right__heading-group">
-        <p class="home-panel-right__eyebrow">Profile</p>
-        <h2 class="home-panel-right__title">Identity, route, and account state</h2>
+        <p class="home-panel-right__eyebrow">Profile Avatar</p>
+        <h2 class="home-panel-right__title">Profile, plan, and account control</h2>
       </div>
 
       <button
@@ -24,8 +24,8 @@
       </button>
     </div>
 
-    <section class="home-panel-right__section" aria-label="Identity surface">
-      <p class="home-panel-right__section-title">Identity</p>
+    <section class="home-panel-right__section" aria-label="Profile overview">
+      <p class="home-panel-right__section-title">Profile Overview</p>
       <div class="home-panel-right__identity-card">
         <div class="home-panel-right__avatar" aria-hidden="true">
           <img class="home-panel-right__avatar-image" data-home-profile-avatar alt="" hidden>
@@ -34,33 +34,48 @@
         <div class="home-panel-right__identity-copy">
           <p class="home-panel-right__name" data-home-profile-name>Sign in to Neuroartan</p>
           <p class="home-panel-right__username" data-home-profile-username>@username</p>
+          <p class="home-panel-right__plan" data-home-profile-plan>Plan pending</p>
           <p class="home-panel-right__meta" data-home-profile-meta>Private identity surface</p>
+          <a class="home-panel-right__route-link" data-home-profile-route href="/profile.html">neuroartan.com/username</a>
         </div>
       </div>
-      <div class="home-panel-right__route-card">
-        <p class="home-panel-right__route-label">Public route</p>
-        <a class="home-panel-right__route-link" data-home-profile-route href="/profile.html">neuroartan.com/username</a>
-        <p class="home-panel-right__route-status" data-home-profile-route-status>
-          Canonical public route becomes available once username and visibility are ready.
-        </p>
+
+      <div class="home-panel-right__status-grid" aria-label="Quick status">
+        <article class="home-panel-right__status-card">
+          <p class="home-panel-right__status-label">Verification</p>
+          <p class="home-panel-right__status-value" data-home-profile-verification>Unverified</p>
+        </article>
+        <article class="home-panel-right__status-card">
+          <p class="home-panel-right__status-label">Models</p>
+          <p class="home-panel-right__status-value" data-home-profile-model-count>0</p>
+        </article>
+        <article class="home-panel-right__status-card">
+          <p class="home-panel-right__status-label">State</p>
+          <p class="home-panel-right__status-value" data-home-profile-state>Private</p>
+        </article>
+      </div>
+
+      <p class="home-panel-right__route-status" data-home-profile-route-status>
+        Canonical public route becomes available once username and visibility are ready.
+      </p>
+    </section>
+
+    <section class="home-panel-right__section" aria-label="Profile control">
+      <p class="home-panel-right__section-title">Profile Control</p>
+      <div class="home-panel-right__stack">
+        <button class="home-panel-right__item" data-home-profile-action="account-identity" type="button">Account Identity</button>
+        <button class="home-panel-right__item" data-home-profile-action="subscription-plan" type="button">Subscription &amp; Plan</button>
+        <button class="home-panel-right__item" data-home-profile-action="my-models" type="button">My Models</button>
+        <button class="home-panel-right__item" data-home-profile-action="verification" type="button">Verification</button>
+        <button class="home-panel-right__item" data-home-profile-action="linked-accounts" type="button">Linked Accounts</button>
       </div>
     </section>
 
-    <section class="home-panel-right__section" aria-label="Profile actions">
-      <p class="home-panel-right__section-title">Access</p>
+    <section class="home-panel-right__section" aria-label="Shortcuts">
+      <p class="home-panel-right__section-title">Shortcuts</p>
       <div class="home-panel-right__stack">
-        <button class="home-panel-right__item" data-home-profile-action="open-profile" type="button">Open private profile</button>
-        <button class="home-panel-right__item" data-home-profile-action="public-route" type="button">View public route</button>
-        <button class="home-panel-right__item" data-home-profile-action="account-entry" type="button">Create account</button>
-      </div>
-    </section>
-
-    <section class="home-panel-right__section" aria-label="System actions">
-      <p class="home-panel-right__section-title">Controls</p>
-      <div class="home-panel-right__stack">
+        <button class="home-panel-right__item" data-home-profile-action="dashboard" type="button">Dashboard</button>
         <button class="home-panel-right__item" data-home-profile-action="settings" type="button">Settings</button>
-        <button class="home-panel-right__item" data-home-profile-action="language" type="button">Language</button>
-        <button class="home-panel-right__item" data-home-profile-action="privacy" type="button">Privacy</button>
         <button class="home-panel-right__item" data-home-profile-action="sign-out" type="button">Sign out</button>
       </div>
     </section>

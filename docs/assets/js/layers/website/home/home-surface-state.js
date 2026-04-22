@@ -77,6 +77,12 @@ function normalizeUserSnapshot(user = null) {
     email: normalizeString(user.email || ''),
     displayName: normalizeString(user.displayName || user.display_name || ''),
     photoURL: normalizeString(user.photoURL || user.photo_url || ''),
+    emailVerified: user.emailVerified === true,
+    providerIds: Array.isArray(user.providerData)
+      ? user.providerData
+        .map((entry) => normalizeString(entry?.providerId || ''))
+        .filter(Boolean)
+      : [],
   };
 }
 
@@ -94,6 +100,9 @@ function normalizeProfileSnapshot(profile = null) {
     photo_url: normalizeString(profile.photo_url || ''),
     public_profile_enabled: profile.public_profile_enabled === true,
     public_profile_discoverable: profile.public_profile_discoverable === true,
+    auth_email_verified: profile.auth_email_verified === true,
+    subscription_plan: normalizeString(profile.subscription_plan || profile.plan || ''),
+    verification_state: normalizeString(profile.verification_state || ''),
   };
 }
 

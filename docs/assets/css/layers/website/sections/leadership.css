@@ -8,13 +8,12 @@
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
-/* /website/docs/assets/css/layers/website/sections/profiles.css */
+/* /website/docs/assets/css/layers/website/sections/leadership.css */
 
 /* =============================================================================
    02) OWNERSHIP NOTE
-   Profiles surfaces intentionally inherit the shared catalog section system.
-   Keep future profile-directory-specific rules here so the profiles layer stays
-   sovereign without duplicating catalog ownership.
+   Leadership surfaces intentionally inherit the shared catalog system. Keep any
+   future leadership-specific rules here so the layer remains sovereign.
 ============================================================================= */
 
 /* =============================================================================

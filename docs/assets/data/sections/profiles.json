@@ -1,0 +1,11 @@
+{
+  "id": "profiles",
+  "label": "Continuity Models",
+  "title": "Continuity Models",
+  "description": "Searchable public continuity models, founder surfaces, and system previews available for discovery, selection, and immediate interaction.",
+  "hero": {
+    "eyebrow": "Continuity Models",
+    "title": "Public continuity models and governed profile surfaces",
+    "description": "Neuroartan profiles are not generic account cards. They are structured continuity models with route states, training signals, availability logic, and governed interaction entry."
+  }
+}

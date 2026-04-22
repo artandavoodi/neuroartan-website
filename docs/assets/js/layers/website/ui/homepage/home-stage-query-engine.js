@@ -11,6 +11,11 @@
    09. MODULE BOOT
    ========================================================= */
 
+import {
+  formatActiveModelResponse,
+  getActiveModelRoutingContext
+} from '../../system/active-model.js';
+
 /* =========================================================
    01. MODULE STATE
    ========================================================= */
@@ -87,6 +92,14 @@ const HOME_STAGE_QUERY_SITE_HINT_PATTERNS = [
   /product/i,
   /neuroartan/i,
   /icos/i,
+  /profile/i,
+  /profiles/i,
+  /model/i,
+  /models/i,
+  /continuity/i,
+  /history/i,
+  /leadership/i,
+  /sitemap/i,
   /careers/i,
   /jobs/i,
   /research/i,
@@ -212,7 +225,7 @@ function delegateHomeStageWebQuery(query, queryId) {
     source: 'homepage-voice',
   });
 
-  return 'This query is correctly classified for live web retrieval, but the live web-search adapter has not been connected to the homepage engine yet.';
+  return '';
 }
 
 function delegateHomeStageSiteKnowledgeQuery(query, queryId) {
@@ -222,7 +235,7 @@ function delegateHomeStageSiteKnowledgeQuery(query, queryId) {
     source: 'homepage-voice',
   });
 
-  return 'This query is correctly classified for website knowledge retrieval, but the site knowledge index and retrieval adapter have not been connected yet.';
+  return '';
 }
 
 function delegateHomeStagePlatformQuery(query, queryId) {
@@ -232,7 +245,7 @@ function delegateHomeStagePlatformQuery(query, queryId) {
     source: 'homepage-voice',
   });
 
-  return 'This query should route into the broader platform knowledge system, but that retrieval layer has not been connected to the homepage engine yet.';
+  return '';
 }
 
 /* =========================================================
@@ -254,7 +267,7 @@ function resolveHomeStageQuery(query, queryId) {
   if (classification.route === 'knowledge') {
     return {
       route: 'knowledge',
-      response: classification.response,
+      response: formatActiveModelResponse('knowledge', classification.response),
       query: classification.query,
       id: classification.id,
     };
@@ -313,10 +326,11 @@ function handleHomeStageQuerySubmitted(event) {
       queryId,
       route: result.route,
       id: result.id || null,
+      ...getActiveModelRoutingContext(result.route),
     });
 
     dispatchHomeStageMode('responding');
-    dispatchHomeStageResponse(result.response);
+    dispatchHomeStageResponse(result.response || '');
     HOME_STAGE_QUERY_ENGINE_STATE.isBusy = false;
   }, 420);
 }

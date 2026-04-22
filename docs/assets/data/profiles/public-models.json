@@ -1,0 +1,249 @@
+{
+  "id": "public-models",
+  "label": "Continuity Models",
+  "title": "Public continuity models",
+  "description": "Searchable public continuity models, founder surfaces, and governed system previews available for discovery and active homepage routing.",
+  "default_model_id": "neuroartan-institution",
+  "models": [
+    {
+      "id": "artan-davoodi",
+      "model_type": "human-profile",
+      "identity_ref": "founder-artan-davoodi",
+      "directory_visibility": true,
+      "selectable": true,
+      "search_title": "Artan Davoodi",
+      "display_name": "Artan Davoodi",
+      "username": "artan",
+      "description": "Founder continuity model for product doctrine, continuity architecture, and reflective system framing.",
+      "tags": [
+        "founder",
+        "cognitive architect",
+        "product doctrine",
+        "continuity",
+        "profile systems"
+      ],
+      "identity_signals": [
+        "founder-authored doctrine",
+        "governed public route",
+        "living continuity"
+      ],
+      "joined_year": "2026",
+      "training_state": "Guided training active",
+      "voice_state": "Voice training started",
+      "model_maturity": "Founder preview",
+      "source_depth": "Founder-authored doctrine and governed public material",
+      "availability": "Direct interaction enabled",
+      "legacy_state": "Living continuity",
+      "trust_classification": "Self-authored and governed",
+      "interaction_entry": "Voice and text",
+      "training_modes": [
+        "Voice training",
+        "Thought-pattern training",
+        "Response-style calibration",
+        "Source and archive submission",
+        "Public-readiness review"
+      ],
+      "source_ingestion": [
+        "Founder-authored product doctrine",
+        "Founder public writing and linked public profiles",
+        "Governed public website records",
+        "Structured product-definition cluster"
+      ],
+      "permissions": {
+        "search": "Public and searchable",
+        "view": "Public route enabled",
+        "interaction": "Text and voice",
+        "voice": "Enabled for homepage preview",
+        "legacy": "Not applicable"
+      },
+      "reliability_signals": [
+        "Self-authored source origin",
+        "Founder-governed doctrine",
+        "Canonical public route ready"
+      ],
+      "page_route": "/pages/profiles/index.html?model=artan-davoodi",
+      "public_profile": {
+        "public_username": "artan",
+        "public_display_name": "Artan Davoodi",
+        "public_avatar_url": "/assets/images/layers/website/sections/legacy/profile-era/Artan Davoodi Profile.jpeg",
+        "public_identity_label": "Founder continuity model",
+        "public_profile_enabled": true,
+        "public_profile_discoverable": true,
+        "public_profile_visibility": "public",
+        "public_route_path": "/artan",
+        "public_route_canonical_url": "https://neuroartan.com/artan",
+        "public_route_status": "ready",
+        "public_summary": "Founder continuity surface for product doctrine, reflection architecture, and long-horizon continuity design.",
+        "public_bio": "Founder continuity surface for Neuroartan and ICOS.",
+        "public_links": [
+          {
+            "label": "Leadership surface",
+            "url": "/pages/company/leadership/index.html?leader=founder-artan-davoodi"
+          },
+          {
+            "label": "X",
+            "url": "https://x.com/artandavoodi"
+          },
+          {
+            "label": "GitHub",
+            "url": "https://github.com/artandavoodi"
+          }
+        ]
+      },
+      "engine": {
+        "label": "Artan",
+        "memory_namespace": "public/artan",
+        "tts_readiness": "Voice training started",
+        "preferred_route": "knowledge",
+        "prelude": "From the founder continuity surface:",
+        "route_preludes": {
+          "knowledge": "From the founder continuity surface:",
+          "site-knowledge": "Using founder product doctrine:",
+          "platform-search": "From the founder product lens:",
+          "web": "Using the founder continuity route:"
+        },
+        "closing": "This route favors doctrinal clarity and continuity over generic assistant tone."
+      }
+    },
+    {
+      "id": "neuroartan-institution",
+      "model_type": "institution-model",
+      "directory_visibility": true,
+      "selectable": true,
+      "search_title": "Neuroartan Institution",
+      "display_name": "Neuroartan Institution",
+      "username": "neuroartan-institution",
+      "description": "Institutional model surface for company, product, governance, and platform posture.",
+      "tags": [
+        "institution",
+        "company",
+        "governance",
+        "platform",
+        "trust"
+      ],
+      "identity_signals": [
+        "institutional posture",
+        "public company surface",
+        "governed language"
+      ],
+      "joined_year": "2026",
+      "training_state": "Institutional doctrine synced",
+      "voice_state": "Text-first runtime",
+      "model_maturity": "Institutional baseline",
+      "source_depth": "Company pages, product definition, and governance surfaces",
+      "availability": "Direct interaction enabled",
+      "legacy_state": "Current institution",
+      "trust_classification": "Governed public institution",
+      "interaction_entry": "Voice and text",
+      "training_modes": [
+        "Institutional doctrine synchronization",
+        "Website knowledge refresh",
+        "Governance-language calibration",
+        "Public-surface review"
+      ],
+      "source_ingestion": [
+        "Active public website routes",
+        "Product-definition cluster",
+        "Governance and trust pages",
+        "Institutional communication doctrine"
+      ],
+      "permissions": {
+        "search": "Public and searchable",
+        "view": "Public page detail only",
+        "interaction": "Text and voice",
+        "voice": "Homepage preview",
+        "legacy": "Not applicable"
+      },
+      "reliability_signals": [
+        "Governed public institution",
+        "Company-domain doctrine sync",
+        "Site-knowledge route preferred"
+      ],
+      "page_route": "/pages/profiles/index.html?model=neuroartan-institution",
+      "engine": {
+        "label": "Neuroartan",
+        "memory_namespace": "public/neuroartan",
+        "tts_readiness": "Text-first",
+        "preferred_route": "site-knowledge",
+        "prelude": "Institutionally, the correct reading is:",
+        "route_preludes": {
+          "knowledge": "Institutionally, the correct reading is:",
+          "site-knowledge": "According to the active website and company surface:",
+          "platform-search": "From the institutional platform surface:",
+          "web": "From the institutional retrieval surface:"
+        },
+        "closing": "This route preserves the public institutional posture of Neuroartan."
+      }
+    },
+    {
+      "id": "icos-reflection-preview",
+      "model_type": "system-model",
+      "directory_visibility": true,
+      "selectable": true,
+      "search_title": "ICOS Reflection Preview",
+      "display_name": "ICOS Reflection Preview",
+      "username": "icos-reflection-preview",
+      "description": "System model preview centered on reflective cognition, pattern continuity, and guided response shaping.",
+      "tags": [
+        "icos",
+        "reflection",
+        "continuity",
+        "voice training",
+        "pattern intelligence"
+      ],
+      "identity_signals": [
+        "product-system preview",
+        "guided reflection",
+        "pattern-aware"
+      ],
+      "joined_year": "2026",
+      "training_state": "Prototype doctrine ready",
+      "voice_state": "Voice-linked preparation",
+      "model_maturity": "Product preview",
+      "source_depth": "Product definition cluster and prototype doctrine",
+      "availability": "Direct interaction enabled",
+      "legacy_state": "Current preview",
+      "trust_classification": "Governed system preview",
+      "interaction_entry": "Voice and text",
+      "training_modes": [
+        "Reflection-loop tuning",
+        "Pattern-label calibration",
+        "Response-style shaping",
+        "Voice-linked preparation"
+      ],
+      "source_ingestion": [
+        "ICOS product-definition documents",
+        "Homepage interaction doctrine",
+        "Guided reflection requirements",
+        "Prototype product architecture records"
+      ],
+      "permissions": {
+        "search": "Public and searchable",
+        "view": "Public detail page",
+        "interaction": "Text and voice",
+        "voice": "Homepage preview",
+        "legacy": "Not applicable"
+      },
+      "reliability_signals": [
+        "Prototype doctrine ready",
+        "Governed system preview",
+        "Platform-search route preferred"
+      ],
+      "page_route": "/pages/profiles/index.html?model=icos-reflection-preview",
+      "engine": {
+        "label": "ICOS",
+        "memory_namespace": "public/icos-preview",
+        "tts_readiness": "Voice-layer preparation",
+        "preferred_route": "platform-search",
+        "prelude": "From the ICOS reflection preview:",
+        "route_preludes": {
+          "knowledge": "From the ICOS doctrine surface:",
+          "site-knowledge": "From the ICOS product surface:",
+          "platform-search": "From the ICOS reflective engine:",
+          "web": "From the ICOS retrieval bridge:"
+        },
+        "closing": "This route emphasizes reflective structure, continuity, and guided interpretation."
+      }
+    }
+  ]
+}

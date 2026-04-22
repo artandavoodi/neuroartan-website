@@ -19,6 +19,10 @@ import {
   resolvePublicProfileByUsername
 } from './account-profile-identity.js';
 import {
+  getPublicModelByUsername,
+  loadPublicModelRegistry
+} from './public-model-registry.js';
+import {
   getPublicRouteState,
   subscribePublicRoute
 } from './profile-router.js';
@@ -50,7 +54,7 @@ function getFirestore() {
   }
 }
 
-async function waitForFirebaseReady(timeoutMs = 15000) {
+async function waitForFirebaseReady(timeoutMs = 1200) {
   if (hasFirestore()) return true;
 
   return new Promise((resolve) => {
@@ -101,6 +105,52 @@ function buildErrorState(route, reason, errorMessage = '') {
     outcome: 'error',
     reason,
     error: normalizeString(errorMessage)
+  };
+}
+
+async function buildRegistryResolutionState(route) {
+  const baseState = buildBaseState(route);
+
+  try {
+    await loadPublicModelRegistry();
+  } catch (_) {
+    return {
+      ...baseState,
+      outcome: 'not_found',
+      reason: 'PUBLIC_MODEL_REGISTRY_UNAVAILABLE'
+    };
+  }
+
+  const model = getPublicModelByUsername(route.normalizedUsername || route.routeCandidate);
+  const publicProfile = model?.public_profile && typeof model.public_profile === 'object'
+    ? { ...model.public_profile }
+    : null;
+
+  if (!publicProfile) {
+    return {
+      ...baseState,
+      outcome: 'not_found',
+      reason: 'PUBLIC_MODEL_NOT_FOUND'
+    };
+  }
+
+  const routeStatus = normalizeString(publicProfile.public_route_status || 'ready').toLowerCase();
+  const publicEnabled = publicProfile.public_profile_enabled === true;
+  const renderable = publicEnabled && ['ready', 'renderable', 'active'].includes(routeStatus);
+
+  return {
+    ...baseState,
+    outcome: renderable
+      ? 'found_renderable'
+      : publicEnabled
+        ? 'reserved_but_not_ready'
+        : 'reserved_but_disabled',
+    publicProfile: {
+      ...publicProfile,
+      public_route_path: normalizeString(publicProfile.public_route_path || route.publicRoutePath),
+      public_route_canonical_url: normalizeString(publicProfile.public_route_canonical_url || route.publicRouteUrl)
+    },
+    reason: renderable ? '' : 'PUBLIC_ROUTE_NOT_PUBLISHED'
   };
 }
 
@@ -173,13 +223,13 @@ async function resolveStateForRoute(route) {
   if (requestId !== RUNTIME.requestId) return;
 
   if (!firebaseReady) {
-    setState(buildErrorState(route, 'PROFILE_STORE_UNAVAILABLE'));
+    setState(await buildRegistryResolutionState(route));
     return;
   }
 
   const firestore = getFirestore();
   if (!firestore) {
-    setState(buildErrorState(route, 'PROFILE_STORE_UNAVAILABLE'));
+    setState(await buildRegistryResolutionState(route));
     return;
   }
 
@@ -191,6 +241,17 @@ async function resolveStateForRoute(route) {
     });
 
     if (requestId !== RUNTIME.requestId) return;
+
+    if (resolution.outcome !== 'found_renderable') {
+      const registryResolution = await buildRegistryResolutionState(route);
+
+      if (requestId !== RUNTIME.requestId) return;
+
+      if (registryResolution.outcome === 'found_renderable') {
+        setState(registryResolution);
+        return;
+      }
+    }
 
     setState({
       ...baseState,

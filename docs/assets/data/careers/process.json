@@ -1,0 +1,42 @@
+{
+  "id": "careers-process",
+  "title": "Recruitment Process",
+  "description": "Neuroartan recruitment follows the governed Human Resources operating sequence rather than an improvised application flow.",
+  "steps": [
+    {
+      "id": "opening-authorized",
+      "title": "Role opening authorized",
+      "summary": "A role enters recruitment only after the opening package and approval logic are complete."
+    },
+    {
+      "id": "record-opened",
+      "title": "Recruitment record structure opened",
+      "summary": "The role is placed inside the governed recruitment structure before candidate intake begins."
+    },
+    {
+      "id": "intake",
+      "title": "Candidate intake and CV handling",
+      "summary": "Candidate materials are linked to the role opening, intake path, and traceable record."
+    },
+    {
+      "id": "screening",
+      "title": "Screening and initial evaluation",
+      "summary": "Candidates are assessed against the role definition, qualifications, and product-truth requirements."
+    },
+    {
+      "id": "interviews",
+      "title": "Interview and questionnaire sequence",
+      "summary": "Interviews are structured around the approved role opening and preserved as governed evaluation material."
+    },
+    {
+      "id": "recommendation",
+      "title": "Recommendation and decision package",
+      "summary": "A traceable hiring recommendation is formed before executive decision routing."
+    },
+    {
+      "id": "offer-transition",
+      "title": "Offer handover and onboarding transition",
+      "summary": "Approved candidates transition into offer and onboarding continuity without losing role context."
+    }
+  ]
+}

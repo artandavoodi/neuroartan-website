@@ -1,0 +1,32 @@
+{
+  "id": "careers-departments",
+  "title": "Recruiting Lanes",
+  "description": "Current recruiting lanes reflect the product and institutional architecture already active inside Neuroartan.",
+  "departments": [
+    {
+      "id": "product-doctrine",
+      "title": "Product Doctrine & ICOS Architecture",
+      "summary": "Product truth, ICOS interaction logic, continuity architecture, and profile-system direction."
+    },
+    {
+      "id": "profile-continuity",
+      "title": "Profile & Continuity Systems",
+      "summary": "Public/private profile surfaces, model training architecture, continuity state logic, and route governance."
+    },
+    {
+      "id": "research-validation",
+      "title": "Research & Validation",
+      "summary": "Cognitive science, evaluation logic, reflection-loop validation, and long-horizon defensibility."
+    },
+    {
+      "id": "platform-infrastructure",
+      "title": "Platform Infrastructure",
+      "summary": "Runtime infrastructure, routing, search, state management, and future deployment readiness."
+    },
+    {
+      "id": "trust-governance",
+      "title": "Trust, Legal & Governance",
+      "summary": "Permission boundaries, public-identity governance, privacy posture, and institutional trust surfaces."
+    }
+  ]
+}

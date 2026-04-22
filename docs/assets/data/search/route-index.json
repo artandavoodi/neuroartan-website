@@ -35,6 +35,15 @@
     { "id": "policies", "path": "/pages/legal/policies/index.html", "title": "Policies", "scope": "legal" },
     { "id": "cookies", "path": "/pages/legal/cookies/index.html", "title": "Cookies", "scope": "legal" },
     { "id": "imprint", "path": "/pages/legal/imprint/index.html", "title": "Imprint", "scope": "legal" },
+    { "id": "about", "path": "/pages/about/index.html", "title": "About", "scope": "institutional" },
+    { "id": "profiles", "path": "/pages/profiles/index.html", "title": "Continuity Models", "scope": "profiles" },
+    { "id": "leadership", "path": "/pages/company/leadership/index.html", "title": "Leadership", "scope": "institutional" },
+    { "id": "continuity_history", "path": "/pages/continuity-history/index.html", "title": "Continuity History", "scope": "platform" },
+    { "id": "sitemap", "path": "/pages/sitemap/index.html", "title": "Sitemap", "scope": "platform" },
+    { "id": "careers_roles", "path": "/pages/careers/roles/index.html", "title": "Roles", "scope": "institutional" },
+    { "id": "careers_process", "path": "/pages/careers/process/index.html", "title": "Recruitment Process", "scope": "institutional" },
+    { "id": "careers_departments", "path": "/pages/careers/departments/index.html", "title": "Recruiting Lanes", "scope": "institutional" },
+    { "id": "careers_culture", "path": "/pages/careers/culture/index.html", "title": "Operating Culture", "scope": "institutional" },
     { "id": "profile", "path": "/profile.html", "title": "Profile", "scope": "account" }
   ]
 }

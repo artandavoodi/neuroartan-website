@@ -16,6 +16,8 @@
 import './firebase-config.js';
 import './account-completion.js';
 import './profile-save.js';
+import './public-model-registry.js';
+import './active-model.js';
 import './profile-router.js';
 import './profile-state.js';
 import './auth.js';

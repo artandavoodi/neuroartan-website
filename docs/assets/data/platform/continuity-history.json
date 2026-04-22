@@ -1,0 +1,47 @@
+{
+  "id": "continuity-history",
+  "title": "Continuity History",
+  "description": "Long-horizon record of product-definition hardening, profile architecture, continuity doctrine, and public-system preparation across Neuroartan.",
+  "years": [
+    {
+      "year": "2026",
+      "entries": [
+        {
+          "date": "2026-04-22",
+          "title": "Product definition cluster finalized",
+          "category": "product-definition",
+          "summary": "The Neuroartan product-definition cluster was finalized as the routing source for public interaction, profile training, and continuity architecture.",
+          "href": "/pages/about/index.html"
+        },
+        {
+          "date": "2026-04-19",
+          "title": "Profile setup and public identity specification hardened",
+          "category": "profile-system",
+          "summary": "Profile setup was defined as a convergent identity layer with username infrastructure, public-route logic, and eligibility boundaries.",
+          "href": "/pages/profiles/index.html"
+        },
+        {
+          "date": "2026-04-07",
+          "title": "Voice-training doctrine normalized for runtime transition",
+          "category": "voice-training",
+          "summary": "Voice in ICOS was constrained as governed continuity rather than imitation, with profile linkage and selection boundaries clarified.",
+          "href": "/pages/training/index.html"
+        },
+        {
+          "date": "2026-03-29",
+          "title": "Leadership surface direction established",
+          "category": "institutional-surface",
+          "summary": "Leadership was approved as a founder-first public trust surface with future multi-profile expansion handled through its own destination.",
+          "href": "/pages/company/leadership/index.html"
+        },
+        {
+          "date": "2026-03-13",
+          "title": "Product history reconstruction consolidated",
+          "category": "continuity-history",
+          "summary": "Historical reconstruction clarified the transition from founder-centered ecosystem logic toward a bounded cognitive product institution.",
+          "href": "/pages/continuity-history/index.html"
+        }
+      ]
+    }
+  ]
+}

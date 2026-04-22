@@ -8,13 +8,13 @@
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
-/* /website/docs/assets/css/layers/website/sections/profiles.css */
+/* /website/docs/assets/css/layers/website/sections/continuity-history.css */
 
 /* =============================================================================
    02) OWNERSHIP NOTE
-   Profiles surfaces intentionally inherit the shared catalog section system.
-   Keep future profile-directory-specific rules here so the profiles layer stays
-   sovereign without duplicating catalog ownership.
+   Continuity-history surfaces intentionally inherit the shared catalog system.
+   Add continuity-history-specific rules here only when that page requires
+   behavior not owned by the shared catalog layer.
 ============================================================================= */
 
 /* =============================================================================

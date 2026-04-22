@@ -1,0 +1,27 @@
+{
+  "id": "careers-culture",
+  "title": "Operating Culture",
+  "description": "Neuroartan culture is shaped by product truth, governed execution, and long-horizon institutional seriousness.",
+  "principles": [
+    {
+      "title": "Governed systems over improvisation",
+      "summary": "Important work is structured through stable ownership, reviewable systems, and traceable decisions."
+    },
+    {
+      "title": "Continuity over novelty theater",
+      "summary": "The product is designed for durable reflection, memory, and identity fidelity rather than short-lived AI spectacle."
+    },
+    {
+      "title": "Product truth before polish claims",
+      "summary": "Public behavior, language, and shipping decisions must remain aligned with what the product can defensibly support."
+    },
+    {
+      "title": "Privacy and permission are product architecture",
+      "summary": "Profile, source-ingestion, and public-route work are handled as trust-sensitive systems rather than cosmetic settings."
+    },
+    {
+      "title": "Institutional clarity",
+      "summary": "The standard is serious, quiet, and enterprise-ready across UI, code, and public communication."
+    }
+  ]
+}

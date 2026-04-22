@@ -10,6 +10,8 @@
    08. MODULE BOOT
    ========================================================= */
 
+import { formatActiveModelResponse } from '../../system/active-model.js';
+
 /* =========================================================
    01. MODULE STATE
    ========================================================= */
@@ -87,8 +89,22 @@ async function fetchHomeStageKnowledgeJson(path) {
   return response.json();
 }
 
-function normalizeHomeStageKnowledgeArray(value) {
-  return Array.isArray(value) ? value : [];
+function normalizeHomeStageKnowledgeArray(value, preferredKey = '') {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (value && typeof value === 'object') {
+    if (preferredKey && Array.isArray(value[preferredKey])) {
+      return value[preferredKey];
+    }
+
+    if (Array.isArray(value.entries)) return value.entries;
+    if (Array.isArray(value.entities)) return value.entities;
+    if (Array.isArray(value.routes)) return value.routes;
+  }
+
+  return [];
 }
 
 async function loadHomeStageSiteKnowledgeData() {
@@ -107,9 +123,9 @@ async function loadHomeStageSiteKnowledgeData() {
     fetchHomeStageKnowledgeJson(HOME_STAGE_SITE_KNOWLEDGE_SOURCES.routeIndex),
   ])
     .then(([contentIndex, entityIndex, routeIndex]) => {
-      HOME_STAGE_SITE_KNOWLEDGE_STATE.contentIndex = normalizeHomeStageKnowledgeArray(contentIndex);
-      HOME_STAGE_SITE_KNOWLEDGE_STATE.entityIndex = normalizeHomeStageKnowledgeArray(entityIndex);
-      HOME_STAGE_SITE_KNOWLEDGE_STATE.routeIndex = normalizeHomeStageKnowledgeArray(routeIndex);
+      HOME_STAGE_SITE_KNOWLEDGE_STATE.contentIndex = normalizeHomeStageKnowledgeArray(contentIndex, 'entries');
+      HOME_STAGE_SITE_KNOWLEDGE_STATE.entityIndex = normalizeHomeStageKnowledgeArray(entityIndex, 'entities');
+      HOME_STAGE_SITE_KNOWLEDGE_STATE.routeIndex = normalizeHomeStageKnowledgeArray(routeIndex, 'routes');
       HOME_STAGE_SITE_KNOWLEDGE_STATE.dataLoaded = true;
     })
     .catch(() => {
@@ -144,6 +160,8 @@ function getHomeStageCandidateText(entry) {
     entry.excerpt,
     entry.path,
     entry.href,
+    entry.scope,
+    entry.type,
     Array.isArray(entry.tags) ? entry.tags.join(' ') : '',
     Array.isArray(entry.keywords) ? entry.keywords.join(' ') : '',
     Array.isArray(entry.entities) ? entry.entities.join(' ') : '',
@@ -260,7 +278,7 @@ async function handleHomeStageSiteKnowledgeRequested(event) {
   const response = buildHomeStageSiteKnowledgeResponse(match);
 
   dispatchHomeStageMode('responding');
-  dispatchHomeStageResponse(response);
+  dispatchHomeStageResponse(formatActiveModelResponse('site-knowledge', response));
   dispatchHomeStageRoutingResolved({
     query,
     queryId,

@@ -23,6 +23,10 @@ import {
   normalizeUsername,
   validateUsernameLocally
 } from './account-profile-identity.js';
+import {
+  getPublicModelByUsername,
+  loadPublicModelRegistry
+} from './public-model-registry.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -191,7 +195,26 @@ export function subscribePublicRoute(subscriber) {
 
 export async function refreshPublicRoute(pathname = window.location.pathname) {
   const policy = await loadProfileIdentityPolicy();
-  setRoute(resolvePublicRoute(pathname, policy));
+  const resolvedRoute = resolvePublicRoute(pathname, policy);
+
+  if (resolvedRoute.handleAsPublicRoute && resolvedRoute.outcome === 'restricted_username') {
+    try {
+      await loadPublicModelRegistry();
+      const canonicalModel = getPublicModelByUsername(resolvedRoute.normalizedUsername || resolvedRoute.routeCandidate);
+
+      if (canonicalModel?.public_profile?.public_route_path) {
+        setRoute({
+          ...resolvedRoute,
+          outcome: 'candidate',
+          reason: '',
+          protectedCollision: false
+        });
+        return getPublicRouteState();
+      }
+    } catch (_) {}
+  }
+
+  setRoute(resolvedRoute);
   return getPublicRouteState();
 }
 

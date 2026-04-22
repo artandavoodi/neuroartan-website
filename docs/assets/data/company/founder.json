@@ -1,0 +1,32 @@
+{
+  "id": "founder-artan-davoodi",
+  "legal_name": "Saeed Davoodi",
+  "public_name": "Artan Davoodi",
+  "display_name": "Artan Davoodi",
+  "username": "artan",
+  "title": "Founder, Chief Executive Officer, and Cognitive Architect",
+  "image": "/assets/images/layers/website/sections/legacy/profile-era/Artan Davoodi Profile.jpeg",
+  "summary": "Artan Davoodi leads Neuroartan as the founder and chief executive officer while defining the product doctrine, continuity architecture, and institutional posture of ICOS.",
+  "biography": [
+    "Artan Davoodi is the founder of Neuroartan and the primary architect of ICOS as a voice-trained reflective cognition system.",
+    "His work centers on continuity, profile fidelity, structured reflection, and the translation of human observation into governed product architecture.",
+    "The founder surface is presented as an institutional trust layer rather than as a personality wrapper over generic AI."
+  ],
+  "areas": [
+    "Product doctrine",
+    "Continuity architecture",
+    "Profile systems",
+    "Voice-training direction",
+    "Institutional design logic"
+  ],
+  "public_links": [
+    {
+      "label": "X",
+      "url": "https://x.com/artandavoodi"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/artandavoodi"
+    }
+  ]
+}

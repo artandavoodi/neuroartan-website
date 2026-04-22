@@ -227,6 +227,69 @@
       "keywords": ["imprint", "legal", "entity", "notice"]
     },
     {
+      "id": "about",
+      "title": "About",
+      "path": "/pages/about/index.html",
+      "scope": "institutional",
+      "keywords": ["about", "neuroartan", "company", "product direction"]
+    },
+    {
+      "id": "profiles",
+      "title": "Continuity Models",
+      "path": "/pages/profiles/index.html",
+      "scope": "profiles",
+      "keywords": ["profiles", "continuity models", "public routes", "identity", "searchable models"]
+    },
+    {
+      "id": "leadership",
+      "title": "Leadership",
+      "path": "/pages/company/leadership/index.html",
+      "scope": "institutional",
+      "keywords": ["leadership", "founder", "artan", "company trust surface"]
+    },
+    {
+      "id": "continuity_history",
+      "title": "Continuity History",
+      "path": "/pages/continuity-history/index.html",
+      "scope": "platform",
+      "keywords": ["continuity history", "history", "archive", "timeline", "milestones"]
+    },
+    {
+      "id": "sitemap",
+      "title": "Sitemap",
+      "path": "/pages/sitemap/index.html",
+      "scope": "platform",
+      "keywords": ["sitemap", "route map", "navigation", "published routes"]
+    },
+    {
+      "id": "careers_roles",
+      "title": "Roles",
+      "path": "/pages/careers/roles/index.html",
+      "scope": "institutional",
+      "keywords": ["roles", "jobs", "openings", "hiring"]
+    },
+    {
+      "id": "careers_process",
+      "title": "Recruitment Process",
+      "path": "/pages/careers/process/index.html",
+      "scope": "institutional",
+      "keywords": ["recruitment process", "hiring process", "interview", "intake"]
+    },
+    {
+      "id": "careers_departments",
+      "title": "Recruiting Lanes",
+      "path": "/pages/careers/departments/index.html",
+      "scope": "institutional",
+      "keywords": ["departments", "recruiting lanes", "workstreams", "roles"]
+    },
+    {
+      "id": "careers_culture",
+      "title": "Operating Culture",
+      "path": "/pages/careers/culture/index.html",
+      "scope": "institutional",
+      "keywords": ["culture", "operating culture", "governed execution", "institutional clarity"]
+    },
+    {
       "id": "profile",
       "title": "Profile",
       "path": "/profile.html",

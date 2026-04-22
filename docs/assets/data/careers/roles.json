@@ -1,0 +1,11 @@
+{
+  "id": "careers-roles",
+  "title": "Roles",
+  "description": "Public job openings are published only when a role opening has cleared governed approval. The detail route architecture is active even when no public opening is currently live.",
+  "status": {
+    "public_openings_state": "No public openings published",
+    "note": "The recruitment system is live. Public role cards appear here only after a role opening is approved for public release."
+  },
+  "detail_query_param": "role",
+  "openings": []
+}

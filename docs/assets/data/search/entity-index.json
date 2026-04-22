@@ -122,6 +122,41 @@
       "keywords": ["imprint", "entity", "legal", "notice"]
     },
     {
+      "id": "artan_davoodi",
+      "label": "Artan Davoodi",
+      "type": "profile",
+      "path": "/artan",
+      "keywords": ["artan", "founder", "davoodi", "continuity model", "public profile"]
+    },
+    {
+      "id": "continuity_models",
+      "label": "Continuity Models",
+      "type": "profiles",
+      "path": "/pages/profiles/index.html",
+      "keywords": ["profiles", "continuity models", "public routes", "identity", "model search"]
+    },
+    {
+      "id": "leadership",
+      "label": "Leadership",
+      "type": "institutional",
+      "path": "/pages/company/leadership/index.html",
+      "keywords": ["leadership", "founder", "company", "trust surface"]
+    },
+    {
+      "id": "continuity_history",
+      "label": "Continuity History",
+      "type": "platform",
+      "path": "/pages/continuity-history/index.html",
+      "keywords": ["continuity history", "history", "archive", "timeline", "milestones"]
+    },
+    {
+      "id": "sitemap",
+      "label": "Sitemap",
+      "type": "platform",
+      "path": "/pages/sitemap/index.html",
+      "keywords": ["sitemap", "route map", "published routes", "navigation"]
+    },
+    {
       "id": "profile",
       "label": "Profile",
       "type": "account",

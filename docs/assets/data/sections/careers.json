@@ -1,0 +1,44 @@
+{
+  "id": "careers",
+  "label": "Careers",
+  "title": "Careers",
+  "description": "Governed recruiting surface for Neuroartan. Roles, process, departments, and culture are structured as sovereign data and rendered through one reusable careers system.",
+  "defaultSection": "overview",
+  "sections": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "title": "Careers",
+      "route": "/pages/careers/index.html",
+      "description": "The careers surface explains how Neuroartan opens roles, which workstreams hiring belongs to, and how governed recruitment progresses."
+    },
+    {
+      "id": "roles",
+      "label": "Roles",
+      "title": "Roles",
+      "route": "/pages/careers/roles/index.html",
+      "description": "Published openings and the role-detail architecture for future hiring."
+    },
+    {
+      "id": "process",
+      "label": "Process",
+      "title": "Process",
+      "route": "/pages/careers/process/index.html",
+      "description": "Role opening, intake, interview, recommendation, and onboarding transition logic."
+    },
+    {
+      "id": "departments",
+      "label": "Departments",
+      "title": "Departments",
+      "route": "/pages/careers/departments/index.html",
+      "description": "Current workstreams and recruiting lanes aligned with the product and institutional architecture."
+    },
+    {
+      "id": "culture",
+      "label": "Culture",
+      "title": "Culture",
+      "route": "/pages/careers/culture/index.html",
+      "description": "Operating expectations for people joining Neuroartan."
+    }
+  ]
+}

@@ -9,6 +9,8 @@
    07. MODULE BOOT
    ========================================================= */
 
+import { formatActiveModelResponse } from '../../system/active-model.js';
+
 /* =========================================================
    01. MODULE STATE
    ========================================================= */
@@ -138,7 +140,7 @@ async function handleHomeStageWebSearchRequested(event) {
   const result = await resolveHomeStageWebSearch(query, queryId);
 
   dispatchHomeStageMode('responding');
-  dispatchHomeStageResponse(result.response);
+  dispatchHomeStageResponse(formatActiveModelResponse('web', result.response));
   dispatchHomeStageRoutingResolved({
     query,
     queryId,

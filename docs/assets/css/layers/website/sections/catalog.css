@@ -1,0 +1,491 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) PAGE SHELL
+   02) HERO
+   03) META / CHIP SYSTEM
+   04) TOOLBAR / SEARCH
+   05) GRID / CARD SYSTEM
+   06) DETAIL / PANEL SYSTEM
+   07) LIST / TIMELINE
+   08) SITEMAP / INLINE LINKS
+   09) EMPTY / MEDIA STATES
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) PAGE SHELL
+============================================================================= */
+body.profiles-page,
+body.careers-page,
+body.leadership-page,
+body.continuity-history-page,
+body.sitemap-page{
+  min-height:100vh;
+}
+
+.catalog-page-shell{
+  width:100%;
+}
+
+.catalog-page-rail{
+  width:min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
+  margin:0 auto;
+  padding:8.8rem 0 5.5rem;
+  box-sizing:border-box;
+}
+
+.catalog-section{
+  margin-top:2.5rem;
+}
+
+/* =============================================================================
+   02) HERO
+============================================================================= */
+.catalog-page-hero{
+  display:grid;
+  gap:1rem;
+  padding-bottom:2.5rem;
+  border-bottom:1px solid var(--border-color);
+}
+
+.catalog-page-eyebrow{
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:0.78rem;
+  font-weight:500;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+}
+
+.catalog-page-title{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:clamp(2.8rem, 6vw, 4.8rem);
+  font-weight:300;
+  line-height:0.94;
+  letter-spacing:-0.06em;
+}
+
+.catalog-page-description{
+  max-width:56rem;
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:1.02rem;
+  line-height:1.72;
+}
+
+/* =============================================================================
+   03) META / CHIP SYSTEM
+============================================================================= */
+.catalog-meta,
+.catalog-chip-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.75rem;
+}
+
+.catalog-meta-item,
+.catalog-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:2.2rem;
+  padding:0 0.95rem;
+  border:1px solid var(--control-border);
+  border-radius:999px;
+  background:var(--control-bg);
+  color:var(--text-secondary-color);
+  font-size:0.78rem;
+  line-height:1;
+}
+
+/* =============================================================================
+   04) TOOLBAR / SEARCH
+============================================================================= */
+.catalog-toolbar{
+  display:grid;
+  gap:0.9rem;
+}
+
+.catalog-search{
+  display:grid;
+  gap:0.45rem;
+}
+
+.catalog-search__label,
+.catalog-filter-note{
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:0.86rem;
+  line-height:1.6;
+}
+
+.catalog-search__input-row{
+  display:flex;
+  align-items:center;
+  min-height:3.4rem;
+  padding:0 1rem;
+  border:1px solid var(--field-border);
+  border-radius:1rem;
+  background:var(--field-bg);
+}
+
+.catalog-search__input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+}
+
+.catalog-search__input::placeholder{
+  color:var(--text-secondary-color);
+}
+
+/* =============================================================================
+   05) GRID / CARD SYSTEM
+============================================================================= */
+.catalog-grid{
+  display:grid;
+  grid-template-columns:repeat(12, minmax(0, 1fr));
+  gap:1.5rem;
+}
+
+.catalog-grid--compact{
+  gap:1rem;
+}
+
+.catalog-card{
+  grid-column:span 4;
+  min-width:0;
+  border:1px solid var(--control-border);
+  border-radius:1.4rem;
+  background:var(--control-bg);
+  box-sizing:border-box;
+}
+
+.catalog-card--compact{
+  grid-column:span 12;
+}
+
+.catalog-card[data-active="true"]{
+  border-color:var(--control-border-strong);
+  background:var(--control-bg-hover);
+}
+
+.catalog-card__link{
+  display:block;
+  color:inherit;
+  text-decoration:none;
+}
+
+.catalog-card__body{
+  display:grid;
+  gap:1rem;
+  padding:1.35rem;
+}
+
+.catalog-card__header{
+  display:grid;
+  gap:0.65rem;
+}
+
+.catalog-card__eyebrow{
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:0.74rem;
+  font-weight:500;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+.catalog-card__title{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:1.28rem;
+  font-weight:400;
+  line-height:1.1;
+}
+
+.catalog-card__summary{
+  margin:0;
+  color:var(--text-secondary-color);
+  line-height:1.65;
+}
+
+.catalog-action-row,
+.catalog-action-stack{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.75rem;
+}
+
+.catalog-action-stack{
+  flex-direction:column;
+  align-items:flex-start;
+}
+
+/* =============================================================================
+   06) DETAIL / PANEL SYSTEM
+============================================================================= */
+.catalog-detail-grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1.45fr) minmax(0, 1fr);
+  gap:1.5rem;
+}
+
+.catalog-panel{
+  display:grid;
+  gap:1rem;
+  padding:1.4rem;
+  border:1px solid var(--control-border);
+  border-radius:1.4rem;
+  background:var(--control-bg);
+  min-width:0;
+}
+
+.catalog-panel--primary,
+.catalog-panel--wide{
+  grid-column:1 / -1;
+}
+
+.catalog-panel__title,
+.catalog-panel__copy{
+  margin:0;
+}
+
+.catalog-panel__title{
+  color:var(--text-primary-color);
+  font-size:1.14rem;
+  font-weight:500;
+}
+
+.catalog-panel__copy{
+  color:var(--text-secondary-color);
+  line-height:1.7;
+}
+
+.catalog-rows{
+  display:grid;
+  gap:0.85rem;
+}
+
+.catalog-row{
+  display:grid;
+  gap:0.25rem;
+  padding-bottom:0.85rem;
+  border-bottom:1px solid var(--border-color);
+}
+
+.catalog-row:last-child{
+  padding-bottom:0;
+  border-bottom:0;
+}
+
+.catalog-row__label,
+.catalog-row__value{
+  margin:0;
+}
+
+.catalog-row__label{
+  color:var(--text-secondary-color);
+  font-size:0.78rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+.catalog-row__value{
+  color:var(--text-primary-color);
+  line-height:1.65;
+}
+
+/* =============================================================================
+   07) LIST / TIMELINE
+============================================================================= */
+.catalog-list{
+  display:grid;
+  gap:0.9rem;
+}
+
+.catalog-list-item{
+  color:var(--text-secondary-color);
+  line-height:1.7;
+}
+
+.catalog-list--timeline{
+  gap:1.2rem;
+}
+
+.catalog-timeline-year{
+  display:grid;
+  gap:1rem;
+}
+
+.catalog-timeline-year__label{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:1.3rem;
+  font-weight:500;
+}
+
+.catalog-timeline-entry{
+  display:grid;
+  gap:0.5rem;
+  padding:1.2rem 1.3rem;
+  border:1px solid var(--control-border);
+  border-radius:1.25rem;
+  background:var(--control-bg);
+}
+
+.catalog-timeline-entry__eyebrow,
+.catalog-timeline-entry__title,
+.catalog-timeline-entry__copy{
+  margin:0;
+}
+
+.catalog-timeline-entry__eyebrow{
+  color:var(--text-secondary-color);
+  font-size:0.76rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+
+.catalog-timeline-entry__title{
+  color:var(--text-primary-color);
+  font-size:1.1rem;
+  font-weight:500;
+}
+
+.catalog-timeline-entry__copy{
+  color:var(--text-secondary-color);
+  line-height:1.72;
+}
+
+/* =============================================================================
+   08) SITEMAP / INLINE LINKS
+============================================================================= */
+.catalog-inline-link{
+  color:var(--text-primary-color);
+  text-decoration:none;
+}
+
+.catalog-inline-link:hover,
+.catalog-inline-link:focus-visible{
+  color:var(--text-primary-color);
+  text-decoration:underline;
+}
+
+.catalog-sitemap-group{
+  display:grid;
+  gap:1rem;
+  padding-top:1.6rem;
+  border-top:1px solid var(--border-color);
+}
+
+.catalog-sitemap-group:first-child{
+  padding-top:0;
+  border-top:0;
+}
+
+.catalog-sitemap-group__title{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:1.15rem;
+  font-weight:500;
+}
+
+.catalog-sitemap-item{
+  display:grid;
+  gap:0.2rem;
+}
+
+.catalog-sitemap-item__path{
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:0.84rem;
+}
+
+/* =============================================================================
+   09) EMPTY / MEDIA STATES
+============================================================================= */
+.catalog-empty-state{
+  display:grid;
+  gap:0.75rem;
+  padding:1.5rem;
+  border:1px solid var(--control-border);
+  border-radius:1.4rem;
+  background:var(--control-bg);
+}
+
+.catalog-empty-state__title,
+.catalog-empty-state__copy{
+  margin:0;
+}
+
+.catalog-empty-state__title{
+  color:var(--text-primary-color);
+  font-size:1.2rem;
+  font-weight:500;
+}
+
+.catalog-empty-state__copy{
+  color:var(--text-secondary-color);
+  line-height:1.72;
+}
+
+.catalog-media-card{
+  display:grid;
+  grid-template-columns:minmax(15rem, 22rem) minmax(0, 1fr);
+  gap:1.25rem;
+  align-items:start;
+}
+
+.catalog-media-card__figure{
+  border-radius:1.2rem;
+  overflow:hidden;
+  background:var(--control-bg);
+}
+
+.catalog-media-card__figure img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.catalog-media-card__body{
+  display:grid;
+  gap:1rem;
+}
+
+/* =============================================================================
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width: 1080px){
+  .catalog-card{
+    grid-column:span 6;
+  }
+
+  .catalog-detail-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width: 760px){
+  .catalog-page-rail{
+    padding-top:7.4rem;
+    padding-bottom:4.5rem;
+  }
+
+  .catalog-grid,
+  .catalog-grid--compact{
+    grid-template-columns:1fr;
+  }
+
+  .catalog-card{
+    grid-column:span 1;
+  }
+
+  .catalog-media-card{
+    grid-template-columns:1fr;
+  }
+}

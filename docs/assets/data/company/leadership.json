@@ -1,0 +1,16 @@
+{
+  "id": "leadership",
+  "label": "Leadership",
+  "title": "Leadership",
+  "description": "Leadership is the institutional trust surface for the active executive presence of Neuroartan. It begins with the founder profile and is structured to expand cleanly as additional public leadership surfaces become ready.",
+  "expansion_state": "founder-first",
+  "members": [
+    {
+      "id": "founder-artan-davoodi",
+      "member_type": "founder",
+      "status": "active",
+      "profile_route": "/pages/company/leadership/index.html?leader=founder-artan-davoodi",
+      "public_route": "/artan"
+    }
+  ]
+}

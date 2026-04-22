@@ -1,10 +1,13 @@
+import { subscribeHomeSurfaceState } from './home-surface-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
    02. DOM HELPERS
-   03. TRIGGER HELPERS
-   04. EVENT BINDING
-   05. MODULE BOOT
+   03. PROFILE HELPERS
+   04. TRIGGER HELPERS
+   05. EVENT BINDING
+   06. MODULE BOOT
    ========================================================= */
 
 /* =========================================================
@@ -14,6 +17,7 @@
 const HOME_DASHBOARD_TOPBAR_STATE = {
   isBound: false,
   root: null,
+  snapshot: null,
 };
 
 /* =========================================================
@@ -28,6 +32,11 @@ function getHomeDashboardTopbarNodes() {
     searchTrigger: document.querySelector('#home-dashboard-search-trigger'),
     settingsTrigger: document.querySelector('#home-dashboard-settings-trigger'),
     profileTrigger: document.querySelector('#home-dashboard-profile-trigger'),
+    profileLabel: document.querySelector('[data-home-topbar-profile-label]'),
+    profileAvatarShell: document.querySelector('[data-home-topbar-profile-avatar-shell]'),
+    profileAvatarImage: document.querySelector('[data-home-topbar-profile-avatar]'),
+    profileAvatarFallback: document.querySelector('[data-home-topbar-profile-avatar-fallback]'),
+    profileIcon: document.querySelector('[data-home-topbar-profile-icon]'),
     sidebarPanel: document.querySelector('#home-sidebar'),
     workspacePanel: document.querySelector('#home-panel-left'),
     searchPanel: document.querySelector('#home-search-shell'),
@@ -40,7 +49,73 @@ function getHomeDashboardTopbarNodes() {
 }
 
 /* =========================================================
-   03. TRIGGER HELPERS
+   03. PROFILE HELPERS
+   ========================================================= */
+
+function resolveHomeTopbarProfileLabel(snapshot) {
+  const displayName = snapshot?.account?.profile?.display_name || snapshot?.account?.user?.displayName || '';
+  const username = snapshot?.account?.profile?.username || '';
+
+  if (displayName) {
+    return displayName;
+  }
+
+  if (username) {
+    return `@${username}`;
+  }
+
+  return 'Profile';
+}
+
+function resolveHomeTopbarProfileFallback(snapshot) {
+  const label = resolveHomeTopbarProfileLabel(snapshot).replace(/^@/, '');
+  return (label.charAt(0) || 'N').toUpperCase();
+}
+
+function renderHomeDashboardTopbar(snapshot) {
+  HOME_DASHBOARD_TOPBAR_STATE.snapshot = snapshot;
+
+  const nodes = getHomeDashboardTopbarNodes();
+  const signedIn = !!snapshot?.account?.signedIn;
+  const photo = snapshot?.account?.profile?.photo_url || snapshot?.account?.user?.photoURL || '';
+
+  if (nodes.profileLabel) {
+    nodes.profileLabel.textContent = signedIn ? resolveHomeTopbarProfileLabel(snapshot) : 'Profile';
+  }
+
+  if (nodes.profileTrigger) {
+    const label = signedIn ? `Open profile panel for ${resolveHomeTopbarProfileLabel(snapshot)}` : 'Open profile panel';
+    nodes.profileTrigger.setAttribute('aria-label', label);
+  }
+
+  if (nodes.profileAvatarShell) {
+    nodes.profileAvatarShell.hidden = !signedIn;
+  }
+
+  if (nodes.profileAvatarImage) {
+    if (signedIn && photo) {
+      nodes.profileAvatarImage.hidden = false;
+      nodes.profileAvatarImage.src = photo;
+      nodes.profileAvatarImage.alt = resolveHomeTopbarProfileLabel(snapshot);
+    } else {
+      nodes.profileAvatarImage.hidden = true;
+      nodes.profileAvatarImage.removeAttribute('src');
+      nodes.profileAvatarImage.alt = '';
+    }
+  }
+
+  if (nodes.profileAvatarFallback) {
+    nodes.profileAvatarFallback.hidden = !signedIn || !!photo;
+    nodes.profileAvatarFallback.textContent = resolveHomeTopbarProfileFallback(snapshot);
+  }
+
+  if (nodes.profileIcon) {
+    nodes.profileIcon.hidden = signedIn;
+  }
+}
+
+/* =========================================================
+   04. TRIGGER HELPERS
    ========================================================= */
 
 function setTriggerExpanded(trigger, expanded) {
@@ -146,10 +221,12 @@ function openHomeProfilePanel(nodes) {
 }
 
 /* =========================================================
-   04. EVENT BINDING
+   05. EVENT BINDING
    ========================================================= */
 
 function bindHomeDashboardTopbar() {
+  subscribeHomeSurfaceState(renderHomeDashboardTopbar);
+
   document.addEventListener('click', (event) => {
     const root = getLiveTopbarRoot();
     if (!root) return;
@@ -204,7 +281,7 @@ function bindHomeDashboardTopbar() {
 }
 
 /* =========================================================
-   05. MODULE BOOT
+   06. MODULE BOOT
    ========================================================= */
 
 function bootHomeDashboardTopbar() {
@@ -216,6 +293,7 @@ function bootHomeDashboardTopbar() {
   HOME_DASHBOARD_TOPBAR_STATE.root = root;
 
   if (HOME_DASHBOARD_TOPBAR_STATE.isBound) {
+    renderHomeDashboardTopbar(HOME_DASHBOARD_TOPBAR_STATE.snapshot || {});
     return;
   }
 

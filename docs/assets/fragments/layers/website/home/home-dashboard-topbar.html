@@ -9,80 +9,86 @@
 
 <header class="home-dashboard-topbar" id="home-dashboard-topbar" aria-label="Home dashboard topbar">
   <div class="home-dashboard-topbar__inner">
-    <div class="home-dashboard-topbar__left">
-      <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan home">
-        <img
-          class="home-dashboard-topbar__brand-mark"
-          src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
-          alt="Neuroartan symbol">
-      </a>
+    <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan home">
+      <img
+        class="home-dashboard-topbar__brand-mark"
+        src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
+        alt="Neuroartan symbol">
+    </a>
 
-      <button
-        class="home-dashboard-topbar__icon-action"
-        id="home-dashboard-sidebar-trigger"
-        type="button"
-        aria-label="Open navigation panel"
-        aria-controls="home-sidebar"
-        aria-expanded="false">
-        <span class="home-dashboard-topbar__icon" aria-hidden="true">
-          <img src="/assets/icons/core/navigation/unclassified/menu.svg" alt="">
-        </span>
-        <span class="home-dashboard-topbar__icon-label">Menu</span>
-      </button>
+    <div class="home-dashboard-topbar__group">
+      <nav class="home-dashboard-topbar__nav" aria-label="Home dashboard primary actions">
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="home-dashboard-sidebar-trigger"
+          type="button"
+          aria-label="Open navigation panel"
+          aria-controls="home-sidebar"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/navigation/unclassified/menu.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Menu</span>
+        </button>
 
-      <button
-        class="home-dashboard-topbar__icon-action"
-        id="home-dashboard-workspace-trigger"
-        type="button"
-        aria-label="Open continuity workspace"
-        aria-controls="home-panel-left"
-        aria-expanded="false">
-        <span class="home-dashboard-topbar__icon" aria-hidden="true">
-          <img src="/assets/icons/core/cognition/unclassified/continuity.svg" alt="">
-        </span>
-        <span class="home-dashboard-topbar__icon-label">Continuity</span>
-      </button>
-    </div>
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="home-dashboard-workspace-trigger"
+          type="button"
+          aria-label="Open continuity workspace"
+          aria-controls="home-panel-left"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/cognition/unclassified/continuity.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Continuity</span>
+        </button>
+      </nav>
 
-    <div class="home-dashboard-topbar__right">
-      <button
-        class="home-dashboard-topbar__icon-action"
-        id="home-dashboard-search-trigger"
-        type="button"
-        aria-label="Open search"
-        aria-controls="home-search-shell"
-        aria-expanded="false">
-        <span class="home-dashboard-topbar__icon" aria-hidden="true">
-          <img src="/assets/icons/core/actions/unclassified/search.svg" alt="">
-        </span>
-        <span class="home-dashboard-topbar__icon-label">Search</span>
-      </button>
+      <div class="home-dashboard-topbar__utility" aria-label="Home dashboard utility actions">
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--utility"
+          id="home-dashboard-search-trigger"
+          type="button"
+          aria-label="Open search"
+          aria-controls="home-search-shell"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/search.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Search</span>
+        </button>
 
-      <button
-        class="home-dashboard-topbar__icon-action"
-        id="home-dashboard-settings-trigger"
-        type="button"
-        aria-label="Open home settings"
-        aria-controls="home-settings-panel"
-        aria-expanded="false">
-        <span class="home-dashboard-topbar__icon" aria-hidden="true">
-          <img src="/assets/icons/core/system/unclassified/settings.svg" alt="">
-        </span>
-        <span class="home-dashboard-topbar__icon-label">Settings</span>
-      </button>
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--utility"
+          id="home-dashboard-settings-trigger"
+          type="button"
+          aria-label="Open home settings"
+          aria-controls="home-settings-panel"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/settings.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Settings</span>
+        </button>
 
-      <button
-        class="home-dashboard-topbar__icon-action home-dashboard-topbar__icon-action--primary"
-        id="home-dashboard-profile-trigger"
-        type="button"
-        aria-label="Open profile panel"
-        aria-controls="home-panel-right"
-        aria-expanded="false">
-        <span class="home-dashboard-topbar__icon" aria-hidden="true">
-          <img src="/assets/icons/core/identity/unclassified/profile.svg" alt="">
-        </span>
-        <span class="home-dashboard-topbar__icon-label">Profile</span>
-      </button>
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--utility home-dashboard-topbar__action--profile"
+          id="home-dashboard-profile-trigger"
+          type="button"
+          aria-label="Open profile panel"
+          aria-controls="home-panel-right"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__profile-avatar" data-home-topbar-profile-avatar-shell aria-hidden="true" hidden>
+            <img class="home-dashboard-topbar__profile-avatar-image" data-home-topbar-profile-avatar alt="" hidden>
+            <span class="home-dashboard-topbar__profile-avatar-fallback" data-home-topbar-profile-avatar-fallback>N</span>
+          </span>
+          <span class="home-dashboard-topbar__icon home-dashboard-topbar__icon--profile" data-home-topbar-profile-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/identity/unclassified/profile.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label" data-home-topbar-profile-label>Profile</span>
+        </button>
+      </div>
     </div>
   </div>
 </header>

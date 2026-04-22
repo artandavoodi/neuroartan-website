@@ -11,31 +11,12 @@
 /* /website/docs/assets/css/layers/website/home/home-footer.css */
 
 /* =============================================================================
-   02) HOME FOOTER SEPARATOR
-   Home footer reuses the canonical footer structure, but the separator line is
-   local to the homepage because the source page gets its line from upstream
-   layout context rather than from the footer fragment itself.
+   02) OWNERSHIP NOTE
+   Home footer is an exact structural clone of the canonical footer fragment.
+   Visual ownership intentionally delegates to the canonical footer CSS chain:
+   - /website/docs/assets/css/core/04-systems/footer.css
+   - /website/docs/assets/css/layers/website/navigation/footer.css
 ============================================================================= */
-
-.home-footer-separator{
-  width:min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
-  max-width:none;
-  height:1px;
-  min-height:1px;
-  border:0;
-  margin:0 auto;
-  background:rgba(128, 128, 128, 0.28);
-  display:block;
-  pointer-events:none;
-}
-
-body.light-mode .home-footer-separator{
-  background:rgba(0, 0, 0, 0.16);
-}
-
-body.dark-mode .home-footer-separator{
-  background:rgba(255, 255, 255, 0.16);
-}
 
 /* =============================================================================
    03) END OF FILE

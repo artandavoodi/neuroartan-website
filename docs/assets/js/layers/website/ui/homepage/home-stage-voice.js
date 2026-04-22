@@ -31,6 +31,8 @@ const HOME_STAGE_VOICE_STATE = {
   permissionState: 'unknown',
   permissionsSupported: false,
   submittedQuery: '',
+  route: '',
+  baseEssenceLabel: '',
 };
 
 /* =========================================================
@@ -41,6 +43,7 @@ const HOME_STAGE_VOICE_SELECTORS = {
   stageShell: '#stage-cognitive-core-shell',
   microphoneButton: '#stage-microphone-button',
   interactionShell: '#stage-voice-interaction-shell',
+  essence: '#stage-essence',
   status: '#stage-voice-status',
   transcript: '#stage-voice-transcript',
   response: '#stage-voice-response',
@@ -117,10 +120,37 @@ function getHomeStageVoiceNodes() {
     stageShell: document.querySelector(HOME_STAGE_VOICE_SELECTORS.stageShell),
     microphoneButton: document.querySelector(HOME_STAGE_VOICE_SELECTORS.microphoneButton),
     interactionShell: document.querySelector(HOME_STAGE_VOICE_SELECTORS.interactionShell),
+    essence: document.querySelector(HOME_STAGE_VOICE_SELECTORS.essence),
     status: document.querySelector(HOME_STAGE_VOICE_SELECTORS.status),
     transcript: document.querySelector(HOME_STAGE_VOICE_SELECTORS.transcript),
     response: document.querySelector(HOME_STAGE_VOICE_SELECTORS.response),
   };
+}
+
+function getHomeStageRouteLabel() {
+  switch (HOME_STAGE_VOICE_STATE.route) {
+    case 'translation':
+      return 'translating';
+    case 'web':
+    case 'site-knowledge':
+    case 'platform-search':
+      return 'finding';
+    default:
+      return 'responding';
+  }
+}
+
+function getHomeStageEssenceLabel() {
+  switch (HOME_STAGE_VOICE_STATE.mode) {
+    case 'listening':
+      return 'listening';
+    case 'thinking':
+      return 'thinking';
+    case 'responding':
+      return getHomeStageRouteLabel();
+    default:
+      return HOME_STAGE_VOICE_STATE.baseEssenceLabel || "What's in my mind?";
+  }
 }
 
 function getHomeStageStatusLabel() {
@@ -170,6 +200,16 @@ function syncHomeStageVoiceDom() {
     nodes.interactionShell.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
     nodes.interactionShell.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
     nodes.interactionShell.hidden = false;
+  }
+
+  if (nodes.essence) {
+    if (!HOME_STAGE_VOICE_STATE.baseEssenceLabel) {
+      HOME_STAGE_VOICE_STATE.baseEssenceLabel = nodes.essence.textContent?.trim() || "What's in my mind?";
+    }
+
+    nodes.essence.textContent = getHomeStageEssenceLabel();
+    nodes.essence.dataset.engineMode = HOME_STAGE_VOICE_STATE.mode;
+    nodes.essence.dataset.engineActive = HOME_STAGE_VOICE_STATE.mode === 'idle' ? 'false' : 'true';
   }
 
   if (nodes.status) {
@@ -514,6 +554,11 @@ function bindHomeStageVoiceSurface() {
    ========================================================= */
 
 function bindHomeStageVoiceEvents() {
+  document.addEventListener('neuroartan:home-stage-query-routing', (event) => {
+    HOME_STAGE_VOICE_STATE.route = String(event?.detail?.route || '').trim().toLowerCase();
+    syncHomeStageVoiceDom();
+  });
+
   document.addEventListener('neuroartan:home-stage-voice-transcript', (event) => {
     const nextTranscript = event?.detail?.transcript ?? '';
     setHomeStageTranscript(nextTranscript);

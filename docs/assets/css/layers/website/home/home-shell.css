@@ -23,6 +23,11 @@
   --home-chrome-item-active: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --home-chrome-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
   --home-chrome-backdrop-blur: 18px;
+  --home-shell-topbar-height: 3.55rem;
+  --home-shell-footer-separator-offset: 3.25rem;
+  --home-shell-panel-inline-padding: max(var(--site-gutter), 1rem);
+  --home-shell-panel-top: calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height));
+  --home-shell-panel-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset));
 }
 
 body.theme-dark .home-shell{
@@ -59,22 +64,31 @@ body.theme-light .home-shell{
 .home-shell__topbar,
 .home-shell__footer{
   position:fixed;
-  left:50%;
-  transform:translateX(-50%);
+  left:0;
+  right:0;
+  width:100%;
   pointer-events:none;
 }
 
 .home-shell__topbar{
-  top:calc(env(safe-area-inset-top, 0px) + 1rem);
-  width:var(--chrome-rail-width);
+  top:0;
 }
 
 .home-shell__footer{
   bottom:env(safe-area-inset-bottom, 0px);
-  left:0;
-  right:0;
-  transform:none;
-  width:100%;
+}
+
+.home-shell__footer-separator{
+  position:fixed;
+  left:50%;
+  right:auto;
+  bottom:var(--home-shell-panel-bottom);
+  transform:translateX(-50%);
+  width:var(--footer-rail-width);
+  max-width:none;
+  margin:0;
+  pointer-events:none;
+  z-index:calc(var(--z-raised) - 1);
 }
 
 .home-shell__topbar > *,
@@ -100,16 +114,13 @@ body.theme-light .home-shell{
    05) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 760px){
-  .home-shell__topbar{
-    top:calc(env(safe-area-inset-top, 0px) + 0.85rem);
-    width:var(--chrome-rail-width);
+  .home-shell{
+    --home-shell-topbar-height: 3.3rem;
+    --home-shell-footer-separator-offset: 3.04rem;
+    --home-shell-panel-inline-padding: max(var(--site-gutter), 0.85rem);
   }
 
-  .home-shell__footer{
-    bottom:env(safe-area-inset-bottom, 0px);
-    left:0;
-    right:0;
-    transform:none;
-    width:100%;
+  .home-shell__topbar{
+    top:0;
   }
 }

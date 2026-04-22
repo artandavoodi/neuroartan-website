@@ -14,10 +14,10 @@
 ============================================================================= */
 .home-panel-right{
   position:fixed;
-  top:calc(env(safe-area-inset-top, 0px) + 1.15rem + 4.7rem);
-  right:max(var(--site-gutter), 1rem);
-  bottom:calc(env(safe-area-inset-bottom, 0px) + 1.1rem + 5.6rem);
-  width:min(24rem, calc(100vw - (max(var(--site-gutter), 1rem) * 2)));
+  top:var(--home-shell-panel-top);
+  right:var(--home-shell-panel-inline-padding);
+  bottom:var(--home-shell-panel-bottom);
+  width:min(24rem, calc(100vw - (var(--home-shell-panel-inline-padding) * 2)));
   z-index:calc(var(--z-fixed) - 1);
   pointer-events:none;
 }
@@ -258,10 +258,10 @@
 ============================================================================= */
 @media (max-width: 760px){
   .home-panel-right{
-    top:calc(env(safe-area-inset-top, 0px) + 0.9rem + 4.2rem);
-    left:max(var(--site-gutter), 0.85rem);
-    right:max(var(--site-gutter), 0.85rem);
-    bottom:calc(env(safe-area-inset-bottom, 0px) + 0.9rem + 5rem);
+    top:var(--home-shell-panel-top);
+    left:var(--home-shell-panel-inline-padding);
+    right:var(--home-shell-panel-inline-padding);
+    bottom:var(--home-shell-panel-bottom);
     width:auto;
   }
 

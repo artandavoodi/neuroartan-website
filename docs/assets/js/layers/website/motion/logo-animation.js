@@ -243,6 +243,11 @@
     };
 
     const setStageVideoMask = ({ opacity, hard } = {}) => {
+      if (body.classList.contains("site-entered") || body.classList.contains("hero-stage-hidden")) {
+        removeStageVideoMask({ immediate: true });
+        return;
+      }
+
       const mask = getOrCreateStageVideoMask();
       if (typeof opacity === "number" && opacity < 1) maskRevealStarted = true;
       const isLight = body.classList.contains("light-mode");
@@ -276,7 +281,29 @@
       setStageVideoMask({ opacity, hard: true });
     };
 
+    const removeStageVideoMask = ({ immediate = false } = {}) => {
+      const mask = qs("#stage-video-mask");
+      if (!mask) return;
+
+      if (immediate) {
+        if (mask.parentNode) mask.parentNode.removeChild(mask);
+        return;
+      }
+
+      mask.style.transition = `opacity 700ms ${EASE_OUT}, background-color 600ms ${EASE_OUT}`;
+      mask.style.opacity = "0";
+
+      window.setTimeout(() => {
+        if (mask.parentNode) mask.parentNode.removeChild(mask);
+      }, 760);
+    };
+
     document.addEventListener("neuroartan:theme-changed", () => {
+      if (body.classList.contains("site-entered") || body.classList.contains("hero-stage-hidden")) {
+        requestAnimationFrame(() => removeStageVideoMask({ immediate: true }));
+        return;
+      }
+
       requestAnimationFrame(syncStageVideoMaskToTheme);
     });
 
@@ -336,6 +363,7 @@
     const activateLandingShell = () => {
       body.classList.remove("intro-loading", "intro-reveal");
       body.classList.add("site-entered");
+      removeStageVideoMask({ immediate: true });
       showChrome();
       unlockScroll();
     };
@@ -469,9 +497,7 @@
       restoreEssenceToOriginal();
       showChrome();
 
-      setStageVideoMask({ opacity: 1, hard: true });
-      const __mask = qs("#stage-video-mask");
-      if (__mask) __mask.style.display = "none";
+      removeStageVideoMask({ immediate: true });
 
       // Entered state must never be scroll-locked.
       unlockScroll();

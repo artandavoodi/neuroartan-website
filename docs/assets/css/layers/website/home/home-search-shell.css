@@ -15,11 +15,16 @@
 ============================================================================= */
 .home-search-shell{
   position:fixed;
-  inset:0;
-  display:grid;
-  place-items:start center;
-  padding:4.5rem 1rem 1rem;
+  top:var(--home-shell-panel-top);
+  right:var(--home-shell-panel-inline-padding);
+  bottom:var(--home-shell-panel-bottom);
+  left:var(--home-shell-panel-inline-padding);
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  padding:0;
   z-index:1900;
+  pointer-events:none;
 }
 
 .home-search-shell[hidden]{
@@ -27,37 +32,28 @@
 }
 
 /* =============================================================================
-   02) BACKDROP
-============================================================================= */
-.home-search-shell__backdrop{
-  position:absolute;
-  inset:0;
-  background:color-mix(in srgb, var(--bg-color) 46%, transparent);
-  backdrop-filter:blur(var(--home-chrome-backdrop-blur)) saturate(1.04);
-  -webkit-backdrop-filter:blur(var(--home-chrome-backdrop-blur)) saturate(1.04);
-}
-
-/* =============================================================================
-   03) DIALOG SURFACE
+   02) DIALOG SURFACE
 ============================================================================= */
 .home-search-shell__dialog{
   position:relative;
   width:min(100%, 62rem);
-  max-height:min(84vh, 52rem);
+  height:100%;
+  max-height:none;
   display:flex;
   flex-direction:column;
   overflow:hidden;
-  border:1px solid var(--home-chrome-border-strong);
-  border-radius:1.75rem;
+  border-top:1px solid var(--home-chrome-border);
+  border-bottom:1px solid var(--home-chrome-border);
   background:var(--home-chrome-surface-strong);
   box-shadow:var(--home-chrome-shadow);
   backdrop-filter:blur(calc(var(--home-chrome-backdrop-blur) + 10px)) saturate(1.04);
   -webkit-backdrop-filter:blur(calc(var(--home-chrome-backdrop-blur) + 10px)) saturate(1.04);
   z-index:1;
+  pointer-events:auto;
 }
 
 /* =============================================================================
-   04) HEADER
+   03) HEADER
 ============================================================================= */
 .home-search-shell__header{
   display:flex;
@@ -95,11 +91,12 @@
 }
 
 /* =============================================================================
-   05) FORM + INPUT
+   04) FORM + INPUT
 ============================================================================= */
 .home-search-shell__body{
   display:flex;
   flex-direction:column;
+  flex:1 1 auto;
   gap:1rem;
   min-height:0;
   padding:1.1rem 1.25rem 1.25rem;
@@ -170,7 +167,7 @@
 }
 
 /* =============================================================================
-   06) QUICK ACTIONS
+   05) QUICK ACTIONS
 ============================================================================= */
 .home-search-shell__quick-actions{
   display:flex;
@@ -199,11 +196,11 @@
 }
 
 /* =============================================================================
-   07) RESULTS + EMPTY STATE
+   06) RESULTS + EMPTY STATE
 ============================================================================= */
 .home-search-shell__results{
-  min-height:15rem;
-  max-height:min(50vh, 28rem);
+  min-height:0;
+  flex:1 1 auto;
   overflow:auto;
   padding:0.2rem 0.1rem 0 0;
 }
@@ -309,16 +306,18 @@
 }
 
 /* =============================================================================
-   08) RESPONSIVE REFINEMENTS
+   07) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 720px){
   .home-search-shell{
-    padding:4rem 0.75rem 0.75rem;
+    top:var(--home-shell-panel-top);
+    right:var(--home-shell-panel-inline-padding);
+    bottom:var(--home-shell-panel-bottom);
+    left:var(--home-shell-panel-inline-padding);
   }
 
   .home-search-shell__dialog{
     width:100%;
-    border-radius:1.3rem;
   }
 
   .home-search-shell__header,

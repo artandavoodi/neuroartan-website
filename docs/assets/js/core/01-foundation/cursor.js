@@ -143,6 +143,35 @@ function resolvePointerTarget(target) {
   return target.closest(INTERACTIVE_SELECTOR);
 }
 
+function resolveInteractiveTargetAtPointer() {
+  if (typeof document.elementsFromPoint !== 'function') {
+    return null;
+  }
+
+  const targets = document.elementsFromPoint(state.pointerX, state.pointerY);
+
+  for (const target of targets) {
+    if (!(target instanceof Element)) continue;
+    if (target.matches?.(CURSOR_SELECTOR)) continue;
+
+    const interactiveTarget = resolvePointerTarget(target);
+    if (interactiveTarget) {
+      return interactiveTarget;
+    }
+  }
+
+  return null;
+}
+
+function syncInteractiveStateFromPointerPosition() {
+  if (!state.enabled || state.isHidden) {
+    state.isInteractive = false;
+    return;
+  }
+
+  state.isInteractive = Boolean(resolveInteractiveTargetAtPointer());
+}
+
 /* =============================================================================
    07) VISUAL STATE
 ============================================================================= */
@@ -264,11 +293,13 @@ function handleVisibilityChange() {
 }
 
 function handleScroll() {
+  syncInteractiveStateFromPointerPosition();
   applyVisualState();
 }
 
 function handleWindowFocus() {
   state.isHidden = false;
+  syncInteractiveStateFromPointerPosition();
   applyVisualState();
 }
 

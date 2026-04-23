@@ -24,14 +24,14 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="6.4455469"
-     inkscape:cx="11.480795"
-     inkscape:cy="19.393234"
+     inkscape:cx="11.558368"
+     inkscape:cy="19.315661"
      inkscape:window-width="1472"
-     inkscape:window-height="923"
+     inkscape:window-height="896"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="32"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg3" />
+     inkscape:current-layer="g3" />
   <g
      id="g3"
      transform="translate(1.3730484,-0.0327557)">
@@ -41,20 +41,20 @@
        stroke-width="1.25"
        stroke-linecap="round"
        id="path1"
-       style="stroke-width:2;stroke-dasharray:none" />
+       style="stroke-width:1;stroke-dasharray:none" />
     <path
        d="M 2.2308282,14.702047 H 15.023075"
        stroke="currentColor"
        stroke-width="1.25"
        stroke-linecap="round"
        id="path1-3"
-       style="stroke-width:2;stroke-dasharray:none" />
+       style="stroke-width:1;stroke-dasharray:none" />
     <path
        d="M 2.2308283,10.032756 H 15.023075"
        stroke="currentColor"
        stroke-width="1.25"
        stroke-linecap="round"
        id="path1-3-7"
-       style="stroke-width:2;stroke-dasharray:none" />
+       style="stroke-width:1;stroke-dasharray:none" />
   </g>
 </svg>

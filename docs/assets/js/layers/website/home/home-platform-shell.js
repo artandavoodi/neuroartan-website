@@ -6,11 +6,12 @@ import { subscribeHomeSurfaceState } from './home-surface-state.js';
 03) DOM HELPERS
 04) CONTENT SOURCE HELPERS
 05) RENDER HELPERS
-06) SHELL STATE HELPERS
-07) OPEN / CLOSE HELPERS
-08) EVENT BINDING
-09) BOOT
-10) END OF FILE
+06) RAIL MODE HELPERS
+07) SHELL STATE HELPERS
+08) OPEN / CLOSE HELPERS
+09) EVENT BINDING
+10) BOOT
+11) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -20,6 +21,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   isBound: false,
   activeDestination: 'home',
   snapshot: null,
+  railMode: 'expanded',
 };
 
 /* =============================================================================
@@ -56,6 +58,8 @@ const HOME_PLATFORM_COPY = {
     copy: 'Theme, language, privacy, and identity controls belong here in one stable shell destination.',
   },
 };
+
+const HOME_PLATFORM_RAIL_STORAGE_KEY = 'neuroartan.home.platformShell.railMode';
 
 const HOME_PLATFORM_SOURCE_SELECTORS = {
   workspace: {
@@ -110,6 +114,10 @@ function getHomePlatformShellMenuTrigger() {
 
 function getHomePlatformShellCloseTrigger() {
   return document.querySelector('#home-platform-shell-close');
+}
+
+function getHomePlatformShellRailToggleTrigger() {
+  return document.querySelector('#home-platform-shell-rail-toggle');
 }
 
 function getHomePlatformShellNavItems() {
@@ -357,7 +365,64 @@ function syncHomePlatformShellNav(destination) {
 }
 
 /* =============================================================================
-06) SHELL STATE HELPERS
+06) RAIL MODE HELPERS
+============================================================================= */
+function normalizeHomePlatformRailMode(value) {
+  return value === 'collapsed' ? 'collapsed' : 'expanded';
+}
+
+function loadHomePlatformRailMode() {
+  try {
+    return normalizeHomePlatformRailMode(window.localStorage.getItem(HOME_PLATFORM_RAIL_STORAGE_KEY));
+  } catch (_error) {
+    return 'expanded';
+  }
+}
+
+function saveHomePlatformRailMode(mode) {
+  try {
+    window.localStorage.setItem(HOME_PLATFORM_RAIL_STORAGE_KEY, normalizeHomePlatformRailMode(mode));
+  } catch (_error) {
+    /* Intentionally empty: rail mode persistence is best-effort only. */
+  }
+}
+
+function syncHomePlatformRailMode(mode = HOME_PLATFORM_SHELL_STATE.railMode) {
+  const normalized = normalizeHomePlatformRailMode(mode);
+  HOME_PLATFORM_SHELL_STATE.railMode = normalized;
+
+  const root = getHomePlatformShellRoot();
+  if (root) {
+    root.setAttribute('data-home-platform-rail', normalized);
+  }
+
+  const toggle = getHomePlatformShellRailToggleTrigger();
+  if (toggle) {
+    const isExpanded = normalized === 'expanded';
+    toggle.setAttribute('aria-pressed', isExpanded ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isExpanded ? 'Collapse navigation rail' : 'Expand navigation rail');
+  }
+}
+
+function setHomePlatformRailMode(mode) {
+  const normalized = normalizeHomePlatformRailMode(mode);
+  syncHomePlatformRailMode(normalized);
+  saveHomePlatformRailMode(normalized);
+
+  document.dispatchEvent(new CustomEvent('home:platform-shell-rail-mode-changed', {
+    detail: {
+      railMode: normalized,
+    },
+  }));
+}
+
+function toggleHomePlatformRailMode() {
+  const nextMode = HOME_PLATFORM_SHELL_STATE.railMode === 'collapsed' ? 'expanded' : 'collapsed';
+  setHomePlatformRailMode(nextMode);
+}
+
+/* =============================================================================
+07) SHELL STATE HELPERS
 ============================================================================= */
 function setHomePlatformDestination(destination) {
   if (!HOME_PLATFORM_DESTINATIONS.has(destination)) {
@@ -386,7 +451,7 @@ function setHomePlatformDestination(destination) {
 }
 
 /* =============================================================================
-07) OPEN / CLOSE HELPERS
+08) OPEN / CLOSE HELPERS
 ============================================================================= */
 function closeConflictingHomeChrome() {
   getHomePlatformShellChromeRoots().forEach(hideRoot);
@@ -400,6 +465,7 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   root.hidden = false;
   root.setAttribute('aria-hidden', 'false');
   document.body.classList.add('home-platform-shell-open');
+  syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   setHomePlatformDestination(destination);
 
   document.dispatchEvent(new CustomEvent('home:platform-shell-opened', {
@@ -417,6 +483,7 @@ function closeHomePlatformShell() {
   root.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('home-platform-shell-open');
   root.removeAttribute('data-home-platform-destination');
+  syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   document.dispatchEvent(new CustomEvent('neuroartan:home-topbar-reset-triggers'));
   document.dispatchEvent(new CustomEvent('home:platform-shell-closed'));
 }
@@ -439,7 +506,7 @@ function toggleHomePlatformShell(destination = 'home') {
 }
 
 /* =============================================================================
-08) EVENT BINDING
+09) EVENT BINDING
 ============================================================================= */
 function bindHomePlatformShellEvents() {
   if (HOME_PLATFORM_SHELL_STATE.isBound) return;
@@ -458,6 +525,13 @@ function bindHomePlatformShellEvents() {
     if (closeTrigger) {
       event.preventDefault();
       closeHomePlatformShell();
+      return;
+    }
+
+    const railToggleTrigger = event.target.closest('[data-home-platform-shell-rail-toggle]');
+    if (railToggleTrigger) {
+      event.preventDefault();
+      toggleHomePlatformRailMode();
       return;
     }
 
@@ -512,11 +586,13 @@ function bindHomePlatformShellEvents() {
 }
 
 /* =============================================================================
-09) BOOT
+10) BOOT
 ============================================================================= */
 function bootHomePlatformShell() {
   if (!getHomePlatformShellRoot()) return;
   bindHomePlatformShellEvents();
+  HOME_PLATFORM_SHELL_STATE.railMode = loadHomePlatformRailMode();
+  syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   syncHomePlatformShellNav(HOME_PLATFORM_SHELL_STATE.activeDestination);
   renderHomePlatformShellContent(HOME_PLATFORM_SHELL_STATE.activeDestination);
 }
@@ -537,5 +613,5 @@ if (document.readyState === 'loading') {
 }
 
 /* =============================================================================
-10) END OF FILE
+11) END OF FILE
 ============================================================================= */

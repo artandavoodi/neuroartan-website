@@ -4,14 +4,15 @@
 02) SHELL ROOT
 03) SHELL CHROME
 04) SHELL MAIN GRID
-05) LEFT NAVIGATION RAIL
-06) NAVIGATION ITEMS
-07) RIGHT CONTENT SURFACE
-08) CONTENT STACK
-09) SHELL-OWNED DESTINATION SYSTEM
-10) THEME STATES
-11) RESPONSIVE STATES
-12) END OF FILE
+05) RAIL MODE STATES
+06) LEFT NAVIGATION RAIL
+07) NAVIGATION ITEMS
+08) RIGHT CONTENT SURFACE
+09) CONTENT STACK
+10) SHELL-OWNED DESTINATION SYSTEM
+11) THEME STATES
+12) RESPONSIVE STATES
+13) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -70,6 +71,51 @@
   color: var(--text-secondary-color);
 }
 
+.home-platform-shell__rail-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-secondary-color);
+  opacity: 0.68;
+  cursor: pointer;
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+.home-platform-shell__rail-toggle:hover,
+.home-platform-shell__rail-toggle:focus-visible,
+.home-platform-shell__rail-toggle[aria-pressed="true"] {
+  color: var(--text-primary-color);
+  opacity: 1;
+  outline: none;
+}
+
+.home-platform-shell__rail-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: 0 0 auto;
+}
+
+.home-platform-shell__rail-toggle-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: var(--icon-image-filter, none);
+}
+
 /* =============================================================================
 04) SHELL MAIN GRID
 ============================================================================= */
@@ -83,7 +129,37 @@
 }
 
 /* =============================================================================
-05) LEFT NAVIGATION RAIL
+05) RAIL MODE STATES
+============================================================================= */
+.home-platform-shell[data-home-platform-rail="expanded"] .home-platform-shell__main {
+  grid-template-columns: var(--home-platform-shell-rail-width) minmax(0, 1fr);
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__main {
+  grid-template-columns: minmax(0, 1fr);
+}
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__content {
+  grid-column: 1 / -1;
+}
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__rail {
+  display: none;
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__content-inner {
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 1.45rem;
+  padding-right: 0;
+  padding-bottom: calc(var(--home-shell-footer-separator-offset) + 1.45rem);
+  padding-left: 0;
+}
+
+
+
+
+
+/* =============================================================================
+06) LEFT NAVIGATION RAIL
 ============================================================================= */
 .home-platform-shell__rail {
   min-width: 0;
@@ -118,7 +194,7 @@
 }
 
 /* =============================================================================
-06) NAVIGATION ITEMS
+07) NAVIGATION ITEMS
 ============================================================================= */
 .home-platform-shell__nav-item {
   -webkit-appearance:none;
@@ -134,6 +210,7 @@
   border-radius: 999px;
   background: transparent;
   color: var(--text-secondary-color);
+  opacity: 0.68;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -168,6 +245,7 @@
   border-color: var(--control-border);
   background: var(--control-bg);
   color: var(--text-primary-color);
+  opacity: 1;
   outline: none;
 }
 
@@ -182,7 +260,7 @@
 }
 
 /* =============================================================================
-07) RIGHT CONTENT SURFACE
+08) RIGHT CONTENT SURFACE
 ============================================================================= */
 .home-platform-shell__content {
   min-width: 0;
@@ -227,7 +305,7 @@
 }
 
 /* =============================================================================
-08) CONTENT STACK
+09) CONTENT STACK
 ============================================================================= */
 .home-platform-shell__content-stack {
   display: flex;
@@ -241,7 +319,7 @@
 }
 
 /* =============================================================================
-09) SHELL-OWNED DESTINATION SYSTEM
+10) SHELL-OWNED DESTINATION SYSTEM
 ============================================================================= */
 .home-platform-shell__content .home-settings-panel,
 .home-platform-shell__content .home-workspace-panel,
@@ -485,9 +563,6 @@
   outline: none;
 }
 
-/* =============================================================================
-09.5) SHELL-OWNED DESTINATION SYSTEM: LINKS
-============================================================================= */
 .home-platform-shell__content .home-settings-panel__item--link,
 .home-platform-shell__content .home-workspace-panel__item--link,
 .home-platform-shell__content .home-profile-control-panel__item--link {
@@ -495,7 +570,7 @@
 }
 
 /* =============================================================================
-11) RESPONSIVE STATES
+12) RESPONSIVE STATES
 ============================================================================= */
 @media (max-width: 980px) {
   .home-platform-shell {
@@ -506,6 +581,10 @@
 @media (max-width: 760px) {
   .home-platform-shell {
     --home-platform-shell-inline-padding: 1rem;
+  }
+
+  .home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__rail {
+    display: none;
   }
 
   .home-platform-shell__main {
@@ -522,10 +601,15 @@
   }
 
   .home-platform-shell__content-inner {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 1.45rem;
+    padding-right: 0;
+    padding-bottom: calc(var(--home-shell-footer-separator-offset) + 1.45rem);
     padding-left: 0;
   }
 }
 
 /* =============================================================================
-12) END OF FILE
+13) END OF FILE
 ============================================================================= */

@@ -1,0 +1,103 @@
+{
+  "id": "dashboard",
+  "label": "Dashboard",
+  "title": "Dashboard",
+  "description": "Private command, reflection, analysis, and management environment for continuity model owners.",
+  "sections": [
+    {
+      "id": "model-control-center",
+      "title": "Model Control Center",
+      "summary": "Anchor the current active model, interaction route, and readiness posture from one owner-facing control surface.",
+      "items": [
+        "Switch the active model and keep routing continuity stable across the platform.",
+        "Review trust posture, public state, and verification before making a model more visible.",
+        "Keep interaction entry aligned with the model’s preferred route and current readiness."
+      ]
+    },
+    {
+      "id": "reflection-thought-capture",
+      "title": "Reflection & Thought Capture",
+      "summary": "Preserve structured thought capture as an owner tool rather than a generic notes surface.",
+      "items": [
+        "Capture thought fragments, themes, and observations that should shape continuity over time.",
+        "Organize reflections for future dialogue, training, and longitudinal pattern review.",
+        "Prepare voice-linked submissions and source additions without fragmenting model identity."
+      ]
+    },
+    {
+      "id": "analytics-pattern-intelligence",
+      "title": "Analytics & Pattern Intelligence",
+      "summary": "Treat model analytics as an interpretive intelligence layer, not a decorative metrics board.",
+      "items": [
+        "Review training status, maturity posture, and public-route readiness.",
+        "Track interaction mode distribution and current discoverability posture.",
+        "Surface pattern, reliability, and trust indicators that inform future training decisions."
+      ]
+    },
+    {
+      "id": "knowledge-graph",
+      "title": "Knowledge Graph",
+      "summary": "Prepare the graph-linked continuity layer that connects sources, patterns, entities, and longitudinal records.",
+      "items": [
+        "Link continuity records, source evidence, and future graph nodes.",
+        "Preserve visibility into model provenance and relationship structure.",
+        "Keep graph ownership modular so richer traversal can arrive without page rewrites."
+      ]
+    },
+    {
+      "id": "training-status",
+      "title": "Training Status",
+      "summary": "Keep training orchestration visible across voice, response-style, thought-pattern, and public-readiness preparation.",
+      "items": [
+        "Voice training readiness",
+        "Thought-pattern calibration",
+        "Response-style shaping",
+        "Public-readiness review"
+      ]
+    },
+    {
+      "id": "source-linked-accounts",
+      "title": "Source & Linked Accounts",
+      "summary": "Keep external-account authorization, source provenance, and identity proof in one governed section.",
+      "items": [
+        "External account authorization",
+        "Source-link review",
+        "Identity proof posture",
+        "Trust-classification preparation"
+      ]
+    },
+    {
+      "id": "runtime-health",
+      "title": "Runtime / Health / System Status",
+      "summary": "Maintain a clean system-governance surface for runtime status, route integrity, and operational readiness.",
+      "items": [
+        "Theme and shell integrity",
+        "Route resolution and public visibility",
+        "Interaction runtime posture",
+        "Continuity system readiness"
+      ]
+    },
+    {
+      "id": "private-archive-history",
+      "title": "Private Archive / History",
+      "summary": "Preserve private archive review separately from the public continuity-history surface.",
+      "items": [
+        "Private archive review",
+        "Longitudinal continuity snapshots",
+        "Observation history",
+        "Future export and audit pathways"
+      ]
+    },
+    {
+      "id": "settings-shortcuts",
+      "title": "Settings Shortcuts",
+      "summary": "Keep settings access short and subordinate to the dashboard’s primary intelligence role.",
+      "items": [
+        "Theme controls",
+        "Language and region",
+        "Cookie settings",
+        "Profile route controls"
+      ]
+    }
+  ]
+}

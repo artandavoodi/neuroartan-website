@@ -49,6 +49,7 @@ import './evaluation-center.js';
 import './executive-team.js';
 import './faq.js';
 import './financials.js';
+import './feed.js';
 import './founder.js';
 import './home-featured-functions.js';
 import './home-featured-functions-shader.js';

@@ -1,0 +1,33 @@
+{
+  "id": "feed",
+  "label": "Feed",
+  "title": "Feed",
+  "description": "Public ecosystem stream for continuity models, public profiles, and governed interaction signals.",
+  "default_tab": "for-you",
+  "tabs": [
+    { "id": "for-you", "label": "For You" },
+    { "id": "following", "label": "Following" },
+    { "id": "models", "label": "Models" },
+    { "id": "profiles", "label": "Profiles" },
+    { "id": "my-posts", "label": "My Posts" }
+  ],
+  "sort_options": [
+    { "id": "latest", "label": "Latest" },
+    { "id": "verified", "label": "Verified Priority" },
+    { "id": "models", "label": "Model Signals" }
+  ],
+  "composer": {
+    "title": "Feed Composer",
+    "description": "Compose governed updates from a public profile or continuity model surface.",
+    "placeholder": "Write a continuity update, product note, or governed public signal."
+  },
+  "featured_model_ids": [
+    "artan-davoodi",
+    "neuroartan-institution"
+  ],
+  "empty_state": {
+    "title": "No public feed posts are published yet",
+    "copy": "The feed shell is live and ready for governed posting, comments, and interaction signals once the publishing runtime is connected."
+  },
+  "posts": []
+}

@@ -778,7 +778,7 @@ body.hero-stage-hidden .stage-video-overlay{
   display:none !important;
 }
 
-body.home-page.site-entered:not(.hero-stage-hidden) #stage #stage-logo{
+body.home-page #stage #stage-logo{
   display:none !important;
 }
 
@@ -982,12 +982,41 @@ body.home-page.intro-reveal .stage-circle{
 }
 
 body.home-page.intro-loading #header-controls,
+body.home-page.intro-loading #home-dashboard-topbar-mount,
+body.home-page.intro-loading .home-shell__topbar,
 body.home-page.intro-loading .site-essence,
 body.home-page.intro-loading .site-footer,
+body.home-page.intro-loading #home-footer-mount,
+body.home-page.intro-loading .home-shell__footer,
 body.home-page.intro-loading .footer-separator,
+body.home-page.intro-loading .home-shell__footer-separator,
 body.home-page.intro-loading #menu-overlay{
   opacity:0;
   pointer-events:none;
+}
+
+body.home-page.intro-loading #stage-intro{
+  opacity:0;
+  pointer-events:none;
+}
+
+body.home-page.intro-loading #stage-center,
+body.home-page.intro-loading #stage-center-core,
+body.home-page.intro-loading #stage-copy,
+body.home-page.intro-loading #stage-actions,
+body.home-page.intro-loading #stage-microphone,
+body.home-page.intro-loading .stage-glass-vessel,
+body.home-page.intro-loading .stage-cognitive-core-shell,
+body.home-page.intro-loading .stage-microphone-button{
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+body.home-page.intro-reveal #stage-intro,
+body.home-page.site-entered #stage-intro{
+  opacity:1;
+  pointer-events:auto;
+  transition:opacity 0.8s var(--intro-ease);
 }
 
 body.home-page.intro-loading #announcement,

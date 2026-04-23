@@ -30,14 +30,16 @@
   top: var(--home-shell-panel-top);
   left: 0;
   right: 0;
-  bottom: var(--home-shell-panel-bottom);
+  bottom: 0;
   z-index: 520;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: var(--surface-base);
-  color: var(--text-primary);
-  border-top: 1px solid var(--border-subtle);
+  background: var(--home-panel-surface);
+  color: var(--text-primary-color);
+  border-top: 1px solid var(--home-panel-border);
+  backdrop-filter: blur(4px) saturate(115%);
+  -webkit-backdrop-filter: blur(4px) saturate(115%);
 }
 
 .home-platform-shell[hidden] {
@@ -54,8 +56,10 @@
   justify-content: flex-start;
   min-height: 3.5rem;
   padding: 0 var(--home-platform-shell-inline-padding);
-  border-bottom: 1px solid var(--border-subtle);
-  background: color-mix(in srgb, var(--surface-base) 92%, transparent);
+  border-bottom: 1px solid var(--home-ribbon-border);
+  background: var(--home-ribbon-surface);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
 }
 
 .home-platform-shell__close {
@@ -63,7 +67,7 @@
 }
 
 .home-platform-shell__close.global-close-button {
-  color: var(--text-secondary);
+  color: var(--text-secondary-color);
 }
 
 /* =============================================================================
@@ -75,7 +79,7 @@
   display: grid;
   grid-template-columns: var(--home-platform-shell-rail-width) minmax(0, 1fr);
   padding: 0 var(--home-platform-shell-inline-padding);
-  background: color-mix(in srgb, var(--surface-base) 96%, transparent);
+  background: transparent;
 }
 
 /* =============================================================================
@@ -84,57 +88,76 @@
 .home-platform-shell__rail {
   min-width: 0;
   min-height: 0;
-  border-right: 1px solid var(--border-subtle);
-  background: color-mix(in srgb, var(--surface-base) 98%, transparent);
+  border-right: 1px solid var(--home-panel-border);
+  background: transparent;
 }
 
 .home-platform-shell__rail-inner {
   height: 100%;
   overflow-y: auto;
-  padding: 1.25rem 1.5rem 2rem 0;
+  padding: 1.45rem 1.5rem 2.2rem 0;
 }
 
 .home-platform-shell__group + .home-platform-shell__group {
-  margin-top: 2rem;
+  margin-top: 2.15rem;
 }
 
 .home-platform-shell__group-label {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.82rem;
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
 }
 
 .home-platform-shell__nav {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.34rem;
 }
 
 /* =============================================================================
 06) NAVIGATION ITEMS
 ============================================================================= */
 .home-platform-shell__nav-item {
+  -webkit-appearance:none;
   appearance: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: 0.72rem;
   width: 100%;
-  min-height: 2.8rem;
-  padding: 0.78rem 0.92rem;
+  min-height: 3rem;
+  padding: 0.86rem 1rem;
   border: 1px solid transparent;
-  border-radius: 0.9rem;
+  border-radius: 999px;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-secondary-color);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease;
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    opacity 220ms ease;
+}
+
+.home-platform-shell__nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.home-platform-shell__nav-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: var(--icon-image-filter);
 }
 
 .home-platform-shell__nav-item:hover,
@@ -142,9 +165,9 @@
 .home-platform-shell__nav-item[aria-pressed="true"],
 .home-platform-shell__nav-item[aria-current="page"],
 .home-platform-shell__nav-item.is-active {
-  border-color: var(--border-strong);
-  background: var(--surface-muted);
-  color: var(--text-primary);
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  color: var(--text-primary-color);
   outline: none;
 }
 
@@ -164,21 +187,13 @@
 .home-platform-shell__content {
   min-width: 0;
   min-height: 0;
-  background: color-mix(in srgb, var(--surface-base) 98%, transparent);
-}
-
-.home-platform-shell[data-home-platform-destination="home"] .home-platform-shell__content,
-.home-platform-shell[data-home-platform-destination="continuity"] .home-platform-shell__content,
-.home-platform-shell[data-home-platform-destination="workspace"] .home-platform-shell__content,
-.home-platform-shell[data-home-platform-destination="profile"] .home-platform-shell__content,
-.home-platform-shell[data-home-platform-destination="settings"] .home-platform-shell__content {
-  background: color-mix(in srgb, var(--surface-base) 98%, transparent);
+  background: transparent;
 }
 
 .home-platform-shell__content-inner {
   height: 100%;
   overflow-y: auto;
-  padding: 1.25rem 0 2rem 1.75rem;
+  padding: 1.45rem 0 calc(var(--home-shell-footer-separator-offset) + 1.45rem) 2rem;
 }
 
 .home-platform-shell__content-state {
@@ -194,7 +209,7 @@
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  color: var(--text-primary);
+  color: var(--text-primary-color);
 }
 
 .home-platform-shell__content-copy {
@@ -204,7 +219,7 @@
   font-weight: 400;
   line-height: 1.65;
   letter-spacing: -0.01em;
-  color: var(--text-secondary);
+  color: color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
 }
 
 .home-platform-shell__content-inner > * {
@@ -249,6 +264,8 @@
   height: auto;
   padding: 0;
   background: transparent;
+  border: 0;
+  box-shadow: none;
   overflow: visible;
 }
 
@@ -256,7 +273,7 @@
 .home-platform-shell__content .home-workspace-panel__header,
 .home-platform-shell__content .home-profile-control-panel__header {
   padding: 0 0 0.95rem;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--home-panel-border);
 }
 
 .home-platform-shell__content .home-settings-panel__close,
@@ -268,22 +285,13 @@
 .home-platform-shell__content .home-settings-panel__eyebrow,
 .home-platform-shell__content .home-workspace-panel__eyebrow,
 .home-platform-shell__content .home-profile-control-panel__eyebrow {
-  margin: 0 0 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
 }
 
 .home-platform-shell__content .home-settings-panel__title,
 .home-platform-shell__content .home-workspace-panel__title,
 .home-platform-shell__content .home-profile-control-panel__title {
-  margin: 0;
-  font-size: 1.02rem;
-  font-weight: 500;
-  line-height: 1.3;
-  color: var(--text-primary);
+  color: var(--text-primary-color);
 }
 
 .home-platform-shell__content .home-settings-panel__section,
@@ -297,12 +305,7 @@
 .home-platform-shell__content .home-settings-panel__section-title,
 .home-platform-shell__content .home-workspace-panel__section-title,
 .home-platform-shell__content .home-profile-control-panel__section-title {
-  margin: 0;
-  font-size: 0.74rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
 }
 
 .home-platform-shell__content .home-settings-panel__stack,
@@ -327,9 +330,9 @@
 .home-platform-shell__content .home-workspace-panel__summary-card,
 .home-platform-shell__content .home-profile-control-panel__identity-card,
 .home-platform-shell__content .home-profile-control-panel__status-card {
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.9rem;
-  background: transparent;
+  border: 1px solid var(--home-panel-card-border);
+  border-radius: 0;
+  background: var(--home-panel-card-surface);
 }
 
 .home-platform-shell__content .home-profile-control-panel__identity-card {
@@ -337,9 +340,9 @@
 }
 
 .home-platform-shell__content .home-profile-control-panel__avatar {
-  border: 1px solid var(--border-strong);
-  background: var(--surface-muted);
-  color: var(--text-primary);
+  border: 1px solid var(--home-panel-card-border);
+  background: var(--home-panel-card-surface);
+  color: var(--text-primary-color);
 }
 
 .home-platform-shell__content .home-profile-control-panel__avatar-fallback {
@@ -374,21 +377,22 @@
 }
 
 .home-platform-shell__content .home-workspace-panel__summary-label {
-  color: var(--text-tertiary);
+  color: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
 }
 
 .home-platform-shell__content .home-settings-panel__item,
 .home-platform-shell__content .home-workspace-panel__item,
 .home-platform-shell__content .home-profile-control-panel__item,
 .home-platform-shell__content .home-settings-panel__theme-option {
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.9rem;
-  background: color-mix(in srgb, var(--surface-base) 88%, transparent);
-  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary-color);
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background-color 180ms ease;
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    opacity 220ms ease;
 }
 
 .home-platform-shell__content .home-settings-panel__theme-option,
@@ -414,9 +418,9 @@
 .home-platform-shell__content .home-settings-panel__theme-option:hover,
 .home-platform-shell__content .home-settings-panel__theme-option:focus-visible,
 .home-platform-shell__content .home-settings-panel__theme-option[aria-pressed="true"] {
-  border-color: var(--border-strong);
-  background: var(--surface-muted);
-  color: var(--text-primary);
+  border-color: var(--control-border);
+  background: var(--control-bg);
+  color: var(--text-primary-color);
   outline: none;
 }
 
@@ -424,7 +428,7 @@
 .home-platform-shell__content .home-workspace-panel__summary-body,
 .home-platform-shell__content .home-profile-control-panel__meta,
 .home-platform-shell__content .home-profile-control-panel__route-status {
-  color: var(--text-secondary);
+  color: color-mix(in srgb, var(--text-primary-color) 72%, transparent);
   font-size: 0.84rem;
   line-height: 1.55;
 }
@@ -435,7 +439,7 @@
 .home-platform-shell__content .home-profile-control-panel__status-label,
 .home-platform-shell__content .home-profile-control-panel__section-title,
 .home-platform-shell__content .home-profile-control-panel__item-value {
-  color: var(--text-tertiary);
+  color: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
 }
 
 .home-platform-shell__content .home-settings-panel__item-value,
@@ -453,14 +457,14 @@
 }
 
 .home-platform-shell__content .home-profile-control-panel__route-link {
-  color: var(--text-primary);
+  color: var(--text-primary-color);
 }
 
 .home-platform-shell__content .home-profile-control-panel__name,
 .home-platform-shell__content .home-profile-control-panel__plan,
 .home-platform-shell__content .home-profile-control-panel__status-value,
 .home-platform-shell__content .home-workspace-panel__summary-value {
-  color: var(--text-primary);
+  color: var(--text-primary-color);
 }
 
 .home-platform-shell__content .home-profile-control-panel__name {
@@ -477,7 +481,7 @@
 
 .home-platform-shell__content .home-profile-control-panel__route-link:hover,
 .home-platform-shell__content .home-profile-control-panel__route-link:focus-visible {
-  color: var(--text-primary);
+  color: var(--text-primary-color);
   outline: none;
 }
 
@@ -488,51 +492,6 @@
 .home-platform-shell__content .home-workspace-panel__item--link,
 .home-platform-shell__content .home-profile-control-panel__item--link {
   text-decoration: none;
-}
-
-/* =============================================================================
-10) THEME STATES
-============================================================================= */
-html[data-theme="light"] .home-platform-shell,
-body[data-theme="light"] .home-platform-shell,
-html[data-theme="dark"] .home-platform-shell,
-body[data-theme="dark"] .home-platform-shell,
-html[data-theme="color"] .home-platform-shell,
-body[data-theme="color"] .home-platform-shell {
-  background: var(--surface-base);
-}
-
-html[data-theme="light"] .home-platform-shell__chrome,
-body[data-theme="light"] .home-platform-shell__chrome,
-html[data-theme="light"] .home-platform-shell__main,
-body[data-theme="light"] .home-platform-shell__main,
-html[data-theme="light"] .home-platform-shell__rail,
-body[data-theme="light"] .home-platform-shell__rail,
-html[data-theme="light"] .home-platform-shell__content,
-body[data-theme="light"] .home-platform-shell__content {
-  background: color-mix(in srgb, white 94%, transparent);
-}
-
-html[data-theme="dark"] .home-platform-shell__chrome,
-body[data-theme="dark"] .home-platform-shell__chrome,
-html[data-theme="dark"] .home-platform-shell__main,
-body[data-theme="dark"] .home-platform-shell__main,
-html[data-theme="dark"] .home-platform-shell__rail,
-body[data-theme="dark"] .home-platform-shell__rail,
-html[data-theme="dark"] .home-platform-shell__content,
-body[data-theme="dark"] .home-platform-shell__content {
-  background: color-mix(in srgb, #060606 94%, transparent);
-}
-
-html[data-theme="color"] .home-platform-shell__chrome,
-body[data-theme="color"] .home-platform-shell__chrome,
-html[data-theme="color"] .home-platform-shell__main,
-body[data-theme="color"] .home-platform-shell__main,
-html[data-theme="color"] .home-platform-shell__rail,
-body[data-theme="color"] .home-platform-shell__rail,
-html[data-theme="color"] .home-platform-shell__content,
-body[data-theme="color"] .home-platform-shell__content {
-  background: color-mix(in srgb, var(--surface-base) 84%, transparent);
 }
 
 /* =============================================================================
@@ -555,7 +514,7 @@ body[data-theme="color"] .home-platform-shell__content {
 
   .home-platform-shell__rail {
     border-right: 0;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--home-panel-border);
   }
 
   .home-platform-shell__rail-inner {

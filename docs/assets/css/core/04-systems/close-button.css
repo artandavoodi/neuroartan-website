@@ -63,13 +63,17 @@
 /* =============================================================================
    04) HOVER STATES
 ============================================================================= */
-.global-close-button:hover{
+.global-close-button:hover,
+.global-close-button:focus-visible{
   color:var(--color-primary7);
-  transform:translateY(var(--hover-lift-y)) scale(var(--hover-scale-soft));
+  transform:none;
+  outline:none;
 }
 
 .global-close-button:hover span:nth-child(1),
-.global-close-button:hover span:nth-child(2){
+.global-close-button:hover span:nth-child(2),
+.global-close-button:focus-visible span:nth-child(1),
+.global-close-button:focus-visible span:nth-child(2){
   transform:rotate(0deg);
 }
 

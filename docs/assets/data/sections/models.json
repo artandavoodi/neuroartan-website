@@ -1,0 +1,54 @@
+{
+  "id": "models",
+  "label": "Models",
+  "title": "Models",
+  "description": "Continuity-native model discovery centered on identity, verification, trust, interaction readiness, and creator attribution instead of artifact-first ML taxonomy.",
+  "default_primary_filter": "all",
+  "default_sort": "trust",
+  "featured_model_ids": [
+    "artan-davoodi",
+    "neuroartan-institution"
+  ],
+  "filters": {
+    "primary": [
+      { "id": "all", "label": "All Models" },
+      { "id": "verified", "label": "Verified" },
+      { "id": "public", "label": "Public" },
+      { "id": "private", "label": "Private" },
+      { "id": "legacy", "label": "Legacy" },
+      { "id": "featured", "label": "Featured" }
+    ],
+    "secondary": [
+      {
+        "id": "interaction-mode",
+        "label": "Interaction Mode",
+        "options": ["Voice and text", "Text-first", "Voice-linked preparation"]
+      },
+      {
+        "id": "creator-type",
+        "label": "Creator Type",
+        "options": ["Founder continuity", "Institutional", "System preview"]
+      },
+      {
+        "id": "trust-state",
+        "label": "Trust State",
+        "options": ["Verified", "Governed", "Self-authored", "Preview"]
+      },
+      {
+        "id": "activity-state",
+        "label": "Activity State",
+        "options": ["Direct interaction enabled", "Guided training active", "Homepage preview"]
+      },
+      {
+        "id": "domain-orientation",
+        "label": "Domain / Orientation",
+        "options": ["Product doctrine", "Institutional posture", "Reflective cognition", "Continuity"]
+      }
+    ]
+  },
+  "sort_options": [
+    { "id": "trust", "label": "Trust Priority" },
+    { "id": "name", "label": "Name" },
+    { "id": "joined", "label": "Joined Year" }
+  ]
+}

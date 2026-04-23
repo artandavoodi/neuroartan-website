@@ -65,7 +65,7 @@
 
 .home-settings-panel__close{
   flex:0 0 auto;
-  color:var(--text-secondary);
+  color:var(--text-secondary-color);
   pointer-events:auto;
 }
 

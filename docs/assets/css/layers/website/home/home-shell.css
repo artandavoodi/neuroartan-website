@@ -1,61 +1,53 @@
 /* =============================================================================
    00) FILE INDEX
-   01) HOME SHELL FOUNDATION
+   01) HOME SHELL TOKEN BRIDGE
    02) TOPBAR AND FOOTER CHROME
    03) PANEL MOUNTS
-   04) OVERLAY MOUNTS
-   05) RESPONSIVE REFINEMENTS
+   04) SHARED PANEL SURFACES
+   05) SHARED PANEL TYPOGRAPHY AND ACTIONS
+   06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 
 /* =============================================================================
-   01) HOME SHELL FOUNDATION
+   01) HOME SHELL TOKEN BRIDGE
 ============================================================================= */
 .home-shell{
-  --home-chrome-surface: color-mix(in srgb, var(--bg-color) 24%, transparent);
-  --home-chrome-surface-strong: color-mix(in srgb, var(--bg-color) 36%, transparent);
-  --home-chrome-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --home-chrome-border-strong: color-mix(in srgb, var(--text-primary-color) 12%, transparent);
-  --home-chrome-primary: var(--text-primary-color);
-  --home-chrome-secondary: color-mix(in srgb, var(--text-primary-color) 82%, transparent);
-  --home-chrome-muted: color-mix(in srgb, var(--text-primary-color) 48%, transparent);
-  --home-chrome-quiet: color-mix(in srgb, var(--text-primary-color) 36%, transparent);
-  --home-chrome-item-bg: color-mix(in srgb, var(--bg-color) 18%, transparent);
-  --home-chrome-item-active: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --home-chrome-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
-  --home-chrome-backdrop-blur: 18px;
+  --surface-base: var(--bg-color);
+  --surface-muted: var(--control-bg-hover);
+  --border-subtle: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --border-strong: var(--control-border-strong);
+  --text-primary: var(--text-primary-color);
+  --text-secondary: var(--text-secondary-color);
+  --text-tertiary: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+
+  --home-ribbon-surface: color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --home-ribbon-border: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+
+  --home-panel-surface: color-mix(in srgb, var(--bg-color) 24%, transparent);
+  --home-panel-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --home-panel-shadow: 0 24px 72px rgba(0, 0, 0, 0.16);
+  --home-panel-card-surface: var(--control-bg);
+  --home-panel-card-border: var(--control-border);
+
   --home-shell-topbar-height: 3.55rem;
   --home-shell-footer-separator-offset: 3.25rem;
   --home-shell-panel-inline-padding: max(var(--site-gutter), 1rem);
   --home-shell-panel-top: calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height));
   --home-shell-panel-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset));
-}
 
-body.theme-dark .home-shell{
-  --home-chrome-surface: color-mix(in srgb, black 88%, transparent);
-  --home-chrome-surface-strong: color-mix(in srgb, black 94%, transparent);
-  --home-chrome-item-bg: color-mix(in srgb, black 78%, transparent);
-}
-
-body.theme-light .home-shell{
-  --home-chrome-surface: color-mix(in srgb, white 88%, transparent);
-  --home-chrome-surface-strong: color-mix(in srgb, white 95%, transparent);
-  --home-chrome-border: color-mix(in srgb, black 8%, transparent);
-  --home-chrome-border-strong: color-mix(in srgb, black 12%, transparent);
-  --home-chrome-primary: rgba(16, 16, 16, 0.96);
-  --home-chrome-secondary: rgba(16, 16, 16, 0.82);
-  --home-chrome-muted: rgba(16, 16, 16, 0.52);
-  --home-chrome-quiet: rgba(16, 16, 16, 0.38);
-  --home-chrome-item-bg: color-mix(in srgb, white 72%, transparent);
-  --home-chrome-item-active: color-mix(in srgb, black 5%, transparent);
-  --home-chrome-shadow: 0 18px 44px rgba(0, 0, 0, 0.08);
-  --home-chrome-backdrop-blur: 12px;
-}
-
-.home-shell{
   position:fixed;
   inset:0;
   z-index:var(--z-raised);
   pointer-events:none;
+}
+
+body.light-mode .home-shell{
+  --home-ribbon-surface: color-mix(in srgb, white 26%, transparent);
+  --home-ribbon-border: color-mix(in srgb, black 6%, transparent);
+  --home-panel-surface: color-mix(in srgb, white 20%, transparent);
+  --home-panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
+  --home-panel-card-surface: var(--control-bg);
+  --home-panel-card-border: var(--control-border);
 }
 
 /* =============================================================================
@@ -111,7 +103,143 @@ body.theme-light .home-shell{
 }
 
 /* =============================================================================
-   05) RESPONSIVE REFINEMENTS
+   04) SHARED PANEL SURFACES
+============================================================================= */
+.home-navigation-drawer__inner,
+.home-workspace-panel__inner,
+.home-profile-control-panel__inner,
+.home-settings-panel__inner{
+  background:var(--home-panel-surface);
+  border:1px solid var(--home-panel-border);
+  box-shadow:var(--home-panel-shadow);
+  backdrop-filter:blur(18px) saturate(145%);
+  -webkit-backdrop-filter:blur(18px) saturate(145%);
+  border-radius:0;
+  padding:1.25rem 1.25rem 1.6rem;
+}
+
+.home-workspace-panel__summary-card,
+.home-profile-control-panel__identity-card,
+.home-profile-control-panel__status-card{
+  background:var(--home-panel-card-surface);
+  border:1px solid var(--home-panel-card-border);
+  border-radius:0;
+}
+
+.home-profile-control-panel__avatar{
+  border:1px solid var(--home-panel-card-border);
+  background:var(--home-panel-card-surface);
+  color:var(--text-primary-color);
+}
+
+.home-navigation-drawer__item-icon img,
+.home-search-shell__input-icon img,
+.home-platform-shell__nav-icon img{
+  filter:var(--icon-image-filter);
+}
+
+/* =============================================================================
+   05) SHARED PANEL TYPOGRAPHY AND ACTIONS
+============================================================================= */
+.home-navigation-drawer__eyebrow,
+.home-workspace-panel__eyebrow,
+.home-profile-control-panel__eyebrow,
+.home-settings-panel__eyebrow,
+.home-navigation-drawer__section-title,
+.home-workspace-panel__section-title,
+.home-profile-control-panel__section-title,
+.home-settings-panel__section-title{
+  margin:0 0 0.35rem;
+  color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  font-size:0.72rem;
+  font-weight:500;
+  letter-spacing:0.08em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.home-navigation-drawer__title,
+.home-workspace-panel__title,
+.home-profile-control-panel__title,
+.home-settings-panel__title{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:1.02rem;
+  font-weight:500;
+  line-height:1.3;
+}
+
+.home-navigation-drawer__close,
+.home-workspace-panel__close,
+.home-profile-control-panel__close,
+.home-settings-panel__close{
+  color:var(--text-secondary-color);
+}
+
+.home-navigation-drawer__stack-item,
+.home-workspace-panel__item,
+.home-profile-control-panel__item,
+.home-settings-panel__item,
+.home-settings-panel__theme-option{
+  appearance:none;
+  -webkit-appearance:none;
+  border:1px solid transparent;
+  border-radius:999px;
+  background:transparent;
+  color:var(--text-secondary-color);
+  text-decoration:none;
+  transition:
+    color 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease,
+    opacity 220ms ease;
+}
+
+.home-navigation-drawer__stack-item:hover,
+.home-navigation-drawer__stack-item:focus-visible,
+.home-workspace-panel__item:hover,
+.home-workspace-panel__item:focus-visible,
+.home-profile-control-panel__item:hover,
+.home-profile-control-panel__item:focus-visible,
+.home-settings-panel__item:hover,
+.home-settings-panel__item:focus-visible,
+.home-settings-panel__theme-option:hover,
+.home-settings-panel__theme-option:focus-visible,
+.home-settings-panel__theme-option[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  background:var(--control-bg);
+  border-color:var(--control-border);
+  outline:none;
+}
+
+.home-workspace-panel__summary-label,
+.home-profile-control-panel__status-label,
+.home-profile-control-panel__username,
+.home-settings-panel__item-value{
+  color:color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+}
+
+.home-workspace-panel__summary-value,
+.home-workspace-panel__summary-body,
+.home-profile-control-panel__name,
+.home-profile-control-panel__plan,
+.home-profile-control-panel__meta,
+.home-profile-control-panel__status-value,
+.home-profile-control-panel__route-link,
+.home-profile-control-panel__route-status,
+.home-settings-panel__context{
+  color:var(--text-primary-color);
+}
+
+.home-workspace-panel__summary-body--secondary,
+.home-profile-control-panel__route-status,
+.home-profile-control-panel__meta,
+.home-settings-panel__context{
+  color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+}
+
+/* =============================================================================
+   06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 760px){
   .home-shell{
@@ -120,7 +248,10 @@ body.theme-light .home-shell{
     --home-shell-panel-inline-padding: max(var(--site-gutter), 0.85rem);
   }
 
-  .home-shell__topbar{
-    top:0;
+  .home-navigation-drawer__inner,
+  .home-workspace-panel__inner,
+  .home-profile-control-panel__inner,
+  .home-settings-panel__inner{
+    padding:1rem 1rem 1.3rem;
   }
 }

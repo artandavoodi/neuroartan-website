@@ -28,20 +28,18 @@
   position:absolute;
   inset:env(safe-area-inset-top, 0) 0 auto 0;
   height:3.55rem;
-  border-radius:0;
-  background:color-mix(in srgb, var(--surface-base) 92%, transparent);
-  border-bottom:1px solid var(--border-subtle);
-  backdrop-filter:blur(10px) saturate(120%);
-  -webkit-backdrop-filter:blur(10px) saturate(120%);
+  background:var(--home-ribbon-surface);
+  border-bottom:1px solid var(--home-ribbon-border);
+  backdrop-filter:blur(8px) saturate(120%);
+  -webkit-backdrop-filter:blur(8px) saturate(120%);
   pointer-events:none;
   z-index:0;
   transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    backdrop-filter 180ms ease,
-    -webkit-backdrop-filter 180ms ease;
+    background 220ms ease,
+    border-color 220ms ease,
+    opacity 220ms ease,
+    transform 220ms ease;
 }
-
 
 /* =============================================================================
    03) INNER RAIL
@@ -55,25 +53,10 @@
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:1.4rem;
+  gap:1.6rem;
   position:relative;
   z-index:3;
   direction:ltr;
-}
-
-html[data-theme="light"] .home-dashboard-topbar::before,
-body[data-theme="light"] .home-dashboard-topbar::before{
-  background:color-mix(in srgb, white 94%, transparent);
-}
-
-html[data-theme="dark"] .home-dashboard-topbar::before,
-body[data-theme="dark"] .home-dashboard-topbar::before{
-  background:color-mix(in srgb, #060606 94%, transparent);
-}
-
-html[data-theme="color"] .home-dashboard-topbar::before,
-body[data-theme="color"] .home-dashboard-topbar::before{
-  background:color-mix(in srgb, var(--surface-base) 84%, transparent);
 }
 
 /* =============================================================================
@@ -86,16 +69,19 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   gap:0;
   flex:0 0 auto;
   min-width:max-content;
-  color:var(--text-primary);
+  color:var(--text-primary-color);
   text-decoration:none;
   line-height:0;
-  transition:color 180ms ease;
+  transition:
+    color 220ms ease,
+    opacity 220ms ease;
 }
 
 .home-dashboard-topbar__brand:hover,
 .home-dashboard-topbar__brand:focus-visible,
 .home-dashboard-topbar__brand:active{
-  color:var(--text-primary);
+  color:var(--text-primary-color);
+  opacity:1;
   outline:none;
   text-decoration:none;
 }
@@ -116,7 +102,7 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   display:inline-flex;
   align-items:center;
   justify-content:flex-end;
-  gap:1.35rem;
+  gap:1.6rem;
   flex:0 1 auto;
   min-width:0;
   margin-left:auto;
@@ -131,13 +117,13 @@ body[data-theme="color"] .home-dashboard-topbar::before{
 
 .home-dashboard-topbar__nav{
   justify-content:flex-end;
-  gap:1.2rem;
+  gap:1.42rem;
   flex:0 1 auto;
 }
 
 .home-dashboard-topbar__utility{
   justify-content:flex-end;
-  gap:0.72rem;
+  gap:1rem;
   flex:0 0 auto;
 }
 
@@ -155,8 +141,7 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   align-items:center;
   justify-content:center;
   gap:0.42rem;
-  color:var(--text-secondary);
-  opacity:1;
+  color:var(--text-secondary-color);
   text-decoration:none;
   font-size:0.8rem;
   font-weight:400;
@@ -165,14 +150,19 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   white-space:nowrap;
   font-variation-settings:"wght" 400;
   cursor:pointer;
-  transition:color 180ms ease;
+  transform:none !important;
+  transition:
+    color 220ms ease,
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .home-dashboard-topbar__action:hover,
 .home-dashboard-topbar__action:focus-visible,
 .home-dashboard-topbar__action:active,
 .home-dashboard-topbar__action[aria-expanded="true"]{
-  color:var(--text-primary);
+  color:var(--text-primary-color);
+  opacity:1;
   outline:none;
   text-decoration:none;
 }
@@ -185,8 +175,8 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1rem;
-  height:1rem;
+  width:1.12rem;
+  height:1.12rem;
   flex:0 0 auto;
 }
 
@@ -196,6 +186,15 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   width:100%;
   height:100%;
   object-fit:contain;
+  opacity:0.82;
+  transition:opacity 220ms ease;
+}
+
+.home-dashboard-topbar__action:hover .home-dashboard-topbar__icon img,
+.home-dashboard-topbar__action:focus-visible .home-dashboard-topbar__icon img,
+.home-dashboard-topbar__action:active .home-dashboard-topbar__icon img,
+.home-dashboard-topbar__action[aria-expanded="true"] .home-dashboard-topbar__icon img{
+  opacity:1;
 }
 
 .home-dashboard-topbar__label{
@@ -211,31 +210,22 @@ body[data-theme="color"] .home-dashboard-topbar::before{
 ============================================================================= */
 .home-dashboard-topbar__action--profile{
   gap:0;
-  width:1.85rem;
-  height:1.85rem;
-  min-width:1.85rem;
-  min-height:1.85rem;
-  padding:0;
-  border:1px solid transparent;
-  border-radius:999px;
-}
-
-.home-dashboard-topbar__action--profile:hover,
-.home-dashboard-topbar__action--profile:focus-visible,
-.home-dashboard-topbar__action--profile[aria-expanded="true"]{
-  border-color:var(--border-strong);
-  background:var(--surface-muted);
+  width:1.5rem;
+  min-width:1.5rem;
+  height:1.5rem;
+  min-height:1.5rem;
 }
 
 .home-dashboard-topbar__profile-avatar{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1.6rem;
-  height:1.6rem;
+  width:1.5rem;
+  height:1.5rem;
   border-radius:999px;
   overflow:hidden;
   flex:0 0 auto;
+  border:1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
 }
 
 .home-dashboard-topbar__profile-avatar-image{
@@ -246,23 +236,20 @@ body[data-theme="color"] .home-dashboard-topbar::before{
 }
 
 .home-dashboard-topbar__profile-avatar-fallback{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  height:100%;
-  border-radius:inherit;
-  background:var(--surface-muted);
-  color:var(--text-primary);
-  font-size:0.66rem;
-  font-weight:600;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
+  display:none;
 }
 
 .home-dashboard-topbar__icon--profile{
-  width:1.08rem;
-  height:1.08rem;
+  width:1.12rem;
+  height:1.12rem;
+}
+
+.home-dashboard-topbar__action--profile[data-home-topbar-profile-state="guest"] .home-dashboard-topbar__profile-avatar{
+  display:none;
+}
+
+.home-dashboard-topbar__action--profile[data-home-topbar-profile-state="account"] .home-dashboard-topbar__icon--profile{
+  display:none;
 }
 
 /* =============================================================================
@@ -274,22 +261,17 @@ body[data-theme="color"] .home-dashboard-topbar::before{
   }
 
   .home-dashboard-topbar__group{
-    gap:0.9rem;
+    gap:1rem;
   }
 
   .home-dashboard-topbar__nav{
-    gap:0.9rem;
-  }
-
-  .home-dashboard-topbar__utility{
-    gap:0.7rem;
+    gap:1rem;
   }
 }
 
 @media (max-width: 760px){
   .home-dashboard-topbar::before{
     height:3.3rem;
-    border-bottom:1px solid var(--border-subtle);
   }
 
   .home-dashboard-topbar__inner{
@@ -299,6 +281,10 @@ body[data-theme="color"] .home-dashboard-topbar::before{
 
   .home-dashboard-topbar__group{
     gap:0.55rem;
+  }
+
+  .home-dashboard-topbar__nav{
+    gap:0.72rem;
   }
 
   .home-dashboard-topbar__label{

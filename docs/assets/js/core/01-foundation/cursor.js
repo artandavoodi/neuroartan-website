@@ -236,6 +236,10 @@ function renderCursor() {
   customCursor.style.left = `${state.currentX}px`;
   customCursor.style.top = `${state.currentY}px`;
 
+  if (!state.isHidden) {
+    syncInteractiveStateFromPointerPosition();
+  }
+
   applyVisualState();
   rafId = window.requestAnimationFrame(renderCursor);
 }
@@ -253,35 +257,27 @@ function handlePointerMove(event) {
   state.pointerActive = true;
   state.isHidden = false;
   state.isInteractive = Boolean(resolvePointerTarget(event.target));
+  syncInteractiveStateFromPointerPosition();
 }
 
 function handlePointerDown(event) {
   syncToPointer(event.clientX, event.clientY, true);
   state.pointerActive = true;
   state.isHidden = false;
+  syncInteractiveStateFromPointerPosition();
 }
 
 function handlePointerEnter(event) {
   syncToPointer(event.clientX, event.clientY, true);
   state.pointerActive = true;
   state.isHidden = false;
+  syncInteractiveStateFromPointerPosition();
 }
 
 function handlePointerLeave() {
   state.pointerActive = false;
   state.isInteractive = false;
   state.isHidden = true;
-}
-
-function handlePointerOver(event) {
-  state.isInteractive = Boolean(resolvePointerTarget(event.target));
-  applyVisualState();
-}
-
-function handlePointerOut(event) {
-  const nextTarget = event.relatedTarget;
-  state.isInteractive = Boolean(resolvePointerTarget(nextTarget));
-  applyVisualState();
 }
 
 /* =============================================================================
@@ -331,8 +327,6 @@ function bindEvents() {
   document.addEventListener('pointermove', handlePointerMove, { passive: true });
   document.addEventListener('pointerdown', handlePointerDown, { passive: true });
   document.addEventListener('pointerenter', handlePointerEnter, { passive: true });
-  document.addEventListener('pointerover', handlePointerOver, { passive: true });
-  document.addEventListener('pointerout', handlePointerOut, { passive: true });
   document.addEventListener('visibilitychange', handleVisibilityChange);
 
   window.addEventListener('scroll', handleScroll, { passive: true });

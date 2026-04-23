@@ -26,9 +26,9 @@
   --home-matte-transition-duration: 0.95s;
   --home-matte-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --home-matte-opacity-top-light: 0.64;
-  --home-matte-opacity-mid-light: 0.60;
-  --home-matte-opacity-low-light: 0.76;
+  --home-matte-opacity-top-light: 0.74;
+  --home-matte-opacity-mid-light: 0.70;
+  --home-matte-opacity-low-light: 0.86;
   --home-matte-opacity-bottom-light: 1;
 
   --home-matte-opacity-top-soft: 0.62;
@@ -59,16 +59,15 @@
 #home-hero .home-hero-matte,
 .home-hero-matte{
   position: fixed;
-  top: 0;
+  top: -1px;
   right: 0;
-  bottom: 0;
+  bottom: -1px;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100svh;
   pointer-events: none;
   z-index: 1;
   display: block !important;
+  contain: paint;
+  overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
@@ -97,7 +96,7 @@
 @supports (height: 100dvh){
   #home-hero .home-hero-matte,
   .home-hero-matte{
-    height: 100dvh;
+    bottom: -1px;
   }
 }
 

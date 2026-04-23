@@ -151,7 +151,7 @@
     // (Safe: only affects this tab/session; avoids landing mid-scroll.)
     try { window.scrollTo(0, 0); } catch (_) {}
 
-    const logoEl = qs(".site-logo");
+    const logoEl = qs("#stage-logo .site-logo");
     if (!logoEl) return;
 
     // ===== Session gate =====
@@ -167,6 +167,7 @@
 
     // ===== Core stage elements =====
     const stage = qs("#stage") || qs(".stage-container");
+    const stageIntro = qs("#stage-intro");
     const stageCircle = qs(".stage-circle");
     const announcement = qs("#announcement");
     const enterButton = qs("#enter-button");
@@ -180,8 +181,11 @@
 
     // ===== Global chrome =====
     const headerControls = qs("#header-controls");
+    const homeTopbar = qs("#home-dashboard-topbar-mount");
     const footerSeparator = qs(".footer-separator");
+    const homeFooterSeparator = qs(".home-shell__footer-separator");
     const footer = qs(".site-footer");
+    const homeFooter = qs("#home-footer-mount");
     const menuOverlay = qs("#menu-overlay");
     const customCursor = qs(".custom-cursor");
 
@@ -328,26 +332,35 @@
     // During intro: hide chrome and any overlays.
     const hideChrome = () => {
       setA11yHidden(headerControls, true);
+      setA11yHidden(homeTopbar, true);
       setA11yHidden(footerSeparator, true);
+      setA11yHidden(homeFooterSeparator, true);
       setA11yHidden(footer, true);
+      setA11yHidden(homeFooter, true);
       setA11yHidden(menuOverlay, true);
       setA11yHidden(customCursor, true);
 
       setInline(headerControls, { opacity: "0", pointerEvents: "none" });
+      setInline(homeTopbar, { opacity: "0", pointerEvents: "none" });
       setInline(footerSeparator, { opacity: "0", pointerEvents: "none" });
+      setInline(homeFooterSeparator, { opacity: "0", pointerEvents: "none" });
       setInline(footer, { opacity: "0", pointerEvents: "none" });
+      setInline(homeFooter, { opacity: "0", pointerEvents: "none" });
       setInline(menuOverlay, { opacity: "0", pointerEvents: "none" });
       setInline(customCursor, { opacity: "0", pointerEvents: "none" });
     };
 
     const showChrome = () => {
       setA11yHidden(headerControls, false);
+      setA11yHidden(homeTopbar, false);
       setA11yHidden(footerSeparator, false);
+      setA11yHidden(homeFooterSeparator, false);
       setA11yHidden(footer, false);
+      setA11yHidden(homeFooter, false);
       setA11yHidden(menuOverlay, false);
       setA11yHidden(customCursor, false);
 
-      [headerControls, footerSeparator, footer, customCursor].forEach((el) => {
+      [headerControls, homeTopbar, footerSeparator, homeFooterSeparator, footer, homeFooter, customCursor].forEach((el) => {
         if (!el) return;
         el.style.transition = `opacity 600ms ${EASE_OUT}`;
         el.style.opacity = "1";
@@ -370,6 +383,11 @@
 
     // During intro: hide stage content (and the in-layout logo) so ONLY overlay shows.
     const hideStageContent = () => {
+      if (stageIntro) {
+        setA11yHidden(stageIntro, true);
+        setInline(stageIntro, { opacity: "0", pointerEvents: "none" });
+      }
+
       // Removed hiding of stageCircle via aria-hidden and pointerEvents for accessibility.
       setA11yHidden(logoEl, true);
       setInline(logoEl, { opacity: "0", pointerEvents: "none" });
@@ -390,10 +408,15 @@
     const revealStageContent = () => {
       mountEssenceIntoStage();
 
-      setA11yHidden(logoEl, false);
-      logoEl.style.transition = `opacity 700ms ${EASE_OUT}`;
-      logoEl.style.opacity = "1";
-      logoEl.style.pointerEvents = "";
+      if (stageIntro) {
+        setA11yHidden(stageIntro, false);
+        stageIntro.style.transition = `opacity 800ms ${EASE_OUT}`;
+        stageIntro.style.opacity = "1";
+        stageIntro.style.pointerEvents = "";
+      }
+
+      setA11yHidden(logoEl, true);
+      setInline(logoEl, { opacity: "0", pointerEvents: "none" });
 
       [announcement, enterButton, essence].forEach((el) => {
         if (!el) return;
@@ -491,8 +514,13 @@
 
       hideIntroOnlyUI();
 
-      setA11yHidden(logoEl, false);
-      setInline(logoEl, { opacity: "1", pointerEvents: "" });
+      if (stageIntro) {
+        setA11yHidden(stageIntro, false);
+        setInline(stageIntro, { opacity: "1", pointerEvents: "" });
+      }
+
+      setA11yHidden(logoEl, true);
+      setInline(logoEl, { opacity: "0", pointerEvents: "none" });
 
       restoreEssenceToOriginal();
       showChrome();
@@ -568,32 +596,6 @@
 
     // During intro, lock the page completely until ENTER.
     lockScroll();
-
-    // ===== Video reveal timing (fine-tune) =====
-    const REVEAL_AFTER_MS = 1000;
-    const fadeMaskToWash = () => setStageVideoMask({ opacity: 0.5 });
-
-    window.setTimeout(() => {
-      if (maskRevealStarted) return;
-
-      if (stageVideoReady) {
-        fadeMaskToWash();
-        return;
-      }
-
-      const fallback = window.setTimeout(() => {
-        if (!maskRevealStarted) fadeMaskToWash();
-      }, 900);
-
-      if (stageVideo) {
-        const onReadyForReveal = () => {
-          window.clearTimeout(fallback);
-          if (!maskRevealStarted) fadeMaskToWash();
-        };
-        stageVideo.addEventListener("playing", onReadyForReveal, { once: true });
-        stageVideo.addEventListener("canplay", onReadyForReveal, { once: true });
-      }
-    }, REVEAL_AFTER_MS);
 
     // Build centered overlay logo (clone) so the real logo never "travels" and never shifts left.
     const overlay = document.createElement("div");

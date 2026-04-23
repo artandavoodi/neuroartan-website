@@ -70,14 +70,18 @@ function renderHomeDashboardTopbar(snapshot) {
   const nodes = getHomeDashboardTopbarNodes();
   const signedIn = !!snapshot?.account?.signedIn;
   const photo = snapshot?.account?.profile?.photo_url || snapshot?.account?.user?.photoURL || '';
+  const hasAvatarImage = !!photo;
+  const profileLabel = resolveHomeTopbarProfileLabel(snapshot);
+  const fallback = resolveHomeTopbarProfileFallback(snapshot);
 
   if (nodes.profileLabel) {
-    nodes.profileLabel.textContent = signedIn ? resolveHomeTopbarProfileLabel(snapshot) : 'Profile';
+    nodes.profileLabel.textContent = signedIn ? profileLabel : 'Profile';
   }
 
   if (nodes.profileTrigger) {
-    const label = signedIn ? `Open profile panel for ${resolveHomeTopbarProfileLabel(snapshot)}` : 'Open profile panel';
+    const label = signedIn ? `Open profile panel for ${profileLabel}` : 'Open profile panel';
     nodes.profileTrigger.setAttribute('aria-label', label);
+    nodes.profileTrigger.setAttribute('data-home-topbar-profile-state', signedIn ? 'account' : 'guest');
   }
 
   if (nodes.profileAvatarShell) {
@@ -85,10 +89,10 @@ function renderHomeDashboardTopbar(snapshot) {
   }
 
   if (nodes.profileAvatarImage) {
-    if (signedIn && photo) {
+    if (signedIn && hasAvatarImage) {
       nodes.profileAvatarImage.hidden = false;
       nodes.profileAvatarImage.src = photo;
-      nodes.profileAvatarImage.alt = resolveHomeTopbarProfileLabel(snapshot);
+      nodes.profileAvatarImage.alt = profileLabel;
     } else {
       nodes.profileAvatarImage.hidden = true;
       nodes.profileAvatarImage.removeAttribute('src');
@@ -97,8 +101,8 @@ function renderHomeDashboardTopbar(snapshot) {
   }
 
   if (nodes.profileAvatarFallback) {
-    nodes.profileAvatarFallback.hidden = !signedIn || !!photo;
-    nodes.profileAvatarFallback.textContent = resolveHomeTopbarProfileFallback(snapshot);
+    nodes.profileAvatarFallback.hidden = !signedIn || hasAvatarImage;
+    nodes.profileAvatarFallback.textContent = fallback;
   }
 
   if (nodes.profileIcon) {
@@ -188,11 +192,6 @@ function bindHomeDashboardTopbar() {
     }
 
     const nodes = getHomeDashboardTopbarNodes();
-
-    if (trigger.matches('#home-dashboard-menu-trigger')) {
-      openHomePlatformShellDestination('home');
-      return;
-    }
 
     if (trigger.matches('#home-dashboard-search-trigger')) {
       openHomeSearchShell(nodes);

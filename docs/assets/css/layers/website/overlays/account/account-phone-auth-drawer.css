@@ -20,13 +20,13 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-phone-auth-surface: rgba(0, 0, 0, 0.82);
+  --account-phone-auth-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-phone-auth-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-phone-auth-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-phone-auth-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-phone-auth-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-phone-auth-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.06);
+  --account-phone-auth-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 6%, transparent);
   --account-phone-auth-section-gap: 1.22rem;
 
   --account-phone-auth-content-max-width: var(--account-control-width-max);
@@ -37,9 +37,9 @@
   --account-phone-auth-content-gap-lg: var(--account-content-gap-lg);
   --account-phone-auth-content-gap-xl: var(--account-content-gap-xl);
 
-  --account-phone-auth-input-border: rgba(255, 255, 255, 0.16);
+  --account-phone-auth-input-border:var(--field-border);
   --account-phone-auth-input-surface: transparent;
-  --account-phone-auth-input-focus: rgba(255, 255, 255, 0.3);
+  --account-phone-auth-input-focus:var(--field-border-focus);
   --account-phone-auth-input-height: var(--account-field-height);
   --account-phone-auth-input-radius: var(--account-field-radius);
   --account-phone-auth-input-padding-inline: var(--account-field-padding-x);
@@ -69,26 +69,32 @@
 
   --account-phone-auth-back-control-size: var(--account-back-control-size);
   --account-phone-auth-back-icon-size: var(--account-back-icon-size);
+  --account-phone-auth-motion-fast:180ms;
+  --account-phone-auth-action-text:var(--text-primary-color);
+  --account-phone-auth-action-border:var(--control-border);
+  --account-phone-auth-action-hover-border:var(--control-border-strong);
+  --account-phone-auth-action-hover-bg:var(--control-bg);
+  --account-phone-auth-action-hover-opacity:0.92;
   --account-phone-auth-header-brand-margin-bottom: var(--account-phone-auth-content-gap-xl);
   --account-phone-auth-header-brand-margin-bottom-mobile: var(--account-phone-auth-content-gap-lg);
 }
 
 html[data-theme-effective="light"]{
-  --account-phone-auth-surface: rgba(255, 255, 255, 0.88);
-  --account-phone-auth-shell-inner-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
-  --account-phone-auth-shell-highlight: linear-gradient(180deg, rgba(0, 0, 0, 0.022) 0%, transparent 22%);
+  --account-phone-auth-surface:color-mix(in srgb, var(--surface-color) 88%, transparent);
+  --account-phone-auth-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-phone-auth-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-phone-auth-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.05);
+  --account-phone-auth-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 5%, transparent);
   --account-phone-auth-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-phone-auth-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
 }
 
 html[data-theme-effective="dark"]{
-  --account-phone-auth-surface: rgba(0, 0, 0, 0.82);
-  --account-phone-auth-shell-inner-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  --account-phone-auth-shell-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 22%);
+  --account-phone-auth-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --account-phone-auth-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-phone-auth-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --account-phone-auth-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+  --account-phone-auth-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent);
 }
 
 
@@ -195,7 +201,7 @@ html[data-theme-effective="dark"]{
   line-height: var(--account-phone-auth-input-line-height);
   letter-spacing: var(--account-phone-auth-input-letter-spacing);
   outline: none;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:border-color var(--account-phone-auth-motion-fast) ease, background-color var(--account-phone-auth-motion-fast) ease, color var(--account-phone-auth-motion-fast) ease;
   appearance: none;
 }
 
@@ -230,13 +236,13 @@ html[data-theme-effective="dark"]{
   height: var(--account-phone-auth-button-height);
   padding: 0 var(--account-phone-auth-button-padding-x);
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--account-phone-auth-button-radius);
-  background: transparent;
-  color: #f5f5f7;
+  border:1px solid var(--account-phone-auth-action-border);
+  border-radius:var(--account-phone-auth-button-radius);
+  background:transparent;
+  color:var(--account-phone-auth-action-text);
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:opacity var(--account-phone-auth-motion-fast) ease, border-color var(--account-phone-auth-motion-fast) ease, background-color var(--account-phone-auth-motion-fast) ease, color var(--account-phone-auth-motion-fast) ease;
 }
 
 .account-phone-auth-drawer-action-label{
@@ -246,7 +252,7 @@ html[data-theme-effective="dark"]{
   justify-content: center;
   width: 100%;
   height: var(--account-phone-auth-button-height);
-  color: #f5f5f7;
+  color:var(--account-phone-auth-action-text);
   font-size: var(--account-phone-auth-button-font-size);
   font-weight: var(--account-phone-auth-button-font-weight);
   letter-spacing: var(--account-phone-auth-button-letter-spacing);
@@ -256,9 +262,9 @@ html[data-theme-effective="dark"]{
 
 .account-phone-auth-drawer-action--primary:hover,
 .account-phone-auth-drawer-action--primary:focus-visible{
-  opacity: 0.92;
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.08);
+  opacity:var(--account-phone-auth-action-hover-opacity);
+  border-color:var(--account-phone-auth-action-hover-border);
+  background:var(--account-phone-auth-action-hover-bg);
   outline: none;
 }
 

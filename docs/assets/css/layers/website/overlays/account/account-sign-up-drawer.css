@@ -21,13 +21,13 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-sign-up-surface: rgba(0, 0, 0, 0.82);
+  --account-sign-up-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-sign-up-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-up-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-sign-up-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-sign-up-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-sign-up-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-sign-up-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.06);
+  --account-sign-up-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 6%, transparent);
   --account-sign-up-section-gap: 1.22rem;
   --account-sign-up-content-max-width: var(--account-control-width-max);
   --account-sign-up-content-max-width-wide: var(--account-control-width-max-wide);
@@ -50,6 +50,14 @@
   --account-sign-up-action-label-size: 0.94rem;
   --account-sign-up-divider-label-size: 0.82rem;
   --account-sign-up-text-action-size: 0.82rem;
+  --account-sign-up-motion-fast:180ms;
+  --account-sign-up-motion-medium:220ms;
+  --account-sign-up-action-text:var(--text-primary-color);
+  --account-sign-up-action-border:var(--control-border);
+  --account-sign-up-action-hover-border:var(--control-border-strong);
+  --account-sign-up-action-hover-bg:var(--control-bg);
+  --account-sign-up-action-hover-opacity:0.92;
+  --account-sign-up-accent-hover:var(--color-primary1);
 
   --account-sign-up-button-height: var(--account-button-height);
   --account-sign-up-button-radius: var(--account-button-radius);
@@ -79,34 +87,34 @@
   --account-sign-up-back-control-size: var(--account-back-control-size);
   --account-sign-up-back-icon-size: var(--account-back-icon-size);
 
-  --account-sign-up-input-border: rgba(255, 255, 255, 0.16);
+  --account-sign-up-input-border:var(--field-border);
   --account-sign-up-input-surface: transparent;
-  --account-sign-up-input-focus: rgba(255, 255, 255, 0.3);
+  --account-sign-up-input-focus:var(--field-border-focus);
   --account-sign-up-control-height: var(--account-sign-up-field-height);
   --account-sign-up-control-inline-padding: var(--account-sign-up-field-padding-x);
-  --account-sign-up-divider-line: rgba(128, 128, 128, 0.28);
+  --account-sign-up-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --account-sign-up-header-brand-margin-bottom: var(--account-sign-up-content-gap-xl);
   --account-sign-up-header-brand-margin-bottom-mobile: var(--account-sign-up-content-gap-lg);
 }
 
 html[data-theme-effective="light"]{
-  --account-sign-up-surface: rgba(255, 255, 255, 0.88);
-  --account-sign-up-shell-inner-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
-  --account-sign-up-shell-highlight: linear-gradient(180deg, rgba(0, 0, 0, 0.022) 0%, transparent 22%);
+  --account-sign-up-surface:color-mix(in srgb, var(--surface-color) 88%, transparent);
+  --account-sign-up-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-up-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
   --account-sign-up-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-sign-up-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.05);
+  --account-sign-up-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 5%, transparent);
   --account-sign-up-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-sign-up-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
-  --account-sign-up-divider-line: rgba(0, 0, 0, 0.16);
+  --account-sign-up-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 html[data-theme-effective="dark"]{
-  --account-sign-up-surface: rgba(0, 0, 0, 0.82);
-  --account-sign-up-shell-inner-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  --account-sign-up-shell-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 22%);
+  --account-sign-up-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --account-sign-up-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-sign-up-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-sign-up-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --account-sign-up-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
-  --account-sign-up-divider-line: rgba(255, 255, 255, 0.16);
+  --account-sign-up-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent);
+  --account-sign-up-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 
@@ -222,7 +230,7 @@ html[data-theme-effective="dark"]{
   line-height: var(--account-sign-up-field-line-height);
   letter-spacing: var(--account-sign-up-field-letter-spacing);
   outline: none;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:border-color var(--account-sign-up-motion-fast) ease, background-color var(--account-sign-up-motion-fast) ease, color var(--account-sign-up-motion-fast) ease;
   appearance: none;
 }
 
@@ -257,13 +265,13 @@ html[data-theme-effective="dark"]{
   height: var(--account-sign-up-button-height);
   padding: 0 var(--account-sign-up-button-padding-x);
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--account-sign-up-button-radius);
-  background: transparent;
-  color: #f5f5f7;
+  border:1px solid var(--account-sign-up-action-border);
+  border-radius:var(--account-sign-up-button-radius);
+  background:transparent;
+  color:var(--account-sign-up-action-text);
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:opacity var(--account-sign-up-motion-fast) ease, border-color var(--account-sign-up-motion-fast) ease, background-color var(--account-sign-up-motion-fast) ease, color var(--account-sign-up-motion-fast) ease;
 }
 
 .account-sign-up-drawer-action-label{
@@ -273,7 +281,7 @@ html[data-theme-effective="dark"]{
   justify-content: center;
   width: 100%;
   height: var(--account-sign-up-button-height);
-  color: #f5f5f7;
+  color:var(--account-sign-up-action-text);
   font-size: var(--account-sign-up-button-font-size);
   font-weight: var(--account-sign-up-button-font-weight);
   letter-spacing: var(--account-sign-up-button-letter-spacing);
@@ -283,9 +291,9 @@ html[data-theme-effective="dark"]{
 
 .account-sign-up-drawer-action--primary:hover,
 .account-sign-up-drawer-action--primary:focus-visible{
-  opacity: 0.92;
-  border-color: rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.08);
+  opacity:var(--account-sign-up-action-hover-opacity);
+  border-color:var(--account-sign-up-action-hover-border);
+  background:var(--account-sign-up-action-hover-bg);
   outline: none;
 }
 
@@ -349,14 +357,14 @@ html[data-theme-effective="dark"]{
   font-weight: 400;
   letter-spacing: var(--account-sign-up-text-action-letter-spacing);
   line-height: var(--account-sign-up-text-action-line-height);
-  transition: color 220ms ease, text-decoration-color 220ms ease, opacity 220ms ease;
+  transition:color var(--account-sign-up-motion-medium) ease, text-decoration-color var(--account-sign-up-motion-medium) ease, opacity var(--account-sign-up-motion-medium) ease;
 }
 
 .account-sign-up-drawer-text-action:hover,
 .account-sign-up-drawer-text-action:focus-visible,
 .account-sign-up-drawer-text-action:active{
-  color: var(--color-primary1);
-  text-decoration-color: var(--color-primary1);
+  color:var(--account-sign-up-accent-hover);
+  text-decoration-color:var(--account-sign-up-accent-hover);
   outline: none;
 }
 

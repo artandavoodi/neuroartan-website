@@ -1,17 +1,33 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) FOOTER INNER LAYOUT
-   03) BASE FOOTER LAYOUT
-   04) FOOTER LOCALE SYSTEM
-   05) REVEAL ANIMATION
-   06) RESPONSIVE — 768PX
+   02) FOOTER TOKENS
+   03) FOOTER INNER LAYOUT
+   04) BASE FOOTER LAYOUT
+   05) FOOTER LOCALE SYSTEM
+   06) REVEAL ANIMATION
+   07) RESPONSIVE — 768PX
 ============================================================================= */
 
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
 
+/* =============================================================================
+   02) FOOTER TOKENS
+============================================================================= */
+:root{
+  --footer-text-color:var(--text-secondary-color);
+  --footer-text-hover-color:var(--text-primary-color);
+  --footer-separator-opacity:0.35;
+  --footer-reveal-duration:1.2s;
+  --footer-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
+  --footer-interaction-duration:220ms;
+}
+
+/* =============================================================================
+   03) FOOTER INNER LAYOUT
+============================================================================= */
 .site-footer{
   width:100%;
   font-size:var(--type-body-sm-size, 0.9rem);
@@ -21,7 +37,7 @@
   margin:0.6rem 0 0 0;
   padding:0.8rem 0 0.9rem 0;
   background-color:transparent;
-  color:var(--text-secondary-color);
+  color:var(--footer-text-color);
   text-align:initial;
   position:relative;
   direction:ltr;
@@ -29,7 +45,7 @@
 }
 
 /* =============================================================================
-   02) FOOTER INNER LAYOUT
+   03) FOOTER INNER LAYOUT
 ============================================================================= */
 .footer-flex{
   width: min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
@@ -44,10 +60,10 @@
 }
 
 /* =============================================================================
-   03) BASE FOOTER LAYOUT
+   04) BASE FOOTER LAYOUT
 ============================================================================= */
 .footer-separator{
-  opacity:0.35;
+  opacity:var(--footer-separator-opacity);
 }
 
 .footer-left{
@@ -62,7 +78,7 @@
 .footer-brand{
   display:inline-flex;
   align-items:center;
-  color:var(--text-secondary-color);
+  color:var(--footer-text-color);
   font-size:inherit;
   font-weight:inherit;
   line-height:inherit;
@@ -71,7 +87,7 @@
 }
 
 /* =============================================================================
-   04) FOOTER LOCALE SYSTEM
+   05) FOOTER LOCALE SYSTEM
 ============================================================================= */
 .footer-locale{
   display:inline-flex;
@@ -96,7 +112,7 @@
   padding:0;
   border:0;
   background:transparent;
-  color:var(--text-secondary-color);
+  color:var(--footer-text-color);
   font-family:inherit;
   font-size:inherit;
   font-weight:inherit;
@@ -106,14 +122,14 @@
   cursor:pointer;
   transform:none;
   transition:
-    color 220ms ease,
-    opacity 220ms ease;
+    color var(--footer-interaction-duration) ease,
+    opacity var(--footer-interaction-duration) ease;
 }
 
 .locale-button:hover,
 .locale-button:focus-visible,
 .locale-button:active{
-  color:var(--text-primary-color);
+  color:var(--footer-text-hover-color);
   transform:none;
 }
 
@@ -128,12 +144,12 @@
 }
 
 /* =============================================================================
-   05) REVEAL ANIMATION
+   06) REVEAL ANIMATION
 ============================================================================= */
 
 .site-footer{
   opacity:0;
-  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:opacity var(--footer-reveal-duration) var(--footer-motion-ease);
 }
 
 .site-footer.footer-visible{
@@ -141,7 +157,7 @@
 }
 
 /* =============================================================================
-   06) RESPONSIVE — 768PX
+   07) RESPONSIVE — 768PX
 ============================================================================= */
 
 @media (max-width:768px){

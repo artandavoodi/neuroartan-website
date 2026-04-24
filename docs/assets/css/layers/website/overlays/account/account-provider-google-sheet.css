@@ -19,13 +19,13 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-provider-google-surface: rgba(0, 0, 0, 0.82);
+  --account-provider-google-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-provider-google-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-provider-google-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-provider-google-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-provider-google-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-provider-google-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.06);
+  --account-provider-google-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 6%, transparent);
   --account-provider-google-foreground: var(--text-color);
 
   --account-provider-google-content-max-width: var(--account-control-width-max);
@@ -59,24 +59,26 @@
 
   --account-provider-google-back-control-size: var(--account-back-control-size);
   --account-provider-google-back-icon-size: var(--account-back-icon-size);
+  --account-provider-google-motion-fast:220ms;
+  --account-provider-google-accent-hover:var(--color-primary1);
   --account-provider-google-header-brand-margin-bottom: var(--account-provider-google-content-gap-xl);
   --account-provider-google-header-brand-margin-bottom-mobile: var(--account-provider-google-content-gap-lg);
 }
 
 html[data-theme-effective="light"]{
-  --account-provider-google-surface: rgba(255, 255, 255, 0.88);
-  --account-provider-google-shell-inner-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
-  --account-provider-google-shell-highlight: linear-gradient(180deg, rgba(0, 0, 0, 0.022) 0%, transparent 22%);
+  --account-provider-google-surface:color-mix(in srgb, var(--surface-color) 88%, transparent);
+  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
   --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
-  --account-provider-google-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.05);
+  --account-provider-google-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 5%, transparent);
 }
 
 html[data-theme-effective="dark"]{
-  --account-provider-google-surface: rgba(0, 0, 0, 0.82);
-  --account-provider-google-shell-inner-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  --account-provider-google-shell-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 22%);
+  --account-provider-google-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --account-provider-google-primary-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+  --account-provider-google-primary-shadow:0 18px 44px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent);
 }
 
 /* =============================================================================
@@ -218,14 +220,14 @@ html[data-theme-effective="dark"]{
   font-weight: 400;
   letter-spacing: var(--account-provider-google-text-action-letter-spacing);
   line-height: var(--account-provider-google-text-action-line-height);
-  transition: color 220ms ease, text-decoration-color 220ms ease, opacity 220ms ease;
+  transition:color var(--account-provider-google-motion-fast) ease, text-decoration-color var(--account-provider-google-motion-fast) ease, opacity var(--account-provider-google-motion-fast) ease;
 }
 
 .account-provider-google-sheet-text-action:hover,
 .account-provider-google-sheet-text-action:focus-visible,
 .account-provider-google-sheet-text-action:active{
-  color: var(--color-primary1);
-  text-decoration-color: var(--color-primary1);
+  color:var(--account-provider-google-accent-hover);
+  text-decoration-color:var(--account-provider-google-accent-hover);
   outline: none;
 }
 

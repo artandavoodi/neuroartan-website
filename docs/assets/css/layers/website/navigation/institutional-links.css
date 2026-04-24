@@ -1,22 +1,52 @@
 /* =============================================================================
    00) FILE INDEX
-   01) LINKS SHELL
-   02) LINKS INNER RAIL
-   03) TOP AND BOTTOM SEPARATOR ROWS
-   04) SEPARATOR LINES
-   05) SOCIAL LINKS ROW
-   06) REVEAL STATES
-   07) COLUMN LAYOUT
-   08) COLUMN TITLES
-   09) NAVIGATION STACK
-   10) NAVIGATION LINKS
-   11) SOCIAL LINKS
-   12) RESPONSIVE — 1280PX
-   13) RESPONSIVE — 900PX
+   01) LINKS TOKENS
+   02) LINKS SHELL
+   03) LINKS INNER RAIL
+   04) TOP AND BOTTOM SEPARATOR ROWS
+   05) SEPARATOR LINES
+   06) SOCIAL LINKS ROW
+   07) REVEAL STATES
+   08) COLUMN LAYOUT
+   09) COLUMN TITLES
+   10) NAVIGATION STACK
+   11) NAVIGATION LINKS
+   12) SOCIAL LINKS
+   13) RESPONSIVE — 1280PX
+   14) RESPONSIVE — 900PX
 ============================================================================= */
 
 /* =============================================================================
-   01) LINKS SHELL
+   01) LINKS TOKENS
+============================================================================= */
+:root{
+  --institutional-links-separator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --institutional-links-title-color:var(--text-color);
+  --institutional-links-title-opacity:0.42;
+  --institutional-links-text-color:var(--text-secondary-color);
+  --institutional-links-hover-color:var(--color-primary1);
+  --institutional-links-reveal-y:22px;
+  --institutional-links-reveal-transform-duration:1.05s;
+  --institutional-links-reveal-opacity-duration:0.95s;
+  --institutional-links-motion-fast:220ms;
+  --institutional-links-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
+  --institutional-links-nav-hover-scale:1.06;
+  --institutional-links-social-hover-scale:1.08;
+  --institutional-links-social-icon-hover-scale:1.03;
+}
+
+html[data-theme-effective="light"]{
+  --institutional-links-separator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --institutional-links-title-opacity:0.46;
+}
+
+html[data-theme-effective="dark"]{
+  --institutional-links-separator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --institutional-links-title-opacity:0.4;
+}
+
+/* =============================================================================
+   02) LINKS SHELL
 ============================================================================= */
 .institutional-links{
   position: relative;
@@ -27,7 +57,7 @@
 }
 
 /* =============================================================================
-   02) LINKS INNER RAIL
+   03) LINKS INNER RAIL
 ============================================================================= */
 .institutional-links-inner{
   display: grid;
@@ -43,7 +73,7 @@
 }
 
 /* =============================================================================
-   03) TOP AND BOTTOM SEPARATOR ROWS
+   04) TOP AND BOTTOM SEPARATOR ROWS
 ============================================================================= */
 .institutional-links-separator-row{
   grid-column: 1 / -1;
@@ -56,29 +86,20 @@
 }
 
 /* =============================================================================
-   04) SEPARATOR LINES
+   05) SEPARATOR LINES
 ============================================================================= */
 .institutional-links-separator{
   display: block;
   width: 100%;
   height: 1px;
   min-height: 1px;
-  background: rgba(128, 128, 128, 0.28);
+  background:var(--institutional-links-separator-bg);
   pointer-events: none;
   transform-origin: center;
 }
 
-html[data-theme-effective="light"] .institutional-links-separator{
-  background: rgba(0, 0, 0, 0.16);
-}
-
-html[data-theme-effective="dark"] .institutional-links-separator{
-  background: rgba(255, 255, 255, 0.16);
-}
-
-
 /* =============================================================================
-   05) SOCIAL LINKS ROW
+   06) SOCIAL LINKS ROW
 ============================================================================= */
 .institutional-links-social-row{
   grid-column: 1 / -1;
@@ -93,16 +114,16 @@ html[data-theme-effective="dark"] .institutional-links-separator{
 }
 
 /* =============================================================================
-   06) REVEAL STATES
+   07) REVEAL STATES
 ============================================================================= */
 .institutional-links-column.motion-init,
 .institutional-links-social-row.motion-init,
 .institutional-links-separator-row.motion-init{
-  opacity: 0;
-  transform: translateY(22px);
+  opacity:0;
+  transform:translateY(var(--institutional-links-reveal-y));
   transition:
-    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+    transform var(--institutional-links-reveal-transform-duration) var(--institutional-links-motion-ease),
+    opacity var(--institutional-links-reveal-opacity-duration) var(--institutional-links-motion-ease);
   will-change: transform, opacity;
 }
 
@@ -122,7 +143,7 @@ html[data-theme-effective="dark"] .institutional-links-separator{
 }
 
 /* =============================================================================
-   07) COLUMN LAYOUT
+   08) COLUMN LAYOUT
 ============================================================================= */
 .institutional-links-column{
   display: flex;
@@ -132,7 +153,7 @@ html[data-theme-effective="dark"] .institutional-links-separator{
 }
 
 /* =============================================================================
-   08) COLUMN TITLES
+   09) COLUMN TITLES
 ============================================================================= */
 .institutional-links-title{
   margin: 0;
@@ -140,20 +161,12 @@ html[data-theme-effective="dark"] .institutional-links-separator{
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-color);
-  opacity: 0.42;
-}
-
-html[data-theme-effective="light"] .institutional-links-title{
-  opacity: 0.46;
-}
-
-html[data-theme-effective="dark"] .institutional-links-title{
-  opacity: 0.4;
+  color:var(--institutional-links-title-color);
+  opacity:var(--institutional-links-title-opacity);
 }
 
 /* =============================================================================
-   09) NAVIGATION STACK
+   10) NAVIGATION STACK
 ============================================================================= */
 .institutional-links-nav{
   display: flex;
@@ -164,7 +177,7 @@ html[data-theme-effective="dark"] .institutional-links-title{
 }
 
 /* =============================================================================
-   10) NAVIGATION LINKS
+   11) NAVIGATION LINKS
 ============================================================================= */
 .institutional-links-nav a{
   display: inline-flex;
@@ -172,23 +185,23 @@ html[data-theme-effective="dark"] .institutional-links-title{
   justify-content: start;
   align-self: start;
   width: auto;
-  color: var(--text-secondary-color);
+  color:var(--institutional-links-text-color);
   text-decoration: none;
   line-height: 1.38;
   transform: none;
   transform-origin: center;
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    transform 220ms ease;
+    color var(--institutional-links-motion-fast) ease,
+    opacity var(--institutional-links-motion-fast) ease,
+    transform var(--institutional-links-motion-fast) ease;
 }
 
 .institutional-links-nav a:hover,
 .institutional-links-nav a:focus-visible,
 .institutional-links-nav a:active{
-  color: var(--color-primary1);
+  color:var(--institutional-links-hover-color);
   text-decoration: none;
-  transform: scale(1.06);
+  transform:scale(var(--institutional-links-nav-hover-scale));
   outline: none;
 }
 
@@ -198,7 +211,7 @@ html[data-theme-effective="dark"] .institutional-links-title{
 }
 
 /* =============================================================================
-   11) SOCIAL LINKS
+   12) SOCIAL LINKS
 ============================================================================= */
 .institutional-links-social{
   display: grid;
@@ -207,14 +220,14 @@ html[data-theme-effective="dark"] .institutional-links-title{
   width: 1.28rem;
   height: 1.28rem;
   overflow: visible;
-  color: var(--text-secondary-color);
+  color:var(--institutional-links-text-color);
   text-decoration: none;
   transform: none;
   transform-origin: center;
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    color var(--institutional-links-motion-fast) ease,
+    opacity var(--institutional-links-motion-fast) ease,
+    transform var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
 }
 
 .institutional-links-social svg{
@@ -248,15 +261,15 @@ html[data-theme-effective="dark"] .institutional-links-title{
 .institutional-links-social svg rect{
   transform-box: fill-box;
   transform-origin: center;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:transform var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
 }
 
 .institutional-links-social:hover,
 .institutional-links-social:focus-visible,
 .institutional-links-social:active{
-  color: var(--color-primary1);
+  color:var(--institutional-links-hover-color);
   text-decoration: none;
-  transform: scale(1.08);
+  transform:scale(var(--institutional-links-social-hover-scale));
   outline: none;
   opacity: 1;
 }
@@ -270,15 +283,15 @@ html[data-theme-effective="dark"] .institutional-links-title{
 .institutional-links-social:active svg path,
 .institutional-links-social:active svg circle,
 .institutional-links-social:active svg rect{
-  transform: scale(1.03);
+  transform:scale(var(--institutional-links-social-icon-hover-scale));
 }
 
 .institutional-links-social:not(:hover):not(:focus-visible):not(:active){
-  transform: scale(1);
+  transform:scale(1);
 }
 
 /* =============================================================================
-   12) RESPONSIVE — 1280PX
+   13) RESPONSIVE — 1280PX
 ============================================================================= */
 @media (max-width: 1280px){
   .institutional-links-inner{
@@ -297,7 +310,7 @@ html[data-theme-effective="dark"] .institutional-links-title{
 }
 
 /* =============================================================================
-   13) RESPONSIVE — 900PX
+   14) RESPONSIVE — 900PX
 ============================================================================= */
 @media (max-width: 900px){
   .institutional-links{

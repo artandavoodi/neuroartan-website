@@ -1,6 +1,7 @@
 /* =============================================================================
    00) FILE INDEX
    01A) MENU MOUNT
+   01B) MENU TOKENS
    01) PRIMARY MENU SHELL
    02) MENU SURFACE
    03) MENU BACKDROP STATES
@@ -39,6 +40,33 @@
 }
 
 /* =============================================================================
+   01B) MENU TOKENS
+============================================================================= */
+:root{
+  --institutional-menu-surface-height:3.55rem;
+  --institutional-menu-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --institutional-menu-surface-border:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  --institutional-menu-surface-shadow:none;
+  --institutional-menu-surface-blur:8px;
+  --institutional-menu-surface-saturate:120%;
+  --institutional-menu-text-color:var(--text-secondary-color);
+  --institutional-menu-text-hover-color:var(--text-primary-color);
+  --institutional-menu-brand-color:var(--text-primary-color);
+  --institutional-menu-icon-opacity:0.82;
+  --institutional-menu-icon-hover-opacity:1;
+  --institutional-menu-motion-fast:220ms;
+  --institutional-menu-motion-medium:320ms;
+  --institutional-menu-motion-panel:760ms;
+  --institutional-menu-motion-panel-slow:920ms;
+  --institutional-menu-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
+  --institutional-menu-panel-ease:cubic-bezier(0.19, 1, 0.22, 1);
+  --institutional-menu-panel-shell-bg:color-mix(in srgb, var(--surface-color) 58%, transparent);
+  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--surface-color) 0.2%, transparent) 100%);
+  --institutional-menu-panel-shadow:0 28px 90px color-mix(in srgb, var(--shadow-color, #000000) 10%, transparent);
+  --institutional-menu-search-border:var(--control-border);
+}
+
+/* =============================================================================
    01) PRIMARY MENU SHELL
 ============================================================================= */
 
@@ -58,7 +86,7 @@
   isolation: isolate;
   direction: ltr;
   text-align: left;
-  transition: padding-top 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:padding-top var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease);
 }
 
 /* =============================================================================
@@ -68,21 +96,21 @@
   content: "";
   position: absolute;
   inset: env(safe-area-inset-top, 0) 0 auto 0;
-  height: 3.55rem;
+  height:var(--institutional-menu-surface-height);
   border-radius: 0;
-  background: color-mix(in srgb, var(--bg-color) 32%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--text-primary-color) 7%, transparent);
-  box-shadow: none;
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  background:var(--institutional-menu-surface-bg);
+  border-bottom:1px solid var(--institutional-menu-surface-border);
+  box-shadow:var(--institutional-menu-surface-shadow);
+  backdrop-filter:blur(var(--institutional-menu-surface-blur)) saturate(var(--institutional-menu-surface-saturate));
+  -webkit-backdrop-filter:blur(var(--institutional-menu-surface-blur)) saturate(var(--institutional-menu-surface-saturate));
   opacity: 0;
   transform: translateY(-10px);
   transition:
-    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 220ms ease,
-    border-color 220ms ease,
-    height 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease),
+    transform var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease),
+    background var(--institutional-menu-motion-fast) ease,
+    border-color var(--institutional-menu-motion-fast) ease,
+    height var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease);
   pointer-events: none;
   z-index: 0;
 }
@@ -104,10 +132,10 @@ body.institutional-menu-panel-open .institutional-menu::before{
 /* =============================================================================
    04) LIGHT EFFECTIVE MODE SURFACE
 ============================================================================= */
-html[data-theme-effective="light"] .institutional-menu::before{
-  background: color-mix(in srgb, white 26%, transparent);
-  border-color: color-mix(in srgb, black 6%, transparent);
-  box-shadow: none;
+html[data-theme-effective="light"]{
+  --institutional-menu-surface-bg:color-mix(in srgb, var(--surface-color) 26%, transparent);
+  --institutional-menu-surface-border:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --institutional-menu-surface-shadow:none;
 }
 
 /* =============================================================================
@@ -124,7 +152,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
   gap: 1.6rem;
   position: relative;
   z-index: 3;
-  min-height: 3.55rem;
+  min-height:var(--institutional-menu-surface-height);
   box-sizing: border-box;
   direction: ltr;
 }
@@ -141,15 +169,15 @@ html[data-theme-effective="light"] .institutional-menu::before{
   overflow: visible;
   line-height: 0;
   gap: 0;
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-brand-color);
   text-decoration: none;
   white-space: nowrap;
   flex: 0 0 auto;
   min-width: max-content;
   min-height: 0;
   transition:
-    color 220ms ease,
-    opacity 220ms ease;
+    color var(--institutional-menu-motion-fast) ease,
+    opacity var(--institutional-menu-motion-fast) ease;
 }
 
 .institutional-menu-brand-symbol{
@@ -171,7 +199,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
 .institutional-menu-brand:hover,
 .institutional-menu-brand:focus-visible,
 .institutional-menu-brand:active{
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-brand-color);
   opacity: 1;
   transform: none;
   text-decoration: none;
@@ -255,7 +283,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary-color);
+  color:var(--institutional-menu-text-color);
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 400;
@@ -266,9 +294,9 @@ html[data-theme-effective="light"] .institutional-menu::before{
   cursor: pointer;
   transform: none !important;
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    color var(--institutional-menu-motion-fast) ease,
+    opacity var(--institutional-menu-motion-fast) ease,
+    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease);
 }
 
 .institutional-menu-link:hover,
@@ -278,7 +306,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
 .institutional-menu-utility-button:focus-visible,
 .institutional-menu-utility-button:active,
 .institutional-menu-panel-trigger[aria-expanded="true"]{
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-text-hover-color);
   opacity: 1;
   transform: none !important;
   text-decoration: none;
@@ -321,7 +349,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
   width: 1.12rem;
   height: 1.12rem;
   flex: 0 0 auto;
-  opacity: 0.82;
+  opacity:var(--institutional-menu-icon-opacity);
   background-color: currentColor;
   -webkit-mask-image: url('../../../../icons/core/actions/unclassified/search.svg');
   -webkit-mask-repeat: no-repeat;
@@ -332,15 +360,15 @@ html[data-theme-effective="light"] .institutional-menu::before{
   mask-position: center;
   mask-size: contain;
   transition:
-    opacity 220ms ease,
-    background-color 220ms ease;
+    opacity var(--institutional-menu-motion-fast) ease,
+    background-color var(--institutional-menu-motion-fast) ease;
 }
 
 .institutional-menu-search-trigger:hover .institutional-menu-search-trigger-icon,
 .institutional-menu-search-trigger:focus-visible .institutional-menu-search-trigger-icon,
 .institutional-menu-search-trigger:active .institutional-menu-search-trigger-icon,
 .institutional-menu-panel-trigger[aria-expanded="true"] .institutional-menu-search-trigger-icon{
-  opacity: 1;
+  opacity:var(--institutional-menu-icon-hover-opacity);
 }
 
 /* =============================================================================
@@ -380,7 +408,7 @@ html[data-theme-effective="light"] .institutional-menu::before{
   width: 1.12rem;
   height: 1.12rem;
   flex: 0 0 auto;
-  opacity: 0.82;
+  opacity:var(--institutional-menu-icon-opacity);
   background-color: currentColor;
   -webkit-mask-image: url('../../../../icons/core/identity/unclassified/profile.svg');
   -webkit-mask-repeat: no-repeat;
@@ -391,15 +419,15 @@ html[data-theme-effective="light"] .institutional-menu::before{
   mask-position: center;
   mask-size: contain;
   transition:
-    opacity 220ms ease,
-    background-color 220ms ease;
+    opacity var(--institutional-menu-motion-fast) ease,
+    background-color var(--institutional-menu-motion-fast) ease;
 }
 
 .institutional-menu-account-trigger:hover .institutional-menu-account-trigger-icon,
 .institutional-menu-account-trigger:focus-visible .institutional-menu-account-trigger-icon,
 .institutional-menu-account-trigger:active .institutional-menu-account-trigger-icon,
 .institutional-menu-account-trigger[aria-expanded="true"] .institutional-menu-account-trigger-icon{
-  opacity: 1;
+  opacity:var(--institutional-menu-icon-hover-opacity);
 }
 
 .institutional-menu-account-trigger[data-institutional-menu-account-state="icon"] .institutional-menu-account-trigger-avatar{
@@ -427,10 +455,10 @@ html[data-theme-effective="light"] .institutional-menu::before{
   display: block;
   width: 0.95rem;
   height: 1px;
-  background: var(--text-primary-color);
+  background:var(--institutional-menu-text-hover-color);
   transition:
-    opacity 220ms ease,
-    transform 220ms ease;
+    opacity var(--institutional-menu-motion-fast) ease,
+    transform var(--institutional-menu-motion-fast) ease;
 }
 
 /* =============================================================================
@@ -451,8 +479,8 @@ html[data-theme-effective="light"] .institutional-menu::before{
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 760ms cubic-bezier(0.19, 1, 0.22, 1),
-    visibility 760ms ease;
+    opacity var(--institutional-menu-motion-panel) var(--institutional-menu-panel-ease),
+    visibility var(--institutional-menu-motion-panel) ease;
   z-index: 2;
 }
 
@@ -468,23 +496,20 @@ body.institutional-menu-panel-open .institutional-menu-panels{
   z-index: 0;
   opacity: 1;
   pointer-events: auto;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.003) 0%, rgba(255, 255, 255, 0.002) 100%);
-  backdrop-filter: blur(4px) saturate(115%);
-  -webkit-backdrop-filter: blur(4px) saturate(115%);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.10);
+  background:var(--institutional-menu-panel-backdrop-bg);
+  backdrop-filter:blur(4px) saturate(115%);
+  -webkit-backdrop-filter:blur(4px) saturate(115%);
+  box-shadow:var(--institutional-menu-panel-shadow);
 }
 
-html[data-theme-effective="light"] .institutional-menu-panels-backdrop{
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.003) 0%, rgba(255, 255, 255, 0.002) 100%);
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.08);
+html[data-theme-effective="light"]{
+  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--surface-color) 0.2%, transparent) 100%);
+  --institutional-menu-panel-shadow:0 28px 90px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
 }
 
-html[data-theme-effective="dark"] .institutional-menu-panels-backdrop{
-  background:
-    linear-gradient(180deg, rgba(8, 8, 8, 0.003) 0%, rgba(8, 8, 8, 0.002) 100%);
-  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.28);
+html[data-theme-effective="dark"]{
+  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--bg-color) 0.2%, transparent) 100%);
+  --institutional-menu-panel-shadow:0 32px 100px color-mix(in srgb, var(--shadow-color, #000000) 28%, transparent);
 }
 
 .institutional-menu-panel{
@@ -499,9 +524,9 @@ html[data-theme-effective="dark"] .institutional-menu-panels-backdrop{
   pointer-events: none;
   transform: translateY(-1.1rem) scale(0.982);
   transition:
-    opacity 780ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 920ms cubic-bezier(0.19, 1, 0.22, 1),
-    visibility 780ms ease;
+    opacity var(--institutional-menu-motion-panel) var(--institutional-menu-panel-ease),
+    transform var(--institutional-menu-motion-panel-slow) var(--institutional-menu-panel-ease),
+    visibility var(--institutional-menu-motion-panel) ease;
 }
 
 .institutional-menu-panel.is-active{
@@ -549,26 +574,25 @@ body.institutional-menu-panel-open{
   box-sizing: border-box;
   direction: ltr;
   pointer-events: auto;
-  background: rgba(255, 255, 255, 0.58);
+  background:var(--institutional-menu-panel-shell-bg);
   backdrop-filter: blur(18px) saturate(145%);
   -webkit-backdrop-filter: blur(18px) saturate(145%);
   transition:
-    opacity 760ms cubic-bezier(0.19, 1, 0.22, 1),
-    transform 920ms cubic-bezier(0.19, 1, 0.22, 1),
+    opacity var(--institutional-menu-motion-panel) var(--institutional-menu-panel-ease),
+    transform var(--institutional-menu-motion-panel-slow) var(--institutional-menu-panel-ease),
     background 360ms ease;
 }
 
-html[data-theme-effective="dark"] .institutional-menu-panel-shell{
-  background: rgba(18, 18, 18, 0.48);
+html[data-theme-effective="dark"]{
+  --institutional-menu-panel-shell-bg:color-mix(in srgb, var(--surface-color) 48%, transparent);
 }
 
-html[data-theme-effective="dark"] .institutional-menu-search-field{
-  background: transparent;
-  border-color: rgba(255, 255, 255, 0.16);
+html[data-theme-effective="dark"]{
+  --institutional-menu-search-border:var(--control-border);
 }
 
-html[data-theme-effective="light"] .institutional-menu-search-field{
-  border-color: rgba(0, 0, 0, 0.12);
+html[data-theme-effective="light"]{
+  --institutional-menu-search-border:var(--control-border);
 }
 
 .institutional-menu-panel-shell--search{
@@ -612,7 +636,7 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
 
 .institutional-menu-panel-feature-link{
   margin: 0 0 1.08rem;
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-text-hover-color);
   font-size: 2.18rem;
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -627,7 +651,7 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
 
 .institutional-menu-panel-sub-link{
   margin: 0 0 1rem;
-  color: var(--text-secondary-color);
+  color:var(--institutional-menu-text-color);
   font-size: 0.98rem;
   font-weight: 400;
   letter-spacing: -0.01em;
@@ -644,7 +668,7 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
 .institutional-menu-panel-feature-link:focus-visible,
 .institutional-menu-panel-sub-link:hover,
 .institutional-menu-panel-sub-link:focus-visible{
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-text-hover-color);
   opacity: 1;
   transform: none !important;
   outline: none;
@@ -664,7 +688,7 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
   margin: 0 auto;
   min-height: 4rem;
   padding: 0.82rem 1.08rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border:1px solid var(--institutional-menu-search-border);
   border-radius: 999px;
   background: transparent;
   box-sizing: border-box;
@@ -698,7 +722,7 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
 }
 
 .institutional-menu-search-icon{
-  opacity: 0.82;
+  opacity:var(--institutional-menu-icon-opacity);
 }
 
 .institutional-menu-mic-button{
@@ -713,16 +737,16 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
   margin: 0;
   border: 0;
   background: transparent;
-  color: var(--text-secondary-color);
+  color:var(--institutional-menu-text-color);
   cursor: pointer;
   flex: 0 0 auto;
   align-self: center;
   border-radius: 999px;
   transform: none !important;
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    color var(--institutional-menu-motion-fast) ease,
+    opacity var(--institutional-menu-motion-fast) ease,
+    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease);
 }
 
 .institutional-menu-mic-button:hover,
@@ -750,11 +774,11 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;
-  opacity: 0.78;
+  opacity:var(--institutional-menu-icon-opacity);
   transition:
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms ease;
+    opacity var(--institutional-menu-motion-fast) ease,
+    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease),
+    background-color var(--institutional-menu-motion-fast) ease;
   transform-origin: center center;
 }
 
@@ -842,18 +866,18 @@ html[data-theme-effective="light"] .institutional-menu-search-field{
   width: 100%;
   padding: 0.95rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-text-hover-color);
   text-decoration: none;
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    color var(--institutional-menu-motion-fast) ease,
+    opacity var(--institutional-menu-motion-fast) ease,
+    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease);
 }
 
 .institutional-menu-search-result:hover,
 .institutional-menu-search-result:focus-visible,
 .institutional-menu-search-result:active{
-  color: var(--text-primary-color);
+  color:var(--institutional-menu-text-hover-color);
   opacity: 1;
   transform: none;
   outline: none;

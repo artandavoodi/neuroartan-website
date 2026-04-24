@@ -22,7 +22,7 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-sign-in-surface: rgba(0, 0, 0, 0.82);
+  --account-sign-in-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-sign-in-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-in-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-sign-in-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
@@ -76,34 +76,34 @@
   --account-sign-in-back-icon-size: var(--account-back-icon-size);
   --account-sign-in-divider-label-size: var(--body-3-size);
   --account-sign-in-text-action-size: var(--body-3-size);
-  --account-sign-in-input-border: rgba(255, 255, 255, 0.16);
+  --account-sign-in-input-border:var(--field-border);
   --account-sign-in-input-surface: transparent;
-  --account-sign-in-input-focus: rgba(255, 255, 255, 0.3);
+  --account-sign-in-input-focus:var(--field-border-focus);
   --account-sign-in-control-height: var(--account-sign-in-field-height);
   --account-sign-in-control-inline-padding: var(--account-sign-in-field-padding-x);
-  --account-sign-in-divider-line: rgba(128, 128, 128, 0.28);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --account-sign-in-header-brand-margin-bottom: var(--account-sign-in-content-gap-xl);
   --account-sign-in-header-brand-margin-bottom-mobile: var(--account-sign-in-content-gap-lg);
 }
 
 html[data-theme-effective="light"]{
-  --account-sign-in-surface: rgba(255, 255, 255, 0.88);
-  --account-sign-in-shell-inner-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
-  --account-sign-in-shell-highlight: linear-gradient(180deg, rgba(0, 0, 0, 0.022) 0%, transparent 22%);
+  --account-sign-in-surface:color-mix(in srgb, var(--surface-color) 88%, transparent);
+  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
   --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-in-primary-shadow: var(--shadow-medium);
   --account-sign-in-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-sign-in-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
-  --account-sign-in-divider-line: rgba(0, 0, 0, 0.16);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 html[data-theme-effective="dark"]{
-  --account-sign-in-surface: rgba(0, 0, 0, 0.82);
-  --account-sign-in-shell-inner-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  --account-sign-in-shell-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 22%);
+  --account-sign-in-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --account-sign-in-primary-shadow: var(--shadow-strong);
-  --account-sign-in-divider-line: rgba(255, 255, 255, 0.16);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 

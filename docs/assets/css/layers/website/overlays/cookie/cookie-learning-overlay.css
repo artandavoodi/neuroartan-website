@@ -17,8 +17,8 @@
   --cookie-learning-overlay-radius: var(--cookie-language-overlay-radius);
   --cookie-learning-overlay-back-icon-size: 1rem;
   --cookie-learning-overlay-back-icon-filter: var(--icon-image-filter, none);
-  --cookie-learning-overlay-divider: rgba(255, 255, 255, 0.08);
-  --cookie-learning-overlay-surface: rgba(10, 10, 10, 0.96);
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--control-border));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, color-mix(in srgb, var(--surface-color) 96%, transparent));
   --cookie-consent-learning-shell-min-height: 10.5rem;
   --cookie-consent-learning-shell-radius: 1rem;
   --cookie-consent-learning-shell-padding: 1rem;
@@ -31,10 +31,14 @@
 
 html[data-theme-effective="light"]{
   --cookie-learning-overlay-back-icon-filter: var(--icon-image-filter, none);
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--control-border));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, color-mix(in srgb, var(--surface-color) 96%, transparent));
 }
 
 html[data-theme-effective="dark"]{
   --cookie-learning-overlay-back-icon-filter: var(--icon-image-filter, none);
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--control-border));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, color-mix(in srgb, var(--surface-color) 96%, transparent));
 }
 
 .cookie-learning-overlay{

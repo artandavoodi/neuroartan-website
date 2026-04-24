@@ -1,9 +1,24 @@
 /* =============================================================================
+   00A) PROFILE MENU TOKENS
    01) PROFILE MENU FOUNDATION
    02) PROFILE MENU SURFACE
    03) PROFILE MENU BRAND
    04) PROFILE MENU ACTIONS
    ============================================================================= */
+
+/* =============================================================================
+   00A) PROFILE MENU TOKENS
+   ============================================================================= */
+:root{
+  --profile-menu-border-color:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  --profile-menu-status-color:var(--text-secondary-color);
+  --profile-menu-brand-hover-color:var(--text-color);
+  --profile-menu-action-color:var(--text-secondary-color);
+  --profile-menu-action-hover-color:var(--text-color);
+  --profile-menu-action-opacity:0.72;
+  --profile-menu-action-hover-opacity:1;
+  --profile-menu-motion-fast:220ms;
+}
 
 /* =============================================================================
    01) PROFILE MENU FOUNDATION
@@ -31,7 +46,7 @@
   grid-template-columns:auto minmax(0, 1fr) auto;
   align-items:center;
   gap:var(--spacing-lg);
-  border-bottom:1px solid color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  border-bottom:1px solid var(--profile-menu-border-color);
   box-sizing:border-box;
   background:transparent;
 }
@@ -46,7 +61,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--text-secondary-color);
+  color:var(--profile-menu-status-color);
 }
 
 /* =============================================================================
@@ -74,7 +89,7 @@
 
 .profile-menu__brand:hover,
 .profile-menu__brand:focus-visible{
-  color:var(--text-color);
+  color:var(--profile-menu-brand-hover-color);
   opacity:1;
   outline:none;
 }
@@ -95,13 +110,13 @@
 .profile-menu__action{
   min-height:var(--control-height-sm);
   padding-inline:var(--control-padding-x-sm);
-  color:var(--text-secondary-color);
-  opacity:0.72;
+  color:var(--profile-menu-action-color);
+  opacity:var(--profile-menu-action-opacity);
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease;
+    color var(--profile-menu-motion-fast) ease,
+    opacity var(--profile-menu-motion-fast) ease,
+    border-color var(--profile-menu-motion-fast) ease,
+    background-color var(--profile-menu-motion-fast) ease;
 }
 
 .profile-menu__icon-action{
@@ -109,12 +124,12 @@
   height:var(--control-height-sm);
   min-width:var(--control-height-sm);
   min-height:var(--control-height-sm);
-  opacity:0.72;
+  opacity:var(--profile-menu-action-opacity);
   transition:
-    color 220ms ease,
-    opacity 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease;
+    color var(--profile-menu-motion-fast) ease,
+    opacity var(--profile-menu-motion-fast) ease,
+    border-color var(--profile-menu-motion-fast) ease,
+    background-color var(--profile-menu-motion-fast) ease;
 }
 
 .profile-menu__action--account{
@@ -127,8 +142,8 @@
 .profile-menu__action:focus-visible,
 .profile-menu__icon-action:hover,
 .profile-menu__icon-action:focus-visible{
-  color:var(--text-color);
-  opacity:1;
+  color:var(--profile-menu-action-hover-color);
+  opacity:var(--profile-menu-action-hover-opacity);
   outline:none;
 }
 

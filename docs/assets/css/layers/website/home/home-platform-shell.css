@@ -1,18 +1,19 @@
 /* =============================================================================
 00) FILE INDEX
 01) MODULE IDENTITY
-02) SHELL ROOT
-03) SHELL CHROME
-04) SHELL MAIN GRID
-05) RAIL MODE STATES
-06) LEFT NAVIGATION RAIL
-07) PRIMARY NAVIGATION ITEMS
-08) MIDDLE NAVIGATION LAYER
-09) RIGHT DETAIL SURFACE
-10) EMBEDDED SECTION REFINEMENTS
-11) PLATFORM SCROLL GOVERNANCE
-12) RESPONSIVE STATES
-13) END OF FILE
+02) SHELL TOKENS
+03) SHELL ROOT
+04) SHELL CHROME
+05) SHELL MAIN GRID
+06) RAIL MODE STATES
+07) LEFT NAVIGATION RAIL
+08) PRIMARY NAVIGATION ITEMS
+09) MIDDLE NAVIGATION LAYER
+10) RIGHT DETAIL SURFACE
+11) EMBEDDED SECTION REFINEMENTS
+12) PLATFORM SCROLL GOVERNANCE
+13) RESPONSIVE STATES
+14) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -21,7 +22,28 @@
 /* /website/docs/assets/css/layers/website/home/home-platform-shell.css */
 
 /* =============================================================================
-02) SHELL ROOT
+02) SHELL TOKENS
+============================================================================= */
+:root{
+  --home-platform-shell-chrome-toggle-color:var(--text-secondary-color);
+  --home-platform-shell-chrome-toggle-hover-color:var(--text-primary-color);
+  --home-platform-shell-muted-label-color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  --home-platform-shell-muted-copy-color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+  --home-platform-shell-nav-color:var(--text-secondary-color);
+  --home-platform-shell-nav-hover-color:var(--text-primary-color);
+  --home-platform-shell-nav-opacity:0.68;
+  --home-platform-shell-nav-hover-opacity:1;
+  --home-platform-shell-nav-indicator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --home-platform-shell-nav-indicator-color:var(--text-primary-color);
+  --home-platform-shell-nav-indicator-new-color:var(--color-primary1);
+  --home-platform-shell-nav-indicator-new-bg:color-mix(in srgb, var(--color-primary1) 16%, transparent);
+  --home-platform-shell-nav-indicator-high-color:var(--color-primary7);
+  --home-platform-shell-nav-indicator-high-bg:color-mix(in srgb, var(--color-primary7) 18%, transparent);
+  --home-platform-shell-motion-fast:220ms;
+}
+
+/* =============================================================================
+03) SHELL ROOT
 ============================================================================= */
 .home-platform-shell{
   --home-platform-shell-inline-padding:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
@@ -51,7 +73,7 @@
 }
 
 /* =============================================================================
-03) SHELL CHROME
+04) SHELL CHROME
 ============================================================================= */
 .home-platform-shell__chrome{
   position:relative;
@@ -87,17 +109,17 @@
   border:0;
   border-radius:0;
   background:transparent;
-  color:var(--text-secondary-color);
-  opacity:0.68;
+  color:var(--home-platform-shell-chrome-toggle-color);
+  opacity:var(--home-platform-shell-nav-opacity);
   cursor:pointer;
-  transition:color 220ms ease, opacity 220ms ease;
+  transition:color var(--home-platform-shell-motion-fast) ease, opacity var(--home-platform-shell-motion-fast) ease;
 }
 
 .home-platform-shell__rail-toggle:hover,
 .home-platform-shell__rail-toggle:focus-visible,
 .home-platform-shell__rail-toggle[aria-pressed="true"]{
-  color:var(--text-primary-color);
-  opacity:1;
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
   outline:none;
 }
 
@@ -120,7 +142,7 @@
 }
 
 /* =============================================================================
-04) SHELL MAIN GRID
+05) SHELL MAIN GRID
 ============================================================================= */
 .home-platform-shell__main{
   flex:1 1 auto;
@@ -137,7 +159,7 @@
 }
 
 /* =============================================================================
-05) RAIL MODE STATES
+06) RAIL MODE STATES
 ============================================================================= */
 .home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__main{
   grid-template-columns:var(--home-platform-shell-subrail-width) minmax(0, 1fr);
@@ -168,7 +190,7 @@
 }
 
 /* =============================================================================
-06) LEFT NAVIGATION RAIL
+07) LEFT NAVIGATION RAIL
 ============================================================================= */
 .home-platform-shell__rail,
 .home-platform-shell__subrail{
@@ -212,7 +234,7 @@
   font-weight:500;
   letter-spacing:0.08em;
   text-transform:uppercase;
-  color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  color:var(--home-platform-shell-muted-label-color);
 }
 
 .home-platform-shell__subrail-header{
@@ -244,7 +266,7 @@
 }
 
 /* =============================================================================
-07) PRIMARY NAVIGATION ITEMS
+08) PRIMARY NAVIGATION ITEMS
 ============================================================================= */
 .home-platform-shell__nav-item,
 .home-platform-shell__subnav-item{
@@ -260,16 +282,16 @@
   border:1px solid transparent;
   border-radius:999px;
   background:transparent;
-  color:var(--text-secondary-color);
-  opacity:0.68;
+  color:var(--home-platform-shell-nav-color);
+  opacity:var(--home-platform-shell-nav-opacity);
   text-align:left;
   text-decoration:none;
   cursor:pointer;
   transition:
-    color 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease,
-    opacity 220ms ease;
+    color var(--home-platform-shell-motion-fast) ease,
+    border-color var(--home-platform-shell-motion-fast) ease,
+    background-color var(--home-platform-shell-motion-fast) ease,
+    opacity var(--home-platform-shell-motion-fast) ease;
 }
 
 .home-platform-shell__nav-icon{
@@ -297,8 +319,8 @@
   margin-left:auto;
   padding:0 0.32rem;
   border-radius:999px;
-  background:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
-  color:var(--text-primary-color);
+  background:var(--home-platform-shell-nav-indicator-bg);
+  color:var(--home-platform-shell-nav-indicator-color);
   font-size:0.64rem;
   font-weight:600;
   line-height:1;
@@ -306,13 +328,13 @@
 }
 
 .home-platform-shell__nav-indicator[data-home-platform-nav-indicator-state="new"]{
-  background:color-mix(in srgb, #1d9bf0 16%, transparent);
-  color:#1d9bf0;
+  background:var(--home-platform-shell-nav-indicator-new-bg);
+  color:var(--home-platform-shell-nav-indicator-new-color);
 }
 
 .home-platform-shell__nav-indicator[data-home-platform-nav-indicator-state="high"]{
-  background:color-mix(in srgb, #ff7043 18%, transparent);
-  color:#ff7043;
+  background:var(--home-platform-shell-nav-indicator-high-bg);
+  color:var(--home-platform-shell-nav-indicator-high-color);
 }
 
 .home-platform-shell__nav-item:hover,
@@ -326,8 +348,8 @@
 .home-platform-shell__subnav-item.is-active{
   border-color:var(--control-border);
   background:var(--control-bg);
-  color:var(--text-primary-color);
-  opacity:1;
+  color:var(--home-platform-shell-nav-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
   outline:none;
 }
 
@@ -350,7 +372,7 @@
 }
 
 /* =============================================================================
-08) MIDDLE NAVIGATION LAYER
+09) MIDDLE NAVIGATION LAYER
 ============================================================================= */
 .home-platform-shell__content{
   min-width:0;
@@ -371,7 +393,7 @@
 
 .home-platform-shell__content-eyebrow{
   margin:0;
-  color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  color:var(--home-platform-shell-muted-label-color);
   font-size:0.72rem;
   font-weight:500;
   letter-spacing:0.08em;
@@ -394,7 +416,7 @@
   font-weight:400;
   line-height:1.65;
   letter-spacing:-0.01em;
-  color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+  color:var(--home-platform-shell-muted-copy-color);
 }
 
 .home-platform-shell__content-inner{
@@ -442,7 +464,7 @@
 .home-platform-shell__content-state-copy{
   margin:0;
   max-width:40rem;
-  color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+  color:var(--home-platform-shell-muted-copy-color);
   font-size:0.92rem;
   line-height:1.6;
 }
@@ -457,7 +479,7 @@
   border:1px solid var(--control-border);
   border-radius:999px;
   background:transparent;
-  color:var(--text-secondary-color);
+  color:var(--home-platform-shell-nav-color);
   text-decoration:none;
   font-size:0.78rem;
   font-weight:500;
@@ -465,22 +487,22 @@
   text-transform:uppercase;
   cursor:pointer;
   transition:
-    color 220ms ease,
-    border-color 220ms ease,
-    background-color 220ms ease,
-    opacity 220ms ease;
+    color var(--home-platform-shell-motion-fast) ease,
+    border-color var(--home-platform-shell-motion-fast) ease,
+    background-color var(--home-platform-shell-motion-fast) ease,
+    opacity var(--home-platform-shell-motion-fast) ease;
 }
 
 .home-platform-shell__content-state-action:hover,
 .home-platform-shell__content-state-action:focus-visible{
   border-color:var(--control-border);
   background:var(--control-bg);
-  color:var(--text-primary-color);
+  color:var(--home-platform-shell-nav-hover-color);
   outline:none;
 }
 
 /* =============================================================================
-09) RIGHT DETAIL SURFACE
+10) RIGHT DETAIL SURFACE
 ============================================================================= */
 .home-platform-shell__content-inner > *{
   min-width:0;
@@ -495,7 +517,7 @@
 }
 
 /* =============================================================================
-10) EMBEDDED SECTION REFINEMENTS
+11) EMBEDDED SECTION REFINEMENTS
 ============================================================================= */
 .home-platform-shell__content-stack .home-workspace-panel__section,
 .home-platform-shell__content-stack .home-profile-control-panel__section,
@@ -510,7 +532,7 @@
 }
 
 /* =============================================================================
-11) PLATFORM SCROLL GOVERNANCE
+12) PLATFORM SCROLL GOVERNANCE
 ============================================================================= */
 .home-platform-shell,
 .home-platform-shell *{
@@ -532,7 +554,7 @@
 }
 
 /* =============================================================================
-12) RESPONSIVE STATES
+13) RESPONSIVE STATES
 ============================================================================= */
 @media (max-width: 1024px){
   .home-platform-shell__main{
@@ -585,5 +607,5 @@
 }
 
 /* =============================================================================
-13) END OF FILE
+14) END OF FILE
 ============================================================================= */

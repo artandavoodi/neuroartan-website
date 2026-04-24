@@ -1,4 +1,13 @@
 /* =============================================================================
+   00A) PROFILE HEADER TOKENS
+   ============================================================================= */
+:root{
+  --profile-header-verified-color:var(--color-primary1);
+  --profile-header-verified-border:color-mix(in srgb, var(--profile-header-verified-color) 30%, transparent);
+  --profile-header-verified-bg:color-mix(in srgb, var(--profile-header-verified-color) 10%, transparent);
+}
+
+/* =============================================================================
    01) PROFILE HEADER FOUNDATION
    02) PROFILE HEADER IDENTITY BLOCK
    03) PROFILE HEADER AVATAR
@@ -83,10 +92,10 @@
   align-items:center;
   gap:0.45rem;
   padding:0.34rem 0.72rem;
-  border:1px solid color-mix(in srgb, #1d9bf0 30%, transparent);
+  border:1px solid var(--profile-header-verified-border);
   border-radius:999px;
-  background:color-mix(in srgb, #1d9bf0 10%, transparent);
-  color:#1d9bf0;
+  background:var(--profile-header-verified-bg);
+  color:var(--profile-header-verified-color);
 }
 
 .profile-header__verified-label,

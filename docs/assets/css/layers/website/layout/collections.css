@@ -7,6 +7,16 @@
 ============================================================================= */
 
 /* -----------------------------------------------------------------------------
+   00A) COLLECTIONS TOKENS
+----------------------------------------------------------------------------- */
+:root{
+  --collections-card-surface:var(--surface-color);
+  --collections-card-hover-shadow:0 28px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
+  --collections-card-inner-highlight:radial-gradient(circle at center, color-mix(in srgb, var(--text-primary-color) 6%, transparent) 0%, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 40%, color-mix(in srgb, var(--text-primary-color) 1.5%, transparent) 65%, transparent 85%);
+  --collections-card-copy-opacity:0.9;
+}
+
+/* -----------------------------------------------------------------------------
    01) RAIL STRUCTURE (PERFECT ALIGNMENT WITH HERO + FOOTER)
 ----------------------------------------------------------------------------- */
 
@@ -53,7 +63,7 @@
   position:relative;
   overflow:hidden;
   border-radius:18px;
-  background: var(--surface-color, rgba(255,255,255,0.045));
+  background:var(--collections-card-surface);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition:
@@ -65,7 +75,7 @@
 
 .featured-card:hover{
   transform: translateY(-10px);
-  box-shadow: 0 28px 60px rgba(0,0,0,0.08);
+  box-shadow:var(--collections-card-hover-shadow);
 }
 
 /* Subtle inner breathing feel */
@@ -73,13 +83,7 @@
   content:"";
   position:absolute;
   inset:0;
-  background: radial-gradient(
-    circle at center,
-    rgba(255,255,255,0.06) 0%,
-    rgba(255,255,255,0.03) 40%,
-    rgba(255,255,255,0.015) 65%,
-    transparent 85%
-  );
+  background:var(--collections-card-inner-highlight);
   opacity:0.6;
   pointer-events:none;
 }
@@ -138,5 +142,5 @@ html.lang-rtl .featured-grid{
 
 .featured-section p{
   line-height:1.6;
-  opacity:0.9;
+  opacity:var(--collections-card-copy-opacity);
 }

@@ -16,24 +16,30 @@
    00A. ROOT TOKENS
    ========================================================= */
 :root{
-  --error404-page-background: #050505;
-  --error404-page-text: var(--text-primary-color, #f5f5f7);
-  --error404-shell-max-width: 760px;
-  --error404-shell-padding-y: 56px;
-  --error404-shell-padding-x: 40px;
-  --error404-shell-radius: 28px;
-  --error404-shell-border: rgba(255, 255, 255, 0.08);
-  --error404-shell-surface: rgba(255, 255, 255, 0.02);
-  --error404-mark-color: rgba(245, 245, 247, 0.6);
-  --error404-eyebrow-color: rgba(245, 245, 247, 0.5);
-  --error404-body-color: rgba(245, 245, 247, 0.72);
-  --error404-primary-text: #ffffff;
-  --error404-secondary-border: rgba(255, 255, 255, 0.12);
-  --error404-secondary-text: var(--text-primary-color, #f5f5f7);
-  --error404-secondary-border-hover: rgba(255, 255, 255, 0.2);
-  --error404-focus-outline: rgba(255, 255, 255, 0.55);
-  --error404-page-padding-y: 48px;
-  --error404-page-padding-x: 24px;
+  --error404-page-background:var(--bg-color);
+  --error404-page-text:var(--text-primary-color);
+  --error404-shell-max-width:760px;
+  --error404-shell-padding-y:56px;
+  --error404-shell-padding-x:40px;
+  --error404-shell-radius:28px;
+  --error404-shell-border:var(--control-border);
+  --error404-shell-surface:var(--control-bg);
+  --error404-mark-color:color-mix(in srgb, var(--text-primary-color) 60%, transparent);
+  --error404-eyebrow-color:color-mix(in srgb, var(--text-primary-color) 50%, transparent);
+  --error404-body-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --error404-primary-text:var(--text-primary-color);
+  --error404-secondary-border:var(--control-border);
+  --error404-secondary-text:var(--text-primary-color);
+  --error404-secondary-border-hover:var(--control-border-strong);
+  --error404-focus-outline:color-mix(in srgb, var(--text-primary-color) 55%, transparent);
+  --error404-shader-overlay-top:color-mix(in srgb, var(--bg-color) 8%, transparent);
+  --error404-shader-overlay-bottom:color-mix(in srgb, var(--bg-color) 16%, transparent);
+  --error404-shader-canvas-opacity:0.96;
+  --error404-shader-canvas-duration:720ms;
+  --error404-shader-veil-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --error404-shader-veil-blur:18px;
+  --error404-page-padding-y:48px;
+  --error404-page-padding-x:24px;
 }
 
 /* =========================================================
@@ -98,7 +104,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(5, 5, 6, 0.08) 0%, rgba(5, 5, 6, 0.16) 100%);
+  background:linear-gradient(180deg, var(--error404-shader-overlay-top) 0%, var(--error404-shader-overlay-bottom) 100%);
   pointer-events: none;
 }
 
@@ -115,19 +121,19 @@
   height: 100%;
   display: block;
   opacity: 0;
-  transition: opacity 720ms ease;
+  transition:opacity var(--error404-shader-canvas-duration) ease;
 }
 
 .page-404-hero-shader-active .page-404-hero-shader-canvas {
-  opacity: 0.96;
+  opacity:var(--error404-shader-canvas-opacity);
 }
 
 .page-404-hero-shader-veil {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background:var(--error404-shader-veil-surface);
+  backdrop-filter:blur(var(--error404-shader-veil-blur));
+  -webkit-backdrop-filter:blur(var(--error404-shader-veil-blur));
   opacity: 1;
 }
 

@@ -37,18 +37,18 @@
 ============================================================================= */
 :root{
   --account-drawer-panel-width: min(40rem, calc(100vw - (2 * var(--site-gutter, 24px))));
-  --account-drawer-surface: rgba(0, 0, 0, 0.82);
+  --account-drawer-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-drawer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-drawer-backdrop: var(--overlay-backdrop);
 
-  --account-drawer-card-surface: color-mix(in srgb, var(--bg-color) 72%, transparent);
+  --account-drawer-card-surface:color-mix(in srgb, var(--surface-color) 72%, transparent);
   --account-drawer-card-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --account-drawer-card-shadow: var(--shadow-soft);
   --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 5%, transparent);
   --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 72%, transparent);
 
-  --account-drawer-profile-surface: color-mix(in srgb, var(--bg-color) 76%, transparent);
+  --account-drawer-profile-surface:color-mix(in srgb, var(--surface-color) 76%, transparent);
   --account-drawer-profile-border: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
   --account-drawer-profile-shadow: var(--shadow-soft);
 
@@ -123,6 +123,7 @@
   --account-drawer-text-action-letter-spacing: var(--account-text-action-letter-spacing);
   --account-drawer-text-link-color: var(--text-primary-color);
   --account-drawer-text-link-color-hover: var(--color-primary1);
+  --account-drawer-accent-hover:var(--color-primary1);
   --account-drawer-text-link-font-size: var(--account-text-action-font-size);
   --account-drawer-text-link-line-height: var(--account-text-action-line-height);
   --account-drawer-text-link-letter-spacing: var(--account-text-action-letter-spacing);
@@ -143,33 +144,33 @@
 }
 
 html[data-theme-effective="light"]{
-  --account-drawer-surface: rgba(255, 255, 255, 0.88);
-  --account-drawer-card-surface: rgba(255, 255, 255, 0.52);
+  --account-drawer-surface:color-mix(in srgb, var(--surface-color) 88%, transparent);
+  --account-drawer-card-surface:color-mix(in srgb, var(--surface-color) 52%, transparent);
   --account-drawer-card-border: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
   --account-drawer-card-shadow: var(--shadow-soft);
   --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
   --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
-  --account-drawer-profile-surface: rgba(255, 255, 255, 0.56);
+  --account-drawer-profile-surface:color-mix(in srgb, var(--surface-color) 56%, transparent);
   --account-drawer-profile-border: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
   --account-drawer-profile-shadow: var(--shadow-soft);
-  --account-drawer-shell-inner-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.03);
-  --account-drawer-shell-highlight: linear-gradient(180deg, rgba(0, 0, 0, 0.022) 0%, transparent 22%);
+  --account-drawer-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-drawer-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
   --account-drawer-header-divider: transparent;
   --account-drawer-primary-shadow: var(--shadow-medium);
 }
 
 html[data-theme-effective="dark"]{
-  --account-drawer-surface: rgba(0, 0, 0, 0.82);
-  --account-drawer-card-surface: rgba(255, 255, 255, 0.03);
+  --account-drawer-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --account-drawer-card-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-drawer-card-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-drawer-card-shadow: var(--shadow-medium);
   --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
   --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 74%, transparent);
-  --account-drawer-profile-surface: rgba(255, 255, 255, 0.035);
+  --account-drawer-profile-surface:color-mix(in srgb, var(--text-primary-color) 3.5%, transparent);
   --account-drawer-profile-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --account-drawer-profile-shadow: var(--shadow-medium);
-  --account-drawer-shell-inner-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  --account-drawer-shell-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 22%);
+  --account-drawer-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-drawer-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-drawer-header-divider: transparent;
   --account-drawer-primary-shadow: var(--shadow-strong);
 }
@@ -359,7 +360,7 @@ body.account-drawer-closing .account-drawer-shell{
 .account-drawer-close:hover,
 .account-drawer-close:focus-visible,
 .account-drawer-close:active{
-  color: var(--color-primary7);
+  color:var(--account-drawer-accent-hover);
   transform: translateY(var(--account-drawer-close-hover-lift-y)) scale(var(--account-drawer-close-hover-scale));
   outline: none;
 }
@@ -493,7 +494,7 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 .account-drawer-action:focus-visible{
-  box-shadow: 0 0 0 3px rgba(145,124,111,0.16);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--color-primary1) 16%, transparent);
   outline: none;
 }
 

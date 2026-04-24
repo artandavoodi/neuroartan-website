@@ -1,9 +1,18 @@
 /* =============================================================================
+   00A) PROFILE SHELL TOKENS
    01) PROFILE SHELL FOUNDATION
    02) PROFILE SHELL SURFACE
    03) PROFILE SHELL INNER COMPOSITION
    04) PROFILE SHARED CONTROL STATES
    ============================================================================= */
+
+/* =============================================================================
+   00A) PROFILE SHELL TOKENS
+   ============================================================================= */
+:root{
+  --profile-shell-disabled-opacity:0.48;
+}
+
 
 /* =============================================================================
    01) PROFILE SHELL FOUNDATION
@@ -56,7 +65,7 @@
 
 .profile-shell [aria-disabled="true"],
 .profile-shell button:disabled{
-  opacity:0.48;
+  opacity:var(--profile-shell-disabled-opacity);
   pointer-events:none;
 }
 

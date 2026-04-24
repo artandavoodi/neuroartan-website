@@ -1,18 +1,31 @@
 /* =============================================================================
    00) FILE INDEX
-   01) DESTINATION ROOT
-   02) SURFACE SHELL
-   03) HEADER
-   04) SECTION STRUCTURE
-   05) MODE GRID
-   06) COLOR PICKER CONSUMER STATE
-   07) TOGGLE LIST CONSUMER LAYOUT
-   08) SCROLL SAFETY
-   09) RESPONSIVE REFINEMENTS
+   01) THEME SETTINGS TOKENS
+   02) DESTINATION ROOT
+   03) SURFACE SHELL
+   04) HEADER
+   05) SECTION STRUCTURE
+   06) MODE GRID
+   07) COLOR PICKER CONSUMER STATE
+   08) TOGGLE LIST CONSUMER LAYOUT
+   09) SCROLL SAFETY
+   10) RESPONSIVE REFINEMENTS
 ============================================================================= */
 
 /* =============================================================================
-   01) DESTINATION ROOT
+   01) THEME SETTINGS TOKENS
+============================================================================= */
+:root{
+  --home-platform-theme-eyebrow-opacity:0.72;
+  --home-platform-theme-summary-opacity:0.72;
+  --home-platform-theme-caption-opacity:0.72;
+  --home-platform-theme-token-grid-disabled-opacity:0.48;
+  --home-platform-theme-token-grid-enabled-opacity:1;
+  --home-platform-theme-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) DESTINATION ROOT
 ============================================================================= */
 .home-platform-destination--settings-theme{
   width:100%;
@@ -48,7 +61,7 @@
   font-weight:500;
   letter-spacing:0.08em;
   text-transform:uppercase;
-  opacity:0.72;
+  opacity:var(--home-platform-theme-eyebrow-opacity);
 }
 
 .home-platform-theme__title,
@@ -65,11 +78,11 @@
   max-width:44rem;
   font-size:0.88rem;
   line-height:1.46;
-  opacity:0.72;
+  opacity:var(--home-platform-theme-summary-opacity);
 }
 
 /* =============================================================================
-   04) SECTION STRUCTURE
+   05) SECTION STRUCTURE
 ============================================================================= */
 .home-platform-theme__section{
   display:flex;
@@ -91,7 +104,7 @@
 }
 
 /* =============================================================================
-   05) MODE GRID
+   06) MODE GRID
 ============================================================================= */
 .home-platform-theme__mode-grid{
   display:grid;
@@ -116,10 +129,10 @@
   text-align:left;
   cursor:pointer;
   transition:
-    border-color 220ms ease,
-    background 220ms ease,
-    opacity 220ms ease,
-    color 220ms ease;
+    border-color var(--home-platform-theme-motion-fast) ease,
+    background var(--home-platform-theme-motion-fast) ease,
+    opacity var(--home-platform-theme-motion-fast) ease,
+    color var(--home-platform-theme-motion-fast) ease;
 }
 
 .home-platform-theme__mode-option:hover,
@@ -146,11 +159,11 @@
   margin:0;
   font-size:0.74rem;
   line-height:1.32;
-  opacity:0.72;
+  opacity:var(--home-platform-theme-caption-opacity);
 }
 
 /* =============================================================================
-   06) COLOR PICKER CONSUMER STATE
+   07) COLOR PICKER CONSUMER STATE
 ============================================================================= */
 .home-platform-theme__token-grid{
   display:grid;
@@ -187,17 +200,17 @@
 .home-platform-theme[data-active-theme="system"] .home-platform-theme__token-grid,
 .home-platform-theme[data-active-theme="dark"] .home-platform-theme__token-grid,
 .home-platform-theme[data-active-theme="light"] .home-platform-theme__token-grid{
-  opacity:0.48;
+  opacity:var(--home-platform-theme-token-grid-disabled-opacity);
   pointer-events:none;
 }
 
 .home-platform-theme[data-active-theme="custom"] .home-platform-theme__token-grid{
-  opacity:1;
+  opacity:var(--home-platform-theme-token-grid-enabled-opacity);
   pointer-events:auto;
 }
 
 /* =============================================================================
-   07) TOGGLE LIST CONSUMER LAYOUT
+   08) TOGGLE LIST CONSUMER LAYOUT
 ============================================================================= */
 .home-platform-theme__toggle-list{
   display:flex;
@@ -233,7 +246,7 @@
 }
 
 /* =============================================================================
-   08) SCROLL SAFETY
+   09) SCROLL SAFETY
 ============================================================================= */
 .home-platform-theme,
 .home-platform-theme *{
@@ -252,7 +265,7 @@
 }
 
 /* =============================================================================
-   09) RESPONSIVE REFINEMENTS
+   10) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width:900px){
   .home-platform-theme__mode-grid{

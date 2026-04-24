@@ -30,16 +30,16 @@
 ============================================================================= */
 
 #menu-overlay.menu-overlay{
-  --menu-bg: var(--bg-color, #000);
-  --menu-fg: var(--text-color, #fff);
-  --menu-fg-muted: var(--text-secondary-color, rgba(255,255,255,0.7));
+  --menu-bg:var(--bg-color);
+  --menu-fg:var(--text-color);
+  --menu-fg-muted:var(--text-secondary-color);
   --menu-accent: var(--color-primary1);
 
-  --menu-border-color: var(--menu-border, rgba(255,255,255,0.18));
-  --menu-separator-color: var(--menu-sep, rgba(255,255,255,0.12));
+  --menu-border-color:var(--menu-border, var(--control-border));
+  --menu-separator-color:var(--menu-sep, color-mix(in srgb, var(--menu-fg) 12%, transparent));
 
-  --menu-glass: var(--menu-surface, rgba(0,0,0,0.48));
-  --menu-glass-strong: var(--menu-surface-strong, rgba(0,0,0,0.58));
+  --menu-glass:var(--menu-surface, color-mix(in srgb, var(--menu-bg) 52%, transparent));
+  --menu-glass-strong:var(--menu-surface-strong, color-mix(in srgb, var(--menu-bg) 64%, transparent));
   --menu-glass-wash: color-mix(in srgb, var(--menu-fg) 7%, transparent);
 
   --menu-icon-filter: var(--icon-image-filter, none);
@@ -66,18 +66,17 @@
   --menu-rail-pad: 34px;
   --menu-rail-label-pad: 34px;
   --menu-rail-font: 1.08rem;
+  --menu-close-hover-color:var(--menu-accent);
+  --menu-open-line-hover-color:var(--menu-accent);
+  --menu-motion-line-fast:300ms;
+  --menu-motion-overlay:260ms;
+  --menu-motion-filter:260ms;
+  --menu-motion-color:260ms;
+  --menu-motion-background:260ms;
+  --menu-motion-opacity:260ms;
 }
 
-@supports (color: color-mix(in srgb, #fff 50%, transparent)){
-  #menu-overlay.menu-overlay{
-    --menu-border-color: var(--menu-border, rgba(255,255,255,0.18));
-    --menu-separator-color: var(--menu-sep, rgba(255,255,255,0.12));
 
-    --menu-glass: var(--menu-surface);
-    --menu-glass-strong: var(--menu-surface-strong);
-    --menu-glass-wash: color-mix(in srgb, var(--menu-fg) 7%, transparent);
-  }
-}
 
 /* =============================================================================
    02) VISIBILITY + OPEN/CLOSE MOTION
@@ -141,7 +140,7 @@ body.menu-active{ overflow: hidden; }
   position:absolute;top:50%;left:50%;
   width:55%;height:1.2px;background-color:var(--text-color);
   transform-origin:center;
-  transition:transform 0.45s cubic-bezier(0.22,1,0.36,1),background-color 0.3s ease;
+  transition:transform 0.45s cubic-bezier(0.22,1,0.36,1),background-color var(--menu-motion-line-fast) ease;
   backface-visibility:hidden;
 }
 #menu-button .line-top{transform:translate(-50%,calc(-50% - 4px));}
@@ -159,7 +158,7 @@ body.menu-active{ overflow: hidden; }
 #menu-button.menu-open:hover .line-top,
 #menu-button.menu-open:hover .line-bottom{
   transform:translate(-50%,-50%) rotate(0deg);
-  background-color:var(--color-primary7);
+  background-color:var(--menu-open-line-hover-color);
 }
 
 /* =============================================================================
@@ -189,7 +188,7 @@ body.menu-active{ overflow: hidden; }
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 
-  transition: opacity 260ms ease, visibility 260ms ease, color 260ms ease;
+  transition:opacity var(--menu-motion-overlay) ease, visibility var(--menu-motion-overlay) ease, color var(--menu-motion-overlay) ease;
 }
 
 #menu-overlay.menu-overlay.is-open[aria-hidden="false"],
@@ -340,7 +339,7 @@ body.menu-active .stage-circle{ opacity: 0 !important; filter: none !important; 
   transform: translateX(var(--menu-pack-toggle-nudge)) scale(1);
   transform-origin: center;
   will-change: transform, filter;
-  transition: transform var(--menu-hover-duration) var(--menu-hover-ease), filter 260ms ease;
+  transition: transform var(--menu-hover-duration) var(--menu-hover-ease), filter var(--menu-motion-filter) ease;
   filter: var(--menu-icon-filter);
 }
 
@@ -429,8 +428,8 @@ body.menu-active .stage-circle{ opacity: 0 !important; filter: none !important; 
   transition:
     transform var(--menu-hover-duration) var(--menu-hover-ease),
     opacity var(--menu-hover-opacity-duration) ease,
-    filter 260ms ease,
-    color 260ms ease;
+    filter var(--menu-motion-filter) ease,
+    color var(--menu-motion-color) ease;
 }
 
 #menu-overlay .menu-control-icon:hover,
@@ -801,7 +800,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   display: block;
   opacity: 0.92;
   margin-bottom: 18px;
-  transition: filter 260ms ease, opacity 260ms ease;
+  transition: filter var(--menu-motion-filter) ease, opacity var(--menu-motion-opacity) ease;
   filter: var(--menu-icon-filter);
 }
 
@@ -835,7 +834,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-col-b-section-b .menu-item,
 #menu-overlay .menu-col-b-section-b .menu-link{
   color: var(--menu-fg);
-  transition: color 260ms ease;
+  transition: color var(--menu-motion-color) ease;
 }
 
 /* Hover color must be Primary 1 */
@@ -843,7 +842,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-col-b-section-b .menu-item:focus-within,
 #menu-overlay .menu-col-b-section-b .menu-link:hover,
 #menu-overlay .menu-col-b-section-b .menu-link:focus-visible{
-  color: var(--color-primary1);
+  color:var(--menu-accent);
 }
 
 #menu-overlay .menu-col-b-section-b .menu-list{
@@ -865,7 +864,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   background: var(--menu-separator-color);
   align-self: stretch;
   opacity: inherit;
-  transition: background-color 260ms ease, opacity 260ms ease;
+  transition: background-color var(--menu-motion-background) ease, opacity var(--menu-motion-opacity) ease;
 }
 
 #menu-overlay .menu-col-b-section-b .menu-list .menu-item{
@@ -927,7 +926,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   transition:
     transform 820ms var(--menu-hover-ease),
     opacity 0.55s ease,
-    color 260ms ease;
+    color var(--menu-motion-color) ease;
 
   transition-delay: inherit;
   z-index: 2;
@@ -985,8 +984,8 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   transition:
     transform var(--menu-hover-duration) var(--menu-hover-ease),
     opacity var(--menu-hover-opacity-duration) ease,
-    color 260ms ease,
-    filter 260ms ease;
+    color var(--menu-motion-color) ease,
+    filter var(--menu-motion-filter) ease;
 }
 
 #menu-overlay .menu-pack-icon:hover,
@@ -1075,7 +1074,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-close:hover{
   transform: translateX(-50%) scale(1.06);
   opacity: 1;
-  border-color: color-mix(in srgb, var(--menu-accent) 55%, var(--menu-border-color));
+  border-color:color-mix(in srgb, var(--menu-close-hover-color) 55%, var(--menu-border-color));
 }
 
 /* =============================================================================

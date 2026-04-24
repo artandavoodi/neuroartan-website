@@ -40,9 +40,9 @@
   --account-profile-setup-password-meter-gap: calc(var(--account-profile-setup-content-gap-xs) * 0.75);
   --account-profile-setup-password-meter-segment-radius: var(--radius-pill);
   --account-profile-setup-password-meter-track: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --account-profile-setup-password-meter-fill-weak: color-mix(in srgb, #c14e4e 82%, var(--text-primary-color));
-  --account-profile-setup-password-meter-fill-medium: color-mix(in srgb, #b08d3c 76%, var(--text-primary-color));
-  --account-profile-setup-password-meter-fill-strong: color-mix(in srgb, #4e9b74 82%, var(--text-primary-color));
+  --account-profile-setup-password-meter-fill-weak:var(--status-danger-color, var(--color-primary7));
+  --account-profile-setup-password-meter-fill-medium:var(--status-warning-color, var(--color-primary1));
+  --account-profile-setup-password-meter-fill-strong:var(--status-success-color, var(--color-primary1));
 
   --account-profile-setup-field-height: var(--account-field-height);
   --account-profile-setup-field-radius: var(--account-field-radius);
@@ -85,6 +85,8 @@
 
   --account-profile-setup-back-control-size: var(--account-back-control-size);
   --account-profile-setup-back-icon-size: var(--account-back-icon-size);
+  --account-profile-setup-motion-fast:var(--duration-fast);
+  --account-profile-setup-motion-ease:var(--ease-standard);
 }
 
 /* =============================================================================
@@ -170,10 +172,10 @@
   margin: 0;
   outline: none;
   transition:
-    border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+    border-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    box-shadow var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    background-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease);
 }
 
 .account-profile-setup-drawer-input::placeholder{
@@ -253,7 +255,7 @@
   min-height: 0.28rem;
   border-radius: var(--account-profile-setup-password-meter-segment-radius);
   background: var(--account-profile-setup-password-meter-track);
-  transition: background-color var(--duration-fast) var(--ease-standard);
+  transition:background-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease);
 }
 
 .account-profile-setup-drawer-password-status[data-account-profile-setup-password-status-shell="weak"] .account-profile-setup-drawer-password-meter-segment:nth-child(-n+1){
@@ -325,10 +327,10 @@
   text-decoration: none;
   cursor: pointer;
   transition:
-    opacity var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+    opacity var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    border-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    background-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
 }

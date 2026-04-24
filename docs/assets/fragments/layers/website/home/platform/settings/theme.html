@@ -7,7 +7,8 @@
      05) CUSTOM PALETTE SECTION
      06) CUSTOM HEX TOKEN SECTION
      07) CUSTOM BACKGROUND CONTROLS
-     08) CANONICAL OWNERSHIP NOTE
+     08) CURSOR CONTROLS
+     09) RESET CONTROL
 ============================================================================= -->
 <!-- =============================================================================
      01) THEME DESTINATION ROOT
@@ -21,7 +22,7 @@
       <p class="home-platform-theme__eyebrow">Settings</p>
       <h1 class="home-platform-theme__title">Appearance</h1>
       <p class="home-platform-theme__summary">
-        System follows the device appearance preference. Custom, Dark, and Light are governed by one global token engine.
+        Set the interface mode, contrast, palette, and custom visual layers from one global system.
       </p>
     </header>
 
@@ -35,6 +36,16 @@
       </div>
 
       <div class="home-platform-theme__mode-grid" role="group" aria-label="Appearance mode">
+        <button
+          class="home-platform-theme__mode-option"
+          type="button"
+          data-home-platform-theme-mode-option
+          data-theme-option="company"
+          aria-pressed="true">
+          <span class="home-platform-theme__mode-label">Company Default</span>
+          <span class="home-platform-theme__mode-caption">Authored Neuroartan baseline</span>
+        </button>
+
         <button
           class="home-platform-theme__mode-option"
           type="button"
@@ -84,9 +95,6 @@
       <div class="home-platform-theme__section-header">
         <p class="home-platform-theme__section-eyebrow">Contrast</p>
         <h2 class="home-platform-theme__section-title" id="home-platform-theme-contrast-title">Choose contrast density</h2>
-        <p class="home-platform-theme__section-context">
-          Contrast is a global theme sublayer and applies through canonical token attributes only.
-        </p>
       </div>
 
       <div class="home-platform-theme__mode-grid" role="group" aria-label="Theme contrast">
@@ -129,9 +137,6 @@
       <div class="home-platform-theme__section-header">
         <p class="home-platform-theme__section-eyebrow">Palette</p>
         <h2 class="home-platform-theme__section-title" id="home-platform-theme-palette-title">Choose custom palette</h2>
-        <p class="home-platform-theme__section-context">
-          Palette selection activates Custom and stores the selected palette through the canonical theme state.
-        </p>
       </div>
 
       <div class="home-platform-theme__mode-grid" role="group" aria-label="Custom palette">
@@ -172,11 +177,8 @@
     ============================================================================= -->
     <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-token-title">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Hex tokens</p>
-        <h2 class="home-platform-theme__section-title" id="home-platform-theme-token-title">Adjust custom colors</h2>
-        <p class="home-platform-theme__section-context">
-          Hex inputs write to global CSS variables through the canonical theme engine. Local styling ownership is not duplicated here.
-        </p>
+        <p class="home-platform-theme__section-eyebrow">Colors</p>
+        <h2 class="home-platform-theme__section-title" id="home-platform-theme-token-title">Custom colors</h2>
       </div>
 
       <div class="home-platform-theme__token-grid" role="group" aria-label="Custom hex color tokens">
@@ -217,18 +219,14 @@
     ============================================================================= -->
     <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-effects-title">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Custom</p>
-        <h2 class="home-platform-theme__section-title" id="home-platform-theme-effects-title">Background controls</h2>
-        <p class="home-platform-theme__section-context">
-          These controls are active for Custom. System, Dark, and Light keep governed institutional surfaces.
-        </p>
+        <p class="home-platform-theme__section-eyebrow">Layers</p>
+        <h2 class="home-platform-theme__section-title" id="home-platform-theme-effects-title">Custom visual layers</h2>
       </div>
 
       <div class="home-platform-theme__toggle-list" role="list" aria-label="Background controls">
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="breathing-circle">
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Breathing Circle</p>
-            <p class="home-platform-theme__toggle-description">Controls the background breathing circle atmosphere in Custom mode.</p>
+            <p class="home-platform-theme__toggle-title">Breathing circle</p>
           </div>
           <button
             class="na-toggle"
@@ -249,8 +247,7 @@
 
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="cinematic-background">
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Cinematic Background</p>
-            <p class="home-platform-theme__toggle-description">Controls the homepage cinematic video background in Custom mode.</p>
+            <p class="home-platform-theme__toggle-title">Cinematic background</p>
           </div>
           <button
             class="na-toggle"
@@ -271,8 +268,7 @@
 
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="hero-shader">
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Hero Shader</p>
-            <p class="home-platform-theme__toggle-description">Controls the moving homepage shader environment in Custom mode.</p>
+            <p class="home-platform-theme__toggle-title">Hero shader</p>
           </div>
           <button
             class="na-toggle"
@@ -293,8 +289,7 @@
 
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="matte-atmosphere">
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Matte Atmosphere</p>
-            <p class="home-platform-theme__toggle-description">Controls the premium matte environment in Custom mode.</p>
+            <p class="home-platform-theme__toggle-title">Matte atmosphere</p>
           </div>
           <button
             class="na-toggle"
@@ -316,16 +311,57 @@
     </section>
 
     <!-- =============================================================================
-         08) CANONICAL OWNERSHIP NOTE
+         08) CURSOR CONTROLS
     ============================================================================= -->
-    <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-note-title">
+    <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-cursor-title">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">System note</p>
-        <h2 class="home-platform-theme__section-title" id="home-platform-theme-note-title">Canonical ownership</h2>
-        <p class="home-platform-theme__section-context">
-          These controls are consumer slots only. Theme state, toggle state, contrast, palette, and color tokens are owned by the global theme and toggle systems and must not be redefined locally in this destination.
-        </p>
+        <p class="home-platform-theme__section-eyebrow">Cursor</p>
+        <h2 class="home-platform-theme__section-title" id="home-platform-theme-cursor-title">Pointer style</h2>
+      </div>
+
+      <div class="home-platform-theme__mode-grid" role="group" aria-label="Cursor mode">
+        <button
+          class="home-platform-theme__mode-option"
+          type="button"
+          data-home-platform-cursor-mode-option
+          data-cursor-mode-option="native"
+          aria-pressed="false">
+          <span class="home-platform-theme__mode-label">Default</span>
+          <span class="home-platform-theme__mode-caption">Native browser cursor</span>
+        </button>
+
+        <button
+          class="home-platform-theme__mode-option"
+          type="button"
+          data-home-platform-cursor-mode-option
+          data-cursor-mode-option="custom"
+          aria-pressed="false">
+          <span class="home-platform-theme__mode-label">Circle</span>
+          <span class="home-platform-theme__mode-caption">Neuroartan cursor layer</span>
+        </button>
+      </div>
+
+      <div class="home-platform-theme__token-grid" role="group" aria-label="Cursor color">
+        <label class="home-platform-theme__token-field">
+          <span class="home-platform-theme__token-label">Cursor color</span>
+          <input class="home-platform-theme__token-input" type="color" data-home-platform-cursor-color value="#917c6f" aria-label="Custom cursor color">
+        </label>
       </div>
     </section>
+
+    <!-- =============================================================================
+         09) RESET CONTROL
+    ============================================================================= -->
+    <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-reset-title">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Baseline</p>
+        <h2 class="home-platform-theme__section-title" id="home-platform-theme-reset-title">Restore company design</h2>
+      </div>
+
+      <button class="home-platform-theme__reset-button" type="button" data-home-platform-theme-reset-company>
+        Restore Company Default
+      </button>
+    </section>
+
   </div>
 </section>

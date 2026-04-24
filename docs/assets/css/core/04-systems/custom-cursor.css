@@ -1,68 +1,83 @@
-/* =========================================================
-   00. FILE INDEX
-   01. GLOBAL CURSOR OVERRIDE
-   02. CURSOR NODE
-   03. TOUCH / MOBILE FALLBACK
-   04. RTL SAFETY
-   ========================================================= */
+/* =============================================================================
+   00) FILE INDEX
+   01) GLOBAL CURSOR MODE
+   02) CURSOR NODE
+   03) TOUCH / MOBILE FALLBACK
+   04) RTL SAFETY
+   05) END OF FILE
+============================================================================= */
 
-/* =========================================================
-   01. GLOBAL CURSOR OVERRIDE
-   ========================================================= */
-html,
-body,
-body * {
-  cursor: none !important;
+/* =============================================================================
+   01) GLOBAL CURSOR MODE
+============================================================================= */
+html[data-cursor-custom="true"],
+html[data-cursor-custom="true"] body,
+html[data-cursor-custom="true"] body *{
+  cursor:none;
 }
 
-/* =========================================================
-   02. CURSOR NODE
-   ========================================================= */
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 2147483647;
-  background-color: var(--color-primary1);
-  transform: translate3d(-50%, -50%, 0) scale(1);
+html[data-cursor-custom="false"],
+html[data-cursor-custom="false"] body,
+html[data-cursor-custom="false"] body *{
+  cursor:auto;
+}
+
+/* =============================================================================
+   02) CURSOR NODE
+============================================================================= */
+.custom-cursor{
+  position:fixed;
+  top:0;
+  left:0;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:2147483647;
+  background-color:var(--cursor-accent-color, #917c6f);
+  transform:translate3d(-50%, -50%, 0) scale(1);
   transition:
     background-color 0.3s ease,
     transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.22s ease;
-  opacity: 1;
-  mix-blend-mode: normal;
-  display: block;
-  visibility: visible;
-  right: auto;
-  bottom: auto;
-  will-change: left, top, transform, opacity;
+  opacity:1;
+  mix-blend-mode:normal;
+  display:block;
+  visibility:visible;
+  right:auto;
+  bottom:auto;
+  will-change:left, top, transform, opacity;
 }
 
-/* =========================================================
-   03. TOUCH / MOBILE FALLBACK
-   ========================================================= */
-@media (hover: none) and (pointer: coarse), (max-width: 768px) {
-  .custom-cursor {
-    display: none !important;
+html[data-cursor-custom="false"] .custom-cursor{
+  opacity:0;
+  visibility:hidden;
+}
+
+/* =============================================================================
+   03) TOUCH / MOBILE FALLBACK
+============================================================================= */
+@media (hover:none) and (pointer:coarse), (max-width:768px){
+  .custom-cursor{
+    display:none;
   }
 
   html,
   body,
-  body * {
-    cursor: auto !important;
+  body *{
+    cursor:auto;
   }
 }
 
-/* =========================================================
-   04. RTL SAFETY
-   ========================================================= */
+/* =============================================================================
+   04) RTL SAFETY
+============================================================================= */
 html[dir="rtl"] .custom-cursor,
-body[dir="rtl"] .custom-cursor {
-  direction: ltr;
-  unicode-bidi: isolate;
-  transform: translate3d(-50%, -50%, 0) scale(1) !important;
+body[dir="rtl"] .custom-cursor{
+  direction:ltr;
+  unicode-bidi:isolate;
 }
+
+/* =============================================================================
+   05) END OF FILE
+============================================================================= */

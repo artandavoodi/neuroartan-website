@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) HOME MATTE TOKENS
    02) HOME MATTE LAYER BASE
-   03) HOME MATTE CUSTOM MODE GATE
+   03) HOME MATTE TOGGLE GATE
    04) HOME MATTE STATE MODES
    05) HOME MATTE EXTENDED STATE MODES
    06) END OF FILE
@@ -104,11 +104,13 @@
 }
 
 /* =============================================================================
-   03) HOME MATTE CUSTOM MODE GATE
+   03) HOME MATTE TOGGLE GATE
 ============================================================================= */
 
-html[data-theme="custom"] #home-hero .home-hero-matte,
-html[data-theme="custom"] .home-hero-matte{
+html[data-theme="company"] #home-hero .home-hero-matte,
+html[data-theme="company"] .home-hero-matte,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] #home-hero .home-hero-matte,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] .home-hero-matte{
   opacity: 1;
   visibility: visible;
 }
@@ -121,8 +123,8 @@ html[data-theme="custom"] .home-hero-matte{
    - matte-solid : full solid theme-aware surface, no visible video bleed
 ============================================================================= */
 
-html[data-theme="custom"] body.matte-blur #home-hero .home-hero-matte,
-html[data-theme="custom"] body.matte-blur .home-hero-matte{
+html[data-theme="company"] body.matte-blur,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] body.matte-blur{
   --home-matte-opacity-top: var(--home-matte-opacity-top-light);
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-light);
   --home-matte-opacity-low: var(--home-matte-opacity-low-light);
@@ -130,8 +132,8 @@ html[data-theme="custom"] body.matte-blur .home-hero-matte{
   --home-matte-blur: 24px;
 }
 
-html[data-theme="custom"] body.matte-soft #home-hero .home-hero-matte,
-html[data-theme="custom"] body.matte-soft .home-hero-matte{
+html[data-theme="company"] body.matte-soft,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] body.matte-soft{
   --home-matte-opacity-top: var(--home-matte-opacity-top-soft);
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-soft);
   --home-matte-opacity-low: var(--home-matte-opacity-low-soft);
@@ -139,8 +141,8 @@ html[data-theme="custom"] body.matte-soft .home-hero-matte{
   --home-matte-blur: 30px;
 }
 
-html[data-theme="custom"] body.matte-solid #home-hero .home-hero-matte,
-html[data-theme="custom"] body.matte-solid .home-hero-matte{
+html[data-theme="company"] body.matte-solid,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] body.matte-solid{
   --home-matte-opacity-top: 1;
   --home-matte-opacity-mid: 1;
   --home-matte-opacity-low: 1;
@@ -153,8 +155,8 @@ html[data-theme="custom"] body.matte-solid .home-hero-matte{
    Future-ready optional states for deeper homepage tuning.
 ============================================================================= */
 
-html[data-theme="custom"] body.matte-clear #home-hero .home-hero-matte,
-html[data-theme="custom"] body.matte-clear .home-hero-matte{
+html[data-theme="company"] body.matte-clear,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] body.matte-clear{
   --home-matte-opacity-top: var(--home-matte-opacity-top-clear);
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-clear);
   --home-matte-opacity-low: var(--home-matte-opacity-low-clear);
@@ -162,8 +164,8 @@ html[data-theme="custom"] body.matte-clear .home-hero-matte{
   --home-matte-blur: 10px;
 }
 
-html[data-theme="custom"] body.matte-solid-softedge #home-hero .home-hero-matte,
-html[data-theme="custom"] body.matte-solid-softedge .home-hero-matte{
+html[data-theme="company"] body.matte-solid-softedge,
+html[data-theme="custom"][data-homepage-theme-matte-atmosphere="true"] body.matte-solid-softedge{
   --home-matte-opacity-top: var(--home-matte-opacity-top-solid-softedge);
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-solid-softedge);
   --home-matte-opacity-low: var(--home-matte-opacity-low-solid-softedge);

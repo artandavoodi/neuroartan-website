@@ -5,16 +5,18 @@
    03) CURSOR PRIMITIVE REGISTRATION
    04) STYLE ASSET OWNERSHIP
    05) SELECTORS & STATE
-   06) NODE RECOVERY
-   07) VISUAL STATE
-   08) POINTER SYNC
-   09) RENDER LOOP
-   10) POINTER EVENTS
-   11) VISIBILITY / LIFECYCLE EVENTS
-   12) EVENT BINDING
-   13) SHARED READINESS HELPERS
-   14) INITIALIZATION
-   15) END OF FILE
+   06) CURSOR SETTINGS
+   07) NODE RECOVERY
+   08) VISUAL STATE
+   09) POINTER SYNC
+   10) RENDER LOOP
+   11) POINTER EVENTS
+   12) VISIBILITY / LIFECYCLE EVENTS
+   13) EVENT BINDING
+   14) PUBLIC API
+   15) SHARED READINESS HELPERS
+   16) INITIALIZATION
+   17) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -61,6 +63,10 @@ function assetPath(path) {
 }
 
 const CUSTOM_CURSOR_CSS_URL = assetPath('/assets/css/core/04-systems/custom-cursor.css');
+const STORAGE_KEY = 'neuroartan.cursor.state';
+const CURSOR_MODE_NATIVE = 'native';
+const CURSOR_MODE_CUSTOM = 'custom';
+const DEFAULT_CURSOR_COLOR = '#917c6f';
 
 /* =============================================================================
    03) STYLE ASSET OWNERSHIP
@@ -119,11 +125,67 @@ const state = {
   isInteractive: false,
   isHidden: false,
   initialized: false,
-  enabled: supportsFinePointer
+  enabled: supportsFinePointer,
+  mode: CURSOR_MODE_CUSTOM,
+  color: DEFAULT_CURSOR_COLOR
 };
 
 /* =============================================================================
-   06) NODE RECOVERY
+   06) CURSOR SETTINGS
+============================================================================= */
+function normalizeCursorMode(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === CURSOR_MODE_NATIVE) return CURSOR_MODE_NATIVE;
+  if (normalized === CURSOR_MODE_CUSTOM) return CURSOR_MODE_CUSTOM;
+  return CURSOR_MODE_CUSTOM;
+}
+
+function normalizeCursorColor(value) {
+  const normalized = String(value || '').trim();
+  if (/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(normalized)) return normalized;
+  return DEFAULT_CURSOR_COLOR;
+}
+
+function readStoredCursorState() {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) return {};
+    const parsed = JSON.parse(stored);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function writeStoredCursorState() {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      mode: state.mode,
+      color: state.color
+    }));
+  } catch (_) {}
+}
+
+function syncCursorRootAttributes() {
+  const html = document.documentElement;
+  const active = supportsFinePointer && state.mode === CURSOR_MODE_CUSTOM;
+
+  html.dataset.cursorMode = state.mode;
+  html.dataset.cursorCustom = active ? 'true' : 'false';
+  html.style.setProperty('--cursor-accent-color', state.color);
+
+  state.enabled = active;
+}
+
+function applyStoredCursorState() {
+  const storedState = readStoredCursorState();
+  state.mode = normalizeCursorMode(storedState.mode);
+  state.color = normalizeCursorColor(storedState.color);
+  syncCursorRootAttributes();
+}
+
+/* =============================================================================
+   07) NODE RECOVERY
 ============================================================================= */
 function ensureCursorNode() {
   let node = document.querySelector(CURSOR_SELECTOR);
@@ -173,15 +235,18 @@ function syncInteractiveStateFromPointerPosition() {
 }
 
 /* =============================================================================
-   07) VISUAL STATE
+   08) VISUAL STATE
 ============================================================================= */
 function applyVisualState() {
   const customCursor = document.querySelector(CURSOR_SELECTOR);
   if (!customCursor) return;
 
+  customCursor.style.setProperty('--cursor-accent-color', state.color);
+
   if (!state.enabled) {
     customCursor.style.opacity = '0';
     customCursor.style.transform = 'translate3d(-50%, -50%, 0) scale(0.8)';
+    customCursor.style.pointerEvents = 'none';
     return;
   }
 
@@ -198,7 +263,7 @@ function applyVisualState() {
 }
 
 /* =============================================================================
-   08) POINTER SYNC
+   09) POINTER SYNC
 ============================================================================= */
 function syncToPointer(x, y, immediate = false) {
   state.pointerX = x;
@@ -211,7 +276,7 @@ function syncToPointer(x, y, immediate = false) {
 }
 
 /* =============================================================================
-   09) RENDER LOOP
+   10) RENDER LOOP
 ============================================================================= */
 function stopLoop() {
   if (!rafId) return;
@@ -225,7 +290,7 @@ function renderCursor() {
 
   if (!state.enabled) {
     applyVisualState();
-    rafId = window.requestAnimationFrame(renderCursor);
+    stopLoop();
     return;
   }
 
@@ -250,7 +315,7 @@ function startLoop() {
 }
 
 /* =============================================================================
-   10) POINTER EVENTS
+   11) POINTER EVENTS
 ============================================================================= */
 function handlePointerMove(event) {
   syncToPointer(event.clientX, event.clientY);
@@ -281,7 +346,7 @@ function handlePointerLeave() {
 }
 
 /* =============================================================================
-   11) VISIBILITY / LIFECYCLE EVENTS
+   12) VISIBILITY / LIFECYCLE EVENTS
 ============================================================================= */
 function handleVisibilityChange() {
   state.isHidden = document.hidden;
@@ -305,21 +370,23 @@ function handleWindowBlur() {
 }
 
 function handlePointerMediaChange(event) {
-  state.enabled = event.matches;
+  state.enabled = event.matches && state.mode === CURSOR_MODE_CUSTOM;
 
   if (!state.enabled) {
     state.isHidden = true;
+    stopLoop();
   } else {
     state.isHidden = false;
     ensureCursorNode();
     startLoop();
   }
 
+  syncCursorRootAttributes();
   applyVisualState();
 }
 
 /* =============================================================================
-   12) EVENT BINDING
+   13) EVENT BINDING
 ============================================================================= */
 function bindEvents() {
   if (getRuntimeFlag(FLAG_BOUND)) return;
@@ -347,7 +414,65 @@ function bindEvents() {
 }
 
 /* =============================================================================
-   13) SHARED READINESS HELPERS
+   14) PUBLIC API
+============================================================================= */
+function setCursorState(nextState = {}) {
+  state.mode = normalizeCursorMode(nextState.mode ?? state.mode);
+  state.color = normalizeCursorColor(nextState.color ?? state.color);
+
+  syncCursorRootAttributes();
+  writeStoredCursorState();
+
+  if (state.enabled) {
+    ensureCursorNode();
+    state.isHidden = false;
+    startLoop();
+  } else {
+    state.isHidden = true;
+    stopLoop();
+  }
+
+  applyVisualState();
+
+  emitRuntimeEvent('neuroartan:cursor-changed', {
+    source: MODULE_ID,
+    modulePath: MODULE_PATH,
+    mode: state.mode,
+    color: state.color,
+    enabled: state.enabled
+  });
+}
+
+function resetCursorToCompanyDefault() {
+  setCursorState({
+    mode: CURSOR_MODE_CUSTOM,
+    color: DEFAULT_CURSOR_COLOR
+  });
+}
+
+function bindCursorIntentEvents() {
+  document.addEventListener('neuroartan:cursor-change-requested', (event) => {
+    setCursorState(event?.detail || {});
+  });
+
+  document.addEventListener('neuroartan:theme-changed', (event) => {
+    if (event?.detail?.theme !== 'company') return;
+    resetCursorToCompanyDefault();
+  });
+}
+
+window.NeuroartanCursor = Object.freeze({
+  getState: () => ({
+    mode: state.mode,
+    color: state.color,
+    enabled: state.enabled
+  }),
+  setState: setCursorState,
+  resetToCompanyDefault: resetCursorToCompanyDefault
+});
+
+/* =============================================================================
+   15) SHARED READINESS HELPERS
 ============================================================================= */
 window.__artanRunWhenReady = window.__artanRunWhenReady || ((bootFn) => {
   if (typeof bootFn !== 'function') return;
@@ -364,12 +489,18 @@ window.__artanRunWhenReady = window.__artanRunWhenReady || ((bootFn) => {
 });
 
 /* =============================================================================
-   14) INITIALIZATION
+   16) INITIALIZATION
 ============================================================================= */
 function initCursorPrimitive() {
+  applyStoredCursorState();
+  bindCursorIntentEvents();
+
   ensureStylesheetOnce(CUSTOM_CURSOR_CSS_URL);
 
-  if (!state.enabled) return;
+  if (!state.enabled) {
+    applyVisualState();
+    return;
+  }
 
   const customCursor = ensureCursorNode();
   if (!customCursor) return;
@@ -387,7 +518,10 @@ function initCursorPrimitive() {
     emitRuntimeEvent('neuroartan:cursor-primitive-ready', {
       source: MODULE_ID,
       modulePath: MODULE_PATH,
-      css: CUSTOM_CURSOR_CSS_URL
+      css: CUSTOM_CURSOR_CSS_URL,
+      mode: state.mode,
+      color: state.color,
+      enabled: state.enabled
     });
   }
   state.initialized = true;
@@ -401,5 +535,5 @@ function bootCursorPrimitive() {
 window.__artanRunWhenReady(bootCursorPrimitive);
 
 /* =============================================================================
-   15) END OF FILE
+   17) END OF FILE
 ============================================================================= */

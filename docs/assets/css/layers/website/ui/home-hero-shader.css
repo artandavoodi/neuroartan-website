@@ -11,7 +11,7 @@
    05A) SOFT VEIL LAYER
    06) GLASS MATTE LAYER
    07) INTERACTION FIELD
-   08) VISIBILITY / STATE
+   08) TOGGLE VISIBILITY STATE
    09) RESPONSIVE
 ============================================================================= */
 
@@ -38,43 +38,13 @@
 #home-hero-shader{
   position: absolute;
   inset: 0;
-  z-index: var(--home-hero-shader-z-index);
+  z-index: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
   pointer-events: none;
   opacity: var(--home-hero-shader-opacity);
   isolation: isolate;
-}
-
-#stage .stage-video,
-#stage .stage-video-overlay,
-#stage .stage-circle,
-#stage #stage-intro,
-#stage #stage-top,
-#stage #stage-center,
-#stage #stage-copy,
-#stage #stage-actions,
-#stage #stage-bottom{
-  position: relative;
-}
-
-#stage .stage-video,
-#stage .stage-video-overlay{
-  z-index: 0;
-}
-
-#stage .stage-circle{
-  z-index: 1;
-}
-
-#stage #stage-intro,
-#stage #stage-top,
-#stage #stage-center,
-#stage #stage-copy,
-#stage #stage-actions,
-#stage #stage-bottom{
-  z-index: 2;
 }
 
 /* =============================================================================
@@ -89,6 +59,7 @@
 ============================================================================= */
 .home-hero-shader-canvas-shell{
   position: absolute;
+  z-index: 0;
   inset: -8%;
   width: calc(100% + 16%);
   height: calc(100% + 16%);
@@ -114,6 +85,7 @@
 ============================================================================= */
 .home-hero-shader-veil{
   position: absolute;
+  z-index: 1;
   inset: 0;
   pointer-events: none;
   visibility: hidden;
@@ -127,6 +99,7 @@
 ============================================================================= */
 .home-hero-shader-matte{
   position: absolute;
+  z-index: 2;
   inset: 0;
   pointer-events: none;
   backdrop-filter: blur(var(--home-hero-shader-matte-blur));
@@ -153,17 +126,8 @@ html[data-theme-effective="dark"] .home-hero-shader-matte{
   background: transparent;
 }
 
-#stage #stage-intro,
-#stage #stage-logo,
-#stage #stage-essence,
-#stage #stage-cta,
-#stage #try-icos-button{
-  position: relative;
-  z-index: 3;
-}
-
 /* =============================================================================
-   08) VISIBILITY / STATE
+   08) TOGGLE VISIBILITY STATE
 ============================================================================= */
 .home-hero-shader[hidden]{
   display: none;
@@ -183,22 +147,26 @@ body.hero-stage-hidden .home-hero-shader{
   visibility: hidden;
 }
 
-html[data-theme="custom"] .home-hero-shader{
+html[data-theme="company"] .home-hero-shader,
+html[data-theme="custom"][data-homepage-theme-hero-shader="true"] .home-hero-shader{
   opacity: 1;
   visibility: visible;
 }
 
-html[data-theme="custom"] .home-hero-shader .home-hero-shader-canvas{
+html[data-theme="company"] .home-hero-shader .home-hero-shader-canvas,
+html[data-theme="custom"][data-homepage-theme-hero-shader="true"] .home-hero-shader .home-hero-shader-canvas{
   opacity: 0.96;
   visibility: visible;
 }
 
-html[data-theme="custom"] .home-hero-shader .home-hero-shader-veil{
+html[data-theme="company"] .home-hero-shader .home-hero-shader-veil,
+html[data-theme="custom"][data-homepage-theme-hero-shader="true"] .home-hero-shader .home-hero-shader-veil{
   opacity: var(--home-hero-shader-veil-opacity);
   visibility: visible;
 }
 
-html[data-theme="custom"] .home-hero-shader .home-hero-shader-matte{
+html[data-theme="company"] .home-hero-shader .home-hero-shader-matte,
+html[data-theme="custom"][data-homepage-theme-hero-shader="true"][data-homepage-theme-matte-atmosphere="true"] .home-hero-shader .home-hero-shader-matte{
   opacity: calc(var(--home-hero-shader-matte-opacity) + 0.06);
   visibility: visible;
 }

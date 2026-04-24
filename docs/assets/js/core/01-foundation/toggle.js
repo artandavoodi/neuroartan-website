@@ -2,13 +2,16 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) TOGGLE SELECTORS
-   03) TOGGLE HELPERS
-   04) TOGGLE STATE SYNC
-   05) TOGGLE INTERACTION BINDING
-   06) TOGGLE INITIALIZATION
-   07) PUBLIC API EXPORTS
-   08) AUTO-BOOTSTRAP
-   09) END OF FILE
+   03) TOGGLE STORAGE
+   04) TOGGLE HELPERS
+   05) HOMEPAGE TOGGLE ATTRIBUTE BRIDGE
+   06) TOGGLE STATE SYNC
+   07) TOGGLE INTERACTION BINDING
+   08) TOGGLE INITIALIZATION
+   09) DYNAMIC TOGGLE OBSERVER
+   10) PUBLIC API EXPORTS
+   11) AUTO-BOOTSTRAP
+   12) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -37,8 +40,64 @@ const TOGGLE_THUMB_SELECTOR = [
   '.ui-toggle__thumb'
 ].join(',');
 
+const TOGGLE_STORAGE_KEY = 'neuroartan.toggle.state';
+
+let toggleObserver = null;
+
+const HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP = Object.freeze({
+  'breathing-circle': 'homepageThemeBreathingCircle',
+  'cinematic-background': 'homepageThemeCinematicBackground',
+  'hero-shader': 'homepageThemeHeroShader',
+  'matte-atmosphere': 'homepageThemeMatteAtmosphere'
+});
+
 /* =============================================================================
-   03) TOGGLE HELPERS
+   03) TOGGLE STORAGE
+============================================================================= */
+function getToggleStorageId(toggle) {
+  if (!isToggleRoot(toggle)) return '';
+
+  const scope = String(toggle.getAttribute('data-toggle-scope') || '').trim();
+  const key = String(toggle.getAttribute('data-toggle-key') || '').trim();
+
+  if (!scope || !key) return '';
+  return `${scope}:${key}`;
+}
+
+function readStoredToggleState() {
+  try {
+    const raw = window.localStorage.getItem(TOGGLE_STORAGE_KEY);
+    if (!raw) return {};
+
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function writeStoredToggleState(storageId, checked) {
+  if (!storageId) return;
+
+  try {
+    const state = readStoredToggleState();
+    state[storageId] = Boolean(checked);
+    window.localStorage.setItem(TOGGLE_STORAGE_KEY, JSON.stringify(state));
+  } catch (_) {}
+}
+
+function getStoredToggleValue(toggle) {
+  const storageId = getToggleStorageId(toggle);
+  if (!storageId) return null;
+
+  const state = readStoredToggleState();
+  if (!(storageId in state)) return null;
+
+  return Boolean(state[storageId]);
+}
+
+/* =============================================================================
+   04) TOGGLE HELPERS
 ============================================================================= */
 function getNormalizedToggles(root = document) {
   if (!root?.querySelectorAll) return [];
@@ -97,21 +156,63 @@ function normalizeToggle(toggle) {
     toggle.dataset.toggleInitialized = 'true';
   }
 
-  syncToggleState(toggle, readToggleChecked(toggle), { emit: false });
+  const storedValue = getStoredToggleValue(toggle);
+  syncToggleState(toggle, storedValue === null ? readToggleChecked(toggle) : storedValue, {
+    emit: true,
+    persist: false,
+    source: storedValue === null ? 'init' : 'storage-restore'
+  });
 }
 
 /* =============================================================================
-   04) TOGGLE STATE SYNC
+   05) HOMEPAGE TOGGLE ATTRIBUTE BRIDGE
+============================================================================= */
+function syncHomepageThemeToggleAttribute(toggle, checked) {
+  if (!isToggleRoot(toggle)) return;
+  if (toggle.getAttribute('data-toggle-scope') !== 'homepage-theme') return;
+
+  const key = toggle.getAttribute('data-toggle-key') || '';
+  const attributeName = HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP[key];
+  if (!attributeName) return;
+
+  const attributeValue = checked ? 'true' : 'false';
+  const kebabAttribute = `data-${attributeName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}`;
+
+  document.documentElement.dataset[attributeName] = attributeValue;
+  document.body?.setAttribute(kebabAttribute, attributeValue);
+}
+
+function syncHomepageThemeToggleAttributesFromStorage() {
+  const storedState = readStoredToggleState();
+
+  Object.entries(HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP).forEach(([key, attributeName]) => {
+    const storageId = `homepage-theme:${key}`;
+    if (!(storageId in storedState)) return;
+
+    const checked = Boolean(storedState[storageId]);
+    const attributeValue = checked ? 'true' : 'false';
+    const kebabAttribute = `data-${attributeName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}`;
+
+    document.documentElement.dataset[attributeName] = attributeValue;
+    document.body?.setAttribute(kebabAttribute, attributeValue);
+  });
+}
+
+/* =============================================================================
+   06) TOGGLE STATE SYNC
 ============================================================================= */
 function syncToggleState(toggle, checked, options = {}) {
   if (!isToggleRoot(toggle)) return;
 
   const nextChecked = Boolean(checked);
   const emit = options.emit !== false;
+  const persist = options.persist !== false;
+  const storageId = getToggleStorageId(toggle);
   const detail = {
     checked: nextChecked,
     key: toggle.getAttribute('data-toggle-key') || '',
     scope: toggle.getAttribute('data-toggle-scope') || '',
+    storageId,
     source: options.source || 'core-toggle',
     element: toggle
   };
@@ -132,6 +233,12 @@ function syncToggleState(toggle, checked, options = {}) {
     thumb.setAttribute('data-toggle-state', nextChecked ? 'on' : 'off');
   }
 
+  if (persist) {
+    writeStoredToggleState(storageId, nextChecked);
+  }
+
+  syncHomepageThemeToggleAttribute(toggle, nextChecked);
+
   if (emit) {
     toggle.dispatchEvent(new CustomEvent('neuroartan:toggle-changed', {
       bubbles: true,
@@ -151,7 +258,7 @@ function toggleToggleState(toggle, options = {}) {
 }
 
 /* =============================================================================
-   05) TOGGLE INTERACTION BINDING
+   07) TOGGLE INTERACTION BINDING
 ============================================================================= */
 function bindToggleInteraction(root = document) {
   if (!root?.addEventListener) return;
@@ -184,20 +291,57 @@ function bindToggleInteraction(root = document) {
 }
 
 /* =============================================================================
-   06) TOGGLE INITIALIZATION
+   08) TOGGLE INITIALIZATION
 ============================================================================= */
 function initTogglePrimitive(root = document) {
+  syncHomepageThemeToggleAttributesFromStorage();
   getNormalizedToggles(root).forEach(normalizeToggle);
-  bindToggleInteraction(root);
+  bindToggleInteraction(document);
+  bindDynamicToggleObserver();
 }
 
 /* =============================================================================
-   07) PUBLIC API EXPORTS
+   09) DYNAMIC TOGGLE OBSERVER
+============================================================================= */
+function normalizeNodeToggles(node) {
+  if (!(node instanceof Element)) return;
+
+  if (isToggleRoot(node)) {
+    normalizeToggle(node);
+  }
+
+  node.querySelectorAll?.(TOGGLE_ROOT_SELECTOR)?.forEach(normalizeToggle);
+}
+
+function bindDynamicToggleObserver() {
+  if (toggleObserver instanceof MutationObserver) return;
+
+  toggleObserver = new MutationObserver((records) => {
+    records.forEach((record) => {
+      record.addedNodes.forEach(normalizeNodeToggles);
+    });
+  });
+
+  toggleObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+}
+
+/* =============================================================================
+   10) PUBLIC API EXPORTS
 ============================================================================= */
 window.NeuroartanToggle = Object.freeze({
   TOGGLE_ROOT_SELECTOR,
   TOGGLE_TRACK_SELECTOR,
   TOGGLE_THUMB_SELECTOR,
+  TOGGLE_STORAGE_KEY,
+  getToggleStorageId,
+  readStoredToggleState,
+  writeStoredToggleState,
+  getStoredToggleValue,
+  syncHomepageThemeToggleAttribute,
+  syncHomepageThemeToggleAttributesFromStorage,
   getNormalizedToggles,
   isToggleRoot,
   getToggleTrack,
@@ -208,11 +352,13 @@ window.NeuroartanToggle = Object.freeze({
   syncToggleState,
   toggleToggleState,
   bindToggleInteraction,
-  initTogglePrimitive
+  initTogglePrimitive,
+  normalizeNodeToggles,
+  bindDynamicToggleObserver
 });
 
 /* =============================================================================
-   08) AUTO-BOOTSTRAP
+   11) AUTO-BOOTSTRAP
 ============================================================================= */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => initTogglePrimitive(document), { once: true });
@@ -221,5 +367,5 @@ if (document.readyState === 'loading') {
 }
 
 /* =============================================================================
-   09) END OF FILE
+   12) END OF FILE
 ============================================================================= */

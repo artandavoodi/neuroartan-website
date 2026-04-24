@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) ENTER GATE
-   03) THEME HELPERS
+   03) THEME / TOGGLE HELPERS
    04) HOME MATTE STATE AUTHORITY
    05) END OF FILE
 ============================================================================= */
@@ -16,13 +16,16 @@
   ============================================================================= */
   window.__artanRunAfterEnter(() => {
     /* =============================================================================
-       03) THEME HELPERS
+       03) THEME / TOGGLE HELPERS
     ============================================================================= */
     const normalizeThemeValue = (value) => {
       const normalized = String(value || '').trim().toLowerCase();
 
       if (normalized === 'color') return 'custom';
-      if (normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
+      if (normalized === 'factory') return 'company';
+      if (normalized === 'default') return 'company';
+      if (normalized === 'company-default') return 'company';
+      if (normalized === 'company' || normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
         return normalized;
       }
 
@@ -42,6 +45,19 @@
       }
 
       return 'system';
+    };
+
+    const readMatteToggleActive = () => {
+      const html = document.documentElement;
+      const body = document.body;
+
+      return html?.dataset?.homepageThemeMatteAtmosphere === 'true'
+        || body?.getAttribute('data-homepage-theme-matte-atmosphere') === 'true';
+    };
+
+    const shouldUseMatteLayer = () => {
+      const activeTheme = readActiveTheme();
+      return activeTheme === 'company' || (activeTheme === 'custom' && readMatteToggleActive());
     };
 
     /* =============================================================================
@@ -86,9 +102,8 @@
 
     const update = () => {
       const y = window.scrollY || window.pageYOffset || 0;
-      const activeTheme = readActiveTheme();
 
-      if (activeTheme === 'system' || activeTheme === 'light' || activeTheme === 'dark') {
+      if (!shouldUseMatteLayer()) {
         setMatteState('matte-solid');
         return;
       }
@@ -118,7 +133,7 @@
         return;
       }
 
-      setMatteState(readActiveTheme() === 'custom' ? 'matte-blur' : 'matte-solid');
+      setMatteState('matte-blur');
     };
 
     const requestUpdate = () => {
@@ -137,6 +152,9 @@
     document.addEventListener('fragment:mounted', requestUpdate);
     window.addEventListener('neuroartan:language-applied', requestUpdate);
     window.addEventListener('neuroartan:theme-changed', requestUpdate);
+    document.addEventListener('neuroartan:theme-changed', requestUpdate);
+    document.addEventListener('neuroartan:toggle-changed', requestUpdate);
+    document.addEventListener('neuroartan:homepage-theme-control-changed', requestUpdate);
     window.addEventListener('themechange', requestUpdate);
   });
 })();

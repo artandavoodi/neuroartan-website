@@ -3,11 +3,14 @@
    01) MODULE IMPORTS
    02) MODULE CONSTANTS
    03) THEME HELPERS
-   04) MODE OPTION BINDING
-   05) TOGGLE CONSUMER BINDING
-   06) PANEL STATE SYNC
-   07) DESTINATION MOUNT
-   08) END OF FILE
+   04) THEME INTENT HELPERS
+   05) MODE OPTION BINDING
+   06) CURSOR CONTROL BINDING
+   07) TOGGLE CONSUMER BINDING
+   08) HOMEPAGE TOGGLE ATTRIBUTE BRIDGE
+   09) PANEL STATE SYNC
+   10) DESTINATION MOUNT
+   11) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -22,8 +25,19 @@ const MODE_OPTION_SELECTOR = '[data-home-platform-theme-mode-option]';
 const CONTRAST_OPTION_SELECTOR = '[data-home-platform-theme-contrast-option]';
 const PALETTE_OPTION_SELECTOR = '[data-home-platform-theme-palette-option]';
 const TOKEN_INPUT_SELECTOR = '[data-theme-token]';
+const CURSOR_MODE_OPTION_SELECTOR = '[data-home-platform-cursor-mode-option]';
+const CURSOR_COLOR_INPUT_SELECTOR = '[data-home-platform-cursor-color]';
+const COMPANY_RESET_SELECTOR = '[data-home-platform-theme-reset-company]';
 const TOGGLE_SELECTOR = '[data-na-toggle][data-toggle-scope="homepage-theme"]';
 
+const HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP = Object.freeze({
+  'breathing-circle': 'homepageThemeBreathingCircle',
+  'cinematic-background': 'homepageThemeCinematicBackground',
+  'hero-shader': 'homepageThemeHeroShader',
+  'matte-atmosphere': 'homepageThemeMatteAtmosphere'
+});
+
+const THEME_COMPANY = 'company';
 const THEME_SYSTEM = 'system';
 const THEME_CUSTOM = 'custom';
 const THEME_DARK = 'dark';
@@ -33,7 +47,7 @@ const CONTRAST_LOW = 'low';
 const CONTRAST_STANDARD = 'standard';
 const CONTRAST_HIGH = 'high';
 
-const VALID_THEMES = new Set([THEME_SYSTEM, THEME_CUSTOM, THEME_DARK, THEME_LIGHT]);
+const VALID_THEMES = new Set([THEME_COMPANY, THEME_SYSTEM, THEME_CUSTOM, THEME_DARK, THEME_LIGHT]);
 const VALID_CONTRASTS = new Set([CONTRAST_LOW, CONTRAST_STANDARD, CONTRAST_HIGH]);
 
 /* =============================================================================
@@ -43,6 +57,9 @@ function normalizeTheme(theme) {
   const normalized = String(theme || '').trim().toLowerCase();
 
   if (normalized === 'color') return THEME_CUSTOM;
+  if (normalized === 'factory') return THEME_COMPANY;
+  if (normalized === 'default') return THEME_COMPANY;
+  if (normalized === 'company-default') return THEME_COMPANY;
   if (VALID_THEMES.has(normalized)) return normalized;
 
   return THEME_SYSTEM;
@@ -61,16 +78,12 @@ function getCurrentThemeState() {
   }
 
   return {
-    theme: THEME_SYSTEM,
+    theme: THEME_COMPANY,
     effective: THEME_DARK,
     contrast: CONTRAST_STANDARD,
     palette: 'neuroartan',
     tokens: {}
   };
-}
-
-function getCurrentTheme() {
-  return normalizeTheme(getCurrentThemeState().theme);
 }
 
 function getThemeDetail(theme = getCurrentThemeState()) {
@@ -91,31 +104,59 @@ function getThemeDetail(theme = getCurrentThemeState()) {
 
   return {
     theme: normalizedTheme,
-    themeLabel: normalizedTheme === THEME_SYSTEM
-      ? 'System'
-      : normalizedTheme === THEME_CUSTOM
-        ? 'Custom'
-        : normalizedTheme === THEME_DARK
-          ? 'Dark'
-          : 'Light',
-    themeSummary: normalizedTheme === THEME_SYSTEM
-      ? 'System follows the device appearance preference and keeps the global interface synchronized.'
-      : normalizedTheme === THEME_CUSTOM
-        ? 'Custom applies founder-controlled palette, contrast, and hex-token settings through the global token layer.'
-        : normalizedTheme === THEME_DARK
-          ? 'Dark applies the institutional dark surface with optional contrast refinement.'
-          : 'Light applies the institutional light surface with optional contrast refinement.',
+    themeLabel: normalizedTheme === THEME_COMPANY
+      ? 'Company Default'
+      : normalizedTheme === THEME_SYSTEM
+        ? 'System'
+        : normalizedTheme === THEME_CUSTOM
+          ? 'Custom'
+          : normalizedTheme === THEME_DARK
+            ? 'Dark'
+            : 'Light',
+    themeSummary: normalizedTheme === THEME_COMPANY
+      ? 'Company Default restores the authored Neuroartan interface baseline.'
+      : normalizedTheme === THEME_SYSTEM
+        ? 'System follows the device appearance preference and keeps the global interface synchronized.'
+        : normalizedTheme === THEME_CUSTOM
+          ? 'Custom applies founder-controlled palette, contrast, and hex-token settings through the global token layer.'
+          : normalizedTheme === THEME_DARK
+            ? 'Dark applies the institutional dark surface with optional contrast refinement.'
+            : 'Light applies the institutional light surface with optional contrast refinement.',
     effectiveTheme: state.effective || THEME_DARK,
     contrast: normalizeContrast(state.contrast),
     palette: state.palette || 'neuroartan',
     tokens: state.tokens || {},
-    cinematicAllowed: normalizedTheme === THEME_CUSTOM,
+    companyDefault: normalizedTheme === THEME_COMPANY,
+    cinematicAllowed: normalizedTheme === THEME_CUSTOM || normalizedTheme === THEME_COMPANY,
     monoSolidRequired: normalizedTheme === THEME_DARK || normalizedTheme === THEME_LIGHT
   };
 }
 
-function createThemeIntentDetail(theme, source = 'home-platform-settings-theme') {
-  const themeDetail = getThemeDetail(theme);
+/* =============================================================================
+   04) THEME INTENT HELPERS
+============================================================================= */
+function createThemeStatePatch(patch = {}) {
+  const currentState = getCurrentThemeState();
+  const nextTheme = normalizeTheme(patch.theme || currentState.theme);
+  const nextContrast = normalizeContrast(patch.contrast || currentState.contrast);
+  const nextTokens = {
+    ...(currentState.tokens || {}),
+    ...(patch.tokens || {})
+  };
+
+  return {
+    ...currentState,
+    ...patch,
+    theme: nextTheme,
+    contrast: nextContrast,
+    palette: patch.palette || currentState.palette || 'neuroartan',
+    tokens: nextTokens
+  };
+}
+
+function createThemeIntentFromPatch(patch = {}, source = 'home-platform-settings-theme') {
+  const state = createThemeStatePatch(patch);
+  const themeDetail = getThemeDetail(state);
 
   return {
     theme: themeDetail.theme,
@@ -125,6 +166,7 @@ function createThemeIntentDetail(theme, source = 'home-platform-settings-theme')
     contrast: themeDetail.contrast,
     palette: themeDetail.palette,
     tokens: themeDetail.tokens,
+    companyDefault: themeDetail.companyDefault,
     cinematicAllowed: themeDetail.cinematicAllowed,
     monoSolidRequired: themeDetail.monoSolidRequired,
     source
@@ -140,10 +182,8 @@ function requestThemeChange(detail) {
   }));
 }
 
-// Helper to get the main theme surface root for state sync
 function getThemeSurfaceRoot(root) {
   if (!(root instanceof HTMLElement)) return null;
-
   if (root.classList.contains('home-platform-theme')) return root;
 
   const surface = root.querySelector('.home-platform-theme');
@@ -151,13 +191,14 @@ function getThemeSurfaceRoot(root) {
 }
 
 /* =============================================================================
-   04) MODE OPTION BINDING
+   05) MODE OPTION BINDING
 ============================================================================= */
 function bindModeOptions(root) {
   const modeOptions = Array.from(root.querySelectorAll(MODE_OPTION_SELECTOR));
   const contrastOptions = Array.from(root.querySelectorAll(CONTRAST_OPTION_SELECTOR));
   const paletteOptions = Array.from(root.querySelectorAll(PALETTE_OPTION_SELECTOR));
   const tokenInputs = Array.from(root.querySelectorAll(TOKEN_INPUT_SELECTOR));
+  const companyResetButton = root.querySelector(COMPANY_RESET_SELECTOR);
 
   modeOptions.forEach((option) => {
     if (!(option instanceof HTMLElement)) return;
@@ -169,8 +210,10 @@ function bindModeOptions(root) {
       event.preventDefault();
 
       const requestedTheme = normalizeTheme(option.getAttribute('data-theme-option'));
-      syncDestinationState(root, { ...getCurrentThemeState(), theme: requestedTheme });
-      requestThemeChange(createThemeIntentDetail(requestedTheme));
+      const nextState = createThemeStatePatch({ theme: requestedTheme });
+
+      syncDestinationState(root, nextState);
+      requestThemeChange(createThemeIntentFromPatch(nextState));
     });
   });
 
@@ -184,12 +227,10 @@ function bindModeOptions(root) {
       event.preventDefault();
 
       const requestedContrast = normalizeContrast(option.getAttribute('data-theme-contrast-option'));
-      syncDestinationState(root, { ...getCurrentThemeState(), contrast: requestedContrast });
+      const nextState = createThemeStatePatch({ contrast: requestedContrast });
 
-      requestThemeChange({
-        theme: getCurrentTheme(),
-        contrast: requestedContrast
-      });
+      syncDestinationState(root, nextState);
+      requestThemeChange(createThemeIntentFromPatch(nextState));
     });
   });
 
@@ -203,12 +244,10 @@ function bindModeOptions(root) {
       event.preventDefault();
 
       const requestedPalette = String(option.getAttribute('data-theme-palette-option') || 'neuroartan').trim().toLowerCase();
-      syncDestinationState(root, { ...getCurrentThemeState(), theme: THEME_CUSTOM, palette: requestedPalette });
+      const nextState = createThemeStatePatch({ theme: THEME_CUSTOM, palette: requestedPalette });
 
-      requestThemeChange({
-        theme: THEME_CUSTOM,
-        palette: requestedPalette
-      });
+      syncDestinationState(root, nextState);
+      requestThemeChange(createThemeIntentFromPatch(nextState));
     });
   });
 
@@ -222,26 +261,133 @@ function bindModeOptions(root) {
       const token = input.getAttribute('data-theme-token');
       if (!token) return;
 
-      syncDestinationState(root, {
-        ...getCurrentThemeState(),
-        theme: THEME_CUSTOM,
-        tokens: {
-          ...getCurrentThemeState().tokens,
-          [token]: input.value
-        }
-      });
-      requestThemeChange({
+      const nextState = createThemeStatePatch({
         theme: THEME_CUSTOM,
         tokens: {
           [token]: input.value
         }
       });
+
+      syncDestinationState(root, nextState);
+      requestThemeChange(createThemeIntentFromPatch(nextState));
     });
   });
+
+  if (companyResetButton instanceof HTMLElement && companyResetButton.dataset.homePlatformThemeCompanyResetBound !== 'true') {
+    companyResetButton.dataset.homePlatformThemeCompanyResetBound = 'true';
+
+    companyResetButton.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const themeApi = window.NeuroartanTheme;
+
+      if (themeApi && typeof themeApi.resetThemeToCompanyDefault === 'function') {
+        const nextState = themeApi.resetThemeToCompanyDefault();
+        syncDestinationState(root, nextState);
+        return;
+      }
+
+      const nextState = createThemeStatePatch({
+        theme: THEME_COMPANY,
+        contrast: CONTRAST_STANDARD,
+        palette: 'neuroartan',
+        tokens: {}
+      });
+
+      syncDestinationState(root, nextState);
+      requestThemeChange(createThemeIntentFromPatch(nextState));
+    });
+  }
 }
 
 /* =============================================================================
-   05) TOGGLE CONSUMER BINDING
+   06) CURSOR CONTROL BINDING
+============================================================================= */
+function getCurrentCursorState() {
+  const cursorApi = window.NeuroartanCursor;
+
+  if (cursorApi && typeof cursorApi.getState === 'function') {
+    return cursorApi.getState();
+  }
+
+  return {
+    mode: document.documentElement.dataset.cursorMode || 'custom',
+    color: getComputedStyle(document.documentElement).getPropertyValue('--cursor-accent-color').trim() || '#917c6f',
+    enabled: document.documentElement.dataset.cursorCustom === 'true'
+  };
+}
+
+function requestCursorChange(detail = {}) {
+  document.dispatchEvent(new CustomEvent('neuroartan:cursor-change-requested', {
+    detail: {
+      ...detail,
+      source: 'home-platform-settings-theme'
+    }
+  }));
+}
+
+function syncCursorControls(root) {
+  const cursorState = getCurrentCursorState();
+  const modeOptions = Array.from(root.querySelectorAll(CURSOR_MODE_OPTION_SELECTOR));
+  const colorInput = root.querySelector(CURSOR_COLOR_INPUT_SELECTOR);
+
+  modeOptions.forEach((option) => {
+    if (!(option instanceof HTMLElement)) return;
+
+    const optionMode = String(option.getAttribute('data-cursor-mode-option') || 'custom').trim().toLowerCase();
+    const active = optionMode === cursorState.mode;
+
+    option.setAttribute('aria-pressed', active ? 'true' : 'false');
+    option.toggleAttribute('data-active', active);
+  });
+
+  if (colorInput instanceof HTMLInputElement && colorInput.value !== cursorState.color) {
+    colorInput.value = cursorState.color;
+  }
+}
+
+function bindCursorControls(root) {
+  const modeOptions = Array.from(root.querySelectorAll(CURSOR_MODE_OPTION_SELECTOR));
+  const colorInput = root.querySelector(CURSOR_COLOR_INPUT_SELECTOR);
+
+  modeOptions.forEach((option) => {
+    if (!(option instanceof HTMLElement)) return;
+    if (option.dataset.homePlatformCursorModeBound === 'true') return;
+
+    option.dataset.homePlatformCursorModeBound = 'true';
+
+    option.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      const mode = String(option.getAttribute('data-cursor-mode-option') || 'custom').trim().toLowerCase();
+      const nextState = {
+        ...getCurrentCursorState(),
+        mode
+      };
+
+      syncCursorControls(root);
+      requestCursorChange(nextState);
+    });
+  });
+
+  if (colorInput instanceof HTMLInputElement && colorInput.dataset.homePlatformCursorColorBound !== 'true') {
+    colorInput.dataset.homePlatformCursorColorBound = 'true';
+
+    colorInput.addEventListener('input', () => {
+      const nextState = {
+        ...getCurrentCursorState(),
+        mode: 'custom',
+        color: colorInput.value
+      };
+
+      syncCursorControls(root);
+      requestCursorChange(nextState);
+    });
+  }
+}
+
+/* =============================================================================
+   07) TOGGLE CONSUMER BINDING
 ============================================================================= */
 function syncToggleAvailability(root, theme) {
   const customThemeActive = getThemeDetail(theme).cinematicAllowed;
@@ -263,7 +409,66 @@ function syncToggleAvailability(root, theme) {
 }
 
 /* =============================================================================
-   06) PANEL STATE SYNC
+   08) HOMEPAGE TOGGLE ATTRIBUTE BRIDGE
+============================================================================= */
+function readToggleChecked(toggle) {
+  if (!(toggle instanceof HTMLElement)) return false;
+
+  const toggleApi = window.NeuroartanToggle;
+
+  if (toggleApi && typeof toggleApi.getStoredToggleValue === 'function') {
+    const storedValue = toggleApi.getStoredToggleValue(toggle);
+    if (storedValue !== null) return Boolean(storedValue);
+  }
+
+  if (toggle instanceof HTMLInputElement) return Boolean(toggle.checked);
+
+  return toggle.getAttribute('aria-checked') === 'true'
+    || toggle.getAttribute('aria-pressed') === 'true'
+    || toggle.dataset.toggleChecked === 'true';
+}
+
+function setHomepageToggleAttribute(key, checked) {
+  const attributeName = HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP[key];
+  if (!attributeName) return;
+
+  const attributeValue = checked ? 'true' : 'false';
+  const kebabAttribute = `data-${attributeName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}`;
+
+  document.documentElement.dataset[attributeName] = attributeValue;
+  document.body?.setAttribute(kebabAttribute, attributeValue);
+}
+
+function syncHomepageToggleAttributes(root) {
+  const toggles = Array.from(root.querySelectorAll(TOGGLE_SELECTOR));
+
+  toggles.forEach((toggle) => {
+    if (!(toggle instanceof HTMLElement)) return;
+
+    const key = toggle.getAttribute('data-toggle-key') || '';
+    if (!key) return;
+
+    setHomepageToggleAttribute(key, readToggleChecked(toggle));
+  });
+
+  Object.keys(HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP).forEach((key) => {
+    const matchingToggle = toggles.find((toggle) => toggle instanceof HTMLElement && toggle.getAttribute('data-toggle-key') === key);
+    if (matchingToggle instanceof HTMLElement) return;
+
+    const toggleApi = window.NeuroartanToggle;
+    const storedState = toggleApi && typeof toggleApi.readStoredToggleState === 'function'
+      ? toggleApi.readStoredToggleState()
+      : {};
+    const storedId = `homepage-theme:${key}`;
+
+    if (storedId in storedState) {
+      setHomepageToggleAttribute(key, Boolean(storedState[storedId]));
+    }
+  });
+}
+
+/* =============================================================================
+   09) PANEL STATE SYNC
 ============================================================================= */
 function syncDestinationState(root, state = getCurrentThemeState()) {
   const themeDetail = getThemeDetail(state);
@@ -273,7 +478,6 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
   const paletteOptions = Array.from(root.querySelectorAll(PALETTE_OPTION_SELECTOR));
   const tokenInputs = Array.from(root.querySelectorAll(TOKEN_INPUT_SELECTOR));
   const summaryNode = root.querySelector('.home-platform-theme__summary');
-  const effectsContextNode = root.querySelector('#home-platform-theme-effects-title')?.parentElement?.querySelector('.home-platform-theme__section-context');
   const surfaceRoot = getThemeSurfaceRoot(root);
   const stateRoots = [root, surfaceRoot].filter((node, index, nodes) => node instanceof HTMLElement && nodes.indexOf(node) === index);
 
@@ -291,12 +495,6 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
     summaryNode.textContent = themeDetail.themeSummary;
   }
 
-  if (effectsContextNode) {
-    effectsContextNode.textContent = themeDetail.cinematicAllowed
-      ? 'These controls are active for Custom and can shape the cinematic homepage environment through the global token engine.'
-      : 'These controls are locked in System, Light, and Dark when the active resolved layer requires a controlled institutional surface.';
-  }
-
   modeOptions.forEach((option) => {
     if (!(option instanceof HTMLElement)) return;
 
@@ -304,6 +502,7 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
     const optionDetail = getThemeDetail(optionTheme);
 
     option.setAttribute('aria-pressed', optionTheme === normalizedTheme ? 'true' : 'false');
+    option.toggleAttribute('data-active', optionTheme === normalizedTheme);
     option.dataset.activeThemeOption = optionTheme;
     option.dataset.activeThemeLabel = optionDetail.themeLabel;
   });
@@ -313,6 +512,7 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
 
     const optionContrast = normalizeContrast(option.getAttribute('data-theme-contrast-option'));
     option.setAttribute('aria-pressed', optionContrast === themeDetail.contrast ? 'true' : 'false');
+    option.toggleAttribute('data-active', optionContrast === themeDetail.contrast);
     option.dataset.activeThemeContrast = optionContrast;
   });
 
@@ -321,6 +521,7 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
 
     const optionPalette = String(option.getAttribute('data-theme-palette-option') || '').trim().toLowerCase();
     option.setAttribute('aria-pressed', optionPalette === themeDetail.palette ? 'true' : 'false');
+    option.toggleAttribute('data-active', optionPalette === themeDetail.palette);
     option.dataset.activeThemePalette = optionPalette;
   });
 
@@ -335,6 +536,8 @@ function syncDestinationState(root, state = getCurrentThemeState()) {
   });
 
   syncToggleAvailability(root, normalizedTheme);
+  syncHomepageToggleAttributes(root);
+  syncCursorControls(root);
 }
 
 function bindThemeSync(root) {
@@ -355,29 +558,37 @@ function bindThemeSync(root) {
     const key = toggle.getAttribute('data-toggle-key') || '';
     if (!key) return;
 
+    const checked = Boolean(event?.detail?.checked);
+    setHomepageToggleAttribute(key, checked);
+
     const themeDetail = getThemeDetail();
 
     root.dispatchEvent(new CustomEvent('neuroartan:homepage-theme-control-changed', {
       bubbles: true,
       detail: {
         key,
-        checked: Boolean(event?.detail?.checked),
+        checked,
         theme: themeDetail.theme,
         themeLabel: themeDetail.themeLabel,
         themeSummary: themeDetail.themeSummary,
         effectiveTheme: themeDetail.effectiveTheme,
         contrast: themeDetail.contrast,
         palette: themeDetail.palette,
+        companyDefault: themeDetail.companyDefault,
         cinematicAllowed: themeDetail.cinematicAllowed,
         monoSolidRequired: themeDetail.monoSolidRequired,
         source: 'home-platform-settings-theme'
       }
     }));
   });
+
+  document.addEventListener('neuroartan:cursor-changed', () => {
+    syncCursorControls(root);
+  });
 }
 
 /* =============================================================================
-   07) DESTINATION MOUNT
+   10) DESTINATION MOUNT
 ============================================================================= */
 export function mountHomePlatformDestination(root) {
   if (!(root instanceof HTMLElement)) return;
@@ -389,10 +600,11 @@ export function mountHomePlatformDestination(root) {
   if (!(destinationRoot instanceof HTMLElement)) return;
 
   bindModeOptions(destinationRoot);
+  bindCursorControls(destinationRoot);
   bindThemeSync(destinationRoot);
   syncDestinationState(destinationRoot, getCurrentThemeState());
 }
 
 /* =============================================================================
-   08) END OF FILE
+   11) END OF FILE
 ============================================================================= */

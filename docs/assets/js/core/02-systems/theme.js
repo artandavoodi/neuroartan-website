@@ -72,6 +72,7 @@ const STORAGE_KEY = 'neuroartan-theme-state';
 const LEGACY_STORAGE_KEY = 'neuroartan-theme';
 
 const THEME_SYSTEM = 'system';
+const THEME_COMPANY = 'company';
 const THEME_CUSTOM = 'custom';
 const THEME_DARK = 'dark';
 const THEME_LIGHT = 'light';
@@ -84,7 +85,7 @@ const CONTRAST_STANDARD = 'standard';
 const CONTRAST_HIGH = 'high';
 
 const DEFAULT_THEME_STATE = Object.freeze({
-  theme: THEME_SYSTEM,
+  theme: THEME_COMPANY,
   effective: EFFECTIVE_DARK,
   contrast: CONTRAST_STANDARD,
   palette: 'neuroartan',
@@ -98,7 +99,7 @@ const DEFAULT_THEME_STATE = Object.freeze({
   }
 });
 
-const THEME_SEQUENCE = [THEME_SYSTEM, THEME_CUSTOM, THEME_DARK, THEME_LIGHT];
+const THEME_SEQUENCE = [THEME_COMPANY, THEME_SYSTEM, THEME_CUSTOM, THEME_DARK, THEME_LIGHT];
 const THEME_VALUES = new Set(THEME_SEQUENCE);
 const EFFECTIVE_VALUES = new Set([EFFECTIVE_DARK, EFFECTIVE_LIGHT]);
 const CONTRAST_VALUES = new Set([CONTRAST_LOW, CONTRAST_STANDARD, CONTRAST_HIGH]);
@@ -194,6 +195,9 @@ function normalizeThemeValue(value) {
   const normalized = String(value || '').trim().toLowerCase();
 
   if (normalized === 'color') return THEME_CUSTOM;
+  if (normalized === 'factory') return THEME_COMPANY;
+  if (normalized === 'default') return THEME_COMPANY;
+  if (normalized === 'company-default') return THEME_COMPANY;
   if (THEME_VALUES.has(normalized)) return normalized;
 
   return THEME_SYSTEM;
@@ -227,9 +231,15 @@ function normalizeTokenState(tokens = {}) {
   return normalizedTokens;
 }
 
+function removeUndefinedThemeFields(state = {}) {
+  return Object.fromEntries(
+    Object.entries(state).filter(([, value]) => value !== undefined)
+  );
+}
+
 function resolveEffectiveTheme(theme, explicitEffective = null) {
   const normalizedTheme = normalizeThemeValue(theme);
-
+  if (normalizedTheme === THEME_COMPANY) return EFFECTIVE_DARK;
   if (normalizedTheme === THEME_LIGHT) return EFFECTIVE_LIGHT;
   if (normalizedTheme === THEME_DARK) return EFFECTIVE_DARK;
   if (normalizedTheme === THEME_CUSTOM && explicitEffective) return normalizeEffectiveValue(explicitEffective);
@@ -260,6 +270,8 @@ function getPreferredThemeState() {
 ============================================================================= */
 function getThemeSurfaceLabel(theme) {
   switch (normalizeThemeValue(theme)) {
+    case THEME_COMPANY:
+      return 'Company Default';
     case THEME_SYSTEM:
       return 'System';
     case THEME_CUSTOM:
@@ -275,6 +287,8 @@ function getThemeSurfaceLabel(theme) {
 
 function getThemeSummary(theme) {
   switch (normalizeThemeValue(theme)) {
+    case THEME_COMPANY:
+      return 'Company Default restores the authored Neuroartan interface baseline.';
     case THEME_SYSTEM:
       return 'System follows the device appearance preference and keeps the global interface synchronized.';
     case THEME_CUSTOM:
@@ -299,7 +313,8 @@ function getThemeStateDetail(state = getCurrentThemeState()) {
     contrast: normalizedState.contrast,
     palette: normalizedState.palette,
     tokens: { ...normalizedState.tokens },
-    cinematicAllowed: normalizedState.theme === THEME_CUSTOM,
+    companyDefault: normalizedState.theme === THEME_COMPANY,
+    cinematicAllowed: normalizedState.theme === THEME_CUSTOM || normalizedState.theme === THEME_COMPANY,
     monoSolidRequired: normalizedState.theme === THEME_LIGHT || normalizedState.theme === THEME_DARK
   };
 }
@@ -311,13 +326,69 @@ function applyCustomTokenStyles(html, state) {
   Object.entries(TOKEN_STYLE_MAP).forEach(([key, property]) => {
     const value = normalizeHexValue(state.tokens?.[key]);
 
-    if (value) {
+    if (value && state.theme === THEME_CUSTOM) {
       html.style.setProperty(property, value);
       return;
     }
 
     html.style.removeProperty(property);
   });
+
+  const tokens = state.tokens || {};
+  const background = normalizeHexValue(tokens.background);
+  const text = normalizeHexValue(tokens.text);
+  const surface = normalizeHexValue(tokens.surface);
+  const border = normalizeHexValue(tokens.border);
+  const accent = normalizeHexValue(tokens.accent);
+  const accentHover = normalizeHexValue(tokens.accentHover);
+
+  if (state.theme === THEME_CUSTOM && background) {
+    html.style.setProperty('--bg-color', background);
+  } else {
+    html.style.removeProperty('--bg-color');
+  }
+
+  if (state.theme === THEME_CUSTOM && text) {
+    html.style.setProperty('--text-color', text);
+    html.style.setProperty('--text-primary-color', text);
+  } else {
+    html.style.removeProperty('--text-color');
+    html.style.removeProperty('--text-primary-color');
+  }
+
+  if (state.theme === THEME_CUSTOM && surface) {
+    html.style.setProperty('--surface-color', surface);
+    html.style.setProperty('--home-panel-surface', surface);
+  } else {
+    html.style.removeProperty('--surface-color');
+    html.style.removeProperty('--home-panel-surface');
+  }
+
+  if (state.theme === THEME_CUSTOM && border) {
+    html.style.setProperty('--border-color', border);
+    html.style.setProperty('--control-border', border);
+  } else {
+    html.style.removeProperty('--border-color');
+    html.style.removeProperty('--control-border');
+  }
+
+  if (state.theme === THEME_CUSTOM && accent) {
+    html.style.setProperty('--color-primary1', accent);
+    html.style.setProperty('--accent-color', accent);
+    html.style.setProperty('--link-color', accent);
+  } else {
+    html.style.removeProperty('--color-primary1');
+    html.style.removeProperty('--accent-color');
+    html.style.removeProperty('--link-color');
+  }
+
+  if (state.theme === THEME_CUSTOM && accentHover) {
+    html.style.setProperty('--color-primary2', accentHover);
+    html.style.setProperty('--accent-hover-color', accentHover);
+  } else {
+    html.style.removeProperty('--color-primary2');
+    html.style.removeProperty('--accent-hover-color');
+  }
 }
 
 function applyThemeMetadata(html, state) {
@@ -417,12 +488,15 @@ export function getCurrentTheme() {
 }
 
 export function applyThemeState(nextState = {}) {
+  const currentState = getCurrentThemeState();
+  const cleanNextState = removeUndefinedThemeFields(nextState);
+
   const state = normalizeThemeState({
-    ...getCurrentThemeState(),
-    ...nextState,
+    ...currentState,
+    ...cleanNextState,
     tokens: {
-      ...getCurrentThemeState().tokens,
-      ...(nextState.tokens || {})
+      ...currentState.tokens,
+      ...(cleanNextState.tokens || {})
     }
   });
 
@@ -473,6 +547,19 @@ export function setThemeToken(token, value) {
       [token]: normalizeHexValue(value)
     }
   });
+}
+
+export function resetThemeToCompanyDefault() {
+  const companyState = normalizeThemeState({
+    ...cloneDefaultThemeState(),
+    theme: THEME_COMPANY,
+    effective: EFFECTIVE_DARK,
+    contrast: CONTRAST_STANDARD,
+    palette: 'neuroartan',
+    tokens: cloneDefaultThemeState().tokens
+  });
+
+  return applyThemeState(companyState);
 }
 
 export function toggleTheme() {
@@ -576,24 +663,24 @@ function bindThemeEvents() {
     const detail = event?.detail || {};
     const requestedTheme = normalizeThemeValue(detail.theme || detail.mode);
 
-    applyThemeState({
+    applyThemeState(removeUndefinedThemeFields({
       theme: requestedTheme,
       contrast: detail.contrast,
       palette: detail.palette,
-      tokens: detail.tokens || {}
-    });
+      tokens: detail.tokens
+    }));
   });
 
   document.addEventListener('neuroartan:home-theme-settings-intent', (event) => {
     const detail = event?.detail || {};
     const requestedTheme = normalizeThemeValue(detail.theme || detail.mode);
 
-    applyThemeState({
+    applyThemeState(removeUndefinedThemeFields({
       theme: requestedTheme,
       contrast: detail.contrast,
       palette: detail.palette,
-      tokens: detail.tokens || {}
-    });
+      tokens: detail.tokens
+    }));
   });
 }
 
@@ -653,6 +740,7 @@ window.NeuroartanTheme = Object.freeze({
   setThemeContrast,
   setThemePalette,
   setThemeToken,
+  resetThemeToCompanyDefault,
   initThemeSystem,
   bindDocumentThemeDelegation,
   getThemeSurfaceLabel,

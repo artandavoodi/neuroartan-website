@@ -6,7 +6,7 @@
    01) MODULE WRAPPER
    02) SHADER SOURCE
    03) DOM HELPERS
-   04) THEME HELPERS
+   04) THEME / TOGGLE HELPERS
    05) SHADER CONTROLLER
    06) MOUNT HELPERS
    07) SHARED READINESS HELPERS
@@ -205,13 +205,16 @@
   const qs = (selector, scope = document) => scope.querySelector(selector);
 
   /* =============================================================================
-     04) THEME HELPERS
+     04) THEME / TOGGLE HELPERS
   ============================================================================= */
   function normalizeThemeValue(value) {
     const normalized = String(value || '').trim().toLowerCase();
 
     if (normalized === 'color') return 'custom';
-    if (normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
+    if (normalized === 'factory') return 'company';
+    if (normalized === 'default') return 'company';
+    if (normalized === 'company-default') return 'company';
+    if (normalized === 'company' || normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
       return normalized;
     }
 
@@ -234,8 +237,17 @@
     return 'system';
   }
 
-  function isHomeHeroShaderCustomTheme() {
-    return readHomeHeroShaderTheme() === 'custom';
+  function readHomeHeroShaderToggleActive() {
+    const html = document.documentElement;
+    const body = document.body;
+
+    return html?.dataset?.homepageThemeHeroShader === 'true'
+      || body?.getAttribute('data-homepage-theme-hero-shader') === 'true';
+  }
+
+  function shouldUseHomeHeroShader() {
+    const activeTheme = readHomeHeroShaderTheme();
+    return activeTheme === 'company' || (activeTheme === 'custom' && readHomeHeroShaderToggleActive());
   }
 
   /* =============================================================================
@@ -264,7 +276,7 @@
     init() {
       if (!window.NeuroShaderCore) return false;
       if (!this.resolveElements()) return false;
-      if (!isHomeHeroShaderCustomTheme()) {
+      if (!shouldUseHomeHeroShader()) {
         this.applyThemeVisibility();
         this.bindThemeSync();
         return true;
@@ -285,15 +297,15 @@
     }
 
     applyThemeVisibility() {
-      const isCustomTheme = isHomeHeroShaderCustomTheme();
+      const shaderActive = shouldUseHomeHeroShader();
+      const activeTheme = readHomeHeroShaderTheme();
 
       if (this.root) {
-        this.root.dataset.shaderThemeState = isCustomTheme ? 'custom' : 'controlled';
-        this.root.hidden = !isCustomTheme;
+        this.root.dataset.shaderThemeState = shaderActive ? activeTheme : 'controlled';
         this.root.setAttribute('aria-hidden', 'true');
       }
 
-      if (!isCustomTheme && this.canvas) {
+      if (!shaderActive && this.canvas) {
         const context = this.canvas.getContext('2d');
         if (context) {
           context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -305,16 +317,16 @@
       if (this.boundThemeSync) return;
 
       this.boundThemeSync = () => {
-        const isCustomTheme = isHomeHeroShaderCustomTheme();
+        const shaderActive = shouldUseHomeHeroShader();
         this.applyThemeVisibility();
 
-        if (!isCustomTheme && this.core) {
+        if (!shaderActive && this.core) {
           this.core.destroy();
           this.core = null;
           return;
         }
 
-        if (isCustomTheme && !this.core && window.NeuroShaderCore && this.canvas) {
+        if (shaderActive && !this.core && window.NeuroShaderCore && this.canvas) {
           this.core = new window.NeuroShaderCore({
             canvas: this.canvas,
             fragmentSource: HOME_HERO_FRAGMENT_SHADER,
@@ -327,6 +339,8 @@
       };
 
       document.addEventListener('neuroartan:theme-changed', this.boundThemeSync);
+      document.addEventListener('neuroartan:toggle-changed', this.boundThemeSync);
+      document.addEventListener('neuroartan:homepage-theme-control-changed', this.boundThemeSync);
       document.addEventListener('themechange', this.boundThemeSync);
       window.addEventListener('focus', this.boundThemeSync, { passive: true });
     }
@@ -370,6 +384,8 @@
 
       if (this.boundThemeSync) {
         document.removeEventListener('neuroartan:theme-changed', this.boundThemeSync);
+        document.removeEventListener('neuroartan:toggle-changed', this.boundThemeSync);
+        document.removeEventListener('neuroartan:homepage-theme-control-changed', this.boundThemeSync);
         document.removeEventListener('themechange', this.boundThemeSync);
         window.removeEventListener('focus', this.boundThemeSync);
       }

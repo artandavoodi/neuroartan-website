@@ -10,8 +10,9 @@
 08) MIDDLE NAVIGATION LAYER
 09) RIGHT DETAIL SURFACE
 10) EMBEDDED SECTION REFINEMENTS
-11) RESPONSIVE STATES
-12) END OF FILE
+11) PLATFORM SCROLL GOVERNANCE
+12) RESPONSIVE STATES
+13) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -36,6 +37,8 @@
   display:flex;
   flex-direction:column;
   min-height:0;
+  overflow:hidden;
+  overscroll-behavior:contain;
   background:var(--home-panel-surface);
   color:var(--text-primary-color);
   border-top:1px solid var(--home-panel-border);
@@ -122,6 +125,8 @@
 .home-platform-shell__main{
   flex:1 1 auto;
   min-height:0;
+  max-width:100%;
+  overflow:hidden;
   display:grid;
   grid-template-columns:
     var(--home-platform-shell-rail-width)
@@ -169,6 +174,7 @@
 .home-platform-shell__subrail{
   min-width:0;
   min-height:0;
+  overflow:hidden;
   background:transparent;
 }
 
@@ -183,7 +189,11 @@
 .home-platform-shell__rail-inner,
 .home-platform-shell__subrail-inner{
   height:100%;
+  overflow-x:hidden;
   overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
   padding:1.45rem 1.5rem 2.2rem 0;
 }
 
@@ -224,6 +234,13 @@
   display:flex;
   flex-direction:column;
   gap:0.5rem;
+}
+
+.home-platform-shell__rail-inner::-webkit-scrollbar,
+.home-platform-shell__subrail-inner::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
 }
 
 /* =============================================================================
@@ -338,6 +355,8 @@
 .home-platform-shell__content{
   min-width:0;
   min-height:0;
+  max-width:100%;
+  overflow:hidden;
   background:transparent;
   display:flex;
   flex-direction:column;
@@ -380,8 +399,18 @@
 
 .home-platform-shell__content-inner{
   height:100%;
+  overflow-x:hidden;
   overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
   padding:1.45rem 0 calc(var(--home-shell-footer-separator-offset) + 1.45rem) 2rem;
+}
+
+.home-platform-shell__content-inner::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
 }
 
 .home-platform-destination,
@@ -389,6 +418,8 @@
   display:grid;
   gap:1rem;
   min-width:0;
+  max-width:100%;
+  overflow-x:hidden;
 }
 
 .home-platform-shell__content-stack,
@@ -479,7 +510,29 @@
 }
 
 /* =============================================================================
-11) RESPONSIVE STATES
+11) PLATFORM SCROLL GOVERNANCE
+============================================================================= */
+.home-platform-shell,
+.home-platform-shell *{
+  box-sizing:border-box;
+}
+
+.home-platform-shell__main,
+.home-platform-shell__content,
+.home-platform-shell__content-inner,
+.home-platform-destination,
+.home-platform-destination__surface{
+  min-width:0;
+}
+
+.home-platform-shell__content-inner > *,
+.home-platform-destination > *,
+.home-platform-destination__surface > *{
+  max-width:100%;
+}
+
+/* =============================================================================
+12) RESPONSIVE STATES
 ============================================================================= */
 @media (max-width: 1024px){
   .home-platform-shell__main{
@@ -532,5 +585,5 @@
 }
 
 /* =============================================================================
-12) END OF FILE
+13) END OF FILE
 ============================================================================= */

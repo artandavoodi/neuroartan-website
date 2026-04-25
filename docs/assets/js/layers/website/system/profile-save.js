@@ -76,6 +76,57 @@ function isSupabaseRelationMissingError(error) {
   return code === '42P01' || message.includes('does not exist');
 }
 
+function getMissingSupabaseColumnName(error) {
+  const message = normalizeString(error?.message || '');
+  const match = message.match(/'([^']+)' column of 'profiles'/i);
+  return match?.[1] || '';
+}
+
+function pruneMissingSupabaseColumn(payload, error) {
+  const column = getMissingSupabaseColumnName(error);
+  if (!column || !Object.prototype.hasOwnProperty.call(payload, column)) {
+    return {
+      pruned:false,
+      payload
+    };
+  }
+  const nextPayload = { ...payload };
+  delete nextPayload[column];
+  console.warn(`[profile-save] Removed unsupported Supabase profile column: ${column}`);
+  return {
+    pruned:true,
+    payload:nextPayload
+  };
+}
+
+async function executeSupabaseProfileMutation({ supabase, existingRecordId, payload }) {
+  let activePayload = { ...payload };
+  for (let attempt = 0; attempt < 24; attempt += 1) {
+    const query = existingRecordId
+      ? supabase
+        .from(PROFILE_COLLECTION)
+        .update(activePayload)
+        .eq('id', existingRecordId)
+        .select(SUPABASE_PROFILE_SELECT_FIELDS)
+        .single()
+      : supabase
+        .from(PROFILE_COLLECTION)
+        .insert(activePayload)
+        .select(SUPABASE_PROFILE_SELECT_FIELDS)
+        .single();
+    const { data, error } = await query;
+    if (!error) return data;
+    const pruned = pruneMissingSupabaseColumn(activePayload, error);
+    if (!pruned.pruned) {
+      throw error;
+    }
+    activePayload = pruned.payload;
+  }
+  const error = new Error('PROFILE_SCHEMA_PRUNE_LIMIT_REACHED');
+  error.code = 'PROFILE_SCHEMA_PRUNE_LIMIT_REACHED';
+  throw error;
+}
+
 async function getSupabaseProfileByAuthUserId(supabase, authUserId) {
   return getSupabaseIdentityProfileByAuthUserId({
     supabase,
@@ -480,37 +531,18 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     updated_at: new Date().toISOString()
   };
 
-  if (existingRecordId) {
-    const { data, error } = await supabase
-      .from(PROFILE_COLLECTION)
-      .update(supabasePayload)
-      .eq('id', existingRecordId)
-      .select(SUPABASE_PROFILE_SELECT_FIELDS)
-      .single();
+  const mutationPayload = existingRecordId
+    ? supabasePayload
+    : {
+        ...supabasePayload,
+        created_at: new Date().toISOString()
+      };
 
-    if (error) {
-      throw error;
-    }
-
-    return data;
-  }
-
-  const insertPayload = {
-    ...supabasePayload,
-    created_at: new Date().toISOString()
-  };
-
-  const { data, error } = await supabase
-    .from(PROFILE_COLLECTION)
-    .insert(insertPayload)
-    .select(SUPABASE_PROFILE_SELECT_FIELDS)
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  return executeSupabaseProfileMutation({
+    supabase,
+    existingRecordId,
+    payload:mutationPayload
+  });
 }
 
 export async function persistProfileWithFirebase(scope, values, existingProfile, user, policy, firestore) {

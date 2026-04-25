@@ -50,7 +50,6 @@ import {
   normalizeGenderValue,
   normalizeString,
   normalizeUsername,
-  reserveSupabaseUsernameProfile,
   reserveUsernameProfile,
   splitFullName,
   validateUsernameLocally
@@ -1460,14 +1459,6 @@ import {
         });
 
         await assertSupabaseUsernameAvailable(values, existingProfile, user);
-
-        await reserveSupabaseUsernameProfile({
-          supabase,
-          user,
-          values,
-          existingProfile,
-          policy
-        });
 
         const profile = await createPrivateBaselineProfile({
           values:{

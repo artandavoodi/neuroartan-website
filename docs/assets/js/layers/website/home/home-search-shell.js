@@ -1,3 +1,19 @@
+/* =========================================================
+   00. FILE INDEX
+   01. IMPORTS
+   02. MODULE STATE
+   03. DOM HELPERS
+   04. SEARCH DATA HELPERS
+   05. SEARCH RENDER HELPERS
+   06. QUERY HELPERS
+   07. EVENT BINDING
+   08. MODULE BOOT
+   ========================================================= */
+
+/* =========================================================
+   01. IMPORTS
+   ========================================================= */
+
 import {
   activatePublicModel,
   getActiveModelState,
@@ -13,18 +29,7 @@ import {
 } from '../system/public-model-registry.js';
 
 /* =========================================================
-   00. FILE INDEX
-   01. MODULE STATE
-   02. DOM HELPERS
-   03. SEARCH DATA HELPERS
-   04. SEARCH RENDER HELPERS
-   05. QUERY HELPERS
-   06. EVENT BINDING
-   07. MODULE BOOT
-   ========================================================= */
-
-/* =========================================================
-   01. MODULE STATE
+   02. MODULE STATE
    ========================================================= */
 
 const HOME_SEARCH_SHELL_STATE = {
@@ -32,6 +37,7 @@ const HOME_SEARCH_SHELL_STATE = {
   isOpen: false,
   root: null,
   query: '',
+  mode: 'search',
   dataReady: false,
   loadingPromise: null,
   indexedEntries: [],
@@ -45,7 +51,7 @@ const HOME_SEARCH_SHELL_INDEX_SOURCES = Object.freeze({
 });
 
 /* =========================================================
-   02. DOM HELPERS
+   03. DOM HELPERS
    ========================================================= */
 
 function getHomeSearchShellNodes() {
@@ -82,7 +88,7 @@ function fetchHomeSearchJson(path) {
 }
 
 /* =========================================================
-   03. SEARCH DATA HELPERS
+   04. SEARCH DATA HELPERS
    ========================================================= */
 
 function normalizeHomeSearchQuery(value) {
@@ -305,6 +311,12 @@ function buildModelSearchEntries() {
   }));
 }
 
+function getDefaultModelSearchEntries() {
+  return buildModelSearchEntries()
+    .sort((left, right) => left.title.localeCompare(right.title))
+    .slice(0, 12);
+}
+
 function buildHomeSearchEntries() {
   const entryMap = new Map();
 
@@ -399,7 +411,7 @@ async function ensureHomeSearchData() {
 }
 
 /* =========================================================
-   04. SEARCH RENDER HELPERS
+   05. SEARCH RENDER HELPERS
    ========================================================= */
 
 function renderVerificationBadge(entry = {}) {
@@ -426,6 +438,43 @@ function renderResultChips(keywords = []) {
   }
 
   return `<div class="home-search-shell__result-tags">${chips}</div>`;
+}
+
+function renderDefaultHomeModelResults() {
+  const models = getDefaultModelSearchEntries();
+
+  if (!models.length) {
+    return `
+      <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
+        <p class="home-search-shell__empty-title">No public models available</p>
+        <p class="home-search-shell__empty-text">The model registry is loading or currently unavailable.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="home-search-shell__result-list">
+      ${models.map((entry) => `
+        <article class="home-search-shell__result-card">
+          <div class="home-search-shell__result-meta">
+            <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
+            ${entry.queryLabel ? `<span class="home-search-shell__result-query">${escapeHomeSearchHtml(entry.queryLabel)}</span>` : ''}
+          </div>
+          <div class="home-search-shell__result-title-row">
+            <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>
+            ${renderVerificationBadge(entry)}
+          </div>
+          <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
+          ${renderResultChips(entry.keywords)}
+          <div class="home-search-shell__result-actions">
+            ${entry.href ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">Open model</a>` : ''}
+            ${entry.publicRoute ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.publicRoute)}">Open public route</a>` : ''}
+            ${entry.activateModelId ? `<button class="home-search-shell__result-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button">${entry.activateModelId === getActiveModelState().activeModelId ? 'Active on Homepage' : 'Activate on Homepage'}</button>` : ''}
+          </div>
+        </article>
+      `).join('')}
+    </div>
+  `;
 }
 
 function renderDefaultHomeSearchResults() {
@@ -535,7 +584,9 @@ function renderHomeSearchShell() {
   HOME_SEARCH_SHELL_STATE.query = query;
 
   if (!query) {
-    nodes.results.innerHTML = renderDefaultHomeSearchResults();
+    nodes.results.innerHTML = HOME_SEARCH_SHELL_STATE.mode === 'models'
+      ? renderDefaultHomeModelResults()
+      : renderDefaultHomeSearchResults();
     return;
   }
 
@@ -555,7 +606,7 @@ function renderHomeSearchShell() {
 }
 
 /* =========================================================
-   05. QUERY HELPERS
+   06. QUERY HELPERS
    ========================================================= */
 
 function setHomeSearchValue(value) {
@@ -622,21 +673,30 @@ function handleHomeSearchChipSelection(chipValue) {
   renderHomeSearchShell();
 }
 
-function openHomeSearchShell() {
+function openHomeSearchShell(options = {}) {
   const nodes = getHomeSearchShellNodes();
   if (!nodes.shell) {
     return;
   }
 
   HOME_SEARCH_SHELL_STATE.isOpen = true;
+  HOME_SEARCH_SHELL_STATE.mode = options.mode === 'models' || options.focus === 'models' ? 'models' : 'search';
+
   dispatchHomeSearchEvent('neuroartan:cookie-consent-close-requested', {
     source: 'home-search-shell',
   });
+
   nodes.shell.hidden = false;
   document.documentElement.classList.add('home-search-shell-open');
   document.body.classList.add('home-search-shell-open');
 
   window.requestAnimationFrame(() => {
+    if (HOME_SEARCH_SHELL_STATE.mode === 'models') {
+      setHomeSearchValue('');
+      renderHomeSearchShell();
+      return;
+    }
+
     nodes.input?.focus();
     nodes.input?.select();
   });
@@ -653,6 +713,7 @@ function closeHomeSearchShell() {
   }
 
   HOME_SEARCH_SHELL_STATE.isOpen = false;
+  HOME_SEARCH_SHELL_STATE.mode = 'search';
   nodes.shell.hidden = true;
   document.documentElement.classList.remove('home-search-shell-open');
   document.body.classList.remove('home-search-shell-open');
@@ -660,7 +721,7 @@ function closeHomeSearchShell() {
 }
 
 /* =========================================================
-   06. EVENT BINDING
+   07. EVENT BINDING
    ========================================================= */
 
 function bindHomeSearchShell() {
@@ -672,8 +733,12 @@ function bindHomeSearchShell() {
     renderHomeSearchShell();
   });
 
-  document.addEventListener('neuroartan:home-search-shell-open-requested', () => {
-    openHomeSearchShell();
+  document.addEventListener('neuroartan:home-search-shell-open-requested', (event) => {
+    openHomeSearchShell(event?.detail || {});
+  });
+
+  document.addEventListener('neuroartan:home-model-selector-open-requested', () => {
+    openHomeSearchShell({ mode: 'models', focus: 'models' });
   });
 
   document.addEventListener('neuroartan:home-search-shell-close-requested', () => {
@@ -741,6 +806,7 @@ function bindHomeSearchShell() {
 
       void activatePublicModel(modelId, { source: 'home-search-shell' }).then(() => {
         renderHomeSearchShell();
+        closeHomeSearchShell();
       });
       return;
     }
@@ -793,7 +859,7 @@ function bindHomeSearchShell() {
 }
 
 /* =========================================================
-   07. MODULE BOOT
+   08. MODULE BOOT
    ========================================================= */
 
 function bootHomeSearchShell() {

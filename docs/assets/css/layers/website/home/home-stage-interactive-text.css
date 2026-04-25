@@ -1,0 +1,160 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) INTERACTIVE TEXT TOKENS
+   02) INTERACTIVE TEXT ROOT
+   03) STATE SURFACE
+   04) LABEL SURFACE
+   05) DOT SURFACE
+   06) MODE STATES
+   07) RESPONSIVE AND REDUCED MOTION
+============================================================================= */
+
+/* =============================================================================
+   01) INTERACTIVE TEXT TOKENS
+============================================================================= */
+:root{
+  --home-stage-interactive-text-margin:1rem auto 0;
+  --home-stage-interactive-text-gap:0;
+  --home-stage-interactive-text-min-height:5.05rem;
+  --home-stage-interactive-text-color:var(--text-color);
+  --home-stage-interactive-text-muted:var(--text-secondary-color);
+  --home-stage-interactive-text-font-size:3.05rem;
+  --home-stage-interactive-text-font-size-mobile:1.64rem;
+  --home-stage-interactive-text-font-weight:300;
+  --home-stage-interactive-text-letter-spacing:0.01em;
+  --home-stage-interactive-text-line-height:1.12;
+  --home-stage-interactive-text-max-width:18ch;
+  --home-stage-interactive-text-opacity:0.78;
+  --home-stage-interactive-text-active-opacity:0.92;
+  --home-stage-interactive-text-sheen-duration:16s;
+  --home-stage-interactive-text-switch-duration:820ms;
+  --home-stage-interactive-text-dot-size:0.88rem;
+  --home-stage-interactive-text-dot-color:var(--text-color);
+  --home-stage-interactive-text-dot-glow:0 0 1.1rem color-mix(in srgb, var(--color-primary1) 22%, transparent);
+  --home-stage-interactive-text-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) INTERACTIVE TEXT ROOT
+============================================================================= */
+.home-stage-interactive-text{
+  display:inline-grid;
+  width:100%;
+  place-items:center;
+  gap:var(--home-stage-interactive-text-gap);
+  min-height:var(--home-stage-interactive-text-min-height);
+  margin:var(--home-stage-interactive-text-margin);
+  color:var(--home-stage-interactive-text-color);
+  text-align:center;
+  pointer-events:none;
+}
+
+/* =============================================================================
+   03) STATE SURFACE
+============================================================================= */
+.home-stage-interactive-text__state{
+  display:grid;
+  place-items:center;
+  min-height:var(--home-stage-interactive-text-min-height);
+  line-height:0;
+}
+
+/* =============================================================================
+   04) LABEL SURFACE
+============================================================================= */
+.home-stage-interactive-text__label{
+  display:inline-block;
+  grid-area:1 / 1;
+  margin:0;
+  color:var(--home-stage-interactive-text-color);
+  font-size:var(--home-stage-interactive-text-font-size);
+  font-weight:var(--home-stage-interactive-text-font-weight);
+  max-width:var(--home-stage-interactive-text-max-width);
+  line-height:var(--home-stage-interactive-text-line-height);
+  letter-spacing:var(--home-stage-interactive-text-letter-spacing);
+  opacity:var(--home-stage-interactive-text-opacity);
+  text-wrap:balance;
+  transform-origin:center center;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 42%,
+      color-mix(in srgb, var(--home-stage-interactive-text-color) 88%, transparent) 50%,
+      transparent 58%,
+      transparent 100%
+    );
+  background-size:320% 100%;
+  background-position:0% 50%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  animation:home-stage-interactive-text-sheen var(--home-stage-interactive-text-sheen-duration) linear infinite;
+  transition:
+    opacity var(--home-stage-interactive-text-motion-fast) ease,
+    transform var(--home-stage-interactive-text-motion-fast) ease;
+}
+
+/* =============================================================================
+   05) DOT SURFACE
+============================================================================= */
+.home-stage-interactive-text__dot{
+  display:block;
+  grid-area:1 / 1;
+  width:var(--home-stage-interactive-text-dot-size);
+  height:var(--home-stage-interactive-text-dot-size);
+  border-radius:999px;
+  background:var(--home-stage-interactive-text-dot-color);
+  box-shadow:var(--home-stage-interactive-text-dot-glow);
+  opacity:0;
+  transform-origin:center center;
+}
+
+/* =============================================================================
+   06) MODE STATES
+============================================================================= */
+.home-stage-interactive-text[data-home-stage-interactive-text-mode="listening"] .home-stage-interactive-text__label,
+.home-stage-interactive-text[data-home-stage-interactive-text-mode="transcribing"] .home-stage-interactive-text__label,
+.home-stage-interactive-text[data-home-stage-interactive-text-mode="thinking"] .home-stage-interactive-text__label,
+.home-stage-interactive-text[data-home-stage-interactive-text-mode="responding"] .home-stage-interactive-text__label,
+.home-stage-interactive-text[data-home-stage-interactive-text-mode="finding"] .home-stage-interactive-text__label{
+  opacity:var(--home-stage-interactive-text-active-opacity);
+}
+
+.home-stage-interactive-text[data-home-stage-interactive-text-switch="dot"] .home-stage-interactive-text__label{
+  opacity:0;
+  transform:translateY(0) scale(0.985);
+}
+
+.home-stage-interactive-text[data-home-stage-interactive-text-switch="dot"] .home-stage-interactive-text__dot{
+  display:block;
+  animation:home-stage-interactive-text-dot-breathe var(--home-stage-interactive-text-switch-duration) ease-in-out infinite;
+}
+
+@keyframes home-stage-interactive-text-sheen{
+  0%{background-position:0% 50%;}
+  100%{background-position:320% 50%;}
+}
+
+@keyframes home-stage-interactive-text-dot-breathe{
+  0%{opacity:0.24; transform:translateY(0) scale(0.72);}
+  46%{opacity:0.94; transform:translateY(0) scale(1.28);}
+  100%{opacity:0.24; transform:translateY(0) scale(0.72);}
+}
+
+/* =============================================================================
+   07) RESPONSIVE AND REDUCED MOTION
+============================================================================= */
+@media (max-width:760px){
+  :root{
+    --home-stage-interactive-text-font-size:var(--home-stage-interactive-text-font-size-mobile);
+    --home-stage-interactive-text-min-height:3.2rem;
+    --home-stage-interactive-text-margin:0.72rem auto 0;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .home-stage-interactive-text__label,
+  .home-stage-interactive-text[data-home-stage-interactive-text-switch="dot"] .home-stage-interactive-text__dot{
+    animation:none;
+  }
+}

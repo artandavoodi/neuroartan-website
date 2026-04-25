@@ -47,9 +47,10 @@ const HOME_STAGE_CORE_EFFECT_SELECTORS = {
    ========================================================= */
 
 const HOME_STAGE_CORE_EFFECT_MODE_ENERGY = Object.freeze({
-  idle: 0.12,
-  listening: 0.72,
-  thinking: 0.48,
+  idle: 0.14,
+  listening: 0.86,
+  transcribing: 0.62,
+  thinking: 0.54,
   responding: 1.0,
 });
 
@@ -75,6 +76,12 @@ function setHomeStageCoreEffectMode(mode) {
 
   if (HOME_STAGE_CORE_EFFECT_STATE.shell) {
     HOME_STAGE_CORE_EFFECT_STATE.shell.dataset.coreEffectMode = nextMode;
+  }
+
+  const nodes = getHomeStageCoreEffectNodes();
+
+  if (nodes.vessel) {
+    nodes.vessel.dataset.coreEffectMode = nextMode;
   }
 }
 
@@ -204,6 +211,16 @@ function renderHomeStageCoreEffectFrame(timestamp) {
   const responseBoost = mode === 'responding' ? 1 : 0;
   const listenBoost = mode === 'listening' ? 1 : 0;
   const thinkBoost = mode === 'thinking' ? 1 : 0;
+  const transcribeBoost = mode === 'transcribing' ? 1 : 0;
+  const pulseSpeed = mode === 'listening'
+    ? 2.2
+    : mode === 'transcribing'
+      ? 1.42
+      : mode === 'thinking'
+        ? 0.78
+        : mode === 'responding'
+          ? 1.15
+          : 0.48;
 
   context.clearRect(0, 0, width, height);
 
@@ -217,8 +234,8 @@ function renderHomeStageCoreEffectFrame(timestamp) {
   );
   coreGradient.addColorStop(0, `rgba(255,255,255,${0.22 + energy * 0.12})`);
   coreGradient.addColorStop(0.22, `rgba(145,124,111,${0.24 + energy * 0.18})`);
-  coreGradient.addColorStop(0.5, `rgba(121,101,255,${0.14 + responseBoost * 0.08})`);
-  coreGradient.addColorStop(0.74, `rgba(66,194,255,${0.08 + listenBoost * 0.08})`);
+  coreGradient.addColorStop(0.5, `rgba(121,101,255,${0.14 + responseBoost * 0.08 + transcribeBoost * 0.04})`);
+  coreGradient.addColorStop(0.74, `rgba(66,194,255,${0.08 + listenBoost * 0.14 + transcribeBoost * 0.06})`);
   coreGradient.addColorStop(1, 'rgba(0,0,0,0)');
 
   context.save();
@@ -231,11 +248,11 @@ function renderHomeStageCoreEffectFrame(timestamp) {
 
   const ringCount = 3;
   for (let index = 0; index < ringCount; index += 1) {
-    const ringPhase = elapsed * (0.48 + energy * 0.52) + index * 0.85;
-    const ringRadius = baseRadius * (1.05 + index * 0.42) + Math.sin(ringPhase) * (4 + energy * 8);
+    const ringPhase = elapsed * (pulseSpeed + energy * 0.52) + index * 0.85;
+    const ringRadius = baseRadius * (1.05 + index * 0.42) + Math.sin(ringPhase) * (4 + energy * 8 + listenBoost * 7 + transcribeBoost * 4);
     context.save();
     context.strokeStyle = `rgba(255,255,255,${0.05 + energy * 0.08 - index * 0.015})`;
-    context.lineWidth = 1 + (responseBoost * 0.3);
+    context.lineWidth = 1 + (responseBoost * 0.3) + (listenBoost * 0.45) + (transcribeBoost * 0.22);
     context.filter = `blur(${2 + energy * 4}px)`;
     context.beginPath();
     context.arc(cx, cy, ringRadius, 0, Math.PI * 2);
@@ -245,7 +262,7 @@ function renderHomeStageCoreEffectFrame(timestamp) {
 
   const blobCount = 4;
   for (let index = 0; index < blobCount; index += 1) {
-    const angle = elapsed * (0.9 + energy * 1.4) * (index % 2 === 0 ? 1 : -1) + index * (Math.PI / 2);
+    const angle = elapsed * (0.9 + energy * 1.4 + listenBoost * 0.9 + transcribeBoost * 0.36) * (index % 2 === 0 ? 1 : -1) + index * (Math.PI / 2);
     const wobble = Math.sin(elapsed * (1.4 + index * 0.2) + index) * (6 + energy * 10);
     const orbX = cx + Math.cos(angle) * (orbitRadius + wobble * 0.35);
     const orbY = cy + Math.sin(angle * (1.08 + thinkBoost * 0.08)) * (orbitRadius * 0.72 + wobble * 0.28);
@@ -263,8 +280,8 @@ function renderHomeStageCoreEffectFrame(timestamp) {
       orbY,
       orbRadius,
       color,
-      0.08 + energy * 0.1 + responseBoost * 0.03,
-      14 + energy * 18
+      0.08 + energy * 0.1 + responseBoost * 0.03 + listenBoost * 0.04 + transcribeBoost * 0.025,
+      14 + energy * 18 + listenBoost * 8 + transcribeBoost * 5
     );
   }
 
@@ -298,11 +315,37 @@ function bindHomeStageCoreEffectEvents() {
     setHomeStageCoreEffectMode(event?.detail?.mode ?? 'idle');
   });
 
+  document.addEventListener('neuroartan:home-stage-voice-query-submitted', () => {
+    setHomeStageCoreEffectMode('thinking');
+  });
+
+  document.addEventListener('neuroartan:home-stage-voice-response', (event) => {
+    const response = typeof event?.detail?.response === 'string'
+      ? event.detail.response.trim()
+      : '';
+
+    setHomeStageCoreEffectMode(response ? 'responding' : 'thinking');
+  });
+
+  document.addEventListener('neuroartan:home-stage-voice-transcript', (event) => {
+    const transcript = typeof event?.detail?.transcript === 'string'
+      ? event.detail.transcript.trim()
+      : '';
+
+    if (transcript && HOME_STAGE_CORE_EFFECT_STATE.mode === 'listening') {
+      setHomeStageCoreEffectMode('transcribing');
+    }
+  });
+
   document.addEventListener('neuroartan:home-stage-voice-activated', () => {
     setHomeStageCoreEffectMode('listening');
   });
 
   document.addEventListener('neuroartan:home-stage-voice-deactivated', () => {
+    setHomeStageCoreEffectMode('idle');
+  });
+
+  document.addEventListener('neuroartan:home-stage-reset-requested', () => {
     setHomeStageCoreEffectMode('idle');
   });
 
@@ -321,7 +364,6 @@ function bindHomeStageCoreEffectEvents() {
    ========================================================= */
 
 function bootHomeStageCoreEffect() {
-
   if (HOME_STAGE_CORE_EFFECT_STATE.isBound) {
     resizeHomeStageCoreEffectCanvas();
     return;

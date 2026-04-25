@@ -4,8 +4,9 @@
    02. NORMALIZATION HELPERS
    03. SNAPSHOT HELPERS
    04. STATE MUTATION HELPERS
-   05. EVENT BINDING
-   06. MODULE BOOT
+   05. INTERACTION SETTINGS HELPERS
+   06. EVENT BINDING
+   07. MODULE BOOT
    ========================================================= */
 
 /* =========================================================
@@ -45,6 +46,12 @@ const HOME_SURFACE_STATE = {
     lastQuery: '',
     lastRoute: '',
     lastQueryId: null,
+  },
+  interaction: {
+    responseMode: 'text',
+    interactionStyle: 'composer',
+    stageEffects: 'subtle',
+    stageText: 'minimal',
   },
   subscribers: new Set(),
 };
@@ -213,6 +220,9 @@ function cloneHomeSurfaceState() {
     voice: {
       ...HOME_SURFACE_STATE.voice,
     },
+    interaction: {
+      ...HOME_SURFACE_STATE.interaction,
+    },
   };
 }
 
@@ -317,7 +327,29 @@ function syncVoiceRoute(detail = {}) {
 }
 
 /* =========================================================
-   05. EVENT BINDING
+   05. INTERACTION SETTINGS HELPERS
+   ========================================================= */
+
+function normalizeInteractionSetting(value, fallback = '') {
+  const normalized = normalizeString(value).toLowerCase();
+  return normalized || fallback;
+}
+
+function syncInteractionSettings(detail = {}) {
+  const values = detail.values && typeof detail.values === 'object'
+    ? detail.values
+    : detail;
+
+  HOME_SURFACE_STATE.interaction = {
+    responseMode: normalizeInteractionSetting(values.responseMode, HOME_SURFACE_STATE.interaction.responseMode),
+    interactionStyle: normalizeInteractionSetting(values.interactionStyle, HOME_SURFACE_STATE.interaction.interactionStyle),
+    stageEffects: normalizeInteractionSetting(values.stageEffects, HOME_SURFACE_STATE.interaction.stageEffects),
+    stageText: normalizeInteractionSetting(values.stageText, HOME_SURFACE_STATE.interaction.stageText),
+  };
+}
+
+/* =========================================================
+   06. EVENT BINDING
    ========================================================= */
 
 function bindHomeSurfaceStateEvents() {
@@ -377,6 +409,11 @@ function bindHomeSurfaceStateEvents() {
     emitHomeSurfaceState();
   });
 
+  document.addEventListener('neuroartan:home-interaction-settings-changed', (event) => {
+    syncInteractionSettings(event?.detail || {});
+    emitHomeSurfaceState();
+  });
+
   document.addEventListener('neuroartan:firebase-ready', () => {
     syncSignedInAccountState();
     emitHomeSurfaceState();
@@ -384,7 +421,7 @@ function bindHomeSurfaceStateEvents() {
 }
 
 /* =========================================================
-   06. MODULE BOOT
+   07. MODULE BOOT
    ========================================================= */
 
 function bootHomeSurfaceState() {

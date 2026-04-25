@@ -1,0 +1,125 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) RESPONSE PANEL TOKENS
+   02) RESPONSE PANEL ROOT
+   03) RESPONSE SCROLLER
+   04) RESPONSE CONTENT
+   05) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) RESPONSE PANEL TOKENS
+============================================================================= */
+:root{
+  --home-interaction-response-panel-width:min(46rem, calc(100vw - (2 * var(--site-gutter))));
+  --home-interaction-response-panel-footer-clearance:calc(var(--footer-height, 5rem) + var(--site-gutter));
+  --home-interaction-response-panel-reserved-stage-space:17rem;
+  --home-interaction-response-panel-max-height:min(20rem, calc(100svh - var(--site-header-height, 4rem) - var(--home-interaction-response-panel-footer-clearance) - var(--home-interaction-response-panel-reserved-stage-space)));
+  --home-interaction-response-panel-margin-top:0.52rem;
+  --home-interaction-response-panel-margin-bottom:var(--home-interaction-response-panel-footer-clearance);
+  --home-interaction-response-panel-padding:0.18rem 0.18rem 0.18rem;
+  --home-interaction-response-panel-content-max-width:42rem;
+  --home-interaction-response-panel-content-align:left;
+  --home-interaction-response-panel-radius:1rem;
+  --home-interaction-response-panel-surface:transparent;
+  --home-interaction-response-panel-border:transparent;
+  --home-interaction-response-panel-text:var(--text-primary-color);
+  --home-interaction-response-panel-muted:var(--text-secondary-color);
+  --home-interaction-response-panel-font-size:1.02rem;
+  --home-interaction-response-panel-font-weight:300;
+  --home-interaction-response-panel-line-height:1.72;
+  --home-interaction-response-panel-letter-spacing:-0.012em;
+  --home-interaction-response-panel-scrollbar:color-mix(in srgb, var(--text-secondary-color) 22%, transparent);
+  --home-interaction-response-panel-scrollbar-hover:color-mix(in srgb, var(--text-secondary-color) 38%, transparent);
+  --home-interaction-response-panel-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) RESPONSE PANEL ROOT
+============================================================================= */
+.home-interaction-response-panel{
+  width:var(--home-interaction-response-panel-width);
+  max-width:100%;
+  margin:var(--home-interaction-response-panel-margin-top) auto var(--home-interaction-response-panel-margin-bottom);
+  padding:var(--home-interaction-response-panel-padding);
+  border:1px solid var(--home-interaction-response-panel-border);
+  border-radius:var(--home-interaction-response-panel-radius);
+  background:var(--home-interaction-response-panel-surface);
+  color:var(--home-interaction-response-panel-text);
+  text-align:var(--home-interaction-response-panel-content-align);
+}
+
+.home-interaction-response-panel[hidden],
+.home-interaction-response-panel[data-home-interaction-response-state="idle"]{
+  display:none;
+}
+
+.home-interaction-response-panel[data-home-interaction-response-state="responding"]{
+  display:block;
+}
+
+/* =============================================================================
+   03) RESPONSE SCROLLER
+============================================================================= */
+.home-interaction-response-panel__scroller{
+  width:100%;
+  max-height:var(--home-interaction-response-panel-max-height);
+  min-height:0;
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:var(--home-interaction-response-panel-scrollbar) transparent;
+  outline:none;
+  scroll-padding-bottom:var(--home-interaction-response-panel-footer-clearance);
+}
+
+.home-interaction-response-panel__scroller::-webkit-scrollbar{
+  width:0.42rem;
+}
+
+.home-interaction-response-panel__scroller::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+.home-interaction-response-panel__scroller::-webkit-scrollbar-thumb{
+  border-radius:999px;
+  background:var(--home-interaction-response-panel-scrollbar);
+}
+
+.home-interaction-response-panel__scroller::-webkit-scrollbar-thumb:hover{
+  background:var(--home-interaction-response-panel-scrollbar-hover);
+}
+
+/* =============================================================================
+   04) RESPONSE CONTENT
+============================================================================= */
+.home-interaction-response-panel__content{
+  margin:0;
+  max-width:var(--home-interaction-response-panel-content-max-width);
+  padding:0.18rem 0.24rem 0.32rem;
+  color:var(--home-interaction-response-panel-text);
+  font-size:var(--home-interaction-response-panel-font-size);
+  font-weight:var(--home-interaction-response-panel-font-weight);
+  line-height:var(--home-interaction-response-panel-line-height);
+  letter-spacing:var(--home-interaction-response-panel-letter-spacing);
+  white-space:pre-wrap;
+}
+
+.home-interaction-response-panel__content:empty{
+  display:none;
+}
+
+/* =============================================================================
+   05) RESPONSIVE
+============================================================================= */
+@media (max-width:760px){
+  :root{
+    --home-interaction-response-panel-width:min(100%, calc(100vw - (2 * var(--site-gutter))));
+    --home-interaction-response-panel-footer-clearance:calc(var(--footer-height, 5rem) + var(--site-gutter) + 1rem);
+    --home-interaction-response-panel-reserved-stage-space:13.5rem;
+    --home-interaction-response-panel-max-height:min(14rem, calc(100svh - var(--site-header-height, 4rem) - var(--home-interaction-response-panel-footer-clearance) - var(--home-interaction-response-panel-reserved-stage-space)));
+    --home-interaction-response-panel-content-max-width:100%;
+    --home-interaction-response-panel-font-size:0.96rem;
+    --home-interaction-response-panel-line-height:1.66;
+  }
+}

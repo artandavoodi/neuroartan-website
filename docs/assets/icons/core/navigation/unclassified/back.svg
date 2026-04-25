@@ -24,12 +24,12 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="14.186575"
-     inkscape:cx="12.406095"
-     inkscape:cy="4.0883722"
+     inkscape:cx="12.44134"
+     inkscape:cy="4.0531277"
      inkscape:window-width="1472"
-     inkscape:window-height="923"
+     inkscape:window-height="896"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <path
@@ -38,11 +38,13 @@
      stroke-width="1.25"
      stroke-linecap="round"
      stroke-linejoin="round"
-     id="path1" />
+     id="path1"
+     style="stroke-width:1;stroke-dasharray:none" />
   <path
      d="M 4.1065681,10 H 16.934055"
      stroke="currentColor"
      stroke-width="1.25"
      stroke-linecap="round"
-     id="path2" />
+     id="path2"
+     style="stroke-width:1;stroke-dasharray:none" />
 </svg>

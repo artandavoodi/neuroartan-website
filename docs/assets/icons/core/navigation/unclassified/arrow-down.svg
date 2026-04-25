@@ -38,5 +38,6 @@
      stroke-width="1.25"
      stroke-linecap="round"
      stroke-linejoin="round"
-     id="path1" />
+     id="path1"
+     style="stroke-width:1;stroke-dasharray:none" />
 </svg>

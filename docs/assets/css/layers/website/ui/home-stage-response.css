@@ -1,76 +1,16 @@
 /* =============================================================================
    00) FILE INDEX
-   01) RESPONSE TEXT SURFACE
-   02) RESPONSE MODE BEHAVIOR
-   03) RESPONSE READING RHYTHM
-   04) MOBILE REFINEMENTS
+   01) LEGACY STAGE RESPONSE OWNERSHIP RETIRED
 ============================================================================= */
 
 /* =============================================================================
-   01) RESPONSE TEXT SURFACE
+   01) LEGACY STAGE RESPONSE OWNERSHIP RETIRED
 ============================================================================= */
-#stage-voice-response{
-  position:relative;
-  min-height:1.5rem;
-  max-width:min(34rem, 82vw);
-  margin:0 auto;
-  text-align:center;
-  font-size:0.94rem;
-  font-weight:300;
-  letter-spacing:0.01em;
-  line-height:1.55;
-  color:rgba(235,230,224,0.9);
-  text-wrap:balance;
-}
+/*
+  The legacy stage response DOM styling has been retired.
 
-/* =============================================================================
-   02) RESPONSE MODE BEHAVIOR
-============================================================================= */
-#stage-cognitive-core-shell[data-voice-mode="responding"] #stage-voice-response,
-#stage-voice-interaction-shell[data-voice-mode="responding"] #stage-voice-response{
-  opacity:1;
-  transform:translateY(0);
-}
+  Current sovereign owner:
+  - Response panel: /assets/css/layers/website/home/home-interaction-response-panel.css
 
-#stage-cognitive-core-shell[data-voice-mode="listening"] #stage-voice-response,
-#stage-voice-interaction-shell[data-voice-mode="listening"] #stage-voice-response,
-#stage-cognitive-core-shell[data-voice-mode="thinking"] #stage-voice-response,
-#stage-voice-interaction-shell[data-voice-mode="thinking"] #stage-voice-response{
-  opacity:0.42;
-}
-
-/* =============================================================================
-   03) RESPONSE READING RHYTHM
-============================================================================= */
-#stage-voice-response:empty{
-  min-height:0;
-}
-
-#stage-cognitive-core-shell[data-voice-mode="responding"] #stage-voice-response:not(:empty),
-#stage-voice-interaction-shell[data-voice-mode="responding"] #stage-voice-response:not(:empty){
-  animation:stage-voice-response-settle 0.7s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-@keyframes stage-voice-response-settle{
-  0%{
-    opacity:0;
-    transform:translateY(10px);
-    filter:blur(6px);
-  }
-  100%{
-    opacity:1;
-    transform:translateY(0);
-    filter:blur(0);
-  }
-}
-
-/* =============================================================================
-   04) MOBILE REFINEMENTS
-============================================================================= */
-@media (max-width:820px){
-  #stage-voice-response{
-    max-width:min(88vw, 28rem);
-    font-size:0.88rem;
-    line-height:1.48;
-  }
-}
+  This file is intentionally preserved as an empty compatibility layer so legacy imports do not fail while response ownership remains clean and non-duplicated.
+*/

@@ -1,0 +1,279 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) PANEL TOKENS
+   02) PANEL ROOT
+   03) PANEL SURFACE
+   04) HEADER
+   05) SECTIONS
+   06) OPTIONS
+   07) ROW CONTROLS
+   08) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) PANEL TOKENS
+============================================================================= */
+:root{
+  --home-interaction-settings-panel-z-index:var(--z-overlay, 80);
+  --home-interaction-settings-panel-width:min(24rem, calc(100vw - (2 * var(--site-gutter))));
+  --home-interaction-settings-panel-top:calc(var(--site-header-height, 4rem) + 1rem);
+  --home-interaction-settings-panel-right:var(--site-gutter);
+  --home-interaction-settings-panel-radius:1.35rem;
+  --home-interaction-settings-panel-padding:0.82rem;
+  --home-interaction-settings-panel-gap:0.78rem;
+  --home-interaction-settings-panel-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
+  --home-interaction-settings-panel-border:var(--control-border);
+  --home-interaction-settings-panel-shadow:0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent);
+  --home-interaction-settings-panel-blur:18px;
+  --home-interaction-settings-panel-saturate:126%;
+
+  --home-interaction-settings-panel-title-color:var(--text-primary-color);
+  --home-interaction-settings-panel-muted-color:var(--text-secondary-color);
+  --home-interaction-settings-panel-section-title-color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+
+  --home-interaction-settings-panel-control-radius:1rem;
+  --home-interaction-settings-panel-control-padding:0.76rem;
+  --home-interaction-settings-panel-control-bg:var(--control-bg);
+  --home-interaction-settings-panel-control-bg-active:color-mix(in srgb, var(--color-primary1) 14%, var(--control-bg));
+  --home-interaction-settings-panel-control-border:var(--control-border);
+  --home-interaction-settings-panel-control-border-active:color-mix(in srgb, var(--color-primary1) 38%, var(--control-border));
+  --home-interaction-settings-panel-control-text:var(--text-primary-color);
+  --home-interaction-settings-panel-control-description:var(--text-secondary-color);
+  --home-interaction-settings-panel-icon-size:1rem;
+  --home-interaction-settings-panel-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) PANEL ROOT
+============================================================================= */
+.home-interaction-settings-panel{
+  position:fixed;
+  top:var(--home-interaction-settings-panel-top);
+  right:var(--home-interaction-settings-panel-right);
+  z-index:var(--home-interaction-settings-panel-z-index);
+  width:var(--home-interaction-settings-panel-width);
+  pointer-events:none;
+}
+
+.home-interaction-settings-panel[hidden]{
+  display:none;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-state="open"]{
+  pointer-events:auto;
+}
+
+/* =============================================================================
+   03) PANEL SURFACE
+============================================================================= */
+.home-interaction-settings-panel__surface{
+  display:grid;
+  gap:var(--home-interaction-settings-panel-gap);
+  width:100%;
+  padding:var(--home-interaction-settings-panel-padding);
+  border:1px solid var(--home-interaction-settings-panel-border);
+  border-radius:var(--home-interaction-settings-panel-radius);
+  background:var(--home-interaction-settings-panel-surface);
+  box-shadow:var(--home-interaction-settings-panel-shadow);
+  backdrop-filter:blur(var(--home-interaction-settings-panel-blur)) saturate(var(--home-interaction-settings-panel-saturate));
+  -webkit-backdrop-filter:blur(var(--home-interaction-settings-panel-blur)) saturate(var(--home-interaction-settings-panel-saturate));
+}
+
+/* =============================================================================
+   04) HEADER
+============================================================================= */
+.home-interaction-settings-panel__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:0.75rem;
+}
+
+.home-interaction-settings-panel__title-block{
+  display:grid;
+  gap:0.14rem;
+  min-width:0;
+}
+
+.home-interaction-settings-panel__eyebrow,
+.home-interaction-settings-panel__section-title{
+  margin:0;
+  color:var(--home-interaction-settings-panel-section-title-color);
+  font-size:0.66rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  line-height:1.2;
+  text-transform:uppercase;
+}
+
+.home-interaction-settings-panel__title{
+  margin:0;
+  color:var(--home-interaction-settings-panel-title-color);
+  font-size:1rem;
+  font-weight:600;
+  line-height:1.2;
+  letter-spacing:-0.02em;
+}
+
+.home-interaction-settings-panel__close{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:2rem;
+  min-width:2rem;
+  height:2rem;
+  min-height:2rem;
+  padding:0;
+  border:1px solid var(--home-interaction-settings-panel-control-border);
+  border-radius:999px;
+  background:transparent;
+  color:var(--home-interaction-settings-panel-muted-color);
+  cursor:pointer;
+  outline:none;
+  transition:
+    color var(--home-interaction-settings-panel-motion-fast) ease,
+    border-color var(--home-interaction-settings-panel-motion-fast) ease,
+    background-color var(--home-interaction-settings-panel-motion-fast) ease;
+}
+
+.home-interaction-settings-panel__close:hover,
+.home-interaction-settings-panel__close:focus-visible{
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg);
+  color:var(--home-interaction-settings-panel-control-text);
+}
+
+.home-interaction-settings-panel__close-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-interaction-settings-panel-icon-size);
+  height:var(--home-interaction-settings-panel-icon-size);
+  transform:rotate(45deg);
+}
+
+.home-interaction-settings-panel__close-icon img{
+  display:block;
+  width:100%;
+  height:100%;
+  filter:var(--icon-image-filter, none);
+}
+
+/* =============================================================================
+   05) SECTIONS
+============================================================================= */
+.home-interaction-settings-panel__section{
+  display:grid;
+  gap:0.48rem;
+}
+
+/* =============================================================================
+   06) OPTIONS
+============================================================================= */
+.home-interaction-settings-panel__option-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0.42rem;
+}
+
+.home-interaction-settings-panel__option{
+  -webkit-appearance:none;
+  appearance:none;
+  display:grid;
+  gap:0.24rem;
+  width:100%;
+  padding:var(--home-interaction-settings-panel-control-padding);
+  border:1px solid var(--home-interaction-settings-panel-control-border);
+  border-radius:var(--home-interaction-settings-panel-control-radius);
+  background:var(--home-interaction-settings-panel-control-bg);
+  color:var(--home-interaction-settings-panel-control-text);
+  text-align:left;
+  cursor:pointer;
+  outline:none;
+  transition:
+    border-color var(--home-interaction-settings-panel-motion-fast) ease,
+    background-color var(--home-interaction-settings-panel-motion-fast) ease,
+    color var(--home-interaction-settings-panel-motion-fast) ease;
+}
+
+.home-interaction-settings-panel__option:hover,
+.home-interaction-settings-panel__option:focus-visible,
+.home-interaction-settings-panel__option[aria-pressed="true"]{
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
+}
+
+.home-interaction-settings-panel__option-label{
+  color:var(--home-interaction-settings-panel-control-text);
+  font-size:0.84rem;
+  font-weight:600;
+  line-height:1.2;
+}
+
+.home-interaction-settings-panel__option-description{
+  color:var(--home-interaction-settings-panel-control-description);
+  font-size:0.72rem;
+  font-weight:400;
+  line-height:1.45;
+}
+
+/* =============================================================================
+   07) ROW CONTROLS
+============================================================================= */
+.home-interaction-settings-panel__option-stack{
+  display:grid;
+  gap:0.42rem;
+}
+
+.home-interaction-settings-panel__row{
+  -webkit-appearance:none;
+  appearance:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.75rem;
+  width:100%;
+  padding:0.74rem var(--home-interaction-settings-panel-control-padding);
+  border:1px solid var(--home-interaction-settings-panel-control-border);
+  border-radius:var(--home-interaction-settings-panel-control-radius);
+  background:var(--home-interaction-settings-panel-control-bg);
+  color:var(--home-interaction-settings-panel-control-text);
+  font-size:0.84rem;
+  font-weight:600;
+  line-height:1.2;
+  cursor:pointer;
+  outline:none;
+  transition:
+    border-color var(--home-interaction-settings-panel-motion-fast) ease,
+    background-color var(--home-interaction-settings-panel-motion-fast) ease,
+    color var(--home-interaction-settings-panel-motion-fast) ease;
+}
+
+.home-interaction-settings-panel__row:hover,
+.home-interaction-settings-panel__row:focus-visible,
+.home-interaction-settings-panel__row[aria-pressed="true"]{
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
+}
+
+.home-interaction-settings-panel__row-value{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:0.72rem;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+/* =============================================================================
+   08) RESPONSIVE
+============================================================================= */
+@media (max-width:760px){
+  .home-interaction-settings-panel{
+    top:auto;
+    right:var(--site-gutter);
+    bottom:calc(var(--site-gutter) + 1rem);
+    left:var(--site-gutter);
+    width:auto;
+  }
+}

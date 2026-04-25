@@ -1,14 +1,19 @@
 /* =========================================================
    00. FILE INDEX
-   01. MODULE STATE
-   02. QUERY CONSTANTS
-   03. QUERY HELPERS
-   04. KNOWLEDGE MATCH HELPERS
-   05. ROUTING HELPERS
-   06. DELEGATION HELPERS
-   07. RESPONSE RESOLUTION
-   08. EVENT BINDING
-   09. MODULE BOOT
+   01. IMPORTS
+   02. MODULE STATE
+   03. QUERY CONSTANTS
+   04. QUERY HELPERS
+   05. KNOWLEDGE MATCH HELPERS
+   06. ROUTING HELPERS
+   07. DELEGATION HELPERS
+   08. RESPONSE RESOLUTION
+   09. EVENT BINDING
+   10. MODULE BOOT
+   ========================================================= */
+
+/* =========================================================
+   01. IMPORTS
    ========================================================= */
 
 import {
@@ -17,7 +22,7 @@ import {
 } from '../../system/active-model.js';
 
 /* =========================================================
-   01. MODULE STATE
+   02. MODULE STATE
    ========================================================= */
 
 const HOME_STAGE_QUERY_ENGINE_STATE = {
@@ -27,7 +32,7 @@ const HOME_STAGE_QUERY_ENGINE_STATE = {
 };
 
 /* =========================================================
-   02. QUERY CONSTANTS
+   03. QUERY CONSTANTS
    ========================================================= */
 
 const HOME_STAGE_QUERY_KNOWLEDGE = [
@@ -109,7 +114,7 @@ const HOME_STAGE_QUERY_SITE_HINT_PATTERNS = [
 ];
 
 /* =========================================================
-   03. QUERY HELPERS
+   04. QUERY HELPERS
    ========================================================= */
 
 function normalizeHomeStageQuery(query) {
@@ -120,6 +125,14 @@ function dispatchHomeStageMode(mode) {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-mode', {
       detail: { mode },
+    })
+  );
+}
+
+function dispatchHomeStageTranscript(transcript) {
+  document.dispatchEvent(
+    new CustomEvent('neuroartan:home-stage-voice-transcript', {
+      detail: { transcript },
     })
   );
 }
@@ -140,12 +153,35 @@ function dispatchHomeStageRouting(result) {
   );
 }
 
+function resolveHomeStageDelegatedResponse(route, query) {
+  const normalizedQuery = normalizeHomeStageQuery(query);
+
+  switch (route) {
+    case 'web':
+      return formatActiveModelResponse(
+        'web',
+        `I can route this as a current-information request: “${normalizedQuery}”. Live web retrieval should be handled by the governed web-search layer when connected.`
+      );
+    case 'site-knowledge':
+      return formatActiveModelResponse(
+        'site-knowledge',
+        `I can search the Neuroartan website and platform surface for: “${normalizedQuery}”. The next implementation step is to connect this route to the governed site-knowledge index.`
+      );
+    case 'platform-search':
+    default:
+      return formatActiveModelResponse(
+        'platform-search',
+        `I received your request: “${normalizedQuery}”. The homepage interaction layer is now routing this into the active model pathway.`
+      );
+  }
+}
+
 function dispatchHomeStageDelegation(eventName, detail) {
   document.dispatchEvent(new CustomEvent(eventName, { detail }));
 }
 
 /* =========================================================
-   04. KNOWLEDGE MATCH HELPERS
+   05. KNOWLEDGE MATCH HELPERS
    ========================================================= */
 
 function resolveHomeStageKnowledgeMatch(query) {
@@ -171,7 +207,7 @@ function resolveHomeStageNeedsSiteKnowledge(query) {
 }
 
 /* =========================================================
-   05. ROUTING HELPERS
+   06. ROUTING HELPERS
    ========================================================= */
 
 function classifyHomeStageQuery(query) {
@@ -215,7 +251,7 @@ function classifyHomeStageQuery(query) {
 }
 
 /* =========================================================
-   06. DELEGATION HELPERS
+   07. DELEGATION HELPERS
    ========================================================= */
 
 function delegateHomeStageWebQuery(query, queryId) {
@@ -249,7 +285,7 @@ function delegateHomeStagePlatformQuery(query, queryId) {
 }
 
 /* =========================================================
-   07. RESPONSE RESOLUTION
+   08. RESPONSE RESOLUTION
    ========================================================= */
 
 function resolveHomeStageQuery(query, queryId) {
@@ -276,7 +312,7 @@ function resolveHomeStageQuery(query, queryId) {
   if (classification.route === 'web') {
     return {
       route: 'web',
-      response: delegateHomeStageWebQuery(classification.query, queryId),
+      response: delegateHomeStageWebQuery(classification.query, queryId) || resolveHomeStageDelegatedResponse('web', classification.query),
       query: classification.query,
       id: null,
     };
@@ -285,7 +321,7 @@ function resolveHomeStageQuery(query, queryId) {
   if (classification.route === 'site-knowledge') {
     return {
       route: 'site-knowledge',
-      response: delegateHomeStageSiteKnowledgeQuery(classification.query, queryId),
+      response: delegateHomeStageSiteKnowledgeQuery(classification.query, queryId) || resolveHomeStageDelegatedResponse('site-knowledge', classification.query),
       query: classification.query,
       id: null,
     };
@@ -293,7 +329,7 @@ function resolveHomeStageQuery(query, queryId) {
 
   return {
     route: 'platform-search',
-    response: delegateHomeStagePlatformQuery(classification.query, queryId),
+    response: delegateHomeStagePlatformQuery(classification.query, queryId) || resolveHomeStageDelegatedResponse('platform-search', classification.query),
     query: classification.query,
     id: null,
   };
@@ -301,6 +337,7 @@ function resolveHomeStageQuery(query, queryId) {
 
 function handleHomeStageQuerySubmitted(event) {
   const query = normalizeHomeStageQuery(event?.detail?.query ?? '');
+  const source = normalizeHomeStageQuery(event?.detail?.source ?? 'homepage-interaction');
 
   if (!query || HOME_STAGE_QUERY_ENGINE_STATE.isBusy) {
     return;
@@ -311,6 +348,8 @@ function handleHomeStageQuerySubmitted(event) {
   const queryId = HOME_STAGE_QUERY_ENGINE_STATE.activeQueryId;
 
   dispatchHomeStageMode('thinking');
+  dispatchHomeStageTranscript(query);
+  dispatchHomeStageResponse('', queryId);
 
   window.setTimeout(() => {
     if (queryId !== HOME_STAGE_QUERY_ENGINE_STATE.activeQueryId) {
@@ -330,6 +369,7 @@ function handleHomeStageQuerySubmitted(event) {
       queryId,
       route: result.route,
       id: result.id || null,
+      source,
       ...getActiveModelRoutingContext(result.route),
     });
 
@@ -340,7 +380,7 @@ function handleHomeStageQuerySubmitted(event) {
 }
 
 /* =========================================================
-   08. EVENT BINDING
+   09. EVENT BINDING
    ========================================================= */
 
 function bindHomeStageQueryEngineEvents() {
@@ -352,11 +392,14 @@ function bindHomeStageQueryEngineEvents() {
   document.addEventListener('neuroartan:home-stage-reset-requested', () => {
     HOME_STAGE_QUERY_ENGINE_STATE.isBusy = false;
     HOME_STAGE_QUERY_ENGINE_STATE.activeQueryId += 1;
+    dispatchHomeStageMode('idle');
+    dispatchHomeStageTranscript('');
+    dispatchHomeStageResponse('', HOME_STAGE_QUERY_ENGINE_STATE.activeQueryId);
   });
 }
 
 /* =========================================================
-   09. MODULE BOOT
+   10. MODULE BOOT
    ========================================================= */
 
 function bootHomeStageQueryEngine() {

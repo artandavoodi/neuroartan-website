@@ -14,6 +14,9 @@
 @import url('./home-search-shell.css');
 @import url('./home-settings-panel.css');
 @import url('./home-interaction-panel.css');
+@import url('./home-interaction-response-panel.css');
+@import url('./home-interaction-settings-panel.css');
+@import url('./home-stage-interactive-text.css');
 @import url('./home-shell.css');
 @import url('./home-footer.css');
 

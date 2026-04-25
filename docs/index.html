@@ -12,7 +12,8 @@
      10) LANDING STAGE
      10A) STAGE BACKGROUND VIDEO
      10B) STAGE COGNITIVE CORE SHELL
-     10C) STAGE VOICE INTERACTION SHELL
+     10C) STAGE INTERACTIVE TEXT MOUNT
+     10D) RESERVED
      11) MAIN CONTENT
      11A) ACCOUNT DRAWER MOUNT
      11B) SIGN-IN DRAWER MOUNT
@@ -31,7 +32,9 @@
      11O) HOME PROFILE CONTROL PANEL MOUNT
      11P) HOME SEARCH SHELL MOUNT
      11Q) HOME SETTINGS PANEL MOUNT
-     11R) HOME FOOTER MOUNT
+     11R) HOME INTERACTION SETTINGS PANEL MOUNT
+     11S) HOME INTERACTION RESPONSE PANEL MOUNT
+     11T) HOME FOOTER MOUNT
      12) COUNTRY OVERLAY MOUNT
      12A) COOKIE CONSENT MOUNT
      13) HOME HERO SHADER SYSTEM
@@ -243,11 +246,19 @@
                 </div>
 
                 <div class="stage-region stage-region-copy" id="stage-copy">
-                    <p class="site-essence stage-fade-on-enter" id="stage-essence" data-i18n-key="site.essence">What's in my mind?</p>
+                    <!-- =============================================================================
+                         10C) STAGE INTERACTIVE TEXT MOUNT
+                    ============================================================================= -->
+                    <div class="stage-fade-on-enter" id="home-stage-interactive-text-mount" data-include="home-stage-interactive-text"></div>
                 </div>
 
                 <div class="stage-region stage-region-actions" id="stage-actions">
                     <div class="stage-fade-on-enter" id="home-interaction-panel-mount" data-include="home-interaction-panel"></div>
+
+                    <!-- =============================================================================
+                         11S) HOME INTERACTION RESPONSE PANEL MOUNT
+                    ============================================================================= -->
+                    <div class="stage-fade-on-enter" id="home-interaction-response-panel-mount" data-include="home-interaction-response-panel"></div>
                 </div>
 
             </div>
@@ -320,7 +331,7 @@
   <div class="home-shell__topbar" id="home-dashboard-topbar-mount" data-include="home-dashboard-topbar"></div>
 
   <!-- =============================================================================
-       11L) HOME PLATFORM SHELL MOUNT
+       11M) HOME PLATFORM SHELL MOUNT
   ============================================================================= -->
   <div
     class="home-shell__overlay-mount home-shell__overlay-mount--platform"
@@ -328,7 +339,7 @@
     data-include="home-platform-shell"></div>
 
   <!-- =============================================================================
-       11M) HOME WORKSPACE PANEL MOUNT
+       11N) HOME WORKSPACE PANEL MOUNT
   ============================================================================= -->
   <div
     class="home-shell__panel-mount home-shell__panel-mount--workspace"
@@ -336,7 +347,7 @@
     data-include="home-workspace-panel"></div>
 
   <!-- =============================================================================
-       11N) HOME PROFILE CONTROL PANEL MOUNT
+       11O) HOME PROFILE CONTROL PANEL MOUNT
   ============================================================================= -->
   <div
     class="home-shell__panel-mount home-shell__panel-mount--profile"
@@ -344,7 +355,7 @@
     data-include="home-profile-control-panel"></div>
 
   <!-- =============================================================================
-       11O) HOME SEARCH SHELL MOUNT
+       11P) HOME SEARCH SHELL MOUNT
   ============================================================================= -->
   <div
     class="home-shell__overlay-mount home-shell__overlay-mount--search"
@@ -352,7 +363,7 @@
     data-include="home-search-shell"></div>
 
   <!-- =============================================================================
-       11P) HOME SETTINGS PANEL MOUNT
+       11Q) HOME SETTINGS PANEL MOUNT
   ============================================================================= -->
   <div
     class="home-shell__overlay-mount home-shell__overlay-mount--settings"
@@ -360,7 +371,15 @@
     data-include="home-settings-panel"></div>
 
   <!-- =============================================================================
-       11Q) HOME FOOTER MOUNT
+       11R) HOME INTERACTION SETTINGS PANEL MOUNT
+  ============================================================================= -->
+  <div
+    class="home-shell__overlay-mount home-shell__overlay-mount--interaction-settings"
+    id="home-interaction-settings-panel-mount"
+    data-include="home-interaction-settings-panel"></div>
+
+  <!-- =============================================================================
+       11T) HOME FOOTER MOUNT
   ============================================================================= -->
   <hr class="footer-separator home-shell__footer-separator" aria-hidden="true">
   <div class="home-shell__footer" id="home-footer-mount" data-include="home-footer"></div>

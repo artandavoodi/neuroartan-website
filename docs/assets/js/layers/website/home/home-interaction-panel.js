@@ -1,13 +1,38 @@
+/* =========================================================
+   00. FILE INDEX
+   01. IMPORTS
+   02. MODULE STATE
+   03. DOM HELPERS
+   04. VALUE HELPERS
+   05. EVENT HELPERS
+   06. COMPOSER RENDERING
+   07. MODEL CONTROL
+   08. SUBMISSION CONTROL
+   09. EVENT BINDING
+   10. MODULE BOOT
+   ========================================================= */
+
+/* =========================================================
+   01. IMPORTS
+   ========================================================= */
+
 import {
-  getActiveModelRoutingContext,
   getActiveModelState,
   subscribeActiveModelState,
 } from '../system/active-model.js';
+
+/* =========================================================
+   02. MODULE STATE
+   ========================================================= */
 
 const HOME_INTERACTION_PANEL_STATE = {
   isBound: false,
   files: [],
 };
+
+/* =========================================================
+   03. DOM HELPERS
+   ========================================================= */
 
 function getHomeInteractionPanelNodes() {
   return {
@@ -17,9 +42,12 @@ function getHomeInteractionPanelNodes() {
     fileInput: document.querySelector('#home-interaction-panel-file-input'),
     files: document.querySelector('[data-home-interaction-files]'),
     activeModel: document.querySelector('[data-home-interaction-active-model]'),
-    activeRoute: document.querySelector('[data-home-interaction-active-route]'),
   };
 }
+
+/* =========================================================
+   04. VALUE HELPERS
+   ========================================================= */
 
 function escapeHomeInteractionHtml(value) {
   return String(value || '')
@@ -34,9 +62,54 @@ function normalizeHomeInteractionQuery(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+function getHomeInteractionSubmitIntent() {
+  const submit = document.querySelector('#home-interaction-panel-submit');
+
+  if (!(submit instanceof HTMLButtonElement)) {
+    return 'submit';
+  }
+
+  return submit.dataset.homeInteractionSubmitIntent || 'submit';
+}
+
+function hasHomeInteractionTypedInput(input) {
+  return input instanceof HTMLTextAreaElement && input.value.trim().length > 0;
+}
+
+/* =========================================================
+   05. EVENT HELPERS
+   ========================================================= */
+
 function dispatchHomeInteractionEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
 }
+
+function resetHomeInteractionPanel() {
+  const nodes = getHomeInteractionPanelNodes();
+
+  if (nodes.input instanceof HTMLTextAreaElement) {
+    nodes.input.value = '';
+    nodes.input.style.height = 'auto';
+    nodes.input.dispatchEvent(new Event('input', { bubbles: true }));
+    nodes.input.focus();
+  }
+
+  if (nodes.fileInput instanceof HTMLInputElement) {
+    nodes.fileInput.value = '';
+  }
+
+  HOME_INTERACTION_PANEL_STATE.files = [];
+  renderHomeInteractionFiles();
+  syncHomeInteractionComposerHeight();
+
+  dispatchHomeInteractionEvent('neuroartan:home-stage-reset-requested', {
+    source: 'home-interaction-panel-reset',
+  });
+}
+
+/* =========================================================
+   06. COMPOSER RENDERING
+   ========================================================= */
 
 function syncHomeInteractionComposerHeight() {
   const { input } = getHomeInteractionPanelNodes();
@@ -45,7 +118,7 @@ function syncHomeInteractionComposerHeight() {
   }
 
   input.style.height = 'auto';
-  input.style.height = `${Math.max(input.scrollHeight, 136)}px`;
+  input.style.height = `${Math.max(input.scrollHeight, 70)}px`;
 }
 
 function renderHomeInteractionFiles() {
@@ -64,23 +137,40 @@ function renderHomeInteractionFiles() {
 function renderHomeInteractionActiveModel() {
   const nodes = getHomeInteractionPanelNodes();
   const activeModelState = getActiveModelState();
-  const routingContext = getActiveModelRoutingContext();
   const activeModel = activeModelState.activeModel;
-  const modelLabel = activeModel?.display_name || activeModel?.search_title || 'Neuroartan';
-  const routeLabel = routingContext.engineLabel || activeModel?.engine?.preferred_route || 'Site knowledge';
+  const modelLabel = activeModel?.display_name || activeModel?.search_title || 'Neuroartan Institution';
 
   if (nodes.activeModel) {
     nodes.activeModel.textContent = modelLabel;
   }
 
-  if (nodes.activeRoute) {
-    nodes.activeRoute.textContent = routeLabel;
-  }
-
   if (nodes.input instanceof HTMLTextAreaElement) {
-    nodes.input.placeholder = `Ask ${modelLabel}, search the platform, or start a structured reflection.`;
+    nodes.input.placeholder = 'Ask anything.';
   }
 }
+
+/* =========================================================
+   07. MODEL CONTROL
+   ========================================================= */
+
+function openHomeInteractionModelSelector() {
+  dispatchHomeInteractionEvent('home:platform-shell-close-request', {
+    source: 'home-interaction-panel',
+  });
+  dispatchHomeInteractionEvent('neuroartan:home-search-shell-open-requested', {
+    source: 'home-interaction-panel',
+    mode: 'models',
+    focus: 'models',
+  });
+
+  dispatchHomeInteractionEvent('neuroartan:home-model-selector-open-requested', {
+    source: 'home-interaction-panel',
+  });
+}
+
+/* =========================================================
+   08. SUBMISSION CONTROL
+   ========================================================= */
 
 function submitHomeInteractionQuery() {
   const nodes = getHomeInteractionPanelNodes();
@@ -91,9 +181,10 @@ function submitHomeInteractionQuery() {
     return;
   }
 
-  dispatchHomeInteractionEvent('neuroartan:home-stage-voice-transcript', {
-    transcript: query,
+  dispatchHomeInteractionEvent('neuroartan:home-stage-voice-mode', {
+    mode: 'thinking',
   });
+
   dispatchHomeInteractionEvent('neuroartan:home-stage-voice-query-submitted', {
     query,
     source: 'text',
@@ -101,48 +192,21 @@ function submitHomeInteractionQuery() {
     stagedFiles: HOME_INTERACTION_PANEL_STATE.files.map((file) => file.name),
   });
 
-  if (nodes.input instanceof HTMLTextAreaElement) {
-    nodes.input.value = '';
-  }
-
   if (nodes.fileInput instanceof HTMLInputElement) {
     nodes.fileInput.value = '';
   }
 
   HOME_INTERACTION_PANEL_STATE.files = [];
   renderHomeInteractionFiles();
-  syncHomeInteractionComposerHeight();
-}
-
-function openHomeInteractionSearch() {
-  dispatchHomeInteractionEvent('home:platform-shell-close-request', {
-    source: 'home-interaction-panel',
-  });
-  dispatchHomeInteractionEvent('neuroartan:home-search-shell-open-requested', {
-    source: 'home-interaction-panel',
-  });
-}
-
-function clearHomeInteractionSurface() {
-  const nodes = getHomeInteractionPanelNodes();
-
   if (nodes.input instanceof HTMLTextAreaElement) {
-    nodes.input.value = '';
     nodes.input.focus();
   }
-
-  if (nodes.fileInput instanceof HTMLInputElement) {
-    nodes.fileInput.value = '';
-  }
-
-  HOME_INTERACTION_PANEL_STATE.files = [];
-  renderHomeInteractionFiles();
   syncHomeInteractionComposerHeight();
-
-  dispatchHomeInteractionEvent('neuroartan:home-stage-reset-requested', {
-    source: 'home-interaction-panel',
-  });
 }
+
+/* =========================================================
+   09. EVENT BINDING
+   ========================================================= */
 
 function bindHomeInteractionPanel() {
   subscribeActiveModelState(() => {
@@ -155,16 +219,14 @@ function bindHomeInteractionPanel() {
       return;
     }
 
-    const target = event.target.closest(
-      '[data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-clear]'
-    );
+    const target = event.target.closest('[data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-settings="true"]');
     if (!target || !root.contains(target)) {
       return;
     }
 
     if (target.matches('[data-home-interaction-open-search]')) {
       event.preventDefault();
-      openHomeInteractionSearch();
+      openHomeInteractionModelSelector();
       return;
     }
 
@@ -174,9 +236,14 @@ function bindHomeInteractionPanel() {
       return;
     }
 
-    if (target.matches('[data-home-interaction-clear]')) {
+    if (target.matches('[data-home-interaction-settings="true"]')) {
       event.preventDefault();
-      clearHomeInteractionSurface();
+      const isExpanded = target.getAttribute('aria-expanded') === 'true';
+      target.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+      dispatchHomeInteractionEvent('neuroartan:home-interaction-settings-toggle-requested', {
+        source: 'home-interaction-panel',
+        open: !isExpanded,
+      });
     }
   });
 
@@ -210,6 +277,14 @@ function bindHomeInteractionPanel() {
     }
 
     event.preventDefault();
+
+    const submitIntent = getHomeInteractionSubmitIntent();
+
+    if (submitIntent === 'reset' && !hasHomeInteractionTypedInput(input)) {
+      resetHomeInteractionPanel();
+      return;
+    }
+
     submitHomeInteractionQuery();
   });
 
@@ -220,9 +295,22 @@ function bindHomeInteractionPanel() {
     }
 
     event.preventDefault();
+
+    const submitIntent = getHomeInteractionSubmitIntent();
+    const nodes = getHomeInteractionPanelNodes();
+
+    if (submitIntent === 'reset' && !hasHomeInteractionTypedInput(nodes.input)) {
+      resetHomeInteractionPanel();
+      return;
+    }
+
     submitHomeInteractionQuery();
   });
 }
+
+/* =========================================================
+   10. MODULE BOOT
+   ========================================================= */
 
 function bootHomeInteractionPanel() {
   const nodes = getHomeInteractionPanelNodes();

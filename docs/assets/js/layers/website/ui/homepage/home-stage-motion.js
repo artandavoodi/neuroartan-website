@@ -24,7 +24,6 @@ const HOME_STAGE_MOTION_STATE = {
 const HOME_STAGE_MOTION_SELECTORS = {
   stageShell: '#stage-cognitive-core-shell',
   microphoneButton: '#stage-microphone-button',
-  interactionShell: '#stage-voice-interaction-shell',
 };
 
 /* =========================================================
@@ -35,7 +34,6 @@ function getHomeStageMotionNodes() {
   return {
     stageShell: document.querySelector(HOME_STAGE_MOTION_SELECTORS.stageShell),
     microphoneButton: document.querySelector(HOME_STAGE_MOTION_SELECTORS.microphoneButton),
-    interactionShell: document.querySelector(HOME_STAGE_MOTION_SELECTORS.interactionShell),
   };
 }
 
@@ -45,12 +43,13 @@ function normalizeHomeStageMotionMode(mode) {
   }
 
   const nextMode = mode.trim().toLowerCase();
+  const allowedModes = new Set(['idle', 'listening', 'transcribing', 'thinking', 'responding']);
 
   if (!nextMode) {
     return 'idle';
   }
 
-  return nextMode;
+  return allowedModes.has(nextMode) ? nextMode : 'idle';
 }
 
 function clearHomeStageMotionTokens(node) {
@@ -74,9 +73,9 @@ function applyHomeStageMotionMode(mode) {
   const nodes = getHomeStageMotionNodes();
 
   HOME_STAGE_MOTION_STATE.mode = normalizedMode;
-  const isActiveMode = normalizedMode === 'listening' || normalizedMode === 'thinking' || normalizedMode === 'responding';
+  const isActiveMode = normalizedMode === 'listening' || normalizedMode === 'transcribing' || normalizedMode === 'thinking' || normalizedMode === 'responding';
 
-  [nodes.stageShell, nodes.microphoneButton, nodes.interactionShell].forEach(clearHomeStageMotionTokens);
+  [nodes.stageShell, nodes.microphoneButton].forEach(clearHomeStageMotionTokens);
 
   if (nodes.stageShell) {
     nodes.stageShell.dataset.voiceMotion = normalizedMode;
@@ -88,33 +87,52 @@ function applyHomeStageMotionMode(mode) {
     nodes.microphoneButton.dataset.voiceState = isActiveMode ? 'active' : 'idle';
   }
 
-  if (nodes.interactionShell) {
-    nodes.interactionShell.dataset.voiceMotion = normalizedMode;
-    nodes.interactionShell.dataset.voiceState = isActiveMode ? 'active' : 'idle';
-  }
-
   switch (normalizedMode) {
     case 'listening': {
+      if (nodes.stageShell) {
+        nodes.stageShell.dataset.voicePulse = 'active';
+        nodes.stageShell.dataset.voiceOrbit = 'active';
+        nodes.stageShell.dataset.voiceGlow = 'listening';
+      }
       if (nodes.microphoneButton) {
         nodes.microphoneButton.dataset.voicePulse = 'active';
       }
       break;
     }
+    case 'transcribing': {
+      if (nodes.stageShell) {
+        nodes.stageShell.dataset.voicePulse = 'transcribing';
+        nodes.stageShell.dataset.voiceOrbit = 'active';
+        nodes.stageShell.dataset.voiceGlow = 'transcribing';
+      }
 
+      if (nodes.microphoneButton) {
+        nodes.microphoneButton.dataset.voicePulse = 'transcribing';
+      }
+      break;
+    }
     case 'thinking': {
+      if (nodes.stageShell) {
+        nodes.stageShell.dataset.voicePulse = 'soft';
+        nodes.stageShell.dataset.voiceOrbit = 'thinking';
+        nodes.stageShell.dataset.voiceGlow = 'thinking';
+      }
       if (nodes.microphoneButton) {
         nodes.microphoneButton.dataset.voicePulse = 'soft';
       }
       break;
     }
-
     case 'responding': {
+      if (nodes.stageShell) {
+        nodes.stageShell.dataset.voicePulse = 'response';
+        nodes.stageShell.dataset.voiceOrbit = 'response';
+        nodes.stageShell.dataset.voiceGlow = 'response';
+      }
       if (nodes.microphoneButton) {
         nodes.microphoneButton.dataset.voicePulse = 'response';
       }
       break;
     }
-
     default: {
       break;
     }
@@ -136,6 +154,20 @@ function bindHomeStageMotionEvents() {
 
   document.addEventListener('neuroartan:home-stage-voice-mode', (event) => {
     applyHomeStageMotionMode(event?.detail?.mode ?? 'idle');
+  });
+
+  document.addEventListener('neuroartan:home-stage-voice-transcript', (event) => {
+    const transcript = typeof event?.detail?.transcript === 'string'
+      ? event.detail.transcript.trim()
+      : '';
+
+    if (transcript && HOME_STAGE_MOTION_STATE.mode === 'listening') {
+      applyHomeStageMotionMode('transcribing');
+    }
+  });
+
+  document.addEventListener('neuroartan:home-stage-reset-requested', () => {
+    applyHomeStageMotionMode('idle');
   });
 }
 

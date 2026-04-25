@@ -1,63 +1,58 @@
 <section class="home-interaction-panel" id="home-interaction-panel" data-home-interaction-mode="idle" aria-label="Homepage interaction panel">
-  <div class="home-interaction-panel__meta">
-    <div class="home-interaction-panel__meta-copy">
-      <p class="home-interaction-panel__eyebrow">Neuroartan</p>
-      <button class="home-interaction-panel__model-button" type="button" data-home-interaction-open-search="true">
-        <span class="home-interaction-panel__model-name" data-home-interaction-active-model>Neuroartan</span>
-        <span class="home-interaction-panel__model-route" data-home-interaction-active-route>Site knowledge</span>
-      </button>
-    </div>
-
-    <div class="home-interaction-panel__meta-controls">
-      <p class="home-interaction-panel__mode" data-home-interaction-mode-label>Ready</p>
-
-      <button class="home-interaction-panel__close global-close-button" type="button" data-home-interaction-clear="true" aria-label="Clear interaction surface">
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </div>
-
   <form class="home-interaction-panel__form" id="home-interaction-panel-form" novalidate>
     <textarea
       class="home-interaction-panel__input"
       id="home-interaction-panel-input"
       name="prompt"
       rows="3"
-      placeholder="Ask, write, or begin."
+      placeholder="Ask anything."
       aria-describedby="home-interaction-panel-support"></textarea>
-    <p class="home-interaction-panel__hint" data-home-interaction-hint>Text, voice, or files.</p>
 
     <div class="home-interaction-panel__composer" id="home-interaction-panel-support">
-      <button class="home-interaction-panel__attach" type="button" data-home-interaction-attach="true" aria-label="Attach file">
-        <span class="home-interaction-panel__attach-icon" aria-hidden="true">+</span>
-      </button>
+      <div class="home-interaction-panel__composer-left">
+        <button class="home-interaction-panel__attach" type="button" data-home-interaction-attach="true" aria-label="Attach file">
+          <span class="home-interaction-panel__attach-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/attach.svg" alt="">
+          </span>
+        </button>
+
+        <button class="home-interaction-panel__model-button" type="button" data-home-interaction-open-search="true" aria-label="Change model">
+          <span class="home-interaction-panel__model-name" data-home-interaction-active-model>Neuroartan Institution</span>
+          <span class="home-interaction-panel__model-chevron" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/navigation/unclassified/chevron-down.svg" alt="">
+          </span>
+        </button>
+
+        <button class="home-interaction-panel__settings" type="button" data-home-interaction-settings="true" aria-label="Interaction settings" aria-controls="home-interaction-settings-panel" aria-expanded="false">
+          <span class="home-interaction-panel__settings-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/settings.svg" alt="">
+          </span>
+        </button>
+      </div>
 
       <input id="home-interaction-panel-file-input" type="file" multiple hidden>
       <div class="home-interaction-panel__files" data-home-interaction-files aria-live="polite"></div>
 
-      <button
-        id="stage-microphone-button"
-        class="home-interaction-panel__voice"
-        type="button"
-        aria-label="Activate voice input"
-        aria-controls="stage-voice-interaction-shell"
-        aria-expanded="false">
-        <span class="home-interaction-panel__voice-icon" aria-hidden="true">
-          <img class="ui-icon-theme-aware" src="/assets/icons/core/media/unclassified/mic.svg" alt="">
-        </span>
-        <span class="home-interaction-panel__voice-label" data-home-interaction-voice-label>Voice</span>
-      </button>
+      <div class="home-interaction-panel__composer-right">
+        <button
+          id="stage-microphone-button"
+          class="home-interaction-panel__voice"
+          type="button"
+          aria-label="Activate voice input"
+          aria-controls="home-interaction-response-panel"
+          aria-expanded="false">
+          <span class="home-interaction-panel__voice-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/media/unclassified/mic.svg" alt="">
+          </span>
+        </button>
 
-      <button class="home-interaction-panel__submit" id="home-interaction-panel-submit" type="submit" aria-label="Submit interaction">
-        <span data-home-interaction-submit-label>Continue</span>
-      </button>
+        <button class="home-interaction-panel__submit" id="home-interaction-panel-submit" type="submit" aria-label="Submit interaction">
+          <span class="home-interaction-panel__submit-icon" aria-hidden="true" data-home-interaction-submit-icon>
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/send.svg" alt="">
+          </span>
+          <span class="home-interaction-panel__submit-label" data-home-interaction-submit-label>Send</span>
+        </button>
+      </div>
     </div>
   </form>
-
-  <div class="home-interaction-panel__response" id="stage-voice-interaction-shell" data-voice-state="idle" hidden>
-    <div class="home-interaction-panel__status" id="stage-voice-status" aria-live="polite">Idle</div>
-    <div class="home-interaction-panel__transcript" id="stage-voice-transcript" aria-live="polite"></div>
-    <div class="home-interaction-panel__answer" id="stage-voice-response" aria-live="polite"></div>
-  </div>
 </section>

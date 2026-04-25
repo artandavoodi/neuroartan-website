@@ -1,0 +1,81 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) PANEL ROOT
+     02) PANEL HEADER
+     03) RESPONSE MODE SECTION
+     04) INTERACTION STYLE SECTION
+     05) STAGE PRESENTATION SECTION
+============================================================================= -->
+
+<!-- =============================================================================
+     01) PANEL ROOT
+============================================================================= -->
+<section class="home-interaction-settings-panel" id="home-interaction-settings-panel" data-home-interaction-settings-state="closed" hidden aria-label="Homepage interaction settings">
+  <div class="home-interaction-settings-panel__surface" role="dialog" aria-modal="false" aria-labelledby="home-interaction-settings-panel-title">
+    <!-- =============================================================================
+         02) PANEL HEADER
+    ============================================================================= -->
+    <header class="home-interaction-settings-panel__header">
+      <div class="home-interaction-settings-panel__title-block">
+        <p class="home-interaction-settings-panel__eyebrow">Interaction settings</p>
+        <h2 class="home-interaction-settings-panel__title" id="home-interaction-settings-panel-title">Model behavior</h2>
+      </div>
+      <button class="home-interaction-settings-panel__close" type="button" data-home-interaction-settings-close="true" aria-label="Close interaction settings">
+        <span class="home-interaction-settings-panel__close-icon" aria-hidden="true">
+          <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/plus.svg" alt="">
+        </span>
+      </button>
+    </header>
+
+    <!-- =============================================================================
+         03) RESPONSE MODE SECTION
+    ============================================================================= -->
+    <section class="home-interaction-settings-panel__section" aria-label="Response mode">
+      <p class="home-interaction-settings-panel__section-title">Response mode</p>
+      <div class="home-interaction-settings-panel__option-grid" role="group" aria-label="Response mode">
+        <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="response-mode" data-home-interaction-setting-value="text" aria-pressed="true">
+          <span class="home-interaction-settings-panel__option-label">Text only</span>
+          <span class="home-interaction-settings-panel__option-description">Responses stay written in the interaction panel.</span>
+        </button>
+        <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="response-mode" data-home-interaction-setting-value="voice" aria-pressed="false">
+          <span class="home-interaction-settings-panel__option-label">Voice where supported</span>
+          <span class="home-interaction-settings-panel__option-description">Use spoken output when a voice engine is connected.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =============================================================================
+         04) INTERACTION STYLE SECTION
+    ============================================================================= -->
+    <section class="home-interaction-settings-panel__section" aria-label="Interaction style">
+      <p class="home-interaction-settings-panel__section-title">Interaction style</p>
+      <div class="home-interaction-settings-panel__option-grid" role="group" aria-label="Interaction style">
+        <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="interaction-style" data-home-interaction-setting-value="composer" aria-pressed="true">
+          <span class="home-interaction-settings-panel__option-label">Composer first</span>
+          <span class="home-interaction-settings-panel__option-description">Keep input and response behavior close to a clean AI composer.</span>
+        </button>
+        <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="interaction-style" data-home-interaction-setting-value="stage" aria-pressed="false">
+          <span class="home-interaction-settings-panel__option-label">Stage assisted</span>
+          <span class="home-interaction-settings-panel__option-description">Let the stage circle carry more interaction feedback.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =============================================================================
+         05) STAGE PRESENTATION SECTION
+    ============================================================================= -->
+    <section class="home-interaction-settings-panel__section" aria-label="Stage presentation">
+      <p class="home-interaction-settings-panel__section-title">Stage presentation</p>
+      <div class="home-interaction-settings-panel__option-stack" role="group" aria-label="Stage presentation">
+        <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-setting="stage-effects" data-home-interaction-setting-value="subtle" aria-pressed="true">
+          <span>Stage effects</span>
+          <span class="home-interaction-settings-panel__row-value">Subtle</span>
+        </button>
+        <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-setting="stage-text" data-home-interaction-setting-value="minimal" aria-pressed="true">
+          <span>Stage text</span>
+          <span class="home-interaction-settings-panel__row-value">Minimal</span>
+        </button>
+      </div>
+    </section>
+  </div>
+</section>

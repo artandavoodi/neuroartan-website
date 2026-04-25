@@ -19,21 +19,22 @@
 
 const HOME_STAGE_VOICE_STATE = {
   isBound: false,
+  isSurfaceBound: false,
   isActive: false,
   isStarting: false,
   isStopping: false,
   mode: 'idle',
   transcript: '',
   finalTranscript: '',
-  response: '',
   recognition: null,
   recognitionSupported: false,
+  mediaStream: null,
+  fallbackListeningTimer: null,
   permissionState: 'unknown',
   permissionsSupported: false,
   submittedQuery: '',
   route: '',
   activeQueryId: 0,
-  baseEssenceLabel: '',
 };
 
 /* =========================================================
@@ -43,11 +44,7 @@ const HOME_STAGE_VOICE_STATE = {
 const HOME_STAGE_VOICE_SELECTORS = {
   stageShell: '#stage-cognitive-core-shell',
   microphoneButton: '#stage-microphone-button',
-  interactionShell: '#stage-voice-interaction-shell',
-  essence: '#stage-essence',
-  status: '#stage-voice-status',
-  transcript: '#stage-voice-transcript',
-  response: '#stage-voice-response',
+  composerInput: '#home-interaction-panel-input',
 };
 
 /* =========================================================
@@ -57,9 +54,10 @@ const HOME_STAGE_VOICE_SELECTORS = {
 const HOME_STAGE_VOICE_MESSAGES = Object.freeze({
   idle: 'idle',
   listening: 'listening',
+  transcribing: 'transcribing',
   thinking: 'thinking',
   responding: 'responding',
-  unsupported: 'voice unavailable',
+  unsupported: 'listening mode available',
   prompt: 'allow microphone',
   denied: 'microphone denied',
   error: 'voice error',
@@ -71,6 +69,14 @@ function getHomeStageSpeechRecognitionConstructor() {
   }
 
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function hasHomeStageMicrophoneFallbackSupport() {
+  return Boolean(
+    typeof navigator !== 'undefined' &&
+    navigator.mediaDevices &&
+    typeof navigator.mediaDevices.getUserMedia === 'function'
+  );
 }
 
 /* =========================================================
@@ -90,18 +96,73 @@ function setHomeStageFinalTranscript(value) {
   HOME_STAGE_VOICE_STATE.finalTranscript = typeof value === 'string' ? value : '';
 }
 
-function setHomeStageResponse(value) {
-  HOME_STAGE_VOICE_STATE.response = typeof value === 'string' ? value : '';
-}
-
 function clearHomeStageVoiceTexts() {
   setHomeStageTranscript('');
   setHomeStageFinalTranscript('');
-  setHomeStageResponse('');
 }
 
 function getHomeStageVisibleTranscript() {
   return HOME_STAGE_VOICE_STATE.transcript || HOME_STAGE_VOICE_STATE.finalTranscript || '';
+}
+
+function isHomeStageVoiceOriginActive() {
+  return (
+    HOME_STAGE_VOICE_STATE.mode === 'listening' ||
+    HOME_STAGE_VOICE_STATE.mode === 'transcribing'
+  );
+}
+
+function syncHomeStageTranscriptToComposer() {
+  const nodes = getHomeStageVoiceNodes();
+  const transcript = getHomeStageVisibleTranscript().trim();
+
+  if (!(nodes.composerInput instanceof HTMLTextAreaElement) || !transcript) {
+    return;
+  }
+
+  if (!isHomeStageVoiceOriginActive()) {
+    return;
+  }
+
+  nodes.composerInput.value = transcript;
+  nodes.composerInput.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function clearHomeStageComposerInput({ force = false } = {}) {
+  const nodes = getHomeStageVoiceNodes();
+
+  if (!(nodes.composerInput instanceof HTMLTextAreaElement)) {
+    return;
+  }
+
+  if (!force && nodes.composerInput.value.trim()) {
+    return;
+  }
+
+  nodes.composerInput.value = '';
+  nodes.composerInput.style.height = 'auto';
+  nodes.composerInput.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function clearHomeStageFallbackListeningTimer() {
+  if (!HOME_STAGE_VOICE_STATE.fallbackListeningTimer) {
+    return;
+  }
+
+  window.clearTimeout(HOME_STAGE_VOICE_STATE.fallbackListeningTimer);
+  HOME_STAGE_VOICE_STATE.fallbackListeningTimer = null;
+}
+
+function stopHomeStageFallbackMediaStream() {
+  if (!HOME_STAGE_VOICE_STATE.mediaStream) {
+    return;
+  }
+
+  HOME_STAGE_VOICE_STATE.mediaStream.getTracks().forEach((track) => {
+    track.stop();
+  });
+
+  HOME_STAGE_VOICE_STATE.mediaStream = null;
 }
 
 function canHomeStageStartListening() {
@@ -120,113 +181,28 @@ function getHomeStageVoiceNodes() {
   return {
     stageShell: document.querySelector(HOME_STAGE_VOICE_SELECTORS.stageShell),
     microphoneButton: document.querySelector(HOME_STAGE_VOICE_SELECTORS.microphoneButton),
-    interactionShell: document.querySelector(HOME_STAGE_VOICE_SELECTORS.interactionShell),
-    essence: document.querySelector(HOME_STAGE_VOICE_SELECTORS.essence),
-    status: document.querySelector(HOME_STAGE_VOICE_SELECTORS.status),
-    transcript: document.querySelector(HOME_STAGE_VOICE_SELECTORS.transcript),
-    response: document.querySelector(HOME_STAGE_VOICE_SELECTORS.response),
+    composerInput: document.querySelector(HOME_STAGE_VOICE_SELECTORS.composerInput),
   };
-}
-
-function getHomeStageRouteLabel() {
-  switch (HOME_STAGE_VOICE_STATE.route) {
-    case 'translation':
-      return 'translating';
-    case 'web':
-    case 'site-knowledge':
-    case 'platform-search':
-      return 'finding';
-    default:
-      return 'responding';
-  }
-}
-
-function getHomeStageEssenceLabel() {
-  switch (HOME_STAGE_VOICE_STATE.mode) {
-    case 'listening':
-      return 'listening';
-    case 'thinking':
-      return 'thinking';
-    case 'responding':
-      return getHomeStageRouteLabel();
-    default:
-      return HOME_STAGE_VOICE_STATE.baseEssenceLabel || "What's in my mind?";
-  }
-}
-
-function getHomeStageStatusLabel() {
-  if (!HOME_STAGE_VOICE_STATE.recognitionSupported) {
-    return HOME_STAGE_VOICE_MESSAGES.unsupported;
-  }
-
-  if (HOME_STAGE_VOICE_STATE.permissionState === 'denied') {
-    return HOME_STAGE_VOICE_MESSAGES.denied;
-  }
-
-  if (HOME_STAGE_VOICE_STATE.permissionState === 'prompt' && HOME_STAGE_VOICE_STATE.mode === 'idle') {
-    return HOME_STAGE_VOICE_MESSAGES.prompt;
-  }
-
-  switch (HOME_STAGE_VOICE_STATE.mode) {
-    case 'listening':
-      return HOME_STAGE_VOICE_MESSAGES.listening;
-    case 'thinking':
-      return HOME_STAGE_VOICE_MESSAGES.thinking;
-    case 'responding':
-      return HOME_STAGE_VOICE_MESSAGES.responding;
-    default:
-      return HOME_STAGE_VOICE_MESSAGES.idle;
-  }
 }
 
 function syncHomeStageVoiceDom() {
   const nodes = getHomeStageVoiceNodes();
 
-  if (!nodes.stageShell || !nodes.microphoneButton) {
+  if (!nodes.stageShell && !nodes.microphoneButton) {
     return;
   }
 
-  nodes.stageShell.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
-  nodes.stageShell.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
-  nodes.microphoneButton.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
-  nodes.microphoneButton.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
-  nodes.microphoneButton.dataset.voiceSupported = HOME_STAGE_VOICE_STATE.recognitionSupported ? 'true' : 'false';
-  nodes.microphoneButton.setAttribute(
-    'aria-pressed',
-    HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false'
-  );
-  nodes.microphoneButton.setAttribute('aria-expanded', HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false');
-
-  if (nodes.interactionShell) {
-    nodes.interactionShell.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
-    nodes.interactionShell.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
-    nodes.interactionShell.hidden = !(
-      HOME_STAGE_VOICE_STATE.isActive ||
-      getHomeStageVisibleTranscript() ||
-      HOME_STAGE_VOICE_STATE.response
-    );
+  if (nodes.stageShell) {
+    nodes.stageShell.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
+    nodes.stageShell.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
   }
 
-  if (nodes.essence) {
-    if (!HOME_STAGE_VOICE_STATE.baseEssenceLabel) {
-      HOME_STAGE_VOICE_STATE.baseEssenceLabel = nodes.essence.textContent?.trim() || "What's in my mind?";
-    }
-
-    nodes.essence.textContent = getHomeStageEssenceLabel();
-    nodes.essence.dataset.engineMode = HOME_STAGE_VOICE_STATE.mode;
-    nodes.essence.dataset.engineActive = HOME_STAGE_VOICE_STATE.mode === 'idle' ? 'false' : 'true';
-  }
-
-  if (nodes.status) {
-    nodes.status.textContent = getHomeStageStatusLabel();
-  }
-
-  if (nodes.transcript) {
-    nodes.transcript.textContent = getHomeStageVisibleTranscript();
-  }
-
-  if (nodes.response) {
-    nodes.response.textContent = HOME_STAGE_VOICE_STATE.response;
+  if (nodes.microphoneButton) {
+    nodes.microphoneButton.dataset.voiceMode = HOME_STAGE_VOICE_STATE.mode;
+    nodes.microphoneButton.dataset.voiceActive = HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false';
+    nodes.microphoneButton.dataset.voiceSupported = HOME_STAGE_VOICE_STATE.recognitionSupported ? 'true' : 'false';
+    nodes.microphoneButton.setAttribute('aria-pressed', HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false');
+    nodes.microphoneButton.setAttribute('aria-expanded', HOME_STAGE_VOICE_STATE.isActive ? 'true' : 'false');
   }
 }
 
@@ -237,9 +213,7 @@ function syncHomeStageVoiceDom() {
 function dispatchHomeStageVoiceActivated() {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-activated', {
-      detail: {
-        mode: HOME_STAGE_VOICE_STATE.mode,
-      },
+      detail: { mode: HOME_STAGE_VOICE_STATE.mode },
     })
   );
 }
@@ -247,9 +221,7 @@ function dispatchHomeStageVoiceActivated() {
 function dispatchHomeStageVoiceDeactivated() {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-deactivated', {
-      detail: {
-        mode: HOME_STAGE_VOICE_STATE.mode,
-      },
+      detail: { mode: HOME_STAGE_VOICE_STATE.mode },
     })
   );
 }
@@ -257,9 +229,7 @@ function dispatchHomeStageVoiceDeactivated() {
 function dispatchHomeStageVoiceMode(mode) {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-mode', {
-      detail: {
-        mode,
-      },
+      detail: { mode },
     })
   );
 }
@@ -267,9 +237,7 @@ function dispatchHomeStageVoiceMode(mode) {
 function dispatchHomeStageTranscript(transcript) {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-transcript', {
-      detail: {
-        transcript,
-      },
+      detail: { transcript, source: 'voice' },
     })
   );
 }
@@ -277,9 +245,7 @@ function dispatchHomeStageTranscript(transcript) {
 function dispatchHomeStageResponse(response) {
   document.dispatchEvent(
     new CustomEvent('neuroartan:home-stage-voice-response', {
-      detail: {
-        response,
-      },
+      detail: { response },
     })
   );
 }
@@ -300,7 +266,10 @@ function resetHomeStageVoiceSurface() {
   HOME_STAGE_VOICE_STATE.submittedQuery = '';
   HOME_STAGE_VOICE_STATE.route = '';
   HOME_STAGE_VOICE_STATE.activeQueryId += 1;
+  clearHomeStageFallbackListeningTimer();
+  stopHomeStageFallbackMediaStream();
   clearHomeStageVoiceTexts();
+  clearHomeStageComposerInput({ force: true });
   setHomeStageVoiceMode('idle');
   dispatchHomeStageTranscript('');
   dispatchHomeStageResponse('');
@@ -325,6 +294,67 @@ function teardownHomeStageRecognition() {
   HOME_STAGE_VOICE_STATE.recognition = null;
 }
 
+async function activateHomeStageFallbackListening() {
+  if (!hasHomeStageMicrophoneFallbackSupport()) {
+    setHomeStageVoiceMode('idle');
+    dispatchHomeStageVoiceMode('idle');
+    dispatchHomeStageResponse('Voice transcription requires a browser with speech recognition support.');
+    syncHomeStageVoiceDom();
+    return;
+  }
+
+  HOME_STAGE_VOICE_STATE.isStarting = true;
+  HOME_STAGE_VOICE_STATE.isStopping = false;
+  HOME_STAGE_VOICE_STATE.submittedQuery = '';
+  HOME_STAGE_VOICE_STATE.activeQueryId += 1;
+  clearHomeStageVoiceTexts();
+  clearHomeStageComposerInput();
+  dispatchHomeStageTranscript('');
+  dispatchHomeStageResponse('');
+  setHomeStageVoiceMode('listening');
+  dispatchHomeStageVoiceActivated();
+  dispatchHomeStageVoiceMode('listening');
+  syncHomeStageVoiceDom();
+
+  try {
+    HOME_STAGE_VOICE_STATE.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    HOME_STAGE_VOICE_STATE.permissionState = 'granted';
+    HOME_STAGE_VOICE_STATE.isStarting = false;
+    syncHomeStageVoiceDom();
+
+    clearHomeStageFallbackListeningTimer();
+    HOME_STAGE_VOICE_STATE.fallbackListeningTimer = window.setTimeout(() => {
+      if (HOME_STAGE_VOICE_STATE.mode !== 'listening') {
+        return;
+      }
+
+      setHomeStageVoiceMode('thinking');
+      dispatchHomeStageVoiceMode('thinking');
+      dispatchHomeStageResponse('Speech recognition is not available in this browser. Type your request in the composer and press Enter.');
+      stopHomeStageFallbackMediaStream();
+      syncHomeStageVoiceDom();
+    }, 1800);
+  } catch {
+    HOME_STAGE_VOICE_STATE.isStarting = false;
+    HOME_STAGE_VOICE_STATE.permissionState = 'denied';
+    setHomeStageVoiceMode('idle');
+    dispatchHomeStageVoiceMode('idle');
+    dispatchHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.denied);
+    syncHomeStageVoiceDom();
+  }
+}
+
+function deactivateHomeStageFallbackListening() {
+  clearHomeStageFallbackListeningTimer();
+  stopHomeStageFallbackMediaStream();
+  HOME_STAGE_VOICE_STATE.isStarting = false;
+  HOME_STAGE_VOICE_STATE.isStopping = false;
+  setHomeStageVoiceMode('idle');
+  dispatchHomeStageVoiceDeactivated();
+  dispatchHomeStageVoiceMode('idle');
+  syncHomeStageVoiceDom();
+}
+
 function handleHomeStageRecognitionResult(event) {
   if (!event?.results) {
     return;
@@ -346,7 +376,14 @@ function handleHomeStageRecognitionResult(event) {
 
   setHomeStageFinalTranscript(finalTranscript);
   setHomeStageTranscript(interimTranscript || finalTranscript);
+
+  if (getHomeStageVisibleTranscript().trim()) {
+    setHomeStageVoiceMode('transcribing');
+    dispatchHomeStageVoiceMode('transcribing');
+  }
+
   dispatchHomeStageTranscript(getHomeStageVisibleTranscript());
+  syncHomeStageTranscriptToComposer();
   syncHomeStageVoiceDom();
 }
 
@@ -357,11 +394,13 @@ function submitHomeStageVoiceQuery() {
     return;
   }
 
+  stopHomeStageFallbackMediaStream();
+  clearHomeStageFallbackListeningTimer();
   HOME_STAGE_VOICE_STATE.submittedQuery = query;
   setHomeStageVoiceMode('thinking');
-  setHomeStageResponse('');
   dispatchHomeStageVoiceMode('thinking');
   dispatchHomeStageVoiceQuerySubmitted(query);
+  syncHomeStageTranscriptToComposer();
   syncHomeStageVoiceDom();
 }
 
@@ -371,14 +410,16 @@ function handleHomeStageRecognitionError(event) {
   if (errorCode === 'not-allowed' || errorCode === 'service-not-allowed') {
     HOME_STAGE_VOICE_STATE.recognitionSupported = true;
     setHomeStageVoiceMode('idle');
-    setHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.denied);
+    dispatchHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.denied);
   } else if (errorCode === 'no-speech') {
     setHomeStageVoiceMode('idle');
   } else {
     setHomeStageVoiceMode('idle');
-    setHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.error);
+    dispatchHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.error);
   }
 
+  clearHomeStageFallbackListeningTimer();
+  stopHomeStageFallbackMediaStream();
   teardownHomeStageRecognition();
   HOME_STAGE_VOICE_STATE.isStarting = false;
   HOME_STAGE_VOICE_STATE.isStopping = false;
@@ -414,9 +455,12 @@ function buildHomeStageRecognition() {
 
   recognition.onend = () => {
     const shouldSubmit = !HOME_STAGE_VOICE_STATE.isStopping && HOME_STAGE_VOICE_STATE.finalTranscript.trim();
+
     HOME_STAGE_VOICE_STATE.isStarting = false;
     HOME_STAGE_VOICE_STATE.isStopping = false;
     teardownHomeStageRecognition();
+    stopHomeStageFallbackMediaStream();
+    clearHomeStageFallbackListeningTimer();
 
     if (shouldSubmit) {
       submitHomeStageVoiceQuery();
@@ -445,7 +489,7 @@ function ensureHomeStageRecognition() {
 function activateHomeStageListening() {
   if (HOME_STAGE_VOICE_STATE.permissionState === 'denied') {
     setHomeStageVoiceMode('idle');
-    setHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.denied);
+    dispatchHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.denied);
     syncHomeStageVoiceDom();
     return;
   }
@@ -453,33 +497,40 @@ function activateHomeStageListening() {
   const recognition = ensureHomeStageRecognition();
 
   if (!recognition) {
-    setHomeStageVoiceMode('idle');
-    setHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.unsupported);
-    syncHomeStageVoiceDom();
+    void activateHomeStageFallbackListening();
     return;
   }
 
   HOME_STAGE_VOICE_STATE.isStarting = true;
   HOME_STAGE_VOICE_STATE.isStopping = false;
   HOME_STAGE_VOICE_STATE.submittedQuery = '';
+  HOME_STAGE_VOICE_STATE.activeQueryId += 1;
   setHomeStageVoiceMode('idle');
   clearHomeStageVoiceTexts();
   dispatchHomeStageTranscript('');
   dispatchHomeStageResponse('');
+  clearHomeStageComposerInput();
   syncHomeStageVoiceDom();
+  dispatchHomeStageVoiceMode('listening');
+  dispatchHomeStageVoiceActivated();
 
   try {
     recognition.start();
     void updateHomeStagePermissionState();
   } catch {
     HOME_STAGE_VOICE_STATE.isStarting = false;
-    setHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.error);
+    dispatchHomeStageVoiceMode('idle');
+    dispatchHomeStageResponse(HOME_STAGE_VOICE_MESSAGES.error);
     syncHomeStageVoiceDom();
   }
 }
 
 function deactivateHomeStageListening() {
   const recognition = HOME_STAGE_VOICE_STATE.recognition;
+  if (!recognition && HOME_STAGE_VOICE_STATE.mediaStream) {
+    deactivateHomeStageFallbackListening();
+    return;
+  }
 
   if (!recognition) {
     setHomeStageVoiceMode('idle');
@@ -510,7 +561,7 @@ function toggleHomeStageVoice() {
     return;
   }
 
-  if (HOME_STAGE_VOICE_STATE.mode === 'listening') {
+  if (HOME_STAGE_VOICE_STATE.mode === 'listening' || HOME_STAGE_VOICE_STATE.mode === 'transcribing') {
     deactivateHomeStageListening();
     return;
   }
@@ -558,13 +609,24 @@ async function updateHomeStagePermissionState() {
    ========================================================= */
 
 function bindHomeStageVoiceSurface() {
-  const nodes = getHomeStageVoiceNodes();
-
-  if (!nodes.microphoneButton) {
+  if (HOME_STAGE_VOICE_STATE.isSurfaceBound) {
     return;
   }
 
-  nodes.microphoneButton.addEventListener('click', toggleHomeStageVoice);
+  HOME_STAGE_VOICE_STATE.isSurfaceBound = true;
+
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element
+      ? event.target.closest(HOME_STAGE_VOICE_SELECTORS.microphoneButton)
+      : null;
+
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+    toggleHomeStageVoice();
+  });
 }
 
 /* =========================================================
@@ -581,6 +643,11 @@ function bindHomeStageVoiceEvents() {
   document.addEventListener('neuroartan:home-stage-voice-transcript', (event) => {
     const nextTranscript = event?.detail?.transcript ?? '';
     setHomeStageTranscript(nextTranscript);
+
+    if (event?.detail?.source === 'voice') {
+      syncHomeStageTranscriptToComposer();
+    }
+
     syncHomeStageVoiceDom();
   });
 
@@ -591,18 +658,13 @@ function bindHomeStageVoiceEvents() {
     }
 
     const nextResponse = event?.detail?.response ?? '';
-    setHomeStageResponse(nextResponse);
 
     if (typeof nextResponse === 'string' && nextResponse.trim()) {
       setHomeStageVoiceMode('responding');
     }
+
     if (typeof nextResponse === 'string' && !nextResponse.trim()) {
       HOME_STAGE_VOICE_STATE.submittedQuery = '';
-    }
-    if (typeof nextResponse === 'string' && nextResponse.trim()) {
-      HOME_STAGE_VOICE_STATE.permissionState = HOME_STAGE_VOICE_STATE.permissionState === 'denied'
-        ? 'denied'
-        : HOME_STAGE_VOICE_STATE.permissionState;
     }
 
     syncHomeStageVoiceDom();
@@ -615,7 +677,14 @@ function bindHomeStageVoiceEvents() {
       return;
     }
 
-    setHomeStageVoiceMode(nextMode.trim());
+    const normalizedMode = nextMode.trim();
+    setHomeStageVoiceMode(normalizedMode);
+
+    if (normalizedMode === 'thinking' || normalizedMode === 'responding' || normalizedMode === 'idle') {
+      stopHomeStageFallbackMediaStream();
+      clearHomeStageFallbackListeningTimer();
+    }
+
     syncHomeStageVoiceDom();
   });
 
@@ -630,6 +699,8 @@ function bindHomeStageVoiceEvents() {
       }
     }
 
+    clearHomeStageFallbackListeningTimer();
+    stopHomeStageFallbackMediaStream();
     resetHomeStageVoiceSurface();
   });
 }
@@ -645,11 +716,11 @@ function bootHomeStageVoice() {
   }
 
   HOME_STAGE_VOICE_STATE.recognitionSupported = Boolean(getHomeStageSpeechRecognitionConstructor());
-  void updateHomeStagePermissionState();
   HOME_STAGE_VOICE_STATE.isBound = true;
-  syncHomeStageVoiceDom();
   bindHomeStageVoiceSurface();
   bindHomeStageVoiceEvents();
+  void updateHomeStagePermissionState();
+  syncHomeStageVoiceDom();
 
   window.addEventListener('beforeunload', teardownHomeStageRecognition, { once: true });
 }

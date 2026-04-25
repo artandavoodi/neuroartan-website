@@ -1,5 +1,3 @@
-import { getActiveModelRoutingContext } from '../system/active-model.js';
-
 const HOME_INTERACTION_PANEL_STATE = {
   isBound: false,
   mode: 'idle',
@@ -9,11 +7,11 @@ const HOME_INTERACTION_PANEL_STATE = {
 function getHomeInteractionPanelStateNodes() {
   return {
     root: document.querySelector('#home-interaction-panel'),
-    modeLabel: document.querySelector('[data-home-interaction-mode-label]'),
-    hint: document.querySelector('[data-home-interaction-hint]'),
-    voiceLabel: document.querySelector('[data-home-interaction-voice-label]'),
+    input: document.querySelector('#home-interaction-panel-input'),
     submit: document.querySelector('#home-interaction-panel-submit'),
     submitLabel: document.querySelector('[data-home-interaction-submit-label]'),
+    submitIcon: document.querySelector('[data-home-interaction-submit-icon] img'),
+    settingsButton: document.querySelector('[data-home-interaction-settings="true"]'),
     voiceButton: document.querySelector('#stage-microphone-button'),
   };
 }
@@ -26,54 +24,53 @@ function normalizeHomeInteractionRoute(value) {
   return typeof value === 'string' ? value.trim().toLowerCase() : '';
 }
 
-function getHomeInteractionResponseLabel() {
-  switch (HOME_INTERACTION_PANEL_STATE.route) {
-    case 'translation':
-      return 'Translating';
-    case 'web':
-    case 'site-knowledge':
-    case 'platform-search':
-      return 'Finding';
-    default:
-      return 'Responding';
-  }
+function hasHomeInteractionTypedInput(input) {
+  return input instanceof HTMLTextAreaElement && input.value.trim().length > 0;
 }
 
-function getHomeInteractionStateCopy() {
-  const routingContext = getActiveModelRoutingContext(HOME_INTERACTION_PANEL_STATE.route || 'knowledge');
-
+function getHomeInteractionStateCopy(hasTypedInput = false) {
   switch (HOME_INTERACTION_PANEL_STATE.mode) {
     case 'listening':
       return {
-        modeLabel: 'Listening',
-        hint: 'Listening live. Speak naturally or stop when you are ready to submit.',
         voiceLabel: 'Stop listening',
-        submitLabel: 'Listening…',
+        submitLabel: 'Listening',
         submitDisabled: true,
+        submitIntent: 'listening',
+        submitIcon: '/assets/icons/system/states/loading.svg',
       };
     case 'thinking':
       return {
-        modeLabel: 'Thinking',
-        hint: 'Routing the request through the active model and deciding the right response path.',
-        voiceLabel: 'Voice',
-        submitLabel: 'Thinking…',
+        voiceLabel: 'Voice input',
+        submitLabel: 'Thinking',
         submitDisabled: true,
+        submitIntent: 'thinking',
+        submitIcon: '/assets/icons/system/states/loading.svg',
       };
     case 'responding':
+      if (hasTypedInput) {
+        return {
+          voiceLabel: 'Voice input',
+          submitLabel: 'Send',
+          submitDisabled: false,
+          submitIntent: 'submit',
+          submitIcon: '/assets/icons/core/actions/unclassified/send.svg',
+        };
+      }
+
       return {
-        modeLabel: getHomeInteractionResponseLabel(),
-        hint: routingContext.responsePrelude || 'Responding through the active model and current route.',
-        voiceLabel: 'Voice',
-        submitLabel: 'Ask Again',
+        voiceLabel: 'Voice input',
+        submitLabel: 'Reset',
         submitDisabled: false,
+        submitIntent: 'reset',
+        submitIcon: '/assets/icons/core/actions/unclassified/plus.svg',
       };
     default:
       return {
-        modeLabel: 'Ready',
-        hint: 'Text, voice, or documents for the active model.',
-        voiceLabel: 'Voice',
-        submitLabel: 'Ask Active Model',
+        voiceLabel: 'Voice input',
+        submitLabel: 'Send',
         submitDisabled: false,
+        submitIntent: 'submit',
+        submitIcon: '/assets/icons/core/actions/unclassified/send.svg',
       };
   }
 }
@@ -84,20 +81,9 @@ function syncHomeInteractionPanelState() {
     return;
   }
 
-  const copy = getHomeInteractionStateCopy();
+  const copy = getHomeInteractionStateCopy(hasHomeInteractionTypedInput(nodes.input));
   nodes.root.setAttribute('data-home-interaction-mode', HOME_INTERACTION_PANEL_STATE.mode);
-
-  if (nodes.modeLabel) {
-    nodes.modeLabel.textContent = copy.modeLabel;
-  }
-
-  if (nodes.hint) {
-    nodes.hint.textContent = copy.hint;
-  }
-
-  if (nodes.voiceLabel) {
-    nodes.voiceLabel.textContent = copy.voiceLabel;
-  }
+  nodes.root.setAttribute('data-home-interaction-submit-intent', copy.submitIntent);
 
   if (nodes.voiceButton) {
     nodes.voiceButton.setAttribute('aria-label', copy.voiceLabel);
@@ -107,7 +93,13 @@ function syncHomeInteractionPanelState() {
     nodes.submitLabel.textContent = copy.submitLabel;
   }
 
+  if (nodes.submitIcon instanceof HTMLImageElement && copy.submitIcon) {
+    nodes.submitIcon.src = copy.submitIcon;
+  }
+
   if (nodes.submit instanceof HTMLButtonElement) {
+    nodes.submit.dataset.homeInteractionSubmitIntent = copy.submitIntent;
+    nodes.submit.setAttribute('aria-label', copy.submitLabel);
     nodes.submit.disabled = copy.submitDisabled;
   }
 }
@@ -131,6 +123,64 @@ function bindHomeInteractionPanelState() {
   document.addEventListener('neuroartan:home-stage-reset-requested', () => {
     HOME_INTERACTION_PANEL_STATE.mode = 'idle';
     HOME_INTERACTION_PANEL_STATE.route = '';
+    syncHomeInteractionPanelState();
+  });
+
+  document.addEventListener('input', (event) => {
+    const input = event.target instanceof Element
+      ? event.target.closest('#home-interaction-panel-input')
+      : null;
+
+    if (!(input instanceof HTMLTextAreaElement)) {
+      return;
+    }
+
+    syncHomeInteractionPanelState();
+  });
+
+  document.addEventListener('submit', (event) => {
+    const form = event.target instanceof Element
+      ? event.target.closest('#home-interaction-panel-form')
+      : null;
+
+    if (!form) {
+      return;
+    }
+
+    const nodes = getHomeInteractionPanelStateNodes();
+    const submitIntent = nodes.submit instanceof HTMLButtonElement
+      ? nodes.submit.dataset.homeInteractionSubmitIntent
+      : 'submit';
+
+    if (submitIntent !== 'reset') {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (nodes.input instanceof HTMLTextAreaElement) {
+      nodes.input.value = '';
+      nodes.input.style.height = 'auto';
+      nodes.input.dispatchEvent(new Event('input', { bubbles: true }));
+      nodes.input.focus();
+    }
+
+    HOME_INTERACTION_PANEL_STATE.mode = 'idle';
+    HOME_INTERACTION_PANEL_STATE.route = '';
+
+    if (nodes.submit instanceof HTMLButtonElement) {
+      nodes.submit.dataset.homeInteractionSubmitIntent = 'submit';
+    }
+
+    document.dispatchEvent(
+      new CustomEvent('neuroartan:home-stage-reset-requested', {
+        detail: {
+          source: 'home-interaction-panel-reset',
+        },
+      })
+    );
+
     syncHomeInteractionPanelState();
   });
 }

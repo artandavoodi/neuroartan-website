@@ -195,7 +195,20 @@ body.home-page.home-search-shell-open .home-shell__footer-separator{
 .home-workspace-panel__close,
 .home-profile-control-panel__close,
 .home-settings-panel__close{
-  color:var(--text-secondary-color);
+  color:var(--global-close-button-color);
+}
+
+.home-navigation-drawer__close:hover,
+.home-navigation-drawer__close:focus-visible,
+.home-workspace-panel__close:hover,
+.home-workspace-panel__close:focus-visible,
+.home-profile-control-panel__close:hover,
+.home-profile-control-panel__close:focus-visible,
+.home-settings-panel__close:hover,
+.home-settings-panel__close:focus-visible{
+  color:var(--global-close-button-hover-color);
+  transform:none;
+  outline:none;
 }
 
 .home-navigation-drawer__stack-item,

@@ -40,6 +40,18 @@
   --home-platform-shell-nav-indicator-high-color:var(--color-primary7);
   --home-platform-shell-nav-indicator-high-bg:color-mix(in srgb, var(--color-primary7) 18%, transparent);
   --home-platform-shell-motion-fast:220ms;
+  --home-platform-shell-radius:var(--home-panel-radius, 1.35rem);
+  --home-platform-shell-padding:0.92rem;
+  --home-platform-shell-gap:0.88rem;
+  --home-platform-shell-surface:var(--home-panel-surface);
+  --home-platform-shell-border:var(--home-panel-border);
+  --home-platform-shell-shadow:var(--home-panel-shadow, 0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent));
+  --home-platform-shell-blur:4px;
+  --home-platform-shell-saturate:115%;
+  --home-platform-shell-nav-item-radius:999px;
+  --home-platform-shell-nav-item-padding:0.86rem 1rem;
+  --home-platform-shell-nav-item-bg-active:var(--control-bg);
+  --home-platform-shell-nav-item-border-active:var(--control-border);
 }
 
 /* =============================================================================
@@ -93,7 +105,14 @@
 }
 
 .home-platform-shell__close.global-close-button{
-  color:var(--text-secondary-color);
+  color:var(--global-close-button-color);
+}
+
+.home-platform-shell__close.global-close-button:hover,
+.home-platform-shell__close.global-close-button:focus-visible{
+  color:var(--global-close-button-hover-color);
+  transform:none;
+  outline:none;
 }
 
 .home-platform-shell__rail-toggle{
@@ -287,6 +306,7 @@
   text-align:left;
   text-decoration:none;
   cursor:pointer;
+  transform:none;
   transition:
     color var(--home-platform-shell-motion-fast) ease,
     border-color var(--home-platform-shell-motion-fast) ease,
@@ -351,6 +371,7 @@
   color:var(--home-platform-shell-nav-hover-color);
   opacity:var(--home-platform-shell-nav-hover-opacity);
   outline:none;
+  transform:none;
 }
 
 .home-platform-shell__nav-text{

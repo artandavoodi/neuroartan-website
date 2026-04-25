@@ -10,7 +10,7 @@
 <!-- =============================================================================
      01) INTERACTION SETTINGS ROOT
 ============================================================================= -->
-<section class="home-interaction-settings-panel" id="home-interaction-settings-panel" data-home-interaction-settings-state="closed" data-home-interaction-settings-active-section="overview" hidden aria-label="Homepage interaction settings">
+<section class="home-interaction-settings-panel" id="home-interaction-settings-panel" data-home-interaction-settings-state="closed" data-home-interaction-settings-active-section="overview" hidden aria-hidden="true" aria-label="Homepage interaction settings">
   <div class="home-interaction-settings-panel__surface" role="dialog" aria-modal="false" aria-labelledby="home-interaction-settings-panel-title">
     <!-- =============================================================================
          02) INTERACTION SETTINGS HEADER
@@ -20,10 +20,9 @@
         <p class="home-interaction-settings-panel__eyebrow">Interaction settings</p>
         <h2 class="home-interaction-settings-panel__title" id="home-interaction-settings-panel-title">Control center</h2>
       </div>
-      <button class="global-close-button home-interaction-settings-panel__close" type="button" data-home-interaction-settings-close="true" data-global-close="true" aria-label="Close interaction settings">
-        <span class="global-close-button__icon home-interaction-settings-panel__close-icon" aria-hidden="true">
-          <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/plus.svg" alt="">
-        </span>
+      <button class="global-close-button home-interaction-settings-panel__close" type="button" data-home-interaction-settings-close="true" aria-label="Close interaction settings">
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
       </button>
     </header>
 

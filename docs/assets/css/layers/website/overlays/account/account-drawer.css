@@ -137,10 +137,11 @@
   --account-drawer-card-radius: var(--radius-md);
   --account-drawer-primary-shadow: var(--shadow-medium);
 
-  --account-drawer-close-size: var(--icon-size-md);
-  --account-drawer-close-line-thickness: var(--stroke-soft);
-  --account-drawer-close-hover-lift-y: var(--button-hover-lift-y-subtle);
-  --account-drawer-close-hover-scale: var(--button-hover-scale-subtle);
+  --account-drawer-close-size:var(--global-close-button-size);
+  --account-drawer-close-color:var(--global-close-button-color);
+  --account-drawer-close-hover-color:var(--global-close-button-hover-color);
+  --account-drawer-close-duration:var(--global-close-button-duration);
+  --account-drawer-close-ease:var(--global-close-button-ease);
 }
 
 html[data-theme-effective="light"]{
@@ -313,56 +314,30 @@ body.account-drawer-closing .account-drawer-shell{
    09) CLOSE CONTROL
 ============================================================================= */
 .account-drawer-close{
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  left: auto;
-  width: var(--account-drawer-close-size);
-  min-width: var(--account-drawer-close-size);
-  height: var(--account-drawer-close-size);
-  min-height: var(--account-drawer-close-size);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text-primary-color);
-  cursor: pointer;
-  z-index: var(--z-overlay-control);
-  opacity: 1;
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  left:auto;
+  width:var(--account-drawer-close-size);
+  min-width:var(--account-drawer-close-size);
+  height:var(--account-drawer-close-size);
+  min-height:var(--account-drawer-close-size);
+  color:var(--account-drawer-close-color);
+  z-index:var(--z-overlay-control);
+  opacity:1;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
-    color var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+    color var(--account-drawer-close-duration) var(--account-drawer-close-ease),
+    transform var(--account-drawer-close-duration) var(--account-drawer-close-ease);
 }
 
-.account-drawer-close-line{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: var(--account-drawer-close-line-thickness);
-  background: currentColor;
-  transform-origin: center;
-  opacity: 1;
-  transition:
-    transform var(--duration-base) var(--ease-standard),
-    background-color var(--duration-base) var(--ease-standard),
-    opacity var(--duration-base) var(--ease-standard);
-}
-
-.account-drawer-close-line--first{
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.account-drawer-close-line--second{
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
 
 .account-drawer-close:hover,
 .account-drawer-close:focus-visible,
 .account-drawer-close:active{
-  color:var(--account-drawer-accent-hover);
-  transform: translateY(var(--account-drawer-close-hover-lift-y)) scale(var(--account-drawer-close-hover-scale));
-  outline: none;
+  color:var(--account-drawer-close-hover-color);
+  transform:none;
+  outline:none;
 }
 
 body.account-drawer-closing .account-drawer-close{
@@ -370,23 +345,6 @@ body.account-drawer-closing .account-drawer-close{
   pointer-events: none;
 }
 
-.account-drawer-close:hover .account-drawer-close-line,
-.account-drawer-close:focus-visible .account-drawer-close-line,
-.account-drawer-close:active .account-drawer-close-line{
-  opacity: 1;
-}
-
-.account-drawer-close:hover .account-drawer-close-line--first,
-.account-drawer-close:focus-visible .account-drawer-close-line--first,
-.account-drawer-close:active .account-drawer-close-line--first{
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.account-drawer-close:hover .account-drawer-close-line--second,
-.account-drawer-close:focus-visible .account-drawer-close-line--second,
-.account-drawer-close:active .account-drawer-close-line--second{
-  transform: translate(-50%, -50%) rotate(0deg);
-}
 
 /* =============================================================================
    10) BODY
@@ -1011,7 +969,7 @@ body.account-drawer-closing .account-drawer-close{
   .account-drawer-backdrop,
   .account-drawer-shell,
   .account-drawer-close,
-  .account-drawer-close-line,
+  .account-drawer-close .global-close-button__line,
   .account-drawer-action,
   .account-drawer-identity-option,
   .account-drawer-inner-view,

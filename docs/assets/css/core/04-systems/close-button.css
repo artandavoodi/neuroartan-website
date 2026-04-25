@@ -1,10 +1,11 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) GLOBAL CLOSE BUTTON BASE
-   03) CLOSE BUTTON LINE SYSTEM
-   04) HOVER STATES
-   05) END OF FILE
+   02) GLOBAL CLOSE BUTTON TOKENS
+   03) GLOBAL CLOSE BUTTON BASE
+   04) CLOSE BUTTON LINE SYSTEM
+   05) HOVER STATES
+   06) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -13,70 +14,88 @@
 /* /website/docs/assets/css/core/04-systems/close-button.css */
 
 /* =============================================================================
-   02) GLOBAL CLOSE BUTTON BASE
+   02) GLOBAL CLOSE BUTTON TOKENS
 ============================================================================= */
-.global-close-button{
-  background:none;
-  border:none;
-  font-size:1.2rem;
-  font-weight:300;
-  color:var(--text-color);
-  cursor:pointer;
-  opacity:1;
-  padding:0;
-  margin:0;
-  line-height:1;
-  position:relative;
-  display:inline-block;
-  width:1.2rem;
-  height:1.2rem;
-  transition:
-    color var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
+:root{
+  --global-close-button-size:1.2rem;
+  --global-close-button-line-size:1.2px;
+  --global-close-button-color:var(--text-color);
+  --global-close-button-hover-color:var(--color-primary1);
+  --global-close-button-duration:var(--duration-base);
+  --global-close-button-ease:var(--ease-standard);
 }
 
 /* =============================================================================
-   03) CLOSE BUTTON LINE SYSTEM
+   03) GLOBAL CLOSE BUTTON BASE
 ============================================================================= */
+.global-close-button{
+  -webkit-appearance:none;
+  appearance:none;
+  position:relative;
+  display:inline-block;
+  width:var(--global-close-button-size);
+  height:var(--global-close-button-size);
+  padding:0;
+  margin:0;
+  border:none;
+  background:none;
+  color:var(--global-close-button-color);
+  font-size:var(--global-close-button-size);
+  font-weight:300;
+  line-height:1;
+  opacity:1;
+  cursor:pointer;
+  transform:none;
+  transition:
+    color var(--global-close-button-duration) var(--global-close-button-ease),
+    transform var(--global-close-button-duration) var(--global-close-button-ease);
+}
+
+/* =============================================================================
+   04) CLOSE BUTTON LINE SYSTEM
+============================================================================= */
+.global-close-button__line,
 .global-close-button span{
-  display:block;
-  width:100%;
-  height:1.2px;
-  background-color:currentColor;
   position:absolute;
   top:50%;
   left:0;
+  display:block;
+  width:100%;
+  height:var(--global-close-button-line-size);
+  background-color:currentColor;
   transform-origin:center;
   transition:
-    background-color var(--duration-base) var(--ease-standard),
-    transform 0.4s var(--ease-standard);
+    background-color var(--global-close-button-duration) var(--global-close-button-ease),
+    transform 0.4s var(--global-close-button-ease);
 }
 
+.global-close-button__line--first,
 .global-close-button span:nth-child(1){
   transform:rotate(45deg);
 }
 
+.global-close-button__line--second,
 .global-close-button span:nth-child(2){
   transform:rotate(-45deg);
 }
 
 /* =============================================================================
-   04) HOVER STATES
+   05) HOVER STATES
 ============================================================================= */
 .global-close-button:hover,
 .global-close-button:focus-visible{
-  color:var(--color-primary7);
+  color:var(--global-close-button-hover-color);
   transform:none;
   outline:none;
 }
 
-.global-close-button:hover span:nth-child(1),
-.global-close-button:hover span:nth-child(2),
-.global-close-button:focus-visible span:nth-child(1),
-.global-close-button:focus-visible span:nth-child(2){
+.global-close-button:hover .global-close-button__line,
+.global-close-button:hover span,
+.global-close-button:focus-visible .global-close-button__line,
+.global-close-button:focus-visible span{
   transform:rotate(0deg);
 }
 
 /* =============================================================================
-   05) END OF FILE
+   06) END OF FILE
 ============================================================================= */

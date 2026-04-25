@@ -12,7 +12,8 @@
    10) ROW CONTROLS
    11) TOGGLE CONTROLS
    12) META / STATUS
-   13) RESPONSIVE
+   13) SETTINGS-OPEN PAGE STATE
+   14) RESPONSIVE
 ============================================================================= */
 
 /* =============================================================================
@@ -22,18 +23,18 @@
   --home-interaction-settings-panel-z-index:var(--z-overlay, 80);
   --home-interaction-settings-panel-width:min(68rem, calc(100vw - (2 * var(--site-gutter))));
   --home-interaction-settings-panel-top:calc(var(--home-shell-topbar-height, var(--site-header-height, 4rem)) + var(--site-gutter));
-  --home-interaction-settings-panel-right:var(--site-gutter);
+  --home-interaction-settings-panel-inline:var(--site-gutter);
   --home-interaction-settings-panel-bottom:calc(var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)) + var(--site-gutter));
   --home-interaction-settings-panel-height:min(42rem, calc(100svh - var(--home-interaction-settings-panel-top) - var(--home-interaction-settings-panel-bottom)));
 
-  --home-interaction-settings-panel-radius:var(--home-panel-radius, 1.35rem);
-  --home-interaction-settings-panel-padding:var(--home-panel-padding, 0.92rem);
-  --home-interaction-settings-panel-gap:var(--home-panel-gap, 0.88rem);
-  --home-interaction-settings-panel-surface:var(--home-panel-surface, color-mix(in srgb, var(--surface-color) 82%, transparent));
-  --home-interaction-settings-panel-border:var(--home-panel-border, var(--control-border));
-  --home-interaction-settings-panel-shadow:var(--home-panel-shadow, 0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent));
-  --home-interaction-settings-panel-blur:var(--home-panel-blur, 18px);
-  --home-interaction-settings-panel-saturate:var(--home-panel-saturate, 126%);
+  --home-interaction-settings-panel-radius:var(--home-platform-shell-radius, var(--home-panel-radius, 1.35rem));
+  --home-interaction-settings-panel-padding:var(--home-platform-shell-padding, var(--home-panel-padding, 0.92rem));
+  --home-interaction-settings-panel-gap:var(--home-platform-shell-gap, var(--home-panel-gap, 0.88rem));
+  --home-interaction-settings-panel-surface:var(--home-platform-shell-surface, var(--home-panel-surface, color-mix(in srgb, var(--surface-color) 82%, transparent)));
+  --home-interaction-settings-panel-border:var(--home-platform-shell-border, var(--home-panel-border, var(--control-border)));
+  --home-interaction-settings-panel-shadow:var(--home-platform-shell-shadow, var(--home-panel-shadow, 0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent)));
+  --home-interaction-settings-panel-blur:var(--home-platform-shell-blur, var(--home-panel-blur, 18px));
+  --home-interaction-settings-panel-saturate:var(--home-platform-shell-saturate, var(--home-panel-saturate, 126%));
 
   --home-interaction-settings-panel-body-gap:var(--home-panel-gap, 0.88rem);
   --home-interaction-settings-panel-nav-width:13.4rem;
@@ -56,12 +57,12 @@
   --home-interaction-settings-panel-nav-item-radius:var(--home-platform-shell-nav-item-radius, 0.82rem);
   --home-interaction-settings-panel-nav-item-padding:var(--home-platform-shell-nav-item-padding, 0.76rem);
 
-  --home-interaction-settings-panel-control-radius:var(--home-interaction-settings-panel-nav-item-radius);
-  --home-interaction-settings-panel-control-padding:var(--home-interaction-settings-panel-nav-item-padding);
+  --home-interaction-settings-panel-control-radius:var(--home-platform-shell-nav-item-radius, var(--home-interaction-settings-panel-nav-item-radius));
+  --home-interaction-settings-panel-control-padding:var(--home-platform-shell-nav-item-padding, var(--home-interaction-settings-panel-nav-item-padding));
   --home-interaction-settings-panel-control-bg:transparent;
-  --home-interaction-settings-panel-control-bg-active:var(--control-bg);
+  --home-interaction-settings-panel-control-bg-active:var(--home-platform-shell-nav-item-bg-active, var(--control-bg));
+  --home-interaction-settings-panel-control-border-active:var(--home-platform-shell-nav-item-border-active, var(--control-border));
   --home-interaction-settings-panel-control-border:transparent;
-  --home-interaction-settings-panel-control-border-active:var(--control-border);
   --home-interaction-settings-panel-control-text:var(--home-interaction-settings-panel-nav-color);
   --home-interaction-settings-panel-control-text-active:var(--home-interaction-settings-panel-nav-hover-color);
   --home-interaction-settings-panel-control-description:var(--text-secondary-color);
@@ -84,11 +85,12 @@
 .home-interaction-settings-panel{
   position:fixed;
   top:var(--home-interaction-settings-panel-top);
-  right:var(--home-interaction-settings-panel-right);
+  right:var(--home-interaction-settings-panel-inline);
   bottom:var(--home-interaction-settings-panel-bottom);
+  left:var(--home-interaction-settings-panel-inline);
   z-index:var(--home-interaction-settings-panel-z-index);
-  width:var(--home-interaction-settings-panel-width);
-  max-width:calc(100vw - (2 * var(--site-gutter)));
+  display:flex;
+  justify-content:center;
   pointer-events:none;
 }
 
@@ -108,6 +110,7 @@
   grid-template-rows:auto minmax(0, 1fr);
   gap:var(--home-interaction-settings-panel-gap);
   width:100%;
+  max-width:var(--home-interaction-settings-panel-width);
   height:100%;
   max-height:var(--home-interaction-settings-panel-height);
   padding:var(--home-interaction-settings-panel-padding);
@@ -118,6 +121,7 @@
   backdrop-filter:blur(var(--home-interaction-settings-panel-blur)) saturate(var(--home-interaction-settings-panel-saturate));
   -webkit-backdrop-filter:blur(var(--home-interaction-settings-panel-blur)) saturate(var(--home-interaction-settings-panel-saturate));
   overflow:hidden;
+  pointer-events:auto;
   overscroll-behavior:contain;
 }
 
@@ -129,6 +133,21 @@
   align-items:flex-start;
   justify-content:space-between;
   gap:1rem;
+  position:relative;
+  z-index:2;
+}
+
+.home-interaction-settings-panel__close{
+  position:relative;
+  z-index:3;
+  flex:0 0 auto;
+  pointer-events:auto;
+  transform:none;
+}
+
+.home-interaction-settings-panel__close:hover,
+.home-interaction-settings-panel__close:focus-visible{
+  transform:none;
 }
 
 .home-interaction-settings-panel__title-block{
@@ -182,7 +201,11 @@
   background:var(--home-interaction-settings-panel-nav-bg);
   overflow:auto;
   overscroll-behavior:contain;
-  scrollbar-width:thin;
+  scrollbar-width:none;
+}
+
+.home-interaction-settings-panel__nav::-webkit-scrollbar{
+  display:none;
 }
 
 .home-interaction-settings-panel__nav-item{
@@ -193,7 +216,7 @@
   justify-content:flex-start;
   width:100%;
   padding:var(--home-interaction-settings-panel-nav-item-padding);
-  border:1px solid transparent;
+  border:1px solid var(--home-interaction-settings-panel-control-border);
   border-radius:var(--home-interaction-settings-panel-nav-item-radius);
   background:transparent;
   color:var(--home-interaction-settings-panel-nav-color);
@@ -204,20 +227,24 @@
   text-align:left;
   cursor:pointer;
   outline:none;
+  transform:none;
   transition:
     color var(--home-interaction-settings-panel-motion-fast) ease,
     opacity var(--home-interaction-settings-panel-motion-fast) ease,
     border-color var(--home-interaction-settings-panel-motion-fast) ease,
     background-color var(--home-interaction-settings-panel-motion-fast) ease;
+  will-change:color, opacity, border-color, background-color;
 }
 
 .home-interaction-settings-panel__nav-item:hover,
 .home-interaction-settings-panel__nav-item:focus-visible,
 .home-interaction-settings-panel__nav-item[aria-selected="true"]{
-  border-color:var(--control-border);
-  background:var(--control-bg);
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-nav-hover-color);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+  transform:none;
+  translate:none;
 }
 
 /* =============================================================================
@@ -232,7 +259,11 @@
   background:var(--home-interaction-settings-panel-content-bg);
   overflow:auto;
   overscroll-behavior:contain;
-  scrollbar-width:thin;
+  scrollbar-width:none;
+}
+
+.home-interaction-settings-panel__content::-webkit-scrollbar{
+  display:none;
 }
 
 .home-interaction-settings-panel__section-mount[hidden]{
@@ -299,8 +330,8 @@
 .home-interaction-settings-panel__option[aria-pressed="true"],
 .home-interaction-settings-panel__option:hover,
 .home-interaction-settings-panel__option:focus-visible{
-  border-color:var(--control-border);
-  background:var(--control-bg);
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
 }
@@ -350,8 +381,8 @@
 .home-interaction-settings-panel__row:hover,
 .home-interaction-settings-panel__row:focus-visible,
 .home-interaction-settings-panel__row[aria-pressed="true"]{
-  border-color:var(--control-border);
-  background:var(--control-bg);
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
 }
@@ -392,8 +423,8 @@
 .home-interaction-settings-panel__toggle-row:hover,
 .home-interaction-settings-panel__toggle-row:focus-visible,
 .home-interaction-settings-panel__toggle-row[aria-pressed="true"]{
-  border-color:var(--control-border);
-  background:var(--control-bg);
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+  background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
 }
@@ -468,7 +499,17 @@
 }
 
 /* =============================================================================
-   13) RESPONSIVE
+   13) SETTINGS-OPEN PAGE STATE
+============================================================================= */
+body[data-home-interaction-settings-state="open"] .home-interaction-panel,
+body[data-home-interaction-settings-state="open"] .home-stage-interactive-text{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+/* =============================================================================
+   14) RESPONSIVE
 ============================================================================= */
 @media (max-width:900px){
   :root{
@@ -486,8 +527,6 @@
     right:var(--site-gutter);
     bottom:calc(var(--site-gutter) + env(safe-area-inset-bottom, 0px));
     left:var(--site-gutter);
-    width:auto;
-    max-width:none;
   }
 
   .home-interaction-settings-panel__surface{
@@ -502,6 +541,7 @@
   .home-interaction-settings-panel__nav{
     flex-direction:row;
     overflow-x:auto;
+    scrollbar-width:none;
     overflow-y:hidden;
     white-space:nowrap;
   }

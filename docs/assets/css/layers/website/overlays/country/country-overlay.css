@@ -27,6 +27,8 @@
 :root{
   /* Country overlay accent follows the global palette */
   --country-accent: var(--color-primary1);
+  --country-close-button-color:var(--global-close-button-color);
+  --country-close-button-hover-color:var(--global-close-button-hover-color);
   --country-container-max: var(--site-rail-width, min(calc(100% - (var(--site-gutter, 24px) * 2)), var(--site-max-width, 1320px)));
   --country-container-pad: 0px;
   --country-motion-fast:220ms;
@@ -390,25 +392,31 @@ body.country-active .stage-circle{
 /* Close button (inherits global close button markup) — menu-overlay feel */
 #country-overlay .global-close-button,
 .country-overlay .global-close-button{
-  color: var(--co-fg);
-  transition:color var(--country-motion-medium) ease, transform var(--country-motion-medium) ease;
+  color:var(--country-close-button-color);
+  transition:
+    color var(--global-close-button-duration) var(--global-close-button-ease),
+    transform var(--global-close-button-duration) var(--global-close-button-ease);
 }
 
 #country-overlay .global-close-button:hover,
 #country-overlay .global-close-button:focus-visible,
 .country-overlay .global-close-button:hover,
 .country-overlay .global-close-button:focus-visible{
-  color:var(--country-accent);
-  transform: none;
-  outline: none;
+  color:var(--country-close-button-hover-color);
+  transform:none;
+  outline:none;
 }
 
 /* Let the X-lines ‘soften’ on hover like the menu close */
+#country-overlay .global-close-button:hover .global-close-button__line,
 #country-overlay .global-close-button:hover span,
+#country-overlay .global-close-button:focus-visible .global-close-button__line,
 #country-overlay .global-close-button:focus-visible span,
+.country-overlay .global-close-button:hover .global-close-button__line,
 .country-overlay .global-close-button:hover span,
+.country-overlay .global-close-button:focus-visible .global-close-button__line,
 .country-overlay .global-close-button:focus-visible span{
-  transform: rotate(0deg);
+  transform:rotate(0deg);
 }
 
 /* =============================================================================

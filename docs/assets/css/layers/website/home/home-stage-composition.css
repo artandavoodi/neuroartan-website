@@ -6,7 +6,8 @@
    04) INTERACTIVE TEXT ZONE
    05) COMPOSER AND RESPONSE ZONE
    06) RESPONSE DEBUG HEIGHT MODE
-   07) RESPONSIVE
+   07) SETTINGS-OPEN STAGE STATE
+   08) RESPONSIVE
 ============================================================================= */
 
 /* =============================================================================
@@ -157,7 +158,16 @@
 }
 
 /* =============================================================================
-   07) RESPONSIVE
+   07) SETTINGS-OPEN STAGE STATE
+============================================================================= */
+body[data-home-interaction-settings-state="open"] #stage-center{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+/* =============================================================================
+   08) RESPONSIVE
 ============================================================================= */
 @media (max-width:820px){
   :root{

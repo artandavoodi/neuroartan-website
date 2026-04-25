@@ -152,7 +152,13 @@
     try { window.scrollTo(0, 0); } catch (_) {}
 
     const logoEl = qs("#stage-logo .site-logo");
-    if (!logoEl) return;
+    const introLogoSource = logoEl || (() => {
+      const img = document.createElement("img");
+      img.src = "assets/images/layers/website/brand/logo.svg";
+      img.alt = "Neuroartan Logo";
+      img.className = "intro-logo-source";
+      return img;
+    })();
 
     // ===== Session gate =====
     const introDone = sessionStorage.getItem(INTRO_DONE_KEY) === "1";
@@ -574,14 +580,14 @@
 
     // Ensure logo is decoded before building overlay.
     try {
-      if (logoEl.tagName === "IMG") {
-        if (!logoEl.complete) {
+      if (introLogoSource.tagName === "IMG") {
+        if (!introLogoSource.complete) {
           await new Promise((resolve) =>
-            logoEl.addEventListener("load", resolve, { once: true })
+            introLogoSource.addEventListener("load", resolve, { once: true })
           );
         }
-        if (typeof logoEl.decode === "function") {
-          await logoEl.decode().catch(() => {});
+        if (typeof introLogoSource.decode === "function") {
+          await introLogoSource.decode().catch(() => {});
         }
       }
     } catch (_) {}
@@ -615,7 +621,7 @@
       opacity: "1",
     });
 
-    const overlayLogo = logoEl.cloneNode(true);
+    const overlayLogo = introLogoSource.cloneNode(true);
     overlayLogo.removeAttribute("id");
     overlayLogo.className = "intro-logo";
     overlayLogo.removeAttribute("style");

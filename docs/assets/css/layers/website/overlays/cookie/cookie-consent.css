@@ -47,9 +47,6 @@
   --cookie-consent-max-height: min(46rem, calc(100vh - 3rem));
   --cookie-consent-radius: 1.9rem;
   --cookie-consent-card-radius: 1rem;
-  --cookie-consent-control-size: 1.125rem;
-  --cookie-consent-control-line-width: 100%;
-  --cookie-consent-control-stroke: 1px;
   --cookie-consent-pill-radius: 999px;
   --cookie-consent-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --cookie-consent-header-divider: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
@@ -128,6 +125,11 @@
   --cookie-consent-motion-opacity-soft:160ms;
   --cookie-consent-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
   --cookie-consent-accent-hover:var(--color-primary1);
+  --cookie-consent-close-button-size:var(--global-close-button-size);
+  --cookie-consent-close-button-color:var(--global-close-button-color);
+  --cookie-consent-close-button-hover-color:var(--global-close-button-hover-color);
+  --cookie-consent-close-button-duration:var(--global-close-button-duration);
+  --cookie-consent-close-button-ease:var(--global-close-button-ease);
   --cookie-consent-backdrop-blur:16px;
   --cookie-consent-panel-blur:18px;
   --cookie-consent-footer-separator-opacity:0.35;
@@ -333,72 +335,32 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 .cookie-consent-close{
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--cookie-consent-control-size);
-  height: var(--cookie-consent-control-size);
-  min-width: var(--cookie-consent-control-size);
-  min-height: var(--cookie-consent-control-size);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  appearance: none;
-  color: var(--text-primary-color);
-  cursor: pointer;
-  transition:color var(--cookie-consent-motion-fast) ease, opacity var(--cookie-consent-motion-opacity-soft) ease;
+  position:absolute;
+  top:0;
+  right:0;
+  width:var(--cookie-consent-close-button-size);
+  height:var(--cookie-consent-close-button-size);
+  min-width:var(--cookie-consent-close-button-size);
+  min-height:var(--cookie-consent-close-button-size);
+  color:var(--cookie-consent-close-button-color);
+  transition:
+    color var(--cookie-consent-close-button-duration) var(--cookie-consent-close-button-ease),
+    opacity var(--cookie-consent-motion-opacity-soft) ease,
+    transform var(--cookie-consent-close-button-duration) var(--cookie-consent-close-button-ease);
 }
 
 .cookie-consent-close[hidden]{
-  display: none !important;
-}
-
-.cookie-consent-close-line{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--cookie-consent-control-line-width);
-  height: var(--cookie-consent-control-stroke);
-  background: currentColor;
-  pointer-events: none;
-  transform-origin: center;
-  transition:transform var(--cookie-consent-motion-medium) ease;
-}
-
-.cookie-consent-close-line--first{
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.cookie-consent-close-line--second{
-  transform: translate(-50%, -50%) rotate(-45deg);
+  display:none !important;
 }
 
 .cookie-consent-close:hover,
 .cookie-consent-close:focus-visible,
 .cookie-consent-close:active{
-  color:var(--cookie-consent-accent-hover);
-  outline: none;
+  color:var(--cookie-consent-close-button-hover-color);
+  transform:none;
+  outline:none;
 }
 
-.cookie-consent-close:hover .cookie-consent-close-line--first,
-.cookie-consent-close:focus-visible .cookie-consent-close-line--first,
-.cookie-consent-close:active .cookie-consent-close-line--first{
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.cookie-consent-close:hover .cookie-consent-close-line--second,
-.cookie-consent-close:focus-visible .cookie-consent-close-line--second,
-.cookie-consent-close:active .cookie-consent-close-line--second{
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-body.cookie-consent-closing .cookie-consent-close{
-  opacity: 0;
-  pointer-events: none;
-}
 
 /* =============================================================================
    10) BODY
@@ -1068,10 +1030,10 @@ body.cookie-consent-closing .cookie-consent-close{
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: var(--cookie-consent-control-size);
-  height: var(--cookie-consent-control-size);
-  min-width: var(--cookie-consent-control-size);
-  min-height: var(--cookie-consent-control-size);
+  width: var(--global-close-button-size);
+  height: var(--global-close-button-size);
+  min-width: var(--global-close-button-size);
+  min-height: var(--global-close-button-size);
   padding: 0;
   border: 0;
   background: transparent;
@@ -1086,8 +1048,8 @@ body.cookie-consent-closing .cookie-consent-close{
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--cookie-consent-control-line-width);
-  height: var(--cookie-consent-control-stroke);
+  width: 100%;
+  height: var(--global-close-button-line-size);
   background: currentColor;
   pointer-events: none;
   transform-origin: center;
@@ -1328,7 +1290,7 @@ body.cookie-consent-closing .cookie-consent-close{
   .cookie-consent,
   .cookie-consent-backdrop,
   .cookie-consent-panel,
-  .cookie-consent-close-line,
+  .cookie-consent-close .global-close-button__line,
   .cookie-consent-action,
   .cookie-consent-toggle-track,
   .cookie-consent-toggle-thumb,

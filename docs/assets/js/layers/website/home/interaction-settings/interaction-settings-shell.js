@@ -58,8 +58,11 @@ function setHomeInteractionSettingsSection(section) {
   });
 
   nodes.sectionMounts.forEach((mount) => {
-    const mountSection = mount.dataset.homeInteractionSettingsSectionMount;
-    mount.hidden = mountSection !== activeSection;
+    const mountSection = normalizeHomeInteractionSettingsSection(mount.dataset.homeInteractionSettingsSectionMount);
+    const isActive = mountSection === activeSection;
+
+    mount.hidden = !isActive;
+    mount.setAttribute('aria-hidden', String(!isActive));
   });
 }
 
@@ -98,6 +101,12 @@ function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SH
 
   nodes.root.hidden = false;
   nodes.root.dataset.homeInteractionSettingsState = 'open';
+  nodes.root.setAttribute('aria-hidden', 'false');
+  document.documentElement.dataset.homeInteractionSettingsState = 'open';
+  document.body?.setAttribute('data-home-interaction-settings-state', 'open');
+  document.querySelectorAll('[data-home-interaction-settings-open], [data-home-interaction-settings-trigger], [data-home-topbar-action="interaction-settings"], [data-home-action="interaction-settings"]').forEach((trigger) => {
+    trigger.setAttribute('aria-expanded', 'true');
+  });
   setHomeInteractionSettingsSection(section);
 }
 
@@ -108,21 +117,24 @@ function closeHomeInteractionSettingsPanel() {
 
   nodes.root.dataset.homeInteractionSettingsState = 'closed';
   nodes.root.hidden = true;
+  nodes.root.setAttribute('aria-hidden', 'true');
+  document.documentElement.dataset.homeInteractionSettingsState = 'closed';
+  document.body?.setAttribute('data-home-interaction-settings-state', 'closed');
+  document.querySelectorAll('[data-home-interaction-settings-open], [data-home-interaction-settings-trigger], [data-home-topbar-action="interaction-settings"], [data-home-action="interaction-settings"]').forEach((trigger) => {
+    trigger.setAttribute('aria-expanded', 'false');
+  });
+  nodes.root.dispatchEvent(new CustomEvent('neuroartan:home-interaction-settings-closed', {
+    bubbles: true,
+    detail: {
+      source: 'home-interaction-settings-shell',
+    },
+  }));
 }
 
 function bindHomeInteractionSettingsShell() {
   const nodes = getHomeInteractionSettingsShellNodes();
 
   if (!nodes.root) return false;
-
-  if (
-    HOME_INTERACTION_SETTINGS_SHELL_STATE.isShellBound &&
-    HOME_INTERACTION_SETTINGS_SHELL_STATE.shellRoot === nodes.root
-  ) {
-    return false;
-  }
-
-  nodes.root.addEventListener('click', handleHomeInteractionSettingsShellClick, true);
 
   HOME_INTERACTION_SETTINGS_SHELL_STATE.shellRoot = nodes.root;
   HOME_INTERACTION_SETTINGS_SHELL_STATE.isShellBound = true;
@@ -133,29 +145,42 @@ function bindHomeInteractionSettingsShell() {
    06. SHELL DELEGATION
    ========================================================= */
 function handleHomeInteractionSettingsShellClick(event) {
-  const closeTrigger = event.target?.closest?.('[data-home-interaction-settings-close="true"]');
+  const target = event.target instanceof Element ? event.target : null;
+
+  if (!target) return false;
+
+  const nodes = getHomeInteractionSettingsShellNodes();
+
+  if (!nodes.root || !nodes.root.contains(target)) return false;
+
+  const closeTrigger = target.closest('[data-home-interaction-settings-close="true"]');
 
   if (closeTrigger) {
     event.preventDefault();
     event.stopPropagation();
     closeHomeInteractionSettingsPanel();
-    return;
+    return true;
   }
 
-  const navItem = event.target?.closest?.('[data-home-interaction-settings-tab]');
+  const navItem = target.closest('[data-home-interaction-settings-tab]');
 
   if (navItem) {
     event.preventDefault();
+    event.stopPropagation();
     setHomeInteractionSettingsSection(navItem.dataset.homeInteractionSettingsTab);
-    return;
+    return true;
   }
 
-  const control = event.target?.closest?.('[data-home-interaction-setting]');
+  const control = target.closest('[data-home-interaction-setting]');
 
   if (control) {
     event.preventDefault();
+    event.stopPropagation();
     syncHomeInteractionSettingsControl(control);
+    return true;
   }
+
+  return false;
 }
 
 /* =========================================================
@@ -175,15 +200,47 @@ function bindHomeInteractionSettingsGlobalTriggers() {
   });
 
   document.addEventListener('click', (event) => {
-    const trigger = event.target?.closest?.(
+    const target = event.target instanceof Element ? event.target : null;
+
+    if (!target) return;
+
+    if (handleHomeInteractionSettingsShellClick(event)) return;
+
+    const trigger = target.closest(
       '[data-home-interaction-settings-open], [data-home-interaction-settings-trigger], [data-home-topbar-action="interaction-settings"], [data-home-action="interaction-settings"]'
     );
 
-    if (!trigger) return;
+    if (trigger) {
+      event.preventDefault();
+      event.stopPropagation();
+      openHomeInteractionSettingsPanel(trigger.dataset.homeInteractionSettingsSection);
+      return;
+    }
 
-    event.preventDefault();
-    openHomeInteractionSettingsPanel(trigger.dataset.homeInteractionSettingsSection);
-  });
+    const competingSurfaceTrigger = target.closest(
+      [
+        '[data-home-platform-shell-open]',
+        '[data-home-menu-open]',
+        '[data-home-search-open]',
+        '[data-home-feed-open]',
+        '[data-home-models-open]',
+        '[data-home-topbar-action]',
+        '[data-home-action]',
+        '[data-locale-trigger]',
+        '[data-menu-panel]',
+        '.institutional-menu-panel-trigger',
+        '.institutional-menu-search-trigger',
+        '#home-dashboard-menu-trigger',
+        '#home-dashboard-search-trigger',
+        '#language-toggle',
+        '#country-selector',
+      ].join(', ')
+    );
+
+    if (competingSurfaceTrigger) {
+      closeHomeInteractionSettingsPanel();
+    }
+  }, true);
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
@@ -200,17 +257,15 @@ function bindHomeInteractionSettingsGlobalTriggers() {
 function bootHomeInteractionSettingsShell() {
   bindHomeInteractionSettingsGlobalTriggers();
 
-  const didBind = bindHomeInteractionSettingsShell();
+  bindHomeInteractionSettingsShell();
 
-  if (!didBind && !getHomeInteractionSettingsShellNodes().root) return;
+  if (!getHomeInteractionSettingsShellNodes().root) return;
 
   setHomeInteractionSettingsSection(HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection);
 }
 
-window.addEventListener('fragment:mounted', (event) => {
-  const fragmentKey = event instanceof CustomEvent ? event.detail?.key : '';
-
-  if (fragmentKey !== 'home-interaction-settings-panel') return;
+window.addEventListener('fragment:mounted', () => {
+  if (!document.getElementById('home-interaction-settings-panel')) return;
 
   bootHomeInteractionSettingsShell();
 });

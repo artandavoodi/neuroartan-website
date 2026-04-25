@@ -659,12 +659,18 @@
     document.addEventListener('account-drawer:mounted', () => {
       initAccountDrawer();
     });
+
+    window.addEventListener('fragment:mounted', () => {
+      if (!getDrawer()) return;
+
+      initAccountDrawer({ preserveView: true });
+    });
   }
 
   /* =============================================================================
      14) BOOTSTRAP
   ============================================================================= */
-  function initAccountDrawer() {
+  function initAccountDrawer(options = {}) {
     const drawer = getDrawer();
     if (!drawer) return;
 
@@ -694,6 +700,8 @@
     getCloseControls().forEach((control) => {
       control.dataset.accountDrawerClose = 'true';
     });
+
+    if (options.preserveView && drawer.dataset.accountDrawerView) return;
 
     applyAuthView('entry');
   }

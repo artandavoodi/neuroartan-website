@@ -391,24 +391,25 @@
     if (mountEventsBound) return;
     mountEventsBound = true;
 
-    document.addEventListener('fragment:mounted', (event) => {
-      const name = event?.detail?.name || '';
-      if (name !== 'account-sign-up-drawer') return;
+    window.addEventListener('fragment:mounted', () => {
+      if (!getDrawer()) return;
 
       document.documentElement.dataset.accountSignUpDrawerInitialized = 'false';
-      init();
+      init({ preserveState: true });
     });
   }
 
   /* =============================================================================
      14) BOOTSTRAP
   ============================================================================= */
-  function init() {
+  function init(options = {}) {
     if (document.documentElement.dataset.accountSignUpDrawerInitialized === 'true' && getDrawer()) return;
     document.documentElement.dataset.accountSignUpDrawerInitialized = 'true';
 
     normalizeStateVisibility();
-    syncHiddenContextFields({ method: 'email', auth_provider: 'email' });
+    if (!options.preserveState) {
+      syncHiddenContextFields({ method: 'email', auth_provider: 'email' });
+    }
 
     const drawer = getDrawer();
     if (drawer) {

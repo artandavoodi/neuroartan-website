@@ -6,9 +6,11 @@
    04) HIDDEN CONTEXT FIELD HELPERS
    05) CONTEXT HELPERS
    06) CREDENTIAL VISIBILITY HELPERS
+   06A) DATE OF BIRTH HELPERS
+   06B) PASSWORD FEEDBACK HELPERS
    07) USERNAME PREVIEW HELPERS
    08) OPEN REQUEST BINDING
-   08) CLOSE REQUEST BINDING
+   08A) CLOSE REQUEST BINDING
    09) ROUTE REQUEST BINDING
    09A) INNER ROUTE CONTROLS
    10) INPUT BINDING
@@ -573,8 +575,22 @@ import {
   }
 
   /* =============================================================================
-     08) CLOSE REQUEST BINDING
+     08A) CLOSE REQUEST BINDING
   ============================================================================= */
+  function syncMountedProfileSetupDrawer() {
+    const drawer = getDrawer();
+    if (!drawer) return;
+
+    drawer.dataset.moduleId = MODULE_ID;
+    drawer.dataset.modulePath = MODULE_PATH;
+    drawer.setAttribute('aria-hidden', drawer.hidden ? 'true' : 'false');
+    syncHiddenContextFields({ method: state.method, auth_provider: state.provider, email: getHiddenEmailInput()?.value || '' });
+    syncDateOfBirthControlsFromValue();
+    syncCredentialVisibility();
+    void syncPasswordFeedback();
+    syncUsernamePreview();
+  }
+
   function bindCloseRequests() {
     if (document.documentElement.dataset.accountProfileSetupDrawerCloseBound === 'true') return;
     document.documentElement.dataset.accountProfileSetupDrawerCloseBound = 'true';
@@ -763,13 +779,7 @@ import {
     if (document.documentElement.dataset.accountProfileSetupDrawerInitialized === 'true') return;
     document.documentElement.dataset.accountProfileSetupDrawerInitialized = 'true';
 
-    const drawer = getDrawer();
-    if (drawer) {
-      drawer.dataset.moduleId = MODULE_ID;
-      drawer.dataset.modulePath = MODULE_PATH;
-      drawer.setAttribute('aria-hidden', drawer.hidden ? 'true' : 'false');
-      syncHiddenContextFields({ method: state.method, auth_provider: state.provider, email: '' });
-    }
+    syncMountedProfileSetupDrawer();
 
     bindOpenRequests();
     bindCloseRequests();
@@ -779,10 +789,7 @@ import {
     bindUsernameStatusEvents();
     bindSubmitStatusEvents();
     bindEscape();
-    syncDateOfBirthControlsFromValue();
-    syncCredentialVisibility();
-    void syncPasswordFeedback();
-    syncUsernamePreview();
+    syncMountedProfileSetupDrawer();
   }
 
   if (document.readyState === 'loading') {
@@ -790,6 +797,12 @@ import {
   } else {
     init();
   }
+
+  window.addEventListener('fragment:mounted', () => {
+    if (!getDrawer()) return;
+
+    syncMountedProfileSetupDrawer();
+  });
 
   /* =============================================================================
      13) END OF FILE

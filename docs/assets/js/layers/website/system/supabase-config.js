@@ -18,7 +18,7 @@
  * and must not inherit Firebase naming, state, or runtime responsibility.
  */
 
-const SUPABASE_CDN_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const SUPABASE_CDN_URL = 'https://esm.sh/@supabase/supabase-js@2?bundle';
 
 /* =============================================================================
    02) SUPABASE CDN LOADER

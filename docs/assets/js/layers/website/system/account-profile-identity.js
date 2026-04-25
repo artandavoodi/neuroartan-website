@@ -11,6 +11,7 @@
    09) ELIGIBILITY HELPERS
    10) USERNAME POLICY HELPERS
    11) SUPABASE PROFILE IDENTITY HELPERS
+   11A) SUPABASE USERNAME AVAILABILITY HELPERS
    12) FIRESTORE CONTINUITY HELPERS
    13) PROFILE PAYLOAD HELPERS
    14) END OF FILE
@@ -20,6 +21,13 @@
    01) MODULE IDENTITY
 ============================================================================= */
 /* /website/docs/assets/js/layers/website/system/account-profile-identity.js */
+import {
+  validateAccountUsernamePolicy
+} from './account/username/account-username-policy.js';
+import {
+  checkUsernameReservationAvailability,
+  reserveUsername as reserveModularUsername
+} from './account/username/account-username-reservation.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -34,6 +42,8 @@ const PROFILE_IDENTITY_POLICY_URL = '/assets/data/accounts/profile-identity-poli
 const SUPABASE_PROFILES_TABLE = 'profiles';
 const SUPABASE_USERNAME_RESERVATIONS_TABLE = 'username_reservations';
 const SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized, username_status, username_route_ready, username_reserved_at, public_username, public_display_name, public_avatar_url, public_identity_label, public_profile_enabled, public_profile_discoverable, public_profile_visibility, public_route_path, public_route_url, public_route_canonical_url, public_route_status, public_summary, public_bio, public_tagline, public_links, public_primary_link, public_modules, public_feature_flags, first_name, last_name, display_name, email, avatar_url, photo_url, birth_date, date_of_birth, gender, profile_exists, profile_completion_status, profile_completion_percent, missing_required_fields, profile_visibility_status, profile_complete, eligibility_status, eligibility_age_years, minimum_eligible_age_years, eligibility_policy_status, eligibility_checked_at, created_at, updated_at';
+const SUPABASE_PROFILE_USERNAME_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized';
+const SUPABASE_USERNAME_RESERVATION_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, profile_id, reservation_status';
 const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
   public_profile_url_pattern: 'https://neuroartan.com/{username}',
   public_profile_path_pattern: '/{username}',
@@ -90,7 +100,7 @@ const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
   username: {
     min_length: 3,
     max_length: 24,
-    allowed_pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$',
+    allowed_pattern: '^[a-z0-9][a-z0-9.]*[a-z0-9]$',
     reserved_exact: [
       'account',
       'admin',
@@ -210,14 +220,15 @@ export async function getSupabaseProfileByAuthUserId({
 
 export async function getSupabaseProfileByUsername({
   supabase = getSupabaseClient(),
-  username
+  username,
+  selectFields = SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS
 } = {}) {
   const normalizedUsername = normalizeUsername(username);
   if (!supabase || !normalizedUsername) return null;
 
   const { data, error } = await supabase
     .from(SUPABASE_PROFILES_TABLE)
-    .select(SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS)
+    .select(selectFields)
     .eq('username_lower', normalizedUsername)
     .maybeSingle();
 
@@ -230,14 +241,15 @@ export async function getSupabaseProfileByUsername({
 
 export async function getSupabaseUsernameReservation({
   supabase = getSupabaseClient(),
-  username
+  username,
+  selectFields = '*'
 } = {}) {
   const normalizedUsername = normalizeUsername(username);
   if (!supabase || !normalizedUsername) return null;
 
   const { data, error } = await supabase
     .from(SUPABASE_USERNAME_RESERVATIONS_TABLE)
-    .select('*')
+    .select(selectFields)
     .eq('username_lower', normalizedUsername)
     .maybeSingle();
 
@@ -246,6 +258,173 @@ export async function getSupabaseUsernameReservation({
   }
 
   return data || null;
+}
+
+// Helper to check for missing relation (table) errors from Supabase/Postgres
+function isSupabaseRelationMissingError(error) {
+  const code = normalizeString(error?.code);
+  const message = normalizeString(error?.message).toLowerCase();
+  const details = normalizeString(error?.details).toLowerCase();
+
+  return (
+    code === '42P01'
+    || code === 'PGRST205'
+    || message.includes('could not find the table')
+    || (message.includes('relation') && message.includes('does not exist'))
+    || details.includes('could not find the table')
+    || (details.includes('relation') && details.includes('does not exist'))
+  );
+}
+
+function isSupabaseColumnMissingError(error) {
+  const code = normalizeString(error?.code);
+  const message = normalizeString(error?.message).toLowerCase();
+  const details = normalizeString(error?.details).toLowerCase();
+
+  return (
+    code === '42703'
+    || code === 'PGRST204'
+    || message.includes('column') && message.includes('does not exist')
+    || message.includes('could not find') && message.includes('column')
+    || details.includes('column') && details.includes('does not exist')
+    || details.includes('could not find') && details.includes('column')
+  );
+}
+
+async function getOptionalSupabaseProfileByUsername(options = {}) {
+  const supabase = options.supabase || getSupabaseClient();
+  const normalizedUsername = normalizeUsername(options.username);
+  const selectFields = options.selectFields || 'id, auth_user_id, username';
+
+  if (!supabase || !normalizedUsername) return null;
+
+  const lookupColumns = [
+    'username_lower',
+    'username_normalized',
+    'username'
+  ];
+
+  for (const column of lookupColumns) {
+    try {
+      const { data, error } = await supabase
+        .from(SUPABASE_PROFILES_TABLE)
+        .select(selectFields)
+        .eq(column, normalizedUsername)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (data) return data;
+    } catch (error) {
+      if (isSupabaseColumnMissingError(error)) {
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  return null;
+}
+
+// Wrapper for getSupabaseUsernameReservation that returns null if the table doesn't exist
+async function getOptionalSupabaseUsernameReservation(options = {}) {
+  try {
+    return await getSupabaseUsernameReservation(options);
+  } catch (error) {
+    if (isSupabaseRelationMissingError(error)) {
+      console.warn('[account-profile-identity] username_reservations table unavailable; falling back to profiles-only username check.');
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+/* =============================================================================
+   11A) SUPABASE USERNAME AVAILABILITY HELPERS
+============================================================================= */
+export async function getSupabaseUsernameAvailability({
+  supabase = getSupabaseClient(),
+  username,
+  currentAuthUserId = '',
+  policy = null
+} = {}) {
+  const resolvedPolicy = policy || await loadProfileIdentityPolicy();
+  const modularValidation = await validateAccountUsernamePolicy(username);
+
+  if (!modularValidation.ok) {
+    return {
+      ok:false,
+      normalized:modularValidation.normalized,
+      state:modularValidation.state,
+      code:modularValidation.code,
+      message:modularValidation.message
+    };
+  }
+
+  const localValidation = {
+    ok:true,
+    normalized:modularValidation.normalized,
+    state:'checking',
+    code:'',
+    message:buildUsernameStatus('checking', modularValidation.normalized, resolvedPolicy)
+  };
+
+  if (!supabase) {
+    return {
+      ok:false,
+      normalized:localValidation.normalized,
+      state:'unavailable',
+      code:'PROFILE_STORE_UNAVAILABLE',
+      message:buildUsernameStatus('unavailable', localValidation.normalized, resolvedPolicy)
+    };
+  }
+
+  const normalizedCurrentAuthUserId = normalizeString(currentAuthUserId);
+  const reservationAvailability = await checkUsernameReservationAvailability({
+    supabase,
+    username:localValidation.normalized,
+    currentAuthUserId:normalizedCurrentAuthUserId,
+    allowMissingTable:true
+  });
+
+  if (!reservationAvailability.available) {
+    return {
+      ok:false,
+      normalized:localValidation.normalized,
+      state:'unavailable',
+      code:'USERNAME_TAKEN',
+      message:buildUsernameStatus('unavailable', localValidation.normalized, resolvedPolicy)
+    };
+  }
+
+  const profile = await getOptionalSupabaseProfileByUsername({
+    supabase,
+    username:localValidation.normalized,
+    selectFields:'id, auth_user_id, username'
+  });
+
+  if (
+    profile
+    && normalizeString(profile.auth_user_id)
+    && normalizeString(profile.auth_user_id) !== normalizedCurrentAuthUserId
+  ) {
+    return {
+      ok:false,
+      normalized:localValidation.normalized,
+      state:'unavailable',
+      code:'USERNAME_TAKEN',
+      message:buildUsernameStatus('unavailable', localValidation.normalized, resolvedPolicy)
+    };
+  }
+
+  return {
+    ok:true,
+    normalized:localValidation.normalized,
+    state:'available',
+    code:'',
+    message:buildUsernameStatus('available', localValidation.normalized, resolvedPolicy)
+  };
 }
 
 export async function reserveSupabaseUsernameProfile({
@@ -351,33 +530,13 @@ export async function reserveSupabaseUsernameProfile({
     throw profileError;
   }
 
-  const reservationPayload = {
-    username: normalizedUsername,
-    username_lower: normalizedUsername,
-    auth_user_id: authUserId,
-    profile_id: profile?.id || existingProfile?.id || null,
-    public_profile_path: buildPublicProfilePath(normalizedUsername, resolvedPolicy),
-    public_profile_url: buildPublicProfileUrl(normalizedUsername, resolvedPolicy),
-    public_route_path: buildPublicProfilePath(normalizedUsername, resolvedPolicy),
-    public_route_url: buildPublicProfileUrl(normalizedUsername, resolvedPolicy),
-    public_route_canonical_url: buildPublicProfileUrl(normalizedUsername, resolvedPolicy),
-    reservation_status: 'active',
-    username_status: payload.username_status,
-    username_route_ready: payload.username_route_ready === true,
-    public_route_status: payload.public_route_status,
-    public_route_ready: payload.public_route_ready === true,
-    updated_at: new Date().toISOString()
-  };
-
-  const { error: reservationError } = await supabase
-    .from(SUPABASE_USERNAME_RESERVATIONS_TABLE)
-    .upsert(reservationPayload, {
-      onConflict: 'username_lower'
-    });
-
-  if (reservationError) {
-    throw reservationError;
-  }
+  await reserveModularUsername({
+    supabase,
+    username:normalizedUsername,
+    authUserId,
+    profileId:profile?.id || existingProfile?.id || null,
+    allowMissingTable:true
+  });
 
   return profile || payload;
 }
@@ -494,9 +653,10 @@ export function normalizeUsername(value) {
   const raw = normalizeString(value).toLowerCase();
 
   return raw
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/\s+/g, '.')
+    .replace(/[^a-z0-9.]+/g, '.')
+    .replace(/\.{2,}/g, '.')
+    .replace(/^\.+|\.+$/g, '');
 }
 
 export function normalizePublicProfileVisibility(value, enabled = false) {
@@ -543,7 +703,7 @@ export function buildUsernameSuggestion(values = {}) {
   const displayName = normalizeUsername(values.display_name || '');
   if (displayName) return displayName;
 
-  const combined = normalizeUsername(`${values.first_name || ''}-${values.last_name || ''}`);
+  const combined = normalizeUsername(`${values.first_name || ''}.${values.last_name || ''}`);
   if (combined) return combined;
 
   return '';
@@ -758,7 +918,7 @@ export function buildUsernameStatus(state, username, policy = getProfileIdentity
     case 'checking':
       return `Checking · ${routeDisplay}`;
     case 'invalid-format':
-      return `Use ${config.minLength}-${config.maxLength} lowercase letters, numbers, and internal hyphens.`;
+      return `Use ${config.minLength}-${config.maxLength} lowercase letters, numbers, and internal dots.`;
     case 'reserved':
       return `Reserved · ${routeDisplay}`;
     case 'restricted':
@@ -808,7 +968,7 @@ export function validateUsernameLocally(username, policy = getProfileIdentityPol
     };
   }
 
-  const tokens = normalized.split('-').filter(Boolean);
+  const tokens = normalized.split('.').filter(Boolean);
   if (tokens.some((token) => config.restrictedTokens.has(token))) {
     return {
       ok: false,
@@ -839,7 +999,7 @@ export function messageForUsernameError(code, policy = getProfileIdentityPolicy(
 
   switch (code) {
     case 'USERNAME_INVALID':
-      return `Use ${config.minLength}-${config.maxLength} lowercase letters, numbers, and internal hyphens.`;
+      return `Use ${config.minLength}-${config.maxLength} lowercase letters, numbers, and internal dots.`;
     case 'USERNAME_RESERVED':
       return 'This username is reserved and cannot be claimed.';
     case 'USERNAME_RESTRICTED':
@@ -918,9 +1078,11 @@ export async function getUsernameReservation({
 }
 
 export async function getUsernameAvailability({
+  supabase = getSupabaseClient(),
   firestore,
   username,
   currentUid = '',
+  currentAuthUserId = currentUid,
   policy = null,
   profileCollection = SUPABASE_PROFILES_TABLE,
   reservationCollection = SUPABASE_USERNAME_RESERVATIONS_TABLE
@@ -930,6 +1092,15 @@ export async function getUsernameAvailability({
 
   if (!localValidation.ok) {
     return localValidation;
+  }
+
+  if (supabase) {
+    return getSupabaseUsernameAvailability({
+      supabase,
+      username:localValidation.normalized,
+      currentAuthUserId,
+      policy:resolvedPolicy
+    });
   }
 
   if (!firestore) {
@@ -1106,6 +1277,7 @@ export function buildPublicProfileModel(profile, policy = getProfileIdentityPoli
 }
 
 export async function resolvePublicProfileByUsername({
+  supabase = getSupabaseClient(),
   firestore,
   username,
   policy = null,
@@ -1131,6 +1303,50 @@ export async function resolvePublicProfileByUsername({
       publicRouteUrl,
       publicRouteDisplay,
       publicProfile: null
+    };
+  }
+
+  if (supabase) {
+    const reservation = await getOptionalSupabaseUsernameReservation({
+      supabase,
+      username:normalizedUsername
+    });
+
+    const reservationOwnerAuthUserId = normalizeString(reservation?.auth_user_id || '');
+    const profile = reservationOwnerAuthUserId
+      ? await getSupabaseProfileByAuthUserId({
+          supabase,
+          authUserId:reservationOwnerAuthUserId
+        })
+      : await getOptionalSupabaseProfileByUsername({
+          supabase,
+          username:normalizedUsername,
+          selectFields:SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS
+        });
+
+    if (!profile) {
+      return {
+        outcome:'not_found',
+        username:candidate,
+        normalizedUsername,
+        publicRoutePath,
+        publicRouteUrl,
+        publicRouteDisplay,
+        publicProfile:null
+      };
+    }
+
+    const publicProfile = buildPublicProfileModel(profile, resolvedPolicy);
+    const visibilityOutcome = resolvePublicVisibilityState(profile);
+
+    return {
+      outcome:visibilityOutcome,
+      username:candidate,
+      normalizedUsername,
+      publicRoutePath,
+      publicRouteUrl,
+      publicRouteDisplay,
+      publicProfile:visibilityOutcome === 'found_renderable' ? publicProfile : null
     };
   }
 

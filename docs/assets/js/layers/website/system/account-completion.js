@@ -9,11 +9,13 @@
    07) ROUTE AND DRAWER HELPERS
    08) FORM HELPERS
    09) FLOW STATE HELPERS
+   09A) PENDING PROFILE STATE HELPERS
    10) ONBOARDING CONTEXT HELPERS
    11) ACCOUNT STORE HELPERS
    12) PROFILE RESOLUTION HELPERS
    13) PROFILE SURFACE EVENTS
    14) ACCOUNT FLOW HELPERS
+   14A) BACKEND READINESS HELPERS
    15) USERNAME STATUS FLOW
    16) PROVIDER AUTH FLOW
    17) EMAIL AND PASSWORD SIGN-IN FLOW
@@ -57,6 +59,9 @@ import {
   evaluateAccountPassword,
   loadAccountPasswordPolicy
 } from './account-password-policy.js';
+import {
+  createPrivateBaselineProfile
+} from './profile-save.js';
 
 /* =============================================================================
    02) MODULE IDENTITY
@@ -129,10 +134,22 @@ import {
   }
 
   async function getSupabaseProfile(authUserId) {
-    return getSupabaseProfileByAuthUserId({
-      supabase: getSupabaseClient(),
-      authUserId
-    });
+    const supabase = getSupabaseClient();
+    const normalizedAuthUserId = normalizeString(authUserId);
+
+    if (!supabase || !normalizedAuthUserId) return null;
+
+    const { data, error } = await supabase
+      .from(PROFILE_COLLECTION)
+      .select('*')
+      .eq('auth_user_id', normalizedAuthUserId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data || null;
   }
 
   async function resolveSupabaseEmailIdentity(identity) {
@@ -219,6 +236,7 @@ import {
   const INDEX_ROUTE = '/';
   const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
   const FLOW_STATE_STORAGE_KEY = 'neuroartan_account_flow_state';
+  const PENDING_PROFILE_STORAGE_KEY = 'neuroartan_pending_profile_setup';
   const PROFILE_COLLECTION = 'profiles';
   const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
@@ -570,6 +588,50 @@ import {
   }
 
   /* =============================================================================
+     09A) PENDING PROFILE STATE HELPERS
+  ============================================================================= */
+  function writePendingProfileState(values = {}) {
+    const payload = {
+      ...values,
+      stored_at: new Date().toISOString(),
+      source: MODULE_ID
+    };
+
+    try {
+      window.sessionStorage.setItem(PENDING_PROFILE_STORAGE_KEY, JSON.stringify(payload));
+    } catch (_) {}
+
+    try {
+      window.localStorage.setItem(PENDING_PROFILE_STORAGE_KEY, JSON.stringify(payload));
+    } catch (_) {}
+
+    return payload;
+  }
+
+  function readPendingProfileState() {
+    const read = (storage) => {
+      try {
+        const raw = storage.getItem(PENDING_PROFILE_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (_) {
+        return null;
+      }
+    };
+
+    return read(window.sessionStorage) || read(window.localStorage) || null;
+  }
+
+  function clearPendingProfileState() {
+    try {
+      window.sessionStorage.removeItem(PENDING_PROFILE_STORAGE_KEY);
+    } catch (_) {}
+
+    try {
+      window.localStorage.removeItem(PENDING_PROFILE_STORAGE_KEY);
+    } catch (_) {}
+  }
+
+  /* =============================================================================
      10) ONBOARDING CONTEXT HELPERS
   ============================================================================= */
   function patchOnboardingContext(detail = {}) {
@@ -602,6 +664,7 @@ import {
   }
 
   function clearOnboardingContext() {
+    clearPendingProfileState();
     RUNTIME.onboardingContext = {};
     RUNTIME.lastProviderContext = {};
   }
@@ -673,20 +736,21 @@ import {
   function buildProfilePrefill(user, profile = null) {
     const providerContext = RUNTIME.lastProviderContext || {};
     const onboarding = RUNTIME.onboardingContext || {};
+    const pending = readPendingProfileState() || {};
     const splitDisplayName = splitFullName(user?.displayName || user?.user_metadata?.full_name || user?.user_metadata?.name || providerContext.display_name || '');
 
     const values = {
-      method: onboarding.method || providerContext.method || getPrimaryProviderId(user),
-      provider: onboarding.provider || providerContext.provider || getPrimaryProviderId(user),
-      email: onboarding.email || providerContext.email || normalizeEmail(profile?.email || user?.email || ''),
-      first_name: profile?.first_name || onboarding.first_name || providerContext.first_name || splitDisplayName.first_name || '',
-      last_name: profile?.last_name || onboarding.last_name || providerContext.last_name || splitDisplayName.last_name || '',
-      display_name: profile?.display_name || onboarding.display_name || providerContext.display_name || normalizeString(user?.displayName || user?.user_metadata?.full_name || user?.user_metadata?.name || ''),
-      username: profile?.username || onboarding.username || providerContext.username || '',
-      password: onboarding.password || '',
-      password_confirm: onboarding.password_confirm || onboarding.password || '',
-      date_of_birth: profile?.date_of_birth || profile?.birth_date || onboarding.date_of_birth || '',
-      gender: normalizeGenderValue(profile?.gender || onboarding.gender || '')
+      method: onboarding.method || pending.method || providerContext.method || getPrimaryProviderId(user),
+      provider: onboarding.provider || pending.provider || providerContext.provider || getPrimaryProviderId(user),
+      email: onboarding.email || pending.email || providerContext.email || normalizeEmail(profile?.email || user?.email || ''),
+      first_name: profile?.first_name || onboarding.first_name || pending.first_name || providerContext.first_name || splitDisplayName.first_name || '',
+      last_name: profile?.last_name || onboarding.last_name || pending.last_name || providerContext.last_name || splitDisplayName.last_name || '',
+      display_name: profile?.display_name || onboarding.display_name || pending.display_name || providerContext.display_name || normalizeString(user?.displayName || user?.user_metadata?.full_name || user?.user_metadata?.name || ''),
+      username: profile?.username || onboarding.username || pending.username || providerContext.username || '',
+      password: onboarding.password || pending.password || '',
+      password_confirm: onboarding.password_confirm || onboarding.password || pending.password_confirm || pending.password || '',
+      date_of_birth: profile?.date_of_birth || profile?.birth_date || onboarding.date_of_birth || pending.date_of_birth || '',
+      gender: normalizeGenderValue(profile?.gender || onboarding.gender || pending.gender || '')
     };
 
     values.username = buildUsernameSuggestion(values);
@@ -761,7 +825,7 @@ import {
   /* =============================================================================
      14) ACCOUNT FLOW HELPERS
   ============================================================================= */
-  async function ensureReadyOrThrow() {
+  async function ensureFirebaseReadyOrThrow() {
     const ready = await ensureFirebaseServices();
     if (!ready) {
       throw createUsernameError('FIREBASE_NOT_READY');
@@ -774,6 +838,26 @@ import {
     }
 
     return { auth, firestore };
+  }
+
+  /* =============================================================================
+     14A) BACKEND READINESS HELPERS
+  ============================================================================= */
+  async function ensureAccountBackendReadyOrThrow() {
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      return {
+        source: 'supabase',
+        supabase
+      };
+    }
+
+    const { auth, firestore } = await ensureFirebaseReadyOrThrow();
+    return {
+      source: 'firebase',
+      auth,
+      firestore
+    };
   }
 
   async function maybeRedirectAfterCompleteProfile(user) {
@@ -875,24 +959,19 @@ import {
 
             if (supabase) {
               const sessionUser = await getSupabaseSessionUser();
-              const availabilityUsername = localValidation.normalized;
-              const currentProfile = sessionUser?.id
-                ? await getSupabaseProfileByAuthUserId({
-                    supabase,
-                    authUserId: sessionUser.id
-                  })
-                : null;
-
-              await assertSupabaseUsernameAvailable({
-                username: availabilityUsername
-              }, currentProfile, sessionUser);
+              const availability = await getUsernameAvailability({
+                supabase,
+                username:localValidation.normalized,
+                currentAuthUserId:sessionUser?.id || '',
+                policy
+              });
 
               if (requestId !== RUNTIME.usernameValidationRequestId) return;
 
               emitUsernameStatus({
-                state: 'available',
-                normalized: availabilityUsername,
-                message: buildUsernameStatus('available', availabilityUsername, policy)
+                state:availability.state,
+                normalized:availability.normalized,
+                message:availability.message
               });
               return;
             }
@@ -959,7 +1038,7 @@ import {
         return;
       }
 
-      const { auth } = await ensureReadyOrThrow();
+      const { auth } = await ensureFirebaseReadyOrThrow();
       let providerInstance = null;
 
       if (provider === 'google') {
@@ -1069,7 +1148,7 @@ import {
         return;
       }
 
-      const { auth } = await ensureReadyOrThrow();
+      const { auth } = await ensureFirebaseReadyOrThrow();
       const credential = await auth.signInWithEmailAndPassword(email, password);
       if (credential?.user) {
         await handleSignedInState(credential.user);
@@ -1152,7 +1231,7 @@ import {
         return;
       }
 
-      const { auth } = await ensureReadyOrThrow();
+      const { auth } = await ensureFirebaseReadyOrThrow();
       await auth.sendPasswordResetEmail(email);
       form.reset();
     } catch (error) {
@@ -1229,6 +1308,8 @@ import {
       date_of_birth: normalizeString(detail.date_of_birth || context.date_of_birth || ''),
       gender: normalizeGenderValue(detail.gender || context.gender || '')
     };
+
+    writePendingProfileState(values);
 
     patchOnboardingContext({
       ...context,
@@ -1317,6 +1398,8 @@ import {
       message: 'Creating your account and profile…'
     });
 
+    await ensureAccountBackendReadyOrThrow();
+
     try {
       let user = activeUser;
       let firestore = getFirestore();
@@ -1339,11 +1422,14 @@ import {
           }
 
           if (isSupabaseEmailVerificationPending(data)) {
-            clearOnboardingContext();
-            clearFlowState();
+            writePendingProfileState(values);
+            setFlowState({
+              resolveProfile: true,
+              redirectToProfile: true
+            });
             emitProfileSetupSubmitStatus({
               state: 'success',
-              message: 'Check your email to verify your account, then sign in again to complete your profile.'
+              message: 'Check your email to verify your account. Your profile setup details are saved locally for completion after verification.'
             });
             return;
           }
@@ -1375,12 +1461,24 @@ import {
 
         await assertSupabaseUsernameAvailable(values, existingProfile, user);
 
-        const profile = await reserveSupabaseUsernameProfile({
+        await reserveSupabaseUsernameProfile({
           supabase,
           user,
           values,
           existingProfile,
           policy
+        });
+
+        const profile = await createPrivateBaselineProfile({
+          values:{
+            ...values,
+            eligibility_age_years:eligibility.ageYears,
+            minimum_eligible_age_years:eligibility.minimumAge
+          },
+          existingProfile,
+          user,
+          policy,
+          supabase
         });
 
         emitUsernameStatus({
@@ -1389,6 +1487,7 @@ import {
           message: buildUsernameStatus('available', values.username, policy)
         });
 
+        clearPendingProfileState();
         clearOnboardingContext();
         setFlowState({
           resolveProfile: true,
@@ -1403,7 +1502,7 @@ import {
         return;
       }
 
-      const readyServices = await ensureReadyOrThrow();
+      const readyServices = await ensureFirebaseReadyOrThrow();
       const authInstance = readyServices.auth;
       firestore = readyServices.firestore;
       user = authInstance.currentUser || user;
@@ -1457,6 +1556,7 @@ import {
         message: buildUsernameStatus('available', values.username, policy)
       });
 
+      clearPendingProfileState();
       clearOnboardingContext();
       clearFlowState();
       emitProfileState(user, savedProfile);

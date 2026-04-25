@@ -1,0 +1,59 @@
+{
+  "schema": "neuroartan.account.username.policy.v1",
+  "status": "active",
+  "authority": "account-username-policy",
+  "default_visibility": "private",
+  "normalization": {
+    "case": "lowercase",
+    "trim": true,
+    "space_replacement": ".",
+    "allowed_pattern": "^[a-z0-9][a-z0-9.]*[a-z0-9]$",
+    "collapse_repeated_dots": true,
+    "reserved_dot_edges": true
+  },
+  "length": {
+    "min": 3,
+    "max": 32
+  },
+  "reserved_policy": {
+    "source": "/assets/data/account/username/reserved-usernames.json",
+    "match_mode": "exact_and_prefix",
+    "enforcement": "blocked_for_public_use",
+    "admin_override": true
+  },
+  "availability": {
+    "canonical_order": [
+      "local_policy_validation",
+      "reserved_username_registry",
+      "supabase_username_reservations",
+      "supabase_profiles",
+      "legacy_firebase_fallback"
+    ],
+    "first_stage_fallback": "profiles_only_when_reservation_table_missing",
+    "missing_reservation_table_state": "non_blocking"
+  },
+  "suggestions": {
+    "enabled": true,
+    "primary_source_order": [
+      "email_local_part",
+      "first_name_last_name",
+      "display_name",
+      "random_suffix"
+    ],
+    "max_suggestions": 6,
+    "separator": ".",
+    "suffix_strategy": "short_numeric"
+  },
+  "rename_policy": {
+    "enabled": true,
+    "cooldown_days": 30,
+    "history_retention": true,
+    "previous_username_redirect": "reserved_for_future"
+  },
+  "public_route": {
+    "pattern": "/{username}",
+    "default_enabled": false,
+    "requires_private_profile": true,
+    "requires_user_consent": true
+  }
+}

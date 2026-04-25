@@ -9,6 +9,7 @@
    07) VALUE HELPERS
    08) ERROR HELPERS
    09) SAVE EXECUTION
+   09A) PUBLIC SAVE API
    10) EVENT BINDING
    11) INITIALIZATION
    12) END OF FILE
@@ -47,7 +48,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_SAVE__ ||= {
 ============================================================================= */
 const PROFILE_COLLECTION = 'profiles';
 const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
-const SUPABASE_PROFILE_SELECT_FIELDS = 'id, auth_user_id, username, public_username, username_status, username_route_ready, username_reserved_at, display_name, avatar_url, photo_url, bio, visibility_state, profile_status, public_profile_enabled, public_profile_discoverable, public_profile_visibility, public_route_path, public_route_url, public_route_canonical_url, public_route_status, public_route_ready, public_display_name, public_identity_label, public_avatar_url, public_summary, public_primary_link, public_bio, public_tagline, public_links, public_modules, public_feature_flags, email, first_name, last_name, date_of_birth, birth_date, gender, profile_exists, profile_complete, profile_completion_status, profile_completion_percent, missing_required_fields, profile_visibility_status, eligibility_status, eligibility_age_years, minimum_eligible_age_years, eligibility_policy_status, eligibility_checked_at, username_lower, username_normalized, created_at, updated_at';
+const SUPABASE_PROFILE_SELECT_FIELDS = '*';
 const SAVE_SCOPES = Object.freeze(['identity', 'route', 'visibility']);
 
 /* =============================================================================
@@ -379,7 +380,7 @@ function messageForProfileSaveError(code) {
 /* =============================================================================
    09) SAVE EXECUTION
 ============================================================================= */
-async function persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase) {
+export async function persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase = getSupabaseClient()) {
   const normalizedUsername = await ensureSupabaseUsernameAvailability(values, existingProfile, user, supabase);
 
   if (scope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
@@ -475,8 +476,6 @@ async function persistProfileWithSupabase(scope, values, existingProfile, user, 
     minimum_eligible_age_years: Number.isFinite(payload.minimum_eligible_age_years) ? payload.minimum_eligible_age_years : null,
     eligibility_policy_status: payload.eligibility_policy_status || '',
     eligibility_checked_at: payload.eligibility_checked_at || null,
-    username_lower: payload.username_lower || normalizeUsername(payload.username || normalizedUsername || ''),
-    username_normalized: payload.username_lower || normalizeUsername(payload.username || normalizedUsername || ''),
     created_at: currentProfile?.created_at || null,
     updated_at: new Date().toISOString()
   };
@@ -514,7 +513,7 @@ async function persistProfileWithSupabase(scope, values, existingProfile, user, 
   return data;
 }
 
-async function persistProfile(scope, values, existingProfile, user, policy, firestore) {
+export async function persistProfileWithFirebase(scope, values, existingProfile, user, policy, firestore) {
   const normalizedUsername = normalizeUsername(values.username || existingProfile?.username || '');
 
   if (scope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
@@ -617,7 +616,7 @@ async function handleSaveRequest(form) {
       });
       const values = buildScopedValues(scope, form, existingProfile, user);
 
-      await persistProfile(scope, values, existingProfile, user, policy, firestore);
+      await persistProfileWithFirebase(scope, values, existingProfile, user, policy, firestore);
     }
 
     setScopeState(scope, {
@@ -641,6 +640,70 @@ async function handleSaveRequest(form) {
     });
     console.error('[profile-save] Save failed.', error);
   }
+}
+
+/* =============================================================================
+   09A) PUBLIC SAVE API
+============================================================================= */
+export async function savePrivateProfileScope({
+  scope = 'identity',
+  values = {},
+  existingProfile = null,
+  user = null,
+  policy = null,
+  supabase = getSupabaseClient(),
+  firestore = null
+} = {}) {
+  const normalizedScope = normalizeString(scope || 'identity') || 'identity';
+
+  if (!SAVE_SCOPES.includes(normalizedScope)) {
+    const error = new Error('INVALID_PROFILE_SAVE_SCOPE');
+    error.code = 'INVALID_PROFILE_SAVE_SCOPE';
+    throw error;
+  }
+
+  if (!user?.id && !user?.uid) {
+    const error = new Error('AUTH_REQUIRED');
+    error.code = 'AUTH_REQUIRED';
+    throw error;
+  }
+
+  const resolvedPolicy = policy || await loadProfileIdentityPolicy();
+
+  if (supabase) {
+    return persistProfileWithSupabase(normalizedScope, values, existingProfile, user, resolvedPolicy, supabase);
+  }
+
+  if (firestore) {
+    return persistProfileWithFirebase(normalizedScope, values, existingProfile, user, resolvedPolicy, firestore);
+  }
+
+  const error = new Error('PROFILE_STORE_UNAVAILABLE');
+  error.code = 'PROFILE_STORE_UNAVAILABLE';
+  throw error;
+}
+
+export async function createPrivateBaselineProfile({
+  values = {},
+  existingProfile = null,
+  user = null,
+  policy = null,
+  supabase = getSupabaseClient(),
+  firestore = null
+} = {}) {
+  return savePrivateProfileScope({
+    scope:'route',
+    values:{
+      public_profile_enabled:false,
+      public_profile_discoverable:false,
+      ...values
+    },
+    existingProfile,
+    user,
+    policy,
+    supabase,
+    firestore
+  });
 }
 
 /* =============================================================================

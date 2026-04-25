@@ -330,9 +330,10 @@ import {
   function normalizeUsernamePreview(value) {
     const raw = String(value || '').trim().toLowerCase();
     const collapsed = raw
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/-{2,}/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/\s+/g, '.')
+      .replace(/[^a-z0-9.]+/g, '.')
+      .replace(/\.{2,}/g, '.')
+      .replace(/^\.+/g, '');
 
     return collapsed;
   }

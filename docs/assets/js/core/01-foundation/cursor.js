@@ -82,11 +82,15 @@ function ensureStylesheetOnce(href) {
     }
   });
 
-  if (existing) return existing;
+  if (existing) {
+    document.head.appendChild(existing);
+    return existing;
+  }
 
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = href;
+  link.dataset.cursorOwner = MODULE_ID;
   document.head.appendChild(link);
   return link;
 }
@@ -98,11 +102,17 @@ const CURSOR_SELECTOR = '.custom-cursor';
 const INTERACTIVE_SELECTOR = [
   'a',
   'button',
-  '[role="button"]',
   'input',
   'select',
   'textarea',
   'label[for]',
+  'summary',
+  '[role="button"]',
+  '[role="link"]',
+  '[tabindex]',
+  '[data-cursor-interactive]',
+  '[data-profile-action]',
+  '[data-home-topbar-route]',
   '.country-option',
   '#country-overlay-close',
   '#country-selector',
@@ -205,12 +215,22 @@ function resolvePointerTarget(target) {
   return target.closest(INTERACTIVE_SELECTOR);
 }
 
+function hasFinitePointerPosition() {
+  return Number.isFinite(state.pointerX) && Number.isFinite(state.pointerY);
+}
+
 function resolveInteractiveTargetAtPointer() {
-  if (typeof document.elementsFromPoint !== 'function') {
+  if (!hasFinitePointerPosition() || typeof document.elementsFromPoint !== 'function') {
     return null;
   }
 
-  const targets = document.elementsFromPoint(state.pointerX, state.pointerY);
+  let targets = [];
+
+  try {
+    targets = document.elementsFromPoint(state.pointerX, state.pointerY);
+  } catch (_) {
+    return null;
+  }
 
   for (const target of targets) {
     if (!(target instanceof Element)) continue;
@@ -256,7 +276,7 @@ function applyVisualState() {
     return;
   }
 
-  customCursor.style.opacity = state.isInteractive ? '0.35' : '1';
+  customCursor.style.opacity = '1';
   customCursor.style.transform = state.isInteractive
     ? 'translate3d(-50%, -50%, 0) scale(0.4)'
     : 'translate3d(-50%, -50%, 0) scale(1)';
@@ -266,6 +286,8 @@ function applyVisualState() {
    09) POINTER SYNC
 ============================================================================= */
 function syncToPointer(x, y, immediate = false) {
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+
   state.pointerX = x;
   state.pointerY = y;
 
@@ -354,13 +376,11 @@ function handleVisibilityChange() {
 }
 
 function handleScroll() {
-  syncInteractiveStateFromPointerPosition();
   applyVisualState();
 }
 
 function handleWindowFocus() {
   state.isHidden = false;
-  syncInteractiveStateFromPointerPosition();
   applyVisualState();
 }
 

@@ -15,8 +15,8 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
-import { normalizeString } from '../system/account-profile-identity.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
+import { normalizeString } from '../../../system/account-profile-identity.js';
 
 /* =============================================================================
    02) MODULE STATE

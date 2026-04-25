@@ -1,0 +1,284 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) THEME SETTINGS TOKENS
+   02) DESTINATION ROOT
+   03) SURFACE SHELL
+   04) HEADER
+   05) SECTION STRUCTURE
+   06) MODE GRID
+   07) COLOR PICKER CONSUMER STATE
+   08) TOGGLE LIST CONSUMER LAYOUT
+   09) SCROLL SAFETY
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) THEME SETTINGS TOKENS
+============================================================================= */
+:root{
+  --home-platform-theme-eyebrow-opacity:0.72;
+  --home-platform-theme-summary-opacity:0.72;
+  --home-platform-theme-caption-opacity:0.72;
+  --home-platform-theme-token-grid-disabled-opacity:0.48;
+  --home-platform-theme-token-grid-enabled-opacity:1;
+  --home-platform-theme-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) DESTINATION ROOT
+============================================================================= */
+.home-platform-destination--settings-theme{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+/* =============================================================================
+   02) SURFACE SHELL
+============================================================================= */
+.home-platform-theme{
+  display:flex;
+  flex-direction:column;
+  gap:1.05rem;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+/* =============================================================================
+   03) HEADER
+============================================================================= */
+.home-platform-theme__header{
+  display:flex;
+  flex-direction:column;
+  gap:0.36rem;
+}
+
+.home-platform-theme__eyebrow,
+.home-platform-theme__section-eyebrow{
+  margin:0;
+  font-size:0.68rem;
+  font-weight:500;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  opacity:var(--home-platform-theme-eyebrow-opacity);
+}
+
+.home-platform-theme__title,
+.home-platform-theme__section-title{
+  margin:0;
+  font-size:1.18rem;
+  font-weight:500;
+  line-height:1.18;
+  letter-spacing:-0.01em;
+}
+
+.home-platform-theme__summary{
+  margin:0;
+  max-width:44rem;
+  font-size:0.88rem;
+  line-height:1.46;
+  opacity:var(--home-platform-theme-summary-opacity);
+}
+
+/* =============================================================================
+   05) SECTION STRUCTURE
+============================================================================= */
+.home-platform-theme__section{
+  display:flex;
+  flex-direction:column;
+  gap:0.72rem;
+  padding:0.82rem 0 0;
+  border-top:1px solid var(--control-border);
+}
+
+.home-platform-theme__section:first-of-type{
+  padding-top:0;
+  border-top:0;
+}
+
+.home-platform-theme__section-header{
+  display:flex;
+  flex-direction:column;
+  gap:0.28rem;
+}
+
+/* =============================================================================
+   06) MODE GRID
+============================================================================= */
+.home-platform-theme__mode-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:0.58rem;
+}
+
+.home-platform-theme__mode-option{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:0.16rem;
+  min-height:4.35rem;
+  width:100%;
+  min-width:0;
+  padding:0.72rem 0.78rem;
+  border:1px solid transparent;
+  border-radius:1rem;
+  background:transparent;
+  color:var(--text-color);
+  text-align:left;
+  cursor:pointer;
+  transition:
+    border-color var(--home-platform-theme-motion-fast) ease,
+    background var(--home-platform-theme-motion-fast) ease,
+    opacity var(--home-platform-theme-motion-fast) ease,
+    color var(--home-platform-theme-motion-fast) ease;
+}
+
+.home-platform-theme__mode-option:hover,
+.home-platform-theme__mode-option:focus-visible{
+  border-color:var(--control-border);
+  background:var(--control-bg);
+  outline:none;
+}
+
+.home-platform-theme__mode-option[aria-pressed="true"]{
+  border-color:var(--control-border-strong);
+  background:var(--control-bg);
+}
+
+.home-platform-theme__mode-label,
+.home-platform-theme__toggle-title{
+  margin:0;
+  font-size:0.88rem;
+  font-weight:500;
+  line-height:1.3;
+}
+
+.home-platform-theme__mode-caption{
+  margin:0;
+  font-size:0.74rem;
+  line-height:1.32;
+  opacity:var(--home-platform-theme-caption-opacity);
+}
+
+/* =============================================================================
+   07) COLOR PICKER CONSUMER STATE
+============================================================================= */
+.home-platform-theme__token-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:0.58rem;
+}
+
+.home-platform-theme__token-field{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.72rem;
+  min-height:3.55rem;
+  width:100%;
+  min-width:0;
+  padding:0.72rem 0.78rem;
+  border:1px solid transparent;
+  border-radius:1rem;
+  background:transparent;
+  color:var(--text-color);
+}
+
+.home-platform-theme__token-label{
+  margin:0;
+  font-size:0.8rem;
+  font-weight:500;
+  line-height:1.35;
+}
+
+.home-platform-theme__token-input{
+  flex:0 0 auto;
+}
+
+.home-platform-theme[data-active-theme="system"] .home-platform-theme__token-grid,
+.home-platform-theme[data-active-theme="dark"] .home-platform-theme__token-grid,
+.home-platform-theme[data-active-theme="light"] .home-platform-theme__token-grid{
+  opacity:var(--home-platform-theme-token-grid-disabled-opacity);
+  pointer-events:none;
+}
+
+.home-platform-theme[data-active-theme="custom"] .home-platform-theme__token-grid{
+  opacity:var(--home-platform-theme-token-grid-enabled-opacity);
+  pointer-events:auto;
+}
+
+/* =============================================================================
+   08) TOGGLE LIST CONSUMER LAYOUT
+============================================================================= */
+.home-platform-theme__toggle-list{
+  display:flex;
+  flex-direction:column;
+  gap:0.56rem;
+}
+
+.home-platform-theme__toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.86rem;
+  padding:0.68rem 0;
+  border-top:1px solid var(--control-border);
+}
+
+.home-platform-theme__toggle-row:first-child{
+  padding-top:0;
+  border-top:0;
+}
+
+.home-platform-theme__toggle-copy{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  gap:0;
+  min-width:0;
+}
+
+.home-platform-theme__toggle-row .na-toggle{
+  flex:0 0 auto;
+  align-self:center;
+}
+
+/* =============================================================================
+   09) SCROLL SAFETY
+============================================================================= */
+.home-platform-theme,
+.home-platform-theme *{
+  box-sizing:border-box;
+}
+
+.home-platform-theme__mode-grid,
+.home-platform-theme__token-grid,
+.home-platform-theme__toggle-list,
+.home-platform-theme__toggle-row{
+  max-width:100%;
+}
+
+.home-platform-theme__toggle-row .na-toggle{
+  flex:0 0 auto;
+}
+
+/* =============================================================================
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width:900px){
+  .home-platform-theme__mode-grid{
+    grid-template-columns:1fr;
+  }
+
+  .home-platform-theme__token-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:640px){
+  .home-platform-theme__toggle-row .na-toggle{
+    align-self:flex-start;
+  }
+}

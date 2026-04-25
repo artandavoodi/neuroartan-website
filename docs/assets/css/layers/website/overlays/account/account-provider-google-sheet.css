@@ -161,7 +161,6 @@ html[data-theme-effective="dark"]{
   background: var(--account-provider-google-button-background);
   color: var(--account-provider-google-foreground);
   text-decoration: none;
-  cursor: pointer;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
@@ -210,7 +209,6 @@ html[data-theme-effective="dark"]{
 .account-provider-google-sheet-text-action{
   display: inline;
   color: var(--text-primary-color);
-  cursor: pointer;
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: var(--stroke-soft);
@@ -247,7 +245,6 @@ html[data-theme-effective="dark"]{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-top: 0;
   transition: none;
 }

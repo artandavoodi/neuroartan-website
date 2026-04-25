@@ -41,11 +41,11 @@ input[type="range"] {
   margin: 0 0 18px 0;
   padding: 0;
 }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--link-color); box-shadow: 0 6px 18px var(--shadow-color, rgba(102,100,64,0.24)); border: none; margin-top: 0%; cursor: pointer; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--link-color); box-shadow: 0 6px 18px var(--shadow-color, rgba(102,100,64,0.24)); border: none; margin-top: 0%; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
 input[type="range"]::-webkit-slider-thumb:hover {
   background-color: var(--link-color);
 }
-input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--link-color); box-shadow: 0 6px 18px var(--shadow-color, rgba(102,100,64,0.24)); border: none; margin-top: -2px; cursor: pointer; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--link-color); box-shadow: 0 6px 18px var(--shadow-color, rgba(102,100,64,0.24)); border: none; margin-top: -2px; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
 input[type="range"]::-moz-range-thumb:hover {
   background-color: var(--link-color);
 }
@@ -72,7 +72,6 @@ input[type="range"]::-moz-range-thumb:hover {
   border: 1px solid var(--text-secondary-color);
   box-shadow: none !important;
   font-size: 16px;
-  cursor: pointer;
   margin-top: 34px;
   transition: none;
 }
@@ -82,7 +81,7 @@ input[type="range"]::-moz-range-thumb:hover {
 
 /* =================== Result Stage =================== */
 .result-grid { margin-top: 12px; color: var(--text-color); font-size: 15px; display: flex; gap: 12px; justify-content: space-between; align-items: center; }
-.result-stage { font-weight: 700; flex: 1; padding: 10px; background: transparent !important; border-radius: 10px; cursor: pointer; position: relative; transition: background 0.2s ease; box-shadow: none !important; color: var(--text-color); }
+.result-stage { font-weight: 700; flex: 1; padding: 10px; background: transparent !important; border-radius: 10px; position: relative; transition: background 0.2s ease; box-shadow: none !important; color: var(--text-color); }
 .result-stage:hover { background: var(--link-hover-color); color: var(--bg-color); box-shadow: 0 4px 14px var(--shadow-color, rgba(0,0,0,0.1)); }
 .result-score { font-size: 18px; color: var(--text-color); margin-top: 8px; font-weight: 600; }
 

@@ -39,7 +39,6 @@
   border:var(--picker-input-border-width) solid var(--picker-input-border-color);
   border-radius:var(--picker-input-radius);
   background:var(--picker-input-bg);
-  cursor:pointer;
   appearance:none;
   -webkit-appearance:none;
 }

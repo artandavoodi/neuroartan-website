@@ -215,7 +215,6 @@ html[data-theme-effective="light"]{
   letter-spacing: 0.008em;
   line-height: 1;
   white-space: nowrap;
-  cursor: pointer;
   transform: none !important;
   transition:
     color var(--products-local-nav-motion-fast) ease,

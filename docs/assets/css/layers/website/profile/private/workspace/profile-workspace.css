@@ -98,7 +98,6 @@
   background:transparent;
   color:var(--text-color);
   text-align:left;
-  cursor:pointer;
   transition:
     color var(--duration-base) var(--ease-standard),
     border-color var(--duration-base) var(--ease-standard),

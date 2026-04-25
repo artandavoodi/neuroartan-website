@@ -44,7 +44,6 @@
   font-weight:300;
   line-height:1;
   opacity:1;
-  cursor:pointer;
   transform:none;
   transition:
     color var(--global-close-button-duration) var(--global-close-button-ease),

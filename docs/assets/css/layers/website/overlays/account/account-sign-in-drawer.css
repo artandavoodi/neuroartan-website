@@ -263,7 +263,6 @@ html[data-theme-effective="dark"]{
   background: var(--control-bg);
   color: var(--text-color);
   text-decoration: none;
-  cursor: pointer;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
@@ -366,7 +365,6 @@ html[data-theme-effective="dark"]{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-top: 0;
 }
 

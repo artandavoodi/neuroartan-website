@@ -627,7 +627,6 @@ html[data-theme-effective="dark"] .home-featured-functions-card-title{
   border-radius: 999px;
   background: var(--home-featured-functions-dot-color);
   opacity: var(--home-featured-functions-dot-opacity);
-  cursor: pointer;
   transition: opacity var(--duration-base) var(--ease-standard);
 }
 

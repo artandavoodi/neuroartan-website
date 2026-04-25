@@ -31,7 +31,6 @@
   border: 0;
   background: transparent;
   color:var(--text-color);
-  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -151,7 +150,6 @@
 .na-toggle[aria-disabled="true"],
 .ui-toggle[disabled],
 .ui-toggle[aria-disabled="true"]{
-  cursor: not-allowed;
   opacity:var(--toggle-disabled-opacity);
 }
 

@@ -1,0 +1,483 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) STAGE CORE TOKENS
+   02) STAGE CORE SOVEREIGN BASELINE
+   03) GLASS VESSEL SURFACES
+   04) COGNITIVE CORE SURFACES
+   05) STAGE CORE SIZE STATES
+   06) STAGE MICROPHONE BASELINE
+   07) STAGE MICROPHONE MOTION FIELDS
+   08) ACTIVE VOICE MODE MOTION
+   09) LISTENING MODE MOTION
+   10) THINKING MODE MOTION
+   11) RESPONDING MODE MOTION
+   12) ACTIVE MICROPHONE STATE
+   13) MOBILE REFINEMENTS
+   14) KEYFRAMES
+============================================================================= */
+
+/* =============================================================================
+   01) STAGE CORE TOKENS
+============================================================================= */
+:root{
+  --home-stage-motion-core-width:min(24rem, 70vw);
+  --home-stage-motion-core-height:min(22.5rem, 39vh);
+  --home-stage-motion-core-active-width:min(18.8rem, 58vw);
+  --home-stage-motion-core-active-height:min(17.4rem, 29vh);
+  --home-stage-motion-vessel-size:min(21rem, 58vw, 46vh);
+  --home-stage-motion-vessel-active-size:min(16.8rem, 48vw, 31vh);
+  --home-stage-motion-vessel-ring-border:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
+  --home-stage-motion-vessel-inner-bg:color-mix(in srgb, var(--bg-color) 12%, transparent);
+  --home-stage-motion-core-color:color-mix(in srgb, var(--text-primary-color) 92%, transparent);
+  --home-stage-motion-core-ring-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --home-stage-motion-core-idle-ring-opacity:0.72;
+  --home-stage-motion-mic-size:4.8rem;
+  --home-stage-motion-mic-icon-size:2.35rem;
+  --home-stage-motion-mic-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --home-stage-motion-mic-hover-color:color-mix(in srgb, var(--color-primary1) 94%, var(--text-primary-color));
+  --home-stage-motion-fast:220ms;
+  --home-stage-motion-transition:620ms cubic-bezier(0.22,1,0.36,1);
+  --home-stage-motion-field-blur:10px;
+  --home-stage-motion-field-size:13rem;
+  --home-stage-motion-ring-size:17rem;
+  --home-stage-motion-field-color:rgba(145,124,111,0.18);
+  --home-stage-motion-field-color-soft:rgba(145,124,111,0.08);
+  --home-stage-motion-field-color-faint:rgba(145,124,111,0.02);
+  --home-stage-motion-field-color-clear:rgba(145,124,111,0);
+  --home-stage-motion-ring-border:rgba(255,255,255,0.18);
+  --home-stage-motion-mic-field-color:rgba(145,124,111,0.22);
+  --home-stage-motion-mic-field-color-soft:rgba(145,124,111,0.10);
+  --home-stage-motion-mic-field-color-clear:rgba(145,124,111,0);
+  --home-stage-motion-mic-ring-border:rgba(255,255,255,0.12);
+  --home-stage-motion-active-color:rgba(218,206,196,0.92);
+}
+
+/* =============================================================================
+   02) STAGE CORE SOVEREIGN BASELINE
+============================================================================= */
+#stage-center-core{
+  width:var(--home-stage-motion-core-width);
+  height:var(--home-stage-motion-core-height);
+  transition:
+    width var(--home-stage-motion-transition),
+    height var(--home-stage-motion-transition);
+}
+
+#stage-glass-vessel{
+  width:var(--home-stage-motion-vessel-size);
+  height:var(--home-stage-motion-vessel-size);
+  transition:
+    width var(--home-stage-motion-transition),
+    height var(--home-stage-motion-transition);
+}
+
+/* =============================================================================
+   03) GLASS VESSEL SURFACES
+============================================================================= */
+#stage-glass-vessel{
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0;
+  pointer-events:none;
+  isolation:isolate;
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  transform:translate(-50%, -50%);
+  z-index:4;
+}
+
+#stage-glass-vessel-ring,
+#stage-glass-vessel-inner,
+#stage-glass-vessel-highlight{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+#stage-glass-vessel-ring{
+  border:1px solid var(--home-stage-motion-vessel-ring-border);
+  opacity:1;
+}
+
+#stage-glass-vessel-inner{
+  background:var(--home-stage-motion-vessel-inner-bg);
+  opacity:1;
+}
+
+#stage-glass-vessel-highlight{
+  display:none;
+}
+
+/* =============================================================================
+   04) COGNITIVE CORE SURFACES
+============================================================================= */
+#stage-cognitive-core-shell{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  z-index:5;
+  color:var(--home-stage-motion-core-color);
+  transform:translate(-50%, -50%);
+}
+
+#stage-cognitive-core-signal,
+#stage-cognitive-core-ring,
+#stage-cognitive-core-pulse{
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  transform:translate(-50%, -50%) scale(1);
+  transition:
+    opacity var(--home-stage-motion-fast) ease,
+    transform var(--home-stage-motion-transition);
+}
+
+#stage-cognitive-core-signal{
+  width:58%;
+  aspect-ratio:1 / 1;
+  background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 10%, transparent) 0%, color-mix(in srgb, var(--color-primary1) 5%, transparent) 48%, transparent 100%);
+  filter:blur(16px);
+  -webkit-filter:blur(16px);
+}
+
+#stage-cognitive-core-ring{
+  width:72%;
+  aspect-ratio:1 / 1;
+  border:1px solid var(--home-stage-motion-core-ring-border);
+  box-sizing:border-box;
+}
+
+#stage-cognitive-core-pulse{
+  width:34%;
+  aspect-ratio:1 / 1;
+  background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 12%, transparent) 0%, color-mix(in srgb, var(--color-primary1) 6%, transparent) 44%, transparent 100%);
+  filter:blur(10px);
+  -webkit-filter:blur(10px);
+}
+
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-signal{
+  opacity:0.42;
+}
+
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-ring{
+  opacity:var(--home-stage-motion-core-idle-ring-opacity);
+}
+
+#stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-pulse{
+  opacity:0.34;
+}
+
+#stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-signal,
+#stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-ring,
+#stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-pulse{
+  opacity:1;
+}
+
+/* =============================================================================
+   05) STAGE CORE SIZE STATES
+============================================================================= */
+#stage-center-core:has(#stage-cognitive-core-shell[data-voice-active="true"]){
+  width:var(--home-stage-motion-core-active-width);
+  height:var(--home-stage-motion-core-active-height);
+}
+
+#stage-center-core:has(#stage-cognitive-core-shell[data-voice-active="true"]) #stage-glass-vessel{
+  width:var(--home-stage-motion-vessel-active-size);
+  height:var(--home-stage-motion-vessel-active-size);
+}
+
+/* =============================================================================
+   06) STAGE MICROPHONE BASELINE
+============================================================================= */
+#stage #stage-microphone{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 1.15rem;
+  position:relative;
+  z-index:6;
+  pointer-events:auto;
+}
+
+#stage .stage-microphone-button,
+#stage #stage-microphone-button{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-stage-motion-mic-size);
+  height:var(--home-stage-motion-mic-size);
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--home-stage-motion-mic-color);
+  cursor:pointer;
+  border-radius:50%;
+  opacity:0.92;
+  pointer-events:auto;
+  appearance:none;
+  -webkit-appearance:none;
+  transition:
+    color var(--home-stage-motion-fast) ease,
+    opacity var(--home-stage-motion-fast) ease,
+    transform var(--home-stage-motion-fast) ease;
+}
+
+#stage .stage-microphone-button:hover,
+#stage .stage-microphone-button:focus-visible,
+#stage #stage-microphone-button:hover,
+#stage #stage-microphone-button:focus-visible{
+  color:var(--home-stage-motion-mic-hover-color);
+  opacity:1;
+  transform:scale(1.08);
+}
+
+#stage .stage-microphone-button:focus-visible,
+#stage #stage-microphone-button:focus-visible{
+  outline:none;
+}
+
+#stage .stage-microphone-icon,
+#stage #stage-microphone-button .stage-microphone-icon{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-stage-motion-mic-icon-size);
+  height:var(--home-stage-motion-mic-icon-size);
+  opacity:0.9;
+  transition:
+    transform var(--home-stage-motion-fast) ease,
+    opacity var(--home-stage-motion-fast) ease;
+  background-color:currentColor;
+  -webkit-mask-image:url("../../../../icons/core/media/unclassified/mic.svg");
+  mask-image:url("../../../../icons/core/media/unclassified/mic.svg");
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  -webkit-mask-size:contain;
+  mask-size:contain;
+}
+
+#stage .stage-microphone-button:hover .stage-microphone-icon,
+#stage .stage-microphone-button:focus-visible .stage-microphone-icon,
+#stage #stage-microphone-button:hover .stage-microphone-icon,
+#stage #stage-microphone-button:focus-visible .stage-microphone-icon{
+  opacity:1;
+  transform:scale(1.03);
+}
+
+#stage .stage-microphone-icon svg,
+#stage #stage-microphone-button .stage-microphone-icon svg,
+#stage .stage-microphone-icon img,
+#stage #stage-microphone-button .stage-microphone-icon img{
+  display:none;
+}
+
+/* =============================================================================
+   07) STAGE MICROPHONE MOTION FIELDS
+============================================================================= */
+#stage-microphone-button::before,
+#stage-microphone-button::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(1);
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0;
+  transition:
+    opacity 0.35s ease,
+    transform var(--home-stage-motion-transition),
+    filter var(--home-stage-motion-transition);
+}
+
+#stage-microphone-button::before{
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle, var(--home-stage-motion-mic-field-color) 0%, var(--home-stage-motion-mic-field-color-soft) 42%, var(--home-stage-motion-mic-field-color-clear) 72%);
+  filter:blur(12px);
+  z-index:0;
+}
+
+#stage-microphone-button::after{
+  width:calc(100% + 1.2rem);
+  height:calc(100% + 1.2rem);
+  border:1px solid var(--home-stage-motion-mic-ring-border);
+  z-index:0;
+}
+
+/* =============================================================================
+   08) ACTIVE VOICE MODE MOTION
+============================================================================= */
+#stage-cognitive-core-shell[data-voice-mode="listening"]::before,
+#stage-cognitive-core-shell[data-voice-mode="thinking"]::before,
+#stage-cognitive-core-shell[data-voice-mode="responding"]::before{
+  opacity:0.72;
+}
+
+#stage-cognitive-core-shell[data-voice-mode="listening"]::after,
+#stage-cognitive-core-shell[data-voice-mode="thinking"]::after,
+#stage-cognitive-core-shell[data-voice-mode="responding"]::after{
+  opacity:0.82;
+}
+
+#stage-microphone-button[data-voice-active="true"]::before,
+#stage-microphone-button[data-voice-active="true"]::after{
+  opacity:1;
+}
+
+/* =============================================================================
+   09) LISTENING MODE MOTION
+============================================================================= */
+#stage-cognitive-core-shell[data-voice-mode="listening"]::before{
+  animation:stage-voice-core-breathe 1.35s cubic-bezier(0.22,1,0.36,1) infinite;
+}
+
+#stage-cognitive-core-shell[data-voice-mode="listening"]::after{
+  animation:stage-voice-ring-listening 2.1s linear infinite;
+}
+
+#stage-microphone-button[data-voice-mode="listening"]::before,
+#stage-microphone-button[data-voice-mode="listening"]::after{
+  animation:stage-mic-pulse-listening 1.25s cubic-bezier(0.22,1,0.36,1) infinite;
+}
+
+/* =============================================================================
+   10) THINKING MODE MOTION
+============================================================================= */
+#stage-cognitive-core-shell[data-voice-mode="thinking"]::before{
+  animation:stage-voice-core-think 1.8s ease-in-out infinite;
+}
+
+#stage-cognitive-core-shell[data-voice-mode="thinking"]::after{
+  animation:stage-voice-ring-thinking 2.6s ease-in-out infinite;
+}
+
+#stage-microphone-button[data-voice-mode="thinking"]::before,
+#stage-microphone-button[data-voice-mode="thinking"]::after{
+  animation:stage-mic-pulse-thinking 1.9s ease-in-out infinite;
+}
+
+/* =============================================================================
+   11) RESPONDING MODE MOTION
+============================================================================= */
+#stage-cognitive-core-shell[data-voice-mode="responding"]::before{
+  animation:stage-voice-core-respond 1s cubic-bezier(0.22,1,0.36,1) infinite;
+}
+
+#stage-cognitive-core-shell[data-voice-mode="responding"]::after{
+  animation:stage-voice-ring-responding 1.45s cubic-bezier(0.22,1,0.36,1) infinite;
+}
+
+#stage-microphone-button[data-voice-mode="responding"]::before,
+#stage-microphone-button[data-voice-mode="responding"]::after{
+  animation:stage-mic-pulse-responding 0.95s cubic-bezier(0.22,1,0.36,1) infinite;
+}
+
+/* =============================================================================
+   12) ACTIVE MICROPHONE STATE
+============================================================================= */
+#stage-microphone-button[data-voice-active="true"]{
+  color:var(--home-stage-motion-active-color);
+  opacity:1;
+  transform:scale(1.04);
+}
+
+#stage-microphone-button[data-voice-active="true"] .stage-microphone-icon{
+  opacity:1;
+}
+
+/* =============================================================================
+   13) MOBILE REFINEMENTS
+============================================================================= */
+@media (max-width:820px){
+  :root{
+    --home-stage-motion-core-width:min(18rem, 72vw);
+    --home-stage-motion-core-height:min(16.8rem, 27vh);
+    --home-stage-motion-core-active-width:min(15.2rem, 60vw);
+    --home-stage-motion-core-active-height:min(14rem, 22vh);
+    --home-stage-motion-vessel-size:min(17rem, 66vw, 31vh);
+    --home-stage-motion-vessel-active-size:min(14rem, 54vw, 24vh);
+    --home-stage-motion-mic-size:4rem;
+    --home-stage-motion-mic-icon-size:2rem;
+  }
+
+  #stage #stage-microphone{
+    margin:0 auto 0.85rem;
+  }
+}
+
+/* =============================================================================
+   14) KEYFRAMES
+============================================================================= */
+@keyframes stage-voice-core-breathe{
+  0%{transform:translate(-50%,-50%) scale(0.88);opacity:0.34;}
+  50%{transform:translate(-50%,-50%) scale(1.1);opacity:0.92;}
+  100%{transform:translate(-50%,-50%) scale(0.88);opacity:0.34;}
+}
+
+@keyframes stage-voice-core-think{
+  0%{transform:translate(-50%,-50%) scale(0.96);opacity:0.36;}
+  50%{transform:translate(-50%,-50%) scale(1.04);opacity:0.72;}
+  100%{transform:translate(-50%,-50%) scale(0.96);opacity:0.36;}
+}
+
+@keyframes stage-voice-core-respond{
+  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.34;}
+  50%{transform:translate(-50%,-50%) scale(1.16);opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.34;}
+}
+
+@keyframes stage-voice-ring-listening{
+  0%{transform:translate(-50%,-50%) scale(0.94) rotate(0deg);opacity:0.18;}
+  50%{transform:translate(-50%,-50%) scale(1.02) rotate(180deg);opacity:0.58;}
+  100%{transform:translate(-50%,-50%) scale(0.94) rotate(360deg);opacity:0.18;}
+}
+
+@keyframes stage-voice-ring-thinking{
+  0%{transform:translate(-50%,-50%) scale(0.98) rotate(0deg);opacity:0.14;}
+  50%{transform:translate(-50%,-50%) scale(1.01) rotate(180deg);opacity:0.4;}
+  100%{transform:translate(-50%,-50%) scale(0.98) rotate(360deg);opacity:0.14;}
+}
+
+@keyframes stage-voice-ring-responding{
+  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.16;}
+  50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.7;}
+  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.16;}
+}
+
+@keyframes stage-mic-pulse-listening{
+  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.18;}
+  50%{transform:translate(-50%,-50%) scale(1.14);opacity:0.62;}
+  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.18;}
+}
+
+@keyframes stage-mic-pulse-thinking{
+  0%{transform:translate(-50%,-50%) scale(0.98);opacity:0.14;}
+  50%{transform:translate(-50%,-50%) scale(1.04);opacity:0.34;}
+  100%{transform:translate(-50%,-50%) scale(0.98);opacity:0.14;}
+}
+
+@keyframes stage-mic-pulse-responding{
+  0%{transform:translate(-50%,-50%) scale(0.9);opacity:0.2;}
+  50%{transform:translate(-50%,-50%) scale(1.18);opacity:0.74;}
+  100%{transform:translate(-50%,-50%) scale(0.9);opacity:0.2;}
+}

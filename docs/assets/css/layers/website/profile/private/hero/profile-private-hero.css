@@ -13,13 +13,11 @@
    00A) PRIVATE PROFILE HERO TOKENS
    ============================================================================= */
 :root{
-  --profile-private-hero-radius:var(--radius-2xl);
-  --profile-private-hero-border:1px solid var(--color-border-subtle);
-  --profile-private-hero-surface:var(--color-surface-glass);
-  --profile-private-hero-shadow:var(--shadow-soft);
-  --profile-private-hero-padding:var(--spacing-2xl);
-  --profile-private-hero-gap:var(--spacing-xl);
-  --profile-private-hero-avatar-size:72px;
+  --profile-private-hero-border:var(--stroke-soft) solid var(--control-border);
+  --profile-private-hero-surface:transparent;
+  --profile-private-hero-padding:0 0 var(--spacing-lg);
+  --profile-private-hero-gap:var(--spacing-lg);
+  --profile-private-hero-avatar-size:var(--control-height-lg);
 }
 
 /* =============================================================================
@@ -28,7 +26,8 @@
 
 .profile-private-hero{
   width:100%;
-  color:var(--color-text-primary);
+  color:var(--text-primary);
+  background:transparent;
 }
 
 /* =============================================================================
@@ -41,11 +40,9 @@
   justify-content:space-between;
   gap:var(--profile-private-hero-gap);
   padding:var(--profile-private-hero-padding);
-  border:var(--profile-private-hero-border);
-  border-radius:var(--profile-private-hero-radius);
+  border-bottom:var(--profile-private-hero-border);
   background:var(--profile-private-hero-surface);
-  box-shadow:var(--profile-private-hero-shadow);
-  backdrop-filter:blur(var(--blur-md));
+  box-sizing:border-box;
 }
 
 /* =============================================================================
@@ -56,7 +53,7 @@
   display:flex;
   align-items:center;
   min-width:0;
-  gap:var(--spacing-lg);
+  gap:var(--spacing-md);
 }
 
 /* =============================================================================
@@ -69,15 +66,17 @@
   flex:0 0 auto;
   width:var(--profile-private-hero-avatar-size);
   height:var(--profile-private-hero-avatar-size);
-  border:1px solid var(--color-border-subtle);
-  border-radius:50%;
-  background:var(--color-surface-muted);
-  color:var(--color-text-primary);
+  border:var(--stroke-soft) solid var(--control-border);
+  border-radius:var(--radius-pill);
+  background:var(--surface-secondary);
+  color:var(--text-primary);
 }
 
 .profile-private-hero__avatar-initials{
-  font:var(--font-label);
-  letter-spacing:var(--letter-spacing-wide);
+  font-size:var(--body-3-size);
+  font-weight:var(--body-3-weight);
+  line-height:var(--body-3-line-height);
+  letter-spacing:var(--body-3-tracking);
   text-transform:uppercase;
 }
 
@@ -93,23 +92,31 @@
 
 .profile-private-hero__eyebrow{
   margin:0;
-  font:var(--font-label);
-  letter-spacing:var(--letter-spacing-wide);
+  font-size:var(--body-3-size);
+  font-weight:var(--body-3-weight);
+  line-height:var(--body-3-line-height);
+  letter-spacing:var(--body-3-tracking);
   text-transform:uppercase;
-  color:var(--color-text-tertiary);
+  color:var(--text-secondary);
 }
 
 .profile-private-hero__title{
   margin:0;
-  font:var(--font-title-lg);
-  color:var(--color-text-primary);
+  font-size:var(--headline-3-size);
+  font-weight:var(--headline-3-weight);
+  line-height:var(--headline-3-line-height);
+  letter-spacing:var(--headline-3-tracking);
+  color:var(--text-primary);
 }
 
 .profile-private-hero__meta,
 .profile-private-hero__description{
   margin:0;
-  font:var(--font-body-sm);
-  color:var(--color-text-secondary);
+  font-size:var(--body-2-size);
+  font-weight:var(--body-2-weight);
+  line-height:var(--body-2-line-height);
+  letter-spacing:var(--body-2-tracking);
+  color:var(--text-secondary);
 }
 
 .profile-private-hero__description{
@@ -125,42 +132,12 @@
   align-items:center;
   justify-content:flex-end;
   flex-wrap:wrap;
-  gap:var(--spacing-sm);
+  gap:var(--spacing-xs);
 }
 
 .profile-private-hero__button{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:var(--control-height-md);
-  padding:0 var(--spacing-lg);
-  border:1px solid var(--color-border-subtle);
-  border-radius:var(--radius-full);
-  font:var(--font-button);
-  color:var(--color-text-primary);
-  background:var(--color-surface-muted);
-  cursor:pointer;
-  transition:background var(--motion-duration-fast) var(--motion-ease-standard),
-             border-color var(--motion-duration-fast) var(--motion-ease-standard),
-             color var(--motion-duration-fast) var(--motion-ease-standard),
-             transform var(--motion-duration-fast) var(--motion-ease-standard);
-}
-
-.profile-private-hero__button:hover{
-  border-color:var(--color-border-strong);
-  background:var(--color-surface-elevated);
-  transform:translateY(-1px);
-}
-
-.profile-private-hero__button--primary{
-  color:var(--color-button-primary-text);
-  border-color:var(--color-button-primary-border);
-  background:var(--color-button-primary-bg);
-}
-
-.profile-private-hero__button--secondary{
-  color:var(--color-text-primary);
-  background:transparent;
+  min-height:var(--control-height-sm);
+  padding-inline:var(--control-padding-x-sm);
 }
 
 /* =============================================================================
@@ -171,7 +148,7 @@
   .profile-private-hero__surface{
     align-items:flex-start;
     flex-direction:column;
-    padding:var(--spacing-xl);
+    gap:var(--spacing-md);
   }
 
   .profile-private-hero__actions{

@@ -235,7 +235,6 @@ body.cookie-consent-closing{
   inset: 0;
   border: 0;
   background: var(--cookie-consent-backdrop);
-  cursor: default;
   backdrop-filter:blur(var(--cookie-consent-backdrop-blur));
   -webkit-backdrop-filter:blur(var(--cookie-consent-backdrop-blur));
   opacity: 0;
@@ -673,7 +672,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   border: 0;
   background: transparent;
   text-align: left;
-  cursor: pointer;
 }
 
 .cookie-consent-row-copy{
@@ -784,7 +782,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   padding: 0;
   border: 0;
   background: transparent;
-  cursor: pointer;
   flex: 0 0 auto;
 }
 
@@ -881,7 +878,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   padding: 0;
   border: 0;
   background: transparent;
-  cursor: pointer;
 }
 
 .cookie-consent-toggle-track{
@@ -1039,7 +1035,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   background: transparent;
   appearance: none;
   color: var(--text-primary-color);
-  cursor: pointer;
   transition:color var(--cookie-consent-motion-fast) ease, opacity var(--cookie-consent-motion-opacity-soft) ease;
   flex: 0 0 auto;
 }
@@ -1257,7 +1252,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   border: 1px solid var(--cookie-consent-footer-language-border);
   border-radius: 999px;
   background: var(--cookie-consent-footer-language-surface);
-  cursor: pointer;
 }
 
 .cookie-consent-footer-language-label{

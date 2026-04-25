@@ -89,7 +89,6 @@
   color:var(--text-color);
   text-decoration:none;
   text-align:left;
-  cursor:pointer;
   transition:
     border-color 220ms ease,
     background 220ms ease,
@@ -203,8 +202,6 @@
 .ui-nav__item:disabled,
 .ui-nav__button:disabled{
   opacity:0.45;
-  cursor:not-allowed;
-  pointer-events:none;
 }
 
 /* =============================================================================

@@ -98,7 +98,6 @@
   background:transparent;
   color:var(--profile-settings-nav-color);
   opacity:var(--profile-settings-nav-opacity);
-  cursor:pointer;
   transition:
     color var(--profile-settings-motion-fast) ease,
     opacity var(--profile-settings-motion-fast) ease,

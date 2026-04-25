@@ -214,7 +214,6 @@ html[data-theme-effective="light"]{
   background: var(--account-email-auth-action-background);
   color: var(--account-email-auth-action-foreground);
   text-decoration: none;
-  cursor: pointer;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
@@ -269,7 +268,6 @@ html[data-theme-effective="light"]{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: none;
 }
 

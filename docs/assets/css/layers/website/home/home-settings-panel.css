@@ -118,7 +118,6 @@
   letter-spacing:0.06em;
   text-transform:uppercase;
   text-align:left;
-  cursor:pointer;
   transition:
     border-color 220ms ease,
     background 220ms ease,
@@ -150,7 +149,6 @@
   font-weight:500;
   letter-spacing:0.02em;
   text-align:left;
-  cursor:pointer;
   pointer-events:auto;
   transition:
     border-color 220ms ease,

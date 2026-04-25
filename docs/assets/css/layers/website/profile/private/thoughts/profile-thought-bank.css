@@ -91,7 +91,6 @@
   color:var(--text-secondary-color);
   font:inherit;
   letter-spacing:inherit;
-  cursor:pointer;
   transition:
     background-color var(--duration-fast) ease,
     border-color var(--duration-fast) ease,

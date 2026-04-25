@@ -334,7 +334,6 @@ body.country-active .stage-circle{
   line-height: inherit;
   color: var(--text-color);
 
-  cursor: pointer;
   opacity:var(--country-option-opacity);
   transition:
     color var(--country-motion-fast) ease,

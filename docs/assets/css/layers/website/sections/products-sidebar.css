@@ -48,7 +48,6 @@
   height: 1.3rem;
   min-height: 1.3rem;
   color: var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
-  cursor: pointer;
   transform: none !important;
   transition:
     color 220ms ease,

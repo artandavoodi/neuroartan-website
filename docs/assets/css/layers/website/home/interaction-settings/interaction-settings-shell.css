@@ -225,7 +225,6 @@
   line-height:var(--home-interaction-settings-panel-nav-line-height);
   opacity:var(--home-interaction-settings-panel-nav-opacity);
   text-align:left;
-  cursor:pointer;
   outline:none;
   transform:none;
   transition:
@@ -318,7 +317,6 @@
   background:var(--home-interaction-settings-panel-control-bg);
   color:var(--home-interaction-settings-panel-control-text);
   text-align:left;
-  cursor:pointer;
   outline:none;
   transition:
     opacity var(--home-interaction-settings-panel-motion-fast) ease,
@@ -369,7 +367,6 @@
   font-size:0.84rem;
   font-weight:600;
   line-height:1.2;
-  cursor:pointer;
   outline:none;
   transition:
     opacity var(--home-interaction-settings-panel-motion-fast) ease,
@@ -411,7 +408,6 @@
   background:var(--home-interaction-settings-panel-control-bg);
   color:var(--home-interaction-settings-panel-control-text);
   text-align:left;
-  cursor:pointer;
   outline:none;
   transition:
     opacity var(--home-interaction-settings-panel-motion-fast) ease,

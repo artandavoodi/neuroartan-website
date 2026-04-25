@@ -291,7 +291,6 @@ html[data-theme-effective="light"]{
   line-height: 1;
   white-space: nowrap;
   font-variation-settings: "wght" 400;
-  cursor: pointer;
   transform: none !important;
   transition:
     color var(--institutional-menu-motion-fast) ease,
@@ -738,7 +737,6 @@ html[data-theme-effective="light"]{
   border: 0;
   background: transparent;
   color:var(--institutional-menu-text-color);
-  cursor: pointer;
   flex: 0 0 auto;
   align-self: center;
   border-radius: 999px;

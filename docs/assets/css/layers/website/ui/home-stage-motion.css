@@ -226,7 +226,6 @@
   border:0;
   background:transparent;
   color:var(--home-stage-motion-mic-color);
-  cursor:pointer;
   border-radius:50%;
   opacity:0.92;
   pointer-events:auto;

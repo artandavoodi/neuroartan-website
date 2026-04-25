@@ -149,7 +149,6 @@
   line-height:1rem;
   white-space:nowrap;
   font-variation-settings:"wght" 400;
-  cursor:pointer;
   transform:none !important;
   transition:
     color 220ms ease,

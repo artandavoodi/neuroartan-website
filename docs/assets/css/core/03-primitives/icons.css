@@ -61,7 +61,6 @@ html[data-theme-effective="dark"]{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  cursor:pointer;
   transition:
     background-color var(--duration-base) var(--ease-standard),
     border-color var(--duration-base) var(--ease-standard),

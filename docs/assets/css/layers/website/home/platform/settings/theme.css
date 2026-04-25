@@ -127,7 +127,6 @@
   background:transparent;
   color:var(--text-color);
   text-align:left;
-  cursor:pointer;
   transition:
     border-color var(--home-platform-theme-motion-fast) ease,
     background var(--home-platform-theme-motion-fast) ease,

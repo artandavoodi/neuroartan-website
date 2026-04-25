@@ -1,0 +1,299 @@
+/* =============================================================================
+   FILE INDEX
+   01) LOCAL NAV TOKENS
+   02) LOCAL NAV MOUNT OWNER
+   03) INSTITUTIONAL MENU TRANSITION CONTRACT
+   04) LOCAL NAV SHELL
+   05) LOCAL NAV SURFACE
+   06) LIGHT EFFECTIVE MODE SURFACE
+   07) LOCAL NAV INNER LAYOUT
+   08) LOCAL NAV LABEL
+   09) LOCAL NAV LINKS
+   10) LOCAL NAV STATES
+   11) LOCAL NAV REPLACEMENT STATE
+   12) LOCAL NAV RESPONSIVE BEHAVIOR
+============================================================================= */
+
+/* =============================================================================
+   01) LOCAL NAV TOKENS
+============================================================================= */
+:root{
+  --products-local-nav-height:3.55rem;
+  --products-local-nav-transition:320ms cubic-bezier(0.22, 1, 0.36, 1);
+  --products-local-nav-motion-fast:220ms;
+  --products-local-nav-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --products-local-nav-surface-border:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  --products-local-nav-surface-shadow:none;
+  --products-local-nav-surface-blur:8px;
+  --products-local-nav-surface-saturate:120%;
+  --products-local-nav-label-color:var(--text-primary-color);
+  --products-local-nav-link-color:var(--text-secondary-color);
+  --products-local-nav-link-hover-color:var(--text-primary-color);
+  --products-local-nav-active-underline-bg:var(--text-primary-color);
+  --products-local-nav-active-opacity:1;
+}
+
+html[data-theme-effective="light"]{
+  --products-local-nav-surface-bg:color-mix(in srgb, var(--surface-color) 26%, transparent);
+  --products-local-nav-surface-border:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --products-local-nav-surface-shadow:none;
+}
+
+/* =============================================================================
+   02) LOCAL NAV MOUNT OWNER
+============================================================================= */
+#products-local-nav-mount {
+  position: sticky;
+  top: 0;
+  z-index: 38;
+  width: 100%;
+  margin-top: var(--products-local-nav-height);
+  min-height: var(--products-local-nav-height);
+  box-sizing: border-box;
+  transition:
+    margin-top var(--products-local-nav-transition),
+    min-height var(--products-local-nav-transition);
+}
+
+.products-page.products-local-nav-active #products-local-nav-mount {
+  margin-top: 0;
+}
+
+.products-page #institutional-menu-mount {
+  transition:
+    opacity var(--products-local-nav-transition),
+    visibility 0s linear var(--products-local-nav-transition);
+}
+
+.products-page.products-local-nav-active #institutional-menu-mount {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   03) INSTITUTIONAL MENU TRANSITION CONTRACT
+============================================================================= */
+.products-page #institutional-menu-mount {
+  transition:
+    opacity var(--products-local-nav-transition),
+    visibility 0s linear var(--products-local-nav-transition);
+}
+
+.products-page.products-local-nav-active #institutional-menu-mount {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   04) LOCAL NAV SHELL
+============================================================================= */
+.products-local-nav {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  z-index: 39;
+  pointer-events: auto;
+  box-sizing: border-box;
+  padding: 0;
+  isolation: isolate;
+  direction: ltr;
+  text-align: left;
+  min-height: var(--products-local-nav-height, 3.55rem);
+}
+
+/* =============================================================================
+   05) LOCAL NAV SURFACE
+============================================================================= */
+.products-local-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--products-local-nav-height, 3.55rem);
+  border-radius: 0;
+  background:var(--products-local-nav-surface-bg);
+  border-bottom:1px solid var(--products-local-nav-surface-border);
+  box-shadow:var(--products-local-nav-surface-shadow);
+  backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));
+  -webkit-backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));
+  transition:
+    background var(--products-local-nav-motion-fast) ease,
+    border-color var(--products-local-nav-motion-fast) ease,
+    height var(--products-local-nav-transition);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* =============================================================================
+   06) LIGHT EFFECTIVE MODE SURFACE
+============================================================================= */
+
+/* =============================================================================
+   07) LOCAL NAV INNER LAYOUT
+============================================================================= */
+.products-local-nav__inner {
+  width: var(--site-rail-width);
+  max-width: calc(100% - (var(--site-gutter) * 2));
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  position: relative;
+  z-index: 3;
+  min-height: var(--products-local-nav-height, 3.55rem);
+  box-sizing: border-box;
+  direction: ltr;
+}
+
+/* =============================================================================
+   08) LOCAL NAV LABEL
+============================================================================= */
+.products-local-nav__label-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+
+.products-local-nav__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: auto;
+  color:var(--products-local-nav-label-color);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.008em;
+  line-height: 1;
+  transform: none !important;
+  transition:
+    color var(--products-local-nav-motion-fast) ease,
+    opacity var(--products-local-nav-motion-fast) ease,
+    transform var(--products-local-nav-motion-fast) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =============================================================================
+   09) LOCAL NAV LINKS
+============================================================================= */
+.products-local-nav__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.products-local-nav__links {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.42rem;
+  min-width: 0;
+}
+
+.products-local-nav__link {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+  color:var(--products-local-nav-link-color);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.008em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transform: none !important;
+  transition:
+    color var(--products-local-nav-motion-fast) ease,
+    opacity var(--products-local-nav-motion-fast) ease,
+    transform var(--products-local-nav-motion-fast) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.products-local-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc((var(--products-local-nav-height, 3.55rem) - 100%) / -2);
+  height: 0.35px;
+  background:var(--products-local-nav-active-underline-bg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =============================================================================
+   10) LOCAL NAV STATES
+============================================================================= */
+.products-local-nav__label:hover,
+.products-local-nav__label:focus-visible,
+.products-local-nav__label:active,
+.products-local-nav__link:hover,
+.products-local-nav__link:focus-visible,
+.products-local-nav__link:active,
+.products-local-nav__link--active {
+  color:var(--products-local-nav-link-hover-color);
+  opacity:var(--products-local-nav-active-opacity);
+  transform: none !important;
+  text-decoration: none;
+  outline: none;
+}
+
+.products-local-nav__link--active::after {
+  opacity: 1;
+}
+
+/* =============================================================================
+   11) LOCAL NAV REPLACEMENT STATE
+============================================================================= */
+.products-local-nav.products-local-nav--scrolled {
+  z-index: 50;
+}
+
+/* =============================================================================
+   12) LOCAL NAV RESPONSIVE BEHAVIOR
+============================================================================= */
+@media (max-width: 980px) {
+  #products-local-nav-mount {
+    position: relative;
+    top: auto;
+  }
+
+  .products-local-nav {
+    position: relative;
+  }
+
+  .products-local-nav__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    row-gap: 0.75rem;
+    min-height: auto;
+    padding-block: 0.75rem;
+  }
+
+  .products-local-nav__nav,
+  .products-local-nav__links {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .products-local-nav__label,
+  .products-local-nav__link {
+    min-height: auto;
+  }
+}

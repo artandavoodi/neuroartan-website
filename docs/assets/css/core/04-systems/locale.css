@@ -27,7 +27,6 @@
   letter-spacing:0.08em;
   text-transform:uppercase;
   color:var(--text-color);
-  cursor:pointer;
   opacity:0.85;
   transition:opacity var(--duration-base) var(--ease-standard);
 }
@@ -87,7 +86,6 @@
   text-transform:uppercase;
   color:var(--text-color);
   text-decoration:none;
-  cursor:pointer;
   transition:
     opacity var(--duration-base) var(--ease-standard),
     background-color var(--duration-base) var(--ease-standard),

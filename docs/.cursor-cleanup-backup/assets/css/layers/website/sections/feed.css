@@ -1,0 +1,317 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) FEED LAYOUT
+   03) COMPOSER
+   04) TABS AND SORT
+   05) STREAM
+   06) DISCOVERY
+   07) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/layers/website/sections/feed.css */
+
+/* =============================================================================
+   02) FEED LAYOUT
+============================================================================= */
+.feed-layout{
+  display:grid;
+  grid-template-columns:minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+  gap:1.5rem;
+  align-items:start;
+}
+
+.feed-main,
+.feed-discovery{
+  display:grid;
+  gap:1.25rem;
+}
+
+/* =============================================================================
+   03) COMPOSER
+============================================================================= */
+.feed-composer__input{
+  width:100%;
+  min-height:7.5rem;
+  border:0;
+  outline:0;
+  resize:vertical;
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+  line-height:1.7;
+}
+
+.feed-composer__input::placeholder{
+  color:var(--text-secondary-color);
+}
+
+.feed-composer__action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:2.6rem;
+  padding:0 1rem;
+  border:1px solid var(--control-border);
+  border-radius:999px;
+  background:var(--control-bg);
+  color:var(--text-primary-color);
+  font:inherit;
+  cursor:pointer;
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.feed-composer__action:hover,
+.feed-composer__action:focus-visible{
+  border-color:var(--control-border-strong);
+  background:var(--control-bg-hover);
+  outline:none;
+}
+
+/* =============================================================================
+   04) TABS AND SORT
+============================================================================= */
+.feed-stream-panel__header{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  align-items:flex-end;
+  flex-wrap:wrap;
+}
+
+.feed-tab-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.75rem;
+}
+
+.feed-tab{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:2.2rem;
+  padding:0 0.95rem;
+  border:1px solid var(--control-border);
+  border-radius:999px;
+  background:transparent;
+  color:var(--text-secondary-color);
+  font:inherit;
+  cursor:pointer;
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.feed-tab:hover,
+.feed-tab:focus-visible,
+.feed-tab[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  background:var(--control-bg);
+  border-color:var(--control-border-strong);
+  outline:none;
+}
+
+.feed-sort{
+  display:grid;
+  gap:0.45rem;
+}
+
+.feed-sort__label{
+  margin:0;
+  color:var(--text-secondary-color);
+  font-size:0.86rem;
+  line-height:1.6;
+}
+
+.feed-sort__select{
+  min-height:2.8rem;
+  padding:0 1rem;
+  border:1px solid var(--field-border);
+  border-radius:1rem;
+  background:var(--field-bg);
+  color:var(--text-primary-color);
+  font:inherit;
+}
+
+/* =============================================================================
+   05) STREAM
+============================================================================= */
+.feed-stream{
+  display:grid;
+  gap:1.15rem;
+}
+
+.feed-post{
+  display:grid;
+  gap:0.85rem;
+  padding-bottom:1.1rem;
+  border-bottom:1px solid var(--border-color);
+}
+
+.feed-post:last-child{
+  padding-bottom:0;
+  border-bottom:0;
+}
+
+.feed-post__identity{
+  display:flex;
+  align-items:flex-start;
+  gap:0.85rem;
+}
+
+.feed-post__avatar{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:3rem;
+  height:3rem;
+  border:1px solid var(--control-border);
+  border-radius:999px;
+  background:var(--control-bg-hover);
+  overflow:hidden;
+  flex:0 0 auto;
+}
+
+.feed-post__avatar-image{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.feed-post__avatar-fallback{
+  color:var(--text-primary-color);
+  font-size:0.92rem;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+
+.feed-post__identity-copy{
+  display:grid;
+  gap:0.32rem;
+  min-width:0;
+}
+
+.feed-post__identity-row,
+.feed-post__metadata,
+.feed-post__actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:0.55rem;
+}
+
+.feed-post__entity,
+.feed-post__handle,
+.feed-post__copy{
+  margin:0;
+}
+
+.feed-post__entity{
+  color:var(--text-primary-color);
+  font-size:1rem;
+  font-weight:500;
+  line-height:1.32;
+}
+
+.feed-post__handle{
+  color:var(--text-secondary-color);
+  font-size:0.82rem;
+  line-height:1.5;
+}
+
+.feed-post__type,
+.feed-post__badge,
+.feed-post__meta-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:1.85rem;
+  padding:0 0.72rem;
+  border-radius:999px;
+  font-size:0.72rem;
+  letter-spacing:0.04em;
+}
+
+.feed-post__type,
+.feed-post__meta-chip{
+  border:1px solid var(--control-border);
+  color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+}
+
+.feed-post__badge{
+  gap:0.4rem;
+  border:1px solid color-mix(in srgb, #1d9bf0 30%, transparent);
+  background:color-mix(in srgb, #1d9bf0 10%, transparent);
+  color:#1d9bf0;
+  font-weight:600;
+  text-transform:uppercase;
+}
+
+.feed-post__badge-icon{
+  display:block;
+  width:0.82rem;
+  height:0.82rem;
+}
+
+.feed-post__copy{
+  color:var(--text-primary-color);
+  line-height:1.72;
+}
+
+.feed-post__action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:2.35rem;
+  padding:0 0.92rem;
+  border:1px solid var(--control-border);
+  border-radius:999px;
+  background:transparent;
+  color:var(--text-secondary-color);
+  text-decoration:none;
+  font:inherit;
+  font-size:0.76rem;
+  cursor:pointer;
+  transition:
+    color 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.feed-post__action:hover,
+.feed-post__action:focus-visible,
+.feed-post__action[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  background:var(--control-bg);
+  border-color:var(--control-border-strong);
+  outline:none;
+}
+
+.feed-post__action--primary{
+  background:var(--control-bg);
+  color:var(--text-primary-color);
+}
+
+/* =============================================================================
+   06) DISCOVERY
+============================================================================= */
+.feed-discovery-panel{
+  min-height:100%;
+}
+
+/* =============================================================================
+   07) RESPONSIVE
+============================================================================= */
+@media (max-width: 980px){
+  .feed-layout{
+    grid-template-columns:1fr;
+  }
+}

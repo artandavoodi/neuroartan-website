@@ -9,8 +9,8 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
-import { getProfileNavigationState, subscribeProfileNavigation } from './profile-navigation.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
+import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
 
 /* =============================================================================
    02) PROFILE SECTIONS HELPERS

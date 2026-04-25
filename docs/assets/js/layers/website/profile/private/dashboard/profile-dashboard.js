@@ -11,8 +11,8 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
-import { getProfileThoughtState, subscribeProfileThoughtState } from './profile-thought-store.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
+import { getProfileThoughtState, subscribeProfileThoughtState } from '../thoughts/profile-thought-store.js';
 
 /* =============================================================================
    02) DASHBOARD HELPERS

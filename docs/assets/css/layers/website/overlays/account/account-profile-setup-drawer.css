@@ -291,7 +291,6 @@
    07) SELECT CONTROL
 ============================================================================= */
 .account-profile-setup-drawer-select{
-  cursor: pointer;
 }
 
 /* =============================================================================
@@ -325,7 +324,6 @@
   background: var(--account-profile-setup-action-background);
   color: var(--account-profile-setup-action-foreground);
   text-decoration: none;
-  cursor: pointer;
   transition:
     opacity var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
     border-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
@@ -414,7 +412,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-top: 0;
   transition: none;
 }

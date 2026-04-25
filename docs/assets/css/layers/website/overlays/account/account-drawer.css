@@ -411,7 +411,6 @@ body.account-drawer-closing .account-drawer-close{
   background: var(--control-bg);
   color: var(--text-color);
   text-decoration: none;
-  cursor: pointer;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
@@ -788,7 +787,6 @@ body.account-drawer-closing .account-drawer-close{
   background: var(--control-bg);
   color: var(--text-color);
   text-decoration: none;
-  cursor: pointer;
   font: inherit;
   transition:
     opacity var(--duration-fast) var(--ease-standard),
@@ -875,7 +873,6 @@ body.account-drawer-closing .account-drawer-close{
     border: 0;
     background: transparent;
     color: var(--account-drawer-text-link-color);
-    cursor: pointer;
     text-decoration: none;
     box-shadow: none;
     font-size: var(--account-drawer-text-link-font-size);

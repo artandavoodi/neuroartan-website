@@ -41,7 +41,6 @@
   color:var(--text-secondary-color);
   font:inherit;
   text-align:left;
-  cursor:pointer;
   transition:
     color 220ms ease,
     border-color 220ms ease,

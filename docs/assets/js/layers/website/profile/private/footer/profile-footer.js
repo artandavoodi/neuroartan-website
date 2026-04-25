@@ -9,7 +9,7 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
 
 /* =============================================================================
    02) PROFILE FOOTER HELPERS

@@ -110,7 +110,6 @@
   background: transparent;
   color: var(--office-sidebar-text);
   font: inherit;
-  cursor: pointer;
   transition: border-color 180ms ease, opacity 180ms ease, background-color 180ms ease;
 }
 

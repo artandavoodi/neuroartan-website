@@ -1,0 +1,513 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) PANEL TOKENS
+   02) PANEL ROOT
+   03) FORM AREA
+   04) INPUT AREA
+   05) COMPOSER LAYOUT
+   06) CONTROL PRIMITIVES
+   07) MODEL AND SETTINGS CONTROLS
+   08) FILE AREA
+   09) VOICE CONTROL
+   10) SUBMIT CONTROL
+   11) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) PANEL TOKENS
+============================================================================= */
+:root{
+  --home-interaction-panel-width:min(46rem, calc(100vw - (2 * var(--site-gutter))));
+  --home-interaction-panel-gap:0.38rem;
+  --home-interaction-panel-padding:0.54rem;
+  --home-interaction-panel-radius:1.42rem;
+  --home-interaction-panel-surface:color-mix(in srgb, var(--surface-color) 72%, transparent);
+  --home-interaction-panel-border:var(--control-border);
+  --home-interaction-panel-border-active:var(--control-border-strong);
+  --home-interaction-panel-shadow:0 18px 48px color-mix(in srgb, var(--shadow-color, #000000) 14%, transparent);
+  --home-interaction-panel-blur:18px;
+  --home-interaction-panel-saturate:126%;
+
+  --home-interaction-panel-input-min-height:2.72rem;
+  --home-interaction-panel-input-max-height:6.25rem;
+  --home-interaction-panel-input-padding-y:0.42rem;
+  --home-interaction-panel-input-padding-x:0.64rem;
+  --home-interaction-panel-input-radius:0.92rem;
+  --home-interaction-panel-input-surface:transparent;
+  --home-interaction-panel-input-border:transparent;
+  --home-interaction-panel-input-border-focus:transparent;
+  --home-interaction-panel-input-text:var(--text-primary-color);
+  --home-interaction-panel-input-placeholder:color-mix(in srgb, var(--text-secondary-color) 72%, transparent);
+
+  --home-interaction-panel-control-size:2.08rem;
+  --home-interaction-panel-control-radius:999px;
+  --home-interaction-panel-control-border:var(--control-border);
+  --home-interaction-panel-control-border-hover:var(--control-border-strong);
+  --home-interaction-panel-control-bg:transparent;
+  --home-interaction-panel-control-bg-hover:var(--control-bg);
+  --home-interaction-panel-control-text:var(--text-secondary-color);
+  --home-interaction-panel-control-text-hover:var(--text-primary-color);
+  --home-interaction-panel-control-listening-bg:color-mix(in srgb, var(--color-primary1) 18%, transparent);
+  --home-interaction-panel-control-listening-border:color-mix(in srgb, var(--color-primary1) 42%, var(--control-border));
+  --home-interaction-panel-control-thinking-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --home-interaction-panel-control-responding-bg:color-mix(in srgb, var(--color-primary1) 24%, transparent);
+  --home-interaction-panel-control-pulse-shadow:0 0 0 0 color-mix(in srgb, var(--color-primary1) 28%, transparent);
+  --home-interaction-panel-control-pulse-shadow-active:0 0 0 0.42rem color-mix(in srgb, var(--color-primary1) 0%, transparent);
+
+  --home-interaction-panel-model-height:2.08rem;
+  --home-interaction-panel-model-padding-x:0.68rem;
+  --home-interaction-panel-model-radius:999px;
+  --home-interaction-panel-model-bg:var(--control-bg);
+  --home-interaction-panel-model-border:var(--control-border);
+  --home-interaction-panel-model-text:var(--text-primary-color);
+  --home-interaction-panel-model-chevron:var(--text-secondary-color);
+
+  --home-interaction-panel-icon-size:1rem;
+  --home-interaction-panel-icon-opacity:0.82;
+  --home-interaction-panel-icon-opacity-hover:1;
+
+  --home-interaction-panel-submit-height:2.08rem;
+  --home-interaction-panel-submit-padding-x:0.78rem;
+  --home-interaction-panel-submit-radius:999px;
+  --home-interaction-panel-submit-bg:var(--control-bg);
+  --home-interaction-panel-submit-border:var(--control-border);
+  --home-interaction-panel-submit-text:var(--text-primary-color);
+  --home-interaction-panel-submit-thinking-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --home-interaction-panel-submit-reset-bg:color-mix(in srgb, var(--color-primary1) 12%, transparent);
+  --home-interaction-panel-disabled-opacity:0.48;
+
+  --home-interaction-panel-file-chip-border:var(--control-border);
+  --home-interaction-panel-file-chip-bg:var(--control-bg);
+  --home-interaction-panel-file-chip-text:var(--text-secondary-color);
+
+
+  --home-interaction-panel-motion-fast:220ms;
+}
+
+/* =============================================================================
+   02) PANEL ROOT
+============================================================================= */
+.home-interaction-panel{
+  display:grid;
+  gap:var(--home-interaction-panel-gap);
+  width:var(--home-interaction-panel-width);
+  margin:0 auto;
+  padding:var(--home-interaction-panel-padding);
+  border:1px solid var(--home-interaction-panel-border);
+  border-radius:var(--home-interaction-panel-radius);
+  background:var(--home-interaction-panel-surface);
+  box-shadow:var(--home-interaction-panel-shadow);
+  backdrop-filter:blur(var(--home-interaction-panel-blur)) saturate(var(--home-interaction-panel-saturate));
+  -webkit-backdrop-filter:blur(var(--home-interaction-panel-blur)) saturate(var(--home-interaction-panel-saturate));
+  transition:
+    border-color var(--home-interaction-panel-motion-fast) ease,
+    background-color var(--home-interaction-panel-motion-fast) ease,
+    box-shadow var(--home-interaction-panel-motion-fast) ease;
+}
+
+.home-interaction-panel[data-home-interaction-mode="listening"],
+.home-interaction-panel[data-home-interaction-mode="thinking"],
+.home-interaction-panel[data-home-interaction-mode="responding"]{
+  border-color:var(--home-interaction-panel-border-active);
+}
+
+/* =============================================================================
+   03) FORM AREA
+============================================================================= */
+.home-interaction-panel__form{
+  display:grid;
+  gap:0.32rem;
+}
+
+/* =============================================================================
+   04) INPUT AREA
+============================================================================= */
+.home-interaction-panel__input{
+  width:100%;
+  min-height:var(--home-interaction-panel-input-min-height);
+  max-height:var(--home-interaction-panel-input-max-height);
+  padding:var(--home-interaction-panel-input-padding-y) var(--home-interaction-panel-input-padding-x);
+  box-sizing:border-box;
+  border:1px solid var(--home-interaction-panel-input-border);
+  border-radius:var(--home-interaction-panel-input-radius);
+  background:var(--home-interaction-panel-input-surface);
+  color:var(--home-interaction-panel-input-text);
+  font:inherit;
+  line-height:1.38;
+  resize:none;
+  outline:none;
+  overflow:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  transition:
+    border-color var(--home-interaction-panel-motion-fast) ease,
+    background-color var(--home-interaction-panel-motion-fast) ease,
+    color var(--home-interaction-panel-motion-fast) ease;
+}
+
+.home-interaction-panel__input::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
+}
+
+.home-interaction-panel__input:focus-visible{
+  border-color:var(--home-interaction-panel-input-border-focus);
+}
+
+.home-interaction-panel__input::placeholder{
+  color:var(--home-interaction-panel-input-placeholder);
+}
+
+/* =============================================================================
+   05) COMPOSER LAYOUT
+============================================================================= */
+.home-interaction-panel__composer{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto minmax(0, auto);
+  align-items:center;
+  gap:0.38rem;
+}
+
+.home-interaction-panel__composer-left,
+.home-interaction-panel__composer-right{
+  display:inline-flex;
+  align-items:center;
+  gap:0.34rem;
+  min-width:0;
+}
+
+.home-interaction-panel__composer-left{
+  justify-content:flex-start;
+}
+
+.home-interaction-panel__composer-right{
+  justify-content:flex-end;
+}
+
+/* =============================================================================
+   06) CONTROL PRIMITIVES
+============================================================================= */
+.home-interaction-panel__attach,
+.home-interaction-panel__voice,
+.home-interaction-panel__submit,
+.home-interaction-panel__settings,
+.home-interaction-panel__model-button{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  text-decoration:none;
+  cursor:pointer;
+  outline:none;
+  transition:
+    color var(--home-interaction-panel-motion-fast) ease,
+    border-color var(--home-interaction-panel-motion-fast) ease,
+    background-color var(--home-interaction-panel-motion-fast) ease,
+    opacity var(--home-interaction-panel-motion-fast) ease;
+}
+
+.home-interaction-panel__attach,
+.home-interaction-panel__settings,
+.home-interaction-panel__voice{
+  width:var(--home-interaction-panel-control-size);
+  min-width:var(--home-interaction-panel-control-size);
+  height:var(--home-interaction-panel-control-size);
+  min-height:var(--home-interaction-panel-control-size);
+  padding:0;
+  border:1px solid var(--home-interaction-panel-control-border);
+  border-radius:var(--home-interaction-panel-control-radius);
+  background:var(--home-interaction-panel-control-bg);
+  color:var(--home-interaction-panel-control-text);
+}
+
+.home-interaction-panel__attach:hover,
+.home-interaction-panel__attach:focus-visible,
+.home-interaction-panel__settings:hover,
+.home-interaction-panel__settings:focus-visible,
+.home-interaction-panel__settings[aria-expanded="true"],
+.home-interaction-panel__voice:hover,
+.home-interaction-panel__voice:focus-visible,
+.home-interaction-panel__voice[data-voice-active="true"],
+.home-interaction-panel__model-button:hover,
+.home-interaction-panel__model-button:focus-visible,
+.home-interaction-panel__submit:hover,
+.home-interaction-panel__submit:focus-visible{
+  border-color:var(--home-interaction-panel-control-border-hover);
+  background:var(--home-interaction-panel-control-bg-hover);
+  color:var(--home-interaction-panel-control-text-hover);
+}
+
+.home-interaction-panel__attach-icon,
+.home-interaction-panel__settings-icon,
+.home-interaction-panel__model-chevron,
+.home-interaction-panel__submit-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-interaction-panel-icon-size);
+  height:var(--home-interaction-panel-icon-size);
+  opacity:var(--home-interaction-panel-icon-opacity);
+  line-height:1;
+}
+
+.home-interaction-panel__attach-icon img,
+.home-interaction-panel__settings-icon img,
+.home-interaction-panel__model-chevron img,
+.home-interaction-panel__submit-icon img{
+  display:block;
+  width:100%;
+  height:100%;
+  filter:var(--icon-image-filter, none);
+}
+
+.home-interaction-panel__attach:hover .home-interaction-panel__attach-icon,
+.home-interaction-panel__attach:focus-visible .home-interaction-panel__attach-icon,
+.home-interaction-panel__settings:hover .home-interaction-panel__settings-icon,
+.home-interaction-panel__settings:focus-visible .home-interaction-panel__settings-icon,
+.home-interaction-panel__model-button:hover .home-interaction-panel__model-chevron,
+.home-interaction-panel__model-button:focus-visible .home-interaction-panel__model-chevron,
+.home-interaction-panel__submit:hover .home-interaction-panel__submit-icon,
+.home-interaction-panel__submit:focus-visible .home-interaction-panel__submit-icon{
+  opacity:var(--home-interaction-panel-icon-opacity-hover);
+}
+
+/* =============================================================================
+   07) MODEL AND SETTINGS CONTROLS
+============================================================================= */
+.home-interaction-panel__model-button{
+  min-height:var(--home-interaction-panel-model-height);
+  padding:0 var(--home-interaction-panel-model-padding-x);
+  border:1px solid var(--home-interaction-panel-model-border);
+  border-radius:var(--home-interaction-panel-model-radius);
+  background:var(--home-interaction-panel-model-bg);
+  color:var(--home-interaction-panel-model-text);
+  gap:0.32rem;
+  max-width:100%;
+  text-align:left;
+}
+
+.home-interaction-panel__model-name{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:currentColor;
+  font-size:0.82rem;
+  font-weight:500;
+  line-height:1.2;
+  letter-spacing:-0.01em;
+}
+
+.home-interaction-panel__model-chevron{
+  flex:0 0 auto;
+  color:var(--home-interaction-panel-model-chevron);
+}
+
+.home-interaction-panel__settings{
+  width:var(--home-interaction-panel-control-size);
+  min-width:var(--home-interaction-panel-control-size);
+  height:var(--home-interaction-panel-control-size);
+  min-height:var(--home-interaction-panel-control-size);
+  padding:0;
+  border:1px solid var(--home-interaction-panel-control-border);
+  border-radius:var(--home-interaction-panel-control-radius);
+  background:var(--home-interaction-panel-control-bg);
+  color:var(--home-interaction-panel-control-text);
+}
+
+/* =============================================================================
+   08) FILE AREA
+============================================================================= */
+.home-interaction-panel__files{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0.38rem;
+  min-width:0;
+}
+
+.home-interaction-panel__file-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:1.55rem;
+  max-width:100%;
+  padding:0 0.58rem;
+  border:1px solid var(--home-interaction-panel-file-chip-border);
+  border-radius:999px;
+  background:var(--home-interaction-panel-file-chip-bg);
+  color:var(--home-interaction-panel-file-chip-text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:0.68rem;
+  font-weight:500;
+  letter-spacing:0.04em;
+}
+
+/* =============================================================================
+   09) VOICE CONTROL
+============================================================================= */
+.home-interaction-panel__voice{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice{
+  width:var(--home-interaction-panel-control-size);
+  min-width:var(--home-interaction-panel-control-size);
+  height:var(--home-interaction-panel-control-size);
+  min-height:var(--home-interaction-panel-control-size);
+  padding:0;
+  border:1px solid var(--home-interaction-panel-control-border);
+  border-radius:var(--home-interaction-panel-control-radius);
+  background:var(--home-interaction-panel-control-bg);
+  color:var(--home-interaction-panel-control-text);
+  opacity:1;
+  transform:none;
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice:hover,
+#stage #stage-microphone-button.home-interaction-panel__voice:focus-visible,
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-active="true"]{
+  border-color:var(--home-interaction-panel-control-border-hover);
+  background:var(--home-interaction-panel-control-bg-hover);
+  color:var(--home-interaction-panel-control-text-hover);
+  transform:none;
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="listening"]{
+  border-color:var(--home-interaction-panel-control-listening-border);
+  background:var(--home-interaction-panel-control-listening-bg);
+  color:var(--home-interaction-panel-control-text-hover);
+  animation:home-interaction-panel-voice-listening 1.18s ease-in-out infinite;
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="thinking"]{
+  background:var(--home-interaction-panel-control-thinking-bg);
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="responding"]{
+  background:var(--home-interaction-panel-control-responding-bg);
+}
+
+@keyframes home-interaction-panel-voice-listening{
+  0%{box-shadow:var(--home-interaction-panel-control-pulse-shadow);}
+  70%{box-shadow:var(--home-interaction-panel-control-pulse-shadow-active);}
+  100%{box-shadow:var(--home-interaction-panel-control-pulse-shadow);}
+}
+
+.home-interaction-panel__voice-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-interaction-panel-icon-size);
+  height:var(--home-interaction-panel-icon-size);
+  opacity:var(--home-interaction-panel-icon-opacity);
+  transition:opacity var(--home-interaction-panel-motion-fast) ease;
+}
+
+.home-interaction-panel__voice-icon img{
+  display:block;
+  width:100%;
+  height:100%;
+  filter:var(--icon-image-filter, none);
+}
+
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="thinking"] .home-interaction-panel__voice-icon,
+#stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="responding"] .home-interaction-panel__voice-icon{
+  opacity:0;
+}
+
+/* =============================================================================
+   10) SUBMIT CONTROL
+============================================================================= */
+.home-interaction-panel__submit{
+  min-height:var(--home-interaction-panel-submit-height);
+  padding:0 var(--home-interaction-panel-submit-padding-x);
+  border:1px solid var(--home-interaction-panel-submit-border);
+  border-radius:var(--home-interaction-panel-submit-radius);
+  background:var(--home-interaction-panel-submit-bg);
+  color:var(--home-interaction-panel-submit-text);
+  gap:0.32rem;
+  font-size:0.82rem;
+  font-weight:500;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.home-interaction-panel__submit[disabled]{
+  cursor:default;
+  opacity:var(--home-interaction-panel-disabled-opacity);
+}
+
+.home-interaction-panel__submit[data-home-interaction-submit-intent="thinking"],
+.home-interaction-panel__submit[data-home-interaction-submit-intent="listening"]{
+  background:var(--home-interaction-panel-submit-thinking-bg);
+}
+
+.home-interaction-panel__submit[data-home-interaction-submit-intent="reset"]{
+  background:var(--home-interaction-panel-submit-reset-bg);
+}
+
+.home-interaction-panel[data-home-interaction-mode="thinking"] .home-interaction-panel__submit-label::after{
+  content:"";
+  display:inline-block;
+  width:0.72em;
+  text-align:left;
+  animation:home-interaction-panel-thinking-dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes home-interaction-panel-thinking-dots{
+  0%{content:"";}
+  25%{content:".";}
+  50%{content:"..";}
+  75%{content:"...";}
+  100%{content:"";}
+}
+
+
+/* =============================================================================
+   11) RESPONSIVE
+============================================================================= */
+@media (max-width:760px){
+  .home-interaction-panel{
+    width:min(100%, calc(100vw - (2 * var(--site-gutter))));
+    padding:0.52rem;
+  }
+
+  .home-interaction-panel__composer{
+    grid-template-columns:1fr;
+  }
+
+  .home-interaction-panel__composer-left,
+  .home-interaction-panel__composer-right{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .home-interaction-panel__model-button{
+    min-width:0;
+    flex:1 1 auto;
+  }
+
+  .home-interaction-panel__files{
+    order:3;
+  }
+
+  .home-interaction-panel__submit{
+    min-width:var(--home-interaction-panel-control-size);
+    padding:0 0.66rem;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="listening"],
+  .home-interaction-panel[data-home-interaction-mode="thinking"] .home-interaction-panel__submit-label::after{
+    animation:none;
+  }
+}

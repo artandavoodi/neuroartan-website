@@ -84,7 +84,6 @@ body{
   text-transform:uppercase;
   border:1px solid var(--home-layout-enter-border);
   border-radius:999px;
-  cursor:pointer;
   overflow:hidden;
   transition:border-color var(--home-layout-enter-transition) ease, opacity var(--home-layout-enter-transition) ease;
   animation:enter-breathe 6s ease-in-out infinite;

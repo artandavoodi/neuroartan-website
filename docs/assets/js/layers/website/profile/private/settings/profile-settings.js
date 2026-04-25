@@ -9,9 +9,9 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from './profile-runtime.js';
-import { getProfileNavigationState, subscribeProfileNavigation } from './profile-navigation.js';
-import { getPrivateProfileSaveState, subscribePrivateProfileSaveState } from '../system/profile-save.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
+import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
+import { getPrivateProfileSaveState, subscribePrivateProfileSaveState } from '../../../system/profile-save.js';
 
 /* =============================================================================
    02) SETTINGS HELPERS

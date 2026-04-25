@@ -1,0 +1,394 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) ROOT TOKENS
+   03) SURFACE ROOT
+   04) PANEL
+   05) HEADER
+   06) BACK CONTROL
+   07) TOOLBAR
+   08) SEARCH FIELD
+   09) REGIONS MOUNT
+   09A) COUNTRY ITEM
+   10) HIDDEN STATUS CARRIER
+   11) REDUCED MOTION
+   12) RESPONSIVE — 768PX
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+
+/* =============================================================================
+   02) ROOT TOKENS
+============================================================================= */
+:root{
+  --cookie-language-overlay-surface:color-mix(in srgb, var(--surface-color) 96%, transparent);
+  --cookie-language-overlay-border:var(--control-border);
+  --cookie-language-overlay-shadow:0 20px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
+  --cookie-language-overlay-width: min(36rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --cookie-language-overlay-max-height: min(46rem, calc(100vh - 3rem));
+  --cookie-language-overlay-min-height: 24rem;
+  --cookie-language-overlay-radius: 1.9rem;
+  --cookie-language-overlay-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-muted: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-language-overlay-soft: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-soft-strong: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-sticky-toolbar-surface: transparent;
+  --cookie-language-overlay-sticky-toolbar-divider: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
+  --cookie-language-overlay-toolbar-padding-top: 1.02rem;
+  --cookie-language-overlay-toolbar-padding-bottom: var(--cookie-language-overlay-search-to-list-gap);
+  --cookie-language-overlay-toolbar-gap: 0.44rem;
+  --cookie-language-overlay-search-to-list-gap: 0.68rem;
+  --cookie-language-overlay-list-padding-top: 0;
+  --cookie-language-overlay-list-padding-bottom: 1rem;
+  --cookie-language-overlay-search-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-status-surface: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-country-surface: color-mix(in srgb, var(--text-primary-color) 2%, transparent);
+  --cookie-language-overlay-country-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-language-overlay-country-hover: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 10%, transparent);
+  --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 28%, transparent);
+  --cookie-language-overlay-country-selected-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary1) 18%, transparent) inset;
+  --cookie-language-overlay-country-copy: color-mix(in srgb, var(--text-primary-color) 68%, transparent);
+  --cookie-language-overlay-country-code: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
+  --cookie-language-overlay-back-icon-size: 1rem;
+  --cookie-language-overlay-back-icon-filter: var(--icon-image-filter, none);
+  --cookie-language-overlay-motion-fast:200ms;
+}
+
+html[data-theme-effective="light"]{
+  --cookie-language-overlay-surface:color-mix(in srgb, var(--surface-color) 96%, transparent);
+}
+
+html[data-theme-effective="dark"]{
+  --cookie-language-overlay-surface:color-mix(in srgb, var(--surface-color) 96%, transparent);
+  --cookie-language-overlay-border:var(--control-border);
+  --cookie-language-overlay-shadow:0 24px 70px color-mix(in srgb, var(--shadow-color, #000000) 24%, transparent);
+  --cookie-language-overlay-divider:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-muted:color-mix(in srgb, var(--text-primary-color) 68%, transparent);
+  --cookie-language-overlay-soft:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-soft-strong:color-mix(in srgb, var(--text-primary-color) 5%, transparent);
+  --cookie-language-overlay-sticky-toolbar-surface:transparent;
+  --cookie-language-overlay-sticky-toolbar-divider:color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
+  --cookie-language-overlay-search-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-language-overlay-status-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-language-overlay-country-surface:color-mix(in srgb, var(--text-primary-color) 2.2%, transparent);
+  --cookie-language-overlay-country-border:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-language-overlay-country-hover:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-language-overlay-country-selected:color-mix(in srgb, var(--color-primary1) 14%, transparent);
+  --cookie-language-overlay-country-selected-border:color-mix(in srgb, var(--color-primary1) 32%, transparent);
+  --cookie-language-overlay-country-selected-shadow:0 0 0 1px color-mix(in srgb, var(--color-primary1) 22%, transparent) inset;
+  --cookie-language-overlay-country-copy:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --cookie-language-overlay-country-code:color-mix(in srgb, var(--text-primary-color) 56%, transparent);
+  --cookie-language-overlay-back-icon-filter:var(--icon-image-filter, none);
+}
+
+/* =============================================================================
+   03) SURFACE ROOT
+============================================================================= */
+.cookie-language-overlay{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+
+/* =============================================================================
+   04) PANEL
+============================================================================= */
+.cookie-language-overlay-inner{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  transition: none;
+}
+
+
+/* =============================================================================
+   07) TOOLBAR
+============================================================================= */
+.cookie-language-overlay-toolbar{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: var(--cookie-language-overlay-toolbar-gap);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding-top: var(--cookie-language-overlay-toolbar-padding-top);
+  padding-right: 0;
+  padding-bottom: var(--cookie-language-overlay-toolbar-padding-bottom);
+  padding-left: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+
+/* =============================================================================
+   08) SEARCH FIELD
+============================================================================= */
+.cookie-language-overlay-search-shell{
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.cookie-language-overlay-search{
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.82rem 1rem;
+  border: 1px solid var(--cookie-language-overlay-search-border);
+  border-radius: 999px;
+  background: var(--cookie-language-overlay-soft);
+  color: var(--text-primary-color);
+  font-size: 0.94rem;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  transition:background-color var(--cookie-language-overlay-motion-fast) ease, border-color var(--cookie-language-overlay-motion-fast) ease;
+}
+
+.cookie-language-overlay-search::placeholder{
+  color: var(--cookie-language-overlay-muted);
+}
+
+.cookie-language-overlay-search:focus-visible{
+  outline: none;
+}
+
+.cookie-language-overlay-search:hover{
+  background: var(--cookie-language-overlay-soft-strong);
+}
+
+.cookie-language-overlay-search:focus-visible{
+  border-color: var(--cookie-language-overlay-country-selected-border);
+  background: var(--cookie-language-overlay-soft-strong);
+}
+
+/* =============================================================================
+   09) REGIONS MOUNT
+============================================================================= */
+.cookie-language-overlay-regions{
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  align-content: flex-start;
+  gap: 0.56rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding-top: var(--cookie-language-overlay-list-padding-top);
+  padding-right: 0;
+  padding-bottom: var(--cookie-language-overlay-list-padding-bottom);
+  padding-left: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+  border-bottom: 0;
+}
+
+.cookie-language-overlay-regions::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
+
+.cookie-language-overlay-regions > *{
+  flex: 0 0 auto;
+}
+
+.cookie-language-overlay-section{
+  display: flex;
+  flex-direction: column;
+  gap: 0.68rem;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.cookie-language-overlay-group{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* =============================================================================
+   09A) COUNTRY ITEM
+============================================================================= */
+.cookie-language-overlay-country{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+  align-self: stretch;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.98rem 1rem;
+  border: 1px solid var(--cookie-language-overlay-country-border);
+  border-radius: 1rem;
+  background: var(--cookie-language-overlay-country-surface);
+  color: var(--text-primary-color);
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:background-color var(--cookie-language-overlay-motion-fast) ease, border-color var(--cookie-language-overlay-motion-fast) ease, box-shadow var(--cookie-language-overlay-motion-fast) ease;
+}
+
+.cookie-language-overlay-country-copy{
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.cookie-language-overlay-country-copy strong{
+  color: inherit;
+  font-size: 1.08rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  min-width: 0;
+}
+
+.cookie-language-overlay-country-copy span{
+  color: var(--cookie-language-overlay-country-copy);
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: -0.012em;
+  line-height: 1.35;
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cookie-language-overlay-country-code{
+  display: none;
+}
+
+.cookie-language-overlay-country:hover,
+.cookie-language-overlay-country:focus-visible,
+.cookie-language-overlay-country:active{
+  background: var(--cookie-language-overlay-country-hover);
+  border-color:var(--cookie-language-overlay-search-border);
+  outline: none;
+}
+
+.cookie-language-overlay-country.is-selected{
+  background: var(--cookie-language-overlay-country-selected);
+  border-color: var(--cookie-language-overlay-country-selected-border);
+  box-shadow: var(--cookie-language-overlay-country-selected-shadow);
+}
+
+
+/* =============================================================================
+   10) HIDDEN STATUS CARRIER
+============================================================================= */
+.cookie-consent-language-status[hidden]{
+  display: none !important;
+}
+
+/* =============================================================================
+   11) REDUCED MOTION
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .cookie-language-overlay,
+  .cookie-language-overlay-inner{
+    transition: none !important;
+  }
+}
+
+/* =============================================================================
+   12) RESPONSIVE — 768PX
+============================================================================= */
+@media (max-width:768px){
+  :root{
+    --cookie-language-overlay-min-height: 24rem;
+    --cookie-language-overlay-max-height: min(42rem, calc(100vh - 1.6rem));
+  }
+
+  .cookie-language-overlay-inner{
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .cookie-language-overlay-regions{
+    min-height: 12rem;
+    padding-top: var(--cookie-language-overlay-list-padding-top);
+    padding-bottom: 0;
+  }
+
+  .cookie-language-overlay-toolbar{
+    padding-top: calc(var(--cookie-language-overlay-toolbar-padding-top) - 0.2rem);
+    padding-bottom: var(--cookie-language-overlay-toolbar-padding-bottom);
+  }
+
+
+  .cookie-language-overlay-country{
+    align-items: center;
+  }
+
+  .cookie-language-overlay-country-copy{
+    gap: 0.82rem;
+  }
+
+  .cookie-language-overlay-country-copy strong{
+    font-size: 1rem;
+  }
+
+  .cookie-language-overlay-country-copy span{
+    font-size: 0.84rem;
+  }
+}

@@ -241,7 +241,6 @@ html[data-theme-effective="dark"]{
   background:transparent;
   color:var(--account-phone-auth-action-text);
   text-decoration: none;
-  cursor: pointer;
   transition:opacity var(--account-phone-auth-motion-fast) ease, border-color var(--account-phone-auth-motion-fast) ease, background-color var(--account-phone-auth-motion-fast) ease, color var(--account-phone-auth-motion-fast) ease;
 }
 
@@ -299,7 +298,6 @@ html[data-theme-effective="dark"]{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-top: 0;
   transition: none;
 }

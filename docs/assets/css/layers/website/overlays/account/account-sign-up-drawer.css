@@ -270,7 +270,6 @@ html[data-theme-effective="dark"]{
   background:transparent;
   color:var(--account-sign-up-action-text);
   text-decoration: none;
-  cursor: pointer;
   transition:opacity var(--account-sign-up-motion-fast) ease, border-color var(--account-sign-up-motion-fast) ease, background-color var(--account-sign-up-motion-fast) ease, color var(--account-sign-up-motion-fast) ease;
 }
 
@@ -347,7 +346,6 @@ html[data-theme-effective="dark"]{
 .account-sign-up-drawer-text-action{
   display: inline;
   color: var(--text-primary-color);
-  cursor: pointer;
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: 1px;
@@ -384,7 +382,6 @@ html[data-theme-effective="dark"]{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-top: 1rem;
 }
 

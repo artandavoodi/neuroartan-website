@@ -1,62 +1,112 @@
 <!-- =============================================================================
-     01) PRIVATE PROFILE MENU
-     02) PRIVATE PROFILE MENU SURFACE
-     03) PRIVATE PROFILE MENU BRAND
-     04) PRIVATE PROFILE MENU ACTIONS
+     PROFILE DASHBOARD TOPBAR FRAGMENT
+     Purpose: primary private-profile top navigation shell.
+     Notes:
+     - mirrors the homepage dashboard topbar structure exactly
+     - keeps profile-specific data hooks additive only
+     - preserves source-level topbar spacing, rail, icon, and account-control architecture
 ============================================================================= -->
-<nav class="profile-menu" data-profile-menu data-profile-surface="private" aria-label="Private profile menu">
-  <div class="profile-menu__rail">
-    <div class="profile-menu__surface">
-      <!-- =========================================================================
-           03) PRIVATE PROFILE MENU BRAND
-      ========================================================================= -->
-      <a class="profile-menu__brand" href="/" aria-label="Go to Neuroartan home">
-        <img
-          class="profile-menu__brand-mark"
-          src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
-          alt="Neuroartan"
-        >
-      </a>
 
-      <div class="profile-menu__status">
-        <p class="profile-menu__status-line" data-profile-menu-state-line>Owner environment awaiting account access</p>
-      </div>
+<header class="home-dashboard-topbar profile-menu" id="profile-dashboard-topbar" data-profile-menu data-profile-surface="private" aria-label="Private profile topbar">
+  <div class="home-dashboard-topbar__inner">
+    <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan home">
+      <img
+        class="home-dashboard-topbar__brand-mark"
+        src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
+        alt="Neuroartan symbol">
+    </a>
 
-      <!-- =========================================================================
-           04) PRIVATE PROFILE MENU ACTIONS
-      ========================================================================= -->
-      <div class="profile-menu__actions">
-        <a class="ui-button ui-button--ghost profile-menu__link" href="/">Home</a>
-
-        <button class="ui-button ui-button--ghost profile-menu__action" type="button" data-profile-action="view-public" aria-disabled="true">
-          <img
-            class="ui-icon-theme-aware ui-icon-sm"
-            src="/assets/icons/core/navigation/unclassified/globe.svg"
-            alt=""
-            aria-hidden="true"
-          >
-          <span data-profile-menu-public-label>Public Route</span>
+    <div class="home-dashboard-topbar__nav-group">
+      <nav class="home-dashboard-topbar__nav" aria-label="Private profile navigation">
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="profile-dashboard-menu-trigger"
+          type="button"
+          data-profile-action="menu"
+          aria-label="Open platform navigation"
+          aria-controls="home-platform-shell"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/navigation/unclassified/menu.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Menu</span>
         </button>
 
-        <button class="ui-icon-button profile-menu__icon-action" type="button" data-profile-action="open-settings" aria-label="Profile settings">
-          <img
-            class="ui-icon-theme-aware ui-icon-sm"
-            src="/assets/icons/core/system/unclassified/settings.svg"
-            alt=""
-            aria-hidden="true"
-          >
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--search"
+          id="profile-dashboard-search-trigger"
+          type="button"
+          data-profile-action="search"
+          aria-label="Open platform search"
+          aria-controls="home-search-shell"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/search.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Search</span>
         </button>
 
-        <button class="ui-button ui-button--secondary profile-menu__action profile-menu__action--account" type="button" data-profile-action="account">
-          <img
-            class="ui-icon-theme-aware ui-icon-sm"
-            src="/assets/icons/core/identity/unclassified/profile.svg"
-            alt=""
-            aria-hidden="true"
-          >
-          <span data-profile-menu-account-label>Continue</span>
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="profile-dashboard-models-trigger"
+          type="button"
+          data-home-topbar-route="/pages/models/index.html"
+          data-profile-action="models"
+          aria-label="Open models directory">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/cognition/unclassified/model.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Models</span>
         </button>
-      </div>
+
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="profile-dashboard-feed-trigger"
+          type="button"
+          data-home-topbar-route="/pages/feed/index.html"
+          data-profile-action="feed"
+          aria-label="Open public feed">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/navigation/unclassified/feed.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Feed</span>
+        </button>
+
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+          id="profile-dashboard-dashboard-trigger"
+          type="button"
+          data-home-topbar-route="/pages/dashboard/index.html"
+          data-profile-action="dashboard"
+          aria-label="Open dashboard">
+          <span class="home-dashboard-topbar__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/navigation/unclassified/dashboard.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label">Dashboard</span>
+        </button>
+      </nav>
+
     </div>
+
+    <div class="home-dashboard-topbar__utility" aria-label="Account control">
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--utility home-dashboard-topbar__action--profile"
+          id="profile-dashboard-profile-trigger"
+          type="button"
+          data-profile-action="account"
+          data-home-topbar-profile-state="icon"
+          aria-label="Open profile control"
+          aria-controls="home-platform-shell"
+          aria-expanded="false">
+          <span class="home-dashboard-topbar__profile-avatar" data-profile-menu-avatar-shell aria-hidden="true" hidden>
+            <img class="home-dashboard-topbar__profile-avatar-image" data-profile-menu-avatar-image alt="" hidden>
+            <span class="home-dashboard-topbar__profile-avatar-fallback" data-profile-menu-avatar-fallback>N</span>
+          </span>
+          <span class="home-dashboard-topbar__icon home-dashboard-topbar__icon--profile" data-profile-menu-profile-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/identity/unclassified/profile.svg" alt="">
+          </span>
+          <span class="home-dashboard-topbar__label sr-only" data-profile-menu-account-label>Profile</span>
+        </button>
+      </div>
   </div>
-</nav>
+</header>

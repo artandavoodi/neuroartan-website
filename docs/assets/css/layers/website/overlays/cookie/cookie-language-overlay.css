@@ -277,7 +277,6 @@ html[data-theme-effective="dark"]{
   background: var(--cookie-language-overlay-country-surface);
   color: var(--text-primary-color);
   text-align: left;
-  cursor: pointer;
   box-sizing: border-box;
   transition:background-color var(--cookie-language-overlay-motion-fast) ease, border-color var(--cookie-language-overlay-motion-fast) ease, box-shadow var(--cookie-language-overlay-motion-fast) ease;
 }

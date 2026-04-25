@@ -60,7 +60,6 @@
   background:var(--control-bg);
   color:var(--text-primary-color);
   font:inherit;
-  cursor:pointer;
   transition:
     color 220ms ease,
     background-color 220ms ease,
@@ -102,7 +101,6 @@
   background:transparent;
   color:var(--text-secondary-color);
   font:inherit;
-  cursor:pointer;
   transition:
     color 220ms ease,
     background-color 220ms ease,
@@ -279,7 +277,6 @@
   text-decoration:none;
   font:inherit;
   font-size:0.76rem;
-  cursor:pointer;
   transition:
     color 220ms ease,
     background-color 220ms ease,

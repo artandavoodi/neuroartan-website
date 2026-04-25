@@ -200,7 +200,6 @@
   justify-content:center;
   box-sizing:border-box;
   text-decoration:none;
-  cursor:pointer;
   outline:none;
   transition:
     color var(--home-interaction-panel-motion-fast) ease,
@@ -441,7 +440,6 @@
 }
 
 .home-interaction-panel__submit[disabled]{
-  cursor:default;
   opacity:var(--home-interaction-panel-disabled-opacity);
 }
 

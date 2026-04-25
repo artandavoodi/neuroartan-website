@@ -173,7 +173,6 @@
   background: transparent;
   color: var(--office-menu-text);
   font: inherit;
-  cursor: pointer;
 }
 
 .office-menu__toggle:hover,

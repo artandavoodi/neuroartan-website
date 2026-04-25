@@ -1,25 +1,21 @@
 /* =============================================================================
    00) FILE INDEX
-   01) GLOBAL CURSOR MODE
+   01) GLOBAL CUSTOM CURSOR MODE
    02) CURSOR NODE
-   03) TOUCH / MOBILE FALLBACK
-   04) RTL SAFETY
-   05) END OF FILE
+   03) DISABLED CURSOR MODE
+   04) TOUCH FALLBACK
+   05) RTL STABILITY
+   06) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
-   01) GLOBAL CURSOR MODE
+   01) GLOBAL CUSTOM CURSOR MODE
 ============================================================================= */
 html[data-cursor-custom="true"],
-html[data-cursor-custom="true"] body,
-html[data-cursor-custom="true"] body *{
+html[data-cursor-custom="true"] *,
+html[data-cursor-custom="true"] *::before,
+html[data-cursor-custom="true"] *::after{
   cursor:none;
-}
-
-html[data-cursor-custom="false"],
-html[data-cursor-custom="false"] body,
-html[data-cursor-custom="false"] body *{
-  cursor:auto;
 }
 
 /* =============================================================================
@@ -46,7 +42,19 @@ html[data-cursor-custom="false"] body *{
   visibility:visible;
   right:auto;
   bottom:auto;
+  direction:ltr;
+  unicode-bidi:isolate;
   will-change:left, top, transform, opacity;
+}
+
+/* =============================================================================
+   03) DISABLED CURSOR MODE
+============================================================================= */
+html[data-cursor-custom="false"],
+html[data-cursor-custom="false"] *,
+html[data-cursor-custom="false"] *::before,
+html[data-cursor-custom="false"] *::after{
+  cursor:auto;
 }
 
 html[data-cursor-custom="false"] .custom-cursor{
@@ -55,22 +63,23 @@ html[data-cursor-custom="false"] .custom-cursor{
 }
 
 /* =============================================================================
-   03) TOUCH / MOBILE FALLBACK
+   04) TOUCH FALLBACK
 ============================================================================= */
-@media (hover:none) and (pointer:coarse), (max-width:768px){
+@media (hover:none) and (pointer:coarse){
   .custom-cursor{
     display:none;
   }
 
   html,
-  body,
-  body *{
+  html *,
+  html *::before,
+  html *::after{
     cursor:auto;
   }
 }
 
 /* =============================================================================
-   04) RTL SAFETY
+   05) RTL STABILITY
 ============================================================================= */
 html[dir="rtl"] .custom-cursor,
 body[dir="rtl"] .custom-cursor{
@@ -79,5 +88,5 @@ body[dir="rtl"] .custom-cursor{
 }
 
 /* =============================================================================
-   05) END OF FILE
+   06) END OF FILE
 ============================================================================= */

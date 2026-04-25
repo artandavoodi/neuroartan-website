@@ -44,7 +44,6 @@
   min-width:0;
   gap:0.55rem;
   white-space:nowrap;
-  cursor:pointer;
   box-shadow:none;
   backdrop-filter:blur(var(--glass-blur-sm));
   -webkit-backdrop-filter:blur(var(--glass-blur-sm));

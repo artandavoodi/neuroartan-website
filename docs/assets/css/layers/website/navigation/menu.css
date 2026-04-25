@@ -134,7 +134,7 @@ body.menu-active{ overflow: hidden; }
 }
 #menu-button{
   position:relative;width:35px;height:35px;background:transparent;border:none;border-radius:50%;
-  cursor:pointer;display:flex;justify-content:center;align-items:center;transform-origin:center;
+  display:flex;justify-content:center;align-items:center;transform-origin:center;
 }
 #menu-button .line{
   position:absolute;top:50%;left:50%;
@@ -318,7 +318,6 @@ body.menu-active .stage-circle{ opacity: 0 !important; filter: none !important; 
   justify-content: flex-start;
 
   opacity: 0.86;
-  cursor: pointer;
   z-index: 100001;
 
   transition: opacity var(--menu-hover-opacity-duration) ease;
@@ -422,7 +421,6 @@ body.menu-active .stage-circle{ opacity: 0 !important; filter: none !important; 
   place-items: center;
 
   opacity: 0.86;
-  cursor: pointer;
   transform: scale(1);
 
   transition:
@@ -1065,7 +1063,6 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   display: grid;
   place-items: center;
 
-  cursor: pointer;
   opacity: 0.85;
 
   transition: opacity 180ms ease, transform 180ms ease, border-color 180ms ease;

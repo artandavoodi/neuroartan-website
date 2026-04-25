@@ -13,6 +13,11 @@
 ============================================================================= */
 /* /website/docs/assets/css/core/04-systems/footer.css */
 
+:root{
+  --footer-copy-font-size:0.9rem;
+  --footer-locale-font-size:0.85rem;
+}
+
 /* =============================================================================
    02) SITE FOOTER BASELINE
 ============================================================================= */
@@ -21,6 +26,8 @@
   background-color:transparent;
   color:var(--text-secondary-color);
   text-align:center;
+  font-size:var(--footer-copy-font-size);
+  font-weight:400;
 }
 
 html[data-theme-effective="dark"] .site-footer{
@@ -82,7 +89,10 @@ html[data-theme-effective="dark"] .site-footer{
   border:none;
   padding:0;
   margin:0;
-  font:inherit;
+  font-size:var(--footer-locale-font-size);
+  font-weight:inherit;
+  font-family:inherit;
+  letter-spacing:inherit;
   color:inherit;
   display:inline-flex;
   align-items:center;
@@ -90,7 +100,7 @@ html[data-theme-effective="dark"] .site-footer{
 }
 
 #country-selector{
-  font-size:0.85rem;
+  font-size:var(--footer-locale-font-size);
   font-weight:400;
   letter-spacing:0.08em;
   text-transform:uppercase;

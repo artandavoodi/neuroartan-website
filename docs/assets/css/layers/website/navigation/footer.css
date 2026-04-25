@@ -25,7 +25,7 @@
   --footer-outer-top-spacing:1.05rem;
   --footer-inner-top-padding:1.05rem;
   --footer-inner-bottom-padding:0.9rem;
-  --footer-brand-size:calc(var(--type-body-sm-size, 0.9rem) + 0.05rem);
+  --footer-brand-size:0.9rem;
 }
 
 /* =============================================================================

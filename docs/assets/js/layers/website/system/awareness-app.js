@@ -111,6 +111,20 @@ const scoreIEl = document.getElementById("scoreI");
 const scoreIIEl = document.getElementById("scoreII");
 const scoreIIIEl = document.getElementById("scoreIII");
 
+const awarenessAppAvailable = Boolean(
+  questionTextEl &&
+  sliderEl &&
+  nextBtnEl &&
+  questionPaneEl &&
+  resultPaneEl &&
+  landingPaneEl &&
+  dominantMessageEl &&
+  detailsEl &&
+  scoreIEl &&
+  scoreIIEl &&
+  scoreIIIEl
+);
+
 // ----------------- QUESTION INDICATOR BASELINE FUNCTIONALITY -----------------
 function updateProgressBar() {
   const total = (randomizedQuestions && randomizedQuestions.length > 0) ? randomizedQuestions.length : QUESTIONS.length;
@@ -168,7 +182,7 @@ function showQuestion() {
   questionTextEl.textContent = q.en;
   sliderEl.value = 5;
 }
-if (nextBtnEl && sliderEl) {
+if (awarenessAppAvailable) {
   nextBtnEl.addEventListener("click", () => {
     const source = (randomizedQuestions && randomizedQuestions.length > 0) ? randomizedQuestions : QUESTIONS;
     if (currentQ < source.length) {
@@ -338,13 +352,15 @@ function showResults() {
   showOverallResult(stageAvg);
 }
 // ----------------- STAGE CLICK TOGGLE -----------------
-document.querySelectorAll('.result-stage').forEach((el, idx)=>{
-  el.addEventListener('click', ()=>{
-    const descs = document.querySelectorAll('.stage-desc');
-    if (!descs[idx]) return;
-    descs[idx].style.display = descs[idx].style.display==='none'?'block':'none';
+if (awarenessAppAvailable) {
+  document.querySelectorAll('.result-stage').forEach((el, idx)=>{
+    el.addEventListener('click', ()=>{
+      const descs = document.querySelectorAll('.stage-desc');
+      if (!descs[idx]) return;
+      descs[idx].style.display = descs[idx].style.display==='none'?'block':'none';
+    });
   });
-});
+}
 
 function average(arr){
   return arr.reduce((a,b)=>a+b,0)/arr.length;
@@ -354,7 +370,7 @@ function average(arr){
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 
-if (startBtn) {
+if (awarenessAppAvailable && startBtn) {
   startBtn.addEventListener("click", () => {
     if (!landingPaneEl || !questionPaneEl) return;
     landingPaneEl.classList.add("hidden");
@@ -364,7 +380,7 @@ if (startBtn) {
     showQuestion();
   });
 }
-if (restartBtn) {
+if (awarenessAppAvailable && restartBtn) {
   restartBtn.addEventListener("click", () => {
     if (!resultPaneEl || !questionPaneEl) return;
     randomizeQuestions();

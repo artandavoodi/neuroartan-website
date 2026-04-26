@@ -27,10 +27,10 @@
   --profile-private-hero-media-action-size:2.15rem;
   --profile-private-hero-scroll-overlay-opacity:0;
   --profile-private-hero-scroll-overlay-opacity-active:0.58;
-  --profile-private-hero-cover-blur-active:10px;
+  --profile-private-hero-cover-blur-active:var(--effect-blur-md);
   --profile-private-hero-surface-layer-bg:var(--bg-color);
-  --profile-private-hero-surface-layer-opacity:1;
-  --profile-private-hero-surface-layer-opacity-active:1;
+  --profile-private-hero-surface-layer-opacity:var(--state-opacity-idle);
+  --profile-private-hero-surface-layer-opacity-active:var(--state-opacity-selected);
   --profile-private-hero-surface-layer-border:var(--stroke-soft) solid var(--border-color);
   --profile-private-hero-cover-bg:color-mix(in srgb, var(--text-primary-color) 5%, transparent);
   --profile-private-hero-cover-border:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
@@ -40,10 +40,19 @@
   --profile-private-hero-control-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --profile-private-hero-motion-fast:220ms;
   --profile-private-hero-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
-  --profile-private-hero-tab-color:var(--text-secondary-color);
-  --profile-private-hero-tab-hover-color:var(--text-primary-color);
-  --profile-private-hero-tab-active-underline-bg:var(--text-primary-color);
-  --profile-private-hero-tab-active-opacity:1;
+  --profile-private-hero-avatar-initials-size:var(--data-value-lg-size);
+  --profile-private-hero-avatar-initials-weight:var(--data-value-lg-weight);
+  --profile-private-hero-avatar-initials-line-height:var(--line-height-ui);
+  --profile-private-hero-avatar-initials-tracking:var(--data-value-lg-tracking);
+  --profile-private-hero-detail-gap:var(--spacing-2xs);
+  --profile-private-hero-stat-strong-weight:var(--font-weight-heading-soft);
+  --profile-private-hero-media-action-hover-opacity:var(--state-opacity-selected);
+  --profile-private-hero-tab-indicator-opacity:0;
+  --profile-private-hero-tab-indicator-opacity-active:var(--selected-indicator-opacity);
+  --profile-private-hero-tab-color:var(--nav-local-color);
+  --profile-private-hero-tab-hover-color:var(--local-nav-hover-text-color);
+  --profile-private-hero-tab-active-underline-bg:var(--local-nav-active-indicator-color);
+  --profile-private-hero-tab-active-opacity:var(--local-nav-hover-opacity);
 }
 
 /* =============================================================================
@@ -172,10 +181,10 @@
 }
 
 .profile-private-hero__avatar-initials{
-  font-size:1.7rem;
-  font-weight:500;
-  line-height:1;
-  letter-spacing:0.02em;
+  font-size:var(--profile-private-hero-avatar-initials-size);
+  font-weight:var(--profile-private-hero-avatar-initials-weight);
+  line-height:var(--profile-private-hero-avatar-initials-line-height);
+  letter-spacing:var(--profile-private-hero-avatar-initials-tracking);
 }
 
 .profile-private-hero__media-action{
@@ -191,8 +200,8 @@
   border-radius:999px;
   background:var(--profile-private-hero-control-bg);
   color:var(--text-primary-color);
-  backdrop-filter:blur(8px) saturate(120%);
-  -webkit-backdrop-filter:blur(8px) saturate(120%);
+  backdrop-filter:blur(var(--effect-blur-sm)) saturate(120%);
+  -webkit-backdrop-filter:blur(var(--effect-blur-sm)) saturate(120%);
   transition:
     color var(--profile-private-hero-motion-fast) ease,
     border-color var(--profile-private-hero-motion-fast) ease,
@@ -208,7 +217,7 @@
 .profile-private-hero__media-action:hover,
 .profile-private-hero__media-action:focus-visible{
   color:var(--text-primary-color);
-  opacity:1;
+  opacity:var(--profile-private-hero-media-action-hover-opacity);
   outline:none;
 }
 
@@ -276,7 +285,7 @@
 .profile-private-hero__detail{
   display:inline-flex;
   align-items:center;
-  gap:0.35rem;
+  gap:var(--profile-private-hero-detail-gap);
 }
 
 .profile-private-hero__detail img{
@@ -312,7 +321,7 @@
 
 .profile-private-hero__stat strong{
   color:var(--text-primary-color);
-  font-weight:500;
+  font-weight:var(--profile-private-hero-stat-strong-weight);
 }
 
 /* =============================================================================
@@ -363,7 +372,7 @@
   bottom:calc((3.55rem - 100%) / -2);
   height:0.35px;
   background:var(--profile-private-hero-tab-active-underline-bg);
-  opacity:0;
+  opacity:var(--profile-private-hero-tab-indicator-opacity);
   pointer-events:none;
 }
 
@@ -379,7 +388,7 @@
 }
 
 .profile-private-hero__tab[aria-current="page"]::after{
-  opacity:1;
+  opacity:var(--profile-private-hero-tab-indicator-opacity-active);
 }
 
 /* =============================================================================

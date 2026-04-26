@@ -13,13 +13,14 @@
    11) BLUR / FILTER EFFECT TOKENS
    12) SHADOW EFFECT TOKENS
    13) OVERLAY EFFECT TOKENS
-   14) FEEDBACK EFFECT TOKENS
-   15) NAVIGATION EFFECT TOKENS
-   16) CONTROL EFFECT TOKENS
-   17) PROFILE EFFECT TOKENS
-   18) PRODUCT EFFECT TOKENS
-   19) MARKETING EFFECT TOKENS
-   20) END OF FILE
+   14) DIALOG / CONSENT OVERLAY TOKENS
+   15) FEEDBACK EFFECT TOKENS
+   16) NAVIGATION EFFECT TOKENS
+   17) CONTROL EFFECT TOKENS
+   18) PROFILE EFFECT TOKENS
+   19) PRODUCT EFFECT TOKENS
+   20) MARKETING EFFECT TOKENS
+   21) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -198,7 +199,193 @@
 }
 
 /* =============================================================================
-   14) FEEDBACK EFFECT TOKENS
+   14) DIALOG / CONSENT OVERLAY TOKENS
+============================================================================= */
+:root{
+  /* Exact dialog and consent overlay values for mature modal-style surfaces. */
+  --dialog-overlay-viewport-gap:24px;
+  --dialog-overlay-viewport-gap-mobile:20px;
+  --dialog-overlay-shadow:0 20px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
+  --dialog-overlay-shadow-dark:0 24px 70px color-mix(in srgb, var(--shadow-color, #000000) 24%, transparent);
+  --dialog-overlay-row-shadow:0 14px 34px color-mix(in srgb, var(--shadow-color, #000000) 4%, transparent);
+  --dialog-overlay-row-shadow-light:0 14px 34px color-mix(in srgb, var(--shadow-color, #000000) 3.5%, transparent);
+  --dialog-overlay-row-shadow-dark:0 14px 34px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent);
+  --dialog-overlay-radius:1.9rem;
+  --dialog-overlay-radius-mobile:1.5rem;
+  --dialog-overlay-card-radius:1rem;
+  --dialog-overlay-subitem-radius:0.9rem;
+  --dialog-overlay-pill-radius:999px;
+  --dialog-overlay-backdrop-blur:16px;
+  --dialog-overlay-panel-blur:18px;
+  --dialog-overlay-footer-separator-opacity:0.35;
+  --dialog-overlay-shell-gap:0.9rem;
+  --dialog-overlay-panel-min-height:24rem;
+  --dialog-overlay-panel-padding-y:1.25rem;
+  --dialog-overlay-panel-padding-x:1.25rem;
+  --dialog-overlay-panel-padding-y-mobile:0.95rem;
+  --dialog-overlay-panel-padding-x-mobile:0.95rem;
+  --dialog-overlay-transform-closed:translateY(1.2rem) scale(0.985);
+  --dialog-overlay-transform-open:translateY(0) scale(1);
+  --dialog-overlay-opacity-closed:0;
+  --dialog-overlay-opacity-open:1;
+}
+
+:root{
+  /* Exact consent/dialog content rhythm and typography values. */
+  --dialog-consent-header-gap:0.82rem;
+  --dialog-consent-header-gap-mobile:0.72rem;
+  --dialog-consent-header-padding-bottom:1.14rem;
+  --dialog-consent-header-padding-bottom-mobile:0.97rem;
+  --dialog-consent-body-padding-top:0.64rem;
+  --dialog-consent-body-padding-top-mobile:0.51rem;
+  --dialog-consent-body-padding-inline:0.52rem;
+  --dialog-consent-body-padding-inline-mobile:0.36rem;
+  --dialog-consent-content-gutter:1.42rem;
+  --dialog-consent-content-gutter-mobile:1.08rem;
+  --dialog-consent-body-edge-inset:0.52rem;
+  --dialog-consent-body-edge-inset-mobile:0.36rem;
+  --dialog-consent-row-margin-bottom:1rem;
+  --dialog-consent-subitems-margin-top:0.06rem;
+  --dialog-consent-settings-intro-margin-bottom:1rem;
+  --dialog-consent-eyebrow-size:0.78rem;
+  --dialog-consent-eyebrow-weight:400;
+  --dialog-consent-eyebrow-line-height:1.2;
+  --dialog-consent-eyebrow-tracking:0.08em;
+  --dialog-consent-copy-size:0.95rem;
+  --dialog-consent-copy-weight:300;
+  --dialog-consent-copy-line-height:1.58;
+  --dialog-consent-copy-tracking:-0.015em;
+  --dialog-consent-note-legal-size:0.8rem;
+  --dialog-consent-note-legal-line-height:1.45;
+  --dialog-consent-strong-weight:400;
+  --dialog-consent-mobile-title-size:1.46rem;
+  --dialog-consent-mobile-copy-size:0.9rem;
+}
+
+:root{
+  /* Exact consent/dialog row, action, learning, subitem, and footer values. */
+  --dialog-consent-action-gap:0.72rem;
+  --dialog-consent-action-min-height:3rem;
+  --dialog-consent-action-min-height-mobile:2.86rem;
+  --dialog-consent-action-padding-y:0.82rem;
+  --dialog-consent-action-padding-x:1rem;
+  --dialog-consent-action-padding-y-mobile:0.78rem;
+  --dialog-consent-action-padding-x-mobile:0.94rem;
+  --dialog-consent-action-size:0.94rem;
+  --dialog-consent-action-weight:300;
+  --dialog-consent-action-line-height:1.2;
+  --dialog-consent-action-tracking:-0.015em;
+  --dialog-consent-row-topline-gap:0.72rem;
+  --dialog-consent-row-topline-gap-mobile:0.62rem;
+  --dialog-consent-row-topline-padding-y:1rem;
+  --dialog-consent-row-topline-padding-y-mobile:0.92rem;
+  --dialog-consent-row-summary-gap:0.8rem;
+  --dialog-consent-row-copy-gap:0.22rem;
+  --dialog-consent-row-title-size:0.94rem;
+  --dialog-consent-row-title-weight:400;
+  --dialog-consent-row-title-line-height:1.2;
+  --dialog-consent-row-title-tracking:-0.016em;
+  --dialog-consent-row-copy-size:0.84rem;
+  --dialog-consent-row-copy-size-mobile:0.78rem;
+  --dialog-consent-row-copy-weight:300;
+  --dialog-consent-row-copy-line-height:1.5;
+  --dialog-consent-row-copy-tracking:-0.012em;
+  --dialog-consent-row-status-size:0.76rem;
+  --dialog-consent-row-status-weight:400;
+  --dialog-consent-row-status-line-height:1.2;
+  --dialog-consent-row-status-tracking:-0.01em;
+  --dialog-consent-row-detail-gap:0.62rem;
+  --dialog-consent-row-detail-padding-y:0.92rem;
+  --dialog-consent-row-detail-padding-y-mobile:0.82rem;
+  --dialog-consent-row-link-size:0.8rem;
+  --dialog-consent-row-link-weight:400;
+  --dialog-consent-row-link-line-height:1.3;
+  --dialog-consent-row-link-tracking:-0.01em;
+  --dialog-consent-row-hover:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --dialog-consent-row-icon-size:1.68rem;
+  --dialog-consent-row-expand-size:1.18rem;
+  --dialog-consent-row-expand-icon-size:0.92rem;
+  --dialog-consent-row-expand-icon-size-mobile:0.84rem;
+}
+
+:root{
+  /* Exact consent/dialog brand, learning, subitem, footer, and mobile values. */
+  --dialog-consent-brand-gap:1.04rem;
+  --dialog-consent-brand-margin-top:0.28rem;
+  --dialog-consent-brand-margin-bottom:0.78rem;
+  --dialog-consent-brand-symbol-wrap-size:2.4rem;
+  --dialog-consent-brand-symbol-size:2.3rem;
+  --dialog-consent-brand-symbol-size-mobile:1.9rem;
+  --dialog-consent-brand-wordmark-width:11.8rem;
+  --dialog-consent-brand-wordmark-height:0.96rem;
+  --dialog-consent-brand-wordmark-height-mobile:0.84rem;
+  --dialog-consent-learning-shell-min-height:10.5rem;
+  --dialog-consent-learning-shell-radius:1rem;
+  --dialog-consent-learning-shell-padding:0.88rem;
+  --dialog-consent-learning-card-padding-mobile:0.84rem;
+  --dialog-consent-learning-icon-size:1.68rem;
+  --dialog-consent-learning-rail-gap:1rem;
+  --dialog-consent-learning-card-gap:0.82rem;
+  --dialog-consent-learning-copy-gap:0.28rem;
+  --dialog-consent-copy-stack-gap:0.56rem;
+  --dialog-consent-learning-title-size:0.94rem;
+  --dialog-consent-learning-title-size-mobile:0.9rem;
+  --dialog-consent-learning-title-weight:400;
+  --dialog-consent-learning-title-line-height:1.22;
+  --dialog-consent-learning-title-tracking:-0.016em;
+  --dialog-consent-learning-copy-size:0.84rem;
+  --dialog-consent-learning-copy-size-mobile:0.8rem;
+  --dialog-consent-learning-copy-weight:300;
+  --dialog-consent-learning-copy-line-height:1.52;
+  --dialog-consent-learning-copy-tracking:-0.01em;
+  --dialog-consent-subitem-gap:0.62rem;
+  --dialog-consent-subitem-layout-gap:0.9rem;
+  --dialog-consent-subitem-padding-y:0.92rem;
+  --dialog-consent-subitem-state-margin-top-mobile:0.12rem;
+  --dialog-consent-subitem-copy-gap:0.2rem;
+  --dialog-consent-subitem-title-size:0.86rem;
+  --dialog-consent-subitem-title-weight:400;
+  --dialog-consent-subitem-title-line-height:1.2;
+  --dialog-consent-subitem-title-tracking:-0.014em;
+  --dialog-consent-subitem-copy-size:0.76rem;
+  --dialog-consent-subitem-copy-weight:300;
+  --dialog-consent-subitem-copy-line-height:1.45;
+  --dialog-consent-subitem-copy-tracking:-0.01em;
+  --dialog-consent-subitem-state-size:0.74rem;
+  --dialog-consent-subitem-state-weight:400;
+  --dialog-consent-subitem-state-line-height:1.2;
+  --dialog-consent-subitem-state-tracking:-0.01em;
+  --dialog-consent-sticky-actions-padding-top:0.72rem;
+  --dialog-consent-sticky-actions-padding-top-mobile:0.62rem;
+  --dialog-consent-sticky-actions-padding-bottom:1.12rem;
+  --dialog-consent-sticky-actions-padding-bottom-mobile:1rem;
+  --dialog-consent-footer-gap:1rem;
+  --dialog-consent-footer-gap-mobile:0.78rem;
+  --dialog-consent-footer-link-row-gap:0.5rem;
+  --dialog-consent-footer-separator-size:0.95rem;
+  --dialog-consent-footer-separator-weight:400;
+  --dialog-consent-footer-separator-line-height:1;
+  --dialog-consent-footer-separator-margin-inline:1rem;
+  --dialog-consent-footer-link-size:0.78rem;
+  --dialog-consent-footer-link-weight:400;
+  --dialog-consent-footer-link-line-height:1.3;
+  --dialog-consent-footer-link-tracking:-0.01em;
+  --dialog-consent-footer-language-gap:0.42rem;
+  --dialog-consent-footer-language-min-height:2.2rem;
+  --dialog-consent-footer-language-padding-y:0.56rem;
+  --dialog-consent-footer-language-padding-x:0.82rem;
+  --dialog-consent-footer-language-label-size:0.74rem;
+  --dialog-consent-footer-language-label-weight:400;
+  --dialog-consent-footer-language-label-line-height:1.2;
+  --dialog-consent-footer-language-label-tracking:-0.01em;
+  --dialog-consent-footer-language-value-size:0.78rem;
+  --dialog-consent-footer-language-value-weight:400;
+  --dialog-consent-footer-language-value-line-height:1.2;
+  --dialog-consent-footer-language-value-tracking:-0.01em;
+}
+
+/* =============================================================================
+   15) FEEDBACK EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Shared feedback effect states for success, warning, error, and info surfaces. */
@@ -209,7 +396,7 @@
 }
 
 /* =============================================================================
-   15) NAVIGATION EFFECT TOKENS
+   16) NAVIGATION EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Navigation hover and active behavior. */
@@ -229,7 +416,7 @@
 }
 
 /* =============================================================================
-   16) CONTROL EFFECT TOKENS
+   17) CONTROL EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Buttons, toggles, chips, pills, and form controls. */
@@ -248,7 +435,7 @@
 }
 
 /* =============================================================================
-   17) PROFILE EFFECT TOKENS
+   18) PROFILE EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Profile-specific interactive effects. */
@@ -260,7 +447,7 @@
 }
 
 /* =============================================================================
-   18) PRODUCT EFFECT TOKENS
+   19) PRODUCT EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Product-specific interactive effects. */
@@ -272,7 +459,7 @@
 }
 
 /* =============================================================================
-   19) MARKETING EFFECT TOKENS
+   20) MARKETING EFFECT TOKENS
 ============================================================================= */
 :root{
   /* Marketing-specific effects for landing surfaces and conversion modules. */
@@ -284,5 +471,5 @@
 }
 
 /* =============================================================================
-   20) END OF FILE
+   21) END OF FILE
 ============================================================================= */

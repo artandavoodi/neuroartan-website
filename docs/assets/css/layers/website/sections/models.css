@@ -1,6 +1,7 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
+   01A) MODELS DIRECTORY TOKENS
    02) TOOLBAR
    03) FILTERS
    04) CARD SYSTEM
@@ -13,37 +14,94 @@
 /* /website/docs/assets/css/layers/website/sections/models.css */
 
 /* =============================================================================
+   01A) MODELS DIRECTORY TOKENS
+============================================================================= */
+:root{
+  --models-toolbar-gap:var(--layout-models-toolbar-gap);
+  --models-toolbar-top-gap:var(--layout-models-toolbar-top-gap);
+  --models-sort-gap:var(--layout-models-sort-gap);
+  --models-sort-label-size:var(--layout-models-sort-label-size);
+  --models-sort-label-line-height:var(--layout-models-sort-label-line-height);
+  --models-select-min-height:var(--layout-models-select-min-height);
+  --models-select-padding-x:var(--layout-models-select-padding-x);
+  --models-select-radius:var(--layout-models-select-radius);
+  --models-filter-row-gap:var(--layout-models-filter-row-gap);
+  --models-filter-chip-min-height:var(--layout-models-filter-chip-min-height);
+  --models-filter-chip-padding-x:var(--layout-models-filter-chip-padding-x);
+  --models-filter-chip-radius:var(--layout-models-filter-chip-radius);
+  --models-motion:var(--layout-models-motion);
+  --models-filter-groups-count:var(--layout-models-filter-groups-count);
+  --models-filter-groups-gap:var(--layout-models-filter-groups-gap);
+  --models-filter-group-gap:var(--layout-models-filter-group-gap);
+  --models-filter-label-size:var(--layout-models-filter-label-size);
+  --models-filter-label-weight:var(--layout-models-filter-label-weight);
+  --models-filter-label-tracking:var(--layout-models-filter-label-tracking);
+  --models-card-column-span:var(--layout-models-card-column-span);
+  --models-card-column-span-mobile:var(--layout-models-card-column-span-mobile);
+  --models-card-identity-gap:var(--layout-models-card-identity-gap);
+  --models-avatar-size:var(--layout-models-avatar-size);
+  --models-avatar-radius:var(--layout-models-avatar-radius);
+  --models-avatar-fallback-size:var(--layout-models-avatar-fallback-size);
+  --models-avatar-fallback-weight:var(--layout-models-avatar-fallback-weight);
+  --models-avatar-fallback-tracking:var(--layout-models-avatar-fallback-tracking);
+  --models-identity-copy-gap:var(--layout-models-identity-copy-gap);
+  --models-title-row-gap:var(--layout-models-title-row-gap);
+  --models-verification-gap:var(--layout-models-verification-gap);
+  --models-verification-min-height:var(--layout-models-verification-min-height);
+  --models-verification-padding-x:var(--layout-models-verification-padding-x);
+  --models-verification-radius:var(--layout-models-verification-radius);
+  --models-verification-blue:var(--layout-models-verification-blue);
+  --models-verification-border-mix:var(--layout-models-verification-border-mix);
+  --models-verification-bg-mix:var(--layout-models-verification-bg-mix);
+  --models-verification-size:var(--layout-models-verification-size);
+  --models-verification-weight:var(--layout-models-verification-weight);
+  --models-verification-tracking:var(--layout-models-verification-tracking);
+  --models-verification-icon-size:var(--layout-models-verification-icon-size);
+  --models-handle-size:var(--layout-models-handle-size);
+  --models-handle-tracking:var(--layout-models-handle-tracking);
+  --models-meta-gap:var(--layout-models-meta-gap);
+  --models-meta-row-gap:var(--layout-models-meta-row-gap);
+  --models-meta-size:var(--layout-models-meta-size);
+  --models-meta-line-height:var(--layout-models-meta-line-height);
+  --models-meta-strong-weight:var(--layout-models-meta-strong-weight);
+  --models-actions-gap:var(--layout-models-actions-gap);
+  --models-action-min-height:var(--layout-models-action-min-height);
+  --models-action-padding-x:var(--layout-models-action-padding-x);
+  --models-action-radius:var(--layout-models-action-radius);
+}
+
+/* =============================================================================
    02) TOOLBAR
 ============================================================================= */
 .models-directory-toolbar{
   display:grid;
-  gap:1.15rem;
+  gap:var(--models-toolbar-gap);
 }
 
 .models-directory-toolbar__top{
   display:grid;
   grid-template-columns:minmax(0, 1fr) auto;
-  gap:1rem;
+  gap:var(--models-toolbar-top-gap);
   align-items:end;
 }
 
 .models-directory-sort{
   display:grid;
-  gap:0.45rem;
+  gap:var(--models-sort-gap);
 }
 
 .models-directory-sort__label{
-  margin:0;
+  margin:var(--spacing-none);
   color:var(--text-secondary-color);
-  font-size:0.86rem;
-  line-height:1.6;
+  font-size:var(--models-sort-label-size);
+  line-height:var(--models-sort-label-line-height);
 }
 
 .models-directory-sort__select{
-  min-height:3.4rem;
-  padding:0 1rem;
+  min-height:var(--models-select-min-height);
+  padding:var(--spacing-none) var(--models-select-padding-x);
   border:1px solid var(--field-border);
-  border-radius:1rem;
+  border-radius:var(--models-select-radius);
   background:var(--field-bg);
   color:var(--text-primary-color);
   font:inherit;
@@ -55,24 +113,24 @@
 .models-directory-filter-row{
   display:flex;
   flex-wrap:wrap;
-  gap:0.75rem;
+  gap:var(--models-filter-row-gap);
 }
 
 .models-directory-filter-chip{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:2.2rem;
-  padding:0 0.95rem;
+  min-height:var(--models-filter-chip-min-height);
+  padding:var(--spacing-none) var(--models-filter-chip-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--models-filter-chip-radius);
   background:transparent;
   color:var(--text-secondary-color);
   font:inherit;
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease;
+    color var(--models-motion) ease,
+    background-color var(--models-motion) ease,
+    border-color var(--models-motion) ease;
 }
 
 .models-directory-filter-chip:hover,
@@ -86,21 +144,21 @@
 
 .models-directory-filter-groups{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:1rem;
+  grid-template-columns:repeat(var(--models-filter-groups-count), minmax(0, 1fr));
+  gap:var(--models-filter-groups-gap);
 }
 
 .models-directory-filter-group{
   display:grid;
-  gap:0.55rem;
+  gap:var(--models-filter-group-gap);
 }
 
 .models-directory-filter-group__label{
-  margin:0;
+  margin:var(--spacing-none);
   color:var(--text-secondary-color);
-  font-size:0.78rem;
-  font-weight:500;
-  letter-spacing:0.1em;
+  font-size:var(--models-filter-label-size);
+  font-weight:var(--models-filter-label-weight);
+  letter-spacing:var(--models-filter-label-tracking);
   text-transform:uppercase;
 }
 
@@ -108,19 +166,19 @@
    04) CARD SYSTEM
 ============================================================================= */
 .models-directory-card{
-  grid-column:span 6;
+  grid-column:span var(--models-card-column-span);
 }
 
 .models-directory-card__identity{
   display:flex;
   align-items:flex-start;
-  gap:0.9rem;
+  gap:var(--models-card-identity-gap);
 }
 
 .models-directory-card__avatar{
-  width:3rem;
-  height:3rem;
-  border-radius:999px;
+  width:var(--models-avatar-size);
+  height:var(--models-avatar-size);
+  border-radius:var(--models-filter-chip-radius);
   overflow:hidden;
   border:1px solid var(--control-border);
   background:var(--control-bg-hover);
@@ -144,97 +202,97 @@
   width:100%;
   height:100%;
   color:var(--text-primary-color);
-  font-size:0.92rem;
-  font-weight:600;
-  letter-spacing:0.06em;
+  font-size:var(--models-avatar-fallback-size);
+  font-weight:var(--models-avatar-fallback-weight);
+  letter-spacing:var(--models-avatar-fallback-tracking);
   text-transform:uppercase;
 }
 
 .models-directory-card__identity-copy{
   display:grid;
-  gap:0.3rem;
+  gap:var(--models-identity-copy-gap);
   min-width:0;
 }
 
 .models-directory-card__title-row{
   display:flex;
   flex-wrap:wrap;
-  gap:0.6rem;
+  gap:var(--models-title-row-gap);
   align-items:center;
 }
 
 .models-directory-card__verification{
   display:inline-flex;
   align-items:center;
-  gap:0.42rem;
-  min-height:1.9rem;
-  padding:0 0.7rem;
-  border:1px solid color-mix(in srgb, #1d9bf0 30%, transparent);
-  border-radius:999px;
-  background:color-mix(in srgb, #1d9bf0 10%, transparent);
-  color:#1d9bf0;
-  font-size:0.72rem;
-  font-weight:600;
-  letter-spacing:0.08em;
+  gap:var(--models-verification-gap);
+  min-height:var(--models-verification-min-height);
+  padding:var(--spacing-none) var(--models-verification-padding-x);
+  border:1px solid color-mix(in srgb, var(--models-verification-blue) var(--models-verification-border-mix), transparent);
+  border-radius:var(--models-filter-chip-radius);
+  background:color-mix(in srgb, var(--models-verification-blue) var(--models-verification-bg-mix), transparent);
+  color:var(--models-verification-blue);
+  font-size:var(--models-verification-size);
+  font-weight:var(--models-verification-weight);
+  letter-spacing:var(--models-verification-tracking);
   text-transform:uppercase;
 }
 
 .models-directory-card__verification-icon{
   display:block;
-  width:0.9rem;
-  height:0.9rem;
+  width:var(--models-verification-icon-size);
+  height:var(--models-verification-icon-size);
 }
 
 .models-directory-card__handle{
-  margin:0;
+  margin:var(--spacing-none);
   color:var(--text-secondary-color);
-  font-size:0.82rem;
-  letter-spacing:0.08em;
+  font-size:var(--models-handle-size);
+  letter-spacing:var(--models-verification-tracking);
   text-transform:uppercase;
 }
 
 .models-directory-card__meta{
   display:grid;
-  gap:0.55rem;
+  gap:var(--models-meta-gap);
 }
 
 .models-directory-card__meta-row{
   display:flex;
   justify-content:space-between;
-  gap:1rem;
-  margin:0;
+  gap:var(--models-meta-row-gap);
+  margin:var(--spacing-none);
   color:var(--text-secondary-color);
-  font-size:0.82rem;
-  line-height:1.5;
+  font-size:var(--models-handle-size);
+  line-height:var(--models-meta-line-height);
 }
 
 .models-directory-card__meta-row strong{
   color:var(--text-primary-color);
-  font-weight:500;
+  font-weight:var(--models-meta-strong-weight);
 }
 
 .models-directory-card__actions{
   display:flex;
   flex-wrap:wrap;
-  gap:0.75rem;
+  gap:var(--models-actions-gap);
 }
 
 .models-directory-card__action{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:2.6rem;
-  padding:0 1rem;
+  min-height:var(--models-action-min-height);
+  padding:var(--spacing-none) var(--models-action-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--models-filter-chip-radius);
   background:transparent;
   color:var(--text-primary-color);
   font:inherit;
   text-decoration:none;
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease;
+    color var(--models-motion) ease,
+    background-color var(--models-motion) ease,
+    border-color var(--models-motion) ease;
 }
 
 .models-directory-card__action:hover,
@@ -254,10 +312,10 @@
 @media (max-width: 980px){
   .models-directory-toolbar__top,
   .models-directory-filter-groups{
-    grid-template-columns:1fr;
+    grid-template-columns:var(--grid-column-single);
   }
 
   .models-directory-card{
-    grid-column:span 12;
+    grid-column:span var(--models-card-column-span-mobile);
   }
 }

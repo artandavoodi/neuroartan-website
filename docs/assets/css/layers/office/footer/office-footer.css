@@ -22,15 +22,56 @@
    02) OFFICE FOOTER TOKENS
 ============================================================================= */
 :root {
-  --office-footer-bg: rgba(7, 7, 7, 0.82);
-  --office-footer-panel: rgba(255, 255, 255, 0.04);
-  --office-footer-border: var(--border-color, rgba(255, 255, 255, 0.08));
-  --office-footer-text: var(--text-color, rgba(255, 255, 255, 0.92));
-  --office-footer-muted: var(--text-secondary-color, rgba(255, 255, 255, 0.58));
-  --office-footer-soft: var(--border-color, rgba(255, 255, 255, 0.12));
-  --office-footer-max-width: 1440px;
-  --office-footer-radius: 28px;
-  --office-footer-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+  --office-footer-bg:var(--layout-office-footer-bg);
+  --office-footer-panel:var(--layout-office-footer-panel);
+  --office-footer-border:var(--border-color, var(--layout-office-footer-border-fallback));
+  --office-footer-text:var(--text-color, var(--layout-office-footer-text-fallback));
+  --office-footer-muted:var(--text-secondary-color, var(--layout-office-footer-muted-fallback));
+  --office-footer-soft:var(--border-color, var(--layout-office-footer-soft-fallback));
+  --office-footer-max-width:var(--layout-office-footer-max-width);
+  --office-footer-radius:var(--layout-office-footer-radius);
+  --office-footer-shadow:var(--layout-office-footer-shadow);
+  --office-footer-shell-padding-top:var(--layout-office-footer-shell-padding-top);
+  --office-footer-shell-padding-inline:var(--layout-office-footer-shell-padding-inline);
+  --office-footer-shell-padding-bottom:var(--layout-office-footer-shell-padding-bottom);
+  --office-footer-inner-gap:var(--layout-office-footer-inner-gap);
+  --office-footer-inner-padding:var(--layout-office-footer-inner-padding);
+  --office-footer-brand-gap:var(--layout-office-footer-brand-gap);
+  --office-footer-brand-max-width:var(--layout-office-footer-brand-max-width);
+  --office-footer-eyebrow-size:var(--layout-office-footer-eyebrow-size);
+  --office-footer-eyebrow-weight:var(--layout-office-footer-eyebrow-weight);
+  --office-footer-eyebrow-tracking:var(--layout-office-footer-eyebrow-tracking);
+  --office-footer-title-size:var(--layout-office-footer-title-size);
+  --office-footer-title-line-height:var(--layout-office-footer-title-line-height);
+  --office-footer-title-weight:var(--layout-office-footer-title-weight);
+  --office-footer-title-tracking:var(--layout-office-footer-title-tracking);
+  --office-footer-copy-size:var(--layout-office-footer-copy-size);
+  --office-footer-copy-line-height:var(--layout-office-footer-copy-line-height);
+  --office-footer-columns-count:var(--layout-office-footer-columns-count);
+  --office-footer-columns-gap:var(--layout-office-footer-columns-gap);
+  --office-footer-column-gap:var(--layout-office-footer-column-gap);
+  --office-footer-column-padding:var(--layout-office-footer-column-padding);
+  --office-footer-column-radius:var(--layout-office-footer-column-radius);
+  --office-footer-column-title-size:var(--layout-office-footer-column-title-size);
+  --office-footer-column-title-weight:var(--layout-office-footer-column-title-weight);
+  --office-footer-column-title-tracking:var(--layout-office-footer-column-title-tracking);
+  --office-footer-link-gap:var(--layout-office-footer-link-gap);
+  --office-footer-link-motion:var(--layout-office-footer-link-motion);
+  --office-footer-link-opacity:var(--layout-office-footer-link-opacity);
+  --office-footer-link-opacity-hover:var(--layout-office-footer-link-opacity-hover);
+  --office-footer-meta-gap:var(--layout-office-footer-meta-gap);
+  --office-footer-meta-label-size:var(--layout-office-footer-meta-label-size);
+  --office-footer-meta-label-tracking:var(--layout-office-footer-meta-label-tracking);
+  --office-footer-meta-value-size:var(--layout-office-footer-meta-value-size);
+  --office-footer-meta-value-weight:var(--layout-office-footer-meta-value-weight);
+  --office-footer-bottom-gap:var(--layout-office-footer-bottom-gap);
+  --office-footer-bottom-padding-top:var(--layout-office-footer-bottom-padding-top);
+  --office-footer-legal-size:var(--layout-office-footer-legal-size);
+  --office-footer-legal-line-height:var(--layout-office-footer-legal-line-height);
+  --office-footer-mobile-shell-padding-top:var(--layout-office-footer-mobile-shell-padding-top);
+  --office-footer-mobile-shell-padding-inline:var(--layout-office-footer-mobile-shell-padding-inline);
+  --office-footer-mobile-shell-padding-bottom:var(--layout-office-footer-mobile-shell-padding-bottom);
+  --office-footer-mobile-inner-padding:var(--layout-office-footer-mobile-inner-padding);
 }
 
 /* =============================================================================
@@ -38,7 +79,7 @@
 ============================================================================= */
 .office-footer {
   width: 100%;
-  padding: 0 24px 32px;
+  padding: var(--office-footer-shell-padding-top) var(--office-footer-shell-padding-inline) var(--office-footer-shell-padding-bottom);
 }
 
 /* =============================================================================
@@ -46,10 +87,10 @@
 ============================================================================= */
 .office-footer__inner {
   width: min(100%, var(--office-footer-max-width));
-  margin: 0 auto;
+  margin: var(--spacing-none) auto;
   display: grid;
-  gap: 28px;
-  padding: 32px;
+  gap: var(--office-footer-inner-gap);
+  padding: var(--office-footer-inner-padding);
   border: 1px solid var(--office-footer-border);
   border-radius: var(--office-footer-radius);
   background: var(--office-footer-bg);
@@ -61,33 +102,33 @@
 ============================================================================= */
 .office-footer__brand-block {
   display: grid;
-  gap: 12px;
-  max-width: 720px;
+  gap: var(--office-footer-brand-gap);
+  max-width: var(--office-footer-brand-max-width);
 }
 
 .office-footer__eyebrow {
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--office-footer-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-size: var(--office-footer-eyebrow-size);
+  font-weight: var(--office-footer-eyebrow-weight);
+  letter-spacing: var(--office-footer-eyebrow-tracking);
   text-transform: uppercase;
 }
 
 .office-footer__title {
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--office-footer-text);
-  font-size: 1.8rem;
-  line-height: 1.04;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  font-size: var(--office-footer-title-size);
+  line-height: var(--office-footer-title-line-height);
+  font-weight: var(--office-footer-title-weight);
+  letter-spacing: var(--office-footer-title-tracking);
 }
 
 .office-footer__copy {
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--office-footer-muted);
-  font-size: 0.98rem;
-  line-height: 1.72;
+  font-size: var(--office-footer-copy-size);
+  line-height: var(--office-footer-copy-line-height);
 }
 
 /* =============================================================================
@@ -95,25 +136,25 @@
 ============================================================================= */
 .office-footer__columns {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(var(--office-footer-columns-count), minmax(0, 1fr));
+  gap: var(--office-footer-columns-gap);
 }
 
 .office-footer__column {
   display: grid;
-  gap: 14px;
-  padding: 18px;
+  gap: var(--office-footer-column-gap);
+  padding: var(--office-footer-column-padding);
   border: 1px solid var(--office-footer-border);
-  border-radius: 18px;
+  border-radius: var(--office-footer-column-radius);
   background: var(--office-footer-panel);
 }
 
 .office-footer__column-title {
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--office-footer-text);
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: var(--office-footer-column-title-size);
+  font-weight: var(--office-footer-column-title-weight);
+  letter-spacing: var(--office-footer-column-title-tracking);
 }
 
 /* =============================================================================
@@ -122,7 +163,7 @@
 .office-footer__link-list,
 .office-footer__meta-list {
   display: grid;
-  gap: 10px;
+  gap: var(--office-footer-link-gap);
 }
 
 .office-footer__link-list a {
@@ -130,37 +171,37 @@
   color: var(--office-footer-text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 180ms ease, opacity 180ms ease;
-  opacity: 0.9;
+  transition: border-color var(--office-footer-link-motion) ease, opacity var(--office-footer-link-motion) ease;
+  opacity: var(--office-footer-link-opacity);
 }
 
 .office-footer__link-list a:hover,
 .office-footer__link-list a:focus-visible,
 .office-footer__link-list a[aria-current="page"] {
   border-color: var(--office-footer-soft);
-  opacity: 1;
+  opacity: var(--office-footer-link-opacity-hover);
   outline: none;
 }
 
 .office-footer__meta-list p {
-  margin: 0;
+  margin: var(--spacing-none);
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--office-footer-meta-gap);
 }
 
 .office-footer__meta-list span {
   color: var(--office-footer-muted);
-  font-size: 0.84rem;
-  letter-spacing: 0.04em;
+  font-size: var(--office-footer-meta-label-size);
+  letter-spacing: var(--office-footer-meta-label-tracking);
   text-transform: uppercase;
 }
 
 .office-footer__meta-list strong {
   color: var(--office-footer-text);
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: var(--office-footer-meta-value-size);
+  font-weight: var(--office-footer-meta-value-weight);
 }
 
 /* =============================================================================
@@ -170,16 +211,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding-top: 8px;
+  gap: var(--office-footer-bottom-gap);
+  padding-top: var(--office-footer-bottom-padding-top);
   border-top: 1px solid var(--office-footer-border);
 }
 
 .office-footer__legal {
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--office-footer-muted);
-  font-size: 0.84rem;
-  line-height: 1.5;
+  font-size: var(--office-footer-meta-label-size);
+  line-height: var(--office-footer-legal-line-height);
 }
 
 /* =============================================================================
@@ -187,15 +228,15 @@
 ============================================================================= */
 @media (max-width: 980px) {
   .office-footer {
-    padding: 0 16px 24px;
+    padding: var(--office-footer-mobile-shell-padding-top) var(--office-footer-mobile-shell-padding-inline) var(--office-footer-mobile-shell-padding-bottom);
   }
 
   .office-footer__inner {
-    padding: 24px;
+    padding: var(--office-footer-mobile-inner-padding);
   }
 
   .office-footer__columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: var(--grid-column-single);
   }
 
   .office-footer__bottom {

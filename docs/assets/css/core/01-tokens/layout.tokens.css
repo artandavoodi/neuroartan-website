@@ -1,12 +1,36 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) GLOBAL RAIL TOKENS
-   03) SITE CHROME TOKENS
-   04) SECTION HEIGHT TOKENS
-   05) STAGE CIRCLE TOKENS
-   06) DRAWER LAYOUT TOKENS
-   07) END OF FILE
+   02) GLOBAL PRIMITIVE TOKENS
+   03) GLOBAL RAIL TOKENS
+   04) SITE CHROME TOKENS
+   05) SECTION HEIGHT TOKENS
+   06) STAGE CIRCLE TOKENS
+   07) DRAWER LAYOUT TOKENS
+   08) HOME LAYOUT EXPERIENCE TOKENS
+   09) CATALOG LAYOUT SYSTEM TOKENS
+   10) HOME SEARCH SHELL TOKENS
+   11) HOME PLATFORM SHELL TOKENS
+   12) HOME STAGE MOTION TOKENS
+   13) HOME FEATURED FUNCTIONS TOKENS
+   14) HOME ESSENCE EFFECT TOKENS
+   15) ACCOUNT DRAWER TOKENS
+   16) INTERACTION SETTINGS SHELL TOKENS
+   17) OFFICE INTERNAL CORRESPONDENCE TOKENS
+   18) COOKIE LANGUAGE OVERLAY TOKENS
+   19) COUNTRY OVERLAY TOKENS
+   20) OFFICE MENU TOKENS
+   21) FEED TOKENS
+   22) HOME PROFILE CONTROL PANEL TOKENS
+   23) OFFICE FOOTER TOKENS
+   24) MODELS DIRECTORY TOKENS
+   25) LEGAL PAGE TOKENS
+   26) ABOUT PAGE TOKENS
+   27) HOME PLATFORM THEME SETTINGS TOKENS
+   28) HOME INTERACTION PANEL TOKENS
+   29) OFFICE SIDEBAR TOKENS
+   30) AWARENESS FEATURE TOKENS
+   31) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -15,7 +39,57 @@
 /* /website/docs/assets/css/core/01-tokens/layout.tokens.css */
 
 /* =============================================================================
-   02) GLOBAL RAIL TOKENS
+   02) GLOBAL PRIMITIVE TOKENS
+============================================================================= */
+:root{
+  --spacing-none:0;
+  --size-full:100%;
+  --grid-column-single:1fr;
+  --border-width-hairline:1px;
+  --site-max-width:1320px;
+  --site-header-height:72px;
+  --header-height:var(--site-header-height);
+  --footer-height:72px;
+  --footer-gutter:var(--site-gutter, 24px);
+  --surface-color:var(--bg-color, transparent);
+  --shadow-color:#000000;
+  --panel-width:960px;
+  --content-width:var(--site-max-width);
+  --page-gutter:var(--site-gutter, 24px);
+  --z-overlay-modal:80;
+  --background-color:var(--bg-color, transparent);
+  --bg-primary-color:var(--bg-color, transparent);
+  --border-soft:var(--border-color, color-mix(in srgb, var(--text-color, #ffffff) 12%, transparent));
+  --control-border-color:var(--control-border, var(--border-color, color-mix(in srgb, var(--text-color, #ffffff) 12%, transparent)));
+  --cursor-accent-color:var(--link-color, var(--color-primary1, currentColor));
+  --duration-instant:0ms;
+  --font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-sans:var(--font-family, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+  --home-panel-radius:var(--layout-home-platform-radius);
+  --menu-icon:currentColor;
+  --space-2:0.5rem;
+  --space-3:0.75rem;
+  --space-4:1rem;
+  --space-5:1.25rem;
+  --space-6:1.5rem;
+  --space-9:2.25rem;
+  --spacing-2xs:0.375rem;
+  --spacing-3xs:0.25rem;
+  --state-opacity-high:0.88;
+  --state-opacity-strong:1;
+  --status-danger-color:#d94c4c;
+  --status-success-color:#4f9f6e;
+  --status-warning-color:#c79a3b;
+  --surface-hover:color-mix(in srgb, var(--surface-color) 88%, var(--text-color, #ffffff) 12%);
+  --text-muted-color:var(--text-secondary-color, color-mix(in srgb, var(--text-color, #ffffff) 62%, transparent));
+  --type-body-regular-weight:400;
+  --type-body-sm-line-height:1.5;
+  --type-body-sm-size:0.875rem;
+  --type-body-tracking:0;
+}
+
+/* =============================================================================
+   03) GLOBAL RAIL TOKENS
 ============================================================================= */
 :root{
   --site-gutter:4vw;
@@ -23,7 +97,7 @@
 }
 
 /* =============================================================================
-   03) SITE CHROME TOKENS
+   04) SITE CHROME TOKENS
 ============================================================================= */
 :root{
   --site-gutter-min:18px;
@@ -49,7 +123,7 @@
 }
 
 /* =============================================================================
-   04) SECTION HEIGHT TOKENS
+   05) SECTION HEIGHT TOKENS
 ============================================================================= */
 :root{
   --section-min-height:100vh;
@@ -57,7 +131,7 @@
 }
 
 /* =============================================================================
-   05) STAGE CIRCLE TOKENS
+   06) STAGE CIRCLE TOKENS
 ============================================================================= */
 :root{
   --stage-circle-desktop:1200px;
@@ -71,7 +145,7 @@
 }
 
 /* =============================================================================
-   06) DRAWER LAYOUT TOKENS
+   07) DRAWER LAYOUT TOKENS
 ============================================================================= */
 :root{
   --drawer-width-sm:22rem;
@@ -81,5 +155,1586 @@
 }
 
 /* =============================================================================
-   07) END OF FILE
+   08) HOME LAYOUT EXPERIENCE TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established home layout experience. */
+  --layout-home-announcement-size:1.8rem;
+  --layout-home-announcement-weight:600;
+  --layout-home-announcement-tracking:0.02em;
+  --layout-home-announcement-secondary-size:1.5rem;
+  --layout-home-announcement-secondary-weight:400;
+  --layout-home-announcement-secondary-tracking:0.05em;
+  --layout-home-announcement-mobile-size:1.35rem;
+  --layout-home-announcement-mobile-line-height:1.25;
+  --layout-home-announcement-secondary-mobile-size:1.05rem;
+  --layout-home-announcement-secondary-mobile-tracking:0.06em;
+  --layout-home-enter-width:2.9rem;
+  --layout-home-enter-height:4.4rem;
+  --layout-home-enter-padding-y:0.7rem;
+  --layout-home-enter-padding-x:0.6rem;
+  --layout-home-enter-size:0.95rem;
+  --layout-home-enter-weight:300;
+  --layout-home-enter-tracking:0.14em;
+  --layout-home-enter-border-width:1px;
+  --layout-home-enter-radius:999px;
+  --layout-home-enter-icon-size:1.42rem;
+  --layout-home-enter-hover-y:-1px;
+  --layout-home-enter-hover-opacity:0.95;
+  --layout-home-enter-breathe-duration:6s;
+  --layout-home-enter-breathe-y:-4px;
+  --layout-home-enter-mobile-width:2.7rem;
+  --layout-home-enter-mobile-height:4.05rem;
+  --layout-home-enter-mobile-padding-y:0.62rem;
+  --layout-home-enter-mobile-padding-x:0.55rem;
+  --layout-home-enter-mobile-size:0.85rem;
+  --layout-home-circle-blur:14px;
+  --layout-home-circle-halo-scale:1.3;
+  --layout-home-circle-halo-opacity:0.9;
+  --layout-home-circle-start-scale:0.80;
+  --layout-home-circle-mid-scale:1.12;
+  --layout-home-circle-breathe-duration:2.6s;
+  --layout-home-halo-start-opacity:0.55;
+  --layout-home-halo-breathe-duration:3.4s;
+  --layout-home-video-overlay-blur:20px;
+  --layout-home-video-overlay-saturate:1.1;
+  --layout-home-video-overlay-motion:2.4s;
+  --layout-home-video-overlay-reveal-opacity:0.96;
+  --layout-home-logo-width:320px;
+  --layout-home-logo-width-mobile:260px;
+  --layout-home-logo-margin-bottom:1.7rem;
+  --layout-home-logo-docked-margin-bottom:2rem;
+  --layout-home-logo-transition-opacity:700ms;
+  --layout-home-logo-transition-transform:900ms;
+  --layout-home-stage-copy-margin-top:1.5rem;
+  --layout-home-stage-bottom-margin-top:1.7rem;
+  --layout-home-stage-bottom-margin-top-mobile:1.35rem;
+  --layout-home-stage-intro-max-height:1200px;
+  --layout-home-stage-intro-opacity-duration:900ms;
+  --layout-home-stage-intro-transform-duration:1100ms;
+  --layout-home-stage-intro-reveal-duration:0.8s;
+  --layout-home-intro-reveal-y:18px;
+  --layout-home-intro-content-opacity-duration:0.65s;
+  --layout-home-intro-content-transform-duration:0.85s;
+  --layout-home-intro-logo-scale-start:0.68;
+  --layout-home-intro-logo-scale-settle:0.94;
+  --layout-home-intro-logo-scale-fade:0.30;
+}
+
+/* =============================================================================
+   09) CATALOG LAYOUT SYSTEM TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the shared catalog section system. */
+  --layout-catalog-rail-padding-top:8.8rem;
+  --layout-catalog-rail-padding-bottom:5.5rem;
+  --layout-catalog-rail-padding-top-mobile:7.4rem;
+  --layout-catalog-rail-padding-bottom-mobile:4.5rem;
+  --layout-catalog-section-margin-top:2.5rem;
+  --layout-catalog-hero-gap:1rem;
+  --layout-catalog-hero-padding-bottom:2.5rem;
+  --layout-catalog-eyebrow-size:0.78rem;
+  --layout-catalog-eyebrow-weight:500;
+  --layout-catalog-eyebrow-tracking:0.16em;
+  --layout-catalog-title-size:clamp(2.8rem, 6vw, 4.8rem);
+  --layout-catalog-title-weight:300;
+  --layout-catalog-title-line-height:0.94;
+  --layout-catalog-title-tracking:-0.06em;
+  --layout-catalog-description-max-width:56rem;
+  --layout-catalog-description-size:1.02rem;
+  --layout-catalog-description-line-height:1.72;
+  --layout-catalog-chip-gap:0.75rem;
+  --layout-catalog-chip-min-height:2.2rem;
+  --layout-catalog-chip-padding-x:0.95rem;
+  --layout-catalog-chip-size:0.78rem;
+  --layout-catalog-chip-line-height:1;
+  --layout-catalog-toolbar-gap:0.9rem;
+  --layout-catalog-search-gap:0.45rem;
+  --layout-catalog-filter-note-size:0.86rem;
+  --layout-catalog-filter-note-line-height:1.6;
+  --layout-catalog-search-row-min-height:3.4rem;
+  --layout-catalog-search-row-padding-x:1rem;
+  --layout-catalog-search-row-radius:1rem;
+  --layout-catalog-grid-gap:1.5rem;
+  --layout-catalog-grid-compact-gap:1rem;
+  --layout-catalog-card-radius:1.4rem;
+  --layout-catalog-card-body-gap:1rem;
+  --layout-catalog-card-body-padding:1.35rem;
+  --layout-catalog-card-header-gap:0.65rem;
+  --layout-catalog-card-eyebrow-size:0.74rem;
+  --layout-catalog-card-eyebrow-weight:500;
+  --layout-catalog-card-eyebrow-tracking:0.12em;
+  --layout-catalog-card-title-size:1.28rem;
+  --layout-catalog-card-title-weight:400;
+  --layout-catalog-card-title-line-height:1.1;
+  --layout-catalog-card-summary-line-height:1.65;
+  --layout-catalog-action-gap:0.75rem;
+  --layout-catalog-detail-gap:1.5rem;
+  --layout-catalog-panel-gap:1rem;
+  --layout-catalog-panel-padding:1.4rem;
+  --layout-catalog-panel-radius:1.4rem;
+  --layout-catalog-panel-title-size:1.14rem;
+  --layout-catalog-panel-title-weight:500;
+  --layout-catalog-panel-copy-line-height:1.7;
+  --layout-catalog-rows-gap:0.85rem;
+  --layout-catalog-row-gap:0.25rem;
+  --layout-catalog-row-padding-bottom:0.85rem;
+  --layout-catalog-row-label-size:0.78rem;
+  --layout-catalog-row-label-tracking:0.08em;
+  --layout-catalog-row-value-line-height:1.65;
+  --layout-catalog-list-gap:0.9rem;
+  --layout-catalog-list-line-height:1.7;
+  --layout-catalog-timeline-gap:1.2rem;
+  --layout-catalog-timeline-year-gap:1rem;
+  --layout-catalog-timeline-year-size:1.3rem;
+  --layout-catalog-timeline-year-weight:500;
+  --layout-catalog-timeline-entry-gap:0.5rem;
+  --layout-catalog-timeline-entry-padding-y:1.2rem;
+  --layout-catalog-timeline-entry-padding-x:1.3rem;
+  --layout-catalog-timeline-entry-radius:1.25rem;
+  --layout-catalog-timeline-eyebrow-size:0.76rem;
+  --layout-catalog-timeline-eyebrow-tracking:0.1em;
+  --layout-catalog-timeline-title-size:1.1rem;
+  --layout-catalog-timeline-title-weight:500;
+  --layout-catalog-timeline-copy-line-height:1.72;
+  --layout-catalog-sitemap-group-gap:1rem;
+  --layout-catalog-sitemap-group-padding-top:1.6rem;
+  --layout-catalog-sitemap-title-size:1.15rem;
+  --layout-catalog-sitemap-title-weight:500;
+  --layout-catalog-sitemap-item-gap:0.2rem;
+  --layout-catalog-sitemap-path-size:0.84rem;
+  --layout-catalog-empty-gap:0.75rem;
+  --layout-catalog-empty-padding:1.5rem;
+  --layout-catalog-empty-radius:1.4rem;
+  --layout-catalog-empty-title-size:1.2rem;
+  --layout-catalog-empty-title-weight:500;
+  --layout-catalog-empty-copy-line-height:1.72;
+  --layout-catalog-media-card-min:15rem;
+  --layout-catalog-media-card-max:22rem;
+  --layout-catalog-media-card-gap:1.25rem;
+  --layout-catalog-media-figure-radius:1.2rem;
+  --layout-catalog-media-body-gap:1rem;
+}
+
+/* =============================================================================
+   10) HOME SEARCH SHELL TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established home search shell. */
+  --layout-home-search-shell-width:72rem;
+  --layout-home-search-dialog-blur:18px;
+  --layout-home-search-dialog-saturate:145%;
+  --layout-home-search-header-gap:1rem;
+  --layout-home-search-header-padding-y:1.45rem;
+  --layout-home-search-header-padding-x-fallback:2.8rem;
+  --layout-home-search-header-padding-bottom:1.05rem;
+  --layout-home-search-eyebrow-margin-bottom:0.35rem;
+  --layout-home-search-eyebrow-size:0.72rem;
+  --layout-home-search-eyebrow-weight:500;
+  --layout-home-search-eyebrow-tracking:0.08em;
+  --layout-home-search-title-size:1.02rem;
+  --layout-home-search-title-weight:500;
+  --layout-home-search-title-line-height:1.3;
+  --layout-home-search-body-gap:1.15rem;
+  --layout-home-search-body-padding-y:1.25rem;
+  --layout-home-search-body-padding-x-fallback:2.8rem;
+  --layout-home-search-form-gap:0.55rem;
+  --layout-home-search-input-row-gap:0.62rem;
+  --layout-home-search-input-row-min-height:4rem;
+  --layout-home-search-input-row-padding-y:0.82rem;
+  --layout-home-search-input-row-padding-x:1.08rem;
+  --layout-home-search-input-row-radius:999px;
+  --layout-home-search-input-row-line-height:1;
+  --layout-home-search-input-row-opacity:0.9;
+  --layout-home-search-input-row-border:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --layout-home-search-input-row-border-focus:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
+  --layout-home-search-icon-size:1.38rem;
+  --layout-home-search-icon-opacity:0.82;
+  --layout-home-search-voice-motion:180ms;
+  --layout-home-search-input-size:1.88rem;
+  --layout-home-search-input-weight:300;
+  --layout-home-search-input-tracking:-0.012em;
+  --layout-home-search-input-line-height:1;
+  --layout-home-search-hint-size:0.94rem;
+  --layout-home-search-hint-line-height:1.45;
+  --layout-home-search-quick-actions-gap:0.55rem;
+  --layout-home-search-chip-min-height:2.35rem;
+  --layout-home-search-chip-padding-x:0.88rem;
+  --layout-home-search-chip-size:0.8rem;
+  --layout-home-search-chip-weight:500;
+  --layout-home-search-chip-tracking:0.03em;
+  --layout-home-search-empty-gap:0.45rem;
+  --layout-home-search-empty-padding-top:0.95rem;
+  --layout-home-search-empty-title-size:0.96rem;
+  --layout-home-search-empty-title-weight:500;
+  --layout-home-search-empty-text-size:0.88rem;
+  --layout-home-search-empty-text-line-height:1.55;
+  --layout-home-search-result-card-gap:0.5rem;
+  --layout-home-search-result-card-padding-y:0.95rem;
+  --layout-home-search-result-list-gap:0.85rem;
+  --layout-home-search-result-meta-row-gap:0.55rem;
+  --layout-home-search-result-meta-column-gap:0.8rem;
+  --layout-home-search-result-route-size:0.72rem;
+  --layout-home-search-result-route-weight:500;
+  --layout-home-search-result-route-tracking:0.08em;
+  --layout-home-search-result-query-size:0.9rem;
+  --layout-home-search-result-query-line-height:1.4;
+  --layout-home-search-result-title-size:1.02rem;
+  --layout-home-search-result-title-weight:300;
+  --layout-home-search-result-title-tracking:-0.018em;
+  --layout-home-search-result-title-line-height:1.28;
+  --layout-home-search-result-title-row-gap:0.55rem;
+  --layout-home-search-result-body-size:0.88rem;
+  --layout-home-search-result-body-line-height:1.55;
+  --layout-home-search-result-badge-gap:0.38rem;
+  --layout-home-search-result-badge-min-height:1.7rem;
+  --layout-home-search-result-badge-padding-x:0.62rem;
+  --layout-home-search-result-badge-color:#1d9bf0;
+  --layout-home-search-result-badge-size:0.7rem;
+  --layout-home-search-result-badge-weight:600;
+  --layout-home-search-result-badge-tracking:0.08em;
+  --layout-home-search-result-badge-icon-size:0.82rem;
+  --layout-home-search-result-tags-gap:0.45rem;
+  --layout-home-search-result-tag-min-height:1.85rem;
+  --layout-home-search-result-tag-padding-x:0.7rem;
+  --layout-home-search-result-tag-size:0.72rem;
+  --layout-home-search-result-tag-tracking:0.04em;
+  --layout-home-search-result-actions-gap:0.55rem;
+  --layout-home-search-result-action-min-height:2.4rem;
+  --layout-home-search-result-action-min-width:10.5rem;
+  --layout-home-search-result-action-padding-x:0.95rem;
+  --layout-home-search-result-action-size:0.78rem;
+  --layout-home-search-result-action-weight:500;
+  --layout-home-search-result-action-tracking:0.08em;
+  --layout-home-search-result-action-line-height:1;
+  --layout-home-search-light-border:rgba(0, 0, 0, 0.12);
+  --layout-home-search-dark-border:rgba(255, 255, 255, 0.16);
+  --layout-home-search-mobile-padding-x-fallback:1rem;
+  --layout-home-search-mobile-title-size:1.15rem;
+  --layout-home-search-mobile-input-row-min-height:3.2rem;
+  --layout-home-search-mobile-input-row-padding-y:0.68rem;
+  --layout-home-search-mobile-input-row-padding-x:0.9rem;
+  --layout-home-search-mobile-input-size:1.2rem;
+}
+
+/* =============================================================================
+   11) HOME PLATFORM SHELL TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established home platform shell. */
+  --layout-home-platform-nav-opacity:0.68;
+  --layout-home-platform-nav-hover-opacity:1;
+  --layout-home-platform-motion-fast:220ms;
+  --layout-home-platform-radius:var(--home-panel-radius, 1.35rem);
+  --layout-home-platform-padding:0.92rem;
+  --layout-home-platform-gap:0.88rem;
+  --layout-home-platform-shadow:var(--home-panel-shadow, 0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent));
+  --layout-home-platform-blur:4px;
+  --layout-home-platform-saturate:115%;
+  --layout-home-platform-chrome-min-height:3.55rem;
+  --layout-home-platform-chrome-blur:8px;
+  --layout-home-platform-chrome-saturate:120%;
+  --layout-home-platform-rail-toggle-size:1.25rem;
+  --layout-home-platform-rail-toggle-margin-left:0.7rem;
+  --layout-home-platform-rail-toggle-icon-size:1.05rem;
+  --layout-home-platform-rail-width:17.5rem;
+  --layout-home-platform-subrail-width:14.5rem;
+  --layout-home-platform-tablet-rail-min:12rem;
+  --layout-home-platform-tablet-rail-max:15rem;
+  --layout-home-platform-tablet-subrail-min:11rem;
+  --layout-home-platform-tablet-subrail-max:13rem;
+  --layout-home-platform-mobile-inline-padding-fallback:0.85rem;
+  --layout-home-platform-rail-padding-top:1.45rem;
+  --layout-home-platform-rail-padding-right:1.5rem;
+  --layout-home-platform-rail-padding-bottom:2.2rem;
+  --layout-home-platform-rail-padding-left:0;
+  --layout-home-platform-subrail-padding-left:1.5rem;
+  --layout-home-platform-tablet-rail-padding-right:1rem;
+  --layout-home-platform-group-margin-top:2.15rem;
+  --layout-home-platform-label-margin-bottom:0.82rem;
+  --layout-home-platform-label-size:0.72rem;
+  --layout-home-platform-label-weight:500;
+  --layout-home-platform-label-tracking:0.08em;
+  --layout-home-platform-subrail-header-gap:0.35rem;
+  --layout-home-platform-subrail-header-margin-bottom:0.95rem;
+  --layout-home-platform-subrail-title-size:1.02rem;
+  --layout-home-platform-subrail-title-weight:500;
+  --layout-home-platform-subrail-title-line-height:1.3;
+  --layout-home-platform-nav-gap:0.5rem;
+  --layout-home-platform-nav-item-gap:0.72rem;
+  --layout-home-platform-nav-item-min-height:3rem;
+  --layout-home-platform-nav-item-radius:999px;
+  --layout-home-platform-nav-item-padding-y:0.86rem;
+  --layout-home-platform-nav-item-padding-x:1rem;
+  --layout-home-platform-nav-icon-size:1rem;
+  --layout-home-platform-nav-indicator-min-size:1.15rem;
+  --layout-home-platform-nav-indicator-padding-x:0.32rem;
+  --layout-home-platform-nav-indicator-size:0.64rem;
+  --layout-home-platform-nav-indicator-weight:600;
+  --layout-home-platform-nav-indicator-line-height:1;
+  --layout-home-platform-nav-indicator-tracking:0.04em;
+  --layout-home-platform-nav-text-size:0.98rem;
+  --layout-home-platform-nav-text-weight:400;
+  --layout-home-platform-nav-text-line-height:1.35;
+  --layout-home-platform-nav-text-tracking:-0.01em;
+  --layout-home-platform-subnav-padding-x:0.92rem;
+  --layout-home-platform-subnav-min-height:2.85rem;
+  --layout-home-platform-subnav-size:0.86rem;
+  --layout-home-platform-subnav-line-height:1.35;
+  --layout-home-platform-content-header-gap:0.38rem;
+  --layout-home-platform-content-header-padding-top:1.45rem;
+  --layout-home-platform-content-header-padding-right:0;
+  --layout-home-platform-content-header-padding-bottom:1rem;
+  --layout-home-platform-content-header-padding-left:2rem;
+  --layout-home-platform-tablet-content-padding-left:1.5rem;
+  --layout-home-platform-mobile-content-header-padding-top:1rem;
+  --layout-home-platform-mobile-content-header-padding-bottom:0.85rem;
+  --layout-home-platform-content-title-size:1.75rem;
+  --layout-home-platform-content-title-weight:400;
+  --layout-home-platform-content-title-line-height:1.1;
+  --layout-home-platform-content-title-tracking:-0.03em;
+  --layout-home-platform-content-copy-max-width:42rem;
+  --layout-home-platform-content-copy-size:0.98rem;
+  --layout-home-platform-content-copy-weight:400;
+  --layout-home-platform-content-copy-line-height:1.65;
+  --layout-home-platform-content-copy-tracking:-0.01em;
+  --layout-home-platform-content-inner-padding-top:1.45rem;
+  --layout-home-platform-content-inner-padding-left:2rem;
+  --layout-home-platform-content-inner-footer-gap:1.45rem;
+  --layout-home-platform-mobile-content-inner-padding-top:1rem;
+  --layout-home-platform-mobile-content-inner-footer-gap:1.15rem;
+  --layout-home-platform-destination-gap:1rem;
+  --layout-home-platform-content-stack-gap:1.25rem;
+  --layout-home-platform-state-title-size:1.15rem;
+  --layout-home-platform-state-title-weight:400;
+  --layout-home-platform-state-title-line-height:1.25;
+  --layout-home-platform-state-title-tracking:-0.02em;
+  --layout-home-platform-state-copy-max-width:40rem;
+  --layout-home-platform-state-copy-size:0.92rem;
+  --layout-home-platform-state-copy-line-height:1.6;
+  --layout-home-platform-state-action-min-height:2.45rem;
+  --layout-home-platform-state-action-padding-x:1rem;
+  --layout-home-platform-state-action-size:0.78rem;
+  --layout-home-platform-state-action-weight:500;
+  --layout-home-platform-state-action-tracking:0.08em;
+  --layout-home-platform-embedded-section-gap:0.75rem;
+  --layout-home-platform-embedded-stack-gap:0.45rem;
+}
+
+/* =============================================================================
+   12) HOME STAGE MOTION TOKENS
+============================================================================= */
+:root{
+  --layout-home-stage-motion-core-width:min(24rem, 70vw);
+  --layout-home-stage-motion-core-height:min(22.5rem, 39vh);
+  --layout-home-stage-motion-core-active-width:min(18.8rem, 58vw);
+  --layout-home-stage-motion-core-active-height:min(17.4rem, 29vh);
+  --layout-home-stage-motion-vessel-size:min(21rem, 58vw, 46vh);
+  --layout-home-stage-motion-vessel-active-size:min(16.8rem, 48vw, 31vh);
+  --layout-home-stage-motion-vessel-blur:24px;
+  --layout-home-stage-motion-vessel-ring-border:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
+  --layout-home-stage-motion-vessel-inner-bg:color-mix(in srgb, var(--bg-color) 12%, transparent);
+  --layout-home-stage-motion-core-color:color-mix(in srgb, var(--text-primary-color) 92%, transparent);
+  --layout-home-stage-motion-active-color:var(--layout-home-stage-motion-core-color);
+  --layout-home-stage-motion-core-ring-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --layout-home-stage-motion-core-idle-ring-opacity:0.72;
+  --layout-home-stage-motion-core-idle-signal-opacity:0.42;
+  --layout-home-stage-motion-core-idle-pulse-opacity:0.34;
+  --layout-home-stage-motion-core-signal-size:58%;
+  --layout-home-stage-motion-core-ring-size:72%;
+  --layout-home-stage-motion-core-pulse-size:34%;
+  --layout-home-stage-motion-core-signal-blur:16px;
+  --layout-home-stage-motion-core-pulse-blur:10px;
+  --layout-home-stage-motion-mic-size:4.8rem;
+  --layout-home-stage-motion-mic-icon-size:2.35rem;
+  --layout-home-stage-motion-mic-margin-bottom:1.15rem;
+  --layout-home-stage-motion-mic-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --layout-home-stage-motion-mic-hover-color:color-mix(in srgb, var(--color-primary1) 94%, var(--text-primary-color));
+  --layout-home-stage-motion-mic-opacity:0.92;
+  --layout-home-stage-motion-mic-icon-opacity:0.9;
+  --layout-home-stage-motion-mic-hover-scale:1.08;
+  --layout-home-stage-motion-mic-icon-hover-scale:1.03;
+  --layout-home-stage-motion-active-mic-scale:1.04;
+  --layout-home-stage-motion-fast:220ms;
+  --layout-home-stage-motion-transition:620ms cubic-bezier(0.22,1,0.36,1);
+  --layout-home-stage-motion-field-opacity-transition:0.35s;
+  --layout-home-stage-motion-field-blur:10px;
+  --layout-home-stage-motion-field-size:13rem;
+  --layout-home-stage-motion-ring-size:17rem;
+  --layout-home-stage-motion-field-color:rgba(145,124,111,0.18);
+  --layout-home-stage-motion-field-color-soft:rgba(145,124,111,0.08);
+  --layout-home-stage-motion-field-color-faint:rgba(145,124,111,0.02);
+  --layout-home-stage-motion-field-color-clear:rgba(145,124,111,0);
+  --layout-home-stage-motion-ring-border:rgba(255,255,255,0.18);
+  --layout-home-stage-motion-mic-field-color:rgba(145,124,111,0.22);
+  --layout-home-stage-motion-mic-field-color-soft:rgba(145,124,111,0.10);
+  --layout-home-stage-motion-mic-field-color-clear:rgba(145,124,111,0);
+  --layout-home-stage-motion-mic-field-blur:12px;
+  --layout-home-stage-motion-mic-ring-border:var(--layout-home-stage-motion-ring-border);
+  --layout-home-stage-motion-mic-ring-offset:1.2rem;
+  --layout-home-stage-motion-mode-core-opacity:0.72;
+  --layout-home-stage-motion-mode-ring-opacity:0.82;
+  --layout-home-stage-motion-listening-core-duration:1.35s;
+  --layout-home-stage-motion-listening-ring-duration:2.1s;
+  --layout-home-stage-motion-listening-mic-duration:1.25s;
+  --layout-home-stage-motion-thinking-core-duration:1.8s;
+  --layout-home-stage-motion-thinking-ring-duration:2.6s;
+  --layout-home-stage-motion-thinking-mic-duration:1.9s;
+  --layout-home-stage-motion-responding-core-duration:1s;
+  --layout-home-stage-motion-responding-ring-duration:1.45s;
+  --layout-home-stage-motion-responding-mic-duration:0.95s;
+  --layout-home-stage-motion-mobile-core-width:min(18rem, 72vw);
+  --layout-home-stage-motion-mobile-core-height:min(16.8rem, 27vh);
+  --layout-home-stage-motion-mobile-core-active-width:min(15.2rem, 60vw);
+  --layout-home-stage-motion-mobile-core-active-height:min(14rem, 22vh);
+  --layout-home-stage-motion-mobile-vessel-size:min(17rem, 66vw, 31vh);
+  --layout-home-stage-motion-mobile-vessel-active-size:min(14rem, 54vw, 24vh);
+  --layout-home-stage-motion-mobile-mic-size:4rem;
+  --layout-home-stage-motion-mobile-mic-icon-size:2rem;
+  --layout-home-stage-motion-mobile-mic-margin-bottom:0.85rem;
+  --layout-home-stage-motion-key-core-listen-start-scale:0.88;
+  --layout-home-stage-motion-key-core-listen-mid-scale:1.1;
+  --layout-home-stage-motion-key-core-listen-start-opacity:0.34;
+  --layout-home-stage-motion-key-core-listen-mid-opacity:0.92;
+  --layout-home-stage-motion-key-core-think-start-scale:0.96;
+  --layout-home-stage-motion-key-core-think-mid-scale:1.04;
+  --layout-home-stage-motion-key-core-think-start-opacity:0.36;
+  --layout-home-stage-motion-key-core-think-mid-opacity:0.72;
+  --layout-home-stage-motion-key-core-respond-start-scale:0.92;
+  --layout-home-stage-motion-key-core-respond-mid-scale:1.16;
+  --layout-home-stage-motion-key-core-respond-start-opacity:0.34;
+  --layout-home-stage-motion-key-core-respond-mid-opacity:1;
+  --layout-home-stage-motion-key-ring-listen-start-scale:0.94;
+  --layout-home-stage-motion-key-ring-listen-mid-scale:1.02;
+  --layout-home-stage-motion-key-ring-listen-start-opacity:0.18;
+  --layout-home-stage-motion-key-ring-listen-mid-opacity:0.58;
+  --layout-home-stage-motion-key-ring-think-start-scale:0.98;
+  --layout-home-stage-motion-key-ring-think-mid-scale:1.01;
+  --layout-home-stage-motion-key-ring-think-start-opacity:0.14;
+  --layout-home-stage-motion-key-ring-think-mid-opacity:0.4;
+  --layout-home-stage-motion-key-ring-respond-start-scale:0.92;
+  --layout-home-stage-motion-key-ring-respond-mid-scale:1.08;
+  --layout-home-stage-motion-key-ring-respond-start-opacity:0.16;
+  --layout-home-stage-motion-key-ring-respond-mid-opacity:0.7;
+  --layout-home-stage-motion-key-mic-listen-start-scale:0.92;
+  --layout-home-stage-motion-key-mic-listen-mid-scale:1.14;
+  --layout-home-stage-motion-key-mic-listen-start-opacity:0.18;
+  --layout-home-stage-motion-key-mic-listen-mid-opacity:0.62;
+  --layout-home-stage-motion-key-mic-think-start-scale:0.98;
+  --layout-home-stage-motion-key-mic-think-mid-scale:1.04;
+  --layout-home-stage-motion-key-mic-think-start-opacity:0.14;
+  --layout-home-stage-motion-key-mic-think-mid-opacity:0.34;
+  --layout-home-stage-motion-key-mic-respond-start-scale:0.9;
+  --layout-home-stage-motion-key-mic-respond-mid-scale:1.18;
+  --layout-home-stage-motion-key-mic-respond-start-opacity:0.2;
+  --layout-home-stage-motion-key-mic-respond-mid-opacity:0.74;
+}
+
+/* =============================================================================
+   13) HOME FEATURED FUNCTIONS TOKENS
+============================================================================= */
+:root{
+  --layout-home-featured-functions-max-width:1440px;
+  --layout-home-featured-functions-viewport-max-width:820px;
+  --layout-home-featured-functions-footer-max-width:820px;
+  --layout-home-featured-functions-timeline-height:1px;
+  --layout-home-featured-functions-timeline-progress-scale:0;
+  --layout-home-featured-functions-description-opacity:0.74;
+  --layout-home-featured-functions-card-border-width:1.25px;
+  --layout-home-featured-functions-card-border-color-dark:rgba(255, 255, 255, 0.08);
+  --layout-home-featured-functions-card-border-color-hover-dark:rgba(255, 255, 255, 0.12);
+  --layout-home-featured-functions-card-surface-bg-dark:rgba(255, 255, 255, 0.02);
+  --layout-home-featured-functions-card-surface-highlight-rest-dark:rgba(255, 255, 255, 0.035);
+  --layout-home-featured-functions-card-surface-highlight-hover-dark:rgba(255, 255, 255, 0.045);
+  --layout-home-featured-functions-card-placeholder-glow-a-dark:rgba(255, 255, 255, 0.08);
+  --layout-home-featured-functions-card-placeholder-glow-b-dark:rgba(145, 124, 111, 0.24);
+  --layout-home-featured-functions-card-placeholder-fill-top-dark:rgba(255, 255, 255, 0.04);
+  --layout-home-featured-functions-card-placeholder-fill-bottom-dark:rgba(255, 255, 255, 0.02);
+  --layout-home-featured-functions-card-padding:0;
+  --layout-home-featured-functions-visual-aspect-ratio:16 / 6.4;
+  --layout-home-featured-functions-card-copy-max-width:100%;
+  --layout-home-featured-functions-card-summary-gap:52px;
+  --layout-home-featured-functions-card-title-gap:0;
+  --layout-home-featured-functions-card-label-line-height:0.9;
+  --layout-home-featured-functions-card-label-weight:100;
+  --layout-home-featured-functions-card-label-tracking:0.01em;
+  --layout-home-featured-functions-eyebrow-opacity:0.42;
+  --layout-home-featured-functions-dot-size:7px;
+  --layout-home-featured-functions-dot-opacity:0.22;
+  --layout-home-featured-functions-dot-opacity-active:1;
+  --layout-home-featured-functions-dot-opacity-light:0.18;
+  --layout-home-featured-functions-dot-opacity-dark:0.24;
+  --layout-home-featured-functions-rail-offset:0px;
+  --layout-home-featured-functions-card-matte-blur:34px;
+  --layout-home-featured-functions-card-matte-saturation:0.96;
+  --layout-home-featured-functions-card-spectrum-opacity:0.09;
+  --layout-home-featured-functions-card-spectrum-opacity-light:0.06;
+  --layout-home-featured-functions-card-spectrum-blend:normal;
+  --layout-home-featured-functions-card-spectrum-red:rgba(255, 72, 72, 1);
+  --layout-home-featured-functions-card-spectrum-orange:rgba(255, 154, 72, 1);
+  --layout-home-featured-functions-card-spectrum-yellow:rgb(79, 65, 23);
+  --layout-home-featured-functions-card-spectrum-violet:rgba(146, 92, 255, 1);
+  --layout-home-featured-functions-card-spectrum-blue:rgba(92, 148, 255, 1);
+  --layout-home-featured-functions-card-spectrum-cyan:rgba(84, 232, 255, 1);
+  --layout-home-featured-functions-card-summary-color-dark:rgba(255, 255, 255, 0.94);
+  --layout-home-featured-functions-card-icon-filter-dark:brightness(0) invert(1);
+  --layout-home-featured-functions-card-matte-surface-top-dark:rgba(0, 0, 0, 0.14);
+  --layout-home-featured-functions-card-matte-surface-mid-dark:rgba(0, 0, 0, 0.08);
+  --layout-home-featured-functions-card-matte-surface-bottom-dark:rgba(0, 0, 0, 0.22);
+  --layout-home-featured-functions-card-border-color-light:rgba(0, 0, 0, 0.08);
+  --layout-home-featured-functions-card-border-color-hover-light:rgba(0, 0, 0, 0.12);
+  --layout-home-featured-functions-card-surface-bg-light:rgba(0, 0, 0, 0.02);
+  --layout-home-featured-functions-card-surface-highlight-rest-light:rgba(0, 0, 0, 0.03);
+  --layout-home-featured-functions-card-surface-highlight-hover-light:rgba(0, 0, 0, 0.05);
+  --layout-home-featured-functions-card-placeholder-glow-a-light:rgba(0, 0, 0, 0.04);
+  --layout-home-featured-functions-card-placeholder-glow-b-light:rgba(145, 124, 111, 0.12);
+  --layout-home-featured-functions-card-placeholder-fill-top-light:rgba(0, 0, 0, 0.03);
+  --layout-home-featured-functions-card-placeholder-fill-bottom-light:rgba(0, 0, 0, 0.015);
+  --layout-home-featured-functions-card-summary-color-light:rgba(17, 17, 17, 0.88);
+  --layout-home-featured-functions-card-icon-filter-light:brightness(0) saturate(100%);
+  --layout-home-featured-functions-card-matte-surface-top-light:rgba(255, 255, 255, 0.82);
+  --layout-home-featured-functions-card-matte-surface-mid-light:rgba(255, 255, 255, 0.66);
+  --layout-home-featured-functions-card-matte-surface-bottom-light:rgba(255, 255, 255, 0.9);
+  --layout-home-featured-functions-control-size:48px;
+  --layout-home-featured-functions-control-icon-size:16px;
+  --layout-home-featured-functions-control-disabled-opacity:0.32;
+  --layout-home-featured-functions-track-motion:420ms;
+  --layout-home-featured-functions-ready-opacity-motion:260ms;
+}
+
+/* =============================================================================
+   14) HOME ESSENCE EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established home essence effect. */
+  --layout-home-essence-stage-min-height:320vh;
+  --layout-home-essence-inner-height:100vh;
+  --layout-home-essence-inner-height-small:100svh;
+  --layout-home-essence-inner-height-dynamic:100dvh;
+  --layout-home-essence-inner-opacity:1;
+  --layout-home-essence-inner-transform:none;
+  --layout-home-essence-inner-transform-motion:0.9s;
+  --layout-home-essence-inner-opacity-motion:0.45s;
+  --layout-home-essence-reveal-width:min(92vw, 1120px);
+  --layout-home-essence-reveal-y:-9vh;
+  --layout-home-essence-stack-min-height:3.2em;
+  --layout-home-essence-layer-opacity-hidden:0;
+  --layout-home-essence-layer-font-size:1.9rem;
+  --layout-home-essence-layer-line-height:1.16;
+  --layout-home-essence-layer-font-weight:300;
+  --layout-home-essence-layer-tracking:0.004em;
+  --layout-home-essence-layer-enter-y:8px;
+  --layout-home-essence-layer-enter-scale:0.985;
+  --layout-home-essence-layer-enter-blur:0.35px;
+  --layout-home-essence-layer-opacity-motion:0.48s;
+  --layout-home-essence-layer-transform-motion:0.58s;
+  --layout-home-essence-layer-filter-motion:0.48s;
+  --layout-home-essence-preview-opacity:0.5;
+  --layout-home-essence-preview-y:4px;
+  --layout-home-essence-preview-scale:0.992;
+  --layout-home-essence-preview-blur:0.2px;
+  --layout-home-essence-inactive-y:10px;
+  --layout-home-essence-inactive-scale:0.985;
+  --layout-home-essence-inactive-blur:0.35px;
+  --layout-home-essence-phase-enter-y:2px;
+  --layout-home-essence-phase-enter-scale:0.994;
+  --layout-home-essence-phase-enter-blur:0.15px;
+  --layout-home-essence-phase-active-opacity:0.96;
+  --layout-home-essence-phase-active-y:0;
+  --layout-home-essence-phase-active-scale:1;
+  --layout-home-essence-phase-active-blur:0;
+  --layout-home-essence-phase-exit-y:-2px;
+  --layout-home-essence-phase-exit-scale:0.994;
+  --layout-home-essence-phase-exit-blur:0.15px;
+  --layout-home-essence-phase-hidden-y:-10px;
+  --layout-home-essence-phase-hidden-y-final:-12px;
+  --layout-home-essence-phase-hidden-scale:0.985;
+  --layout-home-essence-phase-hidden-blur:0.35px;
+  --layout-home-essence-phase-hidden-blur-final:0.4px;
+  --layout-home-essence-delay:0.22s;
+  --layout-home-essence-fast-duration:0.34s;
+  --layout-home-essence-gap-y:-8px;
+  --layout-home-essence-gap-scale:0.985;
+  --layout-home-essence-gap-blur:0.3px;
+  --layout-home-essence-hide-y:-64px;
+  --layout-home-essence-mobile-layer-size:1.45rem;
+  --layout-home-essence-mobile-layer-line-height:1.18;
+  --layout-home-essence-desktop-layer-size:2.2rem;
+}
+
+/* =============================================================================
+   15) ACCOUNT DRAWER TOKENS
+============================================================================= */
+:root{
+  --layout-account-drawer-panel-width:min(40rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --layout-account-drawer-panel-width-mobile:min(100vw, calc(100vw - (1.05 * var(--site-gutter, 20px))));
+  --layout-account-drawer-shell-padding-y:1.6rem;
+  --layout-account-drawer-shell-padding-x:2rem;
+  --layout-account-drawer-shell-padding-y-tablet:1.36rem;
+  --layout-account-drawer-shell-padding-x-tablet:1.7rem;
+  --layout-account-drawer-shell-padding-y-mobile:1.2rem;
+  --layout-account-drawer-shell-padding-x-mobile:1.28rem;
+  --layout-account-drawer-close-offset:1rem;
+  --layout-account-drawer-close-offset-tablet:0.82rem;
+  --layout-account-drawer-close-offset-mobile:0.68rem;
+  --layout-account-drawer-header-padding-bottom-mobile:1.04rem;
+  --layout-account-drawer-content-stage-padding-inline:4.8rem;
+  --layout-account-drawer-content-stage-padding-inline-tablet:3.2rem;
+  --layout-account-drawer-content-stage-padding-inline-mobile:1.8rem;
+  --layout-account-drawer-body-gap-mobile:1.04rem;
+  --layout-account-drawer-entry-card-padding:1.06rem;
+  --layout-account-drawer-entry-card-padding-mobile:0.96rem;
+  --layout-account-drawer-entry-title-size-mobile:0.98rem;
+  --layout-account-drawer-entry-copy-size-mobile:0.9rem;
+  --layout-account-drawer-meta-link-size:0.82rem;
+  --layout-account-drawer-meta-link-size-mobile:0.78rem;
+  --layout-account-drawer-segment-title-weight:400;
+  --layout-account-drawer-segment-title-max-width:18ch;
+  --layout-account-drawer-text-link-weight:400;
+  --layout-account-drawer-text-link-opacity:1;
+  --layout-account-drawer-text-link-opacity-hover:1;
+  --layout-account-drawer-copy-weight:300;
+  --layout-account-drawer-entry-badge-min-height:1.66rem;
+  --layout-account-drawer-entry-badge-padding-y:0.3rem;
+  --layout-account-drawer-entry-badge-padding-x:0.58rem;
+  --layout-account-drawer-entry-badge-weight:500;
+  --layout-account-drawer-entry-badge-line-height:1;
+  --layout-account-drawer-entry-title-weight:400;
+  --layout-account-drawer-profile-title-max-width:19ch;
+  --layout-account-drawer-profile-copy-max-width:42ch;
+  --account-provider-google-section-gap:1rem;
+  --profile-panel-gap:1rem;
+  --profile-dashboard-progress:0%;
+}
+
+/* =============================================================================
+   16) INTERACTION SETTINGS SHELL TOKENS
+============================================================================= */
+:root{
+  --layout-interaction-settings-panel-width:min(68rem, calc(100vw - (2 * var(--site-gutter))));
+  --layout-interaction-settings-panel-height:min(42rem, calc(100svh - var(--home-interaction-settings-panel-top) - var(--home-interaction-settings-panel-bottom)));
+  --layout-interaction-settings-panel-radius:var(--layout-home-platform-radius);
+  --layout-interaction-settings-panel-padding:var(--layout-home-platform-padding);
+  --layout-interaction-settings-panel-gap:var(--layout-home-platform-gap);
+  --layout-interaction-settings-panel-shadow:var(--layout-home-platform-shadow);
+  --layout-interaction-settings-panel-blur:var(--layout-home-platform-blur);
+  --layout-interaction-settings-panel-saturate:var(--layout-home-platform-saturate);
+  --layout-interaction-settings-panel-body-gap:var(--layout-home-platform-gap);
+  --layout-interaction-settings-panel-nav-radius:1rem;
+  --layout-interaction-settings-panel-content-radius:1rem;
+  --layout-interaction-settings-panel-icon-size:1rem;
+  --layout-interaction-settings-panel-nav-width:13.4rem;
+  --layout-interaction-settings-panel-nav-width-tablet:11rem;
+  --layout-interaction-settings-panel-nav-opacity:0.72;
+  --layout-interaction-settings-panel-nav-hover-opacity:1;
+  --layout-interaction-settings-panel-nav-font-size:0.82rem;
+  --layout-interaction-settings-panel-nav-font-weight:500;
+  --layout-interaction-settings-panel-nav-line-height:1.2;
+  --layout-interaction-settings-panel-nav-item-radius:0.82rem;
+  --layout-interaction-settings-panel-nav-item-padding:0.76rem;
+  --layout-interaction-settings-header-gap:1rem;
+  --layout-interaction-settings-title-block-gap:0.18rem;
+  --layout-interaction-settings-eyebrow-size:0.68rem;
+  --layout-interaction-settings-eyebrow-weight:600;
+  --layout-interaction-settings-eyebrow-tracking:0.12em;
+  --layout-interaction-settings-eyebrow-line-height:1.2;
+  --layout-interaction-settings-title-size:1.02rem;
+  --layout-interaction-settings-title-weight:650;
+  --layout-interaction-settings-nav-gap:0.28rem;
+  --layout-interaction-settings-section-gap:0.68rem;
+  --layout-interaction-settings-section-heading-gap:0.38rem;
+  --layout-interaction-settings-section-title-tracking:0.08em;
+  --layout-interaction-settings-option-grid-gap:0.42rem;
+  --layout-interaction-settings-option-gap:0.22rem;
+  --layout-interaction-settings-option-padding-y:0.82rem;
+  --layout-interaction-settings-option-label-size:0.84rem;
+  --layout-interaction-settings-option-label-weight:650;
+  --layout-interaction-settings-option-description-size:0.72rem;
+  --layout-interaction-settings-option-description-weight:400;
+  --layout-interaction-settings-option-description-line-height:1.42;
+  --layout-interaction-settings-row-gap:0.75rem;
+  --layout-interaction-settings-row-padding-y:0.72rem;
+  --layout-interaction-settings-row-weight:600;
+  --layout-interaction-settings-row-value-weight:500;
+  --layout-interaction-settings-toggle-row-gap:0.9rem;
+  --layout-interaction-settings-toggle-row-padding-y:0.74rem;
+  --layout-interaction-settings-toggle-radius:999px;
+  --layout-interaction-settings-toggle-width:2.42rem;
+  --layout-interaction-settings-toggle-height:1.34rem;
+  --layout-interaction-settings-toggle-padding:0.16rem;
+  --layout-interaction-settings-toggle-thumb-size:1.02rem;
+  --layout-interaction-settings-status-padding-y:0.58rem;
+  --layout-interaction-settings-status-padding-x:0.68rem;
+  --layout-interaction-settings-status-radius:0.88rem;
+  --layout-interaction-settings-status-line-height:1.45;
+}
+
+/* =============================================================================
+   17) OFFICE INTERNAL CORRESPONDENCE TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established Office internal-correspondence layer. */
+  --layout-office-internal-correspondence-panel-surface:rgba(255, 255, 255, 0.04);
+  --layout-office-internal-correspondence-panel-border-fallback:rgba(255, 255, 255, 0.08);
+  --layout-office-internal-correspondence-text-fallback:rgba(255, 255, 255, 0.92);
+  --layout-office-internal-correspondence-muted-fallback:rgba(255, 255, 255, 0.62);
+  --layout-office-internal-correspondence-soft-fallback:rgba(255, 255, 255, 0.12);
+  --layout-office-internal-correspondence-page-glow-left:rgba(255, 255, 255, 0.06);
+  --layout-office-internal-correspondence-page-glow-right:rgba(255, 255, 255, 0.03);
+  --layout-office-internal-correspondence-page-wash-top:rgba(255, 255, 255, 0.015);
+  --layout-office-internal-correspondence-page-wash-bottom:rgba(255, 255, 255, 0);
+  --layout-office-internal-correspondence-max-width:1200px;
+  --layout-office-internal-correspondence-radius:24px;
+  --layout-office-internal-correspondence-radius-outer-offset:4px;
+  --layout-office-internal-correspondence-shadow:0 24px 80px rgba(0, 0, 0, 0.34);
+  --layout-office-internal-correspondence-shell-gap:32px;
+  --layout-office-internal-correspondence-shell-padding-top:56px;
+  --layout-office-internal-correspondence-shell-padding-inline:24px;
+  --layout-office-internal-correspondence-shell-padding-bottom:80px;
+  --layout-office-internal-correspondence-surface-max-width:1440px;
+  --layout-office-internal-correspondence-menu-gap:24px;
+  --layout-office-internal-correspondence-footer-gap:32px;
+  --layout-office-internal-correspondence-layout-gap:24px;
+  --layout-office-internal-correspondence-sidebar-width:320px;
+  --layout-office-internal-correspondence-content-min-width:0;
+  --layout-office-internal-correspondence-sidebar-top-offset:110px;
+  --layout-office-internal-correspondence-section-gap:24px;
+  --layout-office-internal-correspondence-header-surface-top:rgba(255, 255, 255, 0.05);
+  --layout-office-internal-correspondence-header-surface-bottom:rgba(255, 255, 255, 0.025);
+  --layout-office-internal-correspondence-header-padding:40px;
+  --layout-office-internal-correspondence-header-padding-mobile:24px;
+  --layout-office-internal-correspondence-eyebrow-margin-bottom:16px;
+  --layout-office-internal-correspondence-eyebrow-size:0.78rem;
+  --layout-office-internal-correspondence-eyebrow-weight:600;
+  --layout-office-internal-correspondence-eyebrow-tracking:0.14em;
+  --layout-office-internal-correspondence-title-size:clamp(2.4rem, 4vw, 4.2rem);
+  --layout-office-internal-correspondence-title-size-mobile:2.4rem;
+  --layout-office-internal-correspondence-title-line-height:0.94;
+  --layout-office-internal-correspondence-title-tracking:-0.05em;
+  --layout-office-internal-correspondence-title-weight:600;
+  --layout-office-internal-correspondence-title-max-width:900px;
+  --layout-office-internal-correspondence-copy-margin-top:20px;
+  --layout-office-internal-correspondence-copy-max-width:760px;
+  --layout-office-internal-correspondence-copy-size:1rem;
+  --layout-office-internal-correspondence-copy-line-height:1.7;
+  --layout-office-internal-correspondence-grid-gap:24px;
+  --layout-office-internal-correspondence-card-padding:28px;
+  --layout-office-internal-correspondence-card-padding-mobile:24px;
+  --layout-office-internal-correspondence-card-gap:18px;
+  --layout-office-internal-correspondence-card-title-size:1.15rem;
+  --layout-office-internal-correspondence-card-title-weight:600;
+  --layout-office-internal-correspondence-card-title-tracking:-0.02em;
+  --layout-office-internal-correspondence-card-copy-size:0.96rem;
+  --layout-office-internal-correspondence-card-copy-line-height:1.65;
+  --layout-office-internal-correspondence-link-list-gap:10px;
+  --layout-office-internal-correspondence-link-opacity:0.92;
+  --layout-office-internal-correspondence-link-opacity-hover:1;
+  --layout-office-internal-correspondence-link-motion:180ms;
+  --layout-office-internal-correspondence-subgrid-gap:16px;
+  --layout-office-internal-correspondence-subcard-radius:18px;
+  --layout-office-internal-correspondence-subcard-padding:20px;
+  --layout-office-internal-correspondence-subcard-surface:rgba(255, 255, 255, 0.025);
+  --layout-office-internal-correspondence-subcard-gap:12px;
+  --layout-office-internal-correspondence-subcard-title-size:0.98rem;
+  --layout-office-internal-correspondence-subcard-title-weight:600;
+  --layout-office-internal-correspondence-subcard-title-tracking:-0.02em;
+  --layout-office-internal-correspondence-subcard-copy-size:0.92rem;
+  --layout-office-internal-correspondence-subcard-copy-line-height:1.6;
+  --layout-office-internal-correspondence-mobile-shell-padding-top:18px;
+  --layout-office-internal-correspondence-mobile-shell-padding-inline:16px;
+  --layout-office-internal-correspondence-mobile-shell-padding-bottom:48px;
+}
+
+/* =============================================================================
+   18) COOKIE LANGUAGE OVERLAY TOKENS
+============================================================================= */
+:root{
+  /* Exact globalized values lifted from the established cookie language overlay. */
+  --layout-cookie-language-overlay-shadow:0 20px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
+  --layout-cookie-language-overlay-shadow-dark:0 24px 70px color-mix(in srgb, var(--shadow-color, #000000) 24%, transparent);
+  --layout-cookie-language-overlay-width:min(36rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --layout-cookie-language-overlay-max-height:min(46rem, calc(100vh - 3rem));
+  --layout-cookie-language-overlay-max-height-mobile:min(42rem, calc(100vh - 1.6rem));
+  --layout-cookie-language-overlay-min-height:24rem;
+  --layout-cookie-language-overlay-region-min-height-mobile:12rem;
+  --layout-cookie-language-overlay-radius:1.9rem;
+  --layout-cookie-language-overlay-toolbar-padding-top:1.02rem;
+  --layout-cookie-language-overlay-toolbar-gap:0.44rem;
+  --layout-cookie-language-overlay-toolbar-mobile-offset:0.2rem;
+  --layout-cookie-language-overlay-search-to-list-gap:0.68rem;
+  --layout-cookie-language-overlay-list-padding-top:0;
+  --layout-cookie-language-overlay-list-padding-bottom:1rem;
+  --layout-cookie-language-overlay-back-icon-size:1rem;
+  --layout-cookie-language-overlay-motion-fast:200ms;
+  --layout-cookie-language-overlay-search-min-height:3rem;
+  --layout-cookie-language-overlay-search-padding-y:0.82rem;
+  --layout-cookie-language-overlay-search-padding-x:1rem;
+  --layout-cookie-language-overlay-search-radius:999px;
+  --layout-cookie-language-overlay-search-size:0.94rem;
+  --layout-cookie-language-overlay-search-weight:300;
+  --layout-cookie-language-overlay-search-tracking:-0.015em;
+  --layout-cookie-language-overlay-search-line-height:1.2;
+  --layout-cookie-language-overlay-regions-gap:0.56rem;
+  --layout-cookie-language-overlay-section-gap:0.68rem;
+  --layout-cookie-language-overlay-group-gap:0.5rem;
+  --layout-cookie-language-overlay-country-gap:1rem;
+  --layout-cookie-language-overlay-country-padding-y:0.98rem;
+  --layout-cookie-language-overlay-country-padding-x:1rem;
+  --layout-cookie-language-overlay-country-radius:1rem;
+  --layout-cookie-language-overlay-country-copy-gap:1rem;
+  --layout-cookie-language-overlay-country-copy-gap-mobile:0.82rem;
+  --layout-cookie-language-overlay-country-title-size:1.08rem;
+  --layout-cookie-language-overlay-country-title-size-mobile:1rem;
+  --layout-cookie-language-overlay-country-title-weight:300;
+  --layout-cookie-language-overlay-country-title-tracking:-0.03em;
+  --layout-cookie-language-overlay-country-title-line-height:1.12;
+  --layout-cookie-language-overlay-country-subtitle-size:0.88rem;
+  --layout-cookie-language-overlay-country-subtitle-size-mobile:0.84rem;
+  --layout-cookie-language-overlay-country-subtitle-weight:300;
+  --layout-cookie-language-overlay-country-subtitle-tracking:-0.012em;
+  --layout-cookie-language-overlay-country-subtitle-line-height:1.35;
+}
+
+/* =============================================================================
+   19) COUNTRY OVERLAY TOKENS
+============================================================================= */
+:root{
+  --layout-country-container-pad:0px;
+  --layout-country-motion-fast:220ms;
+  --layout-country-motion-medium:240ms;
+  --layout-country-motion-overlay:620ms;
+  --layout-country-motion-inner-transform:1400ms;
+  --layout-country-motion-inner-opacity:900ms;
+  --layout-country-motion-close-transform:1500ms;
+  --layout-country-motion-close-opacity:1100ms;
+  --layout-country-motion-item-transform:980ms;
+  --layout-country-motion-item-opacity:720ms;
+  --layout-country-motion-ease:cubic-bezier(0.22,1,0.36,1);
+  --layout-country-overlay-blur:16px;
+  --layout-country-overlay-separator-opacity:0.35;
+  --layout-country-heading-opacity:0.85;
+  --layout-country-option-opacity:0.9;
+  --layout-country-option-hover-opacity:1;
+  --layout-country-overlay-padding-block:clamp(3rem, 6vh, 5rem);
+  --layout-country-overlay-inner-gap:1.5rem;
+  --layout-country-overlay-inner-enter-y:48px;
+  --layout-country-overlay-inner-enter-scale:0.98;
+  --layout-country-overlay-inner-close-y:64px;
+  --layout-country-overlay-inner-close-scale:0.965;
+  --layout-country-title-size:1.4rem;
+  --layout-country-title-size-mobile:1.6rem;
+  --layout-country-title-size-small:1.4rem;
+  --layout-country-title-weight:300;
+  --layout-country-title-line-height:1.2;
+  --layout-country-title-tracking:0.02em;
+  --layout-country-region-gap:0.75rem;
+  --layout-country-region-title-size:1.1rem;
+  --layout-country-region-title-size-mobile:1rem;
+  --layout-country-region-title-size-small:0.95rem;
+  --layout-country-region-title-weight:700;
+  --layout-country-region-title-margin-bottom:0.5rem;
+  --layout-country-separator-margin-top:0.5rem;
+  --layout-country-separator-margin-bottom:1rem;
+  --layout-country-separator-height:1px;
+  --layout-country-list-row-gap:0.5rem;
+  --layout-country-list-column-gap:2rem;
+  --layout-country-list-width-large:25%;
+  --layout-country-list-gap-large:1.5rem;
+  --layout-country-list-width-default:33%;
+  --layout-country-list-gap-default:1.33rem;
+  --layout-country-list-width-tablet:50%;
+  --layout-country-list-gap-tablet:1rem;
+  --layout-country-list-width-mobile:100%;
+  --layout-country-list-min-width:150px;
+  --layout-country-item-enter-y:36px;
+  --layout-country-item-delay-01:100ms;
+  --layout-country-item-delay-02:130ms;
+  --layout-country-item-delay-03:160ms;
+  --layout-country-item-delay-04:190ms;
+  --layout-country-item-delay-05:220ms;
+  --layout-country-item-delay-06:250ms;
+  --layout-country-item-delay-07:280ms;
+  --layout-country-item-delay-08:310ms;
+  --layout-country-item-delay-09:340ms;
+  --layout-country-item-delay-10:370ms;
+  --layout-country-item-delay-11:400ms;
+  --layout-country-item-delay-12:430ms;
+  --layout-country-option-size:1rem;
+  --layout-country-option-size-mobile:0.95rem;
+  --layout-country-option-size-small:0.9rem;
+  --layout-country-option-weight:300;
+}
+
+/* =============================================================================
+   20) OFFICE MENU TOKENS
+============================================================================= */
+:root{
+  --layout-office-menu-bg:rgba(7, 7, 7, 0.86);
+  --layout-office-menu-panel:rgba(255, 255, 255, 0.04);
+  --layout-office-menu-border-fallback:rgba(255, 255, 255, 0.08);
+  --layout-office-menu-text-fallback:rgba(255, 255, 255, 0.92);
+  --layout-office-menu-muted-fallback:rgba(255, 255, 255, 0.58);
+  --layout-office-menu-soft-fallback:rgba(255, 255, 255, 0.12);
+  --layout-office-menu-max-width:1440px;
+  --layout-office-menu-radius:22px;
+  --layout-office-menu-shadow:0 20px 60px rgba(0, 0, 0, 0.26);
+  --layout-office-menu-blur:18px;
+  --layout-office-menu-shell-padding-inline:24px;
+  --layout-office-menu-shell-padding-top:18px;
+  --layout-office-menu-shell-gap:10px;
+  --layout-office-menu-inner-min-height:72px;
+  --layout-office-menu-inner-gap:24px;
+  --layout-office-menu-inner-padding-y:16px;
+  --layout-office-menu-inner-padding-x:20px;
+  --layout-office-menu-brand-gap:4px;
+  --layout-office-menu-brand-size:0.96rem;
+  --layout-office-menu-brand-weight:600;
+  --layout-office-menu-brand-tracking:-0.02em;
+  --layout-office-menu-context-size:0.78rem;
+  --layout-office-menu-context-tracking:0.02em;
+  --layout-office-menu-nav-gap:18px;
+  --layout-office-menu-link-motion:180ms;
+  --layout-office-menu-link-padding-y:8px;
+  --layout-office-menu-link-padding-x:2px;
+  --layout-office-menu-link-size:0.9rem;
+  --layout-office-menu-link-opacity:0.88;
+  --layout-office-menu-link-opacity-active:1;
+  --layout-office-menu-utility-gap:14px;
+  --layout-office-menu-status-min-height:34px;
+  --layout-office-menu-status-padding-x:12px;
+  --layout-office-menu-status-radius:999px;
+  --layout-office-menu-status-size:0.78rem;
+  --layout-office-menu-status-tracking:0.08em;
+  --layout-office-menu-toggle-min-height:38px;
+  --layout-office-menu-toggle-padding-x:14px;
+  --layout-office-menu-mobile-panel-gap:8px;
+  --layout-office-menu-mobile-panel-padding:14px;
+  --layout-office-menu-mobile-panel-bg:rgba(7, 7, 7, 0.94);
+  --layout-office-menu-mobile-link-min-height:42px;
+  --layout-office-menu-mobile-link-padding-x:10px;
+  --layout-office-menu-mobile-link-radius:12px;
+  --layout-office-menu-mobile-link-opacity:0.9;
+  --layout-office-menu-tablet-nav-gap:14px;
+  --layout-office-menu-tablet-link-size:0.86rem;
+  --layout-office-menu-mobile-shell-padding-top:14px;
+  --layout-office-menu-mobile-shell-padding-inline:16px;
+  --layout-office-menu-mobile-inner-gap:16px;
+  --layout-office-menu-mobile-inner-padding-y:14px;
+  --layout-office-menu-mobile-inner-padding-x:16px;
+}
+
+/* =============================================================================
+   21) FEED TOKENS
+============================================================================= */
+:root{
+  --layout-feed-main-column:1.2fr;
+  --layout-feed-discovery-min:18rem;
+  --layout-feed-discovery-column:0.8fr;
+  --layout-feed-layout-gap:1.5rem;
+  --layout-feed-panel-gap:1.25rem;
+  --layout-feed-composer-min-height:7.5rem;
+  --layout-feed-input-line-height:1.7;
+  --layout-feed-action-min-height:2.6rem;
+  --layout-feed-action-padding-x:1rem;
+  --layout-feed-action-radius:999px;
+  --layout-feed-motion:220ms;
+  --layout-feed-header-gap:1rem;
+  --layout-feed-tab-gap:0.75rem;
+  --layout-feed-tab-min-height:2.2rem;
+  --layout-feed-tab-padding-x:0.95rem;
+  --layout-feed-sort-gap:0.45rem;
+  --layout-feed-sort-label-size:0.86rem;
+  --layout-feed-sort-label-line-height:1.6;
+  --layout-feed-select-min-height:2.8rem;
+  --layout-feed-select-padding-x:1rem;
+  --layout-feed-select-radius:1rem;
+  --layout-feed-stream-gap:1.15rem;
+  --layout-feed-post-gap:0.85rem;
+  --layout-feed-post-padding-bottom:1.1rem;
+  --layout-feed-post-identity-gap:0.85rem;
+  --layout-feed-avatar-size:3rem;
+  --layout-feed-avatar-radius:999px;
+  --layout-feed-avatar-fallback-size:0.92rem;
+  --layout-feed-avatar-fallback-weight:600;
+  --layout-feed-avatar-fallback-tracking:0.06em;
+  --layout-feed-identity-gap:0.32rem;
+  --layout-feed-row-gap:0.55rem;
+  --layout-feed-entity-size:1rem;
+  --layout-feed-entity-weight:500;
+  --layout-feed-entity-line-height:1.32;
+  --layout-feed-handle-size:0.82rem;
+  --layout-feed-handle-line-height:1.5;
+  --layout-feed-chip-min-height:1.85rem;
+  --layout-feed-chip-padding-x:0.72rem;
+  --layout-feed-chip-radius:999px;
+  --layout-feed-chip-size:0.72rem;
+  --layout-feed-chip-tracking:0.04em;
+  --layout-feed-badge-gap:0.4rem;
+  --layout-feed-badge-blue:#1d9bf0;
+  --layout-feed-badge-border-mix:30%;
+  --layout-feed-badge-bg-mix:10%;
+  --layout-feed-badge-weight:600;
+  --layout-feed-badge-icon-size:0.82rem;
+  --layout-feed-copy-line-height:1.72;
+  --layout-feed-post-action-min-height:2.35rem;
+  --layout-feed-post-action-padding-x:0.92rem;
+  --layout-feed-post-action-size:0.76rem;
+}
+
+/* =============================================================================
+   22) HOME PROFILE CONTROL PANEL TOKENS
+============================================================================= */
+:root{
+  --layout-home-profile-control-panel-width:min(24rem, calc(100vw - (var(--home-shell-panel-inline-padding) * 2)));
+  --layout-home-profile-control-panel-inner-gap:1.25rem;
+  --layout-home-profile-control-panel-inner-padding-top:1.25rem;
+  --layout-home-profile-control-panel-inner-padding-right:0;
+  --layout-home-profile-control-panel-inner-padding-bottom:2rem;
+  --layout-home-profile-control-panel-inner-padding-left:0;
+  --layout-home-profile-control-panel-inner-padding-top-mobile:1rem;
+  --layout-home-profile-control-panel-header-gap:1rem;
+  --layout-home-profile-control-panel-header-padding-bottom:0.95rem;
+  --layout-home-profile-control-panel-eyebrow-margin-bottom:0.35rem;
+  --layout-home-profile-control-panel-section-gap:0.7rem;
+  --layout-home-profile-control-panel-stack-gap:0.45rem;
+  --layout-home-profile-control-panel-identity-gap:0.9rem;
+  --layout-home-profile-control-panel-identity-padding-y:0.9rem;
+  --layout-home-profile-control-panel-identity-padding-x:0.95rem;
+  --layout-home-profile-control-panel-avatar-size:3rem;
+  --layout-home-profile-control-panel-avatar-radius:999px;
+  --layout-home-profile-control-panel-avatar-fallback-size:0.95rem;
+  --layout-home-profile-control-panel-avatar-fallback-weight:600;
+  --layout-home-profile-control-panel-avatar-fallback-tracking:0.06em;
+  --layout-home-profile-control-panel-name-margin-bottom:0.2rem;
+  --layout-home-profile-control-panel-name-size:0.92rem;
+  --layout-home-profile-control-panel-name-weight:500;
+  --layout-home-profile-control-panel-username-margin-bottom:0.25rem;
+  --layout-home-profile-control-panel-username-size:0.76rem;
+  --layout-home-profile-control-panel-username-weight:500;
+  --layout-home-profile-control-panel-username-tracking:0.1em;
+  --layout-home-profile-control-panel-plan-margin-bottom:0.35rem;
+  --layout-home-profile-control-panel-plan-size:0.78rem;
+  --layout-home-profile-control-panel-plan-weight:500;
+  --layout-home-profile-control-panel-plan-tracking:0.06em;
+  --layout-home-profile-control-panel-meta-size:0.82rem;
+  --layout-home-profile-control-panel-meta-line-height:1.5;
+  --layout-home-profile-control-panel-route-link-margin-top:0.55rem;
+  --layout-home-profile-control-panel-route-link-size:0.82rem;
+  --layout-home-profile-control-panel-route-link-line-height:1.3;
+  --layout-home-profile-control-panel-status-grid-gap:0.55rem;
+  --layout-home-profile-control-panel-status-card-gap:0.35rem;
+  --layout-home-profile-control-panel-status-card-padding-y:0.85rem;
+  --layout-home-profile-control-panel-status-card-padding-x:0.9rem;
+  --layout-home-profile-control-panel-status-label-size:0.68rem;
+  --layout-home-profile-control-panel-status-label-weight:500;
+  --layout-home-profile-control-panel-status-label-tracking:0.12em;
+  --layout-home-profile-control-panel-status-value-size:0.86rem;
+  --layout-home-profile-control-panel-status-value-weight:500;
+  --layout-home-profile-control-panel-status-value-line-height:1.3;
+  --layout-home-profile-control-panel-route-status-size:0.82rem;
+  --layout-home-profile-control-panel-route-status-line-height:1.5;
+  --layout-home-profile-control-panel-item-min-height:2.8rem;
+  --layout-home-profile-control-panel-item-padding-y:0.78rem;
+  --layout-home-profile-control-panel-item-padding-x:0.92rem;
+  --layout-home-profile-control-panel-item-size:0.84rem;
+  --layout-home-profile-control-panel-item-weight:500;
+  --layout-home-profile-control-panel-item-tracking:0.02em;
+}
+
+/* =============================================================================
+   23) OFFICE FOOTER TOKENS
+============================================================================= */
+:root{
+  --layout-office-footer-bg:rgba(7, 7, 7, 0.82);
+  --layout-office-footer-panel:rgba(255, 255, 255, 0.04);
+  --layout-office-footer-border-fallback:rgba(255, 255, 255, 0.08);
+  --layout-office-footer-text-fallback:rgba(255, 255, 255, 0.92);
+  --layout-office-footer-muted-fallback:rgba(255, 255, 255, 0.58);
+  --layout-office-footer-soft-fallback:rgba(255, 255, 255, 0.12);
+  --layout-office-footer-max-width:1440px;
+  --layout-office-footer-radius:28px;
+  --layout-office-footer-shadow:0 20px 60px rgba(0, 0, 0, 0.24);
+  --layout-office-footer-shell-padding-top:0;
+  --layout-office-footer-shell-padding-inline:24px;
+  --layout-office-footer-shell-padding-bottom:32px;
+  --layout-office-footer-inner-gap:28px;
+  --layout-office-footer-inner-padding:32px;
+  --layout-office-footer-brand-gap:12px;
+  --layout-office-footer-brand-max-width:720px;
+  --layout-office-footer-eyebrow-size:0.78rem;
+  --layout-office-footer-eyebrow-weight:600;
+  --layout-office-footer-eyebrow-tracking:0.14em;
+  --layout-office-footer-title-size:1.8rem;
+  --layout-office-footer-title-line-height:1.04;
+  --layout-office-footer-title-weight:600;
+  --layout-office-footer-title-tracking:-0.04em;
+  --layout-office-footer-copy-size:0.98rem;
+  --layout-office-footer-copy-line-height:1.72;
+  --layout-office-footer-columns-count:3;
+  --layout-office-footer-columns-gap:20px;
+  --layout-office-footer-column-gap:14px;
+  --layout-office-footer-column-padding:18px;
+  --layout-office-footer-column-radius:18px;
+  --layout-office-footer-column-title-size:0.95rem;
+  --layout-office-footer-column-title-weight:600;
+  --layout-office-footer-column-title-tracking:-0.02em;
+  --layout-office-footer-link-gap:10px;
+  --layout-office-footer-link-motion:180ms;
+  --layout-office-footer-link-opacity:0.9;
+  --layout-office-footer-link-opacity-hover:1;
+  --layout-office-footer-meta-gap:12px;
+  --layout-office-footer-meta-label-size:0.84rem;
+  --layout-office-footer-meta-label-tracking:0.04em;
+  --layout-office-footer-meta-value-size:0.92rem;
+  --layout-office-footer-meta-value-weight:600;
+  --layout-office-footer-bottom-gap:16px;
+  --layout-office-footer-bottom-padding-top:8px;
+  --layout-office-footer-legal-size:0.84rem;
+  --layout-office-footer-legal-line-height:1.5;
+  --layout-office-footer-mobile-shell-padding-top:0;
+  --layout-office-footer-mobile-shell-padding-inline:16px;
+  --layout-office-footer-mobile-shell-padding-bottom:24px;
+  --layout-office-footer-mobile-inner-padding:24px;
+}
+
+/* =============================================================================
+   24) MODELS DIRECTORY TOKENS
+============================================================================= */
+:root{
+  --layout-models-toolbar-gap:1.15rem;
+  --layout-models-toolbar-top-gap:1rem;
+  --layout-models-sort-gap:0.45rem;
+  --layout-models-sort-label-size:0.86rem;
+  --layout-models-sort-label-line-height:1.6;
+  --layout-models-select-min-height:3.4rem;
+  --layout-models-select-padding-x:1rem;
+  --layout-models-select-radius:1rem;
+  --layout-models-filter-row-gap:0.75rem;
+  --layout-models-filter-chip-min-height:2.2rem;
+  --layout-models-filter-chip-padding-x:0.95rem;
+  --layout-models-filter-chip-radius:999px;
+  --layout-models-motion:220ms;
+  --layout-models-filter-groups-count:2;
+  --layout-models-filter-groups-gap:1rem;
+  --layout-models-filter-group-gap:0.55rem;
+  --layout-models-filter-label-size:0.78rem;
+  --layout-models-filter-label-weight:500;
+  --layout-models-filter-label-tracking:0.1em;
+  --layout-models-card-column-span:6;
+  --layout-models-card-column-span-mobile:12;
+  --layout-models-card-identity-gap:0.9rem;
+  --layout-models-avatar-size:3rem;
+  --layout-models-avatar-radius:999px;
+  --layout-models-avatar-fallback-size:0.92rem;
+  --layout-models-avatar-fallback-weight:600;
+  --layout-models-avatar-fallback-tracking:0.06em;
+  --layout-models-identity-copy-gap:0.3rem;
+  --layout-models-title-row-gap:0.6rem;
+  --layout-models-verification-gap:0.42rem;
+  --layout-models-verification-min-height:1.9rem;
+  --layout-models-verification-padding-x:0.7rem;
+  --layout-models-verification-radius:999px;
+  --layout-models-verification-blue:#1d9bf0;
+  --layout-models-verification-border-mix:30%;
+  --layout-models-verification-bg-mix:10%;
+  --layout-models-verification-size:0.72rem;
+  --layout-models-verification-weight:600;
+  --layout-models-verification-tracking:0.08em;
+  --layout-models-verification-icon-size:0.9rem;
+  --layout-models-handle-size:0.82rem;
+  --layout-models-handle-tracking:0.08em;
+  --layout-models-meta-gap:0.55rem;
+  --layout-models-meta-row-gap:1rem;
+  --layout-models-meta-size:0.82rem;
+  --layout-models-meta-line-height:1.5;
+  --layout-models-meta-strong-weight:500;
+  --layout-models-actions-gap:0.75rem;
+  --layout-models-action-min-height:2.6rem;
+  --layout-models-action-padding-x:1rem;
+  --layout-models-action-radius:999px;
+}
+
+/* =============================================================================
+   25) LEGAL PAGE TOKENS
+============================================================================= */
+:root{
+  --layout-legal-page-narrow-width:920px;
+  --layout-legal-page-border-fallback:rgba(255, 255, 255, 0.1);
+  --layout-legal-page-surface:rgba(255, 255, 255, 0.03);
+  --layout-legal-page-muted:rgba(255, 255, 255, 0.64);
+  --layout-legal-page-soft:rgba(255, 255, 255, 0.5);
+  --layout-legal-page-body-min-height:100vh;
+  --layout-legal-page-shell-padding-top:160px;
+  --layout-legal-page-shell-padding-right:0;
+  --layout-legal-page-shell-padding-bottom:96px;
+  --layout-legal-page-shell-padding-left:0;
+  --layout-legal-page-shell-padding-top-tablet:136px;
+  --layout-legal-page-shell-padding-top-mobile:124px;
+  --layout-legal-page-shell-padding-bottom-mobile:72px;
+  --layout-legal-page-header-gap:20px;
+  --layout-legal-page-header-max-width:1100px;
+  --layout-legal-page-eyebrow-size:0.76rem;
+  --layout-legal-page-eyebrow-tracking:0.16em;
+  --layout-legal-page-title-size:64px;
+  --layout-legal-page-title-size-tablet:52px;
+  --layout-legal-page-title-size-mobile:42px;
+  --layout-legal-page-title-line-height:0.96;
+  --layout-legal-page-title-tracking:-0.05em;
+  --layout-legal-page-intro-line-height:1.72;
+  --layout-legal-page-meta-gap:12px;
+  --layout-legal-page-meta-margin-top:4px;
+  --layout-legal-page-meta-padding-y:10px;
+  --layout-legal-page-meta-padding-x:12px;
+  --layout-legal-page-meta-size:0.86rem;
+  --layout-legal-page-divider-height:1px;
+  --layout-legal-page-divider-margin-top:40px;
+  --layout-legal-page-divider-margin-bottom:44px;
+  --layout-legal-page-divider-margin-top-mobile:30px;
+  --layout-legal-page-divider-margin-bottom-mobile:32px;
+  --layout-legal-page-content-gap:40px;
+  --layout-legal-page-content-gap-mobile:32px;
+  --layout-legal-page-section-gap:14px;
+  --layout-legal-page-section-title-size:1.18rem;
+  --layout-legal-page-section-title-line-height:1.2;
+  --layout-legal-page-section-title-tracking:-0.02em;
+  --layout-legal-page-list-padding-inline-start:20px;
+  --layout-legal-page-list-gap:8px;
+  --layout-legal-page-callout-gap:8px;
+  --layout-legal-page-callout-padding-y:18px;
+  --layout-legal-page-callout-padding-x:20px;
+  --layout-legal-page-footer-margin-top:52px;
+  --layout-legal-page-footer-padding-top:24px;
+  --layout-legal-page-footer-line-height:1.7;
+  --layout-legal-page-link-border-rest:rgba(255, 255, 255, 0.22);
+  --layout-legal-page-link-border-hover:rgba(255, 255, 255, 0.4);
+}
+
+/* =============================================================================
+   26) ABOUT PAGE TOKENS
+============================================================================= */
+:root{
+  --layout-about-icos-node-width:min(30rem, 34vw);
+  --layout-about-icos-node-width-desktop:30rem;
+  --layout-about-icos-node-width-tablet:min(24rem, 46vw);
+  --layout-about-icos-node-width-tablet-max:24rem;
+  --layout-about-icos-node-width-mobile:min(18rem, 68vw);
+  --layout-about-icos-node-width-mobile-max:18rem;
+  --layout-about-anchor-max-width:26rem;
+  --layout-about-anchor-max-width-wide:28rem;
+  --layout-about-icos-copy-body-width:28rem;
+  --layout-about-icos-copy-body-width-tablet:26rem;
+  --layout-about-icos-copy-gap:clamp(var(--spacing-lg), 3vw, var(--spacing-xl));
+  --layout-about-section-title-size-desktop:2.08rem;
+  --layout-about-section-title-size-wide:2.3rem;
+  --layout-about-section-title-size-tablet:1.82rem;
+  --layout-about-section-title-size-mobile:1.56rem;
+  --layout-about-section-title-weight:300;
+  --layout-about-section-title-opacity:1;
+  --layout-about-section-title-text-transform:none;
+  --layout-about-closing-padding-bottom-mobile:5rem;
+  --layout-about-stack-handoff-distance:100svh;
+  --layout-about-stack-panel-height:100svh;
+  --layout-about-stack-shell-height:200svh;
+  --layout-about-stack-handoff-distance-dynamic:100dvh;
+  --layout-about-stack-panel-height-dynamic:100dvh;
+  --layout-about-stack-shell-height-dynamic:200dvh;
+  --layout-about-closing-sub-opacity:0.78;
+  --layout-about-legacy-post-padding-y:2rem;
+  --layout-about-legacy-post-title-size:1.5rem;
+  --layout-about-legacy-post-title-weight:600;
+  --layout-about-legacy-post-title-margin-bottom:0.5rem;
+  --layout-about-legacy-post-excerpt-size:1rem;
+  --layout-about-legacy-post-excerpt-margin-bottom:0.5rem;
+  --layout-about-legacy-comments-padding-y:2rem;
+  --layout-about-legacy-comments-title-size:1.8rem;
+  --layout-about-legacy-comments-title-weight:600;
+  --layout-about-legacy-comments-title-margin-bottom:1.5rem;
+  --layout-about-legacy-comment-padding-y:1rem;
+  --layout-about-legacy-comment-size:0.95rem;
+  --layout-about-legacy-comment-line-height:1.6;
+  --layout-about-hero-stage-min-height:320vh;
+  --layout-about-hero-fixed-inset:0;
+  --layout-about-hero-height:100vh;
+  --layout-about-hero-height-small:100svh;
+  --layout-about-hero-height-dynamic:100dvh;
+  --layout-about-hero-z-index:-100;
+  --layout-about-hero-media-z-index:-102;
+  --layout-about-hero-content-z-index:2;
+  --layout-about-hero-overlay-z-index:1;
+  --layout-about-zero:0;
+  --layout-about-center-percent:50%;
+  --layout-about-full-width:100%;
+  --layout-about-viewport-width:100vw;
+  --layout-about-figure-translate-x:-50%;
+  --layout-about-body-opacity:0.92;
+  --layout-about-title-margin-bottom:0.2rem;
+  --layout-about-featured-mobile-shell-factor:1.8;
+  --layout-about-closing-sub-tracking:0.01em;
+}
+
+/* =============================================================================
+   27) HOME PLATFORM THEME SETTINGS TOKENS
+============================================================================= */
+:root{
+  --layout-home-platform-theme-eyebrow-opacity:0.72;
+  --layout-home-platform-theme-summary-opacity:0.72;
+  --layout-home-platform-theme-caption-opacity:0.72;
+  --layout-home-platform-theme-token-grid-disabled-opacity:0.48;
+  --layout-home-platform-theme-token-grid-enabled-opacity:1;
+  --layout-home-platform-theme-motion-fast:220ms;
+  --layout-home-platform-theme-shell-gap:1.05rem;
+  --layout-home-platform-theme-header-gap:0.36rem;
+  --layout-home-platform-theme-eyebrow-size:0.68rem;
+  --layout-home-platform-theme-eyebrow-weight:500;
+  --layout-home-platform-theme-eyebrow-tracking:0.08em;
+  --layout-home-platform-theme-title-size:1.18rem;
+  --layout-home-platform-theme-title-weight:500;
+  --layout-home-platform-theme-title-line-height:1.18;
+  --layout-home-platform-theme-title-tracking:-0.01em;
+  --layout-home-platform-theme-summary-max-width:44rem;
+  --layout-home-platform-theme-summary-size:0.88rem;
+  --layout-home-platform-theme-summary-line-height:1.46;
+  --layout-home-platform-theme-section-gap:0.72rem;
+  --layout-home-platform-theme-section-padding-top:0.82rem;
+  --layout-home-platform-theme-section-header-gap:0.28rem;
+  --layout-home-platform-theme-mode-grid-count:4;
+  --layout-home-platform-theme-mode-grid-gap:0.58rem;
+  --layout-home-platform-theme-mode-option-gap:0.16rem;
+  --layout-home-platform-theme-mode-option-min-height:4.35rem;
+  --layout-home-platform-theme-mode-option-padding-y:0.72rem;
+  --layout-home-platform-theme-mode-option-padding-x:0.78rem;
+  --layout-home-platform-theme-mode-option-radius:1rem;
+  --layout-home-platform-theme-mode-label-size:0.88rem;
+  --layout-home-platform-theme-mode-label-weight:500;
+  --layout-home-platform-theme-mode-label-line-height:1.3;
+  --layout-home-platform-theme-caption-size:0.74rem;
+  --layout-home-platform-theme-caption-line-height:1.32;
+  --layout-home-platform-theme-token-grid-count:2;
+  --layout-home-platform-theme-token-grid-gap:0.58rem;
+  --layout-home-platform-theme-token-field-gap:0.72rem;
+  --layout-home-platform-theme-token-field-min-height:3.55rem;
+  --layout-home-platform-theme-token-field-padding-y:0.72rem;
+  --layout-home-platform-theme-token-field-padding-x:0.78rem;
+  --layout-home-platform-theme-token-field-radius:1rem;
+  --layout-home-platform-theme-token-label-size:0.8rem;
+  --layout-home-platform-theme-token-label-weight:500;
+  --layout-home-platform-theme-token-label-line-height:1.35;
+  --layout-home-platform-theme-toggle-list-gap:0.56rem;
+  --layout-home-platform-theme-toggle-row-gap:0.86rem;
+  --layout-home-platform-theme-toggle-row-padding-y:0.68rem;
+}
+
+/* =============================================================================
+   28) HOME INTERACTION PANEL TOKENS
+============================================================================= */
+:root{
+  --layout-home-interaction-panel-width:min(46rem, calc(100vw - (2 * var(--site-gutter))));
+  --layout-home-interaction-panel-width-mobile:min(100%, calc(100vw - (2 * var(--site-gutter))));
+  --layout-home-interaction-panel-gap:0.38rem;
+  --layout-home-interaction-panel-padding:0.54rem;
+  --layout-home-interaction-panel-padding-mobile:0.52rem;
+  --layout-home-interaction-panel-radius:1.42rem;
+  --layout-home-interaction-panel-shadow:0 18px 48px color-mix(in srgb, var(--shadow-color, #000000) 14%, transparent);
+  --layout-home-interaction-panel-blur:18px;
+  --layout-home-interaction-panel-saturate:126%;
+  --layout-home-interaction-panel-form-gap:0.32rem;
+  --layout-home-interaction-panel-input-min-height:2.72rem;
+  --layout-home-interaction-panel-input-max-height:6.25rem;
+  --layout-home-interaction-panel-input-padding-y:0.42rem;
+  --layout-home-interaction-panel-input-padding-x:0.64rem;
+  --layout-home-interaction-panel-input-radius:0.92rem;
+  --layout-home-interaction-panel-input-line-height:1.38;
+  --layout-home-interaction-panel-composer-gap:0.38rem;
+  --layout-home-interaction-panel-composer-side-gap:0.34rem;
+  --layout-home-interaction-panel-control-size:2.08rem;
+  --layout-home-interaction-panel-control-radius:999px;
+  --layout-home-interaction-panel-control-pulse-shadow:0 0 0 0 color-mix(in srgb, var(--color-primary1) 28%, transparent);
+  --layout-home-interaction-panel-control-pulse-shadow-active:0 0 0 0.42rem color-mix(in srgb, var(--color-primary1) 0%, transparent);
+  --layout-home-interaction-panel-model-height:2.08rem;
+  --layout-home-interaction-panel-model-padding-x:0.68rem;
+  --layout-home-interaction-panel-model-padding-x-mobile:0.66rem;
+  --layout-home-interaction-panel-model-radius:999px;
+  --layout-home-interaction-panel-model-gap:0.32rem;
+  --layout-home-interaction-panel-model-name-size:0.82rem;
+  --layout-home-interaction-panel-model-name-weight:500;
+  --layout-home-interaction-panel-model-name-line-height:1.2;
+  --layout-home-interaction-panel-model-name-tracking:-0.01em;
+  --layout-home-interaction-panel-icon-size:1rem;
+  --layout-home-interaction-panel-icon-opacity:0.82;
+  --layout-home-interaction-panel-icon-opacity-hover:1;
+  --layout-home-interaction-panel-submit-height:2.08rem;
+  --layout-home-interaction-panel-submit-padding-x:0.78rem;
+  --layout-home-interaction-panel-submit-radius:999px;
+  --layout-home-interaction-panel-submit-gap:0.32rem;
+  --layout-home-interaction-panel-submit-size:0.82rem;
+  --layout-home-interaction-panel-submit-weight:500;
+  --layout-home-interaction-panel-submit-line-height:1;
+  --layout-home-interaction-panel-disabled-opacity:0.48;
+  --layout-home-interaction-panel-file-gap:0.38rem;
+  --layout-home-interaction-panel-file-chip-min-height:1.55rem;
+  --layout-home-interaction-panel-file-chip-padding-x:0.58rem;
+  --layout-home-interaction-panel-file-chip-radius:999px;
+  --layout-home-interaction-panel-file-chip-size:0.68rem;
+  --layout-home-interaction-panel-file-chip-weight:500;
+  --layout-home-interaction-panel-file-chip-tracking:0.04em;
+  --layout-home-interaction-panel-motion-fast:220ms;
+  --layout-home-interaction-panel-voice-opacity-active:1;
+  --layout-home-interaction-panel-voice-opacity-inactive:0;
+  --layout-home-interaction-panel-voice-animation-duration:1.18s;
+  --layout-home-interaction-panel-thinking-animation-duration:1.2s;
+  --layout-home-interaction-panel-thinking-animation-steps:4;
+  --layout-home-interaction-panel-dot-width:0.72em;
+}
+
+/* =============================================================================
+   29) OFFICE SIDEBAR TOKENS
+============================================================================= */
+:root{
+  --layout-office-sidebar-width:320px;
+  --layout-office-sidebar-collapsed-width:112px;
+  --layout-office-sidebar-bg:rgba(255, 255, 255, 0.04);
+  --layout-office-sidebar-border-fallback:rgba(255, 255, 255, 0.08);
+  --layout-office-sidebar-text-fallback:rgba(255, 255, 255, 0.92);
+  --layout-office-sidebar-muted-fallback:rgba(255, 255, 255, 0.58);
+  --layout-office-sidebar-soft-fallback:rgba(255, 255, 255, 0.12);
+  --layout-office-sidebar-shadow:0 20px 60px rgba(0, 0, 0, 0.24);
+  --layout-office-sidebar-radius:24px;
+  --layout-office-sidebar-gap:18px;
+  --layout-office-sidebar-inner-padding-y:24px;
+  --layout-office-sidebar-inner-padding-x:20px;
+  --layout-office-sidebar-inner-motion:180ms;
+  --layout-office-sidebar-top-gap:16px;
+  --layout-office-sidebar-brand-gap:8px;
+  --layout-office-sidebar-eyebrow-size:0.76rem;
+  --layout-office-sidebar-eyebrow-weight:600;
+  --layout-office-sidebar-eyebrow-tracking:0.14em;
+  --layout-office-sidebar-title-size:1.42rem;
+  --layout-office-sidebar-title-line-height:1.04;
+  --layout-office-sidebar-title-tracking:-0.03em;
+  --layout-office-sidebar-title-weight:600;
+  --layout-office-sidebar-copy-size:0.92rem;
+  --layout-office-sidebar-copy-line-height:1.6;
+  --layout-office-sidebar-toggle-min-height:40px;
+  --layout-office-sidebar-toggle-padding-x:14px;
+  --layout-office-sidebar-toggle-radius:999px;
+  --layout-office-sidebar-toggle-hover-bg:rgba(255, 255, 255, 0.03);
+  --layout-office-sidebar-nav-gap:10px;
+  --layout-office-sidebar-link-gap:4px;
+  --layout-office-sidebar-link-padding-y:14px;
+  --layout-office-sidebar-link-padding-x:14px;
+  --layout-office-sidebar-link-radius:16px;
+  --layout-office-sidebar-link-bg:rgba(255, 255, 255, 0.02);
+  --layout-office-sidebar-link-bg-active:rgba(255, 255, 255, 0.04);
+  --layout-office-sidebar-link-opacity:0.92;
+  --layout-office-sidebar-link-opacity-active:1;
+  --layout-office-sidebar-link-label-size:0.94rem;
+  --layout-office-sidebar-link-label-weight:600;
+  --layout-office-sidebar-link-label-tracking:-0.02em;
+  --layout-office-sidebar-link-meta-size:0.78rem;
+  --layout-office-sidebar-link-meta-tracking:0.06em;
+  --layout-office-sidebar-collapsed-padding-y:20px;
+  --layout-office-sidebar-collapsed-padding-x:14px;
+  --layout-office-sidebar-collapsed-title-size:1.1rem;
+  --layout-office-sidebar-tablet-padding-y:20px;
+  --layout-office-sidebar-tablet-padding-x:16px;
+  --layout-office-sidebar-mobile-padding-y:18px;
+  --layout-office-sidebar-mobile-padding-x:16px;
+}
+
+/* =============================================================================
+   30) AWARENESS FEATURE TOKENS
+============================================================================= */
+:root{
+  --layout-awareness-wrap-min-height:100%;
+  --layout-awareness-wrap-padding:28px;
+  --layout-awareness-panel-width:96%;
+  --layout-awareness-panel-radius:14px;
+  --layout-awareness-panel-padding:34px;
+  --layout-awareness-title-margin-bottom:18px;
+  --layout-awareness-title-size:22px;
+  --layout-awareness-title-weight:400;
+  --layout-awareness-lead-margin-bottom:18px;
+  --layout-awareness-lead-size:15px;
+  --layout-awareness-lead-line-height:1.45;
+  --layout-awareness-question-size:24px;
+  --layout-awareness-question-line-height:1.5;
+  --layout-awareness-question-margin-top:6px;
+  --layout-awareness-question-margin-bottom:14px;
+  --layout-awareness-note-margin-top:14px;
+  --layout-awareness-note-size:13px;
+  --layout-awareness-row-gap:12px;
+  --layout-awareness-row-margin-bottom:20px;
+  --layout-awareness-select-padding-y:8px;
+  --layout-awareness-select-padding-x:12px;
+  --layout-awareness-select-size:15px;
+  --layout-awareness-select-radius:8px;
+  --layout-awareness-slider-width:680px;
+  --layout-awareness-slider-margin-top:28px;
+  --layout-awareness-slider-margin-bottom:18px;
+  --layout-awareness-slider-gap:32px;
+  --layout-awareness-track-height:12px;
+  --layout-awareness-track-radius:10px;
+  --layout-awareness-thumb-width:20px;
+  --layout-awareness-thumb-height:20px;
+  --layout-awareness-thumb-radius:50%;
+  --layout-awareness-thumb-shadow:0 6px 18px var(--shadow-color, rgba(102,100,64,0.24));
+  --layout-awareness-thumb-margin-top:0%;
+  --layout-awareness-thumb-margin-top-moz:-2px;
+  --layout-awareness-thumb-motion:0.3s;
+  --layout-awareness-label-size:0.95rem;
+  --layout-awareness-label-margin-top:0.3rem;
+  --layout-awareness-label-margin-bottom:10px;
+  --layout-awareness-button-padding-y:14px;
+  --layout-awareness-button-padding-x:32px;
+  --layout-awareness-button-radius:28px;
+  --layout-awareness-button-size:16px;
+  --layout-awareness-button-margin-top:34px;
+  --layout-awareness-result-margin-top:12px;
+  --layout-awareness-result-size:15px;
+  --layout-awareness-result-gap:12px;
+  --layout-awareness-stage-weight:700;
+  --layout-awareness-stage-padding:10px;
+  --layout-awareness-stage-radius:10px;
+  --layout-awareness-stage-motion:0.2s;
+  --layout-awareness-stage-hover-shadow:0 4px 14px var(--shadow-color, rgba(0,0,0,0.1));
+  --layout-awareness-score-size:18px;
+  --layout-awareness-score-margin-top:8px;
+  --layout-awareness-score-weight:600;
+  --layout-awareness-desc-padding-y:12px;
+  --layout-awareness-desc-padding-x:14px;
+  --layout-awareness-desc-margin-top:8px;
+  --layout-awareness-desc-radius:10px;
+  --layout-awareness-desc-size:14px;
+  --layout-awareness-desc-line-height:1.6;
+  --layout-awareness-dominant-margin-top:20px;
+  --layout-awareness-dominant-radius:12px;
+  --layout-awareness-dominant-padding:16px;
+  --layout-awareness-dominant-size:15px;
+  --layout-awareness-dominant-line-height:1.4;
+  --layout-awareness-mobile-panel-padding:14px;
+  --layout-awareness-mobile-question-size:18px;
+  --layout-awareness-mobile-button-padding-y:12px;
+  --layout-awareness-mobile-button-padding-x:18px;
+  --layout-awareness-mobile-button-margin-top:24px;
+  --layout-awareness-mobile-button-size:15px;
+  --layout-awareness-mobile-slider-width:96%;
+  --layout-awareness-mobile-slider-max-width:100%;
+  --layout-awareness-mobile-slider-margin-top:18px;
+  --layout-awareness-mobile-slider-margin-bottom:10px;
+  --layout-awareness-mobile-slider-gap:22px;
+  --layout-awareness-mobile-label-size:0.85rem;
+  --layout-awareness-mobile-label-margin-bottom:6px;
+  --layout-awareness-mobile-thumb-width:28px;
+  --layout-awareness-mobile-thumb-height:16px;
+  --layout-awareness-progress-width:92%;
+  --layout-awareness-progress-max-width:680px;
+  --layout-awareness-progress-height:4px;
+  --layout-awareness-progress-radius:3px;
+  --layout-awareness-progress-margin-top:14px;
+  --layout-awareness-progress-margin-bottom:8px;
+  --layout-awareness-progress-fill-width:0%;
+}
+
+/* =============================================================================
+   31) END OF FILE
 ============================================================================= */

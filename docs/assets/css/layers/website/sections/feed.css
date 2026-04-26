@@ -1,6 +1,7 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
+   01A) FEED TOKENS
    02) FEED LAYOUT
    03) COMPOSER
    04) TABS AND SORT
@@ -15,19 +16,77 @@
 /* /website/docs/assets/css/layers/website/sections/feed.css */
 
 /* =============================================================================
+   01A) FEED TOKENS
+============================================================================= */
+:root{
+  --feed-main-column:var(--layout-feed-main-column);
+  --feed-discovery-min:var(--layout-feed-discovery-min);
+  --feed-discovery-column:var(--layout-feed-discovery-column);
+  --feed-layout-gap:var(--layout-feed-layout-gap);
+  --feed-panel-gap:var(--layout-feed-panel-gap);
+  --feed-composer-min-height:var(--layout-feed-composer-min-height);
+  --feed-input-line-height:var(--layout-feed-input-line-height);
+  --feed-action-min-height:var(--layout-feed-action-min-height);
+  --feed-action-padding-x:var(--layout-feed-action-padding-x);
+  --feed-action-radius:var(--layout-feed-action-radius);
+  --feed-motion:var(--layout-feed-motion);
+  --feed-header-gap:var(--layout-feed-header-gap);
+  --feed-tab-gap:var(--layout-feed-tab-gap);
+  --feed-tab-min-height:var(--layout-feed-tab-min-height);
+  --feed-tab-padding-x:var(--layout-feed-tab-padding-x);
+  --feed-sort-gap:var(--layout-feed-sort-gap);
+  --feed-sort-label-size:var(--layout-feed-sort-label-size);
+  --feed-sort-label-line-height:var(--layout-feed-sort-label-line-height);
+  --feed-select-min-height:var(--layout-feed-select-min-height);
+  --feed-select-padding-x:var(--layout-feed-select-padding-x);
+  --feed-select-radius:var(--layout-feed-select-radius);
+  --feed-stream-gap:var(--layout-feed-stream-gap);
+  --feed-post-gap:var(--layout-feed-post-gap);
+  --feed-post-padding-bottom:var(--layout-feed-post-padding-bottom);
+  --feed-post-identity-gap:var(--layout-feed-post-identity-gap);
+  --feed-avatar-size:var(--layout-feed-avatar-size);
+  --feed-avatar-radius:var(--layout-feed-avatar-radius);
+  --feed-avatar-fallback-size:var(--layout-feed-avatar-fallback-size);
+  --feed-avatar-fallback-weight:var(--layout-feed-avatar-fallback-weight);
+  --feed-avatar-fallback-tracking:var(--layout-feed-avatar-fallback-tracking);
+  --feed-identity-gap:var(--layout-feed-identity-gap);
+  --feed-row-gap:var(--layout-feed-row-gap);
+  --feed-entity-size:var(--layout-feed-entity-size);
+  --feed-entity-weight:var(--layout-feed-entity-weight);
+  --feed-entity-line-height:var(--layout-feed-entity-line-height);
+  --feed-handle-size:var(--layout-feed-handle-size);
+  --feed-handle-line-height:var(--layout-feed-handle-line-height);
+  --feed-chip-min-height:var(--layout-feed-chip-min-height);
+  --feed-chip-padding-x:var(--layout-feed-chip-padding-x);
+  --feed-chip-radius:var(--layout-feed-chip-radius);
+  --feed-chip-size:var(--layout-feed-chip-size);
+  --feed-chip-tracking:var(--layout-feed-chip-tracking);
+  --feed-badge-gap:var(--layout-feed-badge-gap);
+  --feed-badge-blue:var(--layout-feed-badge-blue);
+  --feed-badge-border-mix:var(--layout-feed-badge-border-mix);
+  --feed-badge-bg-mix:var(--layout-feed-badge-bg-mix);
+  --feed-badge-weight:var(--layout-feed-badge-weight);
+  --feed-badge-icon-size:var(--layout-feed-badge-icon-size);
+  --feed-copy-line-height:var(--layout-feed-copy-line-height);
+  --feed-post-action-min-height:var(--layout-feed-post-action-min-height);
+  --feed-post-action-padding-x:var(--layout-feed-post-action-padding-x);
+  --feed-post-action-size:var(--layout-feed-post-action-size);
+}
+
+/* =============================================================================
    02) FEED LAYOUT
 ============================================================================= */
 .feed-layout{
   display:grid;
-  grid-template-columns:minmax(0, 1.2fr) minmax(18rem, 0.8fr);
-  gap:1.5rem;
+  grid-template-columns:minmax(0, var(--feed-main-column)) minmax(var(--feed-discovery-min), var(--feed-discovery-column));
+  gap:var(--feed-layout-gap);
   align-items:start;
 }
 
 .feed-main,
 .feed-discovery{
   display:grid;
-  gap:1.25rem;
+  gap:var(--feed-panel-gap);
 }
 
 /* =============================================================================
@@ -35,14 +94,14 @@
 ============================================================================= */
 .feed-composer__input{
   width:100%;
-  min-height:7.5rem;
+  min-height:var(--feed-composer-min-height);
   border:0;
   outline:0;
   resize:vertical;
   background:transparent;
   color:var(--text-primary-color);
   font:inherit;
-  line-height:1.7;
+  line-height:var(--feed-input-line-height);
 }
 
 .feed-composer__input::placeholder{
@@ -53,17 +112,17 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:2.6rem;
-  padding:0 1rem;
+  min-height:var(--feed-action-min-height);
+  padding:var(--spacing-none) var(--feed-action-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--feed-action-radius);
   background:var(--control-bg);
   color:var(--text-primary-color);
   font:inherit;
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease;
+    color var(--feed-motion) ease,
+    background-color var(--feed-motion) ease,
+    border-color var(--feed-motion) ease;
 }
 
 .feed-composer__action:hover,
@@ -79,7 +138,7 @@
 .feed-stream-panel__header{
   display:flex;
   justify-content:space-between;
-  gap:1rem;
+  gap:var(--feed-header-gap);
   align-items:flex-end;
   flex-wrap:wrap;
 }
@@ -87,24 +146,24 @@
 .feed-tab-row{
   display:flex;
   flex-wrap:wrap;
-  gap:0.75rem;
+  gap:var(--feed-tab-gap);
 }
 
 .feed-tab{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:2.2rem;
-  padding:0 0.95rem;
+  min-height:var(--feed-tab-min-height);
+  padding:var(--spacing-none) var(--feed-tab-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--feed-action-radius);
   background:transparent;
   color:var(--text-secondary-color);
   font:inherit;
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease;
+    color var(--feed-motion) ease,
+    background-color var(--feed-motion) ease,
+    border-color var(--feed-motion) ease;
 }
 
 .feed-tab:hover,
@@ -118,21 +177,21 @@
 
 .feed-sort{
   display:grid;
-  gap:0.45rem;
+  gap:var(--feed-sort-gap);
 }
 
 .feed-sort__label{
-  margin:0;
+  margin:var(--spacing-none);
   color:var(--text-secondary-color);
-  font-size:0.86rem;
-  line-height:1.6;
+  font-size:var(--feed-sort-label-size);
+  line-height:var(--feed-sort-label-line-height);
 }
 
 .feed-sort__select{
-  min-height:2.8rem;
-  padding:0 1rem;
+  min-height:var(--feed-select-min-height);
+  padding:var(--spacing-none) var(--feed-select-padding-x);
   border:1px solid var(--field-border);
-  border-radius:1rem;
+  border-radius:var(--feed-select-radius);
   background:var(--field-bg);
   color:var(--text-primary-color);
   font:inherit;
@@ -143,35 +202,35 @@
 ============================================================================= */
 .feed-stream{
   display:grid;
-  gap:1.15rem;
+  gap:var(--feed-stream-gap);
 }
 
 .feed-post{
   display:grid;
-  gap:0.85rem;
-  padding-bottom:1.1rem;
+  gap:var(--feed-post-gap);
+  padding-bottom:var(--feed-post-padding-bottom);
   border-bottom:1px solid var(--border-color);
 }
 
 .feed-post:last-child{
-  padding-bottom:0;
-  border-bottom:0;
+  padding-bottom:var(--spacing-none);
+  border-bottom:var(--spacing-none);
 }
 
 .feed-post__identity{
   display:flex;
   align-items:flex-start;
-  gap:0.85rem;
+  gap:var(--feed-post-identity-gap);
 }
 
 .feed-post__avatar{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:3rem;
-  height:3rem;
+  width:var(--feed-avatar-size);
+  height:var(--feed-avatar-size);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--feed-action-radius);
   background:var(--control-bg-hover);
   overflow:hidden;
   flex:0 0 auto;
@@ -186,15 +245,15 @@
 
 .feed-post__avatar-fallback{
   color:var(--text-primary-color);
-  font-size:0.92rem;
-  font-weight:600;
-  letter-spacing:0.06em;
+  font-size:var(--feed-avatar-fallback-size);
+  font-weight:var(--feed-avatar-fallback-weight);
+  letter-spacing:var(--feed-avatar-fallback-tracking);
   text-transform:uppercase;
 }
 
 .feed-post__identity-copy{
   display:grid;
-  gap:0.32rem;
+  gap:var(--feed-identity-gap);
   min-width:0;
 }
 
@@ -204,7 +263,7 @@
   display:flex;
   flex-wrap:wrap;
   align-items:center;
-  gap:0.55rem;
+  gap:var(--feed-row-gap);
 }
 
 .feed-post__entity,
@@ -215,15 +274,15 @@
 
 .feed-post__entity{
   color:var(--text-primary-color);
-  font-size:1rem;
-  font-weight:500;
-  line-height:1.32;
+  font-size:var(--feed-entity-size);
+  font-weight:var(--feed-entity-weight);
+  line-height:var(--feed-entity-line-height);
 }
 
 .feed-post__handle{
   color:var(--text-secondary-color);
-  font-size:0.82rem;
-  line-height:1.5;
+  font-size:var(--feed-handle-size);
+  line-height:var(--feed-handle-line-height);
 }
 
 .feed-post__type,
@@ -231,56 +290,56 @@
 .feed-post__meta-chip{
   display:inline-flex;
   align-items:center;
-  min-height:1.85rem;
-  padding:0 0.72rem;
-  border-radius:999px;
-  font-size:0.72rem;
-  letter-spacing:0.04em;
+  min-height:var(--feed-chip-min-height);
+  padding:var(--spacing-none) var(--feed-chip-padding-x);
+  border-radius:var(--feed-chip-radius);
+  font-size:var(--feed-chip-size);
+  letter-spacing:var(--feed-chip-tracking);
 }
 
 .feed-post__type,
 .feed-post__meta-chip{
-  border:1px solid var(--control-border);
+  border:1px solid color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
   color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
 }
 
 .feed-post__badge{
-  gap:0.4rem;
-  border:1px solid color-mix(in srgb, #1d9bf0 30%, transparent);
-  background:color-mix(in srgb, #1d9bf0 10%, transparent);
-  color:#1d9bf0;
-  font-weight:600;
+  gap:var(--feed-badge-gap);
+  border:1px solid color-mix(in srgb, var(--feed-badge-blue) var(--feed-badge-border-mix), transparent);
+  background:color-mix(in srgb, var(--feed-badge-blue) var(--feed-badge-bg-mix), transparent);
+  color:var(--feed-badge-blue);
+  font-weight:var(--feed-badge-weight);
   text-transform:uppercase;
 }
 
 .feed-post__badge-icon{
   display:block;
-  width:0.82rem;
-  height:0.82rem;
+  width:var(--feed-badge-icon-size);
+  height:var(--feed-badge-icon-size);
 }
 
 .feed-post__copy{
   color:var(--text-primary-color);
-  line-height:1.72;
+  line-height:var(--feed-copy-line-height);
 }
 
 .feed-post__action{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:2.35rem;
-  padding:0 0.92rem;
+  min-height:var(--feed-post-action-min-height);
+  padding:var(--spacing-none) var(--feed-post-action-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--feed-action-radius);
   background:transparent;
   color:var(--text-secondary-color);
   text-decoration:none;
   font:inherit;
-  font-size:0.76rem;
+  font-size:var(--feed-post-action-size);
   transition:
-    color 220ms ease,
-    background-color 220ms ease,
-    border-color 220ms ease;
+    color var(--feed-motion) ease,
+    background-color var(--feed-motion) ease,
+    border-color var(--feed-motion) ease;
 }
 
 .feed-post__action:hover,
@@ -301,7 +360,7 @@
    06) DISCOVERY
 ============================================================================= */
 .feed-discovery-panel{
-  min-height:100%;
+  min-height:var(--size-full);
 }
 
 /* =============================================================================
@@ -309,6 +368,6 @@
 ============================================================================= */
 @media (max-width: 980px){
   .feed-layout{
-    grid-template-columns:1fr;
+    grid-template-columns:var(--grid-column-single);
   }
 }

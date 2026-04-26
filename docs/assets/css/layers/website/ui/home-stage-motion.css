@@ -20,36 +20,100 @@
    01) STAGE CORE TOKENS
 ============================================================================= */
 :root{
-  --home-stage-motion-core-width:min(24rem, 70vw);
-  --home-stage-motion-core-height:min(22.5rem, 39vh);
-  --home-stage-motion-core-active-width:min(18.8rem, 58vw);
-  --home-stage-motion-core-active-height:min(17.4rem, 29vh);
-  --home-stage-motion-vessel-size:min(21rem, 58vw, 46vh);
-  --home-stage-motion-vessel-active-size:min(16.8rem, 48vw, 31vh);
-  --home-stage-motion-vessel-ring-border:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
-  --home-stage-motion-vessel-inner-bg:color-mix(in srgb, var(--bg-color) 12%, transparent);
-  --home-stage-motion-core-color:color-mix(in srgb, var(--text-primary-color) 92%, transparent);
-  --home-stage-motion-core-ring-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  --home-stage-motion-core-idle-ring-opacity:0.72;
-  --home-stage-motion-mic-size:4.8rem;
-  --home-stage-motion-mic-icon-size:2.35rem;
-  --home-stage-motion-mic-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
-  --home-stage-motion-mic-hover-color:color-mix(in srgb, var(--color-primary1) 94%, var(--text-primary-color));
-  --home-stage-motion-fast:220ms;
-  --home-stage-motion-transition:620ms cubic-bezier(0.22,1,0.36,1);
-  --home-stage-motion-field-blur:10px;
-  --home-stage-motion-field-size:13rem;
-  --home-stage-motion-ring-size:17rem;
-  --home-stage-motion-field-color:rgba(145,124,111,0.18);
-  --home-stage-motion-field-color-soft:rgba(145,124,111,0.08);
-  --home-stage-motion-field-color-faint:rgba(145,124,111,0.02);
-  --home-stage-motion-field-color-clear:rgba(145,124,111,0);
-  --home-stage-motion-ring-border:rgba(255,255,255,0.18);
-  --home-stage-motion-mic-field-color:rgba(145,124,111,0.22);
-  --home-stage-motion-mic-field-color-soft:rgba(145,124,111,0.10);
-  --home-stage-motion-mic-field-color-clear:rgba(145,124,111,0);
-  --home-stage-motion-mic-ring-border:rgba(255,255,255,0.12);
-  --home-stage-motion-active-color:rgba(218,206,196,0.92);
+  --home-stage-motion-core-width:var(--layout-home-stage-motion-core-width);
+  --home-stage-motion-core-height:var(--layout-home-stage-motion-core-height);
+  --home-stage-motion-core-active-width:var(--layout-home-stage-motion-core-active-width);
+  --home-stage-motion-core-active-height:var(--layout-home-stage-motion-core-active-height);
+  --home-stage-motion-vessel-size:var(--layout-home-stage-motion-vessel-size);
+  --home-stage-motion-vessel-active-size:var(--layout-home-stage-motion-vessel-active-size);
+  --home-stage-motion-vessel-ring-border:var(--layout-home-stage-motion-vessel-ring-border);
+  --home-stage-motion-vessel-inner-bg:var(--layout-home-stage-motion-vessel-inner-bg);
+  --home-stage-motion-core-color:var(--layout-home-stage-motion-core-color);
+  --home-stage-motion-core-ring-border:var(--layout-home-stage-motion-core-ring-border);
+  --home-stage-motion-core-idle-ring-opacity:var(--layout-home-stage-motion-core-idle-ring-opacity);
+  --home-stage-motion-core-idle-signal-opacity:var(--layout-home-stage-motion-core-idle-signal-opacity);
+  --home-stage-motion-core-idle-pulse-opacity:var(--layout-home-stage-motion-core-idle-pulse-opacity);
+  --home-stage-motion-core-signal-size:var(--layout-home-stage-motion-core-signal-size);
+  --home-stage-motion-core-ring-size:var(--layout-home-stage-motion-core-ring-size);
+  --home-stage-motion-core-pulse-size:var(--layout-home-stage-motion-core-pulse-size);
+  --home-stage-motion-core-signal-blur:var(--layout-home-stage-motion-core-signal-blur);
+  --home-stage-motion-core-pulse-blur:var(--layout-home-stage-motion-core-pulse-blur);
+  --home-stage-motion-vessel-blur:var(--layout-home-stage-motion-vessel-blur);
+  --home-stage-motion-mic-size:var(--layout-home-stage-motion-mic-size);
+  --home-stage-motion-mic-icon-size:var(--layout-home-stage-motion-mic-icon-size);
+  --home-stage-motion-mic-margin-bottom:var(--layout-home-stage-motion-mic-margin-bottom);
+  --home-stage-motion-mic-color:var(--layout-home-stage-motion-mic-color);
+  --home-stage-motion-mic-hover-color:var(--layout-home-stage-motion-mic-hover-color);
+  --home-stage-motion-mic-opacity:var(--layout-home-stage-motion-mic-opacity);
+  --home-stage-motion-mic-icon-opacity:var(--layout-home-stage-motion-mic-icon-opacity);
+  --home-stage-motion-mic-hover-scale:var(--layout-home-stage-motion-mic-hover-scale);
+  --home-stage-motion-mic-icon-hover-scale:var(--layout-home-stage-motion-mic-icon-hover-scale);
+  --home-stage-motion-active-mic-scale:var(--layout-home-stage-motion-active-mic-scale);
+  --home-stage-motion-fast:var(--layout-home-stage-motion-fast);
+  --home-stage-motion-transition:var(--layout-home-stage-motion-transition);
+  --home-stage-motion-field-opacity-transition:var(--layout-home-stage-motion-field-opacity-transition);
+  --home-stage-motion-field-blur:var(--layout-home-stage-motion-field-blur);
+  --home-stage-motion-field-size:var(--layout-home-stage-motion-field-size);
+  --home-stage-motion-ring-size:var(--layout-home-stage-motion-ring-size);
+  --home-stage-motion-field-color:var(--layout-home-stage-motion-field-color);
+  --home-stage-motion-field-color-soft:var(--layout-home-stage-motion-field-color-soft);
+  --home-stage-motion-field-color-faint:var(--layout-home-stage-motion-field-color-faint);
+  --home-stage-motion-field-color-clear:var(--layout-home-stage-motion-field-color-clear);
+  --home-stage-motion-ring-border:var(--layout-home-stage-motion-ring-border);
+  --home-stage-motion-mic-field-color:var(--layout-home-stage-motion-mic-field-color);
+  --home-stage-motion-mic-field-color-soft:var(--layout-home-stage-motion-mic-field-color-soft);
+  --home-stage-motion-mic-field-color-clear:var(--layout-home-stage-motion-mic-field-color-clear);
+  --home-stage-motion-mic-field-blur:var(--layout-home-stage-motion-mic-field-blur);
+  --home-stage-motion-mic-ring-border:var(--layout-home-stage-motion-mic-ring-border);
+  --home-stage-motion-mic-ring-offset:var(--layout-home-stage-motion-mic-ring-offset);
+  --home-stage-motion-active-color:var(--layout-home-stage-motion-active-color);
+  --home-stage-motion-mode-core-opacity:var(--layout-home-stage-motion-mode-core-opacity);
+  --home-stage-motion-mode-ring-opacity:var(--layout-home-stage-motion-mode-ring-opacity);
+  --home-stage-motion-listening-core-duration:var(--layout-home-stage-motion-listening-core-duration);
+  --home-stage-motion-listening-ring-duration:var(--layout-home-stage-motion-listening-ring-duration);
+  --home-stage-motion-listening-mic-duration:var(--layout-home-stage-motion-listening-mic-duration);
+  --home-stage-motion-thinking-core-duration:var(--layout-home-stage-motion-thinking-core-duration);
+  --home-stage-motion-thinking-ring-duration:var(--layout-home-stage-motion-thinking-ring-duration);
+  --home-stage-motion-thinking-mic-duration:var(--layout-home-stage-motion-thinking-mic-duration);
+  --home-stage-motion-responding-core-duration:var(--layout-home-stage-motion-responding-core-duration);
+  --home-stage-motion-responding-ring-duration:var(--layout-home-stage-motion-responding-ring-duration);
+  --home-stage-motion-responding-mic-duration:var(--layout-home-stage-motion-responding-mic-duration);
+  --home-stage-motion-key-core-listen-start-scale:var(--layout-home-stage-motion-key-core-listen-start-scale);
+  --home-stage-motion-key-core-listen-mid-scale:var(--layout-home-stage-motion-key-core-listen-mid-scale);
+  --home-stage-motion-key-core-listen-start-opacity:var(--layout-home-stage-motion-key-core-listen-start-opacity);
+  --home-stage-motion-key-core-listen-mid-opacity:var(--layout-home-stage-motion-key-core-listen-mid-opacity);
+  --home-stage-motion-key-core-think-start-scale:var(--layout-home-stage-motion-key-core-think-start-scale);
+  --home-stage-motion-key-core-think-mid-scale:var(--layout-home-stage-motion-key-core-think-mid-scale);
+  --home-stage-motion-key-core-think-start-opacity:var(--layout-home-stage-motion-key-core-think-start-opacity);
+  --home-stage-motion-key-core-think-mid-opacity:var(--layout-home-stage-motion-key-core-think-mid-opacity);
+  --home-stage-motion-key-core-respond-start-scale:var(--layout-home-stage-motion-key-core-respond-start-scale);
+  --home-stage-motion-key-core-respond-mid-scale:var(--layout-home-stage-motion-key-core-respond-mid-scale);
+  --home-stage-motion-key-core-respond-start-opacity:var(--layout-home-stage-motion-key-core-respond-start-opacity);
+  --home-stage-motion-key-core-respond-mid-opacity:var(--layout-home-stage-motion-key-core-respond-mid-opacity);
+  --home-stage-motion-key-ring-listen-start-scale:var(--layout-home-stage-motion-key-ring-listen-start-scale);
+  --home-stage-motion-key-ring-listen-mid-scale:var(--layout-home-stage-motion-key-ring-listen-mid-scale);
+  --home-stage-motion-key-ring-listen-start-opacity:var(--layout-home-stage-motion-key-ring-listen-start-opacity);
+  --home-stage-motion-key-ring-listen-mid-opacity:var(--layout-home-stage-motion-key-ring-listen-mid-opacity);
+  --home-stage-motion-key-ring-think-start-scale:var(--layout-home-stage-motion-key-ring-think-start-scale);
+  --home-stage-motion-key-ring-think-mid-scale:var(--layout-home-stage-motion-key-ring-think-mid-scale);
+  --home-stage-motion-key-ring-think-start-opacity:var(--layout-home-stage-motion-key-ring-think-start-opacity);
+  --home-stage-motion-key-ring-think-mid-opacity:var(--layout-home-stage-motion-key-ring-think-mid-opacity);
+  --home-stage-motion-key-ring-respond-start-scale:var(--layout-home-stage-motion-key-ring-respond-start-scale);
+  --home-stage-motion-key-ring-respond-mid-scale:var(--layout-home-stage-motion-key-ring-respond-mid-scale);
+  --home-stage-motion-key-ring-respond-start-opacity:var(--layout-home-stage-motion-key-ring-respond-start-opacity);
+  --home-stage-motion-key-ring-respond-mid-opacity:var(--layout-home-stage-motion-key-ring-respond-mid-opacity);
+  --home-stage-motion-key-mic-listen-start-scale:var(--layout-home-stage-motion-key-mic-listen-start-scale);
+  --home-stage-motion-key-mic-listen-mid-scale:var(--layout-home-stage-motion-key-mic-listen-mid-scale);
+  --home-stage-motion-key-mic-listen-start-opacity:var(--layout-home-stage-motion-key-mic-listen-start-opacity);
+  --home-stage-motion-key-mic-listen-mid-opacity:var(--layout-home-stage-motion-key-mic-listen-mid-opacity);
+  --home-stage-motion-key-mic-think-start-scale:var(--layout-home-stage-motion-key-mic-think-start-scale);
+  --home-stage-motion-key-mic-think-mid-scale:var(--layout-home-stage-motion-key-mic-think-mid-scale);
+  --home-stage-motion-key-mic-think-start-opacity:var(--layout-home-stage-motion-key-mic-think-start-opacity);
+  --home-stage-motion-key-mic-think-mid-opacity:var(--layout-home-stage-motion-key-mic-think-mid-opacity);
+  --home-stage-motion-key-mic-respond-start-scale:var(--layout-home-stage-motion-key-mic-respond-start-scale);
+  --home-stage-motion-key-mic-respond-mid-scale:var(--layout-home-stage-motion-key-mic-respond-mid-scale);
+  --home-stage-motion-key-mic-respond-start-opacity:var(--layout-home-stage-motion-key-mic-respond-start-opacity);
+  --home-stage-motion-key-mic-respond-mid-opacity:var(--layout-home-stage-motion-key-mic-respond-mid-opacity);
 }
 
 /* =============================================================================
@@ -85,8 +149,8 @@
   margin:0;
   pointer-events:none;
   isolation:isolate;
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
+  backdrop-filter:blur(var(--home-stage-motion-vessel-blur));
+  -webkit-backdrop-filter:blur(var(--home-stage-motion-vessel-blur));
   transform:translate(-50%, -50%);
   z-index:4;
 }
@@ -102,12 +166,12 @@
 
 #stage-glass-vessel-ring{
   border:1px solid var(--home-stage-motion-vessel-ring-border);
-  opacity:1;
+  opacity:var(--state-opacity-selected);
 }
 
 #stage-glass-vessel-inner{
   background:var(--home-stage-motion-vessel-inner-bg);
-  opacity:1;
+  opacity:var(--state-opacity-selected);
 }
 
 #stage-glass-vessel-highlight{
@@ -140,7 +204,7 @@
   top:50%;
   border-radius:50%;
   pointer-events:none;
-  opacity:0;
+  opacity:var(--state-opacity-idle);
   transform:translate(-50%, -50%) scale(1);
   transition:
     opacity var(--home-stage-motion-fast) ease,
@@ -148,30 +212,30 @@
 }
 
 #stage-cognitive-core-signal{
-  width:58%;
+  width:var(--home-stage-motion-core-signal-size);
   aspect-ratio:1 / 1;
   background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 10%, transparent) 0%, color-mix(in srgb, var(--color-primary1) 5%, transparent) 48%, transparent 100%);
-  filter:blur(16px);
-  -webkit-filter:blur(16px);
+  filter:blur(var(--home-stage-motion-core-signal-blur));
+  -webkit-filter:blur(var(--home-stage-motion-core-signal-blur));
 }
 
 #stage-cognitive-core-ring{
-  width:72%;
+  width:var(--home-stage-motion-core-ring-size);
   aspect-ratio:1 / 1;
   border:1px solid var(--home-stage-motion-core-ring-border);
   box-sizing:border-box;
 }
 
 #stage-cognitive-core-pulse{
-  width:34%;
+  width:var(--home-stage-motion-core-pulse-size);
   aspect-ratio:1 / 1;
   background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 12%, transparent) 0%, color-mix(in srgb, var(--color-primary1) 6%, transparent) 44%, transparent 100%);
-  filter:blur(10px);
-  -webkit-filter:blur(10px);
+  filter:blur(var(--home-stage-motion-core-pulse-blur));
+  -webkit-filter:blur(var(--home-stage-motion-core-pulse-blur));
 }
 
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-signal{
-  opacity:0.42;
+  opacity:var(--home-stage-motion-core-idle-signal-opacity);
 }
 
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-ring{
@@ -179,13 +243,13 @@
 }
 
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-pulse{
-  opacity:0.34;
+  opacity:var(--home-stage-motion-core-idle-pulse-opacity);
 }
 
 #stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-signal,
 #stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-ring,
 #stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-pulse{
-  opacity:1;
+  opacity:var(--state-opacity-selected);
 }
 
 /* =============================================================================
@@ -208,7 +272,7 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  margin:0 auto 1.15rem;
+  margin:0 auto var(--home-stage-motion-mic-margin-bottom);
   position:relative;
   z-index:6;
   pointer-events:auto;
@@ -227,7 +291,7 @@
   background:transparent;
   color:var(--home-stage-motion-mic-color);
   border-radius:50%;
-  opacity:0.92;
+  opacity:var(--home-stage-motion-mic-opacity);
   pointer-events:auto;
   appearance:none;
   -webkit-appearance:none;
@@ -242,8 +306,8 @@
 #stage #stage-microphone-button:hover,
 #stage #stage-microphone-button:focus-visible{
   color:var(--home-stage-motion-mic-hover-color);
-  opacity:1;
-  transform:scale(1.08);
+  opacity:var(--state-opacity-selected);
+  transform:scale(var(--home-stage-motion-mic-hover-scale));
 }
 
 #stage .stage-microphone-button:focus-visible,
@@ -259,7 +323,7 @@
   justify-content:center;
   width:var(--home-stage-motion-mic-icon-size);
   height:var(--home-stage-motion-mic-icon-size);
-  opacity:0.9;
+  opacity:var(--home-stage-motion-mic-icon-opacity);
   transition:
     transform var(--home-stage-motion-fast) ease,
     opacity var(--home-stage-motion-fast) ease;
@@ -278,8 +342,8 @@
 #stage .stage-microphone-button:focus-visible .stage-microphone-icon,
 #stage #stage-microphone-button:hover .stage-microphone-icon,
 #stage #stage-microphone-button:focus-visible .stage-microphone-icon{
-  opacity:1;
-  transform:scale(1.03);
+  opacity:var(--state-opacity-selected);
+  transform:scale(var(--home-stage-motion-mic-icon-hover-scale));
 }
 
 #stage .stage-microphone-icon svg,
@@ -301,9 +365,9 @@
   transform:translate(-50%,-50%) scale(1);
   border-radius:50%;
   pointer-events:none;
-  opacity:0;
+  opacity:var(--state-opacity-idle);
   transition:
-    opacity 0.35s ease,
+    opacity var(--home-stage-motion-field-opacity-transition) ease,
     transform var(--home-stage-motion-transition),
     filter var(--home-stage-motion-transition);
 }
@@ -312,13 +376,13 @@
   width:100%;
   height:100%;
   background:radial-gradient(circle, var(--home-stage-motion-mic-field-color) 0%, var(--home-stage-motion-mic-field-color-soft) 42%, var(--home-stage-motion-mic-field-color-clear) 72%);
-  filter:blur(12px);
+  filter:blur(var(--home-stage-motion-mic-field-blur));
   z-index:0;
 }
 
 #stage-microphone-button::after{
-  width:calc(100% + 1.2rem);
-  height:calc(100% + 1.2rem);
+  width:calc(100% + var(--home-stage-motion-mic-ring-offset));
+  height:calc(100% + var(--home-stage-motion-mic-ring-offset));
   border:1px solid var(--home-stage-motion-mic-ring-border);
   z-index:0;
 }
@@ -329,66 +393,66 @@
 #stage-cognitive-core-shell[data-voice-mode="listening"]::before,
 #stage-cognitive-core-shell[data-voice-mode="thinking"]::before,
 #stage-cognitive-core-shell[data-voice-mode="responding"]::before{
-  opacity:0.72;
+  opacity:var(--home-stage-motion-mode-core-opacity);
 }
 
 #stage-cognitive-core-shell[data-voice-mode="listening"]::after,
 #stage-cognitive-core-shell[data-voice-mode="thinking"]::after,
 #stage-cognitive-core-shell[data-voice-mode="responding"]::after{
-  opacity:0.82;
+  opacity:var(--home-stage-motion-mode-ring-opacity);
 }
 
 #stage-microphone-button[data-voice-active="true"]::before,
 #stage-microphone-button[data-voice-active="true"]::after{
-  opacity:1;
+  opacity:var(--state-opacity-selected);
 }
 
 /* =============================================================================
    09) LISTENING MODE MOTION
 ============================================================================= */
 #stage-cognitive-core-shell[data-voice-mode="listening"]::before{
-  animation:stage-voice-core-breathe 1.35s cubic-bezier(0.22,1,0.36,1) infinite;
+  animation:stage-voice-core-breathe var(--home-stage-motion-listening-core-duration) cubic-bezier(0.22,1,0.36,1) infinite;
 }
 
 #stage-cognitive-core-shell[data-voice-mode="listening"]::after{
-  animation:stage-voice-ring-listening 2.1s linear infinite;
+  animation:stage-voice-ring-listening var(--home-stage-motion-listening-ring-duration) linear infinite;
 }
 
 #stage-microphone-button[data-voice-mode="listening"]::before,
 #stage-microphone-button[data-voice-mode="listening"]::after{
-  animation:stage-mic-pulse-listening 1.25s cubic-bezier(0.22,1,0.36,1) infinite;
+  animation:stage-mic-pulse-listening var(--home-stage-motion-listening-mic-duration) cubic-bezier(0.22,1,0.36,1) infinite;
 }
 
 /* =============================================================================
    10) THINKING MODE MOTION
 ============================================================================= */
 #stage-cognitive-core-shell[data-voice-mode="thinking"]::before{
-  animation:stage-voice-core-think 1.8s ease-in-out infinite;
+  animation:stage-voice-core-think var(--home-stage-motion-thinking-core-duration) ease-in-out infinite;
 }
 
 #stage-cognitive-core-shell[data-voice-mode="thinking"]::after{
-  animation:stage-voice-ring-thinking 2.6s ease-in-out infinite;
+  animation:stage-voice-ring-thinking var(--home-stage-motion-thinking-ring-duration) ease-in-out infinite;
 }
 
 #stage-microphone-button[data-voice-mode="thinking"]::before,
 #stage-microphone-button[data-voice-mode="thinking"]::after{
-  animation:stage-mic-pulse-thinking 1.9s ease-in-out infinite;
+  animation:stage-mic-pulse-thinking var(--home-stage-motion-thinking-mic-duration) ease-in-out infinite;
 }
 
 /* =============================================================================
    11) RESPONDING MODE MOTION
 ============================================================================= */
 #stage-cognitive-core-shell[data-voice-mode="responding"]::before{
-  animation:stage-voice-core-respond 1s cubic-bezier(0.22,1,0.36,1) infinite;
+  animation:stage-voice-core-respond var(--home-stage-motion-responding-core-duration) cubic-bezier(0.22,1,0.36,1) infinite;
 }
 
 #stage-cognitive-core-shell[data-voice-mode="responding"]::after{
-  animation:stage-voice-ring-responding 1.45s cubic-bezier(0.22,1,0.36,1) infinite;
+  animation:stage-voice-ring-responding var(--home-stage-motion-responding-ring-duration) cubic-bezier(0.22,1,0.36,1) infinite;
 }
 
 #stage-microphone-button[data-voice-mode="responding"]::before,
 #stage-microphone-button[data-voice-mode="responding"]::after{
-  animation:stage-mic-pulse-responding 0.95s cubic-bezier(0.22,1,0.36,1) infinite;
+  animation:stage-mic-pulse-responding var(--home-stage-motion-responding-mic-duration) cubic-bezier(0.22,1,0.36,1) infinite;
 }
 
 /* =============================================================================
@@ -396,12 +460,12 @@
 ============================================================================= */
 #stage-microphone-button[data-voice-active="true"]{
   color:var(--home-stage-motion-active-color);
-  opacity:1;
-  transform:scale(1.04);
+  opacity:var(--state-opacity-selected);
+  transform:scale(var(--home-stage-motion-active-mic-scale));
 }
 
 #stage-microphone-button[data-voice-active="true"] .stage-microphone-icon{
-  opacity:1;
+  opacity:var(--state-opacity-selected);
 }
 
 /* =============================================================================
@@ -409,18 +473,19 @@
 ============================================================================= */
 @media (max-width:820px){
   :root{
-    --home-stage-motion-core-width:min(18rem, 72vw);
-    --home-stage-motion-core-height:min(16.8rem, 27vh);
-    --home-stage-motion-core-active-width:min(15.2rem, 60vw);
-    --home-stage-motion-core-active-height:min(14rem, 22vh);
-    --home-stage-motion-vessel-size:min(17rem, 66vw, 31vh);
-    --home-stage-motion-vessel-active-size:min(14rem, 54vw, 24vh);
-    --home-stage-motion-mic-size:4rem;
-    --home-stage-motion-mic-icon-size:2rem;
+    --home-stage-motion-core-width:var(--layout-home-stage-motion-mobile-core-width);
+    --home-stage-motion-core-height:var(--layout-home-stage-motion-mobile-core-height);
+    --home-stage-motion-core-active-width:var(--layout-home-stage-motion-mobile-core-active-width);
+    --home-stage-motion-core-active-height:var(--layout-home-stage-motion-mobile-core-active-height);
+    --home-stage-motion-vessel-size:var(--layout-home-stage-motion-mobile-vessel-size);
+    --home-stage-motion-vessel-active-size:var(--layout-home-stage-motion-mobile-vessel-active-size);
+    --home-stage-motion-mic-size:var(--layout-home-stage-motion-mobile-mic-size);
+    --home-stage-motion-mic-icon-size:var(--layout-home-stage-motion-mobile-mic-icon-size);
+    --home-stage-motion-mic-margin-bottom:var(--layout-home-stage-motion-mobile-mic-margin-bottom);
   }
 
   #stage #stage-microphone{
-    margin:0 auto 0.85rem;
+    margin:0 auto var(--home-stage-motion-mic-margin-bottom);
   }
 }
 
@@ -428,55 +493,55 @@
    14) KEYFRAMES
 ============================================================================= */
 @keyframes stage-voice-core-breathe{
-  0%{transform:translate(-50%,-50%) scale(0.88);opacity:0.34;}
-  50%{transform:translate(-50%,-50%) scale(1.1);opacity:0.92;}
-  100%{transform:translate(-50%,-50%) scale(0.88);opacity:0.34;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-listen-start-scale));opacity:var(--home-stage-motion-key-core-listen-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-listen-mid-scale));opacity:var(--home-stage-motion-key-core-listen-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-listen-start-scale));opacity:var(--home-stage-motion-key-core-listen-start-opacity);}
 }
 
 @keyframes stage-voice-core-think{
-  0%{transform:translate(-50%,-50%) scale(0.96);opacity:0.36;}
-  50%{transform:translate(-50%,-50%) scale(1.04);opacity:0.72;}
-  100%{transform:translate(-50%,-50%) scale(0.96);opacity:0.36;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-think-start-scale));opacity:var(--home-stage-motion-key-core-think-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-think-mid-scale));opacity:var(--home-stage-motion-key-core-think-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-think-start-scale));opacity:var(--home-stage-motion-key-core-think-start-opacity);}
 }
 
 @keyframes stage-voice-core-respond{
-  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.34;}
-  50%{transform:translate(-50%,-50%) scale(1.16);opacity:1;}
-  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.34;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-respond-start-scale));opacity:var(--home-stage-motion-key-core-respond-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-respond-mid-scale));opacity:var(--home-stage-motion-key-core-respond-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-core-respond-start-scale));opacity:var(--home-stage-motion-key-core-respond-start-opacity);}
 }
 
 @keyframes stage-voice-ring-listening{
-  0%{transform:translate(-50%,-50%) scale(0.94) rotate(0deg);opacity:0.18;}
-  50%{transform:translate(-50%,-50%) scale(1.02) rotate(180deg);opacity:0.58;}
-  100%{transform:translate(-50%,-50%) scale(0.94) rotate(360deg);opacity:0.18;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-listen-start-scale)) rotate(0deg);opacity:var(--home-stage-motion-key-ring-listen-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-listen-mid-scale)) rotate(180deg);opacity:var(--home-stage-motion-key-ring-listen-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-listen-start-scale)) rotate(360deg);opacity:var(--home-stage-motion-key-ring-listen-start-opacity);}
 }
 
 @keyframes stage-voice-ring-thinking{
-  0%{transform:translate(-50%,-50%) scale(0.98) rotate(0deg);opacity:0.14;}
-  50%{transform:translate(-50%,-50%) scale(1.01) rotate(180deg);opacity:0.4;}
-  100%{transform:translate(-50%,-50%) scale(0.98) rotate(360deg);opacity:0.14;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-think-start-scale)) rotate(0deg);opacity:var(--home-stage-motion-key-ring-think-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-think-mid-scale)) rotate(180deg);opacity:var(--home-stage-motion-key-ring-think-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-think-start-scale)) rotate(360deg);opacity:var(--home-stage-motion-key-ring-think-start-opacity);}
 }
 
 @keyframes stage-voice-ring-responding{
-  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.16;}
-  50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.7;}
-  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.16;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-respond-start-scale));opacity:var(--home-stage-motion-key-ring-respond-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-respond-mid-scale));opacity:var(--home-stage-motion-key-ring-respond-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-ring-respond-start-scale));opacity:var(--home-stage-motion-key-ring-respond-start-opacity);}
 }
 
 @keyframes stage-mic-pulse-listening{
-  0%{transform:translate(-50%,-50%) scale(0.92);opacity:0.18;}
-  50%{transform:translate(-50%,-50%) scale(1.14);opacity:0.62;}
-  100%{transform:translate(-50%,-50%) scale(0.92);opacity:0.18;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-listen-start-scale));opacity:var(--home-stage-motion-key-mic-listen-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-listen-mid-scale));opacity:var(--home-stage-motion-key-mic-listen-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-listen-start-scale));opacity:var(--home-stage-motion-key-mic-listen-start-opacity);}
 }
 
 @keyframes stage-mic-pulse-thinking{
-  0%{transform:translate(-50%,-50%) scale(0.98);opacity:0.14;}
-  50%{transform:translate(-50%,-50%) scale(1.04);opacity:0.34;}
-  100%{transform:translate(-50%,-50%) scale(0.98);opacity:0.14;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-think-start-scale));opacity:var(--home-stage-motion-key-mic-think-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-think-mid-scale));opacity:var(--home-stage-motion-key-mic-think-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-think-start-scale));opacity:var(--home-stage-motion-key-mic-think-start-opacity);}
 }
 
 @keyframes stage-mic-pulse-responding{
-  0%{transform:translate(-50%,-50%) scale(0.9);opacity:0.2;}
-  50%{transform:translate(-50%,-50%) scale(1.18);opacity:0.74;}
-  100%{transform:translate(-50%,-50%) scale(0.9);opacity:0.2;}
+  0%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-respond-start-scale));opacity:var(--home-stage-motion-key-mic-respond-start-opacity);}
+  50%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-respond-mid-scale));opacity:var(--home-stage-motion-key-mic-respond-mid-opacity);}
+  100%{transform:translate(-50%,-50%) scale(var(--home-stage-motion-key-mic-respond-start-scale));opacity:var(--home-stage-motion-key-mic-respond-start-opacity);}
 }

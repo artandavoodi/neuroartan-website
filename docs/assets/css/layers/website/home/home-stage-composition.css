@@ -15,10 +15,7 @@
 ============================================================================= */
 :root{
   --home-stage-composition-width:var(--home-interaction-panel-width);
-  --home-stage-composition-safe-clearance:max(
-    calc(var(--home-shell-topbar-height, var(--site-header-height, 4rem)) + env(safe-area-inset-top, 0px)),
-    calc(var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)) + env(safe-area-inset-bottom, 0px))
-  );
+  --home-stage-composition-safe-clearance:max(calc(var(--home-shell-topbar-height, var(--site-header-height, 4rem)) + env(safe-area-inset-top, 0px)), calc(var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)) + env(safe-area-inset-bottom, 0px)));
   --home-stage-composition-edge-buffer:2rem;
   --home-stage-composition-top-clearance:calc(var(--home-stage-composition-safe-clearance) + var(--home-stage-composition-edge-buffer));
   --home-stage-composition-footer-clearance:calc(var(--home-stage-composition-safe-clearance) + var(--home-stage-composition-edge-buffer));

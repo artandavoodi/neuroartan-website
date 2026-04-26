@@ -2,6 +2,7 @@
 00) FILE INDEX
 01) MODULE IDENTITY
 02) SHELL TOKENS
+02A) PLATFORM LAYOUT ALIASES
 03) SHELL ROOT
 04) SHELL CHROME
 05) SHELL MAIN GRID
@@ -31,27 +32,130 @@
   --home-platform-shell-muted-copy-color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
   --home-platform-shell-nav-color:var(--text-secondary-color);
   --home-platform-shell-nav-hover-color:var(--text-primary-color);
-  --home-platform-shell-nav-opacity:0.68;
-  --home-platform-shell-nav-hover-opacity:1;
+  --home-platform-shell-nav-opacity:var(--layout-home-platform-nav-opacity);
+  --home-platform-shell-nav-hover-opacity:var(--layout-home-platform-nav-hover-opacity);
   --home-platform-shell-nav-indicator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --home-platform-shell-nav-indicator-color:var(--text-primary-color);
   --home-platform-shell-nav-indicator-new-color:var(--color-primary1);
   --home-platform-shell-nav-indicator-new-bg:color-mix(in srgb, var(--color-primary1) 16%, transparent);
   --home-platform-shell-nav-indicator-high-color:var(--color-primary7);
   --home-platform-shell-nav-indicator-high-bg:color-mix(in srgb, var(--color-primary7) 18%, transparent);
-  --home-platform-shell-motion-fast:220ms;
-  --home-platform-shell-radius:var(--home-panel-radius, 1.35rem);
-  --home-platform-shell-padding:0.92rem;
-  --home-platform-shell-gap:0.88rem;
+  --home-platform-shell-motion-fast:var(--layout-home-platform-motion-fast);
+  --home-platform-shell-radius:var(--layout-home-platform-radius);
+  --home-platform-shell-padding:var(--layout-home-platform-padding);
+  --home-platform-shell-gap:var(--layout-home-platform-gap);
   --home-platform-shell-surface:var(--home-panel-surface);
   --home-platform-shell-border:var(--home-panel-border);
-  --home-platform-shell-shadow:var(--home-panel-shadow, 0 18px 54px color-mix(in srgb, var(--shadow-color, #000000) 18%, transparent));
-  --home-platform-shell-blur:4px;
-  --home-platform-shell-saturate:115%;
-  --home-platform-shell-nav-item-radius:999px;
-  --home-platform-shell-nav-item-padding:0.86rem 1rem;
+  --home-platform-shell-shadow:var(--layout-home-platform-shadow);
+  --home-platform-shell-blur:var(--layout-home-platform-blur);
+  --home-platform-shell-saturate:var(--layout-home-platform-saturate);
+  --home-platform-shell-nav-item-radius:var(--layout-home-platform-nav-item-radius);
+  --home-platform-shell-nav-item-padding:var(--home-platform-shell-nav-item-padding-y) var(--home-platform-shell-nav-item-padding-x);
   --home-platform-shell-nav-item-bg-active:var(--control-bg);
   --home-platform-shell-nav-item-border-active:var(--control-border);
+}
+
+/* =============================================================================
+02A) PLATFORM LAYOUT ALIASES
+============================================================================= */
+:root{
+  --home-platform-shell-nav-opacity:var(--layout-home-platform-nav-opacity);
+  --home-platform-shell-nav-hover-opacity:var(--layout-home-platform-nav-hover-opacity);
+  --home-platform-shell-motion-fast:var(--layout-home-platform-motion-fast);
+  --home-platform-shell-radius:var(--layout-home-platform-radius);
+  --home-platform-shell-padding:var(--layout-home-platform-padding);
+  --home-platform-shell-gap:var(--layout-home-platform-gap);
+  --home-platform-shell-shadow:var(--layout-home-platform-shadow);
+  --home-platform-shell-blur:var(--layout-home-platform-blur);
+  --home-platform-shell-saturate:var(--layout-home-platform-saturate);
+  --home-platform-shell-chrome-min-height:var(--layout-home-platform-chrome-min-height);
+  --home-platform-shell-chrome-blur:var(--layout-home-platform-chrome-blur);
+  --home-platform-shell-chrome-saturate:var(--layout-home-platform-chrome-saturate);
+  --home-platform-shell-rail-toggle-size:var(--layout-home-platform-rail-toggle-size);
+  --home-platform-shell-rail-toggle-margin-left:var(--layout-home-platform-rail-toggle-margin-left);
+  --home-platform-shell-rail-toggle-icon-size:var(--layout-home-platform-rail-toggle-icon-size);
+  --home-platform-shell-rail-width-token:var(--layout-home-platform-rail-width);
+  --home-platform-shell-subrail-width-token:var(--layout-home-platform-subrail-width);
+  --home-platform-shell-tablet-rail-min:var(--layout-home-platform-tablet-rail-min);
+  --home-platform-shell-tablet-rail-max:var(--layout-home-platform-tablet-rail-max);
+  --home-platform-shell-tablet-subrail-min:var(--layout-home-platform-tablet-subrail-min);
+  --home-platform-shell-tablet-subrail-max:var(--layout-home-platform-tablet-subrail-max);
+  --home-platform-shell-mobile-inline-padding-fallback:var(--layout-home-platform-mobile-inline-padding-fallback);
+  --home-platform-shell-rail-padding-top:var(--layout-home-platform-rail-padding-top);
+  --home-platform-shell-rail-padding-right:var(--layout-home-platform-rail-padding-right);
+  --home-platform-shell-rail-padding-bottom:var(--layout-home-platform-rail-padding-bottom);
+  --home-platform-shell-rail-padding-left:var(--layout-home-platform-rail-padding-left);
+  --home-platform-shell-subrail-padding-left:var(--layout-home-platform-subrail-padding-left);
+  --home-platform-shell-tablet-rail-padding-right:var(--layout-home-platform-tablet-rail-padding-right);
+  --home-platform-shell-group-margin-top:var(--layout-home-platform-group-margin-top);
+  --home-platform-shell-label-margin-bottom:var(--layout-home-platform-label-margin-bottom);
+  --home-platform-shell-label-size:var(--layout-home-platform-label-size);
+  --home-platform-shell-label-weight:var(--layout-home-platform-label-weight);
+  --home-platform-shell-label-tracking:var(--layout-home-platform-label-tracking);
+  --home-platform-shell-subrail-header-gap:var(--layout-home-platform-subrail-header-gap);
+  --home-platform-shell-subrail-header-margin-bottom:var(--layout-home-platform-subrail-header-margin-bottom);
+  --home-platform-shell-subrail-title-size:var(--layout-home-platform-subrail-title-size);
+  --home-platform-shell-subrail-title-weight:var(--layout-home-platform-subrail-title-weight);
+  --home-platform-shell-subrail-title-line-height:var(--layout-home-platform-subrail-title-line-height);
+  --home-platform-shell-nav-gap:var(--layout-home-platform-nav-gap);
+  --home-platform-shell-nav-item-gap:var(--layout-home-platform-nav-item-gap);
+  --home-platform-shell-nav-item-min-height:var(--layout-home-platform-nav-item-min-height);
+  --home-platform-shell-nav-item-radius:var(--layout-home-platform-nav-item-radius);
+  --home-platform-shell-nav-item-padding-y:var(--layout-home-platform-nav-item-padding-y);
+  --home-platform-shell-nav-item-padding-x:var(--layout-home-platform-nav-item-padding-x);
+  --home-platform-shell-nav-icon-size:var(--layout-home-platform-nav-icon-size);
+  --home-platform-shell-nav-indicator-min-size:var(--layout-home-platform-nav-indicator-min-size);
+  --home-platform-shell-nav-indicator-padding-x:var(--layout-home-platform-nav-indicator-padding-x);
+  --home-platform-shell-nav-indicator-size:var(--layout-home-platform-nav-indicator-size);
+  --home-platform-shell-nav-indicator-weight:var(--layout-home-platform-nav-indicator-weight);
+  --home-platform-shell-nav-indicator-line-height:var(--layout-home-platform-nav-indicator-line-height);
+  --home-platform-shell-nav-indicator-tracking:var(--layout-home-platform-nav-indicator-tracking);
+  --home-platform-shell-nav-text-size:var(--layout-home-platform-nav-text-size);
+  --home-platform-shell-nav-text-weight:var(--layout-home-platform-nav-text-weight);
+  --home-platform-shell-nav-text-line-height:var(--layout-home-platform-nav-text-line-height);
+  --home-platform-shell-nav-text-tracking:var(--layout-home-platform-nav-text-tracking);
+  --home-platform-shell-subnav-padding-x:var(--layout-home-platform-subnav-padding-x);
+  --home-platform-shell-subnav-min-height:var(--layout-home-platform-subnav-min-height);
+  --home-platform-shell-subnav-size:var(--layout-home-platform-subnav-size);
+  --home-platform-shell-subnav-line-height:var(--layout-home-platform-subnav-line-height);
+  --home-platform-shell-content-header-gap:var(--layout-home-platform-content-header-gap);
+  --home-platform-shell-content-header-padding-top:var(--layout-home-platform-content-header-padding-top);
+  --home-platform-shell-content-header-padding-right:var(--layout-home-platform-content-header-padding-right);
+  --home-platform-shell-content-header-padding-bottom:var(--layout-home-platform-content-header-padding-bottom);
+  --home-platform-shell-content-header-padding-left:var(--layout-home-platform-content-header-padding-left);
+  --home-platform-shell-tablet-content-padding-left:var(--layout-home-platform-tablet-content-padding-left);
+  --home-platform-shell-mobile-content-header-padding-top:var(--layout-home-platform-mobile-content-header-padding-top);
+  --home-platform-shell-mobile-content-header-padding-bottom:var(--layout-home-platform-mobile-content-header-padding-bottom);
+  --home-platform-shell-content-title-size:var(--layout-home-platform-content-title-size);
+  --home-platform-shell-content-title-weight:var(--layout-home-platform-content-title-weight);
+  --home-platform-shell-content-title-line-height:var(--layout-home-platform-content-title-line-height);
+  --home-platform-shell-content-title-tracking:var(--layout-home-platform-content-title-tracking);
+  --home-platform-shell-content-copy-max-width:var(--layout-home-platform-content-copy-max-width);
+  --home-platform-shell-content-copy-size:var(--layout-home-platform-content-copy-size);
+  --home-platform-shell-content-copy-weight:var(--layout-home-platform-content-copy-weight);
+  --home-platform-shell-content-copy-line-height:var(--layout-home-platform-content-copy-line-height);
+  --home-platform-shell-content-copy-tracking:var(--layout-home-platform-content-copy-tracking);
+  --home-platform-shell-content-inner-padding-top:var(--layout-home-platform-content-inner-padding-top);
+  --home-platform-shell-content-inner-padding-left:var(--layout-home-platform-content-inner-padding-left);
+  --home-platform-shell-content-inner-footer-gap:var(--layout-home-platform-content-inner-footer-gap);
+  --home-platform-shell-mobile-content-inner-padding-top:var(--layout-home-platform-mobile-content-inner-padding-top);
+  --home-platform-shell-mobile-content-inner-footer-gap:var(--layout-home-platform-mobile-content-inner-footer-gap);
+  --home-platform-shell-destination-gap:var(--layout-home-platform-destination-gap);
+  --home-platform-shell-content-stack-gap:var(--layout-home-platform-content-stack-gap);
+  --home-platform-shell-state-title-size:var(--layout-home-platform-state-title-size);
+  --home-platform-shell-state-title-weight:var(--layout-home-platform-state-title-weight);
+  --home-platform-shell-state-title-line-height:var(--layout-home-platform-state-title-line-height);
+  --home-platform-shell-state-title-tracking:var(--layout-home-platform-state-title-tracking);
+  --home-platform-shell-state-copy-max-width:var(--layout-home-platform-state-copy-max-width);
+  --home-platform-shell-state-copy-size:var(--layout-home-platform-state-copy-size);
+  --home-platform-shell-state-copy-line-height:var(--layout-home-platform-state-copy-line-height);
+  --home-platform-shell-state-action-min-height:var(--layout-home-platform-state-action-min-height);
+  --home-platform-shell-state-action-padding-x:var(--layout-home-platform-state-action-padding-x);
+  --home-platform-shell-state-action-size:var(--layout-home-platform-state-action-size);
+  --home-platform-shell-state-action-weight:var(--layout-home-platform-state-action-weight);
+  --home-platform-shell-state-action-tracking:var(--layout-home-platform-state-action-tracking);
+  --home-platform-shell-embedded-section-gap:var(--layout-home-platform-embedded-section-gap);
+  --home-platform-shell-embedded-stack-gap:var(--layout-home-platform-embedded-stack-gap);
 }
 
 /* =============================================================================
@@ -59,8 +163,8 @@
 ============================================================================= */
 .home-platform-shell{
   --home-platform-shell-inline-padding:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
-  --home-platform-shell-rail-width:17.5rem;
-  --home-platform-shell-subrail-width:14.5rem;
+  --home-platform-shell-rail-width:var(--home-platform-shell-rail-width-token);
+  --home-platform-shell-subrail-width:var(--home-platform-shell-subrail-width-token);
 
   position:fixed;
   top:var(--home-shell-panel-top);
@@ -76,8 +180,8 @@
   background:var(--home-panel-surface);
   color:var(--text-primary-color);
   border-top:1px solid var(--home-panel-border);
-  backdrop-filter:blur(4px) saturate(115%);
-  -webkit-backdrop-filter:blur(4px) saturate(115%);
+  backdrop-filter:blur(var(--home-platform-shell-blur)) saturate(var(--home-platform-shell-saturate));
+  -webkit-backdrop-filter:blur(var(--home-platform-shell-blur)) saturate(var(--home-platform-shell-saturate));
 }
 
 .home-platform-shell[hidden]{
@@ -92,12 +196,12 @@
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  min-height:3.55rem;
+  min-height:var(--home-platform-shell-chrome-min-height);
   padding:0 var(--home-platform-shell-inline-padding);
   border-bottom:1px solid var(--home-ribbon-border);
   background:var(--home-ribbon-surface);
-  backdrop-filter:blur(8px) saturate(120%);
-  -webkit-backdrop-filter:blur(8px) saturate(120%);
+  backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
+  -webkit-backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
 }
 
 .home-platform-shell__close{
@@ -121,9 +225,9 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1.25rem;
-  height:1.25rem;
-  margin-left:0.7rem;
+  width:var(--home-platform-shell-rail-toggle-size);
+  height:var(--home-platform-shell-rail-toggle-size);
+  margin-left:var(--home-platform-shell-rail-toggle-margin-left);
   padding:0;
   border:0;
   border-radius:0;
@@ -145,8 +249,8 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1.05rem;
-  height:1.05rem;
+  width:var(--home-platform-shell-rail-toggle-icon-size);
+  height:var(--home-platform-shell-rail-toggle-icon-size);
   flex:0 0 auto;
 }
 
@@ -234,46 +338,46 @@
   overscroll-behavior:contain;
   scrollbar-width:none;
   -ms-overflow-style:none;
-  padding:1.45rem 1.5rem 2.2rem 0;
+  padding:var(--home-platform-shell-rail-padding-top) var(--home-platform-shell-rail-padding-right) var(--home-platform-shell-rail-padding-bottom) var(--home-platform-shell-rail-padding-left);
 }
 
 .home-platform-shell__subrail-inner{
-  padding-left:1.5rem;
+  padding-left:var(--home-platform-shell-subrail-padding-left);
 }
 
 .home-platform-shell__group + .home-platform-shell__group{
-  margin-top:2.15rem;
+  margin-top:var(--home-platform-shell-group-margin-top);
 }
 
 .home-platform-shell__group-label,
 .home-platform-shell__subrail-label{
-  margin:0 0 0.82rem;
-  font-size:0.72rem;
-  font-weight:500;
-  letter-spacing:0.08em;
+  margin:0 0 var(--home-platform-shell-label-margin-bottom);
+  font-size:var(--home-platform-shell-label-size);
+  font-weight:var(--home-platform-shell-label-weight);
+  letter-spacing:var(--home-platform-shell-label-tracking);
   text-transform:uppercase;
   color:var(--home-platform-shell-muted-label-color);
 }
 
 .home-platform-shell__subrail-header{
   display:grid;
-  gap:0.35rem;
-  margin-bottom:0.95rem;
+  gap:var(--home-platform-shell-subrail-header-gap);
+  margin-bottom:var(--home-platform-shell-subrail-header-margin-bottom);
 }
 
 .home-platform-shell__subrail-title{
   margin:0;
   color:var(--text-primary-color);
-  font-size:1.02rem;
-  font-weight:500;
-  line-height:1.3;
+  font-size:var(--home-platform-shell-subrail-title-size);
+  font-weight:var(--home-platform-shell-subrail-title-weight);
+  line-height:var(--home-platform-shell-subrail-title-line-height);
 }
 
 .home-platform-shell__nav,
 .home-platform-shell__subnav{
   display:flex;
   flex-direction:column;
-  gap:0.5rem;
+  gap:var(--home-platform-shell-nav-gap);
 }
 
 .home-platform-shell__rail-inner::-webkit-scrollbar,
@@ -293,12 +397,12 @@
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  gap:0.72rem;
+  gap:var(--home-platform-shell-nav-item-gap);
   width:100%;
-  min-height:3rem;
-  padding:0.86rem 1rem;
+  min-height:var(--home-platform-shell-nav-item-min-height);
+  padding:var(--home-platform-shell-nav-item-padding);
   border:1px solid transparent;
-  border-radius:999px;
+  border-radius:var(--home-platform-shell-nav-item-radius);
   background:transparent;
   color:var(--home-platform-shell-nav-color);
   opacity:var(--home-platform-shell-nav-opacity);
@@ -316,8 +420,8 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1rem;
-  height:1rem;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
   flex:0 0 auto;
 }
 
@@ -332,17 +436,17 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:1.15rem;
-  min-height:1.15rem;
+  min-width:var(--home-platform-shell-nav-indicator-min-size);
+  min-height:var(--home-platform-shell-nav-indicator-min-size);
   margin-left:auto;
-  padding:0 0.32rem;
-  border-radius:999px;
+  padding:0 var(--home-platform-shell-nav-indicator-padding-x);
+  border-radius:var(--home-platform-shell-nav-item-radius);
   background:var(--home-platform-shell-nav-indicator-bg);
   color:var(--home-platform-shell-nav-indicator-color);
-  font-size:0.64rem;
-  font-weight:600;
-  line-height:1;
-  letter-spacing:0.04em;
+  font-size:var(--home-platform-shell-nav-indicator-size);
+  font-weight:var(--home-platform-shell-nav-indicator-weight);
+  line-height:var(--home-platform-shell-nav-indicator-line-height);
+  letter-spacing:var(--home-platform-shell-nav-indicator-tracking);
 }
 
 .home-platform-shell__nav-indicator[data-home-platform-nav-indicator-state="new"]{
@@ -376,18 +480,18 @@
   display:inline-flex;
   align-items:center;
   min-width:0;
-  font-size:0.98rem;
-  font-weight:400;
-  line-height:1.35;
-  letter-spacing:-0.01em;
+  font-size:var(--home-platform-shell-nav-text-size);
+  font-weight:var(--home-platform-shell-nav-text-weight);
+  line-height:var(--home-platform-shell-nav-text-line-height);
+  letter-spacing:var(--home-platform-shell-nav-text-tracking);
 }
 
 .home-platform-shell__subnav-item{
-  padding-right:0.92rem;
-  padding-left:0.92rem;
-  min-height:2.85rem;
-  font-size:0.86rem;
-  line-height:1.35;
+  padding-right:var(--home-platform-shell-subnav-padding-x);
+  padding-left:var(--home-platform-shell-subnav-padding-x);
+  min-height:var(--home-platform-shell-subnav-min-height);
+  font-size:var(--home-platform-shell-subnav-size);
+  line-height:var(--home-platform-shell-subnav-line-height);
 }
 
 /* =============================================================================
@@ -405,36 +509,36 @@
 
 .home-platform-shell__content-header{
   display:grid;
-  gap:0.38rem;
-  padding:1.45rem 0 1rem 2rem;
+  gap:var(--home-platform-shell-content-header-gap);
+  padding:var(--home-platform-shell-content-header-padding-top) var(--home-platform-shell-content-header-padding-right) var(--home-platform-shell-content-header-padding-bottom) var(--home-platform-shell-content-header-padding-left);
   border-bottom:1px solid var(--home-panel-border);
 }
 
 .home-platform-shell__content-eyebrow{
   margin:0;
   color:var(--home-platform-shell-muted-label-color);
-  font-size:0.72rem;
-  font-weight:500;
-  letter-spacing:0.08em;
+  font-size:var(--home-platform-shell-label-size);
+  font-weight:var(--home-platform-shell-label-weight);
+  letter-spacing:var(--home-platform-shell-label-tracking);
   text-transform:uppercase;
 }
 
 .home-platform-shell__content-title{
   margin:0;
   color:var(--text-primary-color);
-  font-size:1.75rem;
-  font-weight:400;
-  line-height:1.1;
-  letter-spacing:-0.03em;
+  font-size:var(--home-platform-shell-content-title-size);
+  font-weight:var(--home-platform-shell-content-title-weight);
+  line-height:var(--home-platform-shell-content-title-line-height);
+  letter-spacing:var(--home-platform-shell-content-title-tracking);
 }
 
 .home-platform-shell__content-copy{
   margin:0;
-  max-width:42rem;
-  font-size:0.98rem;
-  font-weight:400;
-  line-height:1.65;
-  letter-spacing:-0.01em;
+  max-width:var(--home-platform-shell-content-copy-max-width);
+  font-size:var(--home-platform-shell-content-copy-size);
+  font-weight:var(--home-platform-shell-content-copy-weight);
+  line-height:var(--home-platform-shell-content-copy-line-height);
+  letter-spacing:var(--home-platform-shell-content-copy-tracking);
   color:var(--home-platform-shell-muted-copy-color);
 }
 
@@ -445,7 +549,7 @@
   overscroll-behavior:contain;
   scrollbar-width:none;
   -ms-overflow-style:none;
-  padding:1.45rem 0 calc(var(--home-shell-footer-separator-offset) + 1.45rem) 2rem;
+  padding:var(--home-platform-shell-content-inner-padding-top) 0 calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-content-inner-footer-gap)) var(--home-platform-shell-content-inner-padding-left);
 }
 
 .home-platform-shell__content-inner::-webkit-scrollbar{
@@ -457,7 +561,7 @@
 .home-platform-destination,
 .home-platform-destination__surface{
   display:grid;
-  gap:1rem;
+  gap:var(--home-platform-shell-destination-gap);
   min-width:0;
   max-width:100%;
   overflow-x:hidden;
@@ -467,25 +571,25 @@
 .home-platform-shell__content-state{
   display:flex;
   flex-direction:column;
-  gap:1.25rem;
+  gap:var(--home-platform-shell-content-stack-gap);
   min-width:0;
 }
 
 .home-platform-shell__content-state-title{
   margin:0;
   color:var(--text-primary-color);
-  font-size:1.15rem;
-  font-weight:400;
-  line-height:1.25;
-  letter-spacing:-0.02em;
+  font-size:var(--home-platform-shell-state-title-size);
+  font-weight:var(--home-platform-shell-state-title-weight);
+  line-height:var(--home-platform-shell-state-title-line-height);
+  letter-spacing:var(--home-platform-shell-state-title-tracking);
 }
 
 .home-platform-shell__content-state-copy{
   margin:0;
-  max-width:40rem;
+  max-width:var(--home-platform-shell-state-copy-max-width);
   color:var(--home-platform-shell-muted-copy-color);
-  font-size:0.92rem;
-  line-height:1.6;
+  font-size:var(--home-platform-shell-state-copy-size);
+  line-height:var(--home-platform-shell-state-copy-line-height);
 }
 
 .home-platform-shell__content-state-action{
@@ -493,17 +597,18 @@
   align-items:center;
   justify-content:center;
   width:max-content;
-  min-height:2.45rem;
-  padding:0 1rem;
+  min-height:var(--home-platform-shell-state-action-min-height);
+  padding:0 var(--home-platform-shell-state-action-padding-x);
   border:1px solid var(--control-border);
-  border-radius:999px;
+  border-radius:var(--home-platform-shell-nav-item-radius);
   background:transparent;
   color:var(--home-platform-shell-nav-color);
   text-decoration:none;
-  font-size:0.78rem;
-  font-weight:500;
-  letter-spacing:0.08em;
+  font-size:var(--home-platform-shell-state-action-size);
+  font-weight:var(--home-platform-shell-state-action-weight);
+  letter-spacing:var(--home-platform-shell-state-action-tracking);
   text-transform:uppercase;
+  line-height:var(--home-platform-shell-nav-indicator-line-height);
   transition:
     color var(--home-platform-shell-motion-fast) ease,
     border-color var(--home-platform-shell-motion-fast) ease,
@@ -540,13 +645,13 @@
 .home-platform-shell__content-stack .home-workspace-panel__section,
 .home-platform-shell__content-stack .home-profile-control-panel__section,
 .home-platform-shell__content-stack .home-settings-panel__section{
-  gap:0.75rem;
+  gap:var(--home-platform-shell-embedded-section-gap);
 }
 
 .home-platform-shell__content-stack .home-workspace-panel__stack,
 .home-platform-shell__content-stack .home-profile-control-panel__stack,
 .home-platform-shell__content-stack .home-settings-panel__stack{
-  gap:0.45rem;
+  gap:var(--home-platform-shell-embedded-stack-gap);
 }
 
 /* =============================================================================
@@ -577,28 +682,28 @@
 @media (max-width: 1024px){
   .home-platform-shell__main{
     grid-template-columns:
-      minmax(12rem, 15rem)
-      minmax(11rem, 13rem)
+      minmax(var(--home-platform-shell-tablet-rail-min), var(--home-platform-shell-tablet-rail-max))
+      minmax(var(--home-platform-shell-tablet-subrail-min), var(--home-platform-shell-tablet-subrail-max))
       minmax(0, 1fr);
   }
 
   .home-platform-shell__rail-inner,
   .home-platform-shell__subrail-inner{
-    padding-right:1rem;
+    padding-right:var(--home-platform-shell-tablet-rail-padding-right);
   }
 
   .home-platform-shell__content-header{
-    padding-left:1.5rem;
+    padding-left:var(--home-platform-shell-tablet-content-padding-left);
   }
 
   .home-platform-shell__content-inner{
-    padding-left:1.5rem;
+    padding-left:var(--home-platform-shell-tablet-content-padding-left);
   }
 }
 
 @media (max-width: 760px){
   .home-platform-shell{
-    --home-platform-shell-inline-padding:max(var(--site-gutter), 0.85rem);
+    --home-platform-shell-inline-padding:max(var(--site-gutter), var(--home-platform-shell-mobile-inline-padding-fallback));
   }
 
   .home-platform-shell__main{
@@ -616,11 +721,11 @@
   }
 
   .home-platform-shell__content-header{
-    padding:1rem 0 0.85rem;
+    padding:var(--home-platform-shell-mobile-content-header-padding-top) 0 var(--home-platform-shell-mobile-content-header-padding-bottom);
   }
 
   .home-platform-shell__content-inner{
-    padding:1rem 0 calc(var(--home-shell-footer-separator-offset) + 1.15rem);
+    padding:var(--home-platform-shell-mobile-content-inner-padding-top) 0 calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-mobile-content-inner-footer-gap));
   }
 }
 

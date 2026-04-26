@@ -25,26 +25,75 @@
 :root {
   color-scheme: dark;
   --ic-bg: var(--bg-color, #050505);
-  --ic-panel: rgba(255, 255, 255, 0.04);
-  --ic-panel-border: var(--border-color, rgba(255, 255, 255, 0.08));
-  --ic-text: var(--text-color, rgba(255, 255, 255, 0.92));
-  --ic-muted: var(--text-secondary-color, rgba(255, 255, 255, 0.62));
-  --ic-soft: var(--border-color, rgba(255, 255, 255, 0.12));
-  --ic-max-width: 1200px;
-  --ic-radius: 24px;
-  --ic-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
-  --ic-shell-gap: 32px;
-  --ic-shell-padding-top: 56px;
-  --ic-shell-padding-inline: 24px;
-  --ic-shell-padding-bottom: 80px;
-  --ic-surface-max-width: 1440px;
-  --ic-menu-gap: 24px;
-  --ic-footer-gap: 32px;
-  --ic-layout-gap: 24px;
-  --ic-sidebar-width: 320px;
-  --ic-content-min-width: 0;
-  --ic-sidebar-top-offset: 110px;
-  --ic-section-gap: 24px;
+  --ic-panel: var(--layout-office-internal-correspondence-panel-surface);
+  --ic-panel-border: var(--border-color, var(--layout-office-internal-correspondence-panel-border-fallback));
+  --ic-text: var(--text-color, var(--layout-office-internal-correspondence-text-fallback));
+  --ic-muted: var(--text-secondary-color, var(--layout-office-internal-correspondence-muted-fallback));
+  --ic-soft: var(--border-color, var(--layout-office-internal-correspondence-soft-fallback));
+  --ic-page-glow-left: var(--layout-office-internal-correspondence-page-glow-left);
+  --ic-page-glow-right: var(--layout-office-internal-correspondence-page-glow-right);
+  --ic-page-wash-top: var(--layout-office-internal-correspondence-page-wash-top);
+  --ic-page-wash-bottom: var(--layout-office-internal-correspondence-page-wash-bottom);
+  --ic-max-width: var(--layout-office-internal-correspondence-max-width);
+  --ic-radius: var(--layout-office-internal-correspondence-radius);
+  --ic-radius-outer-offset: var(--layout-office-internal-correspondence-radius-outer-offset);
+  --ic-shadow: var(--layout-office-internal-correspondence-shadow);
+  --ic-shell-gap: var(--layout-office-internal-correspondence-shell-gap);
+  --ic-shell-padding-top: var(--layout-office-internal-correspondence-shell-padding-top);
+  --ic-shell-padding-inline: var(--layout-office-internal-correspondence-shell-padding-inline);
+  --ic-shell-padding-bottom: var(--layout-office-internal-correspondence-shell-padding-bottom);
+  --ic-surface-max-width: var(--layout-office-internal-correspondence-surface-max-width);
+  --ic-menu-gap: var(--layout-office-internal-correspondence-menu-gap);
+  --ic-footer-gap: var(--layout-office-internal-correspondence-footer-gap);
+  --ic-layout-gap: var(--layout-office-internal-correspondence-layout-gap);
+  --ic-sidebar-width: var(--layout-office-internal-correspondence-sidebar-width);
+  --ic-content-min-width: var(--layout-office-internal-correspondence-content-min-width);
+  --ic-sidebar-top-offset: var(--layout-office-internal-correspondence-sidebar-top-offset);
+  --ic-section-gap: var(--layout-office-internal-correspondence-section-gap);
+  --ic-header-surface-top: var(--layout-office-internal-correspondence-header-surface-top);
+  --ic-header-surface-bottom: var(--layout-office-internal-correspondence-header-surface-bottom);
+  --ic-header-padding: var(--layout-office-internal-correspondence-header-padding);
+  --ic-header-padding-mobile: var(--layout-office-internal-correspondence-header-padding-mobile);
+  --ic-eyebrow-margin-bottom: var(--layout-office-internal-correspondence-eyebrow-margin-bottom);
+  --ic-eyebrow-size: var(--layout-office-internal-correspondence-eyebrow-size);
+  --ic-eyebrow-weight: var(--layout-office-internal-correspondence-eyebrow-weight);
+  --ic-eyebrow-tracking: var(--layout-office-internal-correspondence-eyebrow-tracking);
+  --ic-title-size: var(--layout-office-internal-correspondence-title-size);
+  --ic-title-size-mobile: var(--layout-office-internal-correspondence-title-size-mobile);
+  --ic-title-line-height: var(--layout-office-internal-correspondence-title-line-height);
+  --ic-title-tracking: var(--layout-office-internal-correspondence-title-tracking);
+  --ic-title-weight: var(--layout-office-internal-correspondence-title-weight);
+  --ic-title-max-width: var(--layout-office-internal-correspondence-title-max-width);
+  --ic-copy-margin-top: var(--layout-office-internal-correspondence-copy-margin-top);
+  --ic-copy-max-width: var(--layout-office-internal-correspondence-copy-max-width);
+  --ic-copy-size: var(--layout-office-internal-correspondence-copy-size);
+  --ic-copy-line-height: var(--layout-office-internal-correspondence-copy-line-height);
+  --ic-grid-gap: var(--layout-office-internal-correspondence-grid-gap);
+  --ic-card-padding: var(--layout-office-internal-correspondence-card-padding);
+  --ic-card-padding-mobile: var(--layout-office-internal-correspondence-card-padding-mobile);
+  --ic-card-gap: var(--layout-office-internal-correspondence-card-gap);
+  --ic-card-title-size: var(--layout-office-internal-correspondence-card-title-size);
+  --ic-card-title-weight: var(--layout-office-internal-correspondence-card-title-weight);
+  --ic-card-title-tracking: var(--layout-office-internal-correspondence-card-title-tracking);
+  --ic-card-copy-size: var(--layout-office-internal-correspondence-card-copy-size);
+  --ic-card-copy-line-height: var(--layout-office-internal-correspondence-card-copy-line-height);
+  --ic-link-list-gap: var(--layout-office-internal-correspondence-link-list-gap);
+  --ic-link-opacity: var(--layout-office-internal-correspondence-link-opacity);
+  --ic-link-opacity-hover: var(--layout-office-internal-correspondence-link-opacity-hover);
+  --ic-link-motion: var(--layout-office-internal-correspondence-link-motion);
+  --ic-subgrid-gap: var(--layout-office-internal-correspondence-subgrid-gap);
+  --ic-subcard-radius: var(--layout-office-internal-correspondence-subcard-radius);
+  --ic-subcard-padding: var(--layout-office-internal-correspondence-subcard-padding);
+  --ic-subcard-surface: var(--layout-office-internal-correspondence-subcard-surface);
+  --ic-subcard-gap: var(--layout-office-internal-correspondence-subcard-gap);
+  --ic-subcard-title-size: var(--layout-office-internal-correspondence-subcard-title-size);
+  --ic-subcard-title-weight: var(--layout-office-internal-correspondence-subcard-title-weight);
+  --ic-subcard-title-tracking: var(--layout-office-internal-correspondence-subcard-title-tracking);
+  --ic-subcard-copy-size: var(--layout-office-internal-correspondence-subcard-copy-size);
+  --ic-subcard-copy-line-height: var(--layout-office-internal-correspondence-subcard-copy-line-height);
+  --ic-mobile-shell-padding-top: var(--layout-office-internal-correspondence-mobile-shell-padding-top);
+  --ic-mobile-shell-padding-inline: var(--layout-office-internal-correspondence-mobile-shell-padding-inline);
+  --ic-mobile-shell-padding-bottom: var(--layout-office-internal-correspondence-mobile-shell-padding-bottom);
 }
 
 /* =============================================================================
@@ -65,9 +114,9 @@ body {
 
 body.internal-correspondence-page {
   background-image:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 32%),
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.03), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0));
+    radial-gradient(circle at top left, var(--ic-page-glow-left), transparent 32%),
+    radial-gradient(circle at top right, var(--ic-page-glow-right), transparent 28%),
+    linear-gradient(180deg, var(--ic-page-wash-top), var(--ic-page-wash-bottom));
 }
 
 /* =============================================================================
@@ -115,38 +164,38 @@ body.internal-correspondence-page {
 ============================================================================= */
 .internal-correspondence-header {
   border: 1px solid var(--ic-panel-border);
-  border-radius: calc(var(--ic-radius) + 4px);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+  border-radius: calc(var(--ic-radius) + var(--ic-radius-outer-offset));
+  background: linear-gradient(180deg, var(--ic-header-surface-top), var(--ic-header-surface-bottom));
   box-shadow: var(--ic-shadow);
 }
 
 .internal-correspondence-header__inner {
-  padding: 40px;
+  padding: var(--ic-header-padding);
 }
 
 .internal-correspondence-header__eyebrow {
-  margin: 0 0 16px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  margin: 0 0 var(--ic-eyebrow-margin-bottom);
+  font-size: var(--ic-eyebrow-size);
+  font-weight: var(--ic-eyebrow-weight);
+  letter-spacing: var(--ic-eyebrow-tracking);
   text-transform: uppercase;
   color: var(--ic-muted);
 }
 
 .internal-correspondence-header__title {
   margin: 0;
-  font-size: clamp(2.4rem, 4vw, 4.2rem);
-  line-height: 0.94;
-  letter-spacing: -0.05em;
-  font-weight: 600;
-  max-width: 900px;
+  font-size: var(--ic-title-size);
+  line-height: var(--ic-title-line-height);
+  letter-spacing: var(--ic-title-tracking);
+  font-weight: var(--ic-eyebrow-weight);
+  max-width: var(--ic-title-max-width);
 }
 
 .internal-correspondence-header__copy {
-  margin: 20px 0 0;
-  max-width: 760px;
-  font-size: 1rem;
-  line-height: 1.7;
+  margin: var(--ic-copy-margin-top) 0 0;
+  max-width: var(--ic-copy-max-width);
+  font-size: var(--ic-copy-size);
+  line-height: var(--ic-copy-line-height);
   color: var(--ic-muted);
 }
 
@@ -173,7 +222,7 @@ body.internal-correspondence-page {
 ============================================================================= */
 .internal-correspondence-grid {
   display: grid;
-  gap: 24px;
+  gap: var(--ic-grid-gap);
 }
 
 .internal-correspondence-grid--two-up {
@@ -189,24 +238,24 @@ body.internal-correspondence-page {
 
 .internal-correspondence-card {
   border-radius: var(--ic-radius);
-  padding: 28px;
+  padding: var(--ic-card-padding);
   display: grid;
-  gap: 18px;
+  gap: var(--ic-card-gap);
   min-width: 0;
 }
 
 .internal-correspondence-card__title {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: var(--ic-card-title-size);
+  font-weight: var(--ic-eyebrow-weight);
+  letter-spacing: var(--ic-card-title-tracking);
 }
 
 .internal-correspondence-card__copy {
   margin: 0;
   color: var(--ic-muted);
-  line-height: 1.65;
-  font-size: 0.96rem;
+  line-height: var(--ic-card-copy-line-height);
+  font-size: var(--ic-card-copy-size);
 }
 
 /* =============================================================================
@@ -214,7 +263,7 @@ body.internal-correspondence-page {
 ============================================================================= */
 .internal-correspondence-link-list {
   display: grid;
-  gap: 10px;
+  gap: var(--ic-link-list-gap);
 }
 
 .internal-correspondence-link-list a,
@@ -225,8 +274,8 @@ body.internal-correspondence-page {
   color: var(--ic-text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-  transition: border-color 180ms ease, opacity 180ms ease, color 180ms ease, background-color 180ms ease;
-  opacity: 0.92;
+  transition: border-color var(--ic-link-motion) ease, opacity var(--ic-link-motion) ease, color var(--ic-link-motion) ease, background-color var(--ic-link-motion) ease;
+  opacity: var(--ic-link-opacity);
 }
 
 .internal-correspondence-link-list a:hover,
@@ -234,7 +283,7 @@ body.internal-correspondence-page {
 .internal-correspondence-subcard a:hover,
 .internal-correspondence-subcard a:focus-visible {
   border-color: var(--ic-soft);
-  opacity: 1;
+  opacity: var(--ic-link-opacity-hover);
   outline: none;
 }
 
@@ -243,7 +292,7 @@ body.internal-correspondence-page {
 .internal-correspondence-link-list a.is-active,
 .internal-correspondence-subcard a.is-active {
   border-color: var(--ic-soft);
-  opacity: 1;
+  opacity: var(--ic-link-opacity-hover);
 }
 
 /* =============================================================================
@@ -252,29 +301,29 @@ body.internal-correspondence-page {
 .internal-correspondence-subgrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--ic-subgrid-gap);
 }
 
 .internal-correspondence-subcard {
-  border-radius: 18px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.025);
+  border-radius: var(--ic-subcard-radius);
+  padding: var(--ic-subcard-padding);
+  background: var(--ic-subcard-surface);
   display: grid;
-  gap: 12px;
+  gap: var(--ic-subcard-gap);
 }
 
 .internal-correspondence-subcard h3 {
   margin: 0;
-  font-size: 0.98rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: var(--ic-subcard-title-size);
+  font-weight: var(--ic-eyebrow-weight);
+  letter-spacing: var(--ic-subcard-title-tracking);
 }
 
 .internal-correspondence-subcard p {
   margin: 0;
   color: var(--ic-muted);
-  font-size: 0.92rem;
-  line-height: 1.6;
+  font-size: var(--ic-subcard-copy-size);
+  line-height: var(--ic-subcard-copy-line-height);
 }
 
 /* =============================================================================
@@ -282,7 +331,7 @@ body.internal-correspondence-page {
 ============================================================================= */
 @media (max-width: 980px) {
   #internal-correspondence-shell {
-    padding: 18px 16px 48px;
+    padding: var(--ic-mobile-shell-padding-top) var(--ic-mobile-shell-padding-inline) var(--ic-mobile-shell-padding-bottom);
   }
 
   .internal-correspondence-layout {
@@ -301,10 +350,10 @@ body.internal-correspondence-page {
 
   .internal-correspondence-header__inner,
   .internal-correspondence-card {
-    padding: 24px;
+    padding: var(--ic-card-padding-mobile);
   }
 
   .internal-correspondence-header__title {
-    font-size: 2.4rem;
+    font-size: var(--ic-title-size-mobile);
   }
 }

@@ -2,6 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) ROOT TOKENS
+   02A) ACCOUNT DRAWER LAYOUT TOKENS
    03) BASE DRAWER SHELL
    04) OPEN / CLOSE STATES
    05) PAGE SCROLL LOCK
@@ -36,7 +37,7 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-drawer-panel-width: min(40rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --account-drawer-panel-width: var(--layout-account-drawer-panel-width);
   --account-drawer-surface:color-mix(in srgb, var(--surface-color) 82%, transparent);
   --account-drawer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
@@ -63,9 +64,9 @@
   --account-drawer-segment-title-size: var(--headline-4-size);
   --account-drawer-segment-title-line-height: var(--headline-4-line-height);
   --account-drawer-segment-title-letter-spacing: var(--tracking-copy);
-  --account-drawer-segment-title-font-weight: 400;
+  --account-drawer-segment-title-font-weight: var(--layout-account-drawer-segment-title-weight);
   --account-drawer-segment-title-align: center;
-  --account-drawer-segment-title-max-width: 18ch;
+  --account-drawer-segment-title-max-width: var(--layout-account-drawer-segment-title-max-width);
   --account-drawer-segment-title-size-mobile: var(--headline-5-size);
   --account-drawer-segment-title-line-height-mobile: var(--headline-5-line-height);
 
@@ -80,22 +81,22 @@
   --account-drawer-content-gap-xl: var(--account-content-gap-xl);
 
   --account-drawer-header-padding-bottom: var(--spacing-md);
-  --account-drawer-header-padding-bottom-mobile: 1.04rem;
+  --account-drawer-header-padding-bottom-mobile: var(--layout-account-drawer-header-padding-bottom-mobile);
 
-  --account-drawer-content-stage-padding-inline: 4.8rem;
-  --account-drawer-content-stage-padding-inline-tablet: 3.2rem;
-  --account-drawer-content-stage-padding-inline-mobile: 1.8rem;
+  --account-drawer-content-stage-padding-inline: var(--layout-account-drawer-content-stage-padding-inline);
+  --account-drawer-content-stage-padding-inline-tablet: var(--layout-account-drawer-content-stage-padding-inline-tablet);
+  --account-drawer-content-stage-padding-inline-mobile: var(--layout-account-drawer-content-stage-padding-inline-mobile);
 
-  --account-drawer-body-gap-mobile: 1.04rem;
+  --account-drawer-body-gap-mobile: var(--layout-account-drawer-body-gap-mobile);
 
-  --account-drawer-entry-card-padding: 1.06rem;
-  --account-drawer-entry-card-padding-mobile: 0.96rem;
+  --account-drawer-entry-card-padding: var(--layout-account-drawer-entry-card-padding);
+  --account-drawer-entry-card-padding-mobile: var(--layout-account-drawer-entry-card-padding-mobile);
   --account-drawer-entry-title-size: var(--headline-5-size);
-  --account-drawer-entry-title-size-mobile: 0.98rem;
+  --account-drawer-entry-title-size-mobile: var(--layout-account-drawer-entry-title-size-mobile);
   --account-drawer-entry-copy-size: var(--body-2-size);
-  --account-drawer-entry-copy-size-mobile: 0.9rem;
-  --account-drawer-meta-link-size: 0.82rem;
-  --account-drawer-meta-link-size-mobile: 0.78rem;
+  --account-drawer-entry-copy-size-mobile: var(--layout-account-drawer-entry-copy-size-mobile);
+  --account-drawer-meta-link-size: var(--layout-account-drawer-meta-link-size);
+  --account-drawer-meta-link-size-mobile: var(--layout-account-drawer-meta-link-size-mobile);
 
   --account-drawer-button-height: var(--account-button-height);
   --account-drawer-button-radius: var(--account-button-radius);
@@ -127,9 +128,9 @@
   --account-drawer-text-link-font-size: var(--account-text-action-font-size);
   --account-drawer-text-link-line-height: var(--account-text-action-line-height);
   --account-drawer-text-link-letter-spacing: var(--account-text-action-letter-spacing);
-  --account-drawer-text-link-font-weight: 400;
-  --account-drawer-text-link-opacity: 1;
-  --account-drawer-text-link-opacity-hover: 1;
+  --account-drawer-text-link-font-weight: var(--layout-account-drawer-text-link-weight);
+  --account-drawer-text-link-opacity: var(--layout-account-drawer-text-link-opacity);
+  --account-drawer-text-link-opacity-hover: var(--layout-account-drawer-text-link-opacity-hover);
 
   --account-drawer-back-control-size: var(--account-back-control-size);
   --account-drawer-back-icon-size: var(--account-back-icon-size);
@@ -142,6 +143,30 @@
   --account-drawer-close-hover-color:var(--global-close-button-hover-color);
   --account-drawer-close-duration:var(--global-close-button-duration);
   --account-drawer-close-ease:var(--global-close-button-ease);
+}
+
+/* =============================================================================
+   02A) ACCOUNT DRAWER LAYOUT TOKENS
+============================================================================= */
+:root{
+  --account-drawer-shell-padding-y:var(--layout-account-drawer-shell-padding-y);
+  --account-drawer-shell-padding-x:var(--layout-account-drawer-shell-padding-x);
+  --account-drawer-shell-padding-y-tablet:var(--layout-account-drawer-shell-padding-y-tablet);
+  --account-drawer-shell-padding-x-tablet:var(--layout-account-drawer-shell-padding-x-tablet);
+  --account-drawer-shell-padding-y-mobile:var(--layout-account-drawer-shell-padding-y-mobile);
+  --account-drawer-shell-padding-x-mobile:var(--layout-account-drawer-shell-padding-x-mobile);
+  --account-drawer-close-offset:var(--layout-account-drawer-close-offset);
+  --account-drawer-close-offset-tablet:var(--layout-account-drawer-close-offset-tablet);
+  --account-drawer-close-offset-mobile:var(--layout-account-drawer-close-offset-mobile);
+  --account-drawer-copy-weight:var(--layout-account-drawer-copy-weight);
+  --account-drawer-entry-badge-min-height:var(--layout-account-drawer-entry-badge-min-height);
+  --account-drawer-entry-badge-padding-y:var(--layout-account-drawer-entry-badge-padding-y);
+  --account-drawer-entry-badge-padding-x:var(--layout-account-drawer-entry-badge-padding-x);
+  --account-drawer-entry-badge-weight:var(--layout-account-drawer-entry-badge-weight);
+  --account-drawer-entry-badge-line-height:var(--layout-account-drawer-entry-badge-line-height);
+  --account-drawer-entry-title-weight:var(--layout-account-drawer-entry-title-weight);
+  --account-drawer-profile-title-max-width:var(--layout-account-drawer-profile-title-max-width);
+  --account-drawer-profile-copy-max-width:var(--layout-account-drawer-profile-copy-max-width);
 }
 
 html[data-theme-effective="light"]{
@@ -185,7 +210,7 @@ html[data-theme-effective="dark"]{
   z-index: var(--z-overlay-surface);
   display: block;
   pointer-events: none;
-  opacity: 0;
+  opacity: var(--state-opacity-idle);
   visibility: hidden;
 }
 
@@ -195,7 +220,7 @@ html[data-theme-effective="dark"]{
 body.account-drawer-open .account-drawer,
 body.account-drawer-closing .account-drawer{
   pointer-events: auto;
-  opacity: 1;
+  opacity: var(--state-opacity-selected);
   visibility: visible;
 }
 
@@ -217,12 +242,12 @@ body.account-drawer-closing{
   background: var(--account-drawer-backdrop);
   backdrop-filter: blur(var(--glass-blur-sm));
   -webkit-backdrop-filter: blur(var(--glass-blur-sm));
-  opacity: 0;
+  opacity: var(--state-opacity-idle);
   transition: none;
 }
 
 body.account-drawer-open .account-drawer-backdrop{
-  opacity: 1;
+  opacity: var(--state-opacity-selected);
 }
 
 body.account-drawer-closing .account-drawer-backdrop{
@@ -230,7 +255,7 @@ body.account-drawer-closing .account-drawer-backdrop{
 }
 
 body.account-drawer-closing .account-drawer-backdrop{
-  opacity: 0;
+  opacity: var(--state-opacity-idle);
 }
 
 /* =============================================================================
@@ -242,7 +267,7 @@ body.account-drawer-closing .account-drawer-backdrop{
   width: var(--account-drawer-panel-width);
   max-width: 100%;
   height: 100%;
-  padding: 1.6rem 2rem;
+  padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x);
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
   border-right: var(--stroke-soft) solid var(--account-drawer-border);
@@ -299,7 +324,7 @@ body.account-drawer-closing .account-drawer-shell{
 }
 
 .account-drawer-segment-title{
-  margin: 0;
+  margin: var(--spacing-none);
   width: 100%;
   max-width: var(--account-drawer-segment-title-max-width);
   color: var(--text-primary-color);
@@ -315,8 +340,8 @@ body.account-drawer-closing .account-drawer-shell{
 ============================================================================= */
 .account-drawer-close{
   position:absolute;
-  top:1rem;
-  right:1rem;
+  top:var(--account-drawer-close-offset);
+  right:var(--account-drawer-close-offset);
   left:auto;
   width:var(--account-drawer-close-size);
   min-width:var(--account-drawer-close-size);
@@ -324,7 +349,7 @@ body.account-drawer-closing .account-drawer-shell{
   min-height:var(--account-drawer-close-size);
   color:var(--account-drawer-close-color);
   z-index:var(--z-overlay-control);
-  opacity:1;
+  opacity:var(--state-opacity-selected);
   transition:
     opacity var(--duration-fast) var(--ease-standard),
     color var(--account-drawer-close-duration) var(--account-drawer-close-ease),
@@ -341,7 +366,7 @@ body.account-drawer-closing .account-drawer-shell{
 }
 
 body.account-drawer-closing .account-drawer-close{
-  opacity: 0;
+  opacity: var(--state-opacity-idle);
   pointer-events: none;
 }
 
@@ -371,10 +396,10 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 .account-drawer-copy,
 .account-drawer-note{
-  margin: 0;
+  margin: var(--spacing-none);
   color: var(--account-drawer-muted);
   font-size: var(--body-1-size);
-  font-weight: 300;
+  font-weight: var(--account-drawer-copy-weight);
   letter-spacing: var(--body-1-tracking);
   line-height: var(--body-1-line-height);
   max-width: none;
@@ -421,7 +446,7 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 .account-drawer-action-label{
-  margin: 0;
+  margin: var(--spacing-none);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -459,7 +484,7 @@ body.account-drawer-closing .account-drawer-close{
    13) NOTES
 ============================================================================= */
 .account-drawer-notes{
-  padding-top: 0.26rem;
+  padding-top: var(--spacing-2xs);
 }
 
 /* =============================================================================
@@ -472,7 +497,7 @@ body.account-drawer-closing .account-drawer-close{
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 0.92rem;
+  gap: var(--account-drawer-content-gap-md);
 }
 
 .account-drawer-state[hidden],
@@ -489,7 +514,7 @@ body.account-drawer-closing .account-drawer-close{
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 0;
+  gap: var(--spacing-none);
   width: 100%;
   min-width: 0;
   overflow: hidden;
@@ -519,7 +544,7 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-view-mount > .account-drawer-inner-view{
   width: 100%;
   max-width: 100%;
-  margin: 0;
+  margin: var(--spacing-none);
 }
 
 .account-drawer-view-mount > .account-drawer-inner-view > [class$="-state"],
@@ -528,7 +553,7 @@ body.account-drawer-closing .account-drawer-close{
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  gap: 0;
+  gap: var(--spacing-none);
   width: 100%;
 }
 
@@ -551,7 +576,7 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-view-mount .account-provider-google-sheet-content-stage{
   width: 100%;
   max-width: 100%;
-  margin: 0;
+  margin: var(--spacing-none);
   padding-inline: var(--account-drawer-content-stage-padding-inline);
   box-sizing: border-box;
   gap: var(--account-drawer-section-gap);
@@ -671,8 +696,8 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-view-mount .account-forgot-password-drawer-center-stage,
 .account-drawer-view-mount .account-provider-apple-sheet-center-stage,
 .account-drawer-view-mount .account-provider-google-sheet-center-stage{
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-top: var(--spacing-none) !important;
+  margin-bottom: var(--spacing-none) !important;
 }
 
 .account-drawer-view-mount .account-sign-in-drawer-input,
@@ -726,26 +751,26 @@ body.account-drawer-closing .account-drawer-close{
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 1.66rem;
-  padding: 0.3rem 0.58rem;
+  min-height: var(--account-drawer-entry-badge-min-height);
+  padding: var(--account-drawer-entry-badge-padding-y) var(--account-drawer-entry-badge-padding-x);
   background: var(--account-drawer-badge-surface);
   color: var(--account-drawer-badge-text);
   font-size: var(--body-3-size);
-  font-weight: 500;
+  font-weight: var(--account-drawer-entry-badge-weight);
   letter-spacing: var(--tracking-ui);
-  line-height: 1;
+  line-height: var(--account-drawer-entry-badge-line-height);
   text-transform: uppercase;
 }
 
 .account-drawer-entry-title,
 .account-drawer-entry-copy{
-  margin: 0;
+  margin: var(--spacing-none);
 }
 
 .account-drawer-entry-title{
   color: var(--text-primary-color);
   font-size: var(--headline-5-size);
-  font-weight: 400;
+  font-weight: var(--account-drawer-entry-title-weight);
   letter-spacing: var(--tracking-copy);
   line-height: var(--headline-5-line-height);
 }
@@ -753,7 +778,7 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-entry-copy{
   color: var(--account-drawer-muted);
   font-size: var(--body-2-size);
-  font-weight: 300;
+  font-weight: var(--account-drawer-copy-weight);
   letter-spacing: var(--body-2-tracking);
   line-height: var(--body-2-line-height);
 }
@@ -822,7 +847,7 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 .account-drawer-identity-label{
-  margin: 0;
+  margin: var(--spacing-none);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -951,11 +976,11 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 .account-drawer-profile .account-drawer-entry-title{
-  max-width: 19ch;
+  max-width: var(--account-drawer-profile-title-max-width);
 }
 
 .account-drawer-profile .account-drawer-entry-copy{
-  max-width: 42ch;
+  max-width: var(--account-drawer-profile-copy-max-width);
 }
 
 /* =============================================================================
@@ -980,7 +1005,7 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 @media (max-width:1024px){
   .account-drawer-shell{
-    padding: 1.36rem 1.7rem;
+    padding: var(--account-drawer-shell-padding-y-tablet) var(--account-drawer-shell-padding-x-tablet);
   }
 
   .account-drawer-content-stage{
@@ -998,8 +1023,8 @@ body.account-drawer-closing .account-drawer-close{
   }
 
   .account-drawer-close{
-    top: 0.82rem;
-    right: 0.82rem;
+    top: var(--account-drawer-close-offset-tablet);
+    right: var(--account-drawer-close-offset-tablet);
     left: auto;
   }
 }
@@ -1009,11 +1034,11 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 @media (max-width:768px){
   :root{
-    --account-drawer-panel-width: min(100vw, calc(100vw - (1.05 * var(--site-gutter, 20px))));
+    --account-drawer-panel-width: var(--layout-account-drawer-panel-width-mobile);
   }
 
   .account-drawer-shell{
-    padding: 1.2rem 1.28rem;
+    padding: var(--account-drawer-shell-padding-y-mobile) var(--account-drawer-shell-padding-x-mobile);
   }
 
   .account-drawer-content-stage{
@@ -1031,8 +1056,8 @@ body.account-drawer-closing .account-drawer-close{
   }
 
   .account-drawer-close{
-    top: 0.68rem;
-    right: 0.68rem;
+    top: var(--account-drawer-close-offset-mobile);
+    right: var(--account-drawer-close-offset-mobile);
     left: auto;
   }
 

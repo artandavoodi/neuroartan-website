@@ -17,30 +17,30 @@
    01) PANEL TOKENS
 ============================================================================= */
 :root{
-  --home-interaction-panel-width:min(46rem, calc(100vw - (2 * var(--site-gutter))));
-  --home-interaction-panel-gap:0.38rem;
-  --home-interaction-panel-padding:0.54rem;
-  --home-interaction-panel-radius:1.42rem;
+  --home-interaction-panel-width:var(--layout-home-interaction-panel-width);
+  --home-interaction-panel-gap:var(--layout-home-interaction-panel-gap);
+  --home-interaction-panel-padding:var(--layout-home-interaction-panel-padding);
+  --home-interaction-panel-radius:var(--layout-home-interaction-panel-radius);
   --home-interaction-panel-surface:color-mix(in srgb, var(--surface-color) 72%, transparent);
   --home-interaction-panel-border:var(--control-border);
   --home-interaction-panel-border-active:var(--control-border-strong);
-  --home-interaction-panel-shadow:0 18px 48px color-mix(in srgb, var(--shadow-color, #000000) 14%, transparent);
-  --home-interaction-panel-blur:18px;
-  --home-interaction-panel-saturate:126%;
+  --home-interaction-panel-shadow:var(--layout-home-interaction-panel-shadow);
+  --home-interaction-panel-blur:var(--layout-home-interaction-panel-blur);
+  --home-interaction-panel-saturate:var(--layout-home-interaction-panel-saturate);
 
-  --home-interaction-panel-input-min-height:2.72rem;
-  --home-interaction-panel-input-max-height:6.25rem;
-  --home-interaction-panel-input-padding-y:0.42rem;
-  --home-interaction-panel-input-padding-x:0.64rem;
-  --home-interaction-panel-input-radius:0.92rem;
+  --home-interaction-panel-input-min-height:var(--layout-home-interaction-panel-input-min-height);
+  --home-interaction-panel-input-max-height:var(--layout-home-interaction-panel-input-max-height);
+  --home-interaction-panel-input-padding-y:var(--layout-home-interaction-panel-input-padding-y);
+  --home-interaction-panel-input-padding-x:var(--layout-home-interaction-panel-input-padding-x);
+  --home-interaction-panel-input-radius:var(--layout-home-interaction-panel-input-radius);
   --home-interaction-panel-input-surface:transparent;
   --home-interaction-panel-input-border:transparent;
   --home-interaction-panel-input-border-focus:transparent;
   --home-interaction-panel-input-text:var(--text-primary-color);
   --home-interaction-panel-input-placeholder:color-mix(in srgb, var(--text-secondary-color) 72%, transparent);
 
-  --home-interaction-panel-control-size:2.08rem;
-  --home-interaction-panel-control-radius:999px;
+  --home-interaction-panel-control-size:var(--layout-home-interaction-panel-control-size);
+  --home-interaction-panel-control-radius:var(--layout-home-interaction-panel-control-radius);
   --home-interaction-panel-control-border:var(--control-border);
   --home-interaction-panel-control-border-hover:var(--control-border-strong);
   --home-interaction-panel-control-bg:transparent;
@@ -51,37 +51,66 @@
   --home-interaction-panel-control-listening-border:color-mix(in srgb, var(--color-primary1) 42%, var(--control-border));
   --home-interaction-panel-control-thinking-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --home-interaction-panel-control-responding-bg:color-mix(in srgb, var(--color-primary1) 24%, transparent);
-  --home-interaction-panel-control-pulse-shadow:0 0 0 0 color-mix(in srgb, var(--color-primary1) 28%, transparent);
-  --home-interaction-panel-control-pulse-shadow-active:0 0 0 0.42rem color-mix(in srgb, var(--color-primary1) 0%, transparent);
+  --home-interaction-panel-control-pulse-shadow:var(--layout-home-interaction-panel-control-pulse-shadow);
+  --home-interaction-panel-control-pulse-shadow-active:var(--layout-home-interaction-panel-control-pulse-shadow-active);
 
-  --home-interaction-panel-model-height:2.08rem;
-  --home-interaction-panel-model-padding-x:0.68rem;
-  --home-interaction-panel-model-radius:999px;
+  --home-interaction-panel-model-height:var(--layout-home-interaction-panel-model-height);
+  --home-interaction-panel-model-padding-x:var(--layout-home-interaction-panel-model-padding-x);
+  --home-interaction-panel-model-radius:var(--layout-home-interaction-panel-model-radius);
   --home-interaction-panel-model-bg:var(--control-bg);
   --home-interaction-panel-model-border:var(--control-border);
   --home-interaction-panel-model-text:var(--text-primary-color);
   --home-interaction-panel-model-chevron:var(--text-secondary-color);
 
-  --home-interaction-panel-icon-size:1rem;
-  --home-interaction-panel-icon-opacity:0.82;
-  --home-interaction-panel-icon-opacity-hover:1;
+  --home-interaction-panel-icon-size:var(--layout-home-interaction-panel-icon-size);
+  --home-interaction-panel-icon-opacity:var(--layout-home-interaction-panel-icon-opacity);
+  --home-interaction-panel-icon-opacity-hover:var(--layout-home-interaction-panel-icon-opacity-hover);
 
-  --home-interaction-panel-submit-height:2.08rem;
-  --home-interaction-panel-submit-padding-x:0.78rem;
-  --home-interaction-panel-submit-radius:999px;
+  --home-interaction-panel-submit-height:var(--layout-home-interaction-panel-submit-height);
+  --home-interaction-panel-submit-padding-x:var(--layout-home-interaction-panel-submit-padding-x);
+  --home-interaction-panel-submit-radius:var(--layout-home-interaction-panel-submit-radius);
   --home-interaction-panel-submit-bg:var(--control-bg);
   --home-interaction-panel-submit-border:var(--control-border);
   --home-interaction-panel-submit-text:var(--text-primary-color);
   --home-interaction-panel-submit-thinking-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --home-interaction-panel-submit-reset-bg:color-mix(in srgb, var(--color-primary1) 12%, transparent);
-  --home-interaction-panel-disabled-opacity:0.48;
+  --home-interaction-panel-disabled-opacity:var(--layout-home-interaction-panel-disabled-opacity);
 
   --home-interaction-panel-file-chip-border:var(--control-border);
   --home-interaction-panel-file-chip-bg:var(--control-bg);
   --home-interaction-panel-file-chip-text:var(--text-secondary-color);
 
 
-  --home-interaction-panel-motion-fast:220ms;
+  --home-interaction-panel-form-gap:var(--layout-home-interaction-panel-form-gap);
+  --home-interaction-panel-input-line-height:var(--layout-home-interaction-panel-input-line-height);
+  --home-interaction-panel-composer-gap:var(--layout-home-interaction-panel-composer-gap);
+  --home-interaction-panel-composer-side-gap:var(--layout-home-interaction-panel-composer-side-gap);
+  --home-interaction-panel-model-padding-x-mobile:var(--layout-home-interaction-panel-model-padding-x-mobile);
+  --home-interaction-panel-model-gap:var(--layout-home-interaction-panel-model-gap);
+  --home-interaction-panel-model-name-size:var(--layout-home-interaction-panel-model-name-size);
+  --home-interaction-panel-model-name-weight:var(--layout-home-interaction-panel-model-name-weight);
+  --home-interaction-panel-model-name-line-height:var(--layout-home-interaction-panel-model-name-line-height);
+  --home-interaction-panel-model-name-tracking:var(--layout-home-interaction-panel-model-name-tracking);
+  --home-interaction-panel-submit-gap:var(--layout-home-interaction-panel-submit-gap);
+  --home-interaction-panel-submit-size:var(--layout-home-interaction-panel-submit-size);
+  --home-interaction-panel-submit-weight:var(--layout-home-interaction-panel-submit-weight);
+  --home-interaction-panel-submit-line-height:var(--layout-home-interaction-panel-submit-line-height);
+  --home-interaction-panel-file-gap:var(--layout-home-interaction-panel-file-gap);
+  --home-interaction-panel-file-chip-min-height:var(--layout-home-interaction-panel-file-chip-min-height);
+  --home-interaction-panel-file-chip-padding-x:var(--layout-home-interaction-panel-file-chip-padding-x);
+  --home-interaction-panel-file-chip-radius:var(--layout-home-interaction-panel-file-chip-radius);
+  --home-interaction-panel-file-chip-size:var(--layout-home-interaction-panel-file-chip-size);
+  --home-interaction-panel-file-chip-weight:var(--layout-home-interaction-panel-file-chip-weight);
+  --home-interaction-panel-file-chip-tracking:var(--layout-home-interaction-panel-file-chip-tracking);
+  --home-interaction-panel-width-mobile:var(--layout-home-interaction-panel-width-mobile);
+  --home-interaction-panel-padding-mobile:var(--layout-home-interaction-panel-padding-mobile);
+  --home-interaction-panel-voice-opacity-active:var(--layout-home-interaction-panel-voice-opacity-active);
+  --home-interaction-panel-voice-opacity-inactive:var(--layout-home-interaction-panel-voice-opacity-inactive);
+  --home-interaction-panel-voice-animation-duration:var(--layout-home-interaction-panel-voice-animation-duration);
+  --home-interaction-panel-thinking-animation-duration:var(--layout-home-interaction-panel-thinking-animation-duration);
+  --home-interaction-panel-thinking-animation-steps:var(--layout-home-interaction-panel-thinking-animation-steps);
+  --home-interaction-panel-dot-width:var(--layout-home-interaction-panel-dot-width);
+  --home-interaction-panel-motion-fast:var(--layout-home-interaction-panel-motion-fast);
 }
 
 /* =============================================================================
@@ -91,9 +120,9 @@
   display:grid;
   gap:var(--home-interaction-panel-gap);
   width:var(--home-interaction-panel-width);
-  margin:0 auto;
+  margin:var(--spacing-none) auto;
   padding:var(--home-interaction-panel-padding);
-  border:1px solid var(--home-interaction-panel-border);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-border);
   border-radius:var(--home-interaction-panel-radius);
   background:var(--home-interaction-panel-surface);
   box-shadow:var(--home-interaction-panel-shadow);
@@ -116,24 +145,24 @@
 ============================================================================= */
 .home-interaction-panel__form{
   display:grid;
-  gap:0.32rem;
+  gap:var(--home-interaction-panel-form-gap);
 }
 
 /* =============================================================================
    04) INPUT AREA
 ============================================================================= */
 .home-interaction-panel__input{
-  width:100%;
+  width:var(--size-full);
   min-height:var(--home-interaction-panel-input-min-height);
   max-height:var(--home-interaction-panel-input-max-height);
   padding:var(--home-interaction-panel-input-padding-y) var(--home-interaction-panel-input-padding-x);
   box-sizing:border-box;
-  border:1px solid var(--home-interaction-panel-input-border);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-input-border);
   border-radius:var(--home-interaction-panel-input-radius);
   background:var(--home-interaction-panel-input-surface);
   color:var(--home-interaction-panel-input-text);
   font:inherit;
-  line-height:1.38;
+  line-height:var(--home-interaction-panel-input-line-height);
   resize:none;
   outline:none;
   overflow:auto;
@@ -147,8 +176,8 @@
 
 .home-interaction-panel__input::-webkit-scrollbar{
   display:none;
-  width:0;
-  height:0;
+  width:var(--spacing-none);
+  height:var(--spacing-none);
 }
 
 .home-interaction-panel__input:focus-visible{
@@ -164,17 +193,17 @@
 ============================================================================= */
 .home-interaction-panel__composer{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) auto minmax(0, auto);
+  grid-template-columns:minmax(var(--spacing-none), 1fr) auto minmax(var(--spacing-none), auto);
   align-items:center;
-  gap:0.38rem;
+  gap:var(--home-interaction-panel-composer-gap);
 }
 
 .home-interaction-panel__composer-left,
 .home-interaction-panel__composer-right{
   display:inline-flex;
   align-items:center;
-  gap:0.34rem;
-  min-width:0;
+  gap:var(--home-interaction-panel-composer-side-gap);
+  min-width:var(--spacing-none);
 }
 
 .home-interaction-panel__composer-left{
@@ -215,8 +244,8 @@
   min-width:var(--home-interaction-panel-control-size);
   height:var(--home-interaction-panel-control-size);
   min-height:var(--home-interaction-panel-control-size);
-  padding:0;
-  border:1px solid var(--home-interaction-panel-control-border);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-control-border);
   border-radius:var(--home-interaction-panel-control-radius);
   background:var(--home-interaction-panel-control-bg);
   color:var(--home-interaction-panel-control-text);
@@ -249,7 +278,7 @@
   width:var(--home-interaction-panel-icon-size);
   height:var(--home-interaction-panel-icon-size);
   opacity:var(--home-interaction-panel-icon-opacity);
-  line-height:1;
+  line-height:var(--home-interaction-panel-submit-line-height);
 }
 
 .home-interaction-panel__attach-icon img,
@@ -257,8 +286,8 @@
 .home-interaction-panel__model-chevron img,
 .home-interaction-panel__submit-icon img{
   display:block;
-  width:100%;
-  height:100%;
+  width:var(--size-full);
+  height:var(--size-full);
   filter:var(--icon-image-filter, none);
 }
 
@@ -278,26 +307,26 @@
 ============================================================================= */
 .home-interaction-panel__model-button{
   min-height:var(--home-interaction-panel-model-height);
-  padding:0 var(--home-interaction-panel-model-padding-x);
-  border:1px solid var(--home-interaction-panel-model-border);
+  padding:var(--spacing-none) var(--home-interaction-panel-model-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-model-border);
   border-radius:var(--home-interaction-panel-model-radius);
   background:var(--home-interaction-panel-model-bg);
   color:var(--home-interaction-panel-model-text);
-  gap:0.32rem;
-  max-width:100%;
+  gap:var(--home-interaction-panel-model-gap);
+  max-width:var(--size-full);
   text-align:left;
 }
 
 .home-interaction-panel__model-name{
-  min-width:0;
+  min-width:var(--spacing-none);
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
   color:currentColor;
-  font-size:0.82rem;
-  font-weight:500;
-  line-height:1.2;
-  letter-spacing:-0.01em;
+  font-size:var(--home-interaction-panel-model-name-size);
+  font-weight:var(--home-interaction-panel-model-name-weight);
+  line-height:var(--home-interaction-panel-model-name-line-height);
+  letter-spacing:var(--home-interaction-panel-model-name-tracking);
 }
 
 .home-interaction-panel__model-chevron{
@@ -310,8 +339,8 @@
   min-width:var(--home-interaction-panel-control-size);
   height:var(--home-interaction-panel-control-size);
   min-height:var(--home-interaction-panel-control-size);
-  padding:0;
-  border:1px solid var(--home-interaction-panel-control-border);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-control-border);
   border-radius:var(--home-interaction-panel-control-radius);
   background:var(--home-interaction-panel-control-bg);
   color:var(--home-interaction-panel-control-text);
@@ -325,26 +354,26 @@
   flex-wrap:wrap;
   align-items:center;
   justify-content:flex-start;
-  gap:0.38rem;
-  min-width:0;
+  gap:var(--home-interaction-panel-composer-gap);
+  min-width:var(--spacing-none);
 }
 
 .home-interaction-panel__file-chip{
   display:inline-flex;
   align-items:center;
-  min-height:1.55rem;
-  max-width:100%;
-  padding:0 0.58rem;
-  border:1px solid var(--home-interaction-panel-file-chip-border);
-  border-radius:999px;
+  min-height:var(--home-interaction-panel-file-chip-min-height);
+  max-width:var(--size-full);
+  padding:var(--spacing-none) var(--home-interaction-panel-file-chip-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-file-chip-border);
+  border-radius:var(--home-interaction-panel-file-chip-radius);
   background:var(--home-interaction-panel-file-chip-bg);
   color:var(--home-interaction-panel-file-chip-text);
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-  font-size:0.68rem;
-  font-weight:500;
-  letter-spacing:0.04em;
+  font-size:var(--home-interaction-panel-file-chip-size);
+  font-weight:var(--home-interaction-panel-file-chip-weight);
+  letter-spacing:var(--home-interaction-panel-file-chip-tracking);
 }
 
 /* =============================================================================
@@ -361,12 +390,12 @@
   min-width:var(--home-interaction-panel-control-size);
   height:var(--home-interaction-panel-control-size);
   min-height:var(--home-interaction-panel-control-size);
-  padding:0;
-  border:1px solid var(--home-interaction-panel-control-border);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-control-border);
   border-radius:var(--home-interaction-panel-control-radius);
   background:var(--home-interaction-panel-control-bg);
   color:var(--home-interaction-panel-control-text);
-  opacity:1;
+  opacity:var(--home-interaction-panel-voice-opacity-active);
   transform:none;
 }
 
@@ -383,7 +412,7 @@
   border-color:var(--home-interaction-panel-control-listening-border);
   background:var(--home-interaction-panel-control-listening-bg);
   color:var(--home-interaction-panel-control-text-hover);
-  animation:home-interaction-panel-voice-listening 1.18s ease-in-out infinite;
+  animation:home-interaction-panel-voice-listening var(--home-interaction-panel-voice-animation-duration) ease-in-out infinite;
 }
 
 #stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="thinking"]{
@@ -412,14 +441,14 @@
 
 .home-interaction-panel__voice-icon img{
   display:block;
-  width:100%;
-  height:100%;
+  width:var(--size-full);
+  height:var(--size-full);
   filter:var(--icon-image-filter, none);
 }
 
 #stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="thinking"] .home-interaction-panel__voice-icon,
 #stage #stage-microphone-button.home-interaction-panel__voice[data-voice-mode="responding"] .home-interaction-panel__voice-icon{
-  opacity:0;
+  opacity:var(--home-interaction-panel-voice-opacity-inactive);
 }
 
 /* =============================================================================
@@ -427,15 +456,15 @@
 ============================================================================= */
 .home-interaction-panel__submit{
   min-height:var(--home-interaction-panel-submit-height);
-  padding:0 var(--home-interaction-panel-submit-padding-x);
-  border:1px solid var(--home-interaction-panel-submit-border);
+  padding:var(--spacing-none) var(--home-interaction-panel-submit-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-submit-border);
   border-radius:var(--home-interaction-panel-submit-radius);
   background:var(--home-interaction-panel-submit-bg);
   color:var(--home-interaction-panel-submit-text);
-  gap:0.32rem;
-  font-size:0.82rem;
-  font-weight:500;
-  line-height:1;
+  gap:var(--home-interaction-panel-submit-gap);
+  font-size:var(--home-interaction-panel-submit-size);
+  font-weight:var(--home-interaction-panel-submit-weight);
+  line-height:var(--home-interaction-panel-submit-line-height);
   white-space:nowrap;
 }
 
@@ -455,9 +484,9 @@
 .home-interaction-panel[data-home-interaction-mode="thinking"] .home-interaction-panel__submit-label::after{
   content:"";
   display:inline-block;
-  width:0.72em;
+  width:var(--home-interaction-panel-dot-width);
   text-align:left;
-  animation:home-interaction-panel-thinking-dots 1.2s steps(4, end) infinite;
+  animation:home-interaction-panel-thinking-dots var(--home-interaction-panel-thinking-animation-duration) steps(var(--home-interaction-panel-thinking-animation-steps), end) infinite;
 }
 
 @keyframes home-interaction-panel-thinking-dots{
@@ -474,22 +503,22 @@
 ============================================================================= */
 @media (max-width:760px){
   .home-interaction-panel{
-    width:min(100%, calc(100vw - (2 * var(--site-gutter))));
-    padding:0.52rem;
+    width:var(--home-interaction-panel-width-mobile);
+    padding:var(--home-interaction-panel-padding-mobile);
   }
 
   .home-interaction-panel__composer{
-    grid-template-columns:1fr;
+    grid-template-columns:var(--grid-column-single);
   }
 
   .home-interaction-panel__composer-left,
   .home-interaction-panel__composer-right{
-    width:100%;
+    width:var(--size-full);
     justify-content:space-between;
   }
 
   .home-interaction-panel__model-button{
-    min-width:0;
+    min-width:var(--spacing-none);
     flex:1 1 auto;
   }
 
@@ -499,7 +528,7 @@
 
   .home-interaction-panel__submit{
     min-width:var(--home-interaction-panel-control-size);
-    padding:0 0.66rem;
+    padding:var(--spacing-none) var(--home-interaction-panel-model-padding-x-mobile);
   }
 }
 

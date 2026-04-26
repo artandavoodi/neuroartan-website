@@ -31,6 +31,12 @@
   --products-local-nav-link-hover-color:var(--text-primary-color);
   --products-local-nav-active-underline-bg:var(--text-primary-color);
   --products-local-nav-active-opacity:1;
+  --website-local-nav-label-font-size:1rem;
+  --website-local-nav-link-font-size:0.8rem;
+  --website-local-nav-font-weight:400;
+  --website-local-nav-letter-spacing:0.008em;
+  --website-local-nav-line-height:1;
+  --website-local-nav-link-gap:1.42rem;
 }
 
 html[data-theme-effective="light"]{
@@ -166,10 +172,10 @@ html[data-theme-effective="light"]{
   color:var(--products-local-nav-label-color);
   text-decoration: none;
   white-space: nowrap;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.008em;
-  line-height: 1;
+  font-size:var(--website-local-nav-label-font-size);
+  font-weight:var(--website-local-nav-font-weight);
+  letter-spacing:var(--website-local-nav-letter-spacing);
+  line-height:var(--website-local-nav-line-height);
   transform: none !important;
   transition:
     color var(--products-local-nav-motion-fast) ease,
@@ -192,7 +198,7 @@ html[data-theme-effective="light"]{
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 1.42rem;
+  gap:var(--website-local-nav-link-gap);
   min-width: 0;
 }
 
@@ -210,10 +216,10 @@ html[data-theme-effective="light"]{
   min-height: auto;
   color:var(--products-local-nav-link-color);
   text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.008em;
-  line-height: 1;
+  font-size:var(--website-local-nav-link-font-size);
+  font-weight:var(--website-local-nav-font-weight);
+  letter-spacing:var(--website-local-nav-letter-spacing);
+  line-height:var(--website-local-nav-line-height);
   white-space: nowrap;
   transform: none !important;
   transition:

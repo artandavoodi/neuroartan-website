@@ -1,0 +1,247 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) FEEDBACK COLOR TOKENS
+   03) FEEDBACK SURFACE TOKENS
+   04) FEEDBACK BORDER TOKENS
+   05) FEEDBACK TEXT TOKENS
+   06) FEEDBACK ICON TOKENS
+   07) STATUS BADGE TOKENS
+   08) ALERT TOKENS
+   09) TOAST TOKENS
+   10) VALIDATION TOKENS
+   11) SYSTEM MESSAGE TOKENS
+   12) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/feedback.tokens.css */
+
+/* =============================================================================
+   02) FEEDBACK COLOR TOKENS
+============================================================================= */
+:root{
+  /* Foundation semantic feedback colors. */
+  --feedback-success-color:#2f8f5b;
+  --feedback-warning-color:#b9822b;
+  --feedback-error-color:#b84a4a;
+  --feedback-info-color:#4f7fa8;
+  --feedback-neutral-color:var(--text-secondary-color);
+
+  /* State aliases for platform status mapping. */
+  --status-active-color:var(--feedback-success-color);
+  --status-pending-color:var(--feedback-warning-color);
+  --status-error-color:var(--feedback-error-color);
+  --status-info-color:var(--feedback-info-color);
+  --status-muted-color:var(--feedback-neutral-color);
+}
+
+/* =============================================================================
+   03) FEEDBACK SURFACE TOKENS
+============================================================================= */
+:root{
+  /* Feedback background surfaces. */
+  --feedback-success-bg:color-mix(in srgb, var(--feedback-success-color) 10%, transparent);
+  --feedback-warning-bg:color-mix(in srgb, var(--feedback-warning-color) 10%, transparent);
+  --feedback-error-bg:color-mix(in srgb, var(--feedback-error-color) 10%, transparent);
+  --feedback-info-bg:color-mix(in srgb, var(--feedback-info-color) 10%, transparent);
+  --feedback-neutral-bg:color-mix(in srgb, var(--feedback-neutral-color) 8%, transparent);
+
+  /* Stronger feedback surfaces for alerts and critical messages. */
+  --feedback-success-bg-strong:color-mix(in srgb, var(--feedback-success-color) 16%, transparent);
+  --feedback-warning-bg-strong:color-mix(in srgb, var(--feedback-warning-color) 16%, transparent);
+  --feedback-error-bg-strong:color-mix(in srgb, var(--feedback-error-color) 16%, transparent);
+  --feedback-info-bg-strong:color-mix(in srgb, var(--feedback-info-color) 16%, transparent);
+  --feedback-neutral-bg-strong:color-mix(in srgb, var(--feedback-neutral-color) 12%, transparent);
+}
+
+/* =============================================================================
+   04) FEEDBACK BORDER TOKENS
+============================================================================= */
+:root{
+  /* Feedback border colors. */
+  --feedback-success-border:color-mix(in srgb, var(--feedback-success-color) 28%, transparent);
+  --feedback-warning-border:color-mix(in srgb, var(--feedback-warning-color) 30%, transparent);
+  --feedback-error-border:color-mix(in srgb, var(--feedback-error-color) 32%, transparent);
+  --feedback-info-border:color-mix(in srgb, var(--feedback-info-color) 28%, transparent);
+  --feedback-neutral-border:color-mix(in srgb, var(--feedback-neutral-color) 18%, transparent);
+}
+
+/* =============================================================================
+   05) FEEDBACK TEXT TOKENS
+============================================================================= */
+:root{
+  /* Feedback text colors. */
+  --feedback-success-text:var(--feedback-success-color);
+  --feedback-warning-text:var(--feedback-warning-color);
+  --feedback-error-text:var(--feedback-error-color);
+  --feedback-info-text:var(--feedback-info-color);
+  --feedback-neutral-text:var(--feedback-neutral-color);
+
+  /* Feedback title/body typography aliases. */
+  --feedback-title-size:var(--alert-title-size);
+  --feedback-title-weight:var(--alert-title-weight);
+  --feedback-title-line-height:var(--alert-title-line-height);
+  --feedback-title-tracking:var(--alert-title-tracking);
+
+  --feedback-body-size:var(--alert-body-size);
+  --feedback-body-weight:var(--alert-body-weight);
+  --feedback-body-line-height:var(--alert-body-line-height);
+  --feedback-body-tracking:var(--alert-body-tracking);
+}
+
+/* =============================================================================
+   06) FEEDBACK ICON TOKENS
+============================================================================= */
+:root{
+  /* Icon sizing and opacity for feedback surfaces. */
+  --feedback-icon-size-sm:0.78rem;
+  --feedback-icon-size-md:0.96rem;
+  --feedback-icon-size-lg:1.12rem;
+  --feedback-icon-opacity:0.82;
+  --feedback-icon-opacity-strong:1;
+}
+
+/* =============================================================================
+   07) STATUS BADGE TOKENS
+============================================================================= */
+:root{
+  /* Status badge shell. */
+  --status-badge-gap:0.34rem;
+  --status-badge-padding-y:0.22rem;
+  --status-badge-padding-x:0.48rem;
+  --status-badge-radius:999px;
+  --status-badge-border-width:1px;
+
+  /* Status badge typography. */
+  --status-badge-size:var(--status-sm-size);
+  --status-badge-weight:var(--status-sm-weight);
+  --status-badge-line-height:var(--status-sm-line-height);
+  --status-badge-tracking:var(--status-sm-tracking);
+
+  /* Status badge semantic colors. */
+  --status-badge-active-bg:var(--feedback-success-bg);
+  --status-badge-active-border:var(--feedback-success-border);
+  --status-badge-active-text:var(--feedback-success-text);
+
+  --status-badge-pending-bg:var(--feedback-warning-bg);
+  --status-badge-pending-border:var(--feedback-warning-border);
+  --status-badge-pending-text:var(--feedback-warning-text);
+
+  --status-badge-error-bg:var(--feedback-error-bg);
+  --status-badge-error-border:var(--feedback-error-border);
+  --status-badge-error-text:var(--feedback-error-text);
+
+  --status-badge-info-bg:var(--feedback-info-bg);
+  --status-badge-info-border:var(--feedback-info-border);
+  --status-badge-info-text:var(--feedback-info-text);
+
+  --status-badge-neutral-bg:var(--feedback-neutral-bg);
+  --status-badge-neutral-border:var(--feedback-neutral-border);
+  --status-badge-neutral-text:var(--feedback-neutral-text);
+}
+
+/* =============================================================================
+   08) ALERT TOKENS
+============================================================================= */
+:root{
+  /* Alert shell rhythm. */
+  --alert-gap:0.68rem;
+  --alert-padding-y:0.92rem;
+  --alert-padding-x:1rem;
+  --alert-radius:var(--radius-md);
+  --alert-border-width:1px;
+
+  /* Alert semantic surfaces. */
+  --alert-success-bg:var(--feedback-success-bg-strong);
+  --alert-success-border:var(--feedback-success-border);
+  --alert-success-text:var(--feedback-success-text);
+
+  --alert-warning-bg:var(--feedback-warning-bg-strong);
+  --alert-warning-border:var(--feedback-warning-border);
+  --alert-warning-text:var(--feedback-warning-text);
+
+  --alert-error-bg:var(--feedback-error-bg-strong);
+  --alert-error-border:var(--feedback-error-border);
+  --alert-error-text:var(--feedback-error-text);
+
+  --alert-info-bg:var(--feedback-info-bg-strong);
+  --alert-info-border:var(--feedback-info-border);
+  --alert-info-text:var(--feedback-info-text);
+
+  --alert-neutral-bg:var(--feedback-neutral-bg-strong);
+  --alert-neutral-border:var(--feedback-neutral-border);
+  --alert-neutral-text:var(--feedback-neutral-text);
+}
+
+/* =============================================================================
+   09) TOAST TOKENS
+============================================================================= */
+:root{
+  /* Toast shell rhythm. */
+  --toast-gap:0.52rem;
+  --toast-padding-y:0.78rem;
+  --toast-padding-x:0.92rem;
+  --toast-radius:var(--radius-md);
+  --toast-border-width:1px;
+  --toast-shadow:var(--effect-shadow-hover-subtle);
+
+  /* Toast semantic surfaces. */
+  --toast-success-bg:var(--feedback-success-bg-strong);
+  --toast-success-border:var(--feedback-success-border);
+  --toast-success-text:var(--feedback-success-text);
+
+  --toast-warning-bg:var(--feedback-warning-bg-strong);
+  --toast-warning-border:var(--feedback-warning-border);
+  --toast-warning-text:var(--feedback-warning-text);
+
+  --toast-error-bg:var(--feedback-error-bg-strong);
+  --toast-error-border:var(--feedback-error-border);
+  --toast-error-text:var(--feedback-error-text);
+
+  --toast-info-bg:var(--feedback-info-bg-strong);
+  --toast-info-border:var(--feedback-info-border);
+  --toast-info-text:var(--feedback-info-text);
+}
+
+/* =============================================================================
+   10) VALIDATION TOKENS
+============================================================================= */
+:root{
+  /* Form validation state mapping. */
+  --validation-success-color:var(--feedback-success-color);
+  --validation-warning-color:var(--feedback-warning-color);
+  --validation-error-color:var(--feedback-error-color);
+  --validation-info-color:var(--feedback-info-color);
+
+  --validation-success-bg:var(--feedback-success-bg);
+  --validation-warning-bg:var(--feedback-warning-bg);
+  --validation-error-bg:var(--feedback-error-bg);
+  --validation-info-bg:var(--feedback-info-bg);
+
+  --validation-success-border:var(--feedback-success-border);
+  --validation-warning-border:var(--feedback-warning-border);
+  --validation-error-border:var(--feedback-error-border);
+  --validation-info-border:var(--feedback-info-border);
+}
+
+/* =============================================================================
+   11) SYSTEM MESSAGE TOKENS
+============================================================================= */
+:root{
+  /* System message shell for empty states, notices, and platform guidance. */
+  --system-message-gap:0.68rem;
+  --system-message-padding-y:1rem;
+  --system-message-padding-x:1rem;
+  --system-message-radius:var(--radius-lg);
+  --system-message-bg:var(--feedback-neutral-bg);
+  --system-message-border:var(--feedback-neutral-border);
+  --system-message-title-color:var(--text-primary-color);
+  --system-message-body-color:var(--text-secondary-color);
+}
+
+/* =============================================================================
+   12) END OF FILE
+============================================================================= */

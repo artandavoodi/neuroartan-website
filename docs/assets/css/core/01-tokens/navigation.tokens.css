@@ -1,0 +1,151 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) GLOBAL NAVIGATION TOKENS
+   03) LOCAL NAVIGATION TOKENS
+   04) TAB NAVIGATION TOKENS
+   05) BREADCRUMB NAVIGATION TOKENS
+   06) FOOTER NAVIGATION TOKENS
+   07) MENU NAVIGATION TOKENS
+   08) NAVIGATION INDICATOR TOKENS
+   09) NAVIGATION RESPONSIVE TOKENS
+   10) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/navigation.tokens.css */
+
+/* =============================================================================
+   02) GLOBAL NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Global navigation spacing and rhythm. */
+  --nav-global-gap:1.15rem;
+  --nav-global-item-gap:0.42rem;
+  --nav-global-padding-y:0;
+  --nav-global-padding-x:0;
+  --nav-global-min-height:auto;
+
+  /* Global navigation state behavior. */
+  --nav-global-color:var(--text-secondary-color);
+  --nav-global-hover-color:var(--nav-hover-text-color);
+  --nav-global-active-color:var(--nav-active-text-color);
+  --nav-global-hover-opacity:var(--nav-hover-opacity);
+}
+
+/* =============================================================================
+   03) LOCAL NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Local navigation shell used by product/profile secondary nav rows. */
+  --nav-local-gap:1.42rem;
+  --nav-local-label-gap:0.42rem;
+  --nav-local-padding-y:0;
+  --nav-local-padding-x:0;
+  --nav-local-min-height:auto;
+
+  /* Local navigation state behavior. */
+  --nav-local-color:var(--text-secondary-color);
+  --nav-local-hover-color:var(--local-nav-hover-text-color);
+  --nav-local-active-color:var(--local-nav-active-text-color);
+  --nav-local-hover-opacity:var(--local-nav-hover-opacity);
+  --nav-local-active-indicator-color:var(--local-nav-active-indicator-color);
+
+  /* Backward-compatible aliases used by existing product/profile modules. */
+  --website-local-nav-link-gap:var(--nav-local-gap);
+}
+
+/* =============================================================================
+   04) TAB NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Tab navigation spacing and state ownership. */
+  --nav-tab-gap:var(--nav-local-gap);
+  --nav-tab-padding-y:0;
+  --nav-tab-padding-x:0;
+  --nav-tab-min-height:auto;
+  --nav-tab-color:var(--text-secondary-color);
+  --nav-tab-hover-color:var(--local-nav-hover-text-color);
+  --nav-tab-active-color:var(--local-nav-active-text-color);
+  --nav-tab-hover-opacity:var(--local-nav-hover-opacity);
+}
+
+/* =============================================================================
+   05) BREADCRUMB NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Breadcrumb spacing and separator ownership. */
+  --nav-breadcrumb-gap:0.42rem;
+  --nav-breadcrumb-separator-gap:0.34rem;
+  --nav-breadcrumb-color:var(--text-secondary-color);
+  --nav-breadcrumb-hover-color:var(--hover-text-color);
+  --nav-breadcrumb-current-color:var(--text-primary-color);
+  --nav-breadcrumb-separator-color:var(--text-muted-color, var(--text-secondary-color));
+}
+
+/* =============================================================================
+   06) FOOTER NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Footer link grouping and restrained navigation rhythm. */
+  --nav-footer-gap:0.84rem;
+  --nav-footer-column-gap:1.4rem;
+  --nav-footer-row-gap:0.42rem;
+  --nav-footer-color:var(--text-secondary-color);
+  --nav-footer-hover-color:var(--hover-text-color);
+  --nav-footer-hover-opacity:var(--state-opacity-hover-strong);
+}
+
+/* =============================================================================
+   07) MENU NAVIGATION TOKENS
+============================================================================= */
+:root{
+  /* Menu and overlay navigation list rhythm. */
+  --nav-menu-gap:0.64rem;
+  --nav-menu-item-gap:0.42rem;
+  --nav-menu-padding-y:0.42rem;
+  --nav-menu-padding-x:0;
+  --nav-menu-color:var(--text-secondary-color);
+  --nav-menu-hover-color:var(--hover-text-color);
+  --nav-menu-active-color:var(--selected-text-color);
+}
+
+/* =============================================================================
+   08) NAVIGATION INDICATOR TOKENS
+============================================================================= */
+:root{
+  /* Underlines, active indicators, and current-state rails. */
+  --nav-indicator-height:1px;
+  --nav-indicator-width:100%;
+  --nav-indicator-offset:-0.28rem;
+  --nav-indicator-radius:999px;
+  --nav-indicator-color:var(--selected-indicator-color);
+  --nav-indicator-opacity:var(--selected-indicator-opacity);
+}
+
+/* =============================================================================
+   09) NAVIGATION RESPONSIVE TOKENS
+============================================================================= */
+@media (max-width:820px){
+  :root{
+    --nav-global-gap:0.94rem;
+    --nav-local-gap:1.08rem;
+    --nav-tab-gap:var(--nav-local-gap);
+    --nav-footer-column-gap:1rem;
+  }
+}
+
+@media (max-width:540px){
+  :root{
+    --nav-global-gap:0.78rem;
+    --nav-local-gap:0.92rem;
+    --nav-tab-gap:var(--nav-local-gap);
+    --nav-menu-gap:0.52rem;
+  }
+}
+
+/* =============================================================================
+   10) END OF FILE
+============================================================================= */

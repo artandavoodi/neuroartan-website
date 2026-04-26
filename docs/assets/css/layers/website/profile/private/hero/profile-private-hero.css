@@ -11,9 +11,8 @@
    09) PRIVATE PROFILE HERO SOCIAL ROW
    10) PRIVATE PROFILE HERO STATS
    11) PRIVATE PROFILE HERO TABS
-   12) PRIVATE PROFILE HERO ACTIONS
-   13) PRIVATE PROFILE HERO SURFACE LAYER STATES
-   14) PRIVATE PROFILE HERO RESPONSIVE STATES
+   12) PRIVATE PROFILE HERO SURFACE LAYER STATES
+   13) PRIVATE PROFILE HERO RESPONSIVE STATES
 ============================================================================= */
 
 /* =============================================================================
@@ -41,12 +40,10 @@
   --profile-private-hero-control-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --profile-private-hero-motion-fast:220ms;
   --profile-private-hero-motion-ease:cubic-bezier(0.22, 1, 0.36, 1);
-  --profile-private-hero-tabs-gap:1.42rem;
   --profile-private-hero-tab-color:var(--text-secondary-color);
   --profile-private-hero-tab-hover-color:var(--text-primary-color);
   --profile-private-hero-tab-active-underline-bg:var(--text-primary-color);
   --profile-private-hero-tab-active-opacity:1;
-  --profile-private-hero-tab-font-size:1rem;
 }
 
 /* =============================================================================
@@ -239,15 +236,6 @@
   padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
 }
 
-.profile-private-hero__eyebrow{
-  margin:0;
-  font-size:var(--body-3-size);
-  font-weight:var(--body-3-weight);
-  line-height:var(--body-3-line-height);
-  letter-spacing:var(--body-3-tracking);
-  text-transform:uppercase;
-  color:var(--text-secondary-color);
-}
 
 .profile-private-hero__title{
   margin:0;
@@ -261,8 +249,7 @@
 .profile-private-hero__meta,
 .profile-private-hero__description,
 .profile-private-hero__detail,
-.profile-private-hero__stat,
-.profile-private-hero__visibility{
+.profile-private-hero__stat{
   margin:0;
   font-size:var(--body-2-size);
   font-weight:var(--body-2-weight);
@@ -335,7 +322,7 @@
   display:inline-flex;
   align-items:center;
   justify-content:flex-end;
-  gap:var(--profile-private-hero-tabs-gap);
+  gap:var(--website-local-nav-link-gap);
   min-width:0;
   margin:0;
   padding:0;
@@ -356,10 +343,10 @@
   min-height:auto;
   color:var(--profile-private-hero-tab-color);
   text-decoration:none;
-  font-size:var(--profile-private-hero-tab-font-size);
-  font-weight:400;
-  letter-spacing:0.008em;
-  line-height:1;
+  font-size:var(--website-local-nav-link-font-size);
+  font-weight:var(--website-local-nav-font-weight);
+  letter-spacing:var(--website-local-nav-letter-spacing);
+  line-height:var(--website-local-nav-line-height);
   white-space:nowrap;
   transform:none !important;
   transition:
@@ -396,54 +383,18 @@
 }
 
 /* =============================================================================
-   12) PRIVATE PROFILE HERO ACTIONS
-============================================================================= */
-.profile-private-hero__actions{
-  display:flex;
-  align-items:flex-start;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-  gap:var(--spacing-xs);
-  padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
-}
-
-.profile-private-hero__visibility{
-  display:inline-flex;
-  align-items:center;
-  gap:0.35rem;
-  min-height:var(--control-height-sm);
-}
-
-.profile-private-hero__visibility img{
-  width:1rem;
-  height:1rem;
-  opacity:0.72;
-}
-
-.profile-private-hero__button{
-  min-height:var(--control-height-sm);
-  padding-inline:var(--control-padding-x-sm);
-}
-
-/* =============================================================================
-   13) PRIVATE PROFILE HERO SURFACE LAYER STATES
+   12) PRIVATE PROFILE HERO SURFACE LAYER STATES
 ============================================================================= */
 .profile-private-hero[data-profile-hero-stuck="true"]{
   position:relative;
 }
 
 /* =============================================================================
-   14) PRIVATE PROFILE HERO RESPONSIVE STATES
+   13) PRIVATE PROFILE HERO RESPONSIVE STATES
 ============================================================================= */
 @media (max-width:980px){
   .profile-private-hero__identity-row{
     grid-template-columns:auto minmax(0, 1fr);
-  }
-
-  .profile-private-hero__actions{
-    grid-column:1 / -1;
-    justify-content:flex-start;
-    padding-top:0;
   }
 }
 
@@ -461,9 +412,7 @@
   .profile-private-hero__avatar-wrap{
     margin-inline:var(--spacing-md);
   }
-
-  .profile-private-hero__copy,
-  .profile-private-hero__actions{
+  .profile-private-hero__copy{
     padding-inline:var(--spacing-md);
   }
 

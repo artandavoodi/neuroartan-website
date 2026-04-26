@@ -1,0 +1,288 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) INTERACTION STATE TOKENS
+   03) HOVER SURFACE TOKENS
+   04) HOVER TEXT TOKENS
+   05) HOVER BORDER TOKENS
+   06) FOCUS TOKENS
+   07) ACTIVE / PRESSED TOKENS
+   08) SELECTED / CURRENT TOKENS
+   09) DISABLED TOKENS
+   10) TRANSFORM EFFECT TOKENS
+   11) BLUR / FILTER EFFECT TOKENS
+   12) SHADOW EFFECT TOKENS
+   13) OVERLAY EFFECT TOKENS
+   14) FEEDBACK EFFECT TOKENS
+   15) NAVIGATION EFFECT TOKENS
+   16) CONTROL EFFECT TOKENS
+   17) PROFILE EFFECT TOKENS
+   18) PRODUCT EFFECT TOKENS
+   19) MARKETING EFFECT TOKENS
+   20) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/interaction.tokens.css */
+
+/* =============================================================================
+   02) INTERACTION STATE TOKENS
+============================================================================= */
+:root{
+  /* Foundation opacity states for common interaction behavior. */
+  --state-opacity-idle:1;
+  --state-opacity-hover-subtle:0.82;
+  --state-opacity-hover-medium:0.9;
+  --state-opacity-hover-strong:1;
+  --state-opacity-active:0.72;
+  --state-opacity-selected:1;
+  --state-opacity-disabled:0.38;
+  --state-opacity-muted:0.62;
+}
+
+/* =============================================================================
+   03) HOVER SURFACE TOKENS
+============================================================================= */
+:root{
+  /* Subtle hover surface for restrained UI rows, cards, tabs, and links. */
+  --hover-bg-subtle:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+
+  /* Medium hover surface for controls and visible interactive panels. */
+  --hover-bg-medium:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+
+  /* Strong hover surface for high-emphasis actions and selected panels. */
+  --hover-bg-strong:color-mix(in srgb, var(--text-primary-color) 11%, transparent);
+
+  /* Inverted hover surface for dark-on-light or light-on-dark emphasis moments. */
+  --hover-bg-inverted:var(--text-primary-color);
+}
+
+/* =============================================================================
+   04) HOVER TEXT TOKENS
+============================================================================= */
+:root{
+  /* Standard hover text color for links and navigation. */
+  --hover-text-color:var(--text-primary-color);
+
+  /* Muted hover text color for secondary interface elements. */
+  --hover-text-muted-color:var(--text-secondary-color);
+
+  /* Inverted hover text color used when hover background becomes primary text color. */
+  --hover-text-inverted-color:var(--bg-color);
+}
+
+/* =============================================================================
+   05) HOVER BORDER TOKENS
+============================================================================= */
+:root{
+  /* Subtle hover border for low-emphasis cards and rows. */
+  --hover-border-subtle:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+
+  /* Medium hover border for controls and local navigation. */
+  --hover-border-medium:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+
+  /* Strong hover border for high-emphasis interactive surfaces. */
+  --hover-border-strong:color-mix(in srgb, var(--text-primary-color) 28%, transparent);
+}
+
+/* =============================================================================
+   06) FOCUS TOKENS
+============================================================================= */
+:root{
+  /* Global accessible focus ring. */
+  --focus-ring-width:2px;
+  --focus-ring-offset:3px;
+  --focus-ring-color:color-mix(in srgb, var(--text-primary-color) 52%, transparent);
+  --focus-ring-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+
+  /* Softer internal focus state for dense platform controls. */
+  --focus-ring-soft-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
+  --focus-ring-soft-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-soft-color);
+}
+
+/* =============================================================================
+   07) ACTIVE / PRESSED TOKENS
+============================================================================= */
+:root{
+  /* Pressed interaction feedback. */
+  --active-bg-subtle:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --active-bg-medium:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --active-border-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
+  --active-transform:translateY(0);
+  --active-scale:0.99;
+}
+
+/* =============================================================================
+   08) SELECTED / CURRENT TOKENS
+============================================================================= */
+:root{
+  /* Selected/current state for tabs, nav items, filters, and active controls. */
+  --selected-bg-subtle:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --selected-bg-medium:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --selected-text-color:var(--text-primary-color);
+  --selected-border-color:color-mix(in srgb, var(--text-primary-color) 20%, transparent);
+  --selected-indicator-color:var(--text-primary-color);
+  --selected-indicator-opacity:1;
+}
+
+/* =============================================================================
+   09) DISABLED TOKENS
+============================================================================= */
+:root{
+  /* Disabled state for non-interactive controls and pending unavailable actions. */
+  --disabled-opacity:var(--state-opacity-disabled);
+  --disabled-cursor:not-allowed;
+  --disabled-filter:saturate(0.4);
+}
+
+/* =============================================================================
+   10) TRANSFORM EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Subtle transform effects for premium but restrained interaction feedback. */
+  --effect-lift-y-subtle:-1px;
+  --effect-lift-y-medium:-2px;
+  --effect-lift-y-strong:-4px;
+  --effect-scale-subtle:1.01;
+  --effect-scale-medium:1.018;
+  --effect-scale-strong:1.028;
+  --effect-press-scale:var(--active-scale);
+
+  --hover-transform-none:none;
+  --hover-transform-lift-subtle:translateY(var(--effect-lift-y-subtle));
+  --hover-transform-lift-medium:translateY(var(--effect-lift-y-medium));
+  --hover-transform-scale-subtle:scale(var(--effect-scale-subtle));
+}
+
+/* =============================================================================
+   11) BLUR / FILTER EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Blur and filter values for glass surfaces, overlays, and media effects. */
+  --effect-blur-xs:4px;
+  --effect-blur-sm:8px;
+  --effect-blur-md:14px;
+  --effect-blur-lg:22px;
+  --effect-blur-xl:34px;
+
+  --effect-saturate-soft:saturate(1.08);
+  --effect-saturate-strong:saturate(1.18);
+  --effect-brightness-hover:brightness(1.04);
+  --effect-brightness-muted:brightness(0.92);
+}
+
+/* =============================================================================
+   12) SHADOW EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Shadow effects should consume shadow primitives where available. */
+  --effect-shadow-none:none;
+  --effect-shadow-hover-subtle:0 10px 28px color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --effect-shadow-hover-medium:0 18px 52px color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --effect-shadow-hover-strong:0 28px 80px color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+}
+
+/* =============================================================================
+   13) OVERLAY EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Overlay opacity and surface layers. */
+  --overlay-opacity-subtle:0.18;
+  --overlay-opacity-medium:0.38;
+  --overlay-opacity-strong:0.62;
+  --overlay-bg-subtle:color-mix(in srgb, var(--bg-color) 72%, transparent);
+  --overlay-bg-medium:color-mix(in srgb, var(--bg-color) 84%, transparent);
+  --overlay-bg-strong:color-mix(in srgb, var(--bg-color) 92%, transparent);
+}
+
+/* =============================================================================
+   14) FEEDBACK EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Shared feedback effect states for success, warning, error, and info surfaces. */
+  --feedback-success-bg-hover:color-mix(in srgb, var(--feedback-success-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-warning-bg-hover:color-mix(in srgb, var(--feedback-warning-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-error-bg-hover:color-mix(in srgb, var(--feedback-error-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-info-bg-hover:color-mix(in srgb, var(--feedback-info-color, var(--text-primary-color)) 10%, transparent);
+}
+
+/* =============================================================================
+   15) NAVIGATION EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Navigation hover and active behavior. */
+  --nav-hover-text-color:var(--hover-text-color);
+  --nav-hover-opacity:var(--state-opacity-hover-strong);
+  --nav-hover-bg:transparent;
+  --nav-hover-transform:var(--hover-transform-none);
+  --nav-active-text-color:var(--selected-text-color);
+  --nav-active-indicator-color:var(--selected-indicator-color);
+  --nav-active-indicator-opacity:var(--selected-indicator-opacity);
+
+  /* Local navigation and tabs. */
+  --local-nav-hover-text-color:var(--hover-text-color);
+  --local-nav-hover-opacity:var(--state-opacity-hover-strong);
+  --local-nav-active-text-color:var(--selected-text-color);
+  --local-nav-active-indicator-color:var(--selected-indicator-color);
+}
+
+/* =============================================================================
+   16) CONTROL EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Buttons, toggles, chips, pills, and form controls. */
+  --control-hover-bg:var(--hover-bg-subtle);
+  --control-hover-border-color:var(--hover-border-medium);
+  --control-hover-text-color:var(--hover-text-color);
+  --control-hover-transform:var(--hover-transform-lift-subtle);
+  --control-active-bg:var(--active-bg-medium);
+  --control-active-border-color:var(--active-border-color);
+  --control-active-transform:scale(var(--effect-press-scale));
+
+  --button-hover-bg:var(--hover-bg-medium);
+  --button-hover-border-color:var(--hover-border-medium);
+  --button-hover-text-color:var(--hover-text-color);
+  --button-hover-transform:var(--hover-transform-lift-subtle);
+}
+
+/* =============================================================================
+   17) PROFILE EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Profile-specific interactive effects. */
+  --profile-hover-bg:var(--hover-bg-subtle);
+  --profile-hover-border-color:var(--hover-border-subtle);
+  --profile-hover-transform:var(--hover-transform-lift-subtle);
+  --profile-card-hover-shadow:var(--effect-shadow-hover-subtle);
+  --profile-media-hover-filter:var(--effect-brightness-hover);
+}
+
+/* =============================================================================
+   18) PRODUCT EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Product-specific interactive effects. */
+  --product-hover-bg:var(--hover-bg-subtle);
+  --product-hover-border-color:var(--hover-border-medium);
+  --product-hover-transform:var(--hover-transform-lift-subtle);
+  --product-card-hover-shadow:var(--effect-shadow-hover-subtle);
+  --product-media-hover-filter:var(--effect-brightness-hover);
+}
+
+/* =============================================================================
+   19) MARKETING EFFECT TOKENS
+============================================================================= */
+:root{
+  /* Marketing-specific effects for landing surfaces and conversion modules. */
+  --marketing-hover-bg:var(--hover-bg-medium);
+  --marketing-hover-border-color:var(--hover-border-strong);
+  --marketing-hover-transform:var(--hover-transform-lift-medium);
+  --marketing-card-hover-shadow:var(--effect-shadow-hover-medium);
+  --marketing-media-hover-filter:var(--effect-brightness-hover);
+}
+
+/* =============================================================================
+   20) END OF FILE
+============================================================================= */

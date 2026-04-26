@@ -1,0 +1,226 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) DATA SURFACE TOKENS
+   03) DATA METRIC TOKENS
+   04) DATA GRID TOKENS
+   05) DATA TABLE TOKENS
+   06) CHART LAYOUT TOKENS
+   07) CHART AXIS TOKENS
+   08) CHART SERIES TOKENS
+   09) CHART LEGEND TOKENS
+   10) PROGRESS / GAUGE TOKENS
+   11) DATA STATE TOKENS
+   12) DATA RESPONSIVE TOKENS
+   13) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/data.tokens.css */
+
+/* =============================================================================
+   02) DATA SURFACE TOKENS
+============================================================================= */
+:root{
+  /* Shared data surfaces for dashboards, metrics, analytics, and institutional gauges. */
+  --data-surface-bg:var(--surface-primary, var(--bg-color));
+  --data-surface-bg-muted:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --data-surface-bg-hover:var(--hover-bg-subtle);
+  --data-surface-border:var(--border-color);
+  --data-surface-border-hover:var(--hover-border-subtle);
+  --data-surface-radius:var(--radius-lg);
+  --data-surface-shadow:var(--effect-shadow-none);
+  --data-surface-shadow-hover:var(--effect-shadow-hover-subtle);
+}
+
+/* =============================================================================
+   03) DATA METRIC TOKENS
+============================================================================= */
+:root{
+  /* Metric card rhythm and hierarchy. */
+  --data-metric-gap:0.52rem;
+  --data-metric-padding-y:1rem;
+  --data-metric-padding-x:1rem;
+  --data-metric-radius:var(--radius-lg);
+  --data-metric-border-width:1px;
+
+  /* Metric typography aliases. */
+  --data-metric-value-xl-size:var(--data-value-xl-size);
+  --data-metric-value-xl-weight:var(--data-value-xl-weight);
+  --data-metric-value-xl-line-height:var(--data-value-xl-line-height);
+  --data-metric-value-xl-tracking:var(--data-value-xl-tracking);
+
+  --data-metric-value-lg-size:var(--data-value-lg-size);
+  --data-metric-value-lg-weight:var(--data-value-lg-weight);
+  --data-metric-value-lg-line-height:var(--data-value-lg-line-height);
+  --data-metric-value-lg-tracking:var(--data-value-lg-tracking);
+
+  --data-metric-label-size:var(--data-label-size);
+  --data-metric-label-weight:var(--data-label-weight);
+  --data-metric-label-line-height:var(--data-label-line-height);
+  --data-metric-label-tracking:var(--data-label-tracking);
+
+  --data-metric-caption-size:var(--data-caption-size);
+  --data-metric-caption-weight:var(--data-caption-weight);
+  --data-metric-caption-line-height:var(--data-caption-line-height);
+  --data-metric-caption-tracking:var(--data-caption-tracking);
+}
+
+/* =============================================================================
+   04) DATA GRID TOKENS
+============================================================================= */
+:root{
+  /* Dashboard and analytics grid rhythm. */
+  --data-grid-gap:1rem;
+  --data-grid-gap-compact:0.72rem;
+  --data-grid-column-min:14rem;
+  --data-grid-column-min-compact:11rem;
+  --data-grid-section-gap:1.4rem;
+}
+
+/* =============================================================================
+   05) DATA TABLE TOKENS
+============================================================================= */
+:root{
+  /* Table shell and row rhythm for governed data surfaces. */
+  --data-table-border:var(--border-color);
+  --data-table-border-hover:var(--hover-border-subtle);
+  --data-table-header-bg:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --data-table-row-bg:transparent;
+  --data-table-row-bg-hover:var(--hover-bg-subtle);
+  --data-table-row-bg-selected:var(--selected-bg-subtle);
+  --data-table-cell-padding-y:0.62rem;
+  --data-table-cell-padding-x:0.72rem;
+  --data-table-cell-padding-y-dense:0.42rem;
+  --data-table-cell-padding-x-dense:0.56rem;
+}
+
+/* =============================================================================
+   06) CHART LAYOUT TOKENS
+============================================================================= */
+:root{
+  /* Chart shell spacing and geometry. */
+  --chart-gap:0.72rem;
+  --chart-padding-y:1rem;
+  --chart-padding-x:1rem;
+  --chart-radius:var(--radius-lg);
+  --chart-border:var(--border-color);
+  --chart-bg:var(--data-surface-bg);
+  --chart-bg-muted:var(--data-surface-bg-muted);
+  --chart-min-height-sm:12rem;
+  --chart-min-height-md:18rem;
+  --chart-min-height-lg:26rem;
+}
+
+/* =============================================================================
+   07) CHART AXIS TOKENS
+============================================================================= */
+:root{
+  /* Axis, gridline, and annotation styling. */
+  --chart-axis-color:var(--text-secondary-color);
+  --chart-axis-opacity:0.72;
+  --chart-gridline-color:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --chart-gridline-width:1px;
+  --chart-gridline-opacity:0.62;
+  --chart-annotation-color:var(--text-secondary-color);
+  --chart-annotation-opacity:0.82;
+}
+
+/* =============================================================================
+   08) CHART SERIES TOKENS
+============================================================================= */
+:root{
+  /* Neutral institutional chart series colors. */
+  --chart-series-1:var(--text-primary-color);
+  --chart-series-2:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --chart-series-3:color-mix(in srgb, var(--text-primary-color) 52%, transparent);
+  --chart-series-4:color-mix(in srgb, var(--text-primary-color) 34%, transparent);
+  --chart-series-5:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
+
+  /* Semantic chart series aliases. */
+  --chart-series-success:var(--feedback-success-color);
+  --chart-series-warning:var(--feedback-warning-color);
+  --chart-series-error:var(--feedback-error-color);
+  --chart-series-info:var(--feedback-info-color);
+  --chart-series-neutral:var(--feedback-neutral-color);
+}
+
+/* =============================================================================
+   09) CHART LEGEND TOKENS
+============================================================================= */
+:root{
+  /* Legend spacing and markers. */
+  --chart-legend-gap:0.56rem;
+  --chart-legend-item-gap:0.34rem;
+  --chart-legend-marker-size:0.48rem;
+  --chart-legend-marker-radius:999px;
+  --chart-legend-color:var(--text-secondary-color);
+}
+
+/* =============================================================================
+   10) PROGRESS / GAUGE TOKENS
+============================================================================= */
+:root{
+  /* Progress bars, maturity gauges, valuation gauges, and institutional meters. */
+  --data-progress-track-bg:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --data-progress-fill-bg:var(--text-primary-color);
+  --data-progress-height-sm:0.22rem;
+  --data-progress-height-md:0.34rem;
+  --data-progress-height-lg:0.52rem;
+  --data-progress-radius:999px;
+
+  --data-gauge-track-width:1px;
+  --data-gauge-track-color:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --data-gauge-dot-size:0.56rem;
+  --data-gauge-dot-bg:var(--text-primary-color);
+  --data-gauge-dot-border:var(--bg-color);
+  --data-gauge-label-gap:0.42rem;
+}
+
+/* =============================================================================
+   11) DATA STATE TOKENS
+============================================================================= */
+:root{
+  /* Data state colors for deltas, thresholds, and platform states. */
+  --data-state-positive-color:var(--feedback-success-color);
+  --data-state-warning-color:var(--feedback-warning-color);
+  --data-state-negative-color:var(--feedback-error-color);
+  --data-state-neutral-color:var(--feedback-neutral-color);
+  --data-state-info-color:var(--feedback-info-color);
+
+  --data-state-positive-bg:var(--feedback-success-bg);
+  --data-state-warning-bg:var(--feedback-warning-bg);
+  --data-state-negative-bg:var(--feedback-error-bg);
+  --data-state-neutral-bg:var(--feedback-neutral-bg);
+  --data-state-info-bg:var(--feedback-info-bg);
+}
+
+/* =============================================================================
+   12) DATA RESPONSIVE TOKENS
+============================================================================= */
+@media (max-width:820px){
+  :root{
+    --data-grid-gap:0.84rem;
+    --data-grid-section-gap:1rem;
+    --chart-min-height-md:15rem;
+    --chart-min-height-lg:21rem;
+  }
+}
+
+@media (max-width:540px){
+  :root{
+    --data-grid-gap:0.68rem;
+    --data-grid-column-min:100%;
+    --chart-padding-y:0.78rem;
+    --chart-padding-x:0.78rem;
+    --chart-min-height-sm:10rem;
+    --chart-min-height-md:13rem;
+    --chart-min-height-lg:18rem;
+  }
+}
+
+/* =============================================================================
+   13) END OF FILE
+============================================================================= */

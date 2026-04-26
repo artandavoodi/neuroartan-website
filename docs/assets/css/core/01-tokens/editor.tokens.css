@@ -1,0 +1,247 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) EDITOR SURFACE TOKENS
+   03) EDITOR CONTENT TOKENS
+   04) EDITOR TOOLBAR TOKENS
+   05) EDITOR SELECTION TOKENS
+   06) EDITOR CURSOR TOKENS
+   07) EDITOR PLACEHOLDER TOKENS
+   08) EDITOR MARKDOWN TOKENS
+   09) EDITOR BLOCK TOKENS
+   10) EDITOR INLINE TOKENS
+   11) EDITOR STATUS TOKENS
+   12) EDITOR PUBLISHING TOKENS
+   13) EDITOR RESPONSIVE TOKENS
+   14) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/editor.tokens.css */
+
+/* =============================================================================
+   02) EDITOR SURFACE TOKENS
+============================================================================= */
+:root{
+  /* Primary writing and composition surfaces. */
+  --editor-surface-bg:var(--surface-primary, var(--bg-color));
+  --editor-surface-bg-muted:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --editor-surface-bg-hover:var(--hover-bg-subtle);
+  --editor-surface-border:var(--border-color);
+  --editor-surface-border-hover:var(--hover-border-subtle);
+  --editor-surface-radius:var(--radius-lg);
+  --editor-surface-shadow:var(--effect-shadow-none);
+  --editor-surface-shadow-focus:var(--focus-ring-soft-shadow);
+
+  /* Editor panel rhythm. */
+  --editor-panel-gap:1rem;
+  --editor-panel-padding-y:1rem;
+  --editor-panel-padding-x:1rem;
+  --editor-panel-radius:var(--radius-lg);
+}
+
+/* =============================================================================
+   03) EDITOR CONTENT TOKENS
+============================================================================= */
+:root{
+  /* Main editable text area typography and rhythm. */
+  --editor-content-size:var(--body-1-size);
+  --editor-content-weight:var(--body-1-weight);
+  --editor-content-line-height:var(--line-height-body-relaxed);
+  --editor-content-tracking:var(--body-1-tracking);
+  --editor-content-color:var(--text-primary-color);
+
+  /* Supporting editor text. */
+  --editor-supporting-size:var(--body-3-size);
+  --editor-supporting-weight:var(--body-3-weight);
+  --editor-supporting-line-height:var(--body-3-line-height);
+  --editor-supporting-tracking:var(--body-3-tracking);
+  --editor-supporting-color:var(--text-secondary-color);
+
+  /* Editor measure and spacing. */
+  --editor-content-max-width:46rem;
+  --editor-content-gap:1rem;
+  --editor-paragraph-gap:0.92rem;
+}
+
+/* =============================================================================
+   04) EDITOR TOOLBAR TOKENS
+============================================================================= */
+:root{
+  /* Toolbar shell for formatting, publishing, and editor controls. */
+  --editor-toolbar-gap:0.42rem;
+  --editor-toolbar-padding-y:0.42rem;
+  --editor-toolbar-padding-x:0.52rem;
+  --editor-toolbar-radius:var(--radius-md);
+  --editor-toolbar-bg:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --editor-toolbar-border:var(--border-color);
+
+  /* Toolbar controls. */
+  --editor-toolbar-control-size:var(--control-sm-size);
+  --editor-toolbar-control-weight:var(--control-sm-weight);
+  --editor-toolbar-control-line-height:var(--control-sm-line-height);
+  --editor-toolbar-control-tracking:var(--control-sm-tracking);
+  --editor-toolbar-control-color:var(--text-secondary-color);
+  --editor-toolbar-control-hover-color:var(--hover-text-color);
+  --editor-toolbar-control-hover-bg:var(--control-hover-bg);
+}
+
+/* =============================================================================
+   05) EDITOR SELECTION TOKENS
+============================================================================= */
+:root{
+  /* Text selection and selected block states. */
+  --editor-selection-bg:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --editor-selection-color:var(--text-primary-color);
+  --editor-block-selected-bg:var(--selected-bg-subtle);
+  --editor-block-selected-border:var(--selected-border-color);
+}
+
+/* =============================================================================
+   06) EDITOR CURSOR TOKENS
+============================================================================= */
+:root{
+  /* Editor cursor and caret control. */
+  --editor-caret-color:var(--text-primary-color);
+  --editor-caret-width:1px;
+  --editor-caret-opacity:1;
+  --editor-cursor-target-bg:var(--hover-bg-subtle);
+  --editor-cursor-target-border:var(--hover-border-subtle);
+}
+
+/* =============================================================================
+   07) EDITOR PLACEHOLDER TOKENS
+============================================================================= */
+:root{
+  /* Placeholder and empty editor copy. */
+  --editor-placeholder-size:var(--body-2-size);
+  --editor-placeholder-weight:var(--body-2-weight);
+  --editor-placeholder-line-height:var(--body-2-line-height);
+  --editor-placeholder-tracking:var(--body-2-tracking);
+  --editor-placeholder-color:var(--text-secondary-color);
+  --editor-placeholder-opacity:0.62;
+}
+
+/* =============================================================================
+   08) EDITOR MARKDOWN TOKENS
+============================================================================= */
+:root{
+  /* Markdown syntax and preview states. */
+  --editor-markdown-syntax-color:var(--text-secondary-color);
+  --editor-markdown-syntax-opacity:0.72;
+  --editor-markdown-heading-color:var(--text-primary-color);
+  --editor-markdown-link-color:var(--text-primary-color);
+  --editor-markdown-link-underline-color:var(--border-color);
+  --editor-markdown-code-bg:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --editor-markdown-code-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+}
+
+/* =============================================================================
+   09) EDITOR BLOCK TOKENS
+============================================================================= */
+:root{
+  /* Block-level editor structures: quote, callout, divider, embed, and list. */
+  --editor-block-gap:0.84rem;
+  --editor-block-padding-y:0.72rem;
+  --editor-block-padding-x:0.84rem;
+  --editor-block-radius:var(--radius-md);
+  --editor-block-border:var(--border-color);
+  --editor-block-bg:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+
+  --editor-quote-border-width:1px;
+  --editor-quote-border-color:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --editor-quote-padding-x:0.92rem;
+  --editor-quote-color:var(--text-secondary-color);
+
+  --editor-list-indent:1.2rem;
+  --editor-list-gap:0.34rem;
+  --editor-divider-color:var(--border-color);
+  --editor-divider-width:1px;
+}
+
+/* =============================================================================
+   10) EDITOR INLINE TOKENS
+============================================================================= */
+:root{
+  /* Inline editor states and text marks. */
+  --editor-inline-code-size:var(--code-inline-size);
+  --editor-inline-code-weight:var(--code-inline-weight);
+  --editor-inline-code-line-height:var(--code-inline-line-height);
+  --editor-inline-code-tracking:var(--code-inline-tracking);
+  --editor-inline-code-bg:var(--editor-markdown-code-bg);
+  --editor-inline-code-border:var(--editor-markdown-code-border);
+  --editor-inline-code-radius:var(--radius-xs);
+  --editor-inline-code-padding-y:0.08rem;
+  --editor-inline-code-padding-x:0.24rem;
+
+  --editor-link-color:var(--text-primary-color);
+  --editor-link-hover-color:var(--hover-text-color);
+  --editor-link-underline-color:var(--border-color);
+  --editor-link-underline-hover-color:var(--hover-border-medium);
+
+  --editor-highlight-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --editor-highlight-color:var(--text-primary-color);
+}
+
+/* =============================================================================
+   11) EDITOR STATUS TOKENS
+============================================================================= */
+:root{
+  /* Draft, saving, synced, error, and publishing states. */
+  --editor-status-draft-color:var(--feedback-neutral-text);
+  --editor-status-saving-color:var(--feedback-info-text);
+  --editor-status-synced-color:var(--feedback-success-text);
+  --editor-status-error-color:var(--feedback-error-text);
+  --editor-status-warning-color:var(--feedback-warning-text);
+
+  --editor-status-size:var(--status-sm-size);
+  --editor-status-weight:var(--status-sm-weight);
+  --editor-status-line-height:var(--status-sm-line-height);
+  --editor-status-tracking:var(--status-sm-tracking);
+}
+
+/* =============================================================================
+   12) EDITOR PUBLISHING TOKENS
+============================================================================= */
+:root{
+  /* Publishing workflow surfaces and review states. */
+  --editor-publishing-panel-bg:var(--editor-surface-bg-muted);
+  --editor-publishing-panel-border:var(--editor-surface-border);
+  --editor-publishing-panel-radius:var(--radius-lg);
+  --editor-publishing-panel-gap:0.72rem;
+
+  --editor-review-pending-bg:var(--feedback-warning-bg);
+  --editor-review-pending-border:var(--feedback-warning-border);
+  --editor-review-approved-bg:var(--feedback-success-bg);
+  --editor-review-approved-border:var(--feedback-success-border);
+  --editor-review-rejected-bg:var(--feedback-error-bg);
+  --editor-review-rejected-border:var(--feedback-error-border);
+}
+
+/* =============================================================================
+   13) EDITOR RESPONSIVE TOKENS
+============================================================================= */
+@media (max-width:820px){
+  :root{
+    --editor-content-max-width:100%;
+    --editor-panel-gap:0.84rem;
+    --editor-panel-padding-y:0.84rem;
+    --editor-panel-padding-x:0.84rem;
+  }
+}
+
+@media (max-width:540px){
+  :root{
+    --editor-content-gap:0.78rem;
+    --editor-paragraph-gap:0.78rem;
+    --editor-toolbar-gap:0.34rem;
+    --editor-toolbar-padding-y:0.34rem;
+    --editor-toolbar-padding-x:0.42rem;
+  }
+}
+
+/* =============================================================================
+   14) END OF FILE
+============================================================================= */

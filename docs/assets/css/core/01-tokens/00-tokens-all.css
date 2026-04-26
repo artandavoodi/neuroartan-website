@@ -18,6 +18,7 @@
 @import url('./spacing.tokens.css');
 @import url('./radius.tokens.css');
 @import url('./shadow.tokens.css');
+@import url('./interaction.tokens.css');
 @import url('./motion.tokens.css');
 @import url('./zindex.tokens.css');
 @import url('./layout.tokens.css');

@@ -55,6 +55,10 @@
   --shape-overlay-radius:var(--radius-dialog);
   --shape-subpanel-radius:var(--radius-lg);
 
+  /* Universal control shape compatibility aliases. */
+  --control-radius:var(--shape-control-radius);
+  --control-radius-pill:var(--radius-pill);
+
   /* Universal control rhythm. */
   --control-height-sm:2.2rem;
   --control-height-md:2.6rem;
@@ -67,6 +71,14 @@
   --control-font-weight:400;
   --control-line-height:1.2;
   --control-tracking:-0.01em;
+
+  /* Universal control compatibility aliases. */
+  --control-width-min:2.75rem;
+  --border-width-thin:1px;
+  --space-8:2rem;
+  --z-above:20;
+  --viewport-width:100vw;
+  --viewport-height:100vh;
 
   /* Universal button/control surface. */
   --control-surface:color-mix(in srgb, var(--surface-color, var(--bg-color)) 82%, transparent);
@@ -508,6 +520,9 @@
 ============================================================================= */
 :root{
   /* Buttons, toggles, chips, pills, and form controls. */
+  --toggle-track-bg:var(--toggle-track-bg-off);
+  --toggle-track-bg-off:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --toggle-track-bg-on:var(--text-primary-color);
   --control-hover-bg:var(--hover-bg-subtle);
   --control-hover-border-color:var(--hover-border-medium);
   --control-hover-text-color:var(--hover-text-color);

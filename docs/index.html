@@ -42,7 +42,7 @@
      14) CORE SCRIPT
 ============================================================================= -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-homepage-theme-breathing-circle="true">
 <head>
     <!-- =============================================================================
          01) BASIC META
@@ -174,7 +174,7 @@
     ============================================================================= -->
 </head>
 
-<body class="site-body home-page">
+<body class="site-body home-page intro-loading">
 <!-- =============================================================================
      06) GLOBAL LOADING OVERLAY
 ============================================================================= -->
@@ -203,7 +203,6 @@
 <!-- =============================================================================
      10) LANDING STAGE
 ============================================================================= -->
-<div class="stage-circle">
 <!-- =============================================================================
      10A) STAGE BACKGROUND VIDEO
 ============================================================================= -->
@@ -214,53 +213,11 @@
       <source src="assets/video/core/video-1.webm" type="video/webm">
     </video>
   </div>
-</div>
 
 <!-- =============================================================================
-     10B) STAGE COGNITIVE CORE SHELL
+     10B) STAGE COMPOSITION MOUNT
 ============================================================================= -->
-<div class="stage-container" id="stage">
-        <div class="home-hero-matte" aria-hidden="true"></div>
-        <div class="stage-stack">
-            <div class="stage-intro" id="stage-intro">
-                <div class="stage-region stage-region-top" id="stage-top">
-                </div>
-
-                <div class="stage-region stage-region-center" id="stage-center">
-                    <div class="stage-center-core" id="stage-center-core">
-                        <div class="stage-glass-vessel" id="stage-glass-vessel" aria-hidden="true">
-                            <div class="stage-glass-vessel-ring" id="stage-glass-vessel-ring"></div>
-                            <div class="stage-glass-vessel-inner" id="stage-glass-vessel-inner"></div>
-                            <div class="stage-glass-vessel-highlight" id="stage-glass-vessel-highlight"></div>
-                        </div>
-
-                        <div class="stage-cognitive-core-shell" id="stage-cognitive-core-shell" data-core-state="idle" aria-live="polite">
-                            <div class="stage-cognitive-core-signal" id="stage-cognitive-core-signal" aria-hidden="true"></div>
-                            <div class="stage-cognitive-core-ring" id="stage-cognitive-core-ring" aria-hidden="true"></div>
-                            <div class="stage-cognitive-core-pulse" id="stage-cognitive-core-pulse" aria-hidden="true"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stage-region stage-region-copy" id="stage-copy">
-                    <!-- =============================================================================
-                         10C) STAGE INTERACTIVE TEXT MOUNT
-                    ============================================================================= -->
-                    <div class="stage-fade-on-enter" id="home-stage-interactive-text-mount" data-include="home-stage-interactive-text"></div>
-                </div>
-
-                <div class="stage-region stage-region-actions" id="stage-actions">
-                    <div class="stage-fade-on-enter" id="home-interaction-panel-mount" data-include="home-interaction-panel"></div>
-
-                    <!-- =============================================================================
-                         11S) HOME INTERACTION RESPONSE PANEL MOUNT
-                    ============================================================================= -->
-                    <div class="stage-fade-on-enter" id="home-interaction-response-panel-mount" data-include="home-interaction-response-panel"></div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+<div data-include="home-stage-composition"></div>
 
 <!-- =============================================================================
      11) MAIN CONTENT

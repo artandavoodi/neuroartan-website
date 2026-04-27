@@ -2,9 +2,10 @@
    HOME.JS — ARTAN HOME LANDING SYSTEM (SOVEREIGN)
 
    Owns (in-file order):
-   00) Home landing threshold entry
-   01) Home run-after-enter helper (gate)
-   02) Home landing logo layer disabled
+   00) Home landing visibility release
+   01) Home landing threshold entry
+   02) Home run-after-enter helper (gate)
+   03) Home landing logo layer disabled
 
    Contract:
    - Landing threshold entry is home-page only.
@@ -13,7 +14,32 @@
 ============================================================================= */
 
 /* =============================================================================
-   00) HOME LANDING THRESHOLD ENTRY
+   00) HOME LANDING VISIBILITY RELEASE
+============================================================================= */
+
+(() => {
+  const INTRO_RELEASE_DELAY = 900;
+
+  const releaseIntroVisibility = () => {
+    if (!document.body || !document.body.classList.contains('home-page')) return;
+    if (document.body.classList.contains('site-entered')) return;
+
+    document.body.classList.remove('intro-loading');
+    document.body.classList.add('intro-reveal');
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      window.setTimeout(releaseIntroVisibility, INTRO_RELEASE_DELAY);
+    }, { once: true });
+    return;
+  }
+
+  window.setTimeout(releaseIntroVisibility, INTRO_RELEASE_DELAY);
+})();
+
+/* =============================================================================
+   01) HOME LANDING THRESHOLD ENTRY
 ============================================================================= */
 
 (() => {
@@ -130,7 +156,7 @@
 })();
 
 /* =============================================================================
-   01) HOME RUN AFTER ENTER (GATE HELPER)
+   02) HOME RUN AFTER ENTER (GATE HELPER)
 ============================================================================= */
 
 window.__artanRunAfterEnter = window.__artanRunAfterEnter || ((bootFn) => {
@@ -156,7 +182,7 @@ window.__artanRunAfterEnter = window.__artanRunAfterEnter || ((bootFn) => {
 });
 
 /* =============================================================================
-   02) HOME LANDING LOGO LAYER — DISABLED
+   03) HOME LANDING LOGO LAYER — DISABLED
    Legacy homepage restoration: remove the homepage typo/logo JS ownership so it cannot
    interfere with the landing sequence, essence sequence, or release timing.
 ============================================================================= */

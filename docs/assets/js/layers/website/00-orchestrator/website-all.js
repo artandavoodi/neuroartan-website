@@ -43,6 +43,7 @@ import '../renderers/00-renderers-all.js';
 /* =============================================================================
    05A) WEBSITE LAYER AUTHORITIES · HOME
 ============================================================================= */
+import '../ui/homepage/00-homepage-all.js';
 import '../home/00-home-all.js';
 
 /* =============================================================================
@@ -64,7 +65,6 @@ import '../pages/00-pages-all.js';
    09) WEBSITE LAYER AUTHORITIES · UI
 ============================================================================= */
 import '../ui/effects/00-effects-all.js';
-import '../ui/homepage/00-homepage-all.js';
 import '../ui/pages/00-ui-pages-all.js';
 
 /* =============================================================================

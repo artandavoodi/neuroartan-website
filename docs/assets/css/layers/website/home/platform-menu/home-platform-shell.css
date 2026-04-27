@@ -1,0 +1,726 @@
+/* =============================================================================
+00) FILE INDEX
+01) MODULE IDENTITY
+02) SHELL TOKENS
+02A) PLATFORM LAYOUT ALIASES
+03) SHELL ROOT
+04) SHELL CHROME
+05) SHELL MAIN GRID
+06) RAIL MODE STATES
+07) LEFT NAVIGATION RAIL
+08) PRIMARY NAVIGATION ITEMS
+09) MIDDLE NAVIGATION LAYER
+10) RIGHT DETAIL SURFACE
+11) EMBEDDED SECTION REFINEMENTS
+12) PLATFORM SCROLL GOVERNANCE
+13) RESPONSIVE STATES
+14) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/layers/website/home/platform-menu/home-platform-shell.css */
+
+/* =============================================================================
+02) SHELL TOKENS
+============================================================================= */
+:root{
+  --home-platform-shell-chrome-toggle-color:var(--text-secondary-color);
+  --home-platform-shell-chrome-toggle-hover-color:var(--text-primary-color);
+  --home-platform-shell-muted-label-color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  --home-platform-shell-muted-copy-color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+  --home-platform-shell-nav-color:var(--text-secondary-color);
+  --home-platform-shell-nav-hover-color:var(--text-primary-color);
+  --home-platform-shell-nav-opacity:var(--state-opacity-muted);
+  --home-platform-shell-nav-hover-opacity:var(--overlay-opacity-open);
+  --home-platform-shell-nav-indicator-bg:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --home-platform-shell-nav-indicator-color:var(--text-primary-color);
+  --home-platform-shell-nav-indicator-new-color:var(--color-primary1);
+  --home-platform-shell-nav-indicator-new-bg:color-mix(in srgb, var(--color-primary1) 16%, transparent);
+  --home-platform-shell-nav-indicator-high-color:var(--color-primary7);
+  --home-platform-shell-nav-indicator-high-bg:color-mix(in srgb, var(--color-primary7) 18%, transparent);
+  --home-platform-shell-motion-fast:var(--interaction-motion-fast);
+  --home-platform-shell-radius:var(--panel-radius-unified);
+  --home-platform-shell-padding:var(--layout-home-platform-padding);
+  --home-platform-shell-gap:var(--layout-home-platform-gap);
+  --home-platform-shell-surface:var(--panel-surface-unified);
+  --home-platform-shell-border:var(--panel-border-unified);
+  --home-platform-shell-shadow:var(--panel-shadow-unified);
+  --home-platform-shell-blur:var(--panel-blur-unified);
+  --home-platform-shell-saturate:var(--panel-saturate-unified);
+  --home-platform-shell-nav-item-radius:var(--control-radius);
+  --home-platform-shell-nav-item-padding:var(--home-platform-shell-nav-item-padding-y) var(--home-platform-shell-nav-item-padding-x);
+  --home-platform-shell-nav-item-bg-active:var(--control-surface-hover);
+  --home-platform-shell-nav-item-border-active:var(--control-border-hover-unified);
+}
+
+/* =============================================================================
+02A) PLATFORM LAYOUT ALIASES
+============================================================================= */
+:root{
+  --home-platform-shell-nav-opacity:var(--state-opacity-muted);
+  --home-platform-shell-nav-hover-opacity:var(--overlay-opacity-open);
+  --home-platform-shell-motion-fast:var(--interaction-motion-fast);
+  --home-platform-shell-radius:var(--panel-radius-unified);
+  --home-platform-shell-padding:var(--layout-home-platform-padding);
+  --home-platform-shell-gap:var(--layout-home-platform-gap);
+  --home-platform-shell-shadow:var(--panel-shadow-unified);
+  --home-platform-shell-blur:var(--panel-blur-unified);
+  --home-platform-shell-saturate:var(--panel-saturate-unified);
+  --home-platform-shell-chrome-min-height:var(--layout-home-platform-chrome-min-height);
+  --home-platform-shell-chrome-blur:var(--layout-home-platform-chrome-blur);
+  --home-platform-shell-chrome-saturate:var(--layout-home-platform-chrome-saturate);
+  --home-platform-shell-rail-toggle-size:var(--layout-home-platform-rail-toggle-size);
+  --home-platform-shell-rail-toggle-margin-left:var(--layout-home-platform-rail-toggle-margin-left);
+  --home-platform-shell-rail-toggle-icon-size:var(--layout-home-platform-rail-toggle-icon-size);
+  --home-platform-shell-rail-width-token:var(--layout-home-platform-rail-width);
+  --home-platform-shell-subrail-width-token:var(--layout-home-platform-subrail-width);
+  --home-platform-shell-tablet-rail-min:var(--layout-home-platform-tablet-rail-min);
+  --home-platform-shell-tablet-rail-max:var(--layout-home-platform-tablet-rail-max);
+  --home-platform-shell-tablet-subrail-min:var(--layout-home-platform-tablet-subrail-min);
+  --home-platform-shell-tablet-subrail-max:var(--layout-home-platform-tablet-subrail-max);
+  --home-platform-shell-mobile-inline-padding-fallback:var(--layout-home-platform-mobile-inline-padding-fallback);
+  --home-platform-shell-rail-padding-top:var(--layout-home-platform-rail-padding-top);
+  --home-platform-shell-rail-padding-right:var(--layout-home-platform-rail-padding-right);
+  --home-platform-shell-rail-padding-bottom:var(--layout-home-platform-rail-padding-bottom);
+  --home-platform-shell-rail-padding-left:var(--layout-home-platform-rail-padding-left);
+  --home-platform-shell-subrail-padding-left:var(--layout-home-platform-subrail-padding-left);
+  --home-platform-shell-tablet-rail-padding-right:var(--layout-home-platform-tablet-rail-padding-right);
+  --home-platform-shell-group-margin-top:var(--layout-home-platform-group-margin-top);
+  --home-platform-shell-label-margin-bottom:var(--layout-home-platform-label-margin-bottom);
+  --home-platform-shell-label-size:var(--layout-home-platform-label-size);
+  --home-platform-shell-label-weight:var(--layout-home-platform-label-weight);
+  --home-platform-shell-label-tracking:var(--layout-home-platform-label-tracking);
+  --home-platform-shell-subrail-header-gap:var(--layout-home-platform-subrail-header-gap);
+  --home-platform-shell-subrail-header-margin-bottom:var(--layout-home-platform-subrail-header-margin-bottom);
+  --home-platform-shell-subrail-title-size:var(--layout-home-platform-subrail-title-size);
+  --home-platform-shell-subrail-title-weight:var(--layout-home-platform-subrail-title-weight);
+  --home-platform-shell-subrail-title-line-height:var(--layout-home-platform-subrail-title-line-height);
+  --home-platform-shell-nav-gap:var(--layout-home-platform-nav-gap);
+  --home-platform-shell-nav-item-gap:var(--layout-home-platform-nav-item-gap);
+  --home-platform-shell-nav-item-min-height:var(--layout-home-platform-nav-item-min-height);
+  --home-platform-shell-nav-item-radius:var(--control-radius);
+  --home-platform-shell-nav-item-padding-y:var(--layout-home-platform-nav-item-padding-y);
+  --home-platform-shell-nav-item-padding-x:var(--layout-home-platform-nav-item-padding-x);
+  --home-platform-shell-nav-icon-size:var(--layout-home-platform-nav-icon-size);
+  --home-platform-shell-nav-indicator-min-size:var(--layout-home-platform-nav-indicator-min-size);
+  --home-platform-shell-nav-indicator-padding-x:var(--layout-home-platform-nav-indicator-padding-x);
+  --home-platform-shell-nav-indicator-size:var(--layout-home-platform-nav-indicator-size);
+  --home-platform-shell-nav-indicator-weight:var(--layout-home-platform-nav-indicator-weight);
+  --home-platform-shell-nav-indicator-line-height:var(--layout-home-platform-nav-indicator-line-height);
+  --home-platform-shell-nav-indicator-tracking:var(--layout-home-platform-nav-indicator-tracking);
+  --home-platform-shell-nav-text-size:var(--layout-home-platform-nav-text-size);
+  --home-platform-shell-nav-text-weight:var(--layout-home-platform-nav-text-weight);
+  --home-platform-shell-nav-text-line-height:var(--layout-home-platform-nav-text-line-height);
+  --home-platform-shell-nav-text-tracking:var(--layout-home-platform-nav-text-tracking);
+  --home-platform-shell-subnav-padding-x:var(--layout-home-platform-subnav-padding-x);
+  --home-platform-shell-subnav-min-height:var(--layout-home-platform-subnav-min-height);
+  --home-platform-shell-subnav-size:var(--layout-home-platform-subnav-size);
+  --home-platform-shell-subnav-line-height:var(--layout-home-platform-subnav-line-height);
+  --home-platform-shell-content-header-gap:var(--layout-home-platform-content-header-gap);
+  --home-platform-shell-content-header-padding-top:var(--layout-home-platform-content-header-padding-top);
+  --home-platform-shell-content-header-padding-right:var(--layout-home-platform-content-header-padding-right);
+  --home-platform-shell-content-header-padding-bottom:var(--layout-home-platform-content-header-padding-bottom);
+  --home-platform-shell-content-header-padding-left:var(--layout-home-platform-content-header-padding-left);
+  --home-platform-shell-tablet-content-padding-left:var(--layout-home-platform-tablet-content-padding-left);
+  --home-platform-shell-mobile-content-header-padding-top:var(--layout-home-platform-mobile-content-header-padding-top);
+  --home-platform-shell-mobile-content-header-padding-bottom:var(--layout-home-platform-mobile-content-header-padding-bottom);
+  --home-platform-shell-content-title-size:var(--layout-home-platform-content-title-size);
+  --home-platform-shell-content-title-weight:var(--layout-home-platform-content-title-weight);
+  --home-platform-shell-content-title-line-height:var(--layout-home-platform-content-title-line-height);
+  --home-platform-shell-content-title-tracking:var(--layout-home-platform-content-title-tracking);
+  --home-platform-shell-content-copy-max-width:var(--layout-home-platform-content-copy-max-width);
+  --home-platform-shell-content-copy-size:var(--layout-home-platform-content-copy-size);
+  --home-platform-shell-content-copy-weight:var(--layout-home-platform-content-copy-weight);
+  --home-platform-shell-content-copy-line-height:var(--layout-home-platform-content-copy-line-height);
+  --home-platform-shell-content-copy-tracking:var(--layout-home-platform-content-copy-tracking);
+  --home-platform-shell-content-inner-padding-top:var(--layout-home-platform-content-inner-padding-top);
+  --home-platform-shell-content-inner-padding-left:var(--layout-home-platform-content-inner-padding-left);
+  --home-platform-shell-content-inner-footer-gap:var(--layout-home-platform-content-inner-footer-gap);
+  --home-platform-shell-mobile-content-inner-padding-top:var(--layout-home-platform-mobile-content-inner-padding-top);
+  --home-platform-shell-mobile-content-inner-footer-gap:var(--layout-home-platform-mobile-content-inner-footer-gap);
+  --home-platform-shell-destination-gap:var(--layout-home-platform-destination-gap);
+  --home-platform-shell-content-stack-gap:var(--layout-home-platform-content-stack-gap);
+  --home-platform-shell-state-title-size:var(--layout-home-platform-state-title-size);
+  --home-platform-shell-state-title-weight:var(--layout-home-platform-state-title-weight);
+  --home-platform-shell-state-title-line-height:var(--layout-home-platform-state-title-line-height);
+  --home-platform-shell-state-title-tracking:var(--layout-home-platform-state-title-tracking);
+  --home-platform-shell-state-copy-max-width:var(--layout-home-platform-state-copy-max-width);
+  --home-platform-shell-state-copy-size:var(--layout-home-platform-state-copy-size);
+  --home-platform-shell-state-copy-line-height:var(--layout-home-platform-state-copy-line-height);
+  --home-platform-shell-state-action-min-height:var(--layout-home-platform-state-action-min-height);
+  --home-platform-shell-state-action-padding-x:var(--layout-home-platform-state-action-padding-x);
+  --home-platform-shell-state-action-size:var(--layout-home-platform-state-action-size);
+  --home-platform-shell-state-action-weight:var(--layout-home-platform-state-action-weight);
+  --home-platform-shell-state-action-tracking:var(--layout-home-platform-state-action-tracking);
+  --home-platform-shell-embedded-section-gap:var(--layout-home-platform-embedded-section-gap);
+  --home-platform-shell-embedded-stack-gap:var(--layout-home-platform-embedded-stack-gap);
+}
+
+/* =============================================================================
+03) SHELL ROOT
+============================================================================= */
+.home-platform-shell{
+  --home-platform-shell-inline-padding:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
+  --home-platform-shell-rail-width:var(--home-platform-shell-rail-width-token);
+  --home-platform-shell-subrail-width:var(--home-platform-shell-subrail-width-token);
+
+  position:fixed;
+  top:var(--home-shell-panel-top);
+  left:var(--spacing-none);
+  right:var(--spacing-none);
+  bottom:var(--spacing-none);
+  z-index:var(--z-overlay-modal);
+  display:flex;
+  flex-direction:column;
+  min-height:var(--spacing-none);
+  overflow:hidden;
+  overscroll-behavior:contain;
+  background:var(--home-platform-shell-surface);
+  color:var(--text-primary-color);
+  border-top:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  backdrop-filter:blur(var(--home-platform-shell-blur)) saturate(var(--home-platform-shell-saturate));
+  -webkit-backdrop-filter:blur(var(--home-platform-shell-blur)) saturate(var(--home-platform-shell-saturate));
+}
+
+.home-platform-shell[hidden]{
+  display:none !important;
+}
+
+/* =============================================================================
+04) SHELL CHROME
+============================================================================= */
+.home-platform-shell__chrome{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  min-height:var(--home-platform-shell-chrome-min-height);
+  padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
+  border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
+  background:var(--home-ribbon-surface);
+  backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
+  -webkit-backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
+}
+
+.home-platform-shell__close{
+  flex:0 0 auto;
+}
+
+.home-platform-shell__close.global-close-button{
+  color:var(--global-close-button-color);
+}
+
+.home-platform-shell__close.global-close-button:hover,
+.home-platform-shell__close.global-close-button:focus-visible{
+  color:var(--global-close-button-hover-color);
+  transform:none;
+  outline:none;
+}
+
+.home-platform-shell__rail-toggle{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-rail-toggle-size);
+  height:var(--home-platform-shell-rail-toggle-size);
+  margin-left:var(--home-platform-shell-rail-toggle-margin-left);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
+  background:var(--control-surface);
+  color:var(--home-platform-shell-chrome-toggle-color);
+  opacity:var(--home-platform-shell-nav-opacity);
+  transition:var(--interaction-transition-control);
+}
+
+.home-platform-shell__rail-toggle:hover,
+.home-platform-shell__rail-toggle:focus-visible,
+.home-platform-shell__rail-toggle[aria-pressed="true"]{
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+}
+
+.home-platform-shell__rail-toggle-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-rail-toggle-icon-size);
+  height:var(--home-platform-shell-rail-toggle-icon-size);
+  flex:0 0 auto;
+}
+
+.home-platform-shell__rail-toggle-icon img{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+  object-fit:contain;
+  object-position:center;
+  filter:var(--icon-image-filter, none);
+}
+
+/* =============================================================================
+05) SHELL MAIN GRID
+============================================================================= */
+.home-platform-shell__main{
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+  max-width:var(--size-full);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:
+    var(--home-platform-shell-rail-width)
+    var(--home-platform-shell-subrail-width)
+    minmax(var(--spacing-none), 1fr);
+  padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
+  background:var(--home-platform-shell-surface);
+}
+
+/* =============================================================================
+06) RAIL MODE STATES
+============================================================================= */
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__main{
+  grid-template-columns:var(--home-platform-shell-subrail-width) minmax(var(--spacing-none), 1fr);
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__rail{
+  display:none;
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__subrail{
+  grid-column:1;
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__content{
+  grid-column:2;
+}
+
+.home-platform-shell__subrail[hidden]{
+  display:none !important;
+}
+
+.home-platform-shell__subrail[hidden] + .home-platform-shell__content{
+  grid-column:2 / -1;
+}
+
+.home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__subrail[hidden] + .home-platform-shell__content{
+  grid-column:1 / -1;
+}
+
+/* =============================================================================
+07) LEFT NAVIGATION RAIL
+============================================================================= */
+.home-platform-shell__rail,
+.home-platform-shell__subrail{
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  overflow:hidden;
+  background:var(--home-platform-shell-surface);
+}
+
+.home-platform-shell__rail{
+  border-right:var(--border-width-hairline) solid var(--panel-border-unified);
+}
+
+.home-platform-shell__subrail{
+  border-right:var(--border-width-hairline) solid var(--panel-border-unified);
+}
+
+.home-platform-shell__rail-inner,
+.home-platform-shell__subrail-inner{
+  height:var(--size-full);
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  padding:var(--home-platform-shell-rail-padding-top) var(--home-platform-shell-rail-padding-right) var(--home-platform-shell-rail-padding-bottom) var(--home-platform-shell-rail-padding-left);
+}
+
+.home-platform-shell__subrail-inner{
+  padding-left:var(--home-platform-shell-subrail-padding-left);
+}
+
+.home-platform-shell__group + .home-platform-shell__group{
+  margin-top:var(--home-platform-shell-group-margin-top);
+}
+
+.home-platform-shell__group-label,
+.home-platform-shell__subrail-label{
+  margin:var(--spacing-none) var(--spacing-none) var(--home-platform-shell-label-margin-bottom);
+  font-size:var(--home-platform-shell-label-size);
+  font-weight:var(--home-platform-shell-label-weight);
+  letter-spacing:var(--home-platform-shell-label-tracking);
+  text-transform:uppercase;
+  color:var(--home-platform-shell-muted-label-color);
+}
+
+.home-platform-shell__subrail-header{
+  display:grid;
+  gap:var(--home-platform-shell-subrail-header-gap);
+  margin-bottom:var(--home-platform-shell-subrail-header-margin-bottom);
+}
+
+.home-platform-shell__subrail-title{
+  margin:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--home-platform-shell-subrail-title-size);
+  font-weight:var(--home-platform-shell-subrail-title-weight);
+  line-height:var(--home-platform-shell-subrail-title-line-height);
+}
+
+.home-platform-shell__nav,
+.home-platform-shell__subnav{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-shell-nav-gap);
+}
+
+.home-platform-shell__rail-inner::-webkit-scrollbar,
+.home-platform-shell__subrail-inner::-webkit-scrollbar{
+  display:none;
+  width:var(--spacing-none);
+  height:var(--spacing-none);
+}
+
+/* =============================================================================
+08) PRIMARY NAVIGATION ITEMS
+============================================================================= */
+.home-platform-shell__nav-item,
+.home-platform-shell__subnav-item{
+  -webkit-appearance:none;
+  appearance:none;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--home-platform-shell-nav-item-gap);
+  width:var(--size-full);
+  min-height:var(--home-platform-shell-nav-item-min-height);
+  padding:var(--home-platform-shell-nav-item-padding);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--control-radius);
+  background:var(--control-surface);
+  color:var(--home-platform-shell-nav-color);
+  opacity:var(--home-platform-shell-nav-opacity);
+  text-align:left;
+  text-decoration:none;
+  transform:none;
+  transition:var(--interaction-transition-control);
+}
+
+.home-platform-shell__nav-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  flex:0 0 auto;
+}
+
+.home-platform-shell__nav-icon img{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+  filter:var(--icon-image-filter);
+}
+
+.home-platform-shell__nav-indicator{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:var(--home-platform-shell-nav-indicator-min-size);
+  min-height:var(--home-platform-shell-nav-indicator-min-size);
+  margin-left:auto;
+  padding:var(--spacing-none) var(--home-platform-shell-nav-indicator-padding-x);
+  border-radius:var(--control-radius);
+  background:var(--home-platform-shell-nav-indicator-bg);
+  color:var(--home-platform-shell-nav-indicator-color);
+  font-size:var(--home-platform-shell-nav-indicator-size);
+  font-weight:var(--home-platform-shell-nav-indicator-weight);
+  line-height:var(--home-platform-shell-nav-indicator-line-height);
+  letter-spacing:var(--home-platform-shell-nav-indicator-tracking);
+}
+
+.home-platform-shell__nav-indicator[data-home-platform-nav-indicator-state="new"]{
+  background:var(--home-platform-shell-nav-indicator-new-bg);
+  color:var(--home-platform-shell-nav-indicator-new-color);
+}
+
+.home-platform-shell__nav-indicator[data-home-platform-nav-indicator-state="high"]{
+  background:var(--home-platform-shell-nav-indicator-high-bg);
+  color:var(--home-platform-shell-nav-indicator-high-color);
+}
+
+.home-platform-shell__nav-item:hover,
+.home-platform-shell__nav-item:focus-visible,
+.home-platform-shell__nav-item[aria-pressed="true"],
+.home-platform-shell__nav-item[aria-current="page"],
+.home-platform-shell__nav-item.is-active,
+.home-platform-shell__subnav-item:hover,
+.home-platform-shell__subnav-item:focus-visible,
+.home-platform-shell__subnav-item[aria-pressed="true"],
+.home-platform-shell__subnav-item.is-active{
+  border-color:var(--home-platform-shell-nav-item-border-active);
+  background:var(--home-platform-shell-nav-item-bg-active);
+  color:var(--home-platform-shell-nav-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+  transform:none;
+}
+
+.home-platform-shell__nav-text{
+  display:inline-flex;
+  align-items:center;
+  min-width:var(--spacing-none);
+  font-size:var(--home-platform-shell-nav-text-size);
+  font-weight:var(--home-platform-shell-nav-text-weight);
+  line-height:var(--home-platform-shell-nav-text-line-height);
+  letter-spacing:var(--home-platform-shell-nav-text-tracking);
+}
+
+.home-platform-shell__subnav-item{
+  padding-right:var(--home-platform-shell-subnav-padding-x);
+  padding-left:var(--home-platform-shell-subnav-padding-x);
+  min-height:var(--home-platform-shell-subnav-min-height);
+  font-size:var(--home-platform-shell-subnav-size);
+  line-height:var(--home-platform-shell-subnav-line-height);
+}
+
+/* =============================================================================
+09) MIDDLE NAVIGATION LAYER
+============================================================================= */
+.home-platform-shell__content{
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  max-width:var(--size-full);
+  overflow:hidden;
+  background:var(--home-platform-shell-surface);
+  display:flex;
+  flex-direction:column;
+}
+
+.home-platform-shell__content-header{
+  display:grid;
+  gap:var(--home-platform-shell-content-header-gap);
+  padding:var(--home-platform-shell-content-header-padding-top) var(--home-platform-shell-content-header-padding-right) var(--home-platform-shell-content-header-padding-bottom) var(--home-platform-shell-content-header-padding-left);
+  border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
+}
+
+.home-platform-shell__content-eyebrow{
+  margin:var(--spacing-none);
+  color:var(--home-platform-shell-muted-label-color);
+  font-size:var(--home-platform-shell-label-size);
+  font-weight:var(--home-platform-shell-label-weight);
+  letter-spacing:var(--home-platform-shell-label-tracking);
+  text-transform:uppercase;
+}
+
+.home-platform-shell__content-title{
+  margin:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--home-platform-shell-content-title-size);
+  font-weight:var(--home-platform-shell-content-title-weight);
+  line-height:var(--home-platform-shell-content-title-line-height);
+  letter-spacing:var(--home-platform-shell-content-title-tracking);
+}
+
+.home-platform-shell__content-copy{
+  margin:var(--spacing-none);
+  max-width:var(--home-platform-shell-content-copy-max-width);
+  font-size:var(--home-platform-shell-content-copy-size);
+  font-weight:var(--home-platform-shell-content-copy-weight);
+  line-height:var(--home-platform-shell-content-copy-line-height);
+  letter-spacing:var(--home-platform-shell-content-copy-tracking);
+  color:var(--home-platform-shell-muted-copy-color);
+}
+
+.home-platform-shell__content-inner{
+  height:var(--size-full);
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  padding:var(--home-platform-shell-content-inner-padding-top) var(--spacing-none) calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-content-inner-footer-gap)) var(--home-platform-shell-content-inner-padding-left);
+}
+
+.home-platform-shell__content-inner::-webkit-scrollbar{
+  display:none;
+  width:var(--spacing-none);
+  height:var(--spacing-none);
+}
+
+.home-platform-destination,
+.home-platform-destination__surface{
+  display:grid;
+  gap:var(--home-platform-shell-destination-gap);
+  min-width:var(--spacing-none);
+  max-width:var(--size-full);
+  overflow-x:hidden;
+}
+
+.home-platform-shell__content-stack,
+.home-platform-shell__content-state{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-shell-content-stack-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-shell__content-state-title{
+  margin:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--home-platform-shell-state-title-size);
+  font-weight:var(--home-platform-shell-state-title-weight);
+  line-height:var(--home-platform-shell-state-title-line-height);
+  letter-spacing:var(--home-platform-shell-state-title-tracking);
+}
+
+.home-platform-shell__content-state-copy{
+  margin:var(--spacing-none);
+  max-width:var(--home-platform-shell-state-copy-max-width);
+  color:var(--home-platform-shell-muted-copy-color);
+  font-size:var(--home-platform-shell-state-copy-size);
+  line-height:var(--home-platform-shell-state-copy-line-height);
+}
+
+.home-platform-shell__content-state-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:max-content;
+  min-height:var(--home-platform-shell-state-action-min-height);
+  padding:var(--spacing-none) var(--home-platform-shell-state-action-padding-x);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--control-radius);
+  background:var(--control-surface);
+  color:var(--home-platform-shell-nav-color);
+  text-decoration:none;
+  font-size:var(--home-platform-shell-state-action-size);
+  font-weight:var(--home-platform-shell-state-action-weight);
+  letter-spacing:var(--home-platform-shell-state-action-tracking);
+  text-transform:uppercase;
+  line-height:var(--home-platform-shell-nav-indicator-line-height);
+  transition:var(--interaction-transition-control);
+}
+
+.home-platform-shell__content-state-action:hover,
+.home-platform-shell__content-state-action:focus-visible{
+  border-color:var(--home-platform-shell-nav-item-border-active);
+  background:var(--home-platform-shell-nav-item-bg-active);
+  color:var(--home-platform-shell-nav-hover-color);
+  outline:none;
+}
+
+/* =============================================================================
+10) RIGHT DETAIL SURFACE
+============================================================================= */
+.home-platform-shell__content-inner > *{
+  min-width:var(--spacing-none);
+}
+
+.home-platform-shell__content-stack .home-workspace-panel__summary-card,
+.home-platform-shell__content-stack .home-profile-control-panel__identity-card,
+.home-platform-shell__content-stack .home-profile-control-panel__status-card{
+  background:var(--home-panel-card-surface);
+  border:var(--border-width-hairline) solid var(--panel-border-unified);
+  border-radius:var(--radius-none);
+}
+
+/* =============================================================================
+11) EMBEDDED SECTION REFINEMENTS
+============================================================================= */
+.home-platform-shell__content-stack .home-workspace-panel__section,
+.home-platform-shell__content-stack .home-profile-control-panel__section,
+.home-platform-shell__content-stack .home-settings-panel__section{
+  gap:var(--home-platform-shell-embedded-section-gap);
+}
+
+.home-platform-shell__content-stack .home-workspace-panel__stack,
+.home-platform-shell__content-stack .home-profile-control-panel__stack,
+.home-platform-shell__content-stack .home-settings-panel__stack{
+  gap:var(--home-platform-shell-embedded-stack-gap);
+}
+
+/* =============================================================================
+12) PLATFORM SCROLL GOVERNANCE
+============================================================================= */
+.home-platform-shell,
+.home-platform-shell *{
+  box-sizing:border-box;
+}
+
+.home-platform-shell__main,
+.home-platform-shell__content,
+.home-platform-shell__content-inner,
+.home-platform-destination,
+.home-platform-destination__surface{
+  min-width:var(--spacing-none);
+}
+
+.home-platform-shell__content-inner > *,
+.home-platform-destination > *,
+.home-platform-destination__surface > *{
+  max-width:var(--size-full);
+}
+
+/* =============================================================================
+13) RESPONSIVE STATES
+============================================================================= */
+@media (max-width: 1024px){
+  .home-platform-shell__main{
+    grid-template-columns:
+      minmax(var(--home-platform-shell-tablet-rail-min), var(--home-platform-shell-tablet-rail-max))
+      minmax(var(--home-platform-shell-tablet-subrail-min), var(--home-platform-shell-tablet-subrail-max))
+      minmax(var(--spacing-none), 1fr);
+  }
+
+  .home-platform-shell__rail-inner,
+  .home-platform-shell__subrail-inner{
+    padding-right:var(--home-platform-shell-tablet-rail-padding-right);
+  }
+
+  .home-platform-shell__content-header{
+    padding-left:var(--home-platform-shell-tablet-content-padding-left);
+  }
+
+  .home-platform-shell__content-inner{
+    padding-left:var(--home-platform-shell-tablet-content-padding-left);
+  }
+}
+
+@media (max-width: 760px){
+  .home-platform-shell{
+    --home-platform-shell-inline-padding:max(var(--site-gutter), var(--home-platform-shell-mobile-inline-padding-fallback));
+  }
+
+  .home-platform-shell__main{
+    grid-template-columns:var(--grid-column-single);
+  }
+
+  .home-platform-shell__rail,
+  .home-platform-shell__subrail{
+    display:none;
+  }
+
+  .home-platform-shell__content,
+  .home-platform-shell__subrail[hidden] + .home-platform-shell__content{
+    grid-column:1 / -1;
+  }
+
+  .home-platform-shell__content-header{
+    padding:var(--home-platform-shell-mobile-content-header-padding-top) var(--spacing-none) var(--home-platform-shell-mobile-content-header-padding-bottom);
+  }
+
+  .home-platform-shell__content-inner{
+    padding:var(--home-platform-shell-mobile-content-inner-padding-top) var(--spacing-none) calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-mobile-content-inner-footer-gap));
+  }
+}
+
+/* =============================================================================
+14) END OF FILE
+============================================================================= */

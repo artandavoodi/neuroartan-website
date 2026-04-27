@@ -1,0 +1,20 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) SHELL AUTHORITY IMPORTS
+   02) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) SHELL AUTHORITY IMPORTS
+============================================================================= */
+@import url('./home-dashboard-topbar.css');
+@import url('./home-workspace-panel.css');
+@import url('./home-profile-control-panel.css');
+@import url('./home-search-shell.css');
+@import url('./home-settings-panel.css');
+@import url('./home-navigation-drawer.css');
+@import url('./home-footer.css');
+
+/* =============================================================================
+   02) END OF FILE
+============================================================================= */

@@ -7,19 +7,13 @@
 /* =============================================================================
    01) HOME LAYER AUTHORITY IMPORTS
 ============================================================================= */
-@import url('./home-dashboard-topbar.css');
-@import url('./home-platform-shell.css');
-@import url('./home-workspace-panel.css');
-@import url('./home-profile-control-panel.css');
-@import url('./home-search-shell.css');
-@import url('./home-settings-panel.css');
-@import url('./home-interaction-panel.css');
-@import url('./home-interaction-response-panel.css');
-@import url('./home-stage-composition.css');
+@import url('./background/00-background-all.css');
+@import url('./shell/00-shell-all.css');
+@import url('./platform-menu/00-platform-menu-all.css');
+@import url('./stage/00-stage-all.css');
 @import url('./interaction-settings/00-interaction-settings-all.css');
-@import url('./home-stage-interactive-text.css');
+@import url('./featured-functions/00-featured-functions-all.css');
 @import url('./home-shell.css');
-@import url('./home-footer.css');
 
 /* =============================================================================
    02) END OF FILE

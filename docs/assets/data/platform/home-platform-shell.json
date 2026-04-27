@@ -19,18 +19,18 @@
           "label": "Actions",
           "detail_title": "Continuity Actions",
           "detail_copy": "History traversal, active route logic, and continuity operating actions.",
-          "fragment": "/assets/fragments/layers/website/home/platform/continuity/continuity-actions.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/continuity/continuity-actions.css",
-          "module": "/assets/js/layers/website/home/platform/continuity/continuity-actions.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/continuity-actions.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/continuity-actions.css",
+          "module": "/assets/js/layers/website/home/platform-menu/continuity/continuity-actions.js"
         },
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
           "detail_title": "Public Surfaces",
           "detail_copy": "Published continuity, history, and knowledge routes linked from the homepage shell.",
-          "fragment": "/assets/fragments/layers/website/home/platform/continuity/public-surfaces.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/continuity/public-surfaces.css",
-          "module": "/assets/js/layers/website/home/platform/continuity/public-surfaces.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/public-surfaces.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/public-surfaces.css",
+          "module": "/assets/js/layers/website/home/platform-menu/continuity/public-surfaces.js"
         }
       ]
     },
@@ -46,63 +46,63 @@
           "label": "Current Interaction",
           "detail_title": "Current Interaction",
           "detail_copy": "Live voice mode, route state, and interaction continuity from the homepage surface.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/interaction-state.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/interaction-state.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/interaction-state.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/interaction-state.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/interaction-state.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/interaction-state.js"
         },
         {
           "id": "model-overview",
           "label": "Model Overview",
           "detail_title": "Model Overview",
           "detail_copy": "Canonical model records, owner state, and creation workflow from the Supabase-backed model layer.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/model-overview.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/model-overview.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/model-overview.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-overview.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-overview.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/model-overview.js"
         },
         {
           "id": "model-sources",
           "label": "Sources",
           "detail_title": "Source Connections",
           "detail_copy": "Model-owned source authorization and connector readiness.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/model-sources.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/model-sources.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/model-sources.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-sources.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-sources.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/model-sources.js"
         },
         {
           "id": "model-training",
           "label": "Training",
           "detail_title": "Training and Readiness",
           "detail_copy": "Training, ingestion, provenance, and retrieval readiness states.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/model-training.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/model-training.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/model-training.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-training.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-training.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/model-training.js"
         },
         {
           "id": "model-runtime",
           "label": "Runtime",
           "detail_title": "Runtime and Publication",
           "detail_copy": "Provider routing, active model state, and publication controls.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/model-runtime.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/model-runtime.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/model-runtime.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-runtime.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-runtime.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/model-runtime.js"
         },
         {
           "id": "continuity-actions",
           "label": "Continuity Actions",
           "detail_title": "Continuity Actions",
           "detail_copy": "Continue by voice, open continuity history, or move into linked knowledge surfaces.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/continuity-actions.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/continuity-actions.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/continuity-actions.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/continuity-actions.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/continuity-actions.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/continuity-actions.js"
         },
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
           "detail_title": "Public Surfaces",
           "detail_copy": "Homepage-linked public surfaces for continuity, research, and product context.",
-          "fragment": "/assets/fragments/layers/website/home/platform/workspace/public-surfaces.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/workspace/public-surfaces.css",
-          "module": "/assets/js/layers/website/home/platform/workspace/public-surfaces.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/public-surfaces.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/public-surfaces.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/public-surfaces.js"
         }
       ]
     },
@@ -118,27 +118,27 @@
           "label": "Overview",
           "detail_title": "Profile Overview",
           "detail_copy": "Avatar, identity, public-route readiness, plan state, and quick trust signals.",
-          "fragment": "/assets/fragments/layers/website/home/platform/profile/overview.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/profile/overview.css",
-          "module": "/assets/js/layers/website/home/platform/profile/overview.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/overview.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/overview.css",
+          "module": "/assets/js/layers/website/home/platform-menu/profile/overview.js"
         },
         {
           "id": "account-control",
           "label": "Account Control",
           "detail_title": "Account Control",
           "detail_copy": "Account identity, subscription, owned models, verification, and linked accounts.",
-          "fragment": "/assets/fragments/layers/website/home/platform/profile/account-control.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/profile/account-control.css",
-          "module": "/assets/js/layers/website/home/platform/profile/account-control.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/account-control.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/account-control.css",
+          "module": "/assets/js/layers/website/home/platform-menu/profile/account-control.js"
         },
         {
           "id": "shortcuts",
           "label": "Shortcuts",
           "detail_title": "Shortcuts",
           "detail_copy": "Jump directly into dashboard, settings, and sign-out control from one governed surface.",
-          "fragment": "/assets/fragments/layers/website/home/platform/profile/shortcuts.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/profile/shortcuts.css",
-          "module": "/assets/js/layers/website/home/platform/profile/shortcuts.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/shortcuts.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/shortcuts.css",
+          "module": "/assets/js/layers/website/home/platform-menu/profile/shortcuts.js"
         }
       ]
     },
@@ -150,58 +150,31 @@
       "default_subdestination": "theme",
       "subdestinations": [
         {
-          "id": "account-security",
-          "label": "Account & Security",
-          "detail_title": "Account and Security",
-          "detail_copy": "Authentication, recovery, and access state for the Supabase-first account layer.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/account-security.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/account-security.css",
-          "module": "/assets/js/layers/website/home/platform/settings/account-security.js"
-        },
-        {
           "id": "theme",
           "label": "Theme",
           "detail_title": "Theme",
           "detail_copy": "Color, dark, and light modes governed by the canonical shared theme system.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/theme.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/theme.css",
-          "module": "/assets/js/layers/website/home/platform/settings/theme.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/theme.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/theme.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/theme.js"
         },
         {
           "id": "language-privacy",
           "label": "Language & Privacy",
           "detail_title": "Language, Region, and Privacy",
           "detail_copy": "Country, language, and cookie/privacy controls linked to the global systems.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/language-privacy.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/language-privacy.css",
-          "module": "/assets/js/layers/website/home/platform/settings/language-privacy.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/language-privacy.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/language-privacy.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/language-privacy.js"
         },
         {
           "id": "identity-route",
           "label": "Identity & Route",
           "detail_title": "Identity and Route",
           "detail_copy": "Private profile access and public-route readiness from one settings layer.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/identity-route.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/identity-route.css",
-          "module": "/assets/js/layers/website/home/platform/settings/identity-route.js"
-        },
-        {
-          "id": "model-settings",
-          "label": "Model Settings",
-          "detail_title": "Model Settings",
-          "detail_copy": "Model visibility, publication, runtime, and source/training settings.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/model-settings.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/model-settings.css",
-          "module": "/assets/js/layers/website/home/platform/settings/model-settings.js"
-        },
-        {
-          "id": "notifications-security",
-          "label": "Notifications",
-          "detail_title": "Notifications and Security Signals",
-          "detail_copy": "Notification posture, security notices, and future message state preferences.",
-          "fragment": "/assets/fragments/layers/website/home/platform/settings/notifications-security.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/settings/notifications-security.css",
-          "module": "/assets/js/layers/website/home/platform/settings/notifications-security.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/identity-route.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/identity-route.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/identity-route.js"
         }
       ]
     },
@@ -217,9 +190,9 @@
           "label": "Overview",
           "detail_title": "Messaging",
           "detail_copy": "Messaging and continuity-linked conversations will land here as the platform communication layer.",
-          "fragment": "/assets/fragments/layers/website/home/platform/messaging/overview.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/messaging/overview.css",
-          "module": "/assets/js/layers/website/home/platform/messaging/overview.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/messaging/overview.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/messaging/overview.css",
+          "module": "/assets/js/layers/website/home/platform-menu/messaging/overview.js"
         }
       ]
     },
@@ -235,9 +208,9 @@
           "label": "Overview",
           "detail_title": "Notifications",
           "detail_copy": "Verification changes, activity alerts, and platform notifications will resolve here.",
-          "fragment": "/assets/fragments/layers/website/home/platform/notifications/overview.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/notifications/overview.css",
-          "module": "/assets/js/layers/website/home/platform/notifications/overview.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/notifications/overview.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/notifications/overview.css",
+          "module": "/assets/js/layers/website/home/platform-menu/notifications/overview.js"
         }
       ]
     },
@@ -253,9 +226,9 @@
           "label": "Overview",
           "detail_title": "More",
           "detail_copy": "Institutional, legal, and support surfaces remain grouped here without overloading the primary product navigation.",
-          "fragment": "/assets/fragments/layers/website/home/platform/more/overview.html",
-          "stylesheet": "/assets/css/layers/website/home/platform/more/overview.css",
-          "module": "/assets/js/layers/website/home/platform/more/overview.js"
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/more/overview.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/more/overview.css",
+          "module": "/assets/js/layers/website/home/platform-menu/more/overview.js"
         }
       ]
     }

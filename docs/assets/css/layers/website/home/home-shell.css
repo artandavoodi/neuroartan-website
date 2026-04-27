@@ -54,19 +54,19 @@ html[data-theme-effective="light"] .home-shell{
 /* =============================================================================
    02) SHELL OPEN STATES
 ============================================================================= */
-body.home-page.home-platform-shell-open #stage-intro,
-body.home-page.home-search-shell-open #stage-intro{
+body.home-page.site-entered.home-platform-shell-open #stage-intro,
+body.home-page.site-entered.home-search-shell-open #stage-intro{
   opacity:0 !important;
   visibility:hidden;
   pointer-events:none !important;
 }
 
-body.home-page.home-platform-shell-open #home-footer-mount,
-body.home-page.home-platform-shell-open .home-shell__footer,
-body.home-page.home-platform-shell-open .home-shell__footer-separator,
-body.home-page.home-search-shell-open #home-footer-mount,
-body.home-page.home-search-shell-open .home-shell__footer,
-body.home-page.home-search-shell-open .home-shell__footer-separator{
+body.home-page.site-entered.home-platform-shell-open #home-footer-mount,
+body.home-page.site-entered.home-platform-shell-open .home-shell__footer,
+body.home-page.site-entered.home-platform-shell-open .home-shell__footer-separator,
+body.home-page.site-entered.home-search-shell-open #home-footer-mount,
+body.home-page.site-entered.home-search-shell-open .home-shell__footer,
+body.home-page.site-entered.home-search-shell-open .home-shell__footer-separator{
   opacity:0 !important;
   visibility:hidden;
   pointer-events:none !important;

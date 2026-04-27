@@ -8,19 +8,13 @@
    01. HOME LAYER AUTHORITY IMPORTS
    ========================================================= */
 
-import './home-surface-state.js';
-import './home-dashboard-topbar.js';
-import './home-platform-shell.js';
-import './home-workspace-panel.js';
-import './home-profile-control-panel.js';
-import './home-search-shell.js';
-import './home-settings-panel.js';
-import './home-footer.js';
-import './home-interaction-panel.js';
-import './home-interaction-response-panel.js';
+import './core/00-core-all.js';
+import './background/00-background-all.js';
+import './shell/00-shell-all.js';
+import './platform-menu/00-platform-menu-all.js';
+import './stage/00-stage-all.js';
 import './interaction-settings/00-interaction-settings-all.js';
-import './home-stage-interactive-text.js';
-import './home-interaction-panel-state.js';
+import './featured-functions/00-featured-functions-all.js';
 
 /* =========================================================
    02. END OF FILE

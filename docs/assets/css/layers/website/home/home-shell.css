@@ -29,6 +29,8 @@
   --home-panel-shadow: 0 24px 72px rgba(0, 0, 0, 0.16);
   --home-panel-card-surface: var(--control-bg);
   --home-panel-card-border: var(--control-border);
+  --home-panel-radius:var(--control-radius-composer);
+  --home-panel-card-radius:var(--control-radius-composer);
 
   --home-shell-topbar-height: 3.55rem;
   --home-shell-footer-separator-offset: 3.25rem;
@@ -49,6 +51,8 @@ html[data-theme-effective="light"] .home-shell{
   --home-panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
   --home-panel-card-surface: var(--control-bg);
   --home-panel-card-border: var(--control-border);
+  --home-panel-radius:var(--control-radius-composer);
+  --home-panel-card-radius:var(--control-radius-composer);
 }
 
 /* =============================================================================
@@ -136,7 +140,7 @@ body.home-page.site-entered.home-search-shell-open .home-shell__footer-separator
   box-shadow:var(--home-panel-shadow);
   backdrop-filter:blur(18px) saturate(145%);
   -webkit-backdrop-filter:blur(18px) saturate(145%);
-  border-radius:0;
+  border-radius:var(--home-panel-radius);
   padding:1.25rem 1.25rem 1.6rem;
 }
 
@@ -145,7 +149,7 @@ body.home-page.site-entered.home-search-shell-open .home-shell__footer-separator
 .home-profile-control-panel__status-card{
   background:var(--home-panel-card-surface);
   border:1px solid var(--home-panel-card-border);
-  border-radius:0;
+  border-radius:var(--home-panel-card-radius);
 }
 
 .home-profile-control-panel__avatar{

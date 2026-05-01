@@ -37,7 +37,7 @@
   --home-search-shell-input-row-min-height:var(--layout-home-search-input-row-min-height);
   --home-search-shell-input-row-padding-y:var(--layout-home-search-input-row-padding-y);
   --home-search-shell-input-row-padding-x:var(--layout-home-search-input-row-padding-x);
-  --home-search-shell-input-row-radius:var(--control-radius);
+  --home-search-shell-input-row-radius:var(--control-radius-composer);
   --home-search-shell-input-row-line-height:var(--layout-home-search-input-row-line-height);
   --home-search-shell-input-row-opacity:var(--layout-home-search-input-row-opacity);
   --home-search-shell-input-row-border:var(--layout-home-search-input-row-border);
@@ -231,7 +231,7 @@
   min-height:var(--home-search-shell-input-row-min-height);
   padding:var(--home-search-shell-input-row-padding-y) var(--home-search-shell-input-row-padding-x);
   border:1px solid var(--home-search-shell-input-row-border);
-  border-radius:var(--control-radius);
+  border-radius:var(--home-search-shell-input-row-radius);
   background:transparent;
   box-sizing:border-box;
   line-height:var(--home-search-shell-input-row-line-height);
@@ -337,7 +337,7 @@
   min-height:var(--home-search-shell-chip-min-height);
   padding:0 var(--home-search-shell-chip-padding-x);
   border:1px solid color-mix(in srgb, var(--text-primary-color) 12%, transparent);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   background:transparent;
   color:var(--text-secondary-color);
   font-size:var(--home-search-shell-chip-size);
@@ -452,7 +452,7 @@
   min-height:var(--home-search-shell-result-badge-min-height);
   padding:0 var(--home-search-shell-result-badge-padding-x);
   border:1px solid color-mix(in srgb, var(--home-search-shell-result-badge-color) 30%, transparent);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   background:color-mix(in srgb, var(--home-search-shell-result-badge-color) 10%, transparent);
   color:var(--home-search-shell-result-badge-color);
   font-size:var(--home-search-shell-result-badge-size);
@@ -479,7 +479,7 @@
   min-height:var(--home-search-shell-result-tag-min-height);
   padding:0 var(--home-search-shell-result-tag-padding-x);
   border:1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
   background:transparent;
   font-size:var(--home-search-shell-result-tag-size);
@@ -507,7 +507,7 @@
   min-height:var(--home-search-shell-result-action-min-height);
   padding:0 var(--home-search-shell-result-action-padding-x);
   border:1px solid color-mix(in srgb, var(--text-primary-color) 12%, transparent);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   background:transparent;
   color:var(--text-secondary-color);
   text-decoration:none;

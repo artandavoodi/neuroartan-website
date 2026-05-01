@@ -49,7 +49,7 @@
   --home-platform-shell-shadow:var(--panel-shadow-unified);
   --home-platform-shell-blur:var(--panel-blur-unified);
   --home-platform-shell-saturate:var(--panel-saturate-unified);
-  --home-platform-shell-nav-item-radius:var(--control-radius);
+  --home-platform-shell-nav-item-radius:var(--control-radius-composer);
   --home-platform-shell-nav-item-padding:var(--home-platform-shell-nav-item-padding-y) var(--home-platform-shell-nav-item-padding-x);
   --home-platform-shell-nav-item-bg-active:var(--control-surface-hover);
   --home-platform-shell-nav-item-border-active:var(--control-border-hover-unified);
@@ -101,7 +101,7 @@
   --home-platform-shell-nav-gap:var(--layout-home-platform-nav-gap);
   --home-platform-shell-nav-item-gap:var(--layout-home-platform-nav-item-gap);
   --home-platform-shell-nav-item-min-height:var(--layout-home-platform-nav-item-min-height);
-  --home-platform-shell-nav-item-radius:var(--control-radius);
+  --home-platform-shell-nav-item-radius:var(--control-radius-composer);
   --home-platform-shell-nav-item-padding-y:var(--layout-home-platform-nav-item-padding-y);
   --home-platform-shell-nav-item-padding-x:var(--layout-home-platform-nav-item-padding-x);
   --home-platform-shell-nav-icon-size:var(--layout-home-platform-nav-icon-size);
@@ -431,7 +431,7 @@
   min-height:var(--home-platform-shell-nav-item-min-height);
   padding:var(--home-platform-shell-nav-item-padding);
   border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--control-radius);
+  border-radius:var(--home-platform-shell-nav-item-radius);
   background:var(--control-surface);
   color:var(--home-platform-shell-nav-color);
   opacity:var(--home-platform-shell-nav-opacity);
@@ -465,7 +465,7 @@
   min-height:var(--home-platform-shell-nav-indicator-min-size);
   margin-left:auto;
   padding:var(--spacing-none) var(--home-platform-shell-nav-indicator-padding-x);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   background:var(--home-platform-shell-nav-indicator-bg);
   color:var(--home-platform-shell-nav-indicator-color);
   font-size:var(--home-platform-shell-nav-indicator-size);
@@ -665,7 +665,7 @@
   min-height:var(--home-platform-shell-state-action-min-height);
   padding:var(--spacing-none) var(--home-platform-shell-state-action-padding-x);
   border:var(--border-width-hairline) solid var(--control-border-unified);
-  border-radius:var(--control-radius);
+  border-radius:var(--control-radius-composer);
   background:var(--control-surface);
   color:var(--home-platform-shell-nav-color);
   text-decoration:none;
@@ -697,7 +697,7 @@
 .home-platform-shell__content-stack .home-profile-control-panel__status-card{
   background:var(--home-panel-card-surface);
   border:var(--border-width-hairline) solid var(--panel-border-unified);
-  border-radius:var(--radius-none);
+  border-radius:var(--home-panel-card-radius);
 }
 
 /* =============================================================================

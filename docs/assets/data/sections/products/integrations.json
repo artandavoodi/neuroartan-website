@@ -1,0 +1,88 @@
+{
+  "page": {
+    "route": "/pages/products/integrations/index.html",
+    "title": "Integrations"
+  },
+  "sections": [
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "title": "Integrations",
+      "anchor": "#integrations",
+      "paragraphs": [
+        "ICOS integrations define how the product connects trusted inputs, governed services, and future external systems without weakening the core architecture.",
+        "The integration layer is designed to extend capability while preserving continuity, permissions, and user control.",
+        "Each integration must serve the product system rather than fragment it into unrelated tools."
+      ],
+      "highlights": [
+        "Governed service connections",
+        "Permission-aware expansion",
+        "Unified product continuity"
+      ]
+    },
+    {
+      "id": "vault-integration",
+      "label": "Vault Integration",
+      "title": "Vault Integration",
+      "anchor": "#vault-integration",
+      "paragraphs": [
+        "Vault integration connects ICOS with durable knowledge structures, preserved reflections, and governed records.",
+        "This allows profile memory and user-authored material to remain organized rather than scattered across disconnected surfaces.",
+        "The vault layer supports long-term continuity and review without reducing the product to simple storage."
+      ],
+      "highlights": [
+        "Structured knowledge connection",
+        "Governed record continuity",
+        "Long-term review support"
+      ]
+    },
+    {
+      "id": "model-integration",
+      "label": "Model Integration",
+      "title": "Model Integration",
+      "anchor": "#model-integration",
+      "paragraphs": [
+        "Model integration allows ICOS to route interaction through suitable intelligence layers while preserving product-level governance.",
+        "The system can evolve across model providers, local models, and future dedicated infrastructure without changing the user-facing continuity logic.",
+        "This keeps ICOS flexible at the intelligence layer while maintaining a stable product identity."
+      ],
+      "highlights": [
+        "Provider-flexible routing",
+        "Local model readiness",
+        "Stable product identity"
+      ]
+    },
+    {
+      "id": "identity-integration",
+      "label": "Identity Integration",
+      "title": "Identity Integration",
+      "anchor": "#identity-integration",
+      "paragraphs": [
+        "Identity integration governs how profiles, access states, and public or private visibility settings connect across the product.",
+        "It protects the boundary between user-owned continuity and public discovery surfaces.",
+        "This makes identity a governed product system rather than a passive account layer."
+      ],
+      "highlights": [
+        "Profile-aware access",
+        "Public and private boundaries",
+        "Governed identity state"
+      ]
+    },
+    {
+      "id": "publishing-integration",
+      "label": "Publishing Integration",
+      "title": "Publishing Integration",
+      "anchor": "#publishing-integration",
+      "paragraphs": [
+        "Publishing integration connects selected profile or knowledge material to public-facing surfaces when permissions allow it.",
+        "The product can support discovery, presentation, and controlled exposure without making private continuity public by default.",
+        "This creates a clean bridge between internal reflection and external publication."
+      ],
+      "highlights": [
+        "Permission-based publication",
+        "Discovery-ready surfaces",
+        "Private-to-public control"
+      ]
+    }
+  ]
+}

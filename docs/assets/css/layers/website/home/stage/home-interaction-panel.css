@@ -32,7 +32,7 @@
   --home-interaction-panel-input-max-height:var(--layout-home-interaction-panel-input-max-height);
   --home-interaction-panel-input-padding-y:var(--layout-home-interaction-panel-input-padding-y);
   --home-interaction-panel-input-padding-x:var(--layout-home-interaction-panel-input-padding-x);
-  --home-interaction-panel-input-radius:var(--control-radius);
+  --home-interaction-panel-input-radius:var(--control-radius-composer);
   --home-interaction-panel-input-surface:transparent;
   --home-interaction-panel-input-border:transparent;
   --home-interaction-panel-input-border-focus:transparent;
@@ -56,7 +56,7 @@
 
   --home-interaction-panel-model-height:var(--layout-home-interaction-panel-model-height);
   --home-interaction-panel-model-padding-x:var(--layout-home-interaction-panel-model-padding-x);
-  --home-interaction-panel-model-radius:var(--control-radius);
+  --home-interaction-panel-model-radius:var(--control-radius-composer);
   --home-interaction-panel-model-bg:var(--control-bg);
   --home-interaction-panel-model-border:var(--control-border);
   --home-interaction-panel-model-text:var(--text-primary-color);
@@ -68,7 +68,7 @@
 
   --home-interaction-panel-submit-height:var(--layout-home-interaction-panel-submit-height);
   --home-interaction-panel-submit-padding-x:var(--layout-home-interaction-panel-submit-padding-x);
-  --home-interaction-panel-submit-radius:var(--control-radius);
+  --home-interaction-panel-submit-radius:var(--control-radius-composer);
   --home-interaction-panel-submit-bg:var(--control-bg);
   --home-interaction-panel-submit-border:var(--control-border);
   --home-interaction-panel-submit-text:var(--text-primary-color);
@@ -159,7 +159,7 @@
   padding:var(--home-interaction-panel-input-padding-y) var(--home-interaction-panel-input-padding-x);
   box-sizing:border-box;
   border:var(--border-width-hairline) solid var(--home-interaction-panel-input-border);
-  border-radius:var(--control-radius);
+  border-radius:var(--home-interaction-panel-input-radius);
   background:var(--home-interaction-panel-input-surface);
   color:var(--home-interaction-panel-input-text);
   font:inherit;
@@ -306,7 +306,7 @@
   min-height:var(--home-interaction-panel-model-height);
   padding:var(--spacing-none) var(--home-interaction-panel-model-padding-x);
   border:var(--border-width-hairline) solid var(--home-interaction-panel-model-border);
-  border-radius:var(--control-radius);
+  border-radius:var(--home-interaction-panel-model-radius);
   background:var(--home-interaction-panel-model-bg);
   color:var(--home-interaction-panel-model-text);
   gap:var(--home-interaction-panel-model-gap);
@@ -455,7 +455,7 @@
   min-height:var(--home-interaction-panel-submit-height);
   padding:var(--spacing-none) var(--home-interaction-panel-submit-padding-x);
   border:var(--border-width-hairline) solid var(--home-interaction-panel-submit-border);
-  border-radius:var(--control-radius);
+  border-radius:var(--home-interaction-panel-submit-radius);
   background:var(--home-interaction-panel-submit-bg);
   color:var(--home-interaction-panel-submit-text);
   gap:var(--home-interaction-panel-submit-gap);

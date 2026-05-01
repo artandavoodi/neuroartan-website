@@ -44,7 +44,9 @@
   const normalizePath = (path) => {
     const value = String(path || '').trim();
     if (!value) return '/';
-    return value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+
+    const clean = value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+    return clean.endsWith('/index.html') ? clean.slice(0, -'/index.html'.length) || '/' : clean;
   };
 
   /* =============================================================================
@@ -135,10 +137,6 @@
     return response.text();
   }
 
-  function isOverviewSection() {
-    return state.activeSection?.id === 'overview';
-  }
-
   function getActiveContentSource() {
     return state.activeSection?.contentSource || null;
   }
@@ -167,22 +165,6 @@
   /* =============================================================================
      06) CONTENT HELPERS
   ============================================================================= */
-  async function renderOverviewContent(target) {
-    if (!target) return;
-
-    const overviewUrl = assetPath(getActiveContentSourcePath() || '/pages/products/overview/index.html');
-    const html = await fetchText(overviewUrl);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const content = doc.querySelector('.products-overview-content');
-
-    if (!content) {
-      throw new Error('Overview content root `.products-overview-content` not found.');
-    }
-
-    mountHtml(target, content.outerHTML, 'products-index-shell');
-  }
-
   function renderDetailList(items = []) {
     if (!Array.isArray(items) || !items.length) return '';
 
@@ -208,10 +190,12 @@
     const blocks = sections.map((section) => {
       const sectionId = escapeHtml(section.id || '');
       const title = escapeHtml(section.title || section.label || '');
-      const intro = escapeHtml(section.description || '');
-      const paragraphs = Array.isArray(section.paragraphs)
-        ? section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')
-        : '';
+      const paragraphItems = Array.isArray(section.paragraphs) && section.paragraphs.length
+        ? section.paragraphs
+        : section.description
+          ? [section.description]
+          : [];
+      const paragraphs = paragraphItems.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('');
       const highlights = renderDetailList(section.highlights);
 
       return `
@@ -219,7 +203,6 @@
           <div class="products-detail-block__inner">
             <div class="products-detail-block__copy">
               <h2 class="products-detail-block__title" id="${sectionId}-title">${title}</h2>
-              ${intro ? `<p class="products-detail-block__intro">${intro}</p>` : ''}
               <div class="products-detail-block__prose">${paragraphs}</div>
             </div>
             ${highlights}
@@ -231,9 +214,6 @@
     mountHtml(target, `
       <section class="products-detail-shell" aria-label="${escapeHtml(page.title || state.activeSection?.title || 'Products detail content')}">
         <div class="products-detail-shell__inner">
-          ${page.description
-            ? `<header class="products-detail-shell__header" data-motion="lift"><p class="products-detail-shell__description">${escapeHtml(page.description)}</p></header>`
-            : ''}
           <div class="products-detail-content">
             ${blocks}
           </div>
@@ -277,11 +257,6 @@
     const activeSection = state.activeSection;
 
     if (!target || !registry || !activeSection) return;
-
-    if (isOverviewSection()) {
-      await renderOverviewContent(target);
-      return;
-    }
 
     if (getActiveContentSourceType() === 'json') {
       await renderJsonContent(target);

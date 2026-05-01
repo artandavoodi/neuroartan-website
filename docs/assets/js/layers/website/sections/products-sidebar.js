@@ -91,7 +91,9 @@
   function normalizePath(path) {
     const value = String(path || '').trim();
     if (!value) return '/';
-    return value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+
+    const clean = value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+    return clean.endsWith('/index.html') ? clean.slice(0, -'/index.html'.length) || '/' : clean;
   }
 
   function resolveActiveSection(registry) {

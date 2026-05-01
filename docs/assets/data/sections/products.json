@@ -20,18 +20,18 @@
       "id": "overview",
       "label": "Overview",
       "title": "Overview",
-      "route": "/pages/products/index.html",
+      "route": "/pages/products/overview/index.html",
       "description": "ICOS is positioned as a new product category: a user-trained reflective cognition system where voice, memory continuity, emotional patterning, and profile intelligence are organized into one long-term architecture.",
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
       "localNavigationSource": {
         "type": "json",
-        "path": "/assets/data/sections/products-overview.json"
+        "path": "/assets/data/sections/products/overview.json"
       },
       "contentSource": {
-        "type": "page",
-        "path": "/pages/products/overview/index.html"
+        "type": "json",
+        "path": "/assets/data/sections/products/overview.json"
       }
     },
     {
@@ -61,9 +61,13 @@
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
+      "localNavigationSource": {
+        "type": "json",
+        "path": "/assets/data/sections/products/workflows.json"
+      },
       "contentSource": {
-        "type": "page",
-        "path": "/pages/products/workflows/index.html"
+        "type": "json",
+        "path": "/assets/data/sections/products/workflows.json"
       }
     },
     {
@@ -75,9 +79,13 @@
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
+      "localNavigationSource": {
+        "type": "json",
+        "path": "/assets/data/sections/products/integrations.json"
+      },
       "contentSource": {
-        "type": "page",
-        "path": "/pages/products/integrations/index.html"
+        "type": "json",
+        "path": "/assets/data/sections/products/integrations.json"
       }
     },
     {
@@ -89,9 +97,13 @@
       "status": "linked",
       "showInSidebar": true,
       "showInTopbar": true,
+      "localNavigationSource": {
+        "type": "json",
+        "path": "/assets/data/sections/products/software.json"
+      },
       "contentSource": {
-        "type": "page",
-        "path": "/pages/software/index.html"
+        "type": "json",
+        "path": "/assets/data/sections/products/software.json"
       }
     }
   ]

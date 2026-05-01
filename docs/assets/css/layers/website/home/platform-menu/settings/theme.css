@@ -43,7 +43,7 @@
   --home-platform-theme-mode-option-min-height:var(--layout-home-platform-theme-mode-option-min-height);
   --home-platform-theme-mode-option-padding-y:var(--layout-home-platform-theme-mode-option-padding-y);
   --home-platform-theme-mode-option-padding-x:var(--layout-home-platform-theme-mode-option-padding-x);
-  --home-platform-theme-mode-option-radius:var(--control-radius);
+  --home-platform-theme-mode-option-radius:var(--control-radius-composer);
   --home-platform-theme-mode-label-size:var(--layout-home-platform-theme-mode-label-size);
   --home-platform-theme-mode-label-weight:var(--layout-home-platform-theme-mode-label-weight);
   --home-platform-theme-mode-label-line-height:var(--layout-home-platform-theme-mode-label-line-height);
@@ -55,7 +55,7 @@
   --home-platform-theme-token-field-min-height:var(--layout-home-platform-theme-token-field-min-height);
   --home-platform-theme-token-field-padding-y:var(--layout-home-platform-theme-token-field-padding-y);
   --home-platform-theme-token-field-padding-x:var(--layout-home-platform-theme-token-field-padding-x);
-  --home-platform-theme-token-field-radius:var(--control-radius);
+  --home-platform-theme-token-field-radius:var(--control-radius-composer);
   --home-platform-theme-token-label-size:var(--layout-home-platform-theme-token-label-size);
   --home-platform-theme-token-label-weight:var(--layout-home-platform-theme-token-label-weight);
   --home-platform-theme-token-label-line-height:var(--layout-home-platform-theme-token-label-line-height);
@@ -163,7 +163,7 @@
   min-width:var(--spacing-none);
   padding:var(--home-platform-theme-mode-option-padding-y) var(--home-platform-theme-mode-option-padding-x);
   border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--control-radius);
+  border-radius:var(--home-platform-theme-mode-option-radius);
   background:transparent;
   color:var(--text-color);
   text-align:left;
@@ -216,7 +216,7 @@
   min-width:var(--spacing-none);
   padding:var(--home-platform-theme-token-field-padding-y) var(--home-platform-theme-token-field-padding-x);
   border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--control-radius);
+  border-radius:var(--home-platform-theme-token-field-radius);
   background:transparent;
   color:var(--text-color);
 }

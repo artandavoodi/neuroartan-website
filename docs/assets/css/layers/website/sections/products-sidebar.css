@@ -17,6 +17,9 @@
   top: calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem) + var(--space-4, 1.5rem));
   align-self: start;
   min-width: 0;
+  --products-sidebar-link-radius:var(--control-radius-composer);
+  --products-sidebar-link-border-hover:var(--control-border-hover-unified);
+  --products-sidebar-link-surface-hover:var(--control-surface-hover);
 }
 
 .products-page .products-sidebar__inner {
@@ -173,7 +176,7 @@
   min-height: 2.8rem;
   padding: 0.74rem 0.88rem;
   border: 1px solid transparent;
-  border-radius: var(--control-radius);
+  border-radius:var(--products-sidebar-link-radius);
   color: var(--text-primary-color, var(--text-primary, #fff));
   text-decoration: none;
   background: transparent;
@@ -187,8 +190,8 @@
 .products-page .products-sidebar__link:hover,
 .products-page .products-sidebar__link:focus-visible,
 .products-page .products-sidebar__link--active {
-  border-color: var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
-  background: var(--control-bg-hover, var(--surface-hover, rgba(255, 255, 255, 0.06)));
+  border-color:var(--products-sidebar-link-border-hover);
+  background:var(--products-sidebar-link-surface-hover);
   color: var(--text-primary-color, var(--text-primary, #fff));
 }
 

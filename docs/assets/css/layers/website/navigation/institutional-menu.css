@@ -185,9 +185,27 @@
 /* =============================================================================
    03) MENU BACKDROP STATES
 ============================================================================= */
+
 body.menu-ribbon-active .institutional-menu::before{
   opacity:var(--overlay-opacity-open);
   transform:translateY(var(--spacing-none));
+}
+
+body.products-local-nav-active:not(.institutional-menu-panel-open) .institutional-menu::before{
+  opacity:var(--overlay-opacity-closed);
+  transform:translateY(var(--institutional-menu-closed-y));
+}
+
+body.products-local-nav-active:not(.institutional-menu-panel-open) .institutional-menu-inner{
+  opacity:var(--overlay-opacity-closed);
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(var(--institutional-menu-closed-y));
+}
+
+body.products-local-nav-active:not(.institutional-menu-panel-open) #institutional-menu-mount,
+body.products-local-nav-active:not(.institutional-menu-panel-open) .institutional-menu{
+  pointer-events:none;
 }
 
 body.institutional-menu-panel-open .institutional-menu::before{
@@ -221,6 +239,13 @@ html[data-theme-effective="light"]{
   z-index: 3;
   min-height:var(--institutional-menu-surface-height);
   box-sizing: border-box;
+  opacity:var(--overlay-opacity-open);
+  visibility:visible;
+  transform:translateY(var(--spacing-none));
+  transition:
+    opacity var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease),
+    visibility var(--institutional-menu-motion-medium) var(--interaction-ease-standard),
+    transform var(--institutional-menu-motion-medium) var(--institutional-menu-motion-ease);
   direction: ltr;
 }
 

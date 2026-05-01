@@ -1,0 +1,88 @@
+{
+  "page": {
+    "route": "/pages/software/index.html",
+    "title": "Software"
+  },
+  "sections": [
+    {
+      "id": "software",
+      "label": "Software",
+      "title": "Software",
+      "anchor": "#software",
+      "paragraphs": [
+        "Neuroartan software is the execution layer where ICOS product logic becomes usable application infrastructure.",
+        "The software layer connects interface, runtime behavior, model routing, profile continuity, and governed user experience into one operational system.",
+        "Its purpose is to turn product doctrine into stable, testable, and expandable software surfaces."
+      ],
+      "highlights": [
+        "Application execution layer",
+        "Runtime-ready architecture",
+        "Governed product interface"
+      ]
+    },
+    {
+      "id": "runtime-architecture",
+      "label": "Runtime Architecture",
+      "title": "Runtime Architecture",
+      "anchor": "#runtime-architecture",
+      "paragraphs": [
+        "Runtime architecture defines how the application loads models, manages interaction state, and streams responses through the product interface.",
+        "The system is designed to support a stable path from app shell to runtime manager, model registry, inference engine, and response surface.",
+        "This keeps implementation aligned with the long-term ICOS product architecture."
+      ],
+      "highlights": [
+        "Runtime manager path",
+        "Model registry support",
+        "Streaming response surface"
+      ]
+    },
+    {
+      "id": "application-shell",
+      "label": "Application Shell",
+      "title": "Application Shell",
+      "anchor": "#application-shell",
+      "paragraphs": [
+        "The application shell provides the visible product environment for capture, review, profile interaction, and settings control.",
+        "It must remain coherent across web, app, and future software layers so users experience ICOS as one system rather than fragmented tools.",
+        "The shell is where interface discipline, accessibility, motion, and continuity meet."
+      ],
+      "highlights": [
+        "Unified product surface",
+        "Cross-platform coherence",
+        "Accessible interaction model"
+      ]
+    },
+    {
+      "id": "model-routing",
+      "label": "Model Routing",
+      "title": "Model Routing",
+      "anchor": "#model-routing",
+      "paragraphs": [
+        "Model routing allows ICOS to select the appropriate intelligence layer while preserving product-level control.",
+        "The routing system can evolve between external APIs, local models, and embedded runtime paths without changing the user's core continuity experience.",
+        "This makes software architecture flexible without making product behavior unstable."
+      ],
+      "highlights": [
+        "External API readiness",
+        "Local model path",
+        "Stable user experience"
+      ]
+    },
+    {
+      "id": "profile-continuity",
+      "label": "Profile Continuity",
+      "title": "Profile Continuity",
+      "anchor": "#profile-continuity",
+      "paragraphs": [
+        "Profile continuity connects software state with long-term user memory, settings, permissions, and reflection history.",
+        "It ensures that product intelligence remains anchored in the user profile rather than isolated session fragments.",
+        "This is the layer that makes ICOS durable across time, devices, and future product surfaces."
+      ],
+      "highlights": [
+        "Long-term profile memory",
+        "Permission-bound state",
+        "Cross-surface continuity"
+      ]
+    }
+  ]
+}

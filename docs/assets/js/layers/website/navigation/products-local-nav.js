@@ -41,7 +41,9 @@
   const normalizePath = (path) => {
     const value = String(path || '').trim();
     if (!value) return '/';
-    return value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+
+    const clean = value.endsWith('/') ? value.slice(0, -1) || '/' : value;
+    return clean.endsWith('/index.html') ? clean.slice(0, -'/index.html'.length) || '/' : clean;
   };
 
   /* =============================================================================
@@ -51,6 +53,7 @@
   const LOCAL_NAV_SELECTOR = '#products-local-nav-mount';
   const SCROLLED_CLASS = 'products-local-nav--scrolled';
   const ACTIVE_PAGE_CLASS = 'products-local-nav-active';
+  const ACTIVE_BODY_CLASS = 'products-local-nav-active';
   const SCROLL_THRESHOLD = 1;
 
   /* =============================================================================
@@ -160,6 +163,7 @@
     const isActive = window.scrollY > SCROLL_THRESHOLD;
     nav.classList.toggle(SCROLLED_CLASS, isActive);
     pageRoot.classList.toggle(ACTIVE_PAGE_CLASS, isActive);
+    document.body.classList.toggle(ACTIVE_BODY_CLASS, isActive);
   }
 
   function bindScrollState() {

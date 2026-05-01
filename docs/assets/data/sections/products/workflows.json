@@ -1,0 +1,88 @@
+{
+  "page": {
+    "route": "/pages/products/workflows/index.html",
+    "title": "Workflows"
+  },
+  "sections": [
+    {
+      "id": "workflows",
+      "label": "Workflows",
+      "title": "Workflows",
+      "anchor": "#workflows",
+      "paragraphs": [
+        "ICOS workflows define how capture, reflection, review, and continuity move through the product system.",
+        "Each workflow is designed to preserve structure across sessions so the user can return to the same cognitive thread without losing context.",
+        "The workflow layer turns isolated interaction into a governed sequence of reusable product operations."
+      ],
+      "highlights": [
+        "Capture-to-reflection flow",
+        "Continuity-aware review",
+        "Structured product routing"
+      ]
+    },
+    {
+      "id": "capture-flow",
+      "label": "Capture Flow",
+      "title": "Capture Flow",
+      "anchor": "#capture-flow",
+      "paragraphs": [
+        "The capture flow receives voice, text, notes, questions, and structured inputs as product-grade material.",
+        "Captured material is prepared for interpretation, organization, and later retrieval inside the user profile.",
+        "This creates a consistent entry point for reflection, memory, and long-term continuity."
+      ],
+      "highlights": [
+        "Voice and text intake",
+        "Structured input handling",
+        "Profile-ready material"
+      ]
+    },
+    {
+      "id": "reflection-flow",
+      "label": "Reflection Flow",
+      "title": "Reflection Flow",
+      "anchor": "#reflection-flow",
+      "paragraphs": [
+        "The reflection flow returns captured material through a structured response layer that helps the user inspect patterns, priorities, and recurring themes.",
+        "It supports deliberate review rather than passive conversation.",
+        "The system is designed to make each reflection more useful as prior context accumulates."
+      ],
+      "highlights": [
+        "Pattern review",
+        "Structured response layer",
+        "Context-sensitive reflection"
+      ]
+    },
+    {
+      "id": "continuity-flow",
+      "label": "Continuity Flow",
+      "title": "Continuity Flow",
+      "anchor": "#continuity-flow",
+      "paragraphs": [
+        "The continuity flow connects present interaction with earlier profile history and future review.",
+        "It gives ICOS the ability to preserve threads across time without treating every session as a blank start.",
+        "This makes the product more valuable as the user builds a longer record of use."
+      ],
+      "highlights": [
+        "Longitudinal memory logic",
+        "Session continuity",
+        "Reusable profile context"
+      ]
+    },
+    {
+      "id": "review-flow",
+      "label": "Review Flow",
+      "title": "Review Flow",
+      "anchor": "#review-flow",
+      "paragraphs": [
+        "The review flow helps the user return to saved material, evaluate development, and refine earlier conclusions.",
+        "It supports a more disciplined relationship with memory and self-analysis.",
+        "Review becomes a product capability rather than a manual archive search."
+      ],
+      "highlights": [
+        "Saved material review",
+        "Development tracking",
+        "Refinement over time"
+      ]
+    }
+  ]
+}

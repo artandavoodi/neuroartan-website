@@ -56,8 +56,7 @@
   transition:
     background-color var(--global-back-button-duration) var(--global-back-button-ease),
     border-color var(--global-back-button-duration) var(--global-back-button-ease),
-    color var(--global-back-button-duration) var(--global-back-button-ease),
-    transform var(--global-back-button-duration) var(--global-back-button-ease);
+    color var(--global-back-button-duration) var(--global-back-button-ease);
 }
 
 /* =============================================================================

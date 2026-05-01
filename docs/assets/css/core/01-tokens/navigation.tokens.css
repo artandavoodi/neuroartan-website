@@ -207,8 +207,8 @@
   --nav-institutional-surface-height-mobile:3.18rem;
   --nav-institutional-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
   --nav-institutional-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
-  --nav-institutional-surface-border:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
-  --nav-institutional-surface-border-light:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --nav-institutional-surface-border:var(--border-color);
+  --nav-institutional-surface-border-light:var(--border-color);
   --nav-institutional-surface-shadow:none;
   --nav-institutional-surface-blur:8px;
   --nav-institutional-surface-saturate:120%;

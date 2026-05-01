@@ -21,7 +21,7 @@
   --products-local-nav-transition:320ms var(--interaction-ease-standard);
   --products-local-nav-motion-fast:220ms;
   --products-local-nav-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
-  --products-local-nav-surface-border:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  --products-local-nav-surface-border:var(--border-color);
   --products-local-nav-surface-shadow:none;
   --products-local-nav-surface-blur:var(--effect-blur-sm);
   --products-local-nav-surface-saturate:120%;
@@ -39,7 +39,7 @@
 
 html[data-theme-effective="light"]{
   --products-local-nav-surface-bg:color-mix(in srgb, var(--surface-color) 26%, transparent);
-  --products-local-nav-surface-border:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --products-local-nav-surface-border:var(--border-color);
   --products-local-nav-surface-shadow:none;
 }
 
@@ -90,7 +90,7 @@ html[data-theme-effective="light"]{
   height: var(--products-local-nav-height, 3.55rem);
   border-radius: 0;
   background:var(--products-local-nav-surface-bg);
-  border-bottom:1px solid var(--products-local-nav-surface-border);
+  border-bottom:var(--border-width-hairline) solid var(--products-local-nav-surface-border);
   box-shadow:var(--products-local-nav-surface-shadow);
   backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));
   -webkit-backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));

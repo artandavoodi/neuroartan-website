@@ -1,0 +1,100 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) GLOBAL BACK BUTTON TOKENS
+   03) GLOBAL BACK BUTTON BASE
+   04) GLOBAL BACK BUTTON ICON
+   05) GLOBAL BACK BUTTON STATES
+   06) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/04-systems/back-button.css */
+
+/* =============================================================================
+   02) GLOBAL BACK BUTTON TOKENS
+============================================================================= */
+:root{
+  --global-back-button-size:var(--close-control-size);
+  --global-back-button-icon-size:var(--close-control-line-width);
+  --global-back-button-surface:transparent;
+  --global-back-button-surface-hover:transparent;
+  --global-back-button-border:transparent;
+  --global-back-button-border-hover:transparent;
+  --global-back-button-radius:var(--close-control-radius);
+  --global-back-button-color:var(--close-control-color);
+  --global-back-button-hover-color:var(--close-control-color-hover);
+  --global-back-button-duration:var(--interaction-motion-medium);
+  --global-back-button-ease:var(--interaction-ease-standard);
+}
+
+/* =============================================================================
+   03) GLOBAL BACK BUTTON BASE
+============================================================================= */
+.global-back-button{
+  -webkit-appearance:none;
+  appearance:none;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--global-back-button-size);
+  height:var(--global-back-button-size);
+  min-width:var(--global-back-button-size);
+  min-height:var(--global-back-button-size);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid var(--global-back-button-border);
+  border-radius:var(--global-back-button-radius);
+  background:var(--global-back-button-surface);
+  color:var(--global-back-button-color);
+  cursor:pointer;
+  pointer-events:auto;
+  outline:none;
+  transform:none;
+  transition:
+    background-color var(--global-back-button-duration) var(--global-back-button-ease),
+    border-color var(--global-back-button-duration) var(--global-back-button-ease),
+    color var(--global-back-button-duration) var(--global-back-button-ease),
+    transform var(--global-back-button-duration) var(--global-back-button-ease);
+}
+
+/* =============================================================================
+   04) GLOBAL BACK BUTTON ICON
+============================================================================= */
+.global-back-button__icon{
+  display:block;
+  width:var(--global-back-button-icon-size);
+  height:var(--global-back-button-icon-size);
+  object-fit:contain;
+  pointer-events:none;
+  transform:none;
+  transition:
+    opacity var(--global-back-button-duration) var(--global-back-button-ease),
+    transform var(--global-back-button-duration) var(--global-back-button-ease);
+}
+
+/* =============================================================================
+   05) GLOBAL BACK BUTTON STATES
+============================================================================= */
+.global-back-button:hover,
+.global-back-button:focus-visible{
+  background:var(--global-back-button-surface-hover);
+  border-color:var(--global-back-button-border-hover);
+  color:var(--global-back-button-hover-color);
+  transform:none;
+}
+
+.global-back-button:hover .global-back-button__icon,
+.global-back-button:focus-visible .global-back-button__icon{
+  transform:translateX(-0.08rem);
+}
+
+.global-back-button[hidden]{
+  display:none !important;
+}
+
+/* =============================================================================
+   06) END OF FILE
+============================================================================= */

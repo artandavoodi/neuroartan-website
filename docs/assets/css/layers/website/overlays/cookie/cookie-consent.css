@@ -43,8 +43,8 @@
   --cookie-consent-shadow:var(--panel-shadow-unified);
   --cookie-consent-width: min(36rem, calc(100vw - (2 * var(--cookie-consent-min-viewport-gap))));
   --cookie-consent-min-viewport-gap:var(--dialog-overlay-viewport-gap);
-  --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--dialog-overlay-viewport-gap));
-  --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--dialog-overlay-viewport-gap));
+  --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--site-header-height, 4rem));
+  --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--footer-height, 5rem));
   --cookie-consent-footer-links-max-width:100%;
   --cookie-consent-max-height:calc(100dvh - var(--cookie-consent-viewport-gap-top) - var(--cookie-consent-viewport-gap-bottom));
   --cookie-consent-radius:var(--dialog-radius-unified);
@@ -203,7 +203,7 @@
   --cookie-consent-learning-copy-tracking:var(--dialog-consent-learning-copy-tracking);
   --cookie-consent-subitem-layout-gap:var(--dialog-consent-subitem-layout-gap);
   --cookie-consent-subitem-padding-y:var(--dialog-consent-subitem-padding-y);
-  --cookie-consent-subitem-radius:var(--control-radius);
+  --cookie-consent-subitem-radius:var(--control-radius-composer);
   --cookie-consent-subitem-copy-gap:var(--dialog-consent-subitem-copy-gap);
   --cookie-consent-subitem-title-size:var(--dialog-consent-subitem-title-size);
   --cookie-consent-subitem-title-weight:var(--dialog-consent-subitem-title-weight);
@@ -489,17 +489,13 @@ body.cookie-consent-closing .cookie-consent-panel{
   position:absolute;
   top:var(--spacing-none);
   right:var(--spacing-none);
-  width:var(--cookie-consent-close-button-size);
-  height:var(--cookie-consent-close-button-size);
-  min-width:var(--cookie-consent-close-button-size);
-  min-height:var(--cookie-consent-close-button-size);
   color:var(--cookie-consent-close-button-color);
-
 }
 
 .cookie-consent-close[hidden]{
   display:none !important;
 }
+
 
 .cookie-consent-close:hover,
 .cookie-consent-close:focus-visible,
@@ -1174,10 +1170,10 @@ body.cookie-consent-closing .cookie-consent-panel{
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: var(--global-close-button-size);
-  height: var(--global-close-button-size);
-  min-width: var(--global-close-button-size);
-  min-height: var(--global-close-button-size);
+  width:var(--cookie-consent-row-expand-size);
+  height:var(--cookie-consent-row-expand-size);
+  min-width:var(--cookie-consent-row-expand-size);
+  min-height:var(--cookie-consent-row-expand-size);
   padding: var(--spacing-none);
   border: var(--spacing-none);
   background: transparent;
@@ -1191,8 +1187,8 @@ body.cookie-consent-closing .cookie-consent-panel{
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--size-full);
-  height: var(--global-close-button-line-size);
+  width:var(--cookie-consent-row-expand-icon-size);
+  height:var(--border-width-hairline);
   background: currentColor;
   pointer-events: none;
   transform-origin: center;
@@ -1237,7 +1233,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   gap:var(--cookie-consent-subitem-layout-gap);
   padding:var(--cookie-consent-subitem-padding-y) var(--cookie-consent-content-gutter);
   border: var(--border-width-hairline) solid var(--cookie-consent-subitem-border);
-  border-radius:var(--control-radius);
+  border-radius:var(--cookie-consent-subitem-radius);
   background: var(--cookie-consent-subitem-surface);
 }
 
@@ -1460,14 +1456,14 @@ body.cookie-consent-closing .cookie-consent-panel{
   :root{
     --cookie-consent-width: min(39rem, calc(100vw - (2 * var(--cookie-consent-mobile-min-viewport-gap))));
     --cookie-consent-min-viewport-gap:var(--cookie-consent-mobile-min-viewport-gap);
-    --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--cookie-consent-mobile-min-viewport-gap));
-    --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--cookie-consent-mobile-min-viewport-gap));
+    --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--site-header-height, 4rem));
+    --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--footer-height, 5rem));
     --cookie-consent-footer-links-max-width: min(var(--size-full), 31rem);
     --cookie-consent-toggle-track-width: 2.5rem;
     --cookie-consent-toggle-track-height: 1.3rem;
     --cookie-consent-toggle-thumb-size: 1.06rem;
     --cookie-consent-row-icon-size: 1.46rem;
-    --cookie-consent-row-expand-size: 1.08rem;
+    --cookie-consent-row-expand-size:var(--dialog-consent-row-expand-size);
     --cookie-consent-row-expand-icon-size:var(--dialog-consent-row-expand-icon-size-mobile);
     --cookie-consent-content-gutter: 1.08rem;
     --cookie-consent-body-edge-inset: 0.36rem;

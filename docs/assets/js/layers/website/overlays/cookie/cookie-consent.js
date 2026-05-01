@@ -475,6 +475,20 @@
     return String(mount?.dataset?.consentSurface || 'banner').trim() || 'banner';
   }
 
+  function setCookieConsentControlVisibility(control, visible) {
+    if (!(control instanceof HTMLElement)) return;
+
+    const isVisible = Boolean(visible);
+    control.hidden = !isVisible;
+    control.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+    control.tabIndex = isVisible ? 0 : -1;
+    control.dataset.cookieConsentControlVisible = isVisible ? 'true' : 'false';
+
+    if ('inert' in control) {
+      control.inert = !isVisible;
+    }
+  }
+
   function isConsentOpen() {
     return document.body.classList.contains(OPEN_CLASS);
   }
@@ -532,16 +546,16 @@
 
     const showInnerState = currentSurface === 'language' || currentSurface === 'learning';
 
+    const mount = getMount();
+    if (mount instanceof HTMLElement) {
+      mount.dataset.consentNavigationState = showInnerState ? 'back' : 'close';
+    }
+
     closeControls.forEach((control) => {
-      if (!(control instanceof HTMLElement)) return;
-      control.hidden = showInnerState;
-      control.setAttribute('aria-hidden', showInnerState ? 'true' : 'false');
+      setCookieConsentControlVisibility(control, !showInnerState);
     });
 
-    if (backControl instanceof HTMLElement) {
-      backControl.hidden = !showInnerState;
-      backControl.setAttribute('aria-hidden', showInnerState ? 'false' : 'true');
-    }
+    setCookieConsentControlVisibility(backControl, showInnerState);
 
     if (primaryShell instanceof HTMLElement) {
       primaryShell.hidden = showInnerState;

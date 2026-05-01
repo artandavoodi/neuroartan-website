@@ -71,8 +71,7 @@
   pointer-events:none;
   transform:none;
   transition:
-    opacity var(--global-back-button-duration) var(--global-back-button-ease),
-    transform var(--global-back-button-duration) var(--global-back-button-ease);
+    opacity var(--global-back-button-duration) var(--global-back-button-ease);
 }
 
 /* =============================================================================
@@ -88,7 +87,7 @@
 
 .global-back-button:hover .global-back-button__icon,
 .global-back-button:focus-visible .global-back-button__icon{
-  transform:translateX(-0.08rem);
+  transform:none;
 }
 
 .global-back-button[hidden]{

@@ -47,9 +47,10 @@
   --cookie-language-overlay-country-surface: color-mix(in srgb, var(--text-primary-color) 2%, transparent);
   --cookie-language-overlay-country-border:var(--control-border-unified);
   --cookie-language-overlay-country-hover:var(--control-surface-hover);
-  --cookie-language-overlay-country-selected: color-mix(in srgb, var(--color-primary1) 10%, transparent);
-  --cookie-language-overlay-country-selected-border: color-mix(in srgb, var(--color-primary1) 28%, transparent);
-  --cookie-language-overlay-country-selected-shadow: 0 0 0 1px color-mix(in srgb, var(--color-primary1) 18%, transparent) inset;
+  --cookie-language-overlay-country-hover-border:var(--control-border-hover-unified);
+  --cookie-language-overlay-country-selected:var(--control-surface-hover);
+  --cookie-language-overlay-country-selected-border:var(--control-border-hover-unified);
+  --cookie-language-overlay-country-selected-shadow:none;
   --cookie-language-overlay-country-copy: color-mix(in srgb, var(--text-primary-color) 68%, transparent);
   --cookie-language-overlay-country-code: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
   --cookie-language-overlay-back-icon-size:var(--layout-cookie-language-overlay-back-icon-size);
@@ -76,9 +77,10 @@ html[data-theme-effective="dark"]{
   --cookie-language-overlay-country-surface:color-mix(in srgb, var(--text-primary-color) 2.2%, transparent);
   --cookie-language-overlay-country-border:var(--control-border-unified);
   --cookie-language-overlay-country-hover:var(--control-surface-hover);
-  --cookie-language-overlay-country-selected:color-mix(in srgb, var(--color-primary1) 14%, transparent);
-  --cookie-language-overlay-country-selected-border:color-mix(in srgb, var(--color-primary1) 32%, transparent);
-  --cookie-language-overlay-country-selected-shadow:0 0 0 1px color-mix(in srgb, var(--color-primary1) 22%, transparent) inset;
+  --cookie-language-overlay-country-hover-border:var(--control-border-hover-unified);
+  --cookie-language-overlay-country-selected:var(--control-surface-hover);
+  --cookie-language-overlay-country-selected-border:var(--control-border-hover-unified);
+  --cookie-language-overlay-country-selected-shadow:none;
   --cookie-language-overlay-country-copy:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
   --cookie-language-overlay-country-code:color-mix(in srgb, var(--text-primary-color) 56%, transparent);
   --cookie-language-overlay-back-icon-filter:var(--icon-image-filter, none);
@@ -317,15 +319,15 @@ html[data-theme-effective="dark"]{
 .cookie-language-overlay-country:hover,
 .cookie-language-overlay-country:focus-visible,
 .cookie-language-overlay-country:active{
-  background: var(--cookie-language-overlay-country-hover);
-  border-color:var(--cookie-language-overlay-search-border);
-  outline: none;
+  background:var(--cookie-language-overlay-country-hover);
+  border-color:var(--cookie-language-overlay-country-hover-border);
+  outline:none;
 }
 
 .cookie-language-overlay-country.is-selected{
-  background: var(--cookie-language-overlay-country-selected);
-  border-color: var(--cookie-language-overlay-country-selected-border);
-  box-shadow: var(--cookie-language-overlay-country-selected-shadow);
+  background:var(--cookie-language-overlay-country-selected);
+  border-color:var(--cookie-language-overlay-country-selected-border);
+  box-shadow:var(--cookie-language-overlay-country-selected-shadow);
 }
 
 

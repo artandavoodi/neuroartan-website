@@ -131,7 +131,11 @@
 [data-na-toggle]:active [data-na-toggle-thumb],
 .na-toggle:active .na-toggle__thumb,
 .ui-toggle:active .ui-toggle__thumb{
-  width:calc(var(--toggle-thumb-size) + var(--spacing-2xs));
+  width:var(--toggle-thumb-size);
+  height:var(--toggle-thumb-size);
+  min-width:var(--toggle-thumb-size);
+  min-height:var(--toggle-thumb-size);
+  aspect-ratio:1 / 1;
 }
 
 /* =============================================================================

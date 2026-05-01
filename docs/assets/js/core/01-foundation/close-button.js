@@ -68,11 +68,15 @@ function createCloseButtonLine(modifierClass) {
 }
 
 function isCloseButtonPrimitive(node) {
-  return node instanceof Element && node.matches(CLOSE_BUTTON_SELECTORS);
+  if (!(node instanceof Element)) return false;
+  if (node.matches('.global-back-button, [data-core-back-button="true"]')) return false;
+  return node.matches(CLOSE_BUTTON_SELECTORS);
 }
 
 function normalizeCloseButtonPrimitive(node) {
   if (!(node instanceof HTMLElement)) return;
+  if (!isCloseButtonPrimitive(node)) return;
+
   if (node.dataset.closeButtonPrimitiveBound === 'true') return;
 
   if (node.tagName === 'BUTTON' && !node.getAttribute('type')) {

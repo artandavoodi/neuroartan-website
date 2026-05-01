@@ -1000,86 +1000,29 @@ body.cookie-consent-closing .cookie-consent-panel{
    Generic toggle ownership must live in core and future extraction must preserve this exact live style. */
 .cookie-consent-toggle,
 .cookie-consent .na-toggle{
-  --toggle-width: var(--cookie-consent-toggle-track-width);
-  --toggle-height: var(--cookie-consent-toggle-track-height);
-  --toggle-thumb-size: var(--cookie-consent-toggle-thumb-size);
-  --toggle-padding: var(--cookie-consent-toggle-thumb-offset);
-  --toggle-track-bg-off: var(--cookie-consent-toggle-off);
-  --toggle-track-bg-on: var(--cookie-consent-toggle-on);
-  --toggle-thumb-bg: var(--cookie-consent-toggle-thumb);
-  --toggle-track-border-color: var(--cookie-consent-toggle-ring);
-  --toggle-thumb-translate-on: calc(var(--toggle-width) - var(--toggle-thumb-size) - (2 * var(--toggle-padding)));
-  --toggle-focus-ring-color: var(--cookie-consent-toggle-ring);
+  --toggle-width:var(--cookie-consent-toggle-track-width);
+  --toggle-height:var(--cookie-consent-toggle-track-height);
+  --toggle-thumb-size:var(--cookie-consent-toggle-thumb-size);
+  --toggle-padding:var(--cookie-consent-toggle-thumb-offset);
+  --toggle-track-bg-off:var(--cookie-consent-toggle-off);
+  --toggle-track-bg-on:var(--cookie-consent-toggle-on);
+  --toggle-thumb-bg:var(--cookie-consent-toggle-thumb);
+  --toggle-track-border-color:var(--cookie-consent-toggle-ring);
+  --toggle-focus-ring-color:var(--cookie-consent-toggle-ring);
 }
 
 .cookie-consent-toggle{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--cookie-consent-toggle-track-width);
-  min-width: var(--cookie-consent-toggle-track-width);
-  height: var(--cookie-consent-toggle-track-height);
-  padding: var(--spacing-none);
-  border: var(--spacing-none);
-  background: transparent;
-}
-
-.cookie-consent-toggle-track{
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: var(--toggle-width);
-  height: var(--toggle-height);
-  padding: var(--toggle-padding);
-  border: var(--toggle-track-border-width) solid var(--toggle-track-border-color);
-  border-radius: var(--toggle-radius);
-  background: var(--cookie-consent-toggle-off);
-  overflow: hidden;
-  transition:
-    background-color var(--toggle-transition-duration) var(--toggle-transition-ease),
-    border-color var(--toggle-transition-duration) var(--toggle-transition-ease),
-    box-shadow var(--toggle-transition-duration) var(--toggle-transition-ease);
-}
-
-.cookie-consent-toggle-thumb{
-  position: absolute;
-  top: 50%;
-  left: var(--toggle-padding);
-  display: block;
-  width: var(--toggle-thumb-size);
-  height: var(--toggle-thumb-size);
-  border-radius: var(--radius-circle);
-  background: var(--toggle-thumb-bg);
-  box-shadow: var(--toggle-thumb-shadow);
-  transform: translate(var(--spacing-none), -50%);
-  transition: transform var(--toggle-transition-duration) var(--toggle-transition-ease);
+  flex:0 0 auto;
 }
 
 .cookie-consent-toggle:hover .cookie-consent-toggle-track,
 .cookie-consent .na-toggle:hover .na-toggle__track{
-  border-color: var(--cookie-consent-toggle-ring);
-}
-
-.cookie-consent-toggle:focus,
-.cookie-consent-toggle:focus-visible,
-.cookie-consent .na-toggle:focus,
-.cookie-consent .na-toggle:focus-visible{
-  outline: none;
-}
-
-.cookie-consent-toggle:focus-visible .cookie-consent-toggle-track,
-.cookie-consent .na-toggle:focus-visible .na-toggle__track{
-  box-shadow: 0 0 0 var(--toggle-focus-ring-width) var(--toggle-focus-ring-color);
+  border-color:var(--cookie-consent-toggle-ring);
 }
 
 .cookie-consent-toggle[data-cookie-consent-enabled="true"] .cookie-consent-toggle-track{
-  background: var(--cookie-consent-toggle-on-accent);
-  border-color: var(--cookie-consent-toggle-on-accent);
-}
-
-.cookie-consent-toggle[data-cookie-consent-enabled="true"] .cookie-consent-toggle-thumb{
-  transform: translate(var(--toggle-thumb-translate-on), -50%);
+  background:var(--cookie-consent-toggle-on-accent);
+  border-color:var(--cookie-consent-toggle-on-accent);
 }
 
 /* =============================================================================

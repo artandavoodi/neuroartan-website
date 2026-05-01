@@ -31,6 +31,7 @@ import './navigation.js';
 import './feedback.js';
 import './data.js';
 import './close-button.js';
+import './back-button.js';
 import './cursor.js';
 import './drawers.js';
 import './hover.js';

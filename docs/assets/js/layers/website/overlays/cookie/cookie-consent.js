@@ -829,7 +829,6 @@
     }));
 
     bindInnerReturnControls();
-    syncShellViewState();
     return true;
   }
 
@@ -846,8 +845,6 @@
     if (learningSurface instanceof HTMLElement) {
       learningSurface.dataset.cookieConsentActiveArticle = normalized;
     }
-
-    syncShellViewState();
   }
 
   async function requestLearningOverlay(articleKey = '') {
@@ -1016,7 +1013,6 @@
 
     clearCloseTimer();
     applySurface(surface);
-    syncShellViewState();
 
     if (!wasOpen) {
       applyStoredConsentToInputs();

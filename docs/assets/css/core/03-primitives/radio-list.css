@@ -1,0 +1,153 @@
+/* =============================================================================
+   NEUROARTAN — RADIO LIST PRIMITIVE
+   Layer: Core / Primitives
+   Purpose: Reusable vertical single-select radio list controls.
+============================================================================= */
+
+/* =============================================================================
+   00) FILE INDEX
+   01) RADIO LIST TOKENS
+   02) RADIO LIST ROOT
+   03) RADIO LIST ITEM
+   04) RADIO LIST INDICATOR
+   05) RADIO LIST CONTENT
+   06) RADIO LIST STATES
+============================================================================= */
+
+/* =============================================================================
+   01) RADIO LIST TOKENS
+============================================================================= */
+:root{
+  --ui-radio-list-gap:var(--spacing-2xs);
+  --ui-radio-list-item-gap:var(--spacing-sm);
+  --ui-radio-list-item-padding-y:var(--spacing-xs);
+  --ui-radio-list-item-padding-x:var(--spacing-none);
+  --ui-radio-list-item-radius:var(--spacing-none);
+  --ui-radio-list-item-border:transparent;
+  --ui-radio-list-item-border-active:transparent;
+  --ui-radio-list-item-bg:transparent;
+  --ui-radio-list-item-bg-hover:transparent;
+  --ui-radio-list-item-bg-active:transparent;
+  --ui-radio-list-item-color:var(--text-secondary-color);
+  --ui-radio-list-item-color-hover:var(--text-primary-color);
+  --ui-radio-list-item-color-active:var(--text-primary-color);
+  --ui-radio-list-indicator-size:var(--icon-size-sm);
+  --ui-radio-list-indicator-dot-size:calc(var(--ui-radio-list-indicator-size) * 0.44);
+  --ui-radio-list-indicator-border:var(--panel-border-unified);
+  --ui-radio-list-indicator-border-active:var(--color-primary1);
+  --ui-radio-list-indicator-bg:transparent;
+  --ui-radio-list-indicator-bg-active:var(--color-primary1);
+  --ui-radio-list-transition:var(--interaction-transition-control);
+}
+
+/* =============================================================================
+   02) RADIO LIST ROOT
+============================================================================= */
+.ui-radio-list{
+  display:grid;
+  gap:var(--ui-radio-list-gap);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+}
+
+/* =============================================================================
+   03) RADIO LIST ITEM
+============================================================================= */
+.ui-radio-list__item{
+  -webkit-appearance:none;
+  appearance:none;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  align-items:center;
+  gap:var(--ui-radio-list-item-gap);
+  width:var(--size-full);
+  margin:var(--spacing-none);
+  padding:var(--ui-radio-list-item-padding-y) var(--ui-radio-list-item-padding-x);
+  border:var(--border-width-hairline) solid var(--ui-radio-list-item-border);
+  border-radius:var(--ui-radio-list-item-radius);
+  background:var(--ui-radio-list-item-bg);
+  color:var(--ui-radio-list-item-color);
+  text-align:left;
+  outline:none;
+  text-decoration:none;
+  box-shadow:none;
+  transition:var(--ui-radio-list-transition);
+}
+
+/* =============================================================================
+   04) RADIO LIST INDICATOR
+============================================================================= */
+.ui-radio-list__indicator{
+  -webkit-appearance:none;
+  appearance:none;
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  outline:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--ui-radio-list-indicator-size);
+  height:var(--ui-radio-list-indicator-size);
+  border:var(--border-width-hairline) solid var(--ui-radio-list-indicator-border);
+  border-radius:var(--control-radius-pill);
+  background:var(--ui-radio-list-indicator-bg);
+  transition:var(--ui-radio-list-transition);
+  grid-column:2;
+  grid-row:1;
+}
+
+.ui-radio-list__indicator::after{
+  content:"";
+  width:var(--ui-radio-list-indicator-dot-size);
+  height:var(--ui-radio-list-indicator-dot-size);
+  border-radius:var(--control-radius-pill);
+  background:var(--ui-radio-list-indicator-bg-active);
+  opacity:var(--overlay-opacity-closed);
+  transform:scale(0.72);
+  transition:var(--ui-radio-list-transition);
+}
+
+/* =============================================================================
+   05) RADIO LIST CONTENT
+============================================================================= */
+.ui-radio-list__content{
+  display:grid;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+  grid-column:1;
+  grid-row:1;
+}
+
+.ui-radio-list__label{
+  color:currentColor;
+}
+
+.ui-radio-list__description{
+  color:currentColor;
+}
+
+/* =============================================================================
+   06) RADIO LIST STATES
+============================================================================= */
+.ui-radio-list__indicator:focus-visible{
+  border-color:var(--ui-radio-list-indicator-border-active);
+}
+
+.ui-radio-list__item[aria-checked="true"],
+.ui-radio-list__item[aria-pressed="true"]{
+  border-color:var(--ui-radio-list-item-border-active);
+  background:var(--ui-radio-list-item-bg-active);
+  color:var(--ui-radio-list-item-color-active);
+}
+
+.ui-radio-list__item[aria-checked="true"] .ui-radio-list__indicator,
+.ui-radio-list__item[aria-pressed="true"] .ui-radio-list__indicator{
+  border-color:var(--ui-radio-list-indicator-border-active);
+}
+
+.ui-radio-list__item[aria-checked="true"] .ui-radio-list__indicator::after,
+.ui-radio-list__item[aria-pressed="true"] .ui-radio-list__indicator::after{
+  opacity:var(--overlay-opacity-open);
+  transform:scale(1);
+}

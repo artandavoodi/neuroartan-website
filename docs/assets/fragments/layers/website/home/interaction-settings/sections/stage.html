@@ -1,58 +1,256 @@
 <!-- =============================================================================
      00) FILE INDEX
      01) STAGE SECTION ROOT
-     02) STAGE SUMMARY
-     03) STAGE VISIBILITY CONTROLS
-     04) STAGE MOTION CONTROLS
+     02) STAGE HEADER
+     03) STAGE MODE GROUP
+     04) STAGE VISIBILITY GROUP
+     05) STAGE MOTION GROUP
+     06) STAGE DENSITY GROUP
+     07) STAGE CONTRAST GROUP
+     08) STAGE BACKGROUND DEPTH GROUP
 ============================================================================= -->
 
 <!-- =============================================================================
      01) STAGE SECTION ROOT
 ============================================================================= -->
-<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="stage" aria-label="Stage presentation">
+<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="stage" aria-labelledby="home-interaction-settings-stage-title">
   <!-- =============================================================================
-       02) STAGE SUMMARY
+       02) STAGE HEADER
   ============================================================================= -->
-  <div class="home-interaction-settings-panel__section-heading">
-    <p class="home-interaction-settings-panel__section-title">Stage presentation</p>
-    <p class="home-interaction-settings-panel__status">Control the visible intelligence layer, including the interactive text, responsive circle, motion behavior, and stage feedback.</p>
-  </div>
+  <header class="home-interaction-settings-panel__section-heading home-interaction-settings-panel__section-heading--with-icon">
+    <span class="home-interaction-settings-panel__section-icon" aria-hidden="true">
+      <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/stage.svg" alt="">
+    </span>
+    <h3 class="home-interaction-settings-panel__section-title" id="home-interaction-settings-stage-title">Stage</h3>
+  </header>
 
   <!-- =============================================================================
-       03) STAGE VISIBILITY CONTROLS
+       03) STAGE MODE GROUP
   ============================================================================= -->
-  <div class="home-interaction-settings-panel__option-stack" aria-label="Stage visibility controls">
-    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-setting="stage-text" data-home-interaction-setting-value="enabled" aria-pressed="true">
-      <span class="home-interaction-settings-panel__toggle-copy">
-        <span class="home-interaction-settings-panel__toggle-label">Interactive text</span>
-        <span class="home-interaction-settings-panel__toggle-description">Show the stage state text above the composer.</span>
-      </span>
-      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"></span>
-    </button>
-    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-setting="stage-circle" data-home-interaction-setting-value="enabled" aria-pressed="true">
-      <span class="home-interaction-settings-panel__toggle-copy">
-        <span class="home-interaction-settings-panel__toggle-label">Responsive circle</span>
-        <span class="home-interaction-settings-panel__toggle-description">Show the stage circle and motion feedback.</span>
-      </span>
-      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"></span>
-    </button>
-  </div>
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-mode-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-mode-title">Mode</h4>
+    </header>
+
+    <div class="ui-radio-list home-interaction-settings-panel__radio-list" data-ui-radio-list="stage-mode" role="radiogroup" aria-label="Stage mode">
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="standard" aria-checked="true" aria-pressed="true">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-mode" data-home-interaction-setting-value="standard"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Standard</span>
+          <span class="ui-radio-list__description">Balanced depth and feedback for normal use</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="developer-focus" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-mode" data-home-interaction-setting-value="developer-focus"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Developer Focus</span>
+          <span class="ui-radio-list__description">Reduce visual weight for implementation sessions</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="minimal" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-mode" data-home-interaction-setting-value="minimal"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Minimal</span>
+          <span class="ui-radio-list__description">Keep only essential stage feedback</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="presentation" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-mode" data-home-interaction-setting-value="presentation"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Presentation</span>
+          <span class="ui-radio-list__description">Preserve cinematic presence for review</span>
+        </span>
+      </div>
+    </div>
+  </section>
 
   <!-- =============================================================================
-       04) STAGE MOTION CONTROLS
+       04) STAGE VISIBILITY GROUP
   ============================================================================= -->
-  <div class="home-interaction-settings-panel__option-grid" role="group" aria-label="Stage motion intensity">
-    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="subtle" aria-pressed="true">
-      <span class="home-interaction-settings-panel__option-label">Subtle</span>
-      <span class="home-interaction-settings-panel__option-description">Keep motion quiet and premium.</span>
-    </button>
-    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="standard" aria-pressed="false">
-      <span class="home-interaction-settings-panel__option-label">Standard</span>
-      <span class="home-interaction-settings-panel__option-description">Use balanced motion and visible feedback.</span>
-    </button>
-    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="minimal" aria-pressed="false">
-      <span class="home-interaction-settings-panel__option-label">Minimal</span>
-      <span class="home-interaction-settings-panel__option-description">Reduce animated state changes.</span>
-    </button>
-  </div>
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-visibility-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-visibility-title">Visibility</h4>
+    </header>
+
+    <div class="home-interaction-settings-panel__section-group" aria-label="Stage visibility controls">
+      <div class="home-interaction-settings-panel__toggle-row" aria-pressed="true">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Interactive circle</span>
+          <span class="home-interaction-settings-panel__option-description">Show the responsive stage circle</span>
+        </span>
+        <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="stage-circle" data-home-interaction-setting-value="enabled"><span></span></button>
+      </div>
+
+      <div class="home-interaction-settings-panel__toggle-row" aria-pressed="true">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Footer visibility</span>
+          <span class="home-interaction-settings-panel__option-description">Show or hide the footer</span>
+        </span>
+        <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="stage-footer" data-home-interaction-setting-value="enabled"><span></span></button>
+      </div>
+
+      <div class="home-interaction-settings-panel__toggle-row" aria-pressed="true">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Ambient layer</span>
+          <span class="home-interaction-settings-panel__option-description">Enable atmospheric depth</span>
+        </span>
+        <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="stage-ambient-layer" data-home-interaction-setting-value="enabled"><span></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================================
+       05) STAGE MOTION GROUP
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-motion-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-motion-title">Motion</h4>
+    </header>
+
+    <div class="ui-radio-list home-interaction-settings-panel__radio-list" data-ui-radio-list="stage-motion" role="radiogroup" aria-label="Stage motion intensity">
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="full" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="full"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Full</span>
+          <span class="ui-radio-list__description">Use full cinematic motion</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="reduced" aria-checked="true" aria-pressed="true">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="reduced"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Reduced</span>
+          <span class="ui-radio-list__description">Keep motion restrained for long sessions</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="minimal" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-motion" data-home-interaction-setting-value="minimal"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Minimal</span>
+          <span class="ui-radio-list__description">Reduce animated state changes</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="home-interaction-settings-panel__section-group" aria-label="Stage motion switches">
+      <div class="home-interaction-settings-panel__toggle-row" aria-pressed="true">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Idle animation</span>
+          <span class="home-interaction-settings-panel__option-description">Allow subtle idle breathing motion</span>
+        </span>
+        <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="stage-idle-animation" data-home-interaction-setting-value="enabled"><span></span></button>
+      </div>
+
+      <div class="home-interaction-settings-panel__toggle-row" aria-pressed="true">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Visual feedback</span>
+          <span class="home-interaction-settings-panel__option-description">Show listening, thinking, and response states</span>
+        </span>
+        <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="stage-visual-feedback" data-home-interaction-setting-value="enabled"><span></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================================
+       06) STAGE DENSITY GROUP
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-density-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-density-title">Density</h4>
+    </header>
+
+    <div class="ui-radio-list home-interaction-settings-panel__radio-list" data-ui-radio-list="stage-density" role="radiogroup" aria-label="Stage interface density">
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="comfortable" aria-checked="true" aria-pressed="true">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-density" data-home-interaction-setting-value="comfortable"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Comfortable</span>
+          <span class="ui-radio-list__description">Use spacious layout for normal interaction</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="compact" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-density" data-home-interaction-setting-value="compact"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Compact</span>
+          <span class="ui-radio-list__description">Tighten spacing for dense workspace use</span>
+        </span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =============================================================================
+       07) STAGE CONTRAST GROUP
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-contrast-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-contrast-title">Contrast</h4>
+    </header>
+
+    <div class="ui-radio-list home-interaction-settings-panel__radio-list" data-ui-radio-list="stage-contrast" role="radiogroup" aria-label="Stage contrast">
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="standard" aria-checked="true" aria-pressed="true">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-contrast" data-home-interaction-setting-value="standard"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Standard contrast</span>
+          <span class="ui-radio-list__description">Use the default visual balance</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="soft" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-contrast" data-home-interaction-setting-value="soft"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Soft contrast</span>
+          <span class="ui-radio-list__description">Reduce stage visual intensity</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="high" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-contrast" data-home-interaction-setting-value="high"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">High contrast</span>
+          <span class="ui-radio-list__description">Increase stage clarity and definition</span>
+        </span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- =============================================================================
+       08) STAGE BACKGROUND DEPTH GROUP
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-stage-background-depth-title">
+    <header class="home-interaction-settings-panel__control-group-header">
+      <h4 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-stage-background-depth-title">Background Depth</h4>
+    </header>
+
+    <div class="ui-radio-list home-interaction-settings-panel__radio-list" data-ui-radio-list="stage-background-depth" role="radiogroup" aria-label="Stage background depth">
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="cinematic" aria-checked="true" aria-pressed="true">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-background-depth" data-home-interaction-setting-value="cinematic"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Cinematic depth</span>
+          <span class="ui-radio-list__description">Keep full atmospheric stage depth</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="clean" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-background-depth" data-home-interaction-setting-value="clean"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Clean depth</span>
+          <span class="ui-radio-list__description">Reduce background atmosphere</span>
+        </span>
+      </div>
+
+      <div class="ui-radio-list__item home-interaction-settings-panel__radio-item" data-ui-radio-list-item data-ui-radio-list-value="flat" aria-checked="false" aria-pressed="false">
+        <button class="ui-radio-list__indicator" type="button" data-ui-radio-list-control aria-label="Select option" data-home-interaction-setting="stage-background-depth" data-home-interaction-setting-value="flat"></button>
+        <span class="ui-radio-list__content">
+          <span class="ui-radio-list__label">Flat depth</span>
+          <span class="ui-radio-list__description">Remove atmospheric background depth</span>
+        </span>
+      </div>
+    </div>
+  </section>
 </section>

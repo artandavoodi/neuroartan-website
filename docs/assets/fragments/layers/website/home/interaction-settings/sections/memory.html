@@ -1,0 +1,68 @@
+<!-- =============================================================================
+  NEUROARTAN — HOME INTERACTION SETTINGS / MEMORY SECTION
+  Layer: Website / Home / Interaction Settings
+  Purpose: Project memory, context retention, continuity, and agent memory controls.
+============================================================================= -->
+
+<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="memory" aria-labelledby="home-interaction-settings-memory-title">
+  <header class="home-interaction-settings-panel__section-heading">
+    <p class="home-interaction-settings-panel__section-kicker">Continuity</p>
+    <h3 class="home-interaction-settings-panel__section-title" id="home-interaction-settings-memory-title">Memory</h3>
+    <p class="home-interaction-settings-panel__section-description">Control how the agent uses project context, session continuity, and workspace memory during interaction.</p>
+  </header>
+
+  <div class="home-interaction-settings-panel__option-grid" aria-label="Memory modes">
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="memory-mode" data-home-interaction-settings-value="session" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Session only</span>
+      <span class="home-interaction-settings-panel__option-description">Use temporary context for the current interaction without long-range project binding.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="memory-mode" data-home-interaction-settings-value="workspace" aria-pressed="true">
+      <span class="home-interaction-settings-panel__option-label">Workspace memory</span>
+      <span class="home-interaction-settings-panel__option-description">Preserve context across workspace sessions, project decisions, and agent continuity records.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="memory-mode" data-home-interaction-settings-value="governed" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Governed memory</span>
+      <span class="home-interaction-settings-panel__option-description">Use approved planning documents, changelogs, and institutional records as the memory source.</span>
+    </button>
+  </div>
+
+  <div class="home-interaction-settings-panel__section-group" aria-label="Memory controls">
+    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-settings-action="project-memory" aria-pressed="true">
+      <span>
+        <span class="home-interaction-settings-panel__option-label">Project memory</span>
+        <span class="home-interaction-settings-panel__option-description">Allow the agent to use active project context while planning and responding.</span>
+      </span>
+      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"><span></span></span>
+    </button>
+
+    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-settings-action="decision-memory" aria-pressed="true">
+      <span>
+        <span class="home-interaction-settings-panel__option-label">Decision memory</span>
+        <span class="home-interaction-settings-panel__option-description">Retain confirmed strategic and implementation decisions for future sessions.</span>
+      </span>
+      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"><span></span></span>
+    </button>
+
+    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-settings-action="transient-context" aria-pressed="false">
+      <span>
+        <span class="home-interaction-settings-panel__option-label">Transient context only</span>
+        <span class="home-interaction-settings-panel__option-description">Keep the current command isolated when sensitive or exploratory work should not persist.</span>
+      </span>
+      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"><span></span></span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="memory-source">
+      <span>Memory source</span>
+      <span class="home-interaction-settings-panel__row-value">Workspace + governed records</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="memory-reset">
+      <span>Reset session context</span>
+      <span class="home-interaction-settings-panel__row-value">Manual approval required</span>
+    </button>
+  </div>
+
+  <p class="home-interaction-settings-panel__status">Memory controls must remain tied to workspace and session boundaries before agent execution is allowed.</p>
+</section>

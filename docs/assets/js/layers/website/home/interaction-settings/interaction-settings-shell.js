@@ -2,12 +2,13 @@
    00. FILE INDEX
    01. INTERACTION SETTINGS SHELL STATE
    02. DOM HELPERS
-   03. SECTION NAVIGATION
-   04. SETTING CONTROLS
-   05. PANEL LIFECYCLE
-   06. SHELL DELEGATION
-   07. GLOBAL TRIGGERS
-   08. BOOT
+   03. ACTIVE DESCRIPTION PROPAGATION
+   04. SECTION NAVIGATION
+   05. SETTING CONTROLS
+   06. PANEL LIFECYCLE
+   07. SHELL DELEGATION
+   08. GLOBAL TRIGGERS
+   09. BOOT
    ========================================================= */
 
 /* =========================================================
@@ -30,6 +31,7 @@ function getHomeInteractionSettingsShellNodes() {
     root,
     navItems: Array.from(root?.querySelectorAll?.('[data-home-interaction-settings-tab]') ?? []),
     sectionMounts: Array.from(root?.querySelectorAll?.('[data-home-interaction-settings-section-mount]') ?? []),
+    activeDescription: root?.querySelector?.('[data-home-interaction-settings-active-description="true"]') ?? null,
     settingControls: Array.from(root?.querySelectorAll?.('[data-home-interaction-setting]') ?? []),
   };
 }
@@ -40,7 +42,24 @@ function normalizeHomeInteractionSettingsSection(section) {
 }
 
 /* =========================================================
-   03. SECTION NAVIGATION
+   03. ACTIVE DESCRIPTION PROPAGATION
+   ========================================================= */
+function getHomeInteractionSettingsDescriptionForSection(nodes, activeSection) {
+  const activeNavItem = nodes.navItems.find((item) => item.dataset.homeInteractionSettingsTab === activeSection);
+  return activeNavItem?.dataset?.homeInteractionSettingsDescription || '';
+}
+
+function setHomeInteractionSettingsActiveDescription(nodes, activeSection) {
+  if (!nodes.activeDescription) return;
+
+  const description = getHomeInteractionSettingsDescriptionForSection(nodes, activeSection);
+  nodes.activeDescription.textContent = description;
+  nodes.activeDescription.hidden = !description;
+  nodes.activeDescription.setAttribute('aria-hidden', String(!description));
+}
+
+/* =========================================================
+   04. SECTION NAVIGATION
    ========================================================= */
 function setHomeInteractionSettingsSection(section) {
   const nodes = getHomeInteractionSettingsShellNodes();
@@ -51,6 +70,8 @@ function setHomeInteractionSettingsSection(section) {
   if (nodes.root) {
     nodes.root.dataset.homeInteractionSettingsActiveSection = activeSection;
   }
+
+  setHomeInteractionSettingsActiveDescription(nodes, activeSection);
 
   nodes.navItems.forEach((item) => {
     const isActive = item.dataset.homeInteractionSettingsTab === activeSection;
@@ -67,10 +88,11 @@ function setHomeInteractionSettingsSection(section) {
 }
 
 /* =========================================================
-   04. SETTING CONTROLS
+   05. SETTING CONTROLS
    ========================================================= */
 function syncHomeInteractionSettingsControl(control) {
   if (!control) return;
+  if (control.closest('[data-ui-radio-list]')) return;
 
   const isToggle = control.classList.contains('home-interaction-settings-panel__toggle-row');
 
@@ -92,7 +114,7 @@ function syncHomeInteractionSettingsControl(control) {
 }
 
 /* =========================================================
-   05. PANEL LIFECYCLE
+   06. PANEL LIFECYCLE
    ========================================================= */
 function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) {
   const nodes = getHomeInteractionSettingsShellNodes();
@@ -142,7 +164,7 @@ function bindHomeInteractionSettingsShell() {
 }
 
 /* =========================================================
-   06. SHELL DELEGATION
+   07. SHELL DELEGATION
    ========================================================= */
 function handleHomeInteractionSettingsShellClick(event) {
   const target = event.target instanceof Element ? event.target : null;
@@ -173,7 +195,18 @@ function handleHomeInteractionSettingsShellClick(event) {
 
   const control = target.closest('[data-home-interaction-setting]');
 
+  if (control?.closest?.('[data-ui-radio-list]')) {
+    return false;
+  }
+
   if (control) {
+    const section = control.closest('[data-home-interaction-settings-section]');
+    const sectionName = section?.dataset?.homeInteractionSettingsSection || '';
+
+    if (sectionName === 'stage') {
+      return false;
+    }
+
     event.preventDefault();
     event.stopPropagation();
     syncHomeInteractionSettingsControl(control);
@@ -184,7 +217,7 @@ function handleHomeInteractionSettingsShellClick(event) {
 }
 
 /* =========================================================
-   07. GLOBAL TRIGGERS
+   08. GLOBAL TRIGGERS
    ========================================================= */
 function bindHomeInteractionSettingsGlobalTriggers() {
   if (HOME_INTERACTION_SETTINGS_SHELL_STATE.isGlobalBound) return;
@@ -252,7 +285,7 @@ function bindHomeInteractionSettingsGlobalTriggers() {
 }
 
 /* =========================================================
-   08. BOOT
+   09. BOOT
    ========================================================= */
 function bootHomeInteractionSettingsShell() {
   bindHomeInteractionSettingsGlobalTriggers();

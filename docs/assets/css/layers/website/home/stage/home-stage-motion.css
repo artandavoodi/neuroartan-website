@@ -38,7 +38,7 @@
   --home-stage-motion-core-idle-signal-opacity:var(--layout-home-stage-motion-core-idle-signal-opacity);
   --home-stage-motion-core-idle-pulse-opacity:var(--layout-home-stage-motion-core-idle-pulse-opacity);
   --home-stage-motion-core-signal-size:var(--layout-home-stage-motion-core-signal-size);
-  --home-stage-motion-core-ring-size:var(--layout-home-stage-motion-core-ring-size);
+  --home-stage-motion-core-ring-size:var(--home-stage-motion-vessel-size);
   --home-stage-motion-core-pulse-size:var(--layout-home-stage-motion-core-pulse-size);
   --home-stage-motion-core-signal-blur:var(--layout-home-stage-motion-core-signal-blur);
   --home-stage-motion-core-pulse-blur:var(--layout-home-stage-motion-core-pulse-blur);
@@ -158,6 +158,10 @@
 #stage-center-core:has(#stage-cognitive-core-shell[data-voice-active="true"]) #stage-glass-vessel{
   width:var(--home-stage-motion-vessel-active-size);
   height:var(--home-stage-motion-vessel-active-size);
+}
+
+#stage-center-core:has(#stage-cognitive-core-shell[data-voice-active="true"]) #stage-cognitive-core-ring{
+  width:var(--home-stage-motion-vessel-active-size);
 }
 
 /* =============================================================================
@@ -286,6 +290,8 @@
   opacity:1;
   transform:translate(-50%, -50%) scale(1);
   transition:
+    width var(--home-stage-motion-transition),
+    height var(--home-stage-motion-transition),
     opacity var(--home-stage-motion-reset-transition) var(--interaction-ease-standard),
     filter var(--home-stage-motion-reset-transition) var(--interaction-ease-standard),
     background var(--home-stage-motion-reset-transition) var(--interaction-ease-standard),
@@ -342,10 +348,10 @@
 }
 
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-ring{
-  opacity:0.58;
-  border-color:color-mix(in srgb, var(--color-primary1) 72%, var(--home-stage-motion-core-ring-border));
-  box-shadow:0 0 32px color-mix(in srgb, var(--color-primary1) 26%, transparent), inset 0 0 22px color-mix(in srgb, var(--color-primary1) 16%, transparent);
-  filter:blur(0.8px) saturate(1.22);
+  opacity:0;
+  border-color:transparent;
+  box-shadow:none;
+  filter:none;
 }
 
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-pulse{
@@ -368,8 +374,8 @@
 }
 
 #stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-ring{
-  opacity:0.96;
-  filter:blur(1.6px) saturate(1.28);
+  opacity:0.36;
+  filter:blur(0.6px) saturate(1.08);
 }
 
 #stage-cognitive-core-shell[data-voice-active="true"] #stage-cognitive-core-pulse{
@@ -712,7 +718,7 @@
    13A) IDLE INNER COLOR BREATHING
 ============================================================================= */
 #stage-cognitive-core-shell[data-core-state="idle"] #stage-cognitive-core-ring{
-  animation:stage-core-idle-ring-breathe 9.2s var(--interaction-ease-standard) infinite;
+  animation:none;
 }
 
 /* =============================================================================

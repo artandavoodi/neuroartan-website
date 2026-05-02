@@ -25,6 +25,7 @@ import './runtime-state.js';
 import './toggle.js';
 import './buttons.js';
 import './selection.js';
+import './radio-list.js';
 import './forms.js';
 import './menus.js';
 import './navigation.js';

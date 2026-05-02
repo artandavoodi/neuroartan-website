@@ -1,0 +1,59 @@
+<!-- =============================================================================
+  NEUROARTAN — HOME INTERACTION SETTINGS / WORKSPACE SECTION
+  Layer: Website / Home / Interaction Settings
+  Purpose: Workspace, project, environment, repository-connection, and agent-context controls.
+============================================================================= -->
+
+<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="workspace" aria-labelledby="home-interaction-settings-workspace-title">
+  <header class="home-interaction-settings-panel__section-heading">
+    <p class="home-interaction-settings-panel__section-kicker">Operating Context</p>
+    <h3 class="home-interaction-settings-panel__section-title" id="home-interaction-settings-workspace-title">Workspace</h3>
+    <p class="home-interaction-settings-panel__section-description">Define the active workspace that frames projects, memory, tools, repositories, and agent execution.</p>
+  </header>
+
+  <div class="home-interaction-settings-panel__option-grid" aria-label="Workspace modes">
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="workspace-mode" data-home-interaction-settings-value="personal" aria-pressed="true">
+      <span class="home-interaction-settings-panel__option-label">Personal workspace</span>
+      <span class="home-interaction-settings-panel__option-description">Use the founder workspace for focused development and private continuity.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="workspace-mode" data-home-interaction-settings-value="project" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Project workspace</span>
+      <span class="home-interaction-settings-panel__option-description">Bind the session to a selected project, repository scope, and implementation context.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="workspace-mode" data-home-interaction-settings-value="institutional" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Institutional workspace</span>
+      <span class="home-interaction-settings-panel__option-description">Route work through governed Neuroartan planning, release, and approval records.</span>
+    </button>
+  </div>
+
+  <div class="home-interaction-settings-panel__section-group" aria-label="Workspace controls">
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="active-workspace">
+      <span>Active workspace</span>
+      <span class="home-interaction-settings-panel__row-value">Neuroartan Website</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="active-project">
+      <span>Active project</span>
+      <span class="home-interaction-settings-panel__row-value">Website Stabilization</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="environment-status">
+      <span>Environment</span>
+      <span class="home-interaction-settings-panel__row-value">Local Preview</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="repository-connection">
+      <span>Repository connection</span>
+      <span class="home-interaction-settings-panel__row-value">Available when authorized</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="workspace-memory">
+      <span>Workspace memory</span>
+      <span class="home-interaction-settings-panel__row-value">Project-bound</span>
+    </button>
+  </div>
+
+  <p class="home-interaction-settings-panel__status">Workspace settings define the operating context before model, memory, developer, or changelog controls are applied.</p>
+</section>

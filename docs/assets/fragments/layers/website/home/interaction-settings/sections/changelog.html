@@ -1,0 +1,65 @@
+<!-- =============================================================================
+  NEUROARTAN — HOME INTERACTION SETTINGS / CHANGELOG SECTION
+  Layer: Website / Home / Interaction Settings
+  Purpose: Agent session, software release, workspace change, and implementation traceability controls.
+============================================================================= -->
+
+<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="changelog" aria-labelledby="home-interaction-settings-changelog-title">
+  <header class="home-interaction-settings-panel__section-heading">
+    <p class="home-interaction-settings-panel__section-kicker">Traceability</p>
+    <h3 class="home-interaction-settings-panel__section-title" id="home-interaction-settings-changelog-title">Changelog</h3>
+    <p class="home-interaction-settings-panel__section-description">Track interaction changes, agent actions, workspace updates, release decisions, and implementation history.</p>
+  </header>
+
+  <div class="home-interaction-settings-panel__option-grid" aria-label="Changelog modes">
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="changelog-mode" data-home-interaction-settings-value="session" aria-pressed="true">
+      <span class="home-interaction-settings-panel__option-label">Session log</span>
+      <span class="home-interaction-settings-panel__option-description">Record command, response, scan, plan, and review events for the active session.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="changelog-mode" data-home-interaction-settings-value="workspace" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Workspace log</span>
+      <span class="home-interaction-settings-panel__option-description">Preserve project-level changes, workspace state, and implementation decisions.</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__option" type="button" data-home-interaction-settings-action="changelog-mode" data-home-interaction-settings-value="release" aria-pressed="false">
+      <span class="home-interaction-settings-panel__option-label">Release ledger</span>
+      <span class="home-interaction-settings-panel__option-description">Track commercial-grade release history, affected modules, tests, approvals, and rollback notes.</span>
+    </button>
+  </div>
+
+  <div class="home-interaction-settings-panel__section-group" aria-label="Changelog controls">
+    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-settings-action="record-agent-actions" aria-pressed="true">
+      <span>
+        <span class="home-interaction-settings-panel__option-label">Record agent actions</span>
+        <span class="home-interaction-settings-panel__option-description">Log scans, plans, patches, tests, approvals, and blocked runtime actions.</span>
+      </span>
+      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"><span></span></span>
+    </button>
+
+    <button class="home-interaction-settings-panel__toggle-row" type="button" data-home-interaction-settings-action="record-release-impact" aria-pressed="true">
+      <span>
+        <span class="home-interaction-settings-panel__option-label">Release impact</span>
+        <span class="home-interaction-settings-panel__option-description">Attach commercial and product relevance to implementation records when applicable.</span>
+      </span>
+      <span class="home-interaction-settings-panel__toggle" aria-hidden="true"><span></span></span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="latest-entry">
+      <span>Latest entry</span>
+      <span class="home-interaction-settings-panel__row-value">Awaiting runtime ledger</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="ledger-status">
+      <span>Ledger status</span>
+      <span class="home-interaction-settings-panel__row-value">Frontend ready</span>
+    </button>
+
+    <button class="home-interaction-settings-panel__row" type="button" data-home-interaction-settings-action="export-changelog">
+      <span>Export changelog</span>
+      <span class="home-interaction-settings-panel__row-value">Requires approval</span>
+    </button>
+  </div>
+
+  <p class="home-interaction-settings-panel__status">Changelog controls provide traceability for agent sessions before commit, pull request, or release workflows become active.</p>
+</section>

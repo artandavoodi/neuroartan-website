@@ -6,7 +6,8 @@
    04) DOM HELPERS
    05) TEMPLATE HELPERS
    06) SHELL RENDERING
-   07) END OF FILE
+   07) MODULE ROUTING
+   08) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -23,7 +24,13 @@ export const DEVELOPMENT_COCKPIT_DATA_PATHS = Object.freeze({
   promptTemplates: '/assets/data/website/development-cockpit/prompt-template-registry.json',
   scanTemplates: '/assets/data/website/development-cockpit/scan-template-registry.json',
   repositoryScopes: '/assets/data/website/development-cockpit/repository-scope-registry.json',
-  modules: '/assets/data/website/development-cockpit/cockpit-module-registry.json'
+  modules: '/assets/data/website/development-cockpit/cockpit-module-registry.json',
+  developerCapabilities: '/assets/data/website/development-cockpit/developer-mode-capability-registry.json',
+  runtimeInterfaces: '/assets/data/website/development-cockpit/developer-runtime-interface-registry.json',
+  developerProjects: '/assets/data/website/development-cockpit/developer-project-registry.json',
+  agentSessions: '/assets/data/website/development-cockpit/agent-session-registry.json',
+  changelogIndex: '/assets/data/website/development-cockpit/changelog-index.json',
+  releaseLedger: '/assets/data/website/development-cockpit/release-ledger.json'
 });
 
 const SHELL_FRAGMENT_PATH = '/assets/fragments/layers/website/development-cockpit/development-cockpit-shell.html';
@@ -54,14 +61,26 @@ async function loadCockpitRegistries() {
     promptTemplates,
     scanTemplates,
     repositoryScopes,
-    modules
+    modules,
+    developerCapabilities,
+    runtimeInterfaces,
+    developerProjects,
+    agentSessions,
+    changelogIndex,
+    releaseLedger
   ] = await Promise.all([
     fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.providers),
     fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.workflows),
     fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.promptTemplates),
     fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.scanTemplates),
     fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.repositoryScopes),
-    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.modules)
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.modules),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.developerCapabilities),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.runtimeInterfaces),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.developerProjects),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.agentSessions),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.changelogIndex),
+    fetchCockpitJson(DEVELOPMENT_COCKPIT_DATA_PATHS.releaseLedger)
   ]);
 
   return {
@@ -70,7 +89,13 @@ async function loadCockpitRegistries() {
     promptTemplates,
     scanTemplates,
     repositoryScopes,
-    modules
+    modules,
+    developerCapabilities,
+    runtimeInterfaces,
+    developerProjects,
+    agentSessions,
+    changelogIndex,
+    releaseLedger
   };
 }
 
@@ -135,6 +160,34 @@ function setShellStatus(root, title, copy) {
   setCockpitText(root, '[data-cockpit-status-copy]', copy);
 }
 
+function setCockpitActiveNav(root, moduleId) {
+  const nav = root.querySelector('[data-cockpit-module-nav]');
+  if (!nav) return;
+
+  nav.querySelectorAll('button').forEach((button) => {
+    if (button.dataset.cockpitModuleTarget === moduleId) {
+      button.setAttribute('aria-current', 'true');
+      return;
+    }
+
+    button.removeAttribute('aria-current');
+  });
+}
+
+function scrollCockpitModule(root, moduleId, { updateHash = true } = {}) {
+  const target = root.querySelector(`[data-cockpit-module="${moduleId}"]`);
+  if (!target) {
+    return;
+  }
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setCockpitActiveNav(root, moduleId);
+
+  if (updateHash) {
+    window.history.replaceState(null, '', `#${moduleId}`);
+  }
+}
+
 async function renderCockpitModules(root, registries) {
   const grid = root.querySelector('[data-cockpit-module-grid]');
   const nav = root.querySelector('[data-cockpit-module-nav]');
@@ -156,15 +209,25 @@ async function renderCockpitModules(root, registries) {
 
     const navButton = document.createElement('button');
     navButton.type = 'button';
+    navButton.dataset.cockpitModuleTarget = module.id;
     navButton.textContent = normalizeCockpitString(module.label || module.id);
     navButton.addEventListener('click', () => {
-      const target = root.querySelector(`[data-cockpit-module="${module.id}"]`);
-      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      nav.querySelectorAll('button').forEach((button) => button.removeAttribute('aria-current'));
-      navButton.setAttribute('aria-current', 'true');
+      scrollCockpitModule(root, module.id);
     });
     nav.append(navButton);
   }
+}
+
+/* =============================================================================
+   07) MODULE ROUTING
+============================================================================= */
+function syncCockpitHashRoute(root) {
+  const hash = normalizeCockpitString(window.location.hash).replace(/^#/, '');
+  if (!hash) {
+    return;
+  }
+
+  scrollCockpitModule(root, hash, { updateHash: false });
 }
 
 export async function initDevelopmentCockpitShell() {
@@ -180,6 +243,7 @@ export async function initDevelopmentCockpitShell() {
   setShellStatus(shell, 'Loading registries', 'Reading cockpit data owners.');
   const registries = await loadCockpitRegistries();
   await renderCockpitModules(shell, registries);
+  syncCockpitHashRoute(shell);
   setShellStatus(shell, 'Cockpit ready', 'Modules are mounted from fragments and registries.');
 
   return {
@@ -190,5 +254,5 @@ export async function initDevelopmentCockpitShell() {
 }
 
 /* =============================================================================
-   07) END OF FILE
+   08) END OF FILE
 ============================================================================= */

@@ -1,0 +1,48 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) PROJECT REPOSITORY SIDEBAR
+============================================================================= */
+
+/* =============================================================================
+   01) PROJECT REPOSITORY SIDEBAR
+============================================================================= */
+.project-repository-sidebar__actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
+.project-repository-sidebar__list{
+  display:grid;
+  gap:var(--spacing-sm);
+}
+
+.project-repository-sidebar__item{
+  display:grid;
+  gap:var(--spacing-xs);
+  width:var(--size-full);
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+  color:var(--cockpit-text);
+  font:inherit;
+  text-align:start;
+  cursor:pointer;
+  transition:var(--cockpit-motion);
+}
+
+.project-repository-sidebar__item:hover,
+.project-repository-sidebar__item:focus-visible,
+.project-repository-sidebar__item[aria-pressed="true"]{
+  border-color:var(--control-border-hover-unified);
+  background:var(--cockpit-control-hover);
+  outline:none;
+}
+
+.project-repository-sidebar__item span{
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}

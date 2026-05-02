@@ -1,0 +1,103 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "secure_backend_interface_contract",
+  "defaultRuntimeState": {
+    "backendRuntimeImplemented": false,
+    "internetAccessDefault": "blocked",
+    "frontendSecretsAllowed": false,
+    "browserRepositoryMutationAllowed": false,
+    "mutationRequiresApproval": true
+  },
+  "interfaces": [
+    {
+      "id": "provider-connection-status",
+      "label": "Provider connection status",
+      "method": "GET",
+      "route": "/api/developer-mode/providers/status",
+      "frontendStatus": "stubbed_backend_required",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Returns provider availability without exposing provider secrets."
+    },
+    {
+      "id": "github-connection-status",
+      "label": "GitHub connection status",
+      "method": "GET",
+      "route": "/api/developer-mode/github/status",
+      "frontendStatus": "stubbed_backend_required",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Returns scoped GitHub authorization state without exposing tokens."
+    },
+    {
+      "id": "github-repository-discovery",
+      "label": "GitHub repository discovery",
+      "method": "GET",
+      "route": "/api/developer-mode/github/repositories",
+      "frontendStatus": "stubbed_backend_required",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Lists repositories authorized through a server-side GitHub App or OAuth scope. No GitHub token is exposed to the browser."
+    },
+    {
+      "id": "developer-project-create",
+      "label": "Developer project creation",
+      "method": "POST",
+      "route": "/api/developer-mode/projects",
+      "frontendStatus": "locked_backend_required",
+      "mutation": false,
+      "requiresApproval": true,
+      "description": "Creates a profile-owned developer project and workspace record after authenticated developer authorization."
+    },
+    {
+      "id": "agent-session-create",
+      "label": "Agent session creation",
+      "method": "POST",
+      "route": "/api/developer-mode/sessions",
+      "frontendStatus": "locked_backend_required",
+      "mutation": false,
+      "requiresApproval": true,
+      "description": "Creates a server-side coding-agent session after authenticated developer authorization."
+    },
+    {
+      "id": "repository-scan-request",
+      "label": "Repository scan request",
+      "method": "POST",
+      "route": "/api/developer-mode/repositories/scan",
+      "frontendStatus": "locked_backend_required",
+      "mutation": false,
+      "requiresApproval": true,
+      "description": "Requests a read-only repository scan inside a scoped runtime environment."
+    },
+    {
+      "id": "patch-proposal-request",
+      "label": "Patch proposal request",
+      "method": "POST",
+      "route": "/api/developer-mode/patches/propose",
+      "frontendStatus": "locked_backend_required",
+      "mutation": false,
+      "requiresApproval": true,
+      "description": "Requests a reviewable patch proposal without applying it."
+    },
+    {
+      "id": "test-request",
+      "label": "Test request",
+      "method": "POST",
+      "route": "/api/developer-mode/tests/run",
+      "frontendStatus": "locked_backend_required",
+      "mutation": true,
+      "requiresApproval": true,
+      "description": "Runs approved test commands inside a sandbox only."
+    },
+    {
+      "id": "commit-pr-request",
+      "label": "Commit and pull request request",
+      "method": "POST",
+      "route": "/api/developer-mode/github/commit-pr",
+      "frontendStatus": "locked_backend_required",
+      "mutation": true,
+      "requiresApproval": true,
+      "description": "Creates approved commits and pull requests with attribution after patch review."
+    }
+  ]
+}

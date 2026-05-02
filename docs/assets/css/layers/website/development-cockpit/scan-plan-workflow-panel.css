@@ -1,0 +1,36 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) SCAN PLAN WORKFLOW PANEL
+============================================================================= */
+
+/* =============================================================================
+   01) SCAN PLAN WORKFLOW PANEL
+============================================================================= */
+.scan-plan-workflow-panel{
+  grid-column:var(--grid-column-single) / -1;
+}
+
+.scan-plan-workflow-panel__steps{
+  display:grid;
+  gap:var(--spacing-sm);
+}
+
+.scan-plan-workflow-panel__step{
+  display:grid;
+  gap:var(--spacing-xs);
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+}
+
+.scan-plan-workflow-panel__step strong{
+  color:var(--cockpit-text);
+  font-weight:var(--font-weight-semibold);
+}
+
+.scan-plan-workflow-panel__step span{
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}

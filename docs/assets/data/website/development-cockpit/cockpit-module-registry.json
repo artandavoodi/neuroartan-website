@@ -2,6 +2,31 @@
   "version": "2026-05-02",
   "modules": [
     {
+      "id": "developer-dashboard",
+      "label": "Developer Dashboard",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/developer-dashboard.html"
+    },
+    {
+      "id": "project-repository-sidebar",
+      "label": "Projects / Repositories",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/project-repository-sidebar.html"
+    },
+    {
+      "id": "project-environment-panel",
+      "label": "Project Environment",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/project-environment-panel.html"
+    },
+    {
+      "id": "agent-thread-list",
+      "label": "Agent Sessions",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/agent-thread-list.html"
+    },
+    {
+      "id": "developer-command-composer",
+      "label": "Voice / Text Command",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/developer-command-composer.html"
+    },
+    {
       "id": "prompt-composer",
       "label": "Prompt Composer",
       "fragment": "/assets/fragments/layers/website/development-cockpit/prompt-composer.html"
@@ -10,6 +35,11 @@
       "id": "terminal-scan-generator",
       "label": "Terminal Scan Generator",
       "fragment": "/assets/fragments/layers/website/development-cockpit/terminal-scan-generator.html"
+    },
+    {
+      "id": "scan-plan-workflow-panel",
+      "label": "Scan / Plan / Patch / Test",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/scan-plan-workflow-panel.html"
     },
     {
       "id": "file-target-selector",
@@ -35,6 +65,21 @@
       "id": "provider-router",
       "label": "Provider Router",
       "fragment": "/assets/fragments/layers/website/development-cockpit/provider-router.html"
+    },
+    {
+      "id": "worktree-sandbox-controller",
+      "label": "Worktree / Sandbox",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/worktree-sandbox-controller.html"
+    },
+    {
+      "id": "review-approval-pane",
+      "label": "Review / Approval",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/review-approval-pane.html"
+    },
+    {
+      "id": "changelog-release-ledger",
+      "label": "Changelog / Release Ledger",
+      "fragment": "/assets/fragments/layers/website/development-cockpit/changelog-release-ledger.html"
     },
     {
       "id": "daily-execution-log",

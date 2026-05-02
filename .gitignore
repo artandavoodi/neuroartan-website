@@ -1,3 +1,6 @@
 development/*
 !development/serve_docs.py
 development/__pycache__/
+.env
+.env.*
+!.env.example

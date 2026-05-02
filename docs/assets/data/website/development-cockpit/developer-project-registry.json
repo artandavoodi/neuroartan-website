@@ -1,0 +1,52 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "developer_project_schema_frontend_registry",
+  "projectSchema": {
+    "fields": [
+      "project_id",
+      "owner_profile_id",
+      "project_name",
+      "workspace_name",
+      "repository_id",
+      "environment_mode",
+      "provider_id",
+      "github_connection_status",
+      "runtime_access_status",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "workspaceSchema": {
+    "fields": [
+      "workspace_id",
+      "owner_profile_id",
+      "project_id",
+      "workspace_name",
+      "repository_id",
+      "worktree_reference",
+      "sandbox_status",
+      "approval_policy",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "environmentModes": [
+    {
+      "id": "cloud-sandbox",
+      "label": "Cloud sandbox",
+      "status": "backend_required"
+    },
+    {
+      "id": "local-worktree",
+      "label": "Local worktree",
+      "status": "backend_required"
+    },
+    {
+      "id": "manual-review",
+      "label": "Manual review",
+      "status": "available_without_runtime"
+    }
+  ],
+  "workspaces": [],
+  "projects": []
+}

@@ -4,13 +4,15 @@
    02) PANEL ROOT
    03) FORM AREA
    04) INPUT AREA
-   05) COMPOSER LAYOUT
-   06) CONTROL PRIMITIVES
-   07) MODEL AND SETTINGS CONTROLS
-   08) FILE AREA
-   09) VOICE CONTROL
-   10) SUBMIT CONTROL
-   11) RESPONSIVE
+   05) DEVELOPER ACTIONS
+   06) DEVELOPER WORKBENCH
+   07) COMPOSER LAYOUT
+   08) CONTROL PRIMITIVES
+   09) MODEL AND SETTINGS CONTROLS
+   10) FILE AREA
+   11) VOICE CONTROL
+   12) SUBMIT CONTROL
+   13) RESPONSIVE
 ============================================================================= */
 
 /* =============================================================================
@@ -82,6 +84,34 @@
 
 
   --home-interaction-panel-form-gap:var(--layout-home-interaction-panel-form-gap);
+  --home-interaction-panel-developer-actions-gap:var(--layout-home-interaction-panel-developer-actions-gap);
+  --home-interaction-panel-developer-action-min-height:var(--layout-home-interaction-panel-developer-action-min-height);
+  --home-interaction-panel-developer-action-padding-x:var(--layout-home-interaction-panel-developer-action-padding-x);
+  --home-interaction-panel-developer-action-radius:var(--control-radius-pill);
+  --home-interaction-panel-developer-action-bg:transparent;
+  --home-interaction-panel-developer-action-bg-hover:var(--control-bg);
+  --home-interaction-panel-developer-action-border:var(--control-border);
+  --home-interaction-panel-developer-action-border-hover:var(--control-border-strong);
+  --home-interaction-panel-developer-action-text:var(--text-secondary-color);
+  --home-interaction-panel-developer-action-text-hover:var(--text-primary-color);
+  --home-interaction-panel-developer-action-size:var(--layout-home-interaction-panel-developer-action-size);
+  --home-interaction-panel-developer-action-weight:var(--layout-home-interaction-panel-developer-action-weight);
+  --home-interaction-panel-developer-action-line-height:var(--layout-home-interaction-panel-developer-action-line-height);
+  --home-interaction-panel-developer-action-tracking:var(--layout-home-interaction-panel-developer-action-tracking);
+  --home-interaction-panel-developer-control-min-width:var(--layout-home-interaction-panel-developer-control-min-width);
+  --home-interaction-panel-developer-control-height:var(--layout-home-interaction-panel-model-height);
+  --home-interaction-panel-developer-control-padding-x:var(--layout-home-interaction-panel-model-padding-x);
+  --home-interaction-panel-developer-control-radius:var(--control-radius-pill);
+  --home-interaction-panel-developer-control-border:var(--control-border);
+  --home-interaction-panel-developer-control-border-hover:var(--control-border-strong);
+  --home-interaction-panel-developer-control-bg:var(--control-bg);
+  --home-interaction-panel-developer-control-text:var(--text-primary-color);
+  --home-interaction-panel-developer-control-muted:var(--text-secondary-color);
+  --home-interaction-panel-developer-control-size:var(--home-interaction-panel-model-name-size);
+  --home-interaction-panel-developer-control-weight:var(--home-interaction-panel-model-name-weight);
+  --home-interaction-panel-developer-control-line-height:var(--home-interaction-panel-model-name-line-height);
+  --home-interaction-panel-developer-status-size:var(--layout-home-interaction-panel-developer-status-size);
+  --home-interaction-panel-developer-status-line-height:var(--layout-home-interaction-panel-developer-status-line-height);
   --home-interaction-panel-input-line-height:var(--layout-home-interaction-panel-input-line-height);
   --home-interaction-panel-composer-gap:var(--layout-home-interaction-panel-composer-gap);
   --home-interaction-panel-composer-side-gap:var(--layout-home-interaction-panel-composer-side-gap);
@@ -190,7 +220,124 @@
 }
 
 /* =============================================================================
-   05) COMPOSER LAYOUT
+   05) DEVELOPER ACTIONS
+============================================================================= */
+.home-interaction-panel__developer-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--home-interaction-panel-developer-actions-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-interaction-panel__developer-action{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:var(--home-interaction-panel-developer-action-min-height);
+  padding:var(--spacing-none) var(--home-interaction-panel-developer-action-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-developer-action-border);
+  border-radius:var(--home-interaction-panel-developer-action-radius);
+  background:var(--home-interaction-panel-developer-action-bg);
+  color:var(--home-interaction-panel-developer-action-text);
+  font-size:var(--home-interaction-panel-developer-action-size);
+  font-weight:var(--home-interaction-panel-developer-action-weight);
+  line-height:var(--home-interaction-panel-developer-action-line-height);
+  letter-spacing:var(--home-interaction-panel-developer-action-tracking);
+  text-decoration:none;
+  white-space:nowrap;
+  transition:var(--interaction-transition-control);
+}
+
+.home-interaction-panel__developer-action:hover,
+.home-interaction-panel__developer-action:focus-visible{
+  border-color:var(--home-interaction-panel-developer-action-border-hover);
+  background:var(--home-interaction-panel-developer-action-bg-hover);
+  color:var(--home-interaction-panel-developer-action-text-hover);
+  outline:none;
+}
+
+/* =============================================================================
+   06) DEVELOPER WORKBENCH
+============================================================================= */
+.home-interaction-panel__developer-workbench{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--home-interaction-panel-developer-actions-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-interaction-panel__developer-select,
+.home-interaction-panel__developer-input{
+  -webkit-appearance:none;
+  appearance:none;
+  flex:1 1 var(--home-interaction-panel-developer-control-min-width);
+  min-width:var(--spacing-none);
+  min-height:var(--home-interaction-panel-developer-control-height);
+  padding:var(--spacing-none) var(--home-interaction-panel-developer-control-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-developer-control-border);
+  border-radius:var(--home-interaction-panel-developer-control-radius);
+  background:var(--home-interaction-panel-developer-control-bg);
+  color:var(--home-interaction-panel-developer-control-text);
+  font:inherit;
+  font-size:var(--home-interaction-panel-developer-control-size);
+  font-weight:var(--home-interaction-panel-developer-control-weight);
+  line-height:var(--home-interaction-panel-developer-control-line-height);
+  outline:none;
+  transition:var(--interaction-transition-control);
+}
+
+.home-interaction-panel__developer-select:hover,
+.home-interaction-panel__developer-select:focus-visible,
+.home-interaction-panel__developer-input:hover,
+.home-interaction-panel__developer-input:focus-visible{
+  border-color:var(--home-interaction-panel-developer-control-border-hover);
+}
+
+.home-interaction-panel__developer-input::placeholder{
+  color:var(--home-interaction-panel-developer-control-muted);
+}
+
+.home-interaction-panel__developer-primary{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:var(--home-interaction-panel-developer-control-height);
+  padding:var(--spacing-none) var(--home-interaction-panel-submit-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-panel-submit-border);
+  border-radius:var(--home-interaction-panel-submit-radius);
+  background:var(--home-interaction-panel-submit-bg);
+  color:var(--home-interaction-panel-submit-text);
+  font-size:var(--home-interaction-panel-submit-size);
+  font-weight:var(--home-interaction-panel-submit-weight);
+  line-height:var(--home-interaction-panel-submit-line-height);
+  white-space:nowrap;
+  transition:var(--interaction-transition-control);
+}
+
+.home-interaction-panel__developer-primary:hover,
+.home-interaction-panel__developer-primary:focus-visible{
+  border-color:var(--home-interaction-panel-control-border-hover);
+  background:var(--home-interaction-panel-control-bg-hover);
+  color:var(--home-interaction-panel-control-text-hover);
+  outline:none;
+}
+
+.home-interaction-panel__developer-status{
+  min-height:var(--home-interaction-panel-developer-status-line-height);
+  margin:var(--spacing-none);
+  color:var(--home-interaction-panel-developer-control-muted);
+  font-size:var(--home-interaction-panel-developer-status-size);
+  line-height:var(--home-interaction-panel-developer-status-line-height);
+}
+
+/* =============================================================================
+   07) COMPOSER LAYOUT
 ============================================================================= */
 .home-interaction-panel__composer{
   display:grid;
@@ -216,7 +363,7 @@
 }
 
 /* =============================================================================
-   06) CONTROL PRIMITIVES
+   08) CONTROL PRIMITIVES
 ============================================================================= */
 .home-interaction-panel__attach,
 .home-interaction-panel__voice,
@@ -300,7 +447,7 @@
 }
 
 /* =============================================================================
-   07) MODEL AND SETTINGS CONTROLS
+   09) MODEL AND SETTINGS CONTROLS
 ============================================================================= */
 .home-interaction-panel__model-button{
   min-height:var(--home-interaction-panel-model-height);
@@ -344,7 +491,7 @@
 }
 
 /* =============================================================================
-   08) FILE AREA
+   10) FILE AREA
 ============================================================================= */
 .home-interaction-panel__files{
   display:flex;
@@ -374,7 +521,7 @@
 }
 
 /* =============================================================================
-   09) VOICE CONTROL
+   11) VOICE CONTROL
 ============================================================================= */
 .home-interaction-panel__voice{
   position:relative;
@@ -449,7 +596,7 @@
 }
 
 /* =============================================================================
-   10) SUBMIT CONTROL
+   12) SUBMIT CONTROL
 ============================================================================= */
 .home-interaction-panel__submit{
   min-height:var(--home-interaction-panel-submit-height);
@@ -496,7 +643,7 @@
 
 
 /* =============================================================================
-   11) RESPONSIVE
+   13) RESPONSIVE
 ============================================================================= */
 @media (max-width:760px){
   .home-interaction-panel{
@@ -512,6 +659,11 @@
   .home-interaction-panel__composer-right{
     width:var(--size-full);
     justify-content:space-between;
+  }
+
+  .home-interaction-panel__developer-workbench{
+    display:grid;
+    grid-template-columns:var(--grid-column-single);
   }
 
   .home-interaction-panel__model-button{

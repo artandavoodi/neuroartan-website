@@ -1,0 +1,29 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "developer_mode_release_ledger",
+  "entries": [
+    {
+      "id": "dev-mode-foundation-2026-05-02",
+      "date": "2026-05-02",
+      "version": "0.1.0",
+      "feature_category": "developer-mode-foundation",
+      "changed_modules": [
+        "development-cockpit",
+        "developer-mode-architecture",
+        "safe-runtime-interface-stubs",
+        "release-ledger"
+      ],
+      "affected_repositories": [
+        "neuroartan-website"
+      ],
+      "operator": "Artan",
+      "agent_model": "Codex",
+      "approval_state": "draft_founder_review_required",
+      "test_status": "local_static_verification_required",
+      "commercial_relevance": "Creates traceable foundation for in-platform Codex-like development sessions without unsafe frontend secrets or browser-side repository mutation.",
+      "rollback_notes": "Remove Developer Mode module registry additions and related frontend/data owners if the architecture is rejected before runtime implementation.",
+      "release_visibility": "internal",
+      "related_commit_pr": ""
+    }
+  ]
+}

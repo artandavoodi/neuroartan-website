@@ -6,21 +6,36 @@
       "label": "Website",
       "root": "/Users/artan/Documents/Neuroartan/website",
       "publicRoot": "/Users/artan/Documents/Neuroartan/website/docs",
-      "scope": "public website and early platform shell"
+      "scope": "public website and early platform shell",
+      "githubOwner": "pending",
+      "githubRepository": "neuroartan-website",
+      "githubConnectionStatus": "backend_required",
+      "writePermissionStatus": "locked",
+      "defaultBranch": "main"
     },
     {
       "id": "vault",
       "label": "Vault",
       "root": "/Users/artan/Documents/Neuroartan/I",
       "publicRoot": "",
-      "scope": "private doctrine, planning, and Product Vision Core authority"
+      "scope": "private doctrine, planning, and Product Vision Core authority",
+      "githubOwner": "pending",
+      "githubRepository": "neuroartan-i",
+      "githubConnectionStatus": "backend_required",
+      "writePermissionStatus": "locked",
+      "defaultBranch": "main"
     },
     {
       "id": "institution",
       "label": "Institutional Root",
       "root": "/Users/artan/Documents/Neuroartan",
       "publicRoot": "",
-      "scope": "multi-repository institutional workspace"
+      "scope": "multi-repository institutional workspace",
+      "githubOwner": "pending",
+      "githubRepository": "multi-repository-workspace",
+      "githubConnectionStatus": "backend_required",
+      "writePermissionStatus": "locked",
+      "defaultBranch": "main"
     }
   ]
 }

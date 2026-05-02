@@ -1,0 +1,21 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) DEVELOPER COMMAND COMPOSER
+============================================================================= */
+
+/* =============================================================================
+   01) DEVELOPER COMMAND COMPOSER
+============================================================================= */
+.developer-command-composer{
+  grid-column:var(--grid-column-single) / -1;
+}
+
+.developer-command-composer__actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--spacing-sm);
+}
+
+.developer-command-composer[data-voice-state="listening"]{
+  border-color:var(--control-border-hover-unified);
+}

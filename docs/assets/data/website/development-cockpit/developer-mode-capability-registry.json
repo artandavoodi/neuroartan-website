@@ -1,0 +1,62 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "developer_mode_frontend_gate_registry",
+  "developerMode": {
+    "id": "neuroartan-developer-mode",
+    "label": "Developer Mode",
+    "runtimeStatus": "frontend_ready_backend_locked",
+    "unsafeRuntimeEnabled": false,
+    "frontendSecretsAllowed": false,
+    "browserRepositoryMutationAllowed": false
+  },
+  "requirements": [
+    {
+      "id": "authenticated-developer-identity",
+      "label": "Authenticated developer identity",
+      "category": "profile",
+      "required": true,
+      "status": "profile_required",
+      "description": "Developer Mode requires a signed-in Neuroartan profile before runtime access can be trusted."
+    },
+    {
+      "id": "developer-capability-flag",
+      "label": "Developer role or capability flag",
+      "category": "authorization",
+      "required": true,
+      "status": "backend_required",
+      "description": "A backend-owned developer capability flag must authorize access before runtime execution is enabled."
+    },
+    {
+      "id": "provider-preference",
+      "label": "Provider preference",
+      "category": "provider",
+      "required": true,
+      "status": "frontend_selectable_backend_connection_required",
+      "description": "The frontend may select a provider route, but connection, secrets, and execution remain backend-owned."
+    },
+    {
+      "id": "repository-access-eligibility",
+      "label": "Repository access eligibility",
+      "category": "repository",
+      "required": true,
+      "status": "github_app_or_oauth_required",
+      "description": "Repository authorization must be scoped per repository through backend-held GitHub App or OAuth credentials."
+    },
+    {
+      "id": "runtime-access-status",
+      "label": "Runtime access status",
+      "category": "runtime",
+      "required": true,
+      "status": "locked_until_backend_runtime_exists",
+      "description": "Scan, patch, test, commit, and pull request execution are blocked until secure backend runtime routes exist."
+    },
+    {
+      "id": "approval-attribution",
+      "label": "Approval attribution",
+      "category": "audit",
+      "required": true,
+      "status": "backend_required",
+      "description": "All mutation approvals must record the approving profile, provider, repository, patch artifact, and execution trace."
+    }
+  ]
+}

@@ -21,6 +21,7 @@
    02) IMPORTS
 ============================================================================= */
 import {
+  REQUIRED_PROFILE_FIELDS,
   getSupabaseClient,
   getSupabaseProfileByAuthUserId,
   normalizeString,
@@ -148,7 +149,7 @@ export async function getCurrentCanonicalProfile() {
   if (!profile) return null;
 
   const profileExists = profile.profile_exists === true;
-  const profileComplete = profile.profile_complete === true;
+  const profileComplete = isCanonicalProfileComplete(profile);
   const username = normalizeUsername(profile.username || profile.username_lower || profile.public_username || '');
 
   if (!profileExists || !profileComplete || !username) {
@@ -156,6 +157,29 @@ export async function getCurrentCanonicalProfile() {
   }
 
   return profile;
+}
+
+function isCanonicalProfileComplete(profile = null) {
+  if (!profile) return false;
+  if (profile.profile_complete === true) return true;
+
+  const missingFields = Array.isArray(profile.missing_required_fields)
+    ? profile.missing_required_fields.map((field) => normalizeString(field)).filter(Boolean)
+    : [];
+
+  if (missingFields.length > 0) return false;
+
+  return REQUIRED_PROFILE_FIELDS.every((field) => {
+    if (field === 'username') {
+      return normalizeString(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || '');
+    }
+
+    if (field === 'date_of_birth') {
+      return normalizeString(profile.date_of_birth || profile.birth_date || '');
+    }
+
+    return normalizeString(profile[field] || '');
+  });
 }
 
 /* =============================================================================

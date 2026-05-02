@@ -9,6 +9,7 @@
    ========================================================= */
 
 import './continuity-actions.js';
+import './developer-mode.js';
 import './interaction-state.js';
 import './model-create.js';
 import './model-overview.js';

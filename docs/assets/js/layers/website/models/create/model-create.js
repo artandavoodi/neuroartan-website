@@ -111,6 +111,7 @@ function readModelCreateForm(form) {
 ============================================================================= */
 function messageForModelCreateError(error) {
   const code = normalizeString(error?.code || error?.message || '');
+  const message = normalizeString(error?.message || '').toLowerCase();
   switch (code) {
     case 'AUTH_REQUIRED':
       return 'Sign in before creating a model.';
@@ -124,6 +125,14 @@ function messageForModelCreateError(error) {
     case 'MODEL_SLUG_ALREADY_OWNED':
       return 'That model route is already reserved.';
     default:
+      if (message.includes('row-level security') || message.includes('violates row-level security')) {
+        return 'Model creation is blocked by Supabase model policy. Apply the latest model/developer policy migration, then retry while signed in with a complete profile.';
+      }
+
+      if (message.includes('permission denied')) {
+        return 'Model creation is blocked by backend permissions. Confirm the models table owner policies are deployed.';
+      }
+
       return 'Model creation could not complete. Review Supabase schema and policies.';
   }
 }

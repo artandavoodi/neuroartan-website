@@ -1,0 +1,33 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) AGENT THREAD LIST
+============================================================================= */
+
+/* =============================================================================
+   01) AGENT THREAD LIST
+============================================================================= */
+.agent-thread-list__schema,
+.agent-thread-list__items{
+  display:grid;
+  gap:var(--spacing-sm);
+}
+
+.agent-thread-list__field,
+.agent-thread-list__empty{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-sm);
+  padding:var(--spacing-sm) var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}
+
+.agent-thread-list__field strong{
+  color:var(--cockpit-text);
+  font-weight:var(--font-weight-medium);
+}

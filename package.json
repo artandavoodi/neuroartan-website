@@ -1,0 +1,14 @@
+{
+  "name": "neuroartan-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/developer-mode/server.mjs",
+    "dev:developer-mode": "node server/developer-mode/server.mjs",
+    "check:developer-mode": "node --check server/developer-mode/server.mjs && find server/developer-mode -name '*.mjs' -print0 | xargs -0 -n1 node --check"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

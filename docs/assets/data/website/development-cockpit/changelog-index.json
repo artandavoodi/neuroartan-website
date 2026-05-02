@@ -1,0 +1,26 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "developer_mode_changelog_index",
+  "ledgerPath": "/assets/data/website/development-cockpit/release-ledger.json",
+  "fields": [
+    "date",
+    "version",
+    "feature_category",
+    "changed_modules",
+    "affected_repositories",
+    "operator",
+    "agent_model",
+    "approval_state",
+    "test_status",
+    "commercial_relevance",
+    "rollback_notes",
+    "release_visibility",
+    "related_commit_pr"
+  ],
+  "visibilityLevels": [
+    "internal",
+    "founder_review",
+    "release_candidate",
+    "public"
+  ]
+}

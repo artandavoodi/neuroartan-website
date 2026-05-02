@@ -1,0 +1,45 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "session_schema_frontend_registry",
+  "sessionSchema": {
+    "fields": [
+      "session_id",
+      "repository",
+      "branch",
+      "worktree_status",
+      "selected_model_provider",
+      "agent_role",
+      "user_command",
+      "scan_result",
+      "plan",
+      "patch_proposal",
+      "test_result",
+      "approval_state",
+      "commit_pr_state",
+      "changelog_entry"
+    ]
+  },
+  "states": [
+    {
+      "id": "draft",
+      "label": "Draft",
+      "description": "Command is being prepared in the frontend."
+    },
+    {
+      "id": "backend-required",
+      "label": "Backend required",
+      "description": "Session cannot execute until the secure runtime server exists."
+    },
+    {
+      "id": "review-ready",
+      "label": "Review ready",
+      "description": "A plan or patch artifact is ready for human review."
+    },
+    {
+      "id": "approved",
+      "label": "Approved",
+      "description": "The approving profile authorized the next gated runtime action."
+    }
+  ],
+  "sessions": []
+}

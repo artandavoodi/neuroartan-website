@@ -1,0 +1,32 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) WORKTREE SANDBOX CONTROLLER
+============================================================================= */
+
+/* =============================================================================
+   01) WORKTREE SANDBOX CONTROLLER
+============================================================================= */
+.worktree-sandbox-controller__policy{
+  display:grid;
+  gap:var(--spacing-sm);
+}
+
+.worktree-sandbox-controller__policy-item{
+  display:grid;
+  gap:var(--spacing-xs);
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+}
+
+.worktree-sandbox-controller__policy-item strong{
+  color:var(--cockpit-text);
+  font-size:var(--font-size-title-3);
+}
+
+.worktree-sandbox-controller__policy-item span{
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}

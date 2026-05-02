@@ -1,0 +1,46 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) CHANGELOG RELEASE LEDGER
+============================================================================= */
+
+/* =============================================================================
+   01) CHANGELOG RELEASE LEDGER
+============================================================================= */
+.changelog-release-ledger{
+  grid-column:var(--grid-column-single) / -1;
+}
+
+.changelog-release-ledger__entries{
+  display:grid;
+  gap:var(--spacing-md);
+}
+
+.changelog-release-ledger__entry{
+  display:grid;
+  gap:var(--spacing-sm);
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+}
+
+.changelog-release-ledger__entry-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-sm);
+  flex-wrap:wrap;
+}
+
+.changelog-release-ledger__entry strong{
+  color:var(--cockpit-text);
+  font-weight:var(--font-weight-semibold);
+}
+
+.changelog-release-ledger__entry span,
+.changelog-release-ledger__entry p{
+  margin:var(--spacing-none);
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}

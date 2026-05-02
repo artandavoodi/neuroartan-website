@@ -69,6 +69,15 @@
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-create.js"
         },
         {
+          "id": "developer-mode",
+          "label": "Developer Mode",
+          "detail_title": "Developer Mode",
+          "detail_copy": "Open the governed Codex Sessions layer for provider selection, repository scope, voice/text commands, review, approval, and release traceability.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/developer-mode.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/developer-mode.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/developer-mode.js"
+        },
+        {
           "id": "model-sources",
           "label": "Sources",
           "detail_title": "Source Connections",

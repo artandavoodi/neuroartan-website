@@ -22,6 +22,8 @@ const MODULE_PATH = '/website/docs/assets/js/layers/website/system/account/00-ac
    02) IDENTITY EXPORTS
 ============================================================================= */
 export * from './identity/account-identity-state.js';
+export * from './identity/account-password-policy.js';
+export * from './identity/account-profile-identity.js';
 
 /* =============================================================================
    03) USERNAME EXPORTS
@@ -33,6 +35,7 @@ export * from './username/account-username-reservation.js';
 /* =============================================================================
    04) PROFILE EXPORTS
 ============================================================================= */
+export * from './profile/account-completion.js';
 export * from './profile/account-profile-state.js';
 export * from './profile/account-profile-completion.js';
 export * from './profile/account-profile-persistence.js';

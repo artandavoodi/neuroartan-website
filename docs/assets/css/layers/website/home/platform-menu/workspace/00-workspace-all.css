@@ -8,6 +8,7 @@
    01) WORKSPACE AUTHORITY IMPORTS
 ============================================================================= */
 @import url('./continuity-actions.css');
+@import url('./developer-mode.css');
 @import url('./interaction-state.css');
 @import url('./model-create.css');
 @import url('./model-overview.css');

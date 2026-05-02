@@ -13,13 +13,22 @@
    01) MODULE IMPORTS
 ============================================================================= */
 @import url('./development-cockpit-shell.css');
+@import url('./developer-dashboard.css');
+@import url('./project-repository-sidebar.css');
+@import url('./project-environment-panel.css');
+@import url('./agent-thread-list.css');
+@import url('./developer-command-composer.css');
 @import url('./prompt-composer.css');
 @import url('./terminal-scan-generator.css');
+@import url('./scan-plan-workflow-panel.css');
 @import url('./file-target-selector.css');
 @import url('./patch-instruction-generator.css');
 @import url('./github-commit-message-generator.css');
 @import url('./open-file-next-workflow.css');
 @import url('./provider-router.css');
+@import url('./worktree-sandbox-controller.css');
+@import url('./review-approval-pane.css');
+@import url('./changelog-release-ledger.css');
 @import url('./daily-execution-log.css');
 
 /* =============================================================================

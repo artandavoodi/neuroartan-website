@@ -10,7 +10,7 @@
    07) CARD VISUAL
    08) CARD LINKS
    09) CARD COPY
-   10) CARD META
+   10) CARD SUMMARY
    11) SECTION FOOTER
    12) SECTION TIMELINE
    13) SECTION CONTROLS
@@ -142,6 +142,20 @@ html[data-theme-effective="light"] .about-featured-functions{
 html[data-theme-effective="dark"] .about-featured-functions{
   --about-featured-functions-timeline-track: color-mix(in srgb, var(--text-color) 16%, transparent);
   --about-featured-functions-dot-opacity: var(--layout-about-featured-functions-dot-opacity-dark);
+  --about-featured-functions-card-border-color: var(--layout-about-featured-functions-card-border-color-dark);
+  --about-featured-functions-card-border-color-hover: var(--layout-about-featured-functions-card-border-color-hover-dark);
+  --about-featured-functions-card-surface-bg: var(--layout-about-featured-functions-card-surface-bg-dark);
+  --about-featured-functions-card-surface-highlight-rest: var(--layout-about-featured-functions-card-surface-highlight-rest-dark);
+  --about-featured-functions-card-surface-highlight-hover: var(--layout-about-featured-functions-card-surface-highlight-hover-dark);
+  --about-featured-functions-card-placeholder-glow-a: var(--layout-about-featured-functions-card-placeholder-glow-a-dark);
+  --about-featured-functions-card-placeholder-glow-b: var(--layout-about-featured-functions-card-placeholder-glow-b-dark);
+  --about-featured-functions-card-placeholder-fill-top: var(--layout-about-featured-functions-card-placeholder-fill-top-dark);
+  --about-featured-functions-card-placeholder-fill-bottom: var(--layout-about-featured-functions-card-placeholder-fill-bottom-dark);
+  --about-featured-functions-card-summary-color: var(--layout-about-featured-functions-card-summary-color-dark);
+  --about-featured-functions-card-icon-filter: var(--layout-about-featured-functions-card-icon-filter-dark);
+  --about-featured-functions-card-matte-surface-top: var(--layout-about-featured-functions-card-matte-surface-top-dark);
+  --about-featured-functions-card-matte-surface-mid: var(--layout-about-featured-functions-card-matte-surface-mid-dark);
+  --about-featured-functions-card-matte-surface-bottom: var(--layout-about-featured-functions-card-matte-surface-bottom-dark);
 }
 
 /* =============================================================================
@@ -392,7 +406,8 @@ html[data-theme-effective="dark"] .about-featured-functions{
 
 .about-featured-functions-card-visual-link:focus-visible,
 .about-featured-functions-card-text-link:focus-visible{
-  outline: none;
+  outline: var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset: var(--focus-ring-offset, var(--spacing-xs));
 }
 
 /* =============================================================================
@@ -420,6 +435,8 @@ html[data-theme-effective="dark"] .about-featured-functions{
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  color: inherit;
+  text-decoration: none;
   pointer-events: auto;
   justify-self: stretch;
 }

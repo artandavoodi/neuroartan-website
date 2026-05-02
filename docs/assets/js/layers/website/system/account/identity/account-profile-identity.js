@@ -41,7 +41,7 @@ let profileIdentityPolicyPromise = null;
 const PROFILE_IDENTITY_POLICY_URL = '/assets/data/accounts/profile-identity-policy.json';
 const SUPABASE_PROFILES_TABLE = 'profiles';
 const SUPABASE_USERNAME_RESERVATIONS_TABLE = 'username_reservations';
-const SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized, username_status, username_route_ready, username_reserved_at, public_username, public_display_name, public_avatar_url, public_identity_label, public_profile_enabled, public_profile_discoverable, public_profile_visibility, public_route_path, public_route_url, public_route_canonical_url, public_route_status, public_summary, public_bio, public_tagline, public_links, public_primary_link, public_modules, public_feature_flags, first_name, last_name, display_name, email, avatar_url, photo_url, birth_date, date_of_birth, gender, profile_exists, profile_completion_status, profile_completion_percent, missing_required_fields, profile_visibility_status, profile_complete, eligibility_status, eligibility_age_years, minimum_eligible_age_years, eligibility_policy_status, eligibility_checked_at, created_at, updated_at';
+const SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized, username_status, username_route_ready, username_reserved_at, public_username, public_display_name, public_avatar_url, public_identity_label, public_profile_enabled, public_profile_discoverable, public_profile_visibility, public_route_path, public_route_url, public_route_canonical_url, public_route_status, public_summary, public_bio, public_tagline, public_links, public_primary_link, public_modules, public_feature_flags, first_name, last_name, display_name, email, avatar_url, photo_url, avatar_storage_path, cover_storage_path, profile_image_storage_bucket, birth_date, date_of_birth, gender, profile_exists, profile_completion_status, profile_completion_percent, missing_required_fields, profile_visibility_status, profile_complete, eligibility_status, eligibility_age_years, minimum_eligible_age_years, eligibility_policy_status, eligibility_checked_at, created_at, updated_at';
 const SUPABASE_PROFILE_USERNAME_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized';
 const SUPABASE_USERNAME_RESERVATION_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, profile_id, reservation_status';
 const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
@@ -575,6 +575,9 @@ export async function reserveSupabaseUsernameProfile({
     email: payload.email,
     avatar_url: payload.avatar_url,
     photo_url: payload.photo_url,
+    avatar_storage_path: values.avatar_storage_path || existingProfile?.avatar_storage_path || '',
+    cover_storage_path: values.cover_storage_path || existingProfile?.cover_storage_path || '',
+    profile_image_storage_bucket: values.profile_image_storage_bucket || existingProfile?.profile_image_storage_bucket || '',
     date_of_birth: payload.date_of_birth || null,
     birth_date: payload.birth_date || null,
     gender: payload.gender,

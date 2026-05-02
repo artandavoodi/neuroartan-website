@@ -32,7 +32,7 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.1"
+version: "0.3"
 
 created_date: "2026-05-02"
 last_updated: "2026-05-02"
@@ -53,12 +53,14 @@ scope:
   - "Thirty-day development continuity documentation"
   - "Codex prompt governance"
   - "Repository development workflow planning"
+  - "Website modular architecture governance"
 
 index_targets:
   - "Strategic Decisions Register"
   - "Execution Roadmaps Register"
   - "Codex Prompt Queue Register"
   - "Architecture Specifications Register"
+  - "Website Modular Architecture Doctrine Register"
   - "Provider Strategy Register"
   - "Repository Workflow Register"
   - "Daily Execution Records Register"
@@ -70,6 +72,13 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/02 - Execution Roadmaps/01 - Thirty Day AI Development Cockpit Roadmap.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/03 - Codex Prompt Queue/01 - Codex Daily Prompt Queue.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/01 - AI Development Cockpit Architecture Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/02 - Website Modular Architecture Doctrine.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/04 - AI Coding Agent Runtime Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/05 - GitHub Repository Access & Permission Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/07 - Voice-to-Agent Command Pipeline Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/01 - Model Provider Strategy.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md"
@@ -80,6 +89,11 @@ tags:
   - "ai-development-cockpit"
   - "codex-workflow"
   - "development-continuity"
+  - "website-modular-architecture"
+  - "developer-mode"
+  - "ai-coding-agent-runtime"
+  - "importer-doctrine"
+  - "no-overlaying"
 ---
 
 # Website Planning Index
@@ -90,7 +104,7 @@ tags:
 
 This index governs the website planning layer for the thirty-day AI Development Cockpit mission.
 
-The index provides the control surface for strategic decisions, execution roadmaps, Codex prompt sequencing, architecture specifications, provider strategy, repository workflows, and daily execution records.
+The index provides the control surface for strategic decisions, execution roadmaps, Codex prompt sequencing, architecture specifications, website modular architecture doctrine, provider strategy, repository workflows, and daily execution records.
 
 ---
 
@@ -114,6 +128,13 @@ It must not be treated as public website content unless explicit publication app
 | Thirty Day AI Development Cockpit Roadmap | `/Users/artan/Documents/Neuroartan/website/planning/02 - Execution Roadmaps/01 - Thirty Day AI Development Cockpit Roadmap.md` | Defines the thirty-day execution plan for the AI Development Cockpit. |
 | Codex Daily Prompt Queue | `/Users/artan/Documents/Neuroartan/website/planning/03 - Codex Prompt Queue/01 - Codex Daily Prompt Queue.md` | Controls daily Codex prompts and execution sequencing. |
 | AI Development Cockpit Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/01 - AI Development Cockpit Architecture Specification.md` | Defines modular architecture, file ownership, and implementation boundaries. |
+| Website Modular Architecture Doctrine | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/02 - Website Modular Architecture Doctrine.md` | Governs CSS, JavaScript, fragment, namespace, importer, and no-overlay modular architecture discipline for the website layer. |
+| Developer Mode Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md` | Defines the Developer Mode frontend/backend boundary for repository-aware AI development. |
+| AI Coding Agent Runtime Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/04 - AI Coding Agent Runtime Specification.md` | Defines the secure server-side runtime required for provider execution, repository work, scan, patch, test, and audit flows. |
+| GitHub Repository Access & Permission Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/05 - GitHub Repository Access & Permission Specification.md` | Defines scoped GitHub App/OAuth access, repository permissions, branch policy, and mutation attribution. |
+| Agent Sandbox & Internet Egress Governance Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md` | Defines sandbox isolation, worktree containment, domain allowlists, HTTP method policy, and egress risk controls. |
+| Voice-to-Agent Command Pipeline Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/07 - Voice-to-Agent Command Pipeline Specification.md` | Defines voice command capture, normalization, risk classification, confirmation, and runtime routing boundaries. |
+| Patch Review, Test, Commit & PR Workflow Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md` | Defines reviewable patch artifacts, test approval, commit attribution, and pull request governance. |
 | Model Provider Strategy | `/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/01 - Model Provider Strategy.md` | Defines cloud, local, and manual provider routing strategy. |
 | Repository Development Workflow Specification | `/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md` | Defines terminal scan, file targeting, patch instruction, and GitHub commit workflows. |
 | Daily Execution Log | `/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md` | Records daily execution, verification, blockers, and next actions. |
@@ -134,12 +155,12 @@ The AI Development Cockpit should become the internal command surface for prompt
 
 Current priority:
 
-1. complete planning document normalization
-2. review and approve the strategic decision
-3. execute Codex Prompt 01 for modular cockpit scaffolding
-4. scan and verify created structure
-5. return to ChatGPT for surgical review and correction
-6. proceed to Prompt Composer baseline only after scaffold verification
+1. preserve the existing command-generation cockpit frontend
+2. complete Developer Mode architecture documentation before runtime work
+3. keep provider, GitHub, sandbox, internet egress, patch, test, commit, and pull request execution server-side
+4. prohibit frontend secrets and browser-side repository mutation
+5. define backend interface contracts before implementing runtime code
+6. proceed to read-only backend stubs only after architecture review
 
 ---
 
@@ -159,6 +180,10 @@ Required governance rules:
 - avoid orphan files
 - preserve folder-first hierarchy
 - do not create public-facing exposure without explicit approval
+- preserve root orchestrator → domain orchestrator → page/domain importer → local module importer → leaf file architecture
+- verify broken CSS imports after structural CSS changes
+- verify broken JavaScript imports after structural JavaScript changes
+- enforce NOL / No Overlaying as a root-cause implementation rule
 
 ---
 
@@ -186,6 +211,13 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 | Thirty Day AI Development Cockpit Roadmap | Draft | Requires founder review. |
 | Codex Daily Prompt Queue | Draft | Prompt 01 ready for review before execution. |
 | AI Development Cockpit Architecture Specification | Draft | Requires architecture review before Codex execution. |
+| Website Modular Architecture Doctrine | Draft | Active continuation reference for modular website architecture stabilization. |
+| Developer Mode Architecture Specification | Draft | Active architecture reference for repository-aware AI development boundaries. |
+| AI Coding Agent Runtime Specification | Draft | Requires backend/runtime architecture review before implementation. |
+| GitHub Repository Access & Permission Specification | Draft | Requires security and repository governance review before implementation. |
+| Agent Sandbox & Internet Egress Governance Specification | Draft | Requires security review before any network-capable runtime implementation. |
+| Voice-to-Agent Command Pipeline Specification | Draft | Requires UX, security, and command-risk review before runtime binding. |
+| Patch Review, Test, Commit & PR Workflow Specification | Draft | Requires repository mutation and approval workflow review before implementation. |
 | Model Provider Strategy | Draft | Requires provider/security review before implementation. |
 | Repository Development Workflow Specification | Draft | Requires workflow review before cockpit implementation. |
 | Daily Execution Log | Draft | Active for continuity tracking. |
@@ -194,12 +226,14 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 
 ## 9. Next Action
 
-Next action is founder review of the planning set, followed by execution of Prompt 01 from the Codex Daily Prompt Queue after approval.
+Next action is to define backend interface contracts for read-only Developer Mode runtime stubs. Runtime code must not be implemented until provider secrets, GitHub authorization, sandbox isolation, internet egress policy, patch review, and approval gates are reviewed.
 
 ---
 
 ## Change Log
 
+- 2026-05-02 — v0.3 Indexed Developer Mode, AI Coding Agent Runtime, GitHub repository access, sandbox and internet egress governance, voice-to-agent command pipeline, and patch/test/commit/PR workflow specifications as active planning records. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture documentation under `/Users/artan/Documents/Neuroartan/website`.
+- 2026-05-02 — v0.2 Indexed Website Modular Architecture Doctrine as an active planning and governance record for website stabilization continuity. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning index update under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Initial website planning index created for the thirty-day AI Development Cockpit documentation layer. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning layer under `/Users/artan/Documents/Neuroartan/website`.
 
 ---
@@ -211,7 +245,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — Website Planning Index  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.1
+VERSION: 0.3
 
 ---
 

@@ -1,0 +1,37 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) REVIEW APPROVAL PANE
+============================================================================= */
+
+/* =============================================================================
+   01) REVIEW APPROVAL PANE
+============================================================================= */
+.review-approval-pane{
+  grid-column:var(--grid-column-single) / -1;
+}
+
+.review-approval-pane__steps{
+  display:grid;
+  gap:var(--spacing-sm);
+}
+
+.review-approval-pane__step{
+  display:grid;
+  grid-template-columns:minmax(var(--spacing-none), var(--grid-column-single)) auto;
+  gap:var(--spacing-sm);
+  align-items:center;
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+}
+
+.review-approval-pane__step strong{
+  color:var(--cockpit-text);
+  font-weight:var(--font-weight-semibold);
+}
+
+.review-approval-pane__step span{
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+}

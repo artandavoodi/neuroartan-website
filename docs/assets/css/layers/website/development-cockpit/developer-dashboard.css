@@ -1,0 +1,55 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) DEVELOPER DASHBOARD
+   02) STATUS CARDS
+============================================================================= */
+
+/* =============================================================================
+   01) DEVELOPER DASHBOARD
+============================================================================= */
+.developer-dashboard{
+  grid-column:var(--grid-column-single) / -1;
+}
+
+.developer-dashboard__status-grid,
+.developer-dashboard__requirements{
+  display:grid;
+  gap:var(--spacing-md);
+}
+
+.developer-dashboard__status-grid{
+  grid-template-columns:repeat(3, minmax(var(--spacing-none), var(--grid-column-single)));
+}
+
+/* =============================================================================
+   02) STATUS CARDS
+============================================================================= */
+.developer-dashboard__status-card,
+.developer-dashboard__requirement{
+  display:grid;
+  gap:var(--spacing-xs);
+  padding:var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
+  border-radius:var(--cockpit-card-radius);
+  background:var(--cockpit-control-surface);
+}
+
+.developer-dashboard__status-card strong,
+.developer-dashboard__requirement strong{
+  color:var(--cockpit-text);
+  font-size:var(--font-size-title-3);
+  font-weight:var(--font-weight-semibold);
+}
+
+.developer-dashboard__status-card span,
+.developer-dashboard__requirement span{
+  color:var(--cockpit-muted);
+  font-size:var(--font-size-body-2);
+  line-height:var(--line-height-body);
+}
+
+@media (max-width:900px){
+  .developer-dashboard__status-grid{
+    grid-template-columns:var(--grid-column-single);
+  }
+}

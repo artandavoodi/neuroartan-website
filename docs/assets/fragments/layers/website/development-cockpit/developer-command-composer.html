@@ -1,0 +1,47 @@
+<!-- =============================================================================
+     01) DEVELOPER COMMAND COMPOSER
+     02) VOICE DICTATION CONTROL
+     03) SAFE RUNTIME REQUEST PREVIEW
+============================================================================= -->
+<article class="cockpit-module developer-command-composer" data-cockpit-module="developer-command-composer">
+  <header class="cockpit-module__header">
+    <p class="cockpit-module__eyebrow">Command</p>
+    <h3 class="cockpit-module__title">Voice and text command composer</h3>
+    <p class="cockpit-module__copy">
+      Compose a coding-agent command. The current output is a safe request preview, not live provider or repository execution.
+    </p>
+  </header>
+
+  <form class="cockpit-module__form" data-developer-command-form>
+    <label class="cockpit-field">
+      <span>Repository scope</span>
+      <select name="repository" data-developer-command-repository></select>
+    </label>
+
+    <label class="cockpit-field">
+      <span>Model provider</span>
+      <select name="provider" data-developer-command-provider></select>
+    </label>
+
+    <label class="cockpit-field">
+      <span>Agent role</span>
+      <select name="agentRole" data-developer-command-role>
+        <option value="implementation-agent">Implementation agent</option>
+        <option value="review-agent">Review agent</option>
+        <option value="debugging-agent">Debugging agent</option>
+      </select>
+    </label>
+
+    <label class="cockpit-field">
+      <span>User command</span>
+      <textarea name="command" rows="5" data-developer-command-input placeholder="Describe the repository task, files to inspect, and expected verification."></textarea>
+    </label>
+
+    <div class="developer-command-composer__actions">
+      <button class="cockpit-button" type="button" data-developer-command-voice>Start voice dictation</button>
+      <button class="cockpit-button" type="submit">Prepare safe request</button>
+    </div>
+  </form>
+
+  <pre class="cockpit-output cockpit-output--code" data-developer-command-output>No command prepared.</pre>
+</article>

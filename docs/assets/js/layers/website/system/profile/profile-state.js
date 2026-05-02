@@ -414,6 +414,11 @@ async function resolveStateForRoute(route) {
   }
 }
 
+export async function refreshPublicProfileState(route = getPublicRouteState()) {
+  await resolveStateForRoute(route);
+  return getPublicProfileState();
+}
+
 /* =============================================================================
    08) INITIALIZATION
 ============================================================================= */

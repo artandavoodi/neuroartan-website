@@ -1,0 +1,48 @@
+{
+  "version": "2026-05-02",
+  "canonicalStatus": "homepage_developer_mode_action_registry",
+  "actions": [
+    {
+      "id": "open-developer-mode",
+      "label": "Developer Mode",
+      "kind": "link",
+      "href": "/pages/development-cockpit/index.html",
+      "description": "Open the governed coding-agent cockpit."
+    },
+    {
+      "id": "repository-discovery",
+      "label": "Git repositories",
+      "kind": "link",
+      "href": "/pages/development-cockpit/index.html#project-repository-sidebar",
+      "description": "Select or connect governed repositories through backend-safe routing."
+    },
+    {
+      "id": "create-prompt",
+      "label": "Create prompt",
+      "kind": "prompt",
+      "description": "Draft an owner-correct implementation prompt.",
+      "prompt": "Create an owner-correct implementation prompt. Audit the real owner chain first, preserve modularity, remove duplicate ownership, and define the exact verification steps."
+    },
+    {
+      "id": "code-review",
+      "label": "Code review",
+      "kind": "prompt",
+      "description": "Prepare a repository review command for Developer Mode.",
+      "prompt": "Review the selected repository for broken behavior, duplicate ownership, token drift, unsafe backend assumptions, missing tests, and production blockers. Return exact files, root causes, and verification gaps."
+    },
+    {
+      "id": "debug-issue",
+      "label": "Debug issue",
+      "kind": "prompt",
+      "description": "Prepare a debugging command for Developer Mode.",
+      "prompt": "Debug the selected repository issue. Reproduce the failure, identify the owner file, explain the root cause, propose the smallest safe patch, and define verification commands."
+    },
+    {
+      "id": "fix-implementation",
+      "label": "Fix code",
+      "kind": "prompt",
+      "description": "Prepare a guarded implementation command for Developer Mode.",
+      "prompt": "Implement the requested code fix in the selected repository. Audit first, preserve modular ownership, avoid unsafe mutation until approval, return the patch plan, and verify the result."
+    }
+  ]
+}

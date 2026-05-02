@@ -17,8 +17,7 @@
     ============================================================================= -->
     <header class="home-interaction-settings-panel__header">
       <div class="home-interaction-settings-panel__title-block">
-        <p class="home-interaction-settings-panel__eyebrow">Interaction settings</p>
-        <h2 class="home-interaction-settings-panel__title" id="home-interaction-settings-panel-title">Control center</h2>
+        <h2 class="home-platform-shell__content-title home-interaction-settings-panel__title" id="home-interaction-settings-panel-title">Control Center</h2>
       </div>
       <button class="global-close-button home-interaction-settings-panel__close" type="button" data-home-interaction-settings-close="true" aria-label="Close interaction settings">
         <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
@@ -34,16 +33,66 @@
            04) INTERACTION SETTINGS NAVIGATION
       ============================================================================= -->
       <nav class="home-interaction-settings-panel__nav" aria-label="Interaction settings sections">
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="overview" aria-selected="true">Overview</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="model" aria-selected="false">Model</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="response" aria-selected="false">Response</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="voice" aria-selected="false">Voice</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="stage" aria-selected="false">Stage</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="history" aria-selected="false">Chat history</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="privacy" aria-selected="false">Privacy</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="accessibility" aria-selected="false">Accessibility</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="developer" aria-selected="false">Developer</button>
-        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="session" aria-selected="false">Session</button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="overview" aria-selected="true">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/settings.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Overview</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="model" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/cognition/unclassified/model.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Model</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="response" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/interface/status/experience.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Response</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="voice" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/media/audio/voice.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Voice</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="stage" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/color-mode.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Stage</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="history" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/unclassified/log.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Chat history</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="privacy" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/legal/privacy/privacy.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Privacy</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="accessibility" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/interface/status/essential.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Accessibility</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="developer" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/layers/developer/repository/repository.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Developer</span>
+        </button>
+        <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="session" aria-selected="false">
+          <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/assets/icons/core/system/time/timer.svg" alt="">
+          </span>
+          <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Session</span>
+        </button>
       </nav>
 
       <!-- =============================================================================

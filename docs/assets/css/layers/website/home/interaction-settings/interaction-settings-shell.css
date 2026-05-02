@@ -27,56 +27,70 @@
   --home-interaction-settings-panel-bottom:calc(var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)) + var(--site-gutter));
   --home-interaction-settings-panel-height:var(--layout-interaction-settings-panel-height);
 
-  --home-interaction-settings-panel-radius:var(--control-radius-composer);
+  --home-interaction-settings-panel-radius:var(--home-platform-shell-radius, var(--control-radius-composer));
   --home-interaction-settings-panel-padding:var(--home-platform-shell-padding, var(--layout-interaction-settings-panel-padding));
   --home-interaction-settings-panel-gap:var(--home-platform-shell-gap, var(--layout-interaction-settings-panel-gap));
-  --home-interaction-settings-panel-surface:var(--panel-surface-unified);
-  --home-interaction-settings-panel-border:var(--panel-border-unified);
-  --home-interaction-settings-panel-shadow:var(--panel-shadow-unified);
-  --home-interaction-settings-panel-blur:var(--panel-blur-unified);
-  --home-interaction-settings-panel-saturate:var(--panel-saturate-unified);
+  --home-interaction-settings-panel-surface:var(--home-platform-shell-surface, var(--panel-surface-unified));
+  --home-interaction-settings-panel-border:var(--home-platform-shell-border, var(--panel-border-unified));
+  --home-interaction-settings-panel-shadow:var(--home-platform-shell-shadow, var(--panel-shadow-unified));
+  --home-interaction-settings-panel-blur:var(--home-platform-shell-blur, var(--panel-blur-unified));
+  --home-interaction-settings-panel-saturate:var(--home-platform-shell-saturate, var(--panel-saturate-unified));
 
-  --home-interaction-settings-panel-body-gap:var(--layout-interaction-settings-panel-body-gap);
-  --home-interaction-settings-panel-nav-width:var(--layout-interaction-settings-panel-nav-width);
-  --home-interaction-settings-panel-nav-radius:var(--control-radius-composer);
-  --home-interaction-settings-panel-nav-bg:var(--panel-surface-unified);
-  --home-interaction-settings-panel-nav-border:var(--panel-border-unified);
-  --home-interaction-settings-panel-content-radius:var(--control-radius-composer);
-  --home-interaction-settings-panel-content-bg:var(--panel-surface-unified);
-  --home-interaction-settings-panel-content-border:var(--panel-border-unified);
+  --home-interaction-settings-panel-body-gap:var(--home-platform-shell-body-gap, var(--layout-interaction-settings-panel-body-gap));
+  --home-interaction-settings-panel-nav-width:var(--home-platform-shell-subrail-width, var(--layout-interaction-settings-panel-nav-width));
+  --home-interaction-settings-panel-nav-radius:var(--spacing-none);
+  --home-interaction-settings-panel-nav-bg:transparent;
+  --home-interaction-settings-panel-nav-border:transparent;
+  --home-interaction-settings-panel-nav-padding:var(--spacing-none);
+  --home-interaction-settings-panel-separator:var(--home-platform-shell-border, var(--panel-border-unified));
+  --home-interaction-settings-panel-header-separator:var(--home-platform-shell-border, var(--panel-border-unified));
+  --home-interaction-settings-panel-inner-padding-top:var(--home-platform-shell-padding, var(--layout-interaction-settings-panel-padding));
+  --home-interaction-settings-panel-inner-padding-inline:var(--home-platform-shell-padding, var(--layout-interaction-settings-panel-padding));
+  --home-interaction-settings-panel-content-radius:var(--home-platform-shell-content-radius, var(--home-interaction-settings-panel-radius));
+  --home-interaction-settings-panel-content-bg:var(--home-platform-shell-content-bg, transparent);
+  --home-interaction-settings-panel-content-border:var(--home-platform-shell-content-border, transparent);
 
-  --home-interaction-settings-panel-title-color:var(--text-primary-color);
-  --home-interaction-settings-panel-muted-color:var(--text-secondary-color);
+  --home-interaction-settings-panel-title-color:var(--home-platform-shell-content-title-color, var(--text-primary-color));
+  --home-interaction-settings-panel-muted-color:var(--home-platform-shell-muted-color, var(--text-secondary-color));
   --home-interaction-settings-panel-nav-color:var(--home-platform-shell-nav-color, var(--text-secondary-color));
   --home-interaction-settings-panel-nav-hover-color:var(--home-platform-shell-nav-hover-color, var(--text-primary-color));
-  --home-interaction-settings-panel-nav-opacity:var(--state-opacity-muted);
-  --home-interaction-settings-panel-nav-hover-opacity:var(--overlay-opacity-open);
-  --home-interaction-settings-panel-nav-font-size:var(--layout-interaction-settings-panel-nav-font-size);
-  --home-interaction-settings-panel-nav-font-weight:var(--layout-interaction-settings-panel-nav-font-weight);
-  --home-interaction-settings-panel-nav-line-height:var(--layout-interaction-settings-panel-nav-line-height);
-  --home-interaction-settings-panel-nav-item-radius:var(--control-radius-composer);
+  --home-interaction-settings-panel-nav-opacity:var(--home-platform-shell-nav-opacity, var(--state-opacity-muted));
+  --home-interaction-settings-panel-nav-hover-opacity:var(--home-platform-shell-nav-hover-opacity, var(--overlay-opacity-open));
+  --home-interaction-settings-panel-nav-font-size:var(--home-platform-shell-nav-text-size, var(--layout-interaction-settings-panel-nav-font-size));
+  --home-interaction-settings-panel-nav-font-weight:var(--home-platform-shell-nav-text-weight, var(--layout-interaction-settings-panel-nav-font-weight));
+  --home-interaction-settings-panel-nav-line-height:var(--home-platform-shell-nav-text-line-height, var(--layout-interaction-settings-panel-nav-line-height));
+  --home-interaction-settings-panel-nav-item-gap:var(--home-platform-shell-nav-item-gap, var(--spacing-sm));
+  --home-interaction-settings-panel-nav-item-min-height:var(--home-platform-shell-nav-item-min-height, auto);
+  --home-interaction-settings-panel-nav-item-radius:var(--home-platform-shell-nav-item-radius, var(--control-radius-composer));
   --home-interaction-settings-panel-nav-item-padding:var(--home-platform-shell-nav-item-padding, var(--layout-interaction-settings-panel-nav-item-padding));
+  --home-interaction-settings-panel-nav-item-bg:var(--home-platform-shell-nav-item-bg, transparent);
+  --home-interaction-settings-panel-nav-item-bg-hover:var(--home-platform-shell-nav-item-bg-hover, var(--control-bg-hover));
+  --home-interaction-settings-panel-nav-item-bg-active:var(--home-platform-shell-nav-item-bg-active, var(--home-interaction-settings-panel-nav-item-bg-hover));
+  --home-interaction-settings-panel-nav-item-border:var(--home-platform-shell-nav-item-border, transparent);
+  --home-interaction-settings-panel-nav-item-border-hover:var(--home-platform-shell-nav-item-border-hover, var(--control-border-strong));
+  --home-interaction-settings-panel-nav-item-border-active:var(--home-platform-shell-nav-item-border-active, var(--home-interaction-settings-panel-nav-item-border-hover));
+  --home-interaction-settings-panel-nav-item-color-hover:var(--home-platform-shell-nav-item-color-hover, var(--home-interaction-settings-panel-nav-hover-color));
 
-  --home-interaction-settings-panel-control-radius:var(--control-radius-composer);
-  --home-interaction-settings-panel-control-padding:var(--home-platform-shell-nav-item-padding, var(--home-interaction-settings-panel-nav-item-padding));
-  --home-interaction-settings-panel-control-bg:var(--control-bg);
-  --home-interaction-settings-panel-control-bg-active:var(--control-bg-hover);
-  --home-interaction-settings-panel-control-border-active:var(--control-border-strong);
-  --home-interaction-settings-panel-control-border:var(--control-border);
+  --home-interaction-settings-panel-control-radius:var(--home-platform-shell-control-radius, var(--home-interaction-settings-panel-nav-item-radius));
+  --home-interaction-settings-panel-control-padding:var(--home-platform-shell-control-padding, var(--home-interaction-settings-panel-nav-item-padding));
+  --home-interaction-settings-panel-control-bg:var(--home-interaction-settings-panel-nav-item-bg);
+  --home-interaction-settings-panel-control-bg-active:var(--home-interaction-settings-panel-nav-item-bg-active);
+  --home-interaction-settings-panel-control-border:var(--home-interaction-settings-panel-nav-item-border);
+  --home-interaction-settings-panel-control-border-active:var(--home-interaction-settings-panel-nav-item-border-active);
   --home-interaction-settings-panel-control-text:var(--home-interaction-settings-panel-nav-color);
-  --home-interaction-settings-panel-control-text-active:var(--home-interaction-settings-panel-nav-hover-color);
-  --home-interaction-settings-panel-control-description:var(--text-secondary-color);
+  --home-interaction-settings-panel-control-text-active:var(--home-interaction-settings-panel-nav-item-color-hover);
+  --home-interaction-settings-panel-control-description:var(--home-platform-shell-control-description, var(--text-secondary-color));
 
   --home-interaction-settings-panel-icon-size:var(--layout-interaction-settings-panel-icon-size);
   --home-interaction-settings-panel-motion-fast:var(--interaction-motion-fast);
-  --home-interaction-settings-panel-toggle-width:var(--layout-interaction-settings-toggle-width);
-  --home-interaction-settings-panel-toggle-height:var(--layout-interaction-settings-toggle-height);
-  --home-interaction-settings-panel-toggle-padding:var(--layout-interaction-settings-toggle-padding);
-  --home-interaction-settings-panel-toggle-thumb-size:var(--layout-interaction-settings-toggle-thumb-size);
+  --home-interaction-settings-panel-toggle-width:var(--toggle-width, var(--layout-interaction-settings-toggle-width));
+  --home-interaction-settings-panel-toggle-height:var(--toggle-height, var(--layout-interaction-settings-toggle-height));
+  --home-interaction-settings-panel-toggle-padding:var(--toggle-padding, var(--layout-interaction-settings-toggle-padding));
+  --home-interaction-settings-panel-toggle-thumb-size:var(--toggle-thumb-size, var(--layout-interaction-settings-toggle-thumb-size));
   --home-interaction-settings-panel-toggle-bg:var(--toggle-track-bg);
   --home-interaction-settings-panel-toggle-bg-active:var(--toggle-track-bg-on);
   --home-interaction-settings-panel-toggle-thumb:var(--toggle-thumb-bg);
-  --home-interaction-settings-panel-status-bg:var(--control-bg);
+  --home-interaction-settings-panel-status-bg:var(--home-platform-shell-control-bg, var(--control-bg));
 
   --home-interaction-settings-header-gap:var(--layout-interaction-settings-header-gap);
   --home-interaction-settings-title-block-gap:var(--layout-interaction-settings-title-block-gap);
@@ -84,10 +98,11 @@
   --home-interaction-settings-eyebrow-weight:var(--layout-interaction-settings-eyebrow-weight);
   --home-interaction-settings-eyebrow-tracking:var(--layout-interaction-settings-eyebrow-tracking);
   --home-interaction-settings-eyebrow-line-height:var(--layout-interaction-settings-eyebrow-line-height);
-  --home-interaction-settings-title-size:var(--layout-interaction-settings-title-size);
-  --home-interaction-settings-title-weight:var(--layout-interaction-settings-title-weight);
-  --home-interaction-settings-title-line-height:var(--layout-interaction-settings-eyebrow-line-height);
-  --home-interaction-settings-nav-gap:var(--layout-interaction-settings-nav-gap);
+  --home-interaction-settings-title-size:var(--home-platform-shell-content-title-size, var(--layout-interaction-settings-title-size));
+  --home-interaction-settings-title-weight:var(--home-platform-shell-content-title-weight, var(--layout-interaction-settings-title-weight));
+  --home-interaction-settings-title-line-height:var(--home-platform-shell-content-title-line-height, var(--layout-interaction-settings-eyebrow-line-height));
+  --home-interaction-settings-title-tracking:var(--home-platform-shell-content-title-tracking, normal);
+  --home-interaction-settings-nav-gap:var(--home-platform-shell-nav-gap, var(--layout-interaction-settings-nav-gap));
   --home-interaction-settings-section-gap:var(--layout-interaction-settings-section-gap);
   --home-interaction-settings-section-heading-gap:var(--layout-interaction-settings-section-heading-gap);
   --home-interaction-settings-section-title-tracking:var(--layout-interaction-settings-section-title-tracking);
@@ -109,7 +124,7 @@
   --home-interaction-settings-toggle-radius:var(--control-radius-pill);
   --home-interaction-settings-status-padding-y:var(--layout-interaction-settings-status-padding-y);
   --home-interaction-settings-status-padding-x:var(--layout-interaction-settings-status-padding-x);
-  --home-interaction-settings-status-radius:var(--control-radius-composer);
+  --home-interaction-settings-status-radius:var(--home-interaction-settings-panel-control-radius);
   --home-interaction-settings-status-line-height:var(--layout-interaction-settings-status-line-height);
 }
 
@@ -147,7 +162,7 @@
   max-width:var(--home-interaction-settings-panel-width);
   height:var(--size-full);
   max-height:var(--home-interaction-settings-panel-height);
-  padding:var(--home-interaction-settings-panel-padding);
+  padding:var(--spacing-none);
   border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-border);
   border-radius:var(--home-interaction-settings-panel-radius);
   background:var(--home-interaction-settings-panel-surface);
@@ -167,6 +182,8 @@
   align-items:flex-start;
   justify-content:space-between;
   gap:var(--home-interaction-settings-header-gap);
+  padding:var(--home-interaction-settings-panel-inner-padding-top) var(--home-interaction-settings-panel-inner-padding-inline) var(--home-interaction-settings-panel-body-gap) var(--home-interaction-settings-panel-inner-padding-inline);
+  border-bottom:var(--border-width-hairline) solid var(--home-interaction-settings-panel-header-separator);
   position:relative;
   z-index:2;
 }
@@ -196,19 +213,15 @@
 }
 
 .home-interaction-settings-panel__eyebrow{
-  color:var(--home-interaction-settings-panel-muted-color);
-  font-size:var(--home-interaction-settings-eyebrow-size);
-  font-weight:var(--home-interaction-settings-eyebrow-weight);
-  letter-spacing:var(--home-interaction-settings-eyebrow-tracking);
-  line-height:var(--home-interaction-settings-eyebrow-line-height);
-  text-transform:uppercase;
+  display:none;
 }
 
 .home-interaction-settings-panel__title{
   color:var(--home-interaction-settings-panel-title-color);
   font-size:var(--home-interaction-settings-title-size);
   font-weight:var(--home-interaction-settings-title-weight);
-  line-height:var(--home-interaction-settings-eyebrow-line-height);
+  line-height:var(--home-interaction-settings-title-line-height);
+  letter-spacing:var(--home-interaction-settings-title-tracking);
 }
 
 /* =============================================================================
@@ -217,8 +230,9 @@
 .home-interaction-settings-panel__body{
   display:grid;
   grid-template-columns:var(--home-interaction-settings-panel-nav-width) minmax(0, 1fr);
-  gap:var(--home-interaction-settings-panel-body-gap);
+  gap:var(--spacing-none);
   min-height:var(--spacing-none);
+  margin-top:calc(-1 * var(--home-interaction-settings-panel-gap));
 }
 
 /* =============================================================================
@@ -229,9 +243,10 @@
   flex-direction:column;
   gap:var(--home-interaction-settings-nav-gap);
   min-height:var(--spacing-none);
-  padding:var(--home-interaction-settings-panel-padding);
+  padding:calc(var(--home-interaction-settings-panel-inner-padding-top) + var(--home-interaction-settings-panel-gap)) var(--home-interaction-settings-panel-body-gap) var(--home-interaction-settings-panel-inner-padding-top) var(--home-interaction-settings-panel-inner-padding-inline);
   border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-nav-border);
-  border-radius:var(--home-interaction-settings-panel-nav-radius);
+  border-right:var(--border-width-hairline) solid var(--home-interaction-settings-panel-separator);
+  border-radius:var(--spacing-none);
   background:var(--home-interaction-settings-panel-nav-bg);
   overflow:auto;
   overscroll-behavior:contain;
@@ -248,32 +263,46 @@
   display:flex;
   align-items:center;
   justify-content:flex-start;
+  gap:var(--home-interaction-settings-panel-nav-item-gap);
   width:var(--size-full);
+  min-height:var(--home-interaction-settings-panel-nav-item-min-height);
   padding:var(--home-interaction-settings-panel-nav-item-padding);
   border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-control-border);
   border-radius:var(--home-interaction-settings-panel-nav-item-radius);
-  background:transparent;
+  background:var(--home-interaction-settings-panel-nav-item-bg);
   color:var(--home-interaction-settings-panel-nav-color);
   font-size:var(--home-interaction-settings-panel-nav-font-size);
   font-weight:var(--home-interaction-settings-panel-nav-font-weight);
+  letter-spacing:var(--home-platform-shell-nav-text-tracking, normal);
   line-height:var(--home-interaction-settings-panel-nav-line-height);
   opacity:var(--home-interaction-settings-panel-nav-opacity);
   text-align:left;
   outline:none;
+  text-decoration:none;
   transform:none;
   transition:var(--interaction-transition-control);
   will-change:color, opacity, border-color, background-color;
 }
 
 .home-interaction-settings-panel__nav-item:hover,
-.home-interaction-settings-panel__nav-item:focus-visible,
-.home-interaction-settings-panel__nav-item[aria-selected="true"]{
-  border-color:var(--home-interaction-settings-panel-control-border-active);
-  background:var(--home-interaction-settings-panel-control-bg-active);
-  color:var(--home-interaction-settings-panel-nav-hover-color);
+.home-interaction-settings-panel__nav-item:focus-visible{
+  border-color:var(--home-interaction-settings-panel-nav-item-border-hover);
+  background:var(--home-interaction-settings-panel-nav-item-bg-hover);
+  color:var(--home-interaction-settings-panel-nav-item-color-hover);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
   transform:none;
   translate:none;
+}
+
+.home-interaction-settings-panel__nav-item[aria-selected="true"]{
+  border-color:var(--home-interaction-settings-panel-nav-item-border-active);
+  background:var(--home-interaction-settings-panel-nav-item-bg-active);
+  color:var(--home-interaction-settings-panel-nav-hover-color);
+  opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+}
+
+.home-interaction-settings-panel__nav-item:focus-visible{
+  outline:none;
 }
 
 /* =============================================================================
@@ -282,9 +311,9 @@
 .home-interaction-settings-panel__content{
   min-width:var(--spacing-none);
   min-height:var(--spacing-none);
-  padding:var(--home-interaction-settings-panel-padding);
-  border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-content-border);
-  border-radius:var(--home-interaction-settings-panel-content-radius);
+  padding:calc(var(--home-interaction-settings-panel-inner-padding-top) + var(--home-interaction-settings-panel-gap)) var(--home-interaction-settings-panel-inner-padding-inline) var(--home-interaction-settings-panel-inner-padding-top) var(--home-interaction-settings-panel-inner-padding-inline);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--spacing-none);
   background:var(--home-interaction-settings-panel-content-bg);
   overflow:auto;
   overscroll-behavior:contain;
@@ -348,6 +377,7 @@
   color:var(--home-interaction-settings-panel-control-text);
   text-align:left;
   outline:none;
+  text-decoration:none;
   transition:var(--interaction-transition-control);
 }
 
@@ -358,6 +388,11 @@
   background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+}
+
+.home-interaction-settings-panel__option:focus-visible{
+  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 
 .home-interaction-settings-panel__option-label{
@@ -394,6 +429,7 @@
   font-weight:var(--home-interaction-settings-row-weight);
   line-height:var(--home-interaction-settings-eyebrow-line-height);
   outline:none;
+  text-decoration:none;
   transition:var(--interaction-transition-control);
 }
 
@@ -404,6 +440,11 @@
   background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+}
+
+.home-interaction-settings-panel__row:focus-visible{
+  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 
 .home-interaction-settings-panel__row-value{
@@ -431,6 +472,7 @@
   color:var(--home-interaction-settings-panel-control-text);
   text-align:left;
   outline:none;
+  text-decoration:none;
   transition:var(--interaction-transition-control);
 }
 
@@ -441,6 +483,11 @@
   background:var(--home-interaction-settings-panel-control-bg-active);
   color:var(--home-interaction-settings-panel-control-text-active);
   opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+}
+
+.home-interaction-settings-panel__toggle-row:focus-visible{
+  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 
 .home-interaction-settings-panel__toggle-copy{

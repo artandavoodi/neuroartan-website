@@ -1,0 +1,82 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) DEVELOPER MODE WORKSPACE
+   02) ACTIONS
+   03) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) DEVELOPER MODE WORKSPACE
+============================================================================= */
+.home-platform-destination--workspace-developer-mode{
+  width:var(--size-full);
+}
+
+.home-developer-mode-workspace{
+  display:grid;
+  gap:var(--layout-home-platform-destination-grid-gap);
+  grid-template-columns:repeat(var(--layout-home-platform-destination-grid-count-compact), minmax(var(--spacing-none), var(--grid-column-single)));
+}
+
+.home-developer-mode-workspace__card{
+  display:grid;
+  gap:var(--layout-home-platform-destination-card-inner-gap);
+  padding:var(--layout-home-platform-destination-card-padding-y) var(--layout-home-platform-destination-card-padding-x);
+  border:var(--border-width-hairline) solid var(--home-panel-card-border);
+  background:var(--home-panel-card-surface);
+}
+
+.home-developer-mode-workspace__label,
+.home-developer-mode-workspace__title,
+.home-developer-mode-workspace__copy,
+.home-developer-mode-workspace__list{
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-workspace__label{
+  color:var(--text-secondary-color);
+  font-size:var(--layout-home-platform-destination-label-size);
+  font-weight:var(--layout-home-platform-destination-label-weight);
+  letter-spacing:var(--layout-home-platform-destination-label-tracking);
+  text-transform:uppercase;
+}
+
+.home-developer-mode-workspace__title{
+  color:var(--text-primary-color);
+  font-size:var(--layout-home-platform-destination-title-size);
+  font-weight:var(--layout-home-platform-destination-title-weight);
+  line-height:var(--layout-home-platform-destination-title-line-height);
+}
+
+.home-developer-mode-workspace__copy,
+.home-developer-mode-workspace__list{
+  color:var(--text-secondary-color);
+  font-size:var(--layout-home-platform-destination-copy-size);
+  line-height:var(--layout-home-platform-destination-copy-line-height);
+}
+
+.home-developer-mode-workspace__list{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+  padding-inline-start:var(--layout-home-platform-destination-card-padding-x);
+}
+
+/* =============================================================================
+   02) ACTIONS
+============================================================================= */
+.home-developer-mode-workspace__actions{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:var(--layout-home-platform-destination-action-gap);
+  margin-top:var(--layout-home-platform-embedded-stack-gap);
+}
+
+/* =============================================================================
+   03) RESPONSIVE
+============================================================================= */
+@media (max-width:760px){
+  .home-developer-mode-workspace{
+    grid-template-columns:var(--grid-column-single);
+  }
+}

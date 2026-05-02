@@ -255,7 +255,15 @@ function buildPrivateProfileState(user = null, profile = null) {
   const publicRouteUrl = normalizeString(profile?.public_profile_url || profile?.public_route_url || buildPublicProfileUrl(username.normalized));
   const publicRouteDisplay = buildPublicProfileDisplay(username.normalized);
   const publicViewAvailable = visibility.publicEnabled === true && visibility.routeStatus === 'ready' && Boolean(username.normalized);
-  const avatarUrl = normalizeString(profile?.avatar_url || profile?.photo_url || user?.photoURL || '');
+  const avatarUrl = normalizeString(
+    profile?.avatar_url
+    || profile?.photo_url
+    || profile?.public_avatar_url
+    || user?.photoURL
+    || user?.user_metadata?.avatar_url
+    || user?.user_metadata?.picture
+    || ''
+  );
   const coverUrl = normalizeString(profile?.cover_url || profile?.header_image_url || getStructuredProfileFlag(profile, 'profile_cover_url'));
   const avatarHasImage = Boolean(avatarUrl);
   const stateKey = !user

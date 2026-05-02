@@ -1,0 +1,39 @@
+<!-- =============================================================================
+     01) PROJECT / ENVIRONMENT CREATION
+     02) BACKEND LOCKED PROJECT CONTRACT
+============================================================================= -->
+<article class="cockpit-module project-environment-panel" data-cockpit-module="project-environment-panel">
+  <header class="cockpit-module__header">
+    <p class="cockpit-module__eyebrow">Environment</p>
+    <h3 class="cockpit-module__title">Project and environment setup</h3>
+    <p class="cockpit-module__copy">
+      Prepare a development project record tied to profile, provider, repository, and runtime status. Canonical persistence requires backend profile/runtime integration.
+    </p>
+  </header>
+
+  <form class="cockpit-module__form" data-project-environment-form>
+    <label class="cockpit-field">
+      <span>Project name</span>
+      <input name="projectName" type="text" autocomplete="off" placeholder="Website production hardening">
+    </label>
+    <label class="cockpit-field">
+      <span>Workspace name</span>
+      <input name="workspaceName" type="text" autocomplete="off" placeholder="Homepage developer workspace">
+    </label>
+    <label class="cockpit-field">
+      <span>Repository</span>
+      <select name="repository" data-project-environment-repository></select>
+    </label>
+    <label class="cockpit-field">
+      <span>Provider</span>
+      <select name="provider" data-project-environment-provider></select>
+    </label>
+    <label class="cockpit-field">
+      <span>Environment mode</span>
+      <select name="environmentMode" data-project-environment-mode></select>
+    </label>
+    <button class="cockpit-button" type="submit">Create project workspace</button>
+  </form>
+
+  <pre class="cockpit-output cockpit-output--code" data-project-environment-output>No project draft prepared.</pre>
+</article>

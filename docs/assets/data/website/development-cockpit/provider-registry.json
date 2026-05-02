@@ -8,7 +8,19 @@
       "mode": "cloud",
       "runtime": "codex",
       "status": "available_when_authenticated",
-      "description": "Cloud execution for repository-aware implementation work when credentials and workspace access are available."
+      "requiresBackend": true,
+      "frontendSecretsAllowed": false,
+      "description": "Cloud execution for repository-aware implementation work when credentials and workspace access are available through a secure backend."
+    },
+    {
+      "id": "gemini-coding-provider",
+      "label": "Gemini Coding Provider",
+      "mode": "cloud",
+      "runtime": "gemini",
+      "status": "pending_backend_connection",
+      "requiresBackend": true,
+      "frontendSecretsAllowed": false,
+      "description": "Future cloud provider route for coding-capable Gemini models through backend-owned provider credentials."
     },
     {
       "id": "local-codex",
@@ -16,6 +28,8 @@
       "mode": "local",
       "runtime": "codex-local",
       "status": "available_on_workstation",
+      "requiresBackend": true,
+      "frontendSecretsAllowed": false,
       "description": "Local execution for filesystem audits, patch generation, verification commands, and browser review."
     },
     {
@@ -24,6 +38,8 @@
       "mode": "manual",
       "runtime": "human",
       "status": "always_available",
+      "requiresBackend": false,
+      "frontendSecretsAllowed": false,
       "description": "Human-controlled workflow for sensitive files, policy decisions, and final approval boundaries."
     }
   ]

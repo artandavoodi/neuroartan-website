@@ -8,6 +8,24 @@
       placeholder="Ask anything."
       aria-describedby="home-interaction-panel-support"></textarea>
 
+    <div class="home-interaction-panel__developer-actions" data-home-developer-actions aria-label="Developer Mode quick actions"></div>
+
+    <div class="home-interaction-panel__developer-workbench" data-home-developer-workbench aria-label="Developer repository and workspace controls">
+      <select class="home-interaction-panel__developer-select" data-home-developer-repository aria-label="Repository"></select>
+      <select class="home-interaction-panel__developer-select" data-home-developer-environment aria-label="Environment mode"></select>
+      <input class="home-interaction-panel__developer-input" data-home-developer-workspace-name type="text" autocomplete="off" placeholder="Workspace name" aria-label="Workspace name">
+      <button class="home-interaction-panel__developer-primary" type="button" data-home-developer-github-connect>
+        Connect GitHub
+      </button>
+      <button class="home-interaction-panel__developer-primary" type="button" data-home-developer-repositories-discover>
+        Discover repos
+      </button>
+      <button class="home-interaction-panel__developer-primary" type="button" data-home-developer-workspace-create>
+        Create workspace
+      </button>
+    </div>
+    <p class="home-interaction-panel__developer-status" data-home-developer-status aria-live="polite"></p>
+
     <div class="home-interaction-panel__composer" id="home-interaction-panel-support">
       <div class="home-interaction-panel__composer-left">
         <button class="home-interaction-panel__attach" type="button" data-home-interaction-attach="true" aria-label="Attach file">

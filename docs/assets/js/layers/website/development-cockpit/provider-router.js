@@ -20,6 +20,7 @@ import {
   normalizeCockpitString,
   writeCockpitOutput
 } from './development-cockpit-shell.js';
+import { requestDeveloperRuntimeAction } from './developer-runtime-client.js';
 
 /* =============================================================================
    03) RENDERING
@@ -29,11 +30,17 @@ function renderProviderButton(provider) {
   button.className = 'provider-router__option';
   button.type = 'button';
   button.dataset.providerId = normalizeCockpitString(provider.id);
-  button.innerHTML = `
-    <strong>${normalizeCockpitString(provider.label)}</strong>
-    <span>${normalizeCockpitString(provider.mode)} · ${normalizeCockpitString(provider.status)}</span>
-    <span>${normalizeCockpitString(provider.description)}</span>
-  `;
+
+  const title = document.createElement('strong');
+  title.textContent = normalizeCockpitString(provider.label);
+
+  const status = document.createElement('span');
+  status.textContent = `${normalizeCockpitString(provider.mode)} · ${normalizeCockpitString(provider.status)}`;
+
+  const copy = document.createElement('span');
+  copy.textContent = normalizeCockpitString(provider.description);
+
+  button.append(title, status, copy);
   return button;
 }
 
@@ -56,10 +63,18 @@ export function initProviderRouter(context) {
       button.setAttribute('aria-pressed', 'true');
       writeCockpitOutput(root, '[data-provider-router-output]', `Active provider: ${provider.label} (${provider.mode})`);
     }
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
       list.querySelectorAll('.provider-router__option').forEach((entry) => entry.setAttribute('aria-pressed', 'false'));
       button.setAttribute('aria-pressed', 'true');
-      writeCockpitOutput(root, '[data-provider-router-output]', `Active provider: ${provider.label} (${provider.mode})`);
+      const response = await requestDeveloperRuntimeAction(context, 'provider-connection-status', {
+        provider: provider.id
+      });
+      writeCockpitOutput(root, '[data-provider-router-output]', [
+        `Active provider: ${provider.label} (${provider.mode})`,
+        `Connection status: ${response.status}`,
+        `Frontend secrets allowed: ${provider.frontendSecretsAllowed ? 'yes' : 'no'}`,
+        `Reason: ${response.reason}`
+      ].join('\n'));
     });
     list.append(button);
   });

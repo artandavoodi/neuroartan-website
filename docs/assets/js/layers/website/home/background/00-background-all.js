@@ -9,8 +9,6 @@
    ========================================================= */
 
 import './home-hero-shader.js';
-import './home-essence-effect.js';
-import './home-hero-headlines.js';
 import './home-matte-layer.js';
 
 /* =========================================================

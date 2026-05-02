@@ -1,0 +1,26 @@
+/* =============================================================================
+   FILE INDEX
+   01) GLOBAL GLASS SURFACE TOKENS
+   02) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) GLOBAL GLASS SURFACE TOKENS
+============================================================================= */
+:root{
+  /* Sovereign reusable glass surface for overlays, menus, top bars, sticky bars, and future translucent system surfaces. */
+  --glass-surface-height:3.55rem;
+  --glass-surface-height-tablet:3.3rem;
+  --glass-surface-height-mobile:3.18rem;
+  --glass-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --glass-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
+  --glass-surface-border:var(--border-color);
+  --glass-surface-border-light:var(--border-color);
+  --glass-surface-shadow:none;
+  --glass-surface-blur:var(--effect-blur-sm);
+  --glass-surface-saturate:120%;
+}
+
+/* =============================================================================
+   02) END OF FILE
+============================================================================= */

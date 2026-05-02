@@ -82,6 +82,14 @@
   --account-profile-setup-action-background-hover:var(--control-surface-hover);
   --account-profile-setup-action-foreground: var(--text-color);
   --account-profile-setup-submit-status-color: var(--text-secondary-color);
+  --account-profile-setup-suggestion-gap: var(--account-profile-setup-content-gap-xs);
+  --account-profile-setup-suggestion-height: var(--control-height-sm, var(--account-button-height));
+  --account-profile-setup-suggestion-radius: var(--shape-control-radius);
+  --account-profile-setup-suggestion-border: var(--control-border-unified);
+  --account-profile-setup-suggestion-border-hover: var(--control-border-hover-unified);
+  --account-profile-setup-suggestion-background: var(--control-surface);
+  --account-profile-setup-suggestion-background-hover: var(--control-surface-hover);
+  --account-profile-setup-suggestion-foreground: var(--text-color);
 
   --account-profile-setup-back-control-size: var(--account-back-control-size);
   --account-profile-setup-back-icon-size: var(--account-back-icon-size);
@@ -234,6 +242,45 @@
   font-weight: var(--type-body-regular-weight);
   letter-spacing: var(--account-profile-setup-status-letter-spacing);
   line-height: var(--account-profile-setup-status-line-height);
+}
+
+.account-profile-setup-drawer-username-suggestions{
+  width: var(--size-full);
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-profile-setup-suggestion-gap);
+}
+
+.account-profile-setup-drawer-username-suggestions[hidden]{
+  display: none !important;
+}
+
+.account-profile-setup-drawer-username-suggestion-list{
+  width: var(--size-full);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--account-profile-setup-suggestion-gap);
+}
+
+.account-profile-setup-drawer-username-suggestion{
+  appearance: none;
+  min-height: var(--account-profile-setup-suggestion-height);
+  padding-inline: var(--account-profile-setup-field-padding-x);
+  border: var(--border-width-hairline) solid var(--account-profile-setup-suggestion-border);
+  border-radius: var(--account-profile-setup-suggestion-radius);
+  background: var(--account-profile-setup-suggestion-background);
+  color: var(--account-profile-setup-suggestion-foreground);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    border-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
+    background-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease);
+}
+
+.account-profile-setup-drawer-username-suggestion:hover,
+.account-profile-setup-drawer-username-suggestion:focus-visible{
+  border-color: var(--account-profile-setup-suggestion-border-hover);
+  background: var(--account-profile-setup-suggestion-background-hover);
 }
 
 .account-profile-setup-drawer-password-status{

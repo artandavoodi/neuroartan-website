@@ -23,6 +23,7 @@
 @import url('./zindex.tokens.css');
 @import url('./layout.tokens.css');
 @import url('./control.tokens.css');
+@import url('./overlay.tokens.css');
 @import url('./navigation.tokens.css');
 @import url('./feedback.tokens.css');
 @import url('./data.tokens.css');

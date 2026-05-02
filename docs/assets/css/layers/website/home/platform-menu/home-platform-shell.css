@@ -44,15 +44,23 @@
   --home-platform-shell-radius:var(--panel-radius-unified);
   --home-platform-shell-padding:var(--layout-home-platform-padding);
   --home-platform-shell-gap:var(--layout-home-platform-gap);
-  --home-platform-shell-surface:var(--panel-surface-unified);
-  --home-platform-shell-border:var(--panel-border-unified);
-  --home-platform-shell-shadow:var(--panel-shadow-unified);
-  --home-platform-shell-blur:var(--panel-blur-unified);
-  --home-platform-shell-saturate:var(--panel-saturate-unified);
+  --home-platform-shell-surface:var(--glass-surface-bg);
+  --home-platform-shell-inner-surface:transparent;
+  --home-platform-shell-border:var(--glass-surface-border);
+  --home-platform-shell-shadow:var(--glass-surface-shadow);
+  --home-platform-shell-blur:var(--glass-surface-blur);
+  --home-platform-shell-saturate:var(--glass-surface-saturate);
   --home-platform-shell-nav-item-radius:var(--control-radius-composer);
+  --home-platform-shell-nav-item-bg:transparent;
+  --home-platform-shell-nav-item-bg-hover:var(--local-nav-hover-text-only-bg);
+  --home-platform-shell-nav-item-border-hover:var(--local-nav-hover-text-only-border);
+  --home-platform-shell-nav-item-color-hover:var(--local-nav-hover-text-only-color);
   --home-platform-shell-nav-item-padding:var(--home-platform-shell-nav-item-padding-y) var(--home-platform-shell-nav-item-padding-x);
-  --home-platform-shell-nav-item-bg-active:var(--control-surface-hover);
-  --home-platform-shell-nav-item-border-active:var(--control-border-hover-unified);
+  --home-platform-shell-nav-item-bg-active:transparent;
+  --home-platform-shell-nav-item-border-active:transparent;
+  --home-platform-shell-group-separator:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  --home-platform-shell-group-separator-gap:var(--space-5, 2rem);
+  --home-platform-shell-group-separator-offset:var(--space-5, 2rem);
 }
 
 /* =============================================================================
@@ -65,12 +73,12 @@
   --home-platform-shell-radius:var(--panel-radius-unified);
   --home-platform-shell-padding:var(--layout-home-platform-padding);
   --home-platform-shell-gap:var(--layout-home-platform-gap);
-  --home-platform-shell-shadow:var(--panel-shadow-unified);
-  --home-platform-shell-blur:var(--panel-blur-unified);
-  --home-platform-shell-saturate:var(--panel-saturate-unified);
+  --home-platform-shell-shadow:var(--glass-surface-shadow);
+  --home-platform-shell-blur:var(--glass-surface-blur);
+  --home-platform-shell-saturate:var(--glass-surface-saturate);
   --home-platform-shell-chrome-min-height:var(--layout-home-platform-chrome-min-height);
-  --home-platform-shell-chrome-blur:var(--layout-home-platform-chrome-blur);
-  --home-platform-shell-chrome-saturate:var(--layout-home-platform-chrome-saturate);
+  --home-platform-shell-chrome-blur:var(--glass-surface-blur);
+  --home-platform-shell-chrome-saturate:var(--glass-surface-saturate);
   --home-platform-shell-rail-toggle-size:var(--layout-home-platform-rail-toggle-size);
   --home-platform-shell-rail-toggle-margin-left:var(--layout-home-platform-rail-toggle-margin-left);
   --home-platform-shell-rail-toggle-icon-size:var(--layout-home-platform-rail-toggle-icon-size);
@@ -117,8 +125,8 @@
   --home-platform-shell-nav-text-tracking:var(--layout-home-platform-nav-text-tracking);
   --home-platform-shell-subnav-padding-x:var(--layout-home-platform-subnav-padding-x);
   --home-platform-shell-subnav-min-height:var(--layout-home-platform-subnav-min-height);
-  --home-platform-shell-subnav-size:var(--layout-home-platform-subnav-size);
-  --home-platform-shell-subnav-line-height:var(--layout-home-platform-subnav-line-height);
+  --home-platform-shell-subnav-size:var(--home-platform-shell-nav-text-size);
+  --home-platform-shell-subnav-line-height:var(--home-platform-shell-nav-text-line-height);
   --home-platform-shell-content-header-gap:var(--layout-home-platform-content-header-gap);
   --home-platform-shell-content-header-padding-top:var(--layout-home-platform-content-header-padding-top);
   --home-platform-shell-content-header-padding-right:var(--layout-home-platform-content-header-padding-right);
@@ -157,6 +165,12 @@
   --home-platform-shell-state-action-tracking:var(--layout-home-platform-state-action-tracking);
   --home-platform-shell-embedded-section-gap:var(--layout-home-platform-embedded-section-gap);
   --home-platform-shell-embedded-stack-gap:var(--layout-home-platform-embedded-stack-gap);
+}
+
+html[data-theme-effective="light"]{
+  --home-platform-shell-surface:var(--glass-surface-bg-light);
+  --home-platform-shell-inner-surface:transparent;
+  --home-platform-shell-border:var(--glass-surface-border-light);
 }
 
 /* =============================================================================
@@ -201,8 +215,8 @@
   justify-content:flex-start;
   min-height:var(--home-platform-shell-chrome-min-height);
   padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
-  border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
-  background:var(--home-ribbon-surface);
+  border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  background:var(--home-platform-shell-inner-surface);
   backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
   -webkit-backdrop-filter:blur(var(--home-platform-shell-chrome-blur)) saturate(var(--home-platform-shell-chrome-saturate));
 }
@@ -237,11 +251,16 @@
   background:var(--control-surface);
   color:var(--home-platform-shell-chrome-toggle-color);
   opacity:var(--home-platform-shell-nav-opacity);
-  transition:var(--interaction-transition-control);
+  transition:none;
 }
 
 .home-platform-shell__rail-toggle:hover,
-.home-platform-shell__rail-toggle:focus-visible,
+.home-platform-shell__rail-toggle:focus-visible{
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+}
+
 .home-platform-shell__rail-toggle[aria-pressed="true"]{
   color:var(--home-platform-shell-chrome-toggle-hover-color);
   opacity:var(--home-platform-shell-nav-hover-opacity);
@@ -255,6 +274,8 @@
   width:var(--home-platform-shell-rail-toggle-icon-size);
   height:var(--home-platform-shell-rail-toggle-icon-size);
   flex:0 0 auto;
+  transform:none;
+  transition:none;
 }
 
 .home-platform-shell__rail-toggle-icon img{
@@ -280,7 +301,7 @@
     var(--home-platform-shell-subrail-width)
     minmax(var(--spacing-none), 1fr);
   padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
-  background:var(--home-platform-shell-surface);
+  background:var(--home-platform-shell-inner-surface);
 }
 
 /* =============================================================================
@@ -325,16 +346,16 @@
   min-width:var(--spacing-none);
   min-height:var(--spacing-none);
   overflow:hidden;
-  background:var(--home-platform-shell-surface);
+  background:var(--home-platform-shell-inner-surface);
   pointer-events:auto;
 }
 
 .home-platform-shell__rail{
-  border-right:var(--border-width-hairline) solid var(--panel-border-unified);
+  border-right:var(--border-width-hairline) solid var(--home-platform-shell-border);
 }
 
 .home-platform-shell__subrail{
-  border-right:var(--border-width-hairline) solid var(--panel-border-unified);
+  border-right:var(--border-width-hairline) solid var(--home-platform-shell-border);
 }
 
 .home-platform-shell__rail-inner,
@@ -346,9 +367,9 @@
   overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
+  scrollbar-width:none;
   scrollbar-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent) transparent;
-  -ms-overflow-style:auto;
+  -ms-overflow-style:none;
   padding:var(--home-platform-shell-rail-padding-top) var(--home-platform-shell-rail-padding-right) var(--home-platform-shell-rail-padding-bottom) var(--home-platform-shell-rail-padding-left);
 }
 
@@ -362,11 +383,14 @@
 }
 
 .home-platform-shell__group + .home-platform-shell__group{
-  margin-top:var(--home-platform-shell-group-margin-top);
+  margin-top:var(--home-platform-shell-group-separator-gap);
+  padding-top:var(--home-platform-shell-group-separator-offset);
+  border-top:var(--home-platform-shell-group-separator);
 }
 
 .home-platform-shell__group-label,
 .home-platform-shell__subrail-label{
+  display:none;
   margin:var(--spacing-none) var(--spacing-none) var(--home-platform-shell-label-margin-bottom);
   font-size:var(--home-platform-shell-label-size);
   font-weight:var(--home-platform-shell-label-weight);
@@ -398,9 +422,9 @@
 
 .home-platform-shell__rail-inner::-webkit-scrollbar,
 .home-platform-shell__subrail-inner::-webkit-scrollbar{
-  display:block;
-  width:0.36rem;
-  height:0.36rem;
+  display:none;
+  width:0;
+  height:0;
 }
 
 .home-platform-shell__rail-inner::-webkit-scrollbar-track,
@@ -432,14 +456,15 @@
   padding:var(--home-platform-shell-nav-item-padding);
   border:var(--border-width-hairline) solid transparent;
   border-radius:var(--home-platform-shell-nav-item-radius);
-  background:var(--control-surface);
+  background:var(--home-platform-shell-nav-item-bg);
   color:var(--home-platform-shell-nav-color);
   opacity:var(--home-platform-shell-nav-opacity);
   text-align:left;
   text-decoration:none;
   transform:none;
-  transition:var(--interaction-transition-control);
+  transition:none;
 }
+
 
 .home-platform-shell__nav-icon{
   display:inline-flex;
@@ -448,14 +473,41 @@
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
   flex:0 0 auto;
+  transform:none;
+  transition:none;
 }
 
 .home-platform-shell__nav-icon img{
   display:block;
   width:var(--size-full);
   height:var(--size-full);
+  object-fit:contain;
+  object-position:center;
   filter:var(--icon-image-filter);
 }
+
+
+.home-platform-shell__nav-svg,
+.home-platform-shell .inline-stroke-icon__svg{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+  color:currentColor;
+  transform:var(--interactive-icon-transform);
+  transition:none;
+  overflow:visible;
+}
+
+.home-platform-shell__rail-toggle[aria-pressed="true"] .inline-stroke-icon__shape,
+.home-platform-shell__nav-item[aria-pressed="true"] .inline-stroke-icon__shape,
+.home-platform-shell__nav-item[aria-current="page"] .inline-stroke-icon__shape,
+.home-platform-shell__nav-item.is-active .inline-stroke-icon__shape,
+.home-platform-shell__subnav-item[aria-pressed="true"] .inline-stroke-icon__shape,
+.home-platform-shell__subnav-item.is-active .inline-stroke-icon__shape{
+  stroke-width:var(--interactive-icon-stroke-width-active);
+}
+
+
 
 .home-platform-shell__nav-indicator{
   display:inline-flex;
@@ -486,11 +538,19 @@
 
 .home-platform-shell__nav-item:hover,
 .home-platform-shell__nav-item:focus-visible,
+.home-platform-shell__subnav-item:hover,
+.home-platform-shell__subnav-item:focus-visible{
+  border-color:var(--home-platform-shell-nav-item-border-hover);
+  background:var(--home-platform-shell-nav-item-bg-hover);
+  color:var(--home-platform-shell-nav-item-color-hover);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+  transform:none;
+}
+
 .home-platform-shell__nav-item[aria-pressed="true"],
 .home-platform-shell__nav-item[aria-current="page"],
 .home-platform-shell__nav-item.is-active,
-.home-platform-shell__subnav-item:hover,
-.home-platform-shell__subnav-item:focus-visible,
 .home-platform-shell__subnav-item[aria-pressed="true"],
 .home-platform-shell__subnav-item.is-active{
   border-color:var(--home-platform-shell-nav-item-border-active);
@@ -530,6 +590,7 @@
   display:inline-flex;
   align-items:center;
   min-width:var(--spacing-none);
+  padding-inline-start:var(--spacing-none);
   font-size:var(--home-platform-shell-nav-text-size);
   font-weight:var(--home-platform-shell-nav-text-weight);
   line-height:var(--home-platform-shell-nav-text-line-height);
@@ -554,7 +615,7 @@
   min-height:var(--spacing-none);
   max-width:var(--size-full);
   overflow:hidden;
-  background:var(--home-platform-shell-surface);
+  background:var(--home-platform-shell-inner-surface);
   display:flex;
   flex-direction:column;
   pointer-events:auto;
@@ -564,16 +625,11 @@
   display:grid;
   gap:var(--home-platform-shell-content-header-gap);
   padding:var(--home-platform-shell-content-header-padding-top) var(--home-platform-shell-content-header-padding-right) var(--home-platform-shell-content-header-padding-bottom) var(--home-platform-shell-content-header-padding-left);
-  border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
+  border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
 }
 
 .home-platform-shell__content-eyebrow{
-  margin:var(--spacing-none);
-  color:var(--home-platform-shell-muted-label-color);
-  font-size:var(--home-platform-shell-label-size);
-  font-weight:var(--home-platform-shell-label-weight);
-  letter-spacing:var(--home-platform-shell-label-tracking);
-  text-transform:uppercase;
+  display:none;
 }
 
 .home-platform-shell__content-title{
@@ -602,16 +658,16 @@
   overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
+  scrollbar-width:none;
   scrollbar-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent) transparent;
-  -ms-overflow-style:auto;
+  -ms-overflow-style:none;
   padding:var(--home-platform-shell-content-inner-padding-top) var(--spacing-none) calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-content-inner-footer-gap)) var(--home-platform-shell-content-inner-padding-left);
 }
 
 .home-platform-shell__content-inner::-webkit-scrollbar{
-  display:block;
-  width:0.42rem;
-  height:0.42rem;
+  display:none;
+  width:0;
+  height:0;
 }
 
 .home-platform-shell__content-inner::-webkit-scrollbar-track{
@@ -789,7 +845,7 @@
     min-width:var(--size-full);
     max-height:none;
     border-right:var(--spacing-none);
-    border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
+    border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
   }
 
   .home-platform-shell__subrail{
@@ -808,7 +864,7 @@
     padding:0.75rem var(--spacing-none);
     overflow-x:auto;
     overflow-y:hidden;
-    scrollbar-width:thin;
+    scrollbar-width:none;
   }
 
   .home-platform-shell__subrail-inner{
@@ -819,9 +875,9 @@
 
   .home-platform-shell__rail-inner::-webkit-scrollbar,
   .home-platform-shell__subrail-inner::-webkit-scrollbar{
-    display:block;
-    width:0.32rem;
-    height:0.32rem;
+    display:none;
+    width:0;
+    height:0;
   }
 
   .home-platform-shell__group{
@@ -829,7 +885,9 @@
   }
 
   .home-platform-shell__group + .home-platform-shell__group{
-    margin-top:0.72rem;
+    margin-top:var(--home-platform-shell-group-separator-gap);
+    padding-top:var(--home-platform-shell-group-separator-offset);
+    border-top:var(--home-platform-shell-group-separator);
   }
 
   .home-platform-shell__group-label,

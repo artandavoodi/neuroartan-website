@@ -21,12 +21,12 @@
   --home-interaction-panel-gap:var(--layout-home-interaction-panel-gap);
   --home-interaction-panel-padding:var(--layout-home-interaction-panel-padding);
   --home-interaction-panel-radius:var(--control-radius-composer);
-  --home-interaction-panel-surface:color-mix(in srgb, var(--surface-color) 72%, transparent);
-  --home-interaction-panel-border:var(--control-border);
+  --home-interaction-panel-surface:var(--glass-surface-bg);
+  --home-interaction-panel-border:var(--glass-surface-border);
   --home-interaction-panel-border-active:var(--field-border-focus);
-  --home-interaction-panel-shadow:none;
-  --home-interaction-panel-blur:var(--layout-home-interaction-panel-blur);
-  --home-interaction-panel-saturate:var(--layout-home-interaction-panel-saturate);
+  --home-interaction-panel-shadow:var(--glass-surface-shadow);
+  --home-interaction-panel-blur:var(--glass-surface-blur);
+  --home-interaction-panel-saturate:var(--glass-surface-saturate);
 
   --home-interaction-panel-input-min-height:var(--layout-home-interaction-panel-input-min-height);
   --home-interaction-panel-input-max-height:var(--layout-home-interaction-panel-input-max-height);
@@ -534,4 +534,9 @@
   .home-interaction-panel[data-home-interaction-mode="thinking"] .home-interaction-panel__submit-label::after{
     animation:none;
   }
+}
+
+html[data-theme-effective="light"]{
+  --home-interaction-panel-surface:var(--glass-surface-bg-light);
+  --home-interaction-panel-border:var(--glass-surface-border-light);
 }

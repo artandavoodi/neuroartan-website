@@ -9,8 +9,9 @@
    07) MENU NAVIGATION TOKENS
    08) NAVIGATION INDICATOR TOKENS
    09) NAVIGATION RESPONSIVE TOKENS
-   10) MENU OVERLAY NAVIGATION TOKENS
-   11) END OF FILE
+   10) GLOBAL NAVIGATION GLASS SURFACE TOKENS
+   11) MENU OVERLAY NAVIGATION TOKENS
+   12) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -147,8 +148,22 @@
   }
 }
 
+:root{
+  /* Shared glass surface for top bars, sticky local navigation, and footer-facing chrome. */
+  --nav-glass-surface-height:3.55rem;
+  --nav-glass-surface-height-tablet:3.3rem;
+  --nav-glass-surface-height-mobile:3.18rem;
+  --nav-glass-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --nav-glass-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
+  --nav-glass-surface-border:var(--border-color);
+  --nav-glass-surface-border-light:var(--border-color);
+  --nav-glass-surface-shadow:none;
+  --nav-glass-surface-blur:var(--effect-blur-sm);
+  --nav-glass-surface-saturate:120%;
+}
+
 /* =============================================================================
-   10) MENU OVERLAY NAVIGATION TOKENS
+   11) MENU OVERLAY NAVIGATION TOKENS
 ============================================================================= */
 :root{
   /* Exact globalized values lifted from the core navigation primitive system. */
@@ -202,16 +217,16 @@
   --nav-primitive-mobile-row-padding-x:0.78rem;
   /* Exact globalized values lifted from the established fullscreen menu overlay design. */
   /* Exact globalized values lifted from the established institutional top menu design. */
-  --nav-institutional-surface-height:3.55rem;
-  --nav-institutional-surface-height-tablet:3.3rem;
-  --nav-institutional-surface-height-mobile:3.18rem;
-  --nav-institutional-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
-  --nav-institutional-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
-  --nav-institutional-surface-border:var(--border-color);
-  --nav-institutional-surface-border-light:var(--border-color);
-  --nav-institutional-surface-shadow:none;
-  --nav-institutional-surface-blur:8px;
-  --nav-institutional-surface-saturate:120%;
+  --nav-institutional-surface-height:var(--nav-glass-surface-height);
+  --nav-institutional-surface-height-tablet:var(--nav-glass-surface-height-tablet);
+  --nav-institutional-surface-height-mobile:var(--nav-glass-surface-height-mobile);
+  --nav-institutional-surface-bg:var(--nav-glass-surface-bg);
+  --nav-institutional-surface-bg-light:var(--nav-glass-surface-bg-light);
+  --nav-institutional-surface-border:var(--nav-glass-surface-border);
+  --nav-institutional-surface-border-light:var(--nav-glass-surface-border-light);
+  --nav-institutional-surface-shadow:var(--nav-glass-surface-shadow);
+  --nav-institutional-surface-blur:var(--nav-glass-surface-blur);
+  --nav-institutional-surface-saturate:var(--nav-glass-surface-saturate);
   --nav-institutional-text-color:var(--text-secondary-color);
   --nav-institutional-text-hover-color:var(--text-primary-color);
   --nav-institutional-brand-color:var(--text-primary-color);
@@ -417,5 +432,5 @@
 }
 
 /* =============================================================================
-   11) END OF FILE
+   12) END OF FILE
 ============================================================================= */

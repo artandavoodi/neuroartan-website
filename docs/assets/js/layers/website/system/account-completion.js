@@ -61,6 +61,10 @@ import {
 import {
   createPrivateBaselineProfile
 } from './profile-save.js';
+import {
+  suggestAccountUsernames,
+  suggestAvailableAccountUsernames
+} from './account/username/account-username-suggestions.js';
 
 /* =============================================================================
    02) MODULE IDENTITY
@@ -95,6 +99,51 @@ import {
   function getSupabaseClient() {
     if (typeof window === 'undefined') return null;
     return window.neuroartanSupabase || null;
+  }
+
+  function hasSupabaseRuntimeConfig() {
+    if (typeof window === 'undefined') return false;
+    const supabase = window.NEUROARTAN_CONFIG?.supabase || {};
+    return Boolean(supabase.url && supabase.anonKey);
+  }
+
+  function waitForSupabaseClient(timeoutMs = 5000) {
+    const client = getSupabaseClient();
+    if (client) return Promise.resolve(client);
+
+    if (!hasSupabaseRuntimeConfig()) {
+      return Promise.resolve(null);
+    }
+
+    return new Promise((resolve) => {
+      let settled = false;
+
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeoutId);
+        window.removeEventListener('neuroartan:supabase-ready', handleReady);
+        window.removeEventListener('neuroartan:supabase-error', handleUnavailable);
+        window.removeEventListener('neuroartan:supabase-missing-config', handleUnavailable);
+        resolve(value);
+      };
+
+      const handleReady = () => {
+        finish(getSupabaseClient());
+      };
+
+      const handleUnavailable = () => {
+        finish(null);
+      };
+
+      const timeoutId = window.setTimeout(() => {
+        finish(getSupabaseClient());
+      }, timeoutMs);
+
+      window.addEventListener('neuroartan:supabase-ready', handleReady, { once:true });
+      window.addEventListener('neuroartan:supabase-error', handleUnavailable, { once:true });
+      window.addEventListener('neuroartan:supabase-missing-config', handleUnavailable, { once:true });
+    });
   }
 
   function hasSupabaseClient() {
@@ -240,6 +289,7 @@ import {
   const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
   const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
+  const USERNAME_SUGGESTIONS_EVENT = 'account:profile-setup-username-suggestions';
   const USERNAME_VALIDATION_DEBOUNCE_MS = 240;
   /* =============================================================================
      06) FIREBASE HELPERS
@@ -550,6 +600,8 @@ import {
         return 'Use a stronger password that satisfies the current password requirements.';
       case 'auth/too-many-requests':
         return 'Too many attempts were made. Please wait and try again.';
+      case 'SUPABASE_NOT_READY':
+        return 'Supabase account backend is still loading. Wait a moment and try again.';
       case 'permission-denied':
       case 'unavailable':
         return 'Profile storage is not available right now.';
@@ -569,6 +621,23 @@ import {
       || message.includes('failed to get document because the client is offline')
       || message.includes('could not reach cloud firestore backend')
     );
+  }
+
+  function resolveProfileSetupUsernameErrorCode(error) {
+    const code = normalizeString(error?.code || error?.message || '');
+    const message = normalizeString(error?.message || '').toLowerCase();
+    const details = normalizeString(error?.details || '').toLowerCase();
+
+    if (
+      code === '23505'
+      || message.includes('duplicate key')
+      || message.includes('unique constraint')
+      || details.includes('already exists')
+    ) {
+      return 'USERNAME_TAKEN';
+    }
+
+    return code;
   }
 
   /* =============================================================================
@@ -828,6 +897,60 @@ import {
     }));
   }
 
+  function emitUsernameSuggestions(detail = {}) {
+    document.dispatchEvent(new CustomEvent(USERNAME_SUGGESTIONS_EVENT, {
+      detail: {
+        source: MODULE_ID,
+        suggestions: [],
+        ...detail
+      }
+    }));
+  }
+
+  function buildUsernameSuggestionSeed(detail = {}) {
+    return {
+      username: normalizeUsername(detail.username || detail.raw_username || ''),
+      email: normalizeEmail(detail.email || RUNTIME.onboardingContext.email || ''),
+      first_name: normalizeString(detail.first_name || detail.firstName || RUNTIME.onboardingContext.first_name || ''),
+      last_name: normalizeString(detail.last_name || detail.lastName || RUNTIME.onboardingContext.last_name || ''),
+      display_name: normalizeString(detail.display_name || detail.displayName || RUNTIME.onboardingContext.display_name || RUNTIME.onboardingContext.name || '')
+    };
+  }
+
+  async function emitAvailableUsernameSuggestions(detail = {}, policy = null, options = {}) {
+    const seed = buildUsernameSuggestionSeed(detail);
+    const supabase = options.supabase || await waitForSupabaseClient(3000);
+
+    try {
+      const suggestions = supabase
+        ? await suggestAvailableAccountUsernames(seed, {
+            maxSuggestions: 4,
+            policy,
+            availabilityChecker: (candidate) => getUsernameAvailability({
+              supabase,
+              username: candidate,
+              currentAuthUserId: normalizeString(options.currentAuthUserId || ''),
+              policy
+            })
+          })
+        : await suggestAccountUsernames(seed, {
+            maxSuggestions: 4,
+            policy
+          });
+
+      emitUsernameSuggestions({
+        normalized: seed.username,
+        suggestions
+      });
+    } catch (error) {
+      console.error('Username suggestions failed:', error);
+      emitUsernameSuggestions({
+        normalized: seed.username,
+        suggestions: []
+      });
+    }
+  }
+
   function emitProfileSetupSubmitStatus(detail = {}) {
     document.dispatchEvent(new CustomEvent('account:profile-setup-submit-status', {
       detail: {
@@ -887,12 +1010,16 @@ import {
      14A) BACKEND READINESS HELPERS
   ============================================================================= */
   async function ensureAccountBackendReadyOrThrow() {
-    const supabase = getSupabaseClient();
+    const supabase = await waitForSupabaseClient();
     if (supabase) {
       return {
         source: 'supabase',
         supabase
       };
+    }
+
+    if (hasSupabaseRuntimeConfig()) {
+      throw createUsernameError('SUPABASE_NOT_READY');
     }
 
     const { auth, firestore } = await ensureFirebaseReadyOrThrow();
@@ -975,6 +1102,10 @@ import {
             normalized: '',
             message: buildUsernameStatus('idle', '', policy)
           });
+          emitUsernameSuggestions({
+            normalized: '',
+            suggestions: []
+          });
           return;
         }
 
@@ -987,6 +1118,7 @@ import {
             normalized: localValidation.normalized,
             message: localValidation.message
           });
+          void emitAvailableUsernameSuggestions(detail, policy);
           return;
         }
 
@@ -998,7 +1130,7 @@ import {
 
         RUNTIME.usernameValidationTimer = window.setTimeout(async () => {
           try {
-            const supabase = getSupabaseClient();
+            const supabase = await waitForSupabaseClient();
 
             if (supabase) {
               const sessionUser = await getSupabaseSessionUser();
@@ -1015,6 +1147,26 @@ import {
                 state:availability.state,
                 normalized:availability.normalized,
                 message:availability.message
+              });
+              if (!availability.ok || availability.state === 'unavailable') {
+                void emitAvailableUsernameSuggestions(detail, policy, {
+                  supabase,
+                  currentAuthUserId:sessionUser?.id || ''
+                });
+              } else {
+                emitUsernameSuggestions({
+                  normalized:availability.normalized,
+                  suggestions:[]
+                });
+              }
+              return;
+            }
+
+            if (hasSupabaseRuntimeConfig()) {
+              emitUsernameStatus({
+                state:'checking',
+                normalized:localValidation.normalized,
+                message:'Account backend is still loading. Try again in a moment.'
               });
               return;
             }
@@ -1036,14 +1188,24 @@ import {
               normalized: availability.normalized,
               message: availability.message
             });
+            if (!availability.ok || availability.state === 'unavailable') {
+              void emitAvailableUsernameSuggestions(detail, policy, {
+                currentUid
+              });
+            } else {
+              emitUsernameSuggestions({
+                normalized:availability.normalized,
+                suggestions:[]
+              });
+            }
           } catch (error) {
             if (requestId !== RUNTIME.usernameValidationRequestId) return;
 
             console.error('Username availability check failed:', error);
             emitUsernameStatus({
-              state: 'unavailable',
+              state: 'validation-unavailable',
               normalized: localValidation.normalized,
-              message: buildUsernameStatus('unavailable', localValidation.normalized, policy)
+              message: buildUsernameStatus('validation-unavailable', localValidation.normalized, policy)
             });
           }
         }, USERNAME_VALIDATION_DEBOUNCE_MS);
@@ -1061,7 +1223,7 @@ import {
     if (!provider) return;
 
     try {
-      const supabase = getSupabaseClient();
+      const supabase = await waitForSupabaseClient();
 
       setFlowState({
         resolveProfile: true,
@@ -1079,6 +1241,10 @@ import {
         });
 
         return;
+      }
+
+      if (hasSupabaseRuntimeConfig()) {
+        throw createUsernameError('SUPABASE_NOT_READY');
       }
 
       const { auth } = await ensureFirebaseReadyOrThrow();
@@ -1180,7 +1346,7 @@ import {
         redirectToProfile: true
       });
 
-      const supabase = getSupabaseClient();
+      const supabase = await waitForSupabaseClient();
       if (supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -1196,6 +1362,10 @@ import {
           await handleSignedInState(data.user);
         }
         return;
+      }
+
+      if (hasSupabaseRuntimeConfig()) {
+        throw createUsernameError('SUPABASE_NOT_READY');
       }
 
       const { auth } = await ensureFirebaseReadyOrThrow();
@@ -1262,7 +1432,7 @@ import {
       return;
     }
 
-    const supabase = getSupabaseClient();
+    const supabase = await waitForSupabaseClient();
     if (!supabase) {
       const message = 'Phone sign-in requires the Supabase authentication backend.';
       emitPhoneAuthStatus('error', message);
@@ -1341,7 +1511,7 @@ import {
     setFormBusy(form, true);
 
     try {
-      const supabase = getSupabaseClient();
+      const supabase = await waitForSupabaseClient();
       if (supabase) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}${PROFILE_ROUTE}`
@@ -1353,6 +1523,10 @@ import {
 
         form.reset();
         return;
+      }
+
+      if (hasSupabaseRuntimeConfig()) {
+        throw createUsernameError('SUPABASE_NOT_READY');
       }
 
       const { auth } = await ensureFirebaseReadyOrThrow();
@@ -1409,9 +1583,9 @@ import {
     const context = patchOnboardingContext(detail);
     const auth = getFirebaseAuth();
     const currentUser = auth?.currentUser || null;
-    const supabase = getSupabaseClient();
+    const supabase = await waitForSupabaseClient();
     const supabaseSessionUser = supabase ? await getSupabaseSessionUser() : null;
-    const activeUser = supabaseSessionUser || currentUser || null;
+    const activeUser = supabase ? (supabaseSessionUser || null) : (currentUser || null);
     const method = normalizeString(detail.method || context.method || getPrimaryProviderId(activeUser));
     const firstName = normalizeString(detail.first_name || context.first_name || '');
     const lastName = normalizeString(detail.last_name || context.last_name || '');
@@ -1522,9 +1696,9 @@ import {
       message: 'Creating your account and profile…'
     });
 
-    await ensureAccountBackendReadyOrThrow();
-
     try {
+      await ensureAccountBackendReadyOrThrow();
+
       let user = activeUser;
       let firestore = getFirestore();
 
@@ -1679,7 +1853,7 @@ import {
       });
       redirectToProfile();
     } catch (error) {
-      const usernameCode = normalizeString(error?.code || error?.message || '');
+      const usernameCode = resolveProfileSetupUsernameErrorCode(error);
 
       if (
         usernameCode === 'USERNAME_INVALID'
@@ -1713,11 +1887,11 @@ import {
         setFieldError(usernameField, usernameMessage);
       } else if (isProfileStoreUnavailableError(error)) {
         emitUsernameStatus({
-          state: 'unavailable',
+          state: 'validation-unavailable',
           normalized: values.username,
-          message: buildUsernameStatus('unavailable', values.username, policy)
+          message: buildUsernameStatus('validation-unavailable', values.username, policy)
         });
-        const unavailableMessage = 'Profile storage is not available right now. Please try again shortly.';
+        const unavailableMessage = 'Profile storage is not available right now. This is a backend configuration issue, not a username conflict.';
         emitProfileSetupSubmitStatus({
           state: 'error',
           message: unavailableMessage
@@ -1819,6 +1993,10 @@ import {
       return;
     }
 
+    if (hasSupabaseRuntimeConfig()) {
+      return;
+    }
+
     if (RUNTIME.authBound && RUNTIME.authSource === 'firebase') return;
 
     const auth = getFirebaseAuth();
@@ -1856,6 +2034,7 @@ import {
     RUNTIME.firebaseReadyBound = true;
 
     document.addEventListener('neuroartan:firebase-ready', () => {
+      if (hasSupabaseRuntimeConfig()) return;
       RUNTIME.authBound = false;
       RUNTIME.authSource = 'none';
       bindAuthState();
@@ -1865,24 +2044,10 @@ import {
   function bindAccountEvents() {
     document.addEventListener('account:entry-request', async (event) => {
       const detail = event instanceof CustomEvent ? event.detail || {} : {};
-      const firebaseUser = getFirebaseAuth()?.currentUser || null;
-
-      if (firebaseUser) {
-        if (isProfileRoute()) {
-          document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-            detail: {
-              section: 'overview'
-            }
-          }));
-          return;
-        }
-
-        redirectToProfile();
-        return;
-      }
 
       try {
-        const supabaseUser = await getSupabaseSessionUser();
+        const supabase = await waitForSupabaseClient();
+        const supabaseUser = supabase ? await getSupabaseSessionUser() : null;
 
         if (supabaseUser) {
           if (isProfileRoute()) {
@@ -1899,6 +2064,24 @@ import {
         }
       } catch (error) {
         console.error('Supabase account entry resolution failed:', error);
+      }
+
+      if (!hasSupabaseRuntimeConfig()) {
+        const firebaseUser = getFirebaseAuth()?.currentUser || null;
+
+        if (firebaseUser) {
+          if (isProfileRoute()) {
+            document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+              detail: {
+                section: 'overview'
+              }
+            }));
+            return;
+          }
+
+          redirectToProfile();
+          return;
+        }
       }
 
       requestGuestAccountEntry(detail);
@@ -1945,12 +2128,14 @@ import {
 
     document.addEventListener('account:sign-out-request', async () => {
       try {
-        const supabase = getSupabaseClient();
+        const supabase = await waitForSupabaseClient();
         if (supabase) {
           const { error } = await supabase.auth.signOut();
           if (error) {
             throw error;
           }
+        } else if (hasSupabaseRuntimeConfig()) {
+          return;
         } else {
           const auth = getFirebaseAuth();
           if (!auth) return;
@@ -1973,18 +2158,21 @@ import {
     });
 
     document.addEventListener('account:profile-refresh-request', async () => {
+      try {
+        const supabase = await waitForSupabaseClient();
+        const supabaseUser = supabase ? await getSupabaseSessionUser() : null;
+        if (!supabaseUser) return;
+        void handleSignedInState(supabaseUser);
+        return;
+      } catch (error) {
+        console.error('Supabase profile refresh failed:', error);
+      }
+
+      if (hasSupabaseRuntimeConfig()) return;
+
       const firebaseUser = getFirebaseAuth()?.currentUser || null;
       if (firebaseUser) {
         void handleSignedInState(firebaseUser);
-        return;
-      }
-
-      try {
-        const supabaseUser = await getSupabaseSessionUser();
-        if (!supabaseUser) return;
-        void handleSignedInState(supabaseUser);
-      } catch (error) {
-        console.error('Supabase profile refresh failed:', error);
       }
     });
 

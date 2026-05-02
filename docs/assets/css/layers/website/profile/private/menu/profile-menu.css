@@ -53,11 +53,11 @@
   content:"";
   position:absolute;
   inset:env(safe-area-inset-top, 0) 0 auto 0;
-  height:3.55rem;
-  background:var(--bg-color);
-  border-bottom:1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  backdrop-filter:blur(8px) saturate(120%);
-  -webkit-backdrop-filter:blur(8px) saturate(120%);
+  height:var(--nav-glass-surface-height);
+  background:var(--nav-glass-surface-bg);
+  border-bottom:var(--border-width-hairline) solid var(--nav-glass-surface-border);
+  backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
+  -webkit-backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
   pointer-events:none;
   z-index:0;
   transition:var(--interaction-transition-control);
@@ -297,7 +297,7 @@
 
 @media (max-width: 760px){
   #profile-menu-mount .home-dashboard-topbar::before{
-    height:3.3rem;
+    height:var(--nav-glass-surface-height-tablet);
   }
 
   #profile-menu-mount .home-dashboard-topbar__inner{

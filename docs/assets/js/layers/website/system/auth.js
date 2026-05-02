@@ -46,6 +46,12 @@
     return window.neuroartanSupabase || null;
   }
 
+  function hasSupabaseRuntimeConfig() {
+    if (typeof window === 'undefined') return false;
+    const supabase = window.NEUROARTAN_CONFIG?.supabase || {};
+    return Boolean(supabase.url && supabase.anonKey);
+  }
+
   /* =============================================================================
      04) FIREBASE FALLBACK STATE
   ============================================================================= */
@@ -233,6 +239,11 @@
       return;
     }
 
+    if (hasSupabaseRuntimeConfig()) {
+      updateSignedOutSurface();
+      return;
+    }
+
     const authInstance = getFirebaseAuth();
     if (!authInstance) {
       updateSignedOutSurface();
@@ -330,7 +341,7 @@
     if (supabaseReadyEventsBound) return;
     supabaseReadyEventsBound = true;
 
-    document.addEventListener('neuroartan:supabase-ready', () => {
+    window.addEventListener('neuroartan:supabase-ready', () => {
       authBound = false;
       authSource = 'none';
       bindAuthState();
@@ -342,12 +353,13 @@
     firebaseReadyEventsBound = true;
 
     document.addEventListener('neuroartan:firebase-ready', () => {
+      if (hasSupabaseRuntimeConfig()) return;
       authBound = false;
       authSource = 'none';
       bindAuthState();
     });
 
-    document.addEventListener('neuroartan:supabase-ready', () => {
+    window.addEventListener('neuroartan:supabase-ready', () => {
       authBound = false;
       authSource = 'none';
       bindAuthState();

@@ -49,6 +49,11 @@ function compactParts(parts = [], separator = '-') {
     .join(separator);
 }
 
+function resolveSuggestionSeparator(options = {}) {
+  const separator = String(options?.policy?.suggestions?.separator || options.separator || '.').trim();
+  return separator === '_' ? '_' : '.';
+}
+
 function numericSuffixes(seed = '') {
   const base = String(seed || '').replace(/\D/g, '');
   const year = new Date().getFullYear();
@@ -90,26 +95,27 @@ export function getUsernameSuggestionSources(values = {}) {
 /* =============================================================================
    05) CANDIDATE BUILDERS
 ============================================================================= */
-export function buildUsernameCandidates(values = {}) {
+export function buildUsernameCandidates(values = {}, options = {}) {
   const sources = getUsernameSuggestionSources(values);
+  const separator = resolveSuggestionSeparator(options);
   const suffixes = numericSuffixes(`${sources.emailSource}${sources.firstName}${sources.lastName}`);
   const baseCandidates = uniqueList([
     sources.username,
     sources.emailSource,
     sources.displayName,
-    compactParts([sources.firstName, sources.lastName]),
+    compactParts([sources.firstName, sources.lastName], separator),
     compactParts([sources.firstName, sources.lastName], '.'),
     compactParts([sources.firstName, sources.lastName], '_'),
     compactParts([sources.firstName, sources.lastName], ''),
-    compactParts([sources.displayName, sources.firstName]),
-    compactParts([sources.emailSource, sources.firstName])
+    compactParts([sources.displayName, sources.firstName], separator),
+    compactParts([sources.emailSource, sources.firstName], separator)
   ]);
 
   const suffixedCandidates = [];
   baseCandidates.forEach((candidate) => {
     suffixes.forEach((suffix) => {
       suffixedCandidates.push(`${candidate}${suffix}`);
-      suffixedCandidates.push(`${candidate}-${suffix}`);
+      suffixedCandidates.push(`${candidate}${separator}${suffix}`);
     });
   });
 
@@ -124,7 +130,7 @@ export function buildUsernameCandidates(values = {}) {
 ============================================================================= */
 export async function suggestAccountUsernames(values = {}, options = {}) {
   const maxSuggestions = Number(options.maxSuggestions || 6);
-  const candidates = buildUsernameCandidates(values);
+  const candidates = buildUsernameCandidates(values, options);
   const suggestions = [];
 
   for (const candidate of candidates) {
@@ -154,7 +160,7 @@ export async function suggestAvailableAccountUsernames(values = {}, options = {}
   }
 
   const maxSuggestions = Number(options.maxSuggestions || 6);
-  const candidates = buildUsernameCandidates(values);
+  const candidates = buildUsernameCandidates(values, options);
   const suggestions = [];
 
   for (const candidate of candidates) {

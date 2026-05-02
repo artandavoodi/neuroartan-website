@@ -65,7 +65,7 @@ function shouldSkipHover(el) {
 
   return Boolean(
     el.closest(
-      '#institutional-menu, .institutional-menu, .institutional-menu-panels, .institutional-menu-nav, .institutional-menu-utility'
+      '#institutional-menu, .institutional-menu, .institutional-menu-panels, .institutional-menu-nav, .institutional-menu-utility, #home-platform-shell, .home-platform-shell'
     )
   );
 }
@@ -87,7 +87,6 @@ export function initHoverPrimitive(root = document) {
 
     el.dataset.letterified = 'true';
     el.style.transition = 'color 220ms ease, opacity 220ms ease';
-    el.style.transformOrigin = 'center center';
 
     el.addEventListener(
       'mouseenter',

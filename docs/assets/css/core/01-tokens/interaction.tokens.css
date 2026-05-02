@@ -17,6 +17,7 @@
    15) DIALOG / CONSENT OVERLAY TOKENS
    16) FEEDBACK EFFECT TOKENS
    17) NAVIGATION EFFECT TOKENS
+   17A) INTERACTIVE ICON STROKE TOKENS
    18) CONTROL EFFECT TOKENS
    18A) COMPOSER / PROMPT SURFACE TOKENS
    19) PROFILE EFFECT TOKENS
@@ -493,6 +494,9 @@
   --nav-hover-opacity:var(--state-opacity-hover-strong);
   --nav-hover-bg:transparent;
   --nav-hover-transform:var(--hover-transform-none);
+  --nav-hover-text-only-bg:transparent;
+  --nav-hover-text-only-border:transparent;
+  --nav-hover-text-only-color:var(--hover-text-color);
   --nav-active-text-color:var(--selected-text-color);
   --nav-active-indicator-color:var(--selected-indicator-color);
   --nav-active-indicator-opacity:var(--selected-indicator-opacity);
@@ -500,8 +504,26 @@
   /* Local navigation and tabs. */
   --local-nav-hover-text-color:var(--hover-text-color);
   --local-nav-hover-opacity:var(--state-opacity-hover-strong);
+  --local-nav-hover-text-only-bg:var(--nav-hover-text-only-bg);
+  --local-nav-hover-text-only-border:var(--nav-hover-text-only-border);
+  --local-nav-hover-text-only-color:var(--nav-hover-text-only-color);
   --local-nav-active-text-color:var(--selected-text-color);
   --local-nav-active-indicator-color:var(--selected-indicator-color);
+}
+
+/* =============================================================================
+   17A) INTERACTIVE ICON STROKE TOKENS
+============================================================================= */
+:root{
+  /* Shared stroke-width states for line-based SVG icons that consume currentColor and CSS stroke tokens. */
+  --interactive-icon-stroke-width:0;
+  --interactive-icon-stroke-width-hover:var(--interactive-icon-stroke-width);
+  --interactive-icon-stroke-width-active:1.5;
+  --interactive-icon-stroke-width-selected:var(--interactive-icon-stroke-width-active);
+  --interactive-icon-stroke-width-current:var(--interactive-icon-stroke-width-active);
+  --interactive-icon-stroke-width-disabled:var(--interactive-icon-stroke-width);
+  --interactive-icon-stroke-transition:none;
+  --interactive-icon-transform:none;
 }
 
 /* =============================================================================

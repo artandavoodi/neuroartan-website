@@ -17,14 +17,14 @@
    01) PRODUCTS LOCAL NAV TOKENS
 ============================================================================= */
 :root{
-  --products-local-nav-height:3.55rem;
+  --products-local-nav-height:var(--nav-glass-surface-height);
   --products-local-nav-transition:320ms var(--interaction-ease-standard);
   --products-local-nav-motion-fast:220ms;
-  --products-local-nav-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
+  --products-local-nav-surface-bg:var(--nav-glass-surface-bg);
   --products-local-nav-surface-border:var(--border-color);
-  --products-local-nav-surface-shadow:none;
-  --products-local-nav-surface-blur:var(--effect-blur-sm);
-  --products-local-nav-surface-saturate:120%;
+  --products-local-nav-surface-shadow:var(--nav-glass-surface-shadow);
+  --products-local-nav-surface-blur:var(--nav-glass-surface-blur);
+  --products-local-nav-surface-saturate:var(--nav-glass-surface-saturate);
   --products-local-nav-label-color:var(--text-primary-color);
   --products-local-nav-link-color:var(--nav-local-color);
   --products-local-nav-link-hover-color:var(--local-nav-hover-text-color);
@@ -38,9 +38,9 @@
 }
 
 html[data-theme-effective="light"]{
-  --products-local-nav-surface-bg:color-mix(in srgb, var(--surface-color) 26%, transparent);
+  --products-local-nav-surface-bg:var(--nav-glass-surface-bg-light);
   --products-local-nav-surface-border:var(--border-color);
-  --products-local-nav-surface-shadow:none;
+  --products-local-nav-surface-shadow:var(--nav-glass-surface-shadow);
 }
 
 /* =============================================================================

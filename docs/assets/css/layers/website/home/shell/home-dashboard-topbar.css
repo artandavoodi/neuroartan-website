@@ -27,11 +27,11 @@
   content:"";
   position:absolute;
   inset:env(safe-area-inset-top, 0) 0 auto 0;
-  height:3.55rem;
-  background:var(--home-ribbon-surface);
+  height:var(--nav-glass-surface-height);
+  background:var(--nav-glass-surface-bg);
   border-bottom:var(--border-width-hairline) solid var(--border-color);
-  backdrop-filter:blur(8px) saturate(120%);
-  -webkit-backdrop-filter:blur(8px) saturate(120%);
+  backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
+  -webkit-backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
   pointer-events:none;
   z-index:0;
   transition:var(--interaction-transition-control);
@@ -273,7 +273,7 @@
 
 @media (max-width: 760px){
   .home-dashboard-topbar::before{
-    height:3.3rem;
+    height:var(--nav-glass-surface-height-tablet);
   }
 
   .home-dashboard-topbar__inner{

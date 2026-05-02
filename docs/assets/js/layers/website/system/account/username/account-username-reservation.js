@@ -33,7 +33,7 @@ function getSupabaseClient() {
    03) TABLE CONTRACT
 ============================================================================= */
 const USERNAME_RESERVATIONS_TABLE = 'username_reservations';
-const USERNAME_RESERVATION_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, profile_id, reservation_status, claimed_at, updated_at';
+const USERNAME_RESERVATION_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, profile_id, reservation_status';
 
 /* =============================================================================
    04) ERROR HELPERS
@@ -51,6 +51,52 @@ export function isUsernameReservationTableMissing(error) {
     || details.includes('could not find the table')
     || (details.includes('relation') && details.includes('does not exist'))
   );
+}
+
+export function isUsernameReservationColumnMissing(error) {
+  const code = String(error?.code || '').trim();
+  const message = String(error?.message || '').toLowerCase();
+  const details = String(error?.details || '').toLowerCase();
+
+  return (
+    code === '42703'
+    || code === 'PGRST204'
+    || message.includes('could not find')
+    || message.includes('does not exist')
+    || details.includes('could not find')
+    || details.includes('does not exist')
+  );
+}
+
+function getUsernameReservationMissingColumnName(error) {
+  const message = String(error?.message || error?.details || '');
+  const quotedColumn = message.match(/'([^']+)' column of 'username_reservations'/i);
+  if (quotedColumn?.[1]) return quotedColumn[1];
+
+  const relationColumn = message.match(/column\s+username_reservations\.([a-z0-9_]+)\s+does not exist/i);
+  if (relationColumn?.[1]) return relationColumn[1];
+
+  const genericColumn = message.match(/column\s+"?([a-z0-9_]+)"?\s+does not exist/i);
+  return genericColumn?.[1] || '';
+}
+
+function pruneMissingUsernameReservationColumn(payload, error) {
+  const column = getUsernameReservationMissingColumnName(error);
+  if (!column || !Object.prototype.hasOwnProperty.call(payload, column)) {
+    return {
+      pruned:false,
+      payload
+    };
+  }
+
+  const nextPayload = { ...payload };
+  delete nextPayload[column];
+
+  console.warn(`[account-username-reservation] Removed unsupported Supabase username_reservations column: ${column}`);
+  return {
+    pruned:true,
+    payload:nextPayload
+  };
 }
 
 export function buildReservationUnavailableResult(username = '') {
@@ -177,22 +223,41 @@ export async function reserveUsername({
   };
 
   try {
-    const { data, error } = await supabase
-      .from(USERNAME_RESERVATIONS_TABLE)
-      .upsert(payload, { onConflict:'username_lower' })
-      .select(USERNAME_RESERVATION_SELECT_FIELDS)
-      .maybeSingle();
+    let activePayload = { ...payload };
 
-    if (error) throw error;
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const { data, error } = await supabase
+        .from(USERNAME_RESERVATIONS_TABLE)
+        .upsert(activePayload, { onConflict:'username_lower' })
+        .select(USERNAME_RESERVATION_SELECT_FIELDS)
+        .maybeSingle();
 
-    return {
-      ok:true,
-      reserved:true,
-      normalized,
-      reservation:data || payload,
-      source:'username_reservations',
-      message:'Username reserved.'
-    };
+      if (!error) {
+        return {
+          ok:true,
+          reserved:true,
+          normalized,
+          reservation:data || activePayload,
+          source:'username_reservations',
+          message:'Username reserved.'
+        };
+      }
+
+      if (!isUsernameReservationColumnMissing(error)) {
+        throw error;
+      }
+
+      const pruned = pruneMissingUsernameReservationColumn(activePayload, error);
+      if (!pruned.pruned) {
+        throw error;
+      }
+
+      activePayload = pruned.payload;
+    }
+
+    const error = new Error('USERNAME_RESERVATION_SCHEMA_PRUNE_LIMIT_REACHED');
+    error.code = 'USERNAME_RESERVATION_SCHEMA_PRUNE_LIMIT_REACHED';
+    throw error;
   } catch (error) {
     if (allowMissingTable && isUsernameReservationTableMissing(error)) {
       return {
@@ -222,6 +287,7 @@ export const ACCOUNT_USERNAME_RESERVATION_META = Object.freeze({
 if (typeof window !== 'undefined') {
   window.NeuroartanAccountUsernameReservation = Object.freeze({
     isUsernameReservationTableMissing,
+    isUsernameReservationColumnMissing,
     getUsernameReservation,
     checkUsernameReservationAvailability,
     reserveUsername

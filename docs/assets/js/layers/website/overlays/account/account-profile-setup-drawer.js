@@ -35,6 +35,7 @@ import {
   const MODULE_PATH = '/website/docs/assets/js/layers/website/overlays/account/account-profile-setup-drawer.js';
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
   const USERNAME_STATUS_EVENT = 'account:profile-setup-username-status';
+  const USERNAME_SUGGESTIONS_EVENT = 'account:profile-setup-username-suggestions';
 
   /* =============================================================================
      02) STATE
@@ -147,6 +148,14 @@ import {
     return q('[data-account-profile-setup-username-status]', getDrawer() || document);
   }
 
+  function getUsernameSuggestions() {
+    return q('[data-account-profile-setup-username-suggestions]', getDrawer() || document);
+  }
+
+  function getUsernameSuggestionList() {
+    return q('[data-account-profile-setup-username-suggestion-list]', getDrawer() || document);
+  }
+
   function setUsernameStatus(statusKey, text) {
     const status = getUsernameStatus();
     if (!status) return;
@@ -178,6 +187,30 @@ import {
 
     node.dataset.accountProfileSetupSubmitStatus = statusKey;
     node.textContent = text;
+  }
+
+  function renderUsernameSuggestions(suggestions = []) {
+    const shell = getUsernameSuggestions();
+    const list = getUsernameSuggestionList();
+    if (!(shell instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+    const normalizedSuggestions = Array.isArray(suggestions)
+      ? suggestions
+        .map((entry) => String(entry?.username || entry || '').trim())
+        .filter(Boolean)
+      : [];
+
+    list.replaceChildren();
+    shell.hidden = normalizedSuggestions.length === 0;
+
+    normalizedSuggestions.forEach((username) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'account-profile-setup-drawer-username-suggestion';
+      button.dataset.accountProfileSetupUsernameSuggestion = username;
+      button.textContent = `@${username}`;
+      list.appendChild(button);
+    });
   }
 
   function setFieldValue(field, value, options = {}) {
@@ -344,6 +377,10 @@ import {
         source: MODULE_ID,
         username: state.username,
         raw_username: getUsernameInput()?.value || '',
+        email: getHiddenEmailInput()?.value || '',
+        first_name: getFirstNameInput()?.value || '',
+        last_name: getLastNameInput()?.value || '',
+        display_name: getDisplayNameInput()?.value || '',
         method: state.method,
         provider: state.provider
       }
@@ -387,6 +424,17 @@ import {
         detail.state || (state.username ? 'draft' : 'idle'),
         typeof detail.message === 'string' ? detail.message : undefined
       );
+    });
+
+    document.addEventListener(USERNAME_SUGGESTIONS_EVENT, (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      const normalized = normalizeUsernamePreview(detail.normalized || detail.username || '');
+
+      if (normalized && normalized !== state.username) {
+        return;
+      }
+
+      renderUsernameSuggestions(detail.suggestions || []);
     });
   }
 
@@ -673,6 +721,23 @@ import {
             username: state.username
           }
         }));
+      }
+
+      const suggestionControl = event.target instanceof Element
+        ? event.target.closest('[data-account-profile-setup-username-suggestion]')
+        : null;
+
+      if (suggestionControl) {
+        event.preventDefault();
+        event.stopPropagation();
+        const username = suggestionControl.getAttribute('data-account-profile-setup-username-suggestion') || '';
+        const usernameInput = getUsernameInput();
+        if (usernameInput instanceof HTMLInputElement) {
+          usernameInput.value = username;
+          syncUsernamePreview();
+          emitUsernameChange();
+          usernameInput.focus();
+        }
       }
     });
 

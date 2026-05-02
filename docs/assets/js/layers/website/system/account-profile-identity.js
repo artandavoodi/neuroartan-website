@@ -205,17 +205,13 @@ export async function getSupabaseProfileByAuthUserId({
   const normalizedAuthUserId = normalizeString(authUserId);
   if (!supabase || !normalizedAuthUserId) return null;
 
-  const { data, error } = await supabase
-    .from(SUPABASE_PROFILES_TABLE)
-    .select(SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS)
-    .eq('auth_user_id', normalizedAuthUserId)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  return data || null;
+  return maybeSingleSupabaseProfile((selectFields) => (
+    supabase
+      .from(SUPABASE_PROFILES_TABLE)
+      .select(selectFields)
+      .eq('auth_user_id', normalizedAuthUserId)
+      .maybeSingle()
+  ));
 }
 
 export async function getSupabaseProfileByUsername({
@@ -226,17 +222,13 @@ export async function getSupabaseProfileByUsername({
   const normalizedUsername = normalizeUsername(username);
   if (!supabase || !normalizedUsername) return null;
 
-  const { data, error } = await supabase
-    .from(SUPABASE_PROFILES_TABLE)
-    .select(selectFields)
-    .eq('username_lower', normalizedUsername)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  return data || null;
+  return maybeSingleSupabaseProfile((activeSelectFields) => (
+    supabase
+      .from(SUPABASE_PROFILES_TABLE)
+      .select(activeSelectFields)
+      .eq('username_lower', normalizedUsername)
+      .maybeSingle()
+  ), selectFields);
 }
 
 export async function getSupabaseUsernameReservation({
@@ -289,6 +281,98 @@ function isSupabaseColumnMissingError(error) {
     || details.includes('column') && details.includes('does not exist')
     || details.includes('could not find') && details.includes('column')
   );
+}
+
+function getSupabaseMissingColumnName(error) {
+  const message = normalizeString(error?.message || error?.details || '');
+  const quotedColumn = message.match(/'([^']+)' column of 'profiles'/i);
+  if (quotedColumn?.[1]) return quotedColumn[1];
+
+  const missingColumn = message.match(/column\s+profiles\.([a-z0-9_]+)\s+does not exist/i);
+  if (missingColumn?.[1]) return missingColumn[1];
+
+  const genericColumn = message.match(/column\s+\"?([a-z0-9_]+)\"?\s+does not exist/i);
+  return genericColumn?.[1] || '';
+}
+
+function pruneMissingSupabaseProfileColumn(payload, error) {
+  const column = getSupabaseMissingColumnName(error);
+  if (!column || !Object.prototype.hasOwnProperty.call(payload, column)) {
+    return {
+      pruned:false,
+      payload
+    };
+  }
+
+  const nextPayload = { ...payload };
+  delete nextPayload[column];
+
+  console.warn(`[account-profile-identity] Removed unsupported Supabase profile column: ${column}`);
+  return {
+    pruned:true,
+    payload:nextPayload
+  };
+}
+
+async function maybeSingleSupabaseProfile(queryFactory, selectFields = SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS) {
+  const primary = await queryFactory(selectFields);
+  if (!primary.error) return primary.data || null;
+
+  if (!isSupabaseColumnMissingError(primary.error) || selectFields === '*') {
+    throw primary.error;
+  }
+
+  console.warn('[account-profile-identity] Profile select contract is ahead of deployed Supabase schema; retrying with deployed columns.', primary.error);
+  const fallback = await queryFactory('*');
+  if (fallback.error) {
+    throw fallback.error;
+  }
+
+  return fallback.data || null;
+}
+
+async function mutateSupabaseProfileWithSchemaContract({
+  supabase,
+  existingProfileId = '',
+  payload
+} = {}) {
+  let activePayload = { ...payload };
+
+  for (let attempt = 0; attempt < 32; attempt += 1) {
+    const query = existingProfileId
+      ? supabase
+        .from(SUPABASE_PROFILES_TABLE)
+        .update(activePayload)
+        .eq('id', existingProfileId)
+        .select('*')
+        .single()
+      : supabase
+        .from(SUPABASE_PROFILES_TABLE)
+        .insert({
+          ...activePayload,
+          created_at: new Date().toISOString()
+        })
+        .select('*')
+        .single();
+
+    const { data, error } = await query;
+    if (!error) return data || null;
+
+    if (!isSupabaseColumnMissingError(error)) {
+      throw error;
+    }
+
+    const pruned = pruneMissingSupabaseProfileColumn(activePayload, error);
+    if (!pruned.pruned) {
+      throw error;
+    }
+
+    activePayload = pruned.payload;
+  }
+
+  const error = new Error('PROFILE_SCHEMA_PRUNE_LIMIT_REACHED');
+  error.code = 'PROFILE_SCHEMA_PRUNE_LIMIT_REACHED';
+  throw error;
 }
 
 async function getOptionalSupabaseProfileByUsername(options = {}) {
@@ -508,26 +592,11 @@ export async function reserveSupabaseUsernameProfile({
     updated_at: new Date().toISOString()
   };
 
-  const profileQuery = existingProfile?.id
-    ? supabase
-      .from(SUPABASE_PROFILES_TABLE)
-      .update(profilePayload)
-      .eq('id', existingProfile.id)
-      .select(SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS)
-      .single()
-    : supabase
-      .from(SUPABASE_PROFILES_TABLE)
-      .insert({
-        ...profilePayload,
-        created_at: new Date().toISOString()
-      })
-      .select(SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS)
-      .single();
-
-  const { data: profile, error: profileError } = await profileQuery;
-  if (profileError) {
-    throw profileError;
-  }
+  const profile = await mutateSupabaseProfileWithSchemaContract({
+    supabase,
+    existingProfileId:existingProfile?.id || '',
+    payload:profilePayload
+  });
 
   await reserveModularUsername({
     supabase,
@@ -924,6 +993,8 @@ export function buildUsernameStatus(state, username, policy = getProfileIdentity
       return `Restricted · ${routeDisplay}`;
     case 'unavailable':
       return `Unavailable · ${routeDisplay}`;
+    case 'validation-unavailable':
+      return `Username validation is temporarily unavailable · ${routeDisplay}`;
     default:
       return routeDisplay;
   }
@@ -1094,21 +1165,32 @@ export async function getUsernameAvailability({
   }
 
   if (supabase) {
-    return getSupabaseUsernameAvailability({
-      supabase,
-      username:localValidation.normalized,
-      currentAuthUserId,
-      policy:resolvedPolicy
-    });
+    try {
+      return await getSupabaseUsernameAvailability({
+        supabase,
+        username:localValidation.normalized,
+        currentAuthUserId,
+        policy:resolvedPolicy
+      });
+    } catch (error) {
+      console.error('[account-profile-identity] Supabase username availability failed.', error);
+      return {
+        ok: false,
+        normalized: localValidation.normalized,
+        state: 'validation-unavailable',
+        code: 'PROFILE_STORE_UNAVAILABLE',
+        message: buildUsernameStatus('validation-unavailable', localValidation.normalized, resolvedPolicy)
+      };
+    }
   }
 
   if (!firestore) {
     return {
       ok: false,
       normalized: localValidation.normalized,
-      state: 'unavailable',
+      state: 'validation-unavailable',
       code: 'PROFILE_STORE_UNAVAILABLE',
-      message: buildUsernameStatus('unavailable', localValidation.normalized, resolvedPolicy)
+      message: buildUsernameStatus('validation-unavailable', localValidation.normalized, resolvedPolicy)
     };
   }
 

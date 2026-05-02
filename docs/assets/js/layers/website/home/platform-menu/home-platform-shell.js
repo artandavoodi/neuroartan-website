@@ -101,6 +101,10 @@ function getHomePlatformShellRailToggleIcon() {
   return document.querySelector('[data-home-platform-rail-toggle-icon]');
 }
 
+function getHomePlatformShellRailToggleIconHost() {
+  return document.querySelector('#home-platform-shell .home-platform-shell__rail-toggle-icon[data-inline-stroke-icon]');
+}
+
 function getHomePlatformShellNavItems() {
   return Array.from(document.querySelectorAll('#home-platform-shell .home-platform-shell__nav-item[data-home-platform-destination]'));
 }
@@ -420,6 +424,7 @@ function loadHomePlatformModule(path) {
 
   return HOME_PLATFORM_SHELL_STATE.moduleCache.get(path);
 }
+
 
 /* =============================================================================
 06) CONTENT HELPERS
@@ -756,14 +761,36 @@ function syncHomePlatformRailMode(mode = HOME_PLATFORM_SHELL_STATE.railMode) {
     toggle.setAttribute('aria-label', isExpanded ? 'Collapse navigation rail' : 'Expand navigation rail');
   }
 
+  const toggleIconHost = getHomePlatformShellRailToggleIconHost();
   const toggleIcon = getHomePlatformShellRailToggleIcon();
-  if (toggleIcon instanceof HTMLImageElement) {
-    const expandedIcon = normalizeString(toggleIcon.getAttribute('data-home-platform-rail-icon-expanded'));
-    const collapsedIcon = normalizeString(toggleIcon.getAttribute('data-home-platform-rail-icon-collapsed'));
-    const nextIcon = normalized === 'expanded' ? expandedIcon : collapsedIcon;
+  const expandedIcon = normalizeString(
+    toggleIconHost?.getAttribute('data-home-platform-rail-icon-expanded')
+    || toggleIcon?.getAttribute('data-home-platform-rail-icon-expanded')
+    || ''
+  );
+  const collapsedIcon = normalizeString(
+    toggleIconHost?.getAttribute('data-home-platform-rail-icon-collapsed')
+    || toggleIcon?.getAttribute('data-home-platform-rail-icon-collapsed')
+    || ''
+  );
+  const nextIcon = normalized === 'expanded' ? expandedIcon : collapsedIcon;
 
-    if (nextIcon) {
-      toggleIcon.src = nextIcon;
+  if (toggleIconHost && expandedIcon && collapsedIcon) {
+    toggleIconHost.setAttribute('data-home-platform-rail-icon-expanded', expandedIcon);
+    toggleIconHost.setAttribute('data-home-platform-rail-icon-collapsed', collapsedIcon);
+  }
+
+  if (toggleIconHost && nextIcon) {
+    const currentIcon = normalizeString(toggleIconHost.getAttribute('data-home-platform-rail-current-icon') || '');
+    if (currentIcon !== nextIcon) {
+      toggleIconHost.setAttribute('data-home-platform-rail-current-icon', nextIcon);
+      toggleIconHost.innerHTML = `<img class="ui-icon-theme-aware" src="${nextIcon}" alt="" data-home-platform-rail-toggle-icon data-home-platform-rail-icon-expanded="${expandedIcon}" data-home-platform-rail-icon-collapsed="${collapsedIcon}">`;
+      window.dispatchEvent(new CustomEvent('fragment:mounted', {
+        detail: {
+          name: 'home-platform-rail-toggle-icon',
+          root: toggleIconHost,
+        },
+      }));
     }
   }
 }
@@ -1022,6 +1049,7 @@ function resolveHomePlatformSubnavTriggerFromPoint(event) {
   return null;
 }
 
+
 function activateHomePlatformSubnavTrigger(target, event = null) {
   const eventTarget = getEventElementTarget(target);
   const subnavTrigger = (
@@ -1049,8 +1077,32 @@ function activateHomePlatformSubnavTrigger(target, event = null) {
   return true;
 }
 
+function activateHomePlatformLinkTrigger(target) {
+  const eventTarget = getEventElementTarget(target);
+  const linkTrigger = eventTarget
+    ? eventTarget.closest('#home-platform-shell .home-platform-shell__nav-item[data-home-platform-link-href]')
+    : null;
+
+  if (!linkTrigger) {
+    return false;
+  }
+
+  const href = normalizeString(linkTrigger.getAttribute('data-home-platform-link-href') || '');
+  if (!href) {
+    return true;
+  }
+
+  closeHomePlatformShell();
+  window.location.href = href;
+  return true;
+}
+
 function handleHomePlatformShellActivationEvent(event) {
-  if (activateHomePlatformSubnavTrigger(event.target, event) || activateHomePlatformNavTrigger(event.target)) {
+  if (
+    activateHomePlatformLinkTrigger(event.target)
+    || activateHomePlatformSubnavTrigger(event.target, event)
+    || activateHomePlatformNavTrigger(event.target)
+  ) {
     event.preventDefault();
     event.stopPropagation();
   }
@@ -1092,6 +1144,11 @@ function bindHomePlatformShellEvents() {
     if (railToggleTrigger) {
       event.preventDefault();
       toggleHomePlatformRailMode();
+      return;
+    }
+
+    if (activateHomePlatformLinkTrigger(eventTarget)) {
+      event.preventDefault();
       return;
     }
 
@@ -1188,15 +1245,6 @@ function bindHomePlatformShellStaticControls() {
     });
   }
 
-  const railToggleTrigger = root.querySelector('[data-home-platform-shell-rail-toggle]');
-  if (railToggleTrigger instanceof HTMLElement && railToggleTrigger.dataset.homePlatformDirectBound !== 'true') {
-    railToggleTrigger.dataset.homePlatformDirectBound = 'true';
-    railToggleTrigger.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleHomePlatformRailMode();
-    });
-  }
 
   getHomePlatformShellNavItems().forEach((trigger) => {
     if (!(trigger instanceof HTMLElement)) return;
@@ -1222,6 +1270,12 @@ function bootHomePlatformShell() {
   HOME_PLATFORM_SHELL_STATE.railMode = loadHomePlatformRailMode();
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   syncHomePlatformCommunicationIndicators(HOME_PLATFORM_SHELL_STATE.snapshot);
+  window.dispatchEvent(new CustomEvent('fragment:mounted', {
+    detail: {
+      name: 'home-platform-shell-icons',
+      root: getHomePlatformShellRoot(),
+    },
+  }));
 
   void ensureHomePlatformConfig().then(() => {
     syncHomePlatformShellNav(HOME_PLATFORM_SHELL_STATE.activeDestination);

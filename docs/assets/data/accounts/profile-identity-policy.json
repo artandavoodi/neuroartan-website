@@ -53,8 +53,8 @@
   "minimum_eligible_age_review_status": "provisional_pending_legal_review",
   "username": {
     "min_length": 3,
-    "max_length": 24,
-    "allowed_pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+    "max_length": 32,
+    "allowed_pattern": "^[a-z0-9][a-z0-9.]*[a-z0-9]$",
     "reserved_exact": [
       "account",
       "admin",

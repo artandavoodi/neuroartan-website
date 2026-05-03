@@ -5,11 +5,12 @@
    03. ACTIVE DESCRIPTION PROPAGATION
    04. SECTION NAVIGATION
    05. NESTED PANEL NAVIGATION
-   06. SETTING CONTROLS
-   07. PANEL LIFECYCLE
-   08. SHELL DELEGATION
-   09. GLOBAL TRIGGERS
-   10. BOOT
+   06. SETTING ACTIONS
+   07. SETTING CONTROLS
+   08. PANEL LIFECYCLE
+   09. SHELL DELEGATION
+   10. GLOBAL TRIGGERS
+   11. BOOT
    ========================================================= */
 
 /* =========================================================
@@ -253,7 +254,61 @@ async function closeHomeInteractionSettingsNestedPanel() {
 }
 
 /* =========================================================
-   06. SETTING CONTROLS
+   06. SETTING ACTIONS
+   ========================================================= */
+const HOME_INTERACTION_SETTINGS_ACTIONS = {
+  'developer-mode': ({ control, isEnabled }) => {
+    control.dispatchEvent(new CustomEvent('home-interaction-setting:changed', {
+      bubbles: true,
+      detail: {
+        setting: 'developer-mode',
+        value: isEnabled ? 'enabled' : 'disabled',
+        source: 'home-interaction-settings-shell',
+      },
+    }));
+  },
+};
+
+function runHomeInteractionSettingAction(control) {
+  if (!control) return;
+
+  const settingName = control.dataset.homeInteractionSetting;
+  const action = HOME_INTERACTION_SETTINGS_ACTIONS[settingName];
+
+  if (typeof action !== 'function') return;
+
+  action({
+    control,
+    isEnabled: control.dataset.homeInteractionSettingValue === 'enabled' || control.getAttribute('aria-pressed') === 'true',
+  });
+}
+
+function resolveHomeInteractionSettingsControl(target) {
+  if (!(target instanceof Element)) return null;
+
+  const toggleControl = target.closest('[data-home-interaction-toggle-control]');
+
+  if (toggleControl) {
+    const toggleRow = toggleControl.closest('.home-interaction-settings-panel__toggle-row');
+
+    if (toggleRow instanceof HTMLElement) {
+      const settingName = toggleControl.dataset.homeInteractionSetting;
+      const settingValue = toggleControl.dataset.homeInteractionSettingValue;
+
+      if (settingName) toggleRow.dataset.homeInteractionSetting = settingName;
+      if (settingValue) toggleRow.dataset.homeInteractionSettingValue = settingValue;
+
+      return toggleRow;
+    }
+  }
+
+  const settingControl = target.closest('[data-home-interaction-setting]');
+
+  return settingControl instanceof HTMLElement ? settingControl : null;
+}
+
+/* =========================================================
+   07. SETTING CONTROLS
    ========================================================= */
 function syncHomeInteractionSettingsControl(control) {
   if (!control) return;
@@ -263,8 +318,16 @@ function syncHomeInteractionSettingsControl(control) {
 
   if (isToggle) {
     const nextPressed = control.getAttribute('aria-pressed') !== 'true';
+    const toggleButton = control.querySelector('[data-home-interaction-toggle-control]');
+
     control.setAttribute('aria-pressed', String(nextPressed));
     control.dataset.homeInteractionSettingValue = nextPressed ? 'enabled' : 'disabled';
+
+    if (toggleButton instanceof HTMLElement) {
+      toggleButton.setAttribute('aria-pressed', String(nextPressed));
+      toggleButton.dataset.homeInteractionSettingValue = nextPressed ? 'enabled' : 'disabled';
+    }
+
     return;
   }
 
@@ -279,7 +342,7 @@ function syncHomeInteractionSettingsControl(control) {
 }
 
 /* =========================================================
-   07. PANEL LIFECYCLE
+   08. PANEL LIFECYCLE
    ========================================================= */
 function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) {
   const nodes = getHomeInteractionSettingsShellNodes();
@@ -331,7 +394,7 @@ function bindHomeInteractionSettingsShell() {
 }
 
 /* =========================================================
-   08. SHELL DELEGATION
+   09. SHELL DELEGATION
    ========================================================= */
 function handleHomeInteractionSettingsShellClick(event) {
   const target = event.target instanceof Element ? event.target : null;
@@ -378,7 +441,7 @@ function handleHomeInteractionSettingsShellClick(event) {
     return true;
   }
 
-  const control = target.closest('[data-home-interaction-setting]');
+  const control = resolveHomeInteractionSettingsControl(target);
 
   if (control?.closest?.('[data-ui-radio-list]')) {
     return false;
@@ -395,6 +458,7 @@ function handleHomeInteractionSettingsShellClick(event) {
     event.preventDefault();
     event.stopPropagation();
     syncHomeInteractionSettingsControl(control);
+    runHomeInteractionSettingAction(control);
     return true;
   }
 
@@ -402,7 +466,7 @@ function handleHomeInteractionSettingsShellClick(event) {
 }
 
 /* =========================================================
-   09. GLOBAL TRIGGERS
+   10. GLOBAL TRIGGERS
    ========================================================= */
 function bindHomeInteractionSettingsGlobalTriggers() {
   if (HOME_INTERACTION_SETTINGS_SHELL_STATE.isGlobalBound) return;
@@ -470,7 +534,7 @@ function bindHomeInteractionSettingsGlobalTriggers() {
 }
 
 /* =========================================================
-   10. BOOT
+   11. BOOT
    ========================================================= */
 function bootHomeInteractionSettingsShell() {
   bindHomeInteractionSettingsGlobalTriggers();

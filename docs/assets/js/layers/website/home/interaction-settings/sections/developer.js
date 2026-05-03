@@ -65,10 +65,8 @@ function bootDeveloperSettingsSection() {
   void renderDeveloperSettingsSection(root);
 }
 
-document.addEventListener('fragment:mounted', (event) => {
-  if (event?.detail?.fragment === 'home-interaction-settings-developer' || event?.detail?.name === 'home-interaction-settings-developer') {
-    bootDeveloperSettingsSection();
-  }
+document.addEventListener('fragment:mounted', () => {
+  bootDeveloperSettingsSection();
 });
 
 document.addEventListener('neuroartan:runtime-ready', bootDeveloperSettingsSection);

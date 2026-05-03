@@ -77,7 +77,7 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md"
-  - "/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html"
+  - "/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/interaction-settings-shell.html"
   - "/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css"
   - "/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js"
   - "/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js"
@@ -143,7 +143,7 @@ Documents Read:
 
 - `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
 - `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
-- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/interaction-settings-shell.html`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js`
@@ -177,7 +177,7 @@ Files Modified:
 
 - `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
 - `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
-- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/interaction-settings-shell.html`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css`
 - `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js`

@@ -1,0 +1,52 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) HOMEPAGE DEVELOPER MODE TOPBAR
+     02) DEVELOPER MODE TOPBAR IDENTITY
+     03) DEVELOPER MODE TOPBAR NAVIGATION
+     04) DEVELOPER MODE TOPBAR STATUS
+     05) END OF FILE
+============================================================================= -->
+
+<!-- =============================================================================
+     01) HOMEPAGE DEVELOPER MODE TOPBAR
+============================================================================= -->
+<nav class="home-developer-mode-topbar" data-home-developer-topbar aria-label="Developer Mode topbar">
+  <!-- =============================================================================
+       02) DEVELOPER MODE TOPBAR IDENTITY
+  ============================================================================= -->
+  <div class="home-developer-mode-topbar__identity">
+    <span class="home-developer-mode-topbar__icon" aria-hidden="true">
+      <img class="ui-icon-theme-aware" src="/assets/icons/core/files/unclassified/code.svg" alt="">
+    </span>
+    <span class="home-developer-mode-topbar__label">Developer Mode</span>
+  </div>
+
+  <!-- =============================================================================
+       03) DEVELOPER MODE TOPBAR NAVIGATION
+  ============================================================================= -->
+  <div class="home-developer-mode-topbar__items" data-home-developer-topbar-items role="navigation" aria-label="Developer workspace navigation">
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="projects" aria-pressed="false">Project</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="repositories" aria-pressed="false">Repository</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="agents" aria-pressed="false">Agent</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="command" aria-pressed="true">Prompt</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="scan" aria-pressed="false">Scan</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="debug" aria-pressed="false">Debug</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="review" aria-pressed="false">Review</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="tests" aria-pressed="false">Tests</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="pull-request" aria-pressed="false">Pull request</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="runtime" aria-pressed="false">Runtime</button>
+    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="settings" aria-pressed="false">Settings</button>
+  </div>
+
+  <!-- =============================================================================
+       04) DEVELOPER MODE TOPBAR STATUS
+  ============================================================================= -->
+  <div class="home-developer-mode-topbar__status" data-home-developer-topbar-status aria-live="polite">
+    <span class="home-developer-mode-topbar__status-dot" aria-hidden="true"></span>
+    <span class="home-developer-mode-topbar__status-label">Local session</span>
+  </div>
+</nav>
+
+<!-- =============================================================================
+     05) END OF FILE
+============================================================================= -->

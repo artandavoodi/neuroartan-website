@@ -1,0 +1,157 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) TOPBAR TOKENS
+   02) TOPBAR SURFACE
+   03) IDENTITY
+   04) NAVIGATION ITEMS
+   05) STATUS
+   06) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) TOPBAR TOKENS
+============================================================================= */
+:root{
+  --home-developer-mode-topbar-gap:var(--layout-home-platform-destination-action-gap);
+  --home-developer-mode-topbar-padding-y:var(--spacing-sm);
+  --home-developer-mode-topbar-padding-x:var(--control-padding-x-md);
+  --home-developer-mode-topbar-radius:var(--control-radius-pill);
+  --home-developer-mode-topbar-border:var(--border-width-hairline) solid var(--home-developer-mode-border-color, var(--border-subtle-color));
+  --home-developer-mode-topbar-surface:var(--home-panel-card-surface);
+  --home-developer-mode-topbar-item-surface:transparent;
+  --home-developer-mode-topbar-item-surface-active:var(--surface-2);
+  --home-developer-mode-topbar-item-color:var(--text-secondary-color);
+  --home-developer-mode-topbar-item-color-active:var(--text-primary-color);
+  --home-developer-mode-topbar-item-height:var(--control-height-sm);
+  --home-developer-mode-topbar-item-padding-x:var(--control-padding-x-sm);
+  --home-developer-mode-topbar-icon-size:var(--icon-size-sm);
+  --home-developer-mode-topbar-status-dot-size:var(--spacing-xs);
+}
+
+/* =============================================================================
+   02) TOPBAR SURFACE
+============================================================================= */
+.home-developer-mode-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--home-developer-mode-topbar-gap);
+  width:var(--size-full);
+  padding:var(--home-developer-mode-topbar-padding-y) var(--home-developer-mode-topbar-padding-x);
+  border:var(--home-developer-mode-topbar-border);
+  border-radius:var(--home-developer-mode-topbar-radius);
+  background:var(--home-developer-mode-topbar-surface);
+  color:var(--text-primary-color);
+}
+
+/* =============================================================================
+   03) IDENTITY
+============================================================================= */
+.home-developer-mode-topbar__identity{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--home-developer-mode-topbar-gap);
+  flex:0 0 auto;
+  min-width:max-content;
+}
+
+.home-developer-mode-topbar__icon{
+  display:inline-grid;
+  place-items:center;
+  inline-size:var(--home-developer-mode-topbar-icon-size);
+  block-size:var(--home-developer-mode-topbar-icon-size);
+}
+
+.home-developer-mode-topbar__icon img{
+  display:block;
+  inline-size:var(--home-developer-mode-topbar-icon-size);
+  block-size:var(--home-developer-mode-topbar-icon-size);
+}
+
+.home-developer-mode-topbar__label{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  font-weight:var(--font-weight-semibold);
+  line-height:var(--line-height-tight);
+  white-space:nowrap;
+}
+
+/* =============================================================================
+   04) NAVIGATION ITEMS
+============================================================================= */
+.home-developer-mode-topbar__items{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--home-developer-mode-topbar-gap);
+  flex:1 1 auto;
+  min-width:var(--spacing-none);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.home-developer-mode-topbar__items::-webkit-scrollbar{
+  display:none;
+}
+
+.home-developer-mode-topbar__item{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  min-height:var(--home-developer-mode-topbar-item-height);
+  padding:var(--spacing-none) var(--home-developer-mode-topbar-item-padding-x);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-developer-mode-topbar-radius);
+  background:var(--home-developer-mode-topbar-item-surface);
+  color:var(--home-developer-mode-topbar-item-color);
+  font:inherit;
+  font-size:var(--caption-size);
+  line-height:var(--line-height-tight);
+  text-decoration:none;
+  outline:none;
+  transition:var(--interaction-transition-control);
+  white-space:nowrap;
+}
+
+.home-developer-mode-topbar__item:hover,
+.home-developer-mode-topbar__item:focus-visible,
+.home-developer-mode-topbar__item[aria-pressed="true"]{
+  background:var(--home-developer-mode-topbar-item-surface-active);
+  color:var(--home-developer-mode-topbar-item-color-active);
+}
+
+.home-developer-mode-topbar__item:focus-visible{
+  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
+}
+
+/* =============================================================================
+   05) STATUS
+============================================================================= */
+.home-developer-mode-topbar__status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:var(--spacing-xs);
+  flex:0 0 auto;
+  min-width:max-content;
+  color:var(--text-secondary-color);
+  font-size:var(--caption-size);
+  line-height:var(--line-height-tight);
+  white-space:nowrap;
+}
+
+.home-developer-mode-topbar__status-dot{
+  display:block;
+  inline-size:var(--home-developer-mode-topbar-status-dot-size);
+  block-size:var(--home-developer-mode-topbar-status-dot-size);
+  border-radius:var(--radius-round);
+  background:var(--color-primary1);
+}
+
+/* =============================================================================
+   06) END OF FILE
+============================================================================= */

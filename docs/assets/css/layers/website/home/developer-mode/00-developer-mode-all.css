@@ -8,9 +8,16 @@
    01) DEVELOPER MODE CSS IMPORTS
 ============================================================================= */
 @import url('./developer-mode-shell.css');
-@import url('./developer-mode-topbar.css');
-@import url('./developer-mode-sidebar.css');
-@import url('./developer-mode-command-surface.css');
+@import url('./topbar/00-developer-mode-topbar-all.css');
+@import url('./left-sidebar/00-developer-mode-left-sidebar-all.css');
+@import url('./right-sidebar/00-developer-mode-right-sidebar-all.css');
+@import url('./command-surface/00-developer-mode-command-surface-all.css');
+@import url('./repository-panel/00-developer-mode-repository-panel-all.css');
+@import url('./project-panel/00-developer-mode-project-panel-all.css');
+@import url('./provider-panel/00-developer-mode-provider-panel-all.css');
+@import url('./runtime-panel/00-developer-mode-runtime-panel-all.css');
+@import url('./review-panel/00-developer-mode-review-panel-all.css');
+@import url('./settings-panel/00-developer-mode-settings-panel-all.css');
 
 /* =============================================================================
    02) END OF FILE

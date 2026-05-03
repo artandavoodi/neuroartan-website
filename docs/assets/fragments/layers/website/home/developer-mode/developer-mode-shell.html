@@ -1,23 +1,44 @@
 <!-- =============================================================================
-     01) HOMEPAGE DEVELOPER MODE SHELL
-     02) REGION MOUNTS
+     00) FILE INDEX
+     01) DEVELOPER CONSOLE SHELL
+     02) DEVELOPER MODE TOPBAR MOUNT
+     03) DEVELOPER MODE LAYOUT
+     04) DEVELOPER MODE PANEL MOUNTS
+     05) END OF FILE
 ============================================================================= -->
-<section class="home-developer-mode-shell" data-home-platform-destination-root data-home-developer-mode-root aria-label="Homepage Developer Mode workspace">
-  <div class="home-developer-mode-shell__topbar" data-home-developer-region="topbar"></div>
 
+<!-- =============================================================================
+     01) DEVELOPER CONSOLE SHELL
+============================================================================= -->
+<section class="home-developer-mode-shell" data-home-developer-mode-root data-home-developer-mode-shell hidden aria-hidden="true" aria-label="Developer Console workspace">
+  <!-- =============================================================================
+       02) DEVELOPER MODE TOPBAR MOUNT
+  ============================================================================= -->
+  <div class="home-developer-mode-shell__topbar" data-home-developer-mode-topbar data-home-developer-region="topbar" data-include="home-developer-mode-topbar"></div>
+
+  <!-- =============================================================================
+       03) DEVELOPER MODE LAYOUT
+  ============================================================================= -->
   <div class="home-developer-mode-shell__layout">
-    <aside class="home-developer-mode-shell__left" data-home-developer-region="left-sidebar" aria-label="Developer workspace navigation"></aside>
+    <aside class="home-developer-mode-shell__left" data-home-developer-region="left-sidebar" data-include="home-developer-mode-left-sidebar" aria-label="Developer workspace navigation"></aside>
 
+    <!-- =============================================================================
+         04) DEVELOPER MODE PANEL MOUNTS
+    ============================================================================= -->
     <main class="home-developer-mode-shell__main" data-home-developer-panel-root>
-      <div data-home-developer-panel="command"></div>
-      <div data-home-developer-panel="repositories" hidden></div>
-      <div data-home-developer-panel="projects" hidden></div>
-      <div data-home-developer-panel="agents" hidden></div>
-      <div data-home-developer-panel="runtime" hidden></div>
-      <div data-home-developer-panel="review" hidden></div>
-      <div data-home-developer-panel="settings" hidden></div>
+      <div data-home-developer-panel="command" data-include="home-developer-mode-command-surface"></div>
+      <div data-home-developer-panel="repositories" data-include="home-developer-mode-repository-panel" hidden aria-hidden="true"></div>
+      <div data-home-developer-panel="projects" data-include="home-developer-mode-project-panel" hidden aria-hidden="true"></div>
+      <div data-home-developer-panel="agents" data-include="home-developer-mode-provider-panel" hidden aria-hidden="true"></div>
+      <div data-home-developer-panel="runtime" data-include="home-developer-mode-runtime-panel" hidden aria-hidden="true"></div>
+      <div data-home-developer-panel="review" data-include="home-developer-mode-review-panel" hidden aria-hidden="true"></div>
+      <div data-home-developer-panel="settings" data-include="home-developer-mode-settings-panel" hidden aria-hidden="true"></div>
     </main>
 
-    <aside class="home-developer-mode-shell__right" data-home-developer-region="right-sidebar" aria-label="Developer context"></aside>
+    <aside class="home-developer-mode-shell__right" data-home-developer-region="right-sidebar" data-include="home-developer-mode-right-sidebar" aria-label="Developer context"></aside>
   </div>
 </section>
+
+<!-- =============================================================================
+     05) END OF FILE
+============================================================================= -->

@@ -8,7 +8,8 @@
    01E. PLATFORM MENU
    01F. STAGE INTERFACE + SERVICES
    01G. INTERACTION SETTINGS
-   01H. FEATURED FUNCTIONS
+   01H. DEVELOPER MODE
+   01I. FEATURED FUNCTIONS
    02. END OF FILE
    ========================================================= */
 
@@ -54,7 +55,12 @@ import './stage/00-stage-all.js';
 import './interaction-settings/00-interaction-settings-all.js';
 
 /* =========================================================
-   01H. FEATURED FUNCTIONS
+   01H. DEVELOPER MODE
+   ========================================================= */
+import './developer-mode/00-developer-mode-all.js';
+
+/* =========================================================
+   01I. FEATURED FUNCTIONS
    ========================================================= */
 
 /* =========================================================

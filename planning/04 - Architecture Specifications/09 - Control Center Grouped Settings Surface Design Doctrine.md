@@ -81,7 +81,7 @@ related:
   - "docs/assets/css/core/03-primitives/radio-list.css"
   - "docs/assets/js/core/01-foundation/radio-list.js"
   - "docs/assets/js/layers/website/home/interaction-settings/sections/stage.js"
-  - "docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html"
+  - "docs/assets/fragments/layers/website/home/interaction-settings/interaction-settings-shell.html"
   - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html"
   - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/active-chat.html"
   - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/reset-behavior.html"

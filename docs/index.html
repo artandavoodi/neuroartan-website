@@ -34,8 +34,9 @@
      11P) HOME SEARCH SHELL MOUNT
      11Q) HOME SETTINGS PANEL MOUNT
      11R) HOME INTERACTION SETTINGS PANEL MOUNT
-     11S) HOME INTERACTION RESPONSE PANEL MOUNT
-     11T) HOME FOOTER MOUNT
+     11S) HOME DEVELOPER MODE WORKSPACE MOUNT
+     11T) HOME INTERACTION RESPONSE PANEL MOUNT
+     11U) HOME FOOTER MOUNT
      12) COUNTRY OVERLAY MOUNT
      12A) COOKIE CONSENT MOUNT
      13) RESERVED
@@ -327,9 +328,19 @@
     id="home-interaction-settings-panel-mount"
     data-include="home-interaction-settings-panel"></div>
 
+  <!-- =============================================================================
+       11S) HOME DEVELOPER MODE WORKSPACE MOUNT
+  ============================================================================= -->
+  <div
+    class="home-shell__workspace-mount home-shell__workspace-mount--developer-mode"
+    id="home-developer-mode-workspace-mount"
+    data-include="home-developer-mode-shell"
+    hidden
+    aria-hidden="true"></div>
+
 
   <!-- =============================================================================
-       11T) HOME FOOTER MOUNT
+       11U) HOME FOOTER MOUNT
   ============================================================================= -->
   <div class="home-shell__footer" id="home-footer-mount" data-include="home-footer"></div>
 </section>

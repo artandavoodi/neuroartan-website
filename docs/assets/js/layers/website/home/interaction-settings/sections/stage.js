@@ -3,10 +3,11 @@
    01. STAGE SETTINGS CONSTANTS
    02. STAGE SETTINGS STATE
    03. STAGE SETTINGS DOM HELPERS
-   04. STAGE SETTINGS APPLICATION
-   05. STAGE SETTINGS EVENTS
-   06. STAGE SETTINGS INITIALIZATION
-   07. STAGE SETTINGS FRAGMENT OBSERVER
+   04. STAGE SETTINGS MODE RESOLUTION
+   05. STAGE SETTINGS APPLICATION
+   06. STAGE SETTINGS EVENTS
+   07. STAGE SETTINGS INITIALIZATION
+   08. STAGE SETTINGS FRAGMENT OBSERVER
    ========================================================= */
 
 /* =========================================================
@@ -81,6 +82,7 @@ function writeStoredStageSettings(nextState){
 }
 
 const STAGE_SETTINGS_STATE = readStoredStageSettings();
+let STAGE_SETTINGS_DEVELOPER_MODE_ACTIVE = document.documentElement?.dataset?.homeDeveloperMode === 'active';
 
 /* =========================================================
    03. STAGE SETTINGS DOM HELPERS
@@ -122,7 +124,24 @@ function formatStageSettingValue(value){
 }
 
 /* =========================================================
-   04. STAGE SETTINGS APPLICATION
+   04. STAGE SETTINGS MODE RESOLUTION
+   ========================================================= */
+function resolveEffectiveStageSettings(){
+  if (!STAGE_SETTINGS_DEVELOPER_MODE_ACTIVE){
+    return { ...STAGE_SETTINGS_STATE };
+  }
+
+  return {
+    ...STAGE_SETTINGS_STATE,
+    stageCircle: 'disabled',
+    stageFooter: 'disabled',
+    stageIdleAnimation: 'disabled',
+    stageVisualFeedback: 'disabled',
+  };
+}
+
+/* =========================================================
+   05. STAGE SETTINGS APPLICATION
    ========================================================= */
 function setBodyStageAttributes(state){
   if (!document.body) return;
@@ -145,6 +164,7 @@ function applyStageVisibility(state){
   const isFooterEnabled = state.stageFooter === 'enabled';
   const isAmbientEnabled = state.stageAmbientLayer === 'enabled';
   const isFeedbackEnabled = state.stageVisualFeedback === 'enabled';
+  const isStageTextEnabled = state.stageVisualFeedback === 'enabled';
 
   [targets.stageRoot, targets.stageShell].forEach((node) => {
     if (!node) return;
@@ -165,6 +185,8 @@ function applyStageVisibility(state){
 
   if (targets.stageText){
     targets.stageText.dataset.stageVisualFeedback = isFeedbackEnabled ? 'enabled' : 'disabled';
+    targets.stageText.hidden = !isStageTextEnabled;
+    targets.stageText.setAttribute('aria-hidden', String(!isStageTextEnabled));
   }
 }
 
@@ -207,18 +229,25 @@ function applyStageControls(section, state){
 
 function applyStageSettings(){
   const section = getStageSection();
-  setBodyStageAttributes(STAGE_SETTINGS_STATE);
-  applyStageVisibility(STAGE_SETTINGS_STATE);
-  if (section) applyStageControls(section, STAGE_SETTINGS_STATE);
+  const effectiveState = resolveEffectiveStageSettings();
+
+  setBodyStageAttributes(effectiveState);
+  applyStageVisibility(effectiveState);
+  if (section) applyStageControls(section, effectiveState);
 
   document.dispatchEvent(new CustomEvent('neuroartan:home-stage-settings-changed', {
-    detail: { ...STAGE_SETTINGS_STATE },
+    detail: { ...effectiveState },
   }));
 }
 
 /* =========================================================
-   05. STAGE SETTINGS EVENTS
+   06. STAGE SETTINGS EVENTS
    ========================================================= */
+
+function setStageDeveloperModeActive(isActive){
+  STAGE_SETTINGS_DEVELOPER_MODE_ACTIVE = Boolean(isActive);
+  applyStageSettings();
+}
 
 function getStageInteractiveControl(control){
   return control || null;
@@ -250,11 +279,25 @@ function bindStageSettings(section){
     });
   });
 }
+function bindStageDeveloperModeEvents(){
+  if (document.documentElement?.dataset?.homeStageDeveloperModeBound === 'true') return;
+
+  document.documentElement.dataset.homeStageDeveloperModeBound = 'true';
+
+  document.addEventListener('home-developer-mode:activated', () => {
+    setStageDeveloperModeActive(true);
+  });
+
+  document.addEventListener('home-developer-mode:deactivated', () => {
+    setStageDeveloperModeActive(false);
+  });
+}
 
 /* =========================================================
-   06. STAGE SETTINGS INITIALIZATION
+   07. STAGE SETTINGS INITIALIZATION
    ========================================================= */
 function initializeStageSettings(){
+  bindStageDeveloperModeEvents();
   const section = getStageSection();
   if (!section){
     setBodyStageAttributes(STAGE_SETTINGS_STATE);
@@ -268,7 +311,7 @@ function initializeStageSettings(){
 }
 
 /* =========================================================
-   07. STAGE SETTINGS FRAGMENT OBSERVER
+   08. STAGE SETTINGS FRAGMENT OBSERVER
    ========================================================= */
 function observeStageSettingsFragment(){
   if (initializeStageSettings()) return;

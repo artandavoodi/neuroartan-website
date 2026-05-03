@@ -3,7 +3,7 @@
    01) HOME SHELL TOKEN BRIDGE
    02) SHELL OPEN STATES
    03) TOPBAR AND FOOTER CHROME
-   04) PANEL MOUNTS
+   04) PANEL AND WORKSPACE MOUNTS
    05) SHARED PANEL SURFACES
    06) SHARED PANEL TYPOGRAPHY AND ACTIONS
    07) RESPONSIVE REFINEMENTS
@@ -115,16 +115,33 @@ body.home-page.site-entered.home-search-shell-open .home-shell__footer-separator
 }
 
 /* =============================================================================
-   04) PANEL MOUNTS
+   04) PANEL AND WORKSPACE MOUNTS
 ============================================================================= */
 .home-shell__panel-mount,
-.home-shell__overlay-mount{
+.home-shell__overlay-mount,
+.home-shell__workspace-mount{
   position:static;
   pointer-events:none;
 }
 
 .home-shell__panel-mount > *,
-.home-shell__overlay-mount > *{
+.home-shell__overlay-mount > *,
+.home-shell__workspace-mount > *{
+  pointer-events:auto;
+}
+
+.home-shell__workspace-mount--developer-mode{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:calc(var(--z-raised) + 1);
+  pointer-events:none;
+}
+
+.home-shell__workspace-mount--developer-mode > *{
+  width:100%;
+  height:100%;
   pointer-events:auto;
 }
 

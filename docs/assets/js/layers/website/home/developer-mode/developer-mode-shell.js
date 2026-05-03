@@ -7,7 +7,7 @@
    05) RENDERING
    06) BACKEND ACTIONS
    07) EVENT BINDING
-   08) PLATFORM MOUNT
+   08) DEVELOPER CONSOLE MOUNT
    09) END OF FILE
 ============================================================================= */
 
@@ -459,9 +459,9 @@ function bindDeveloperModeEvents(root) {
 }
 
 /* =============================================================================
-   08) PLATFORM MOUNT
+   08) DEVELOPER CONSOLE MOUNT
 ============================================================================= */
-export async function mountHomePlatformDestination(root) {
+export async function mountHomeDeveloperModeShell(root) {
   if (!root || root.dataset.homeDeveloperModeMounted === 'true') {
     return;
   }

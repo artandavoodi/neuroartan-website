@@ -1,91 +1,76 @@
+
 /* =============================================================================
    00) FILE INDEX
-   01) TOPBAR TOKENS
-   02) TOPBAR SURFACE
-   03) IDENTITY
-   04) NAVIGATION ITEMS
-   05) STATUS
-   06) END OF FILE
+   01) TOPBAR SHELL
+   02) TOPBAR ACTIONS
+   03) STATUS
+   04) RESPONSIVE
+   05) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
-   01) TOPBAR TOKENS
-============================================================================= */
-:root{
-  --home-developer-mode-topbar-gap:var(--layout-home-platform-destination-action-gap);
-  --home-developer-mode-topbar-padding-y:var(--spacing-sm);
-  --home-developer-mode-topbar-padding-x:var(--control-padding-x-md);
-  --home-developer-mode-topbar-radius:var(--control-radius-pill);
-  --home-developer-mode-topbar-border:var(--border-width-hairline) solid var(--home-developer-mode-border-color, var(--border-subtle-color));
-  --home-developer-mode-topbar-surface:var(--home-panel-card-surface);
-  --home-developer-mode-topbar-item-surface:transparent;
-  --home-developer-mode-topbar-item-surface-active:var(--surface-2);
-  --home-developer-mode-topbar-item-color:var(--text-secondary-color);
-  --home-developer-mode-topbar-item-color-active:var(--text-primary-color);
-  --home-developer-mode-topbar-item-height:var(--control-height-sm);
-  --home-developer-mode-topbar-item-padding-x:var(--control-padding-x-sm);
-  --home-developer-mode-topbar-icon-size:var(--icon-size-sm);
-  --home-developer-mode-topbar-status-dot-size:var(--spacing-xs);
-}
-
-/* =============================================================================
-   02) TOPBAR SURFACE
+   01) TOPBAR SHELL
 ============================================================================= */
 .home-developer-mode-topbar{
-  display:flex;
+  position:relative;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
   align-items:center;
-  justify-content:space-between;
-  gap:var(--home-developer-mode-topbar-gap);
+  gap:var(--home-dashboard-topbar-gap);
   width:var(--size-full);
-  padding:var(--home-developer-mode-topbar-padding-y) var(--home-developer-mode-topbar-padding-x);
-  border:var(--home-developer-mode-topbar-border);
-  border-radius:var(--home-developer-mode-topbar-radius);
-  background:var(--home-developer-mode-topbar-surface);
+  min-height:var(--home-dashboard-topbar-height);
+  padding:var(--home-dashboard-topbar-padding-y) var(--home-dashboard-topbar-padding-x);
+  border:var(--home-dashboard-topbar-border);
+  border-radius:var(--home-dashboard-topbar-radius);
+  background:var(--home-dashboard-topbar-surface);
+  box-shadow:var(--home-dashboard-topbar-shadow);
+  -webkit-backdrop-filter:var(--home-dashboard-topbar-backdrop-filter);
+  backdrop-filter:var(--home-dashboard-topbar-backdrop-filter);
   color:var(--text-primary-color);
 }
 
-/* =============================================================================
-   03) IDENTITY
-============================================================================= */
 .home-developer-mode-topbar__identity{
   display:inline-flex;
   align-items:center;
-  gap:var(--home-developer-mode-topbar-gap);
-  flex:0 0 auto;
+  gap:var(--home-dashboard-topbar-action-gap);
   min-width:max-content;
 }
 
-.home-developer-mode-topbar__icon{
+.home-developer-mode-topbar__icon,
+.home-developer-mode-topbar__status-dot{
   display:inline-grid;
   place-items:center;
-  inline-size:var(--home-developer-mode-topbar-icon-size);
-  block-size:var(--home-developer-mode-topbar-icon-size);
+  inline-size:var(--home-dashboard-topbar-icon-size);
+  block-size:var(--home-dashboard-topbar-icon-size);
+  flex:0 0 auto;
 }
 
 .home-developer-mode-topbar__icon img{
   display:block;
-  inline-size:var(--home-developer-mode-topbar-icon-size);
-  block-size:var(--home-developer-mode-topbar-icon-size);
+  inline-size:var(--home-dashboard-topbar-icon-size);
+  block-size:var(--home-dashboard-topbar-icon-size);
+  opacity:var(--home-dashboard-topbar-icon-opacity);
+  filter:var(--home-dashboard-topbar-icon-filter);
 }
 
 .home-developer-mode-topbar__label{
-  color:var(--text-primary-color);
-  font-size:var(--body-2-size);
-  font-weight:var(--font-weight-semibold);
+  color:var(--home-dashboard-topbar-action-color);
+  font-size:var(--home-dashboard-topbar-action-font-size);
+  font-weight:var(--home-dashboard-topbar-action-font-weight);
   line-height:var(--line-height-tight);
+  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
   white-space:nowrap;
 }
 
 /* =============================================================================
-   04) NAVIGATION ITEMS
+   02) TOPBAR ACTIONS
 ============================================================================= */
 .home-developer-mode-topbar__items{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:var(--home-developer-mode-topbar-gap);
-  flex:1 1 auto;
-  min-width:var(--spacing-none);
+  gap:var(--home-dashboard-topbar-action-gap);
+  min-width:0;
   overflow-x:auto;
   scrollbar-width:none;
 }
@@ -100,58 +85,80 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  flex:0 0 auto;
-  min-height:var(--home-developer-mode-topbar-item-height);
-  padding:var(--spacing-none) var(--home-developer-mode-topbar-item-padding-x);
-  border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--home-developer-mode-topbar-radius);
-  background:var(--home-developer-mode-topbar-item-surface);
-  color:var(--home-developer-mode-topbar-item-color);
+  min-height:var(--home-dashboard-topbar-action-height);
+  padding:var(--home-dashboard-topbar-action-padding-y) var(--home-dashboard-topbar-action-padding-x);
+  border:var(--home-dashboard-topbar-action-border);
+  border-radius:var(--home-dashboard-topbar-action-radius);
+  background:var(--home-dashboard-topbar-action-surface);
+  color:var(--home-dashboard-topbar-action-color);
   font:inherit;
-  font-size:var(--caption-size);
+  font-size:var(--home-dashboard-topbar-action-font-size);
+  font-weight:var(--home-dashboard-topbar-action-font-weight);
   line-height:var(--line-height-tight);
+  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
   text-decoration:none;
   outline:none;
-  transition:var(--interaction-transition-control);
   white-space:nowrap;
+  transition:var(--home-dashboard-topbar-action-transition);
 }
 
 .home-developer-mode-topbar__item:hover,
 .home-developer-mode-topbar__item:focus-visible,
 .home-developer-mode-topbar__item[aria-pressed="true"]{
-  background:var(--home-developer-mode-topbar-item-surface-active);
-  color:var(--home-developer-mode-topbar-item-color-active);
+  border-color:var(--home-dashboard-topbar-action-border-color-active);
+  background:var(--home-dashboard-topbar-action-surface-active);
+  color:var(--home-dashboard-topbar-action-color-active);
 }
 
 .home-developer-mode-topbar__item:focus-visible{
-  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
-  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
+  outline:var(--home-dashboard-topbar-focus-outline);
+  outline-offset:var(--home-dashboard-topbar-focus-outline-offset);
 }
 
 /* =============================================================================
-   05) STATUS
+   03) STATUS
 ============================================================================= */
 .home-developer-mode-topbar__status{
   display:inline-flex;
   align-items:center;
   justify-content:flex-end;
-  gap:var(--spacing-xs);
-  flex:0 0 auto;
+  gap:var(--home-dashboard-topbar-action-gap);
   min-width:max-content;
-  color:var(--text-secondary-color);
-  font-size:var(--caption-size);
+  color:var(--home-dashboard-topbar-action-color);
+  font-size:var(--home-dashboard-topbar-action-font-size);
+  font-weight:var(--home-dashboard-topbar-action-font-weight);
   line-height:var(--line-height-tight);
+  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
   white-space:nowrap;
 }
 
 .home-developer-mode-topbar__status-dot{
-  display:block;
-  inline-size:var(--home-developer-mode-topbar-status-dot-size);
-  block-size:var(--home-developer-mode-topbar-status-dot-size);
+  inline-size:var(--home-dashboard-topbar-status-dot-size);
+  block-size:var(--home-dashboard-topbar-status-dot-size);
   border-radius:var(--radius-round);
-  background:var(--color-primary1);
+  background:var(--home-dashboard-topbar-status-dot-color);
 }
 
 /* =============================================================================
-   06) END OF FILE
+   04) RESPONSIVE
+============================================================================= */
+@media (max-width: 760px){
+  .home-developer-mode-topbar{
+    grid-template-columns:1fr;
+    justify-items:center;
+  }
+
+  .home-developer-mode-topbar__identity,
+  .home-developer-mode-topbar__status{
+    display:none;
+  }
+
+  .home-developer-mode-topbar__items{
+    justify-content:flex-start;
+    width:var(--size-full);
+  }
+}
+
+/* =============================================================================
+   05) END OF FILE
 ============================================================================= */

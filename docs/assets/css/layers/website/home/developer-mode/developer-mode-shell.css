@@ -47,8 +47,7 @@
 ============================================================================= */
 .home-developer-mode-panel,
 .home-developer-mode-context,
-.home-developer-mode-sidebar,
-.home-developer-mode-topbar{
+.home-developer-mode-sidebar{
   border:var(--home-developer-mode-border);
   background:var(--home-developer-mode-surface);
 }

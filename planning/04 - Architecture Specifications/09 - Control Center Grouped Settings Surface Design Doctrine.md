@@ -33,7 +33,7 @@ system: "Website-Governed"
 
 spine_version: "1.4"
 template_lock: "Global-Metadata-Standard-v1.6"
-version: "1.2.0"
+version: "1.3.0"
 
 created_date: "2026-05-03"
 last_updated: "2026-05-03"
@@ -61,6 +61,10 @@ scope:
   - "Apple-Native Nested Settings Architecture"
   - "Reusable Platform Menu Nested Surface Architecture"
   - "Global Drill-In Row and Back Navigation Primitive Planning"
+  - "Neuroartan Apple-Native Settings Design Baseline"
+  - "Reusable Drill-In Navigation Runtime Pattern"
+  - "Global Settings Surface UX and Token Doctrine"
+  - "Company-Level Settings Interface Style Reference"
 
 index_targets:
   - "Website Planning Index"
@@ -78,6 +82,12 @@ related:
   - "docs/assets/js/core/01-foundation/radio-list.js"
   - "docs/assets/js/layers/website/home/interaction-settings/sections/stage.js"
   - "docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html"
+  - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html"
+  - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/active-chat.html"
+  - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/reset-behavior.html"
+  - "docs/assets/fragments/layers/website/home/interaction-settings/sections/session/persistence.html"
+  - "docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js"
+  - "docs/assets/js/core/01-foundation/fragment-authorities.js"
 
 tags:
   - "website"
@@ -92,6 +102,11 @@ tags:
   - "apple-native-settings"
   - "platform-menu"
   - "drill-in-navigation"
+  - "company-style"
+  - "settings-interface"
+  - "native-icons"
+  - "fragment-authority"
+  - "runtime-navigation"
 ---
 
 ## I. Purpose
@@ -593,7 +608,9 @@ workspace.html: header=1 icon=1 description=1 ui_radio=1 toggles=0
 
 ## XX. Apple-Native Nested Settings Architecture
 
-The next approved design direction is an Apple-native nested settings architecture for Control Center sections and future Platform Menu surfaces.
+The approved architecture is an Apple-native nested settings system for Control Center sections and future Platform Menu surfaces.
+
+This system is now a Neuroartan company-style reference for calm, minimal, native-feeling settings interfaces.
 
 The model follows the native settings pattern:
 
@@ -602,41 +619,43 @@ Left navigation remains stable
 Right panel shows the selected parent section
 A drill-in row opens a child panel inside the same right panel
 The parent panel gives its space to the child panel
-A back control appears in the shell header area
+A left/right navigation wrapper appears after the Control Center title
 The user can return to the parent section without resetting the left navigation
 ```
 
-This must behave like a settings environment, not like a modal, overlay, external page, or duplicated shell.
+This must behave like a settings environment, not like a modal, overlay, external page, drawer, or duplicated shell.
 
-The first pilot is Session.
+The first approved pilot is Session.
 
-Example flow:
+Approved pilot flow:
 
 ```text
 Control Center
 Session
 Active chat
+Reset behavior
+Persistence
 ```
 
-When the user selects `Active chat`, the Session surface is replaced by the Active chat child surface inside the same right panel.
+When the user selects a Session child item, the Session parent surface is replaced by the selected child surface inside the same right panel.
 
 The nested panel must feel like a continuation of the same surface, with the same header rhythm, grouped surface logic, row tokens, icon system, and interaction ownership rules.
 
-This architecture is intended to be reused later for the Platform Menu, where the current menu system is not yet mature enough to support deeper Apple-native navigation.
+This architecture is intended to be reused later for the Platform Menu, where deeper Apple-native navigation must not be built as an unrelated system.
 
 ---
 
 ## XXI. Folder-Based Section Module Rule
 
-Every Control Center section may eventually be promoted from a single flat HTML fragment into a folder-based section module.
+Every Control Center section is moving from a flat HTML fragment model into a folder-based section module model.
 
-Current flat model:
+Previous flat model:
 
 ```text
 sections/session.html
 ```
 
-Approved future module model:
+Approved module model:
 
 ```text
 sections/session/
@@ -650,70 +669,129 @@ The `index.html` file owns the parent section surface.
 
 Child files own deeper nested panel surfaces.
 
-The left Control Center navigation must continue to point to the parent section route, while the right panel may move deeper into child surfaces.
+The left Control Center navigation points to the parent section route.
 
-All section folders must be registered through the fragment authority system before runtime loading is treated as canonical.
+The right panel may move deeper into child surfaces without altering the left navigation.
 
-No folder or file creation may occur without a live rescan and explicit structural approval.
+Flat legacy section files must not remain beside their corresponding folders after migration, because duplicate flat and folder files create authority ambiguity.
+
+All section folders and child panels must be registered through the fragment authority system before runtime loading is treated as canonical.
+
+Current approved Session module files:
+
+```text
+/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html
+/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/active-chat.html
+/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/reset-behavior.html
+/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/persistence.html
+```
+
+No new section folder, child panel, or module conversion may occur without a live scan and explicit structural approval.
 
 No flat-to-folder conversion may occur by assumption.
 
-The current flat files remain valid until the folder-based structure is scanned, mapped, approved, created, registered, and verified.
-
 ---
 
-## XXII. Global Drill-In Row and Back Navigation System
+## XXII. Global Drill-In Row and Nested Navigation System
 
-Nested panel rows must use a reusable drill-in row primitive.
+Nested panel rows use a reusable drill-in row primitive.
 
 A drill-in row is not a toggle and not a radio list.
 
 Approved drill-in row behavior:
 
 ```text
-Row represents navigation into a child settings surface
-Right-side accessory icon indicates entry
-Actual navigation ownership belongs to the approved control element
-Text remains calm and non-decorative
+Row is only a visual container
+Text is non-interactive
+Empty row area is non-interactive
+Only the right-side native icon button opens the child panel
+Right-side icon aligns to the same right-side control lane as toggles
 No cursor overrides
 No overlay panels
 No duplicated shell
 ```
 
-The right-side accessory must be token-based and reusable.
+Approved drill row structure:
 
-The drill-in row primitive must be usable in:
-
-```text
-Control Center
-Platform Menu
-Future website settings surfaces
-Future application settings surfaces
+```html
+<div class="home-interaction-settings-panel__drill-row" aria-label="Active chat settings">
+  <span>
+    <span class="home-interaction-settings-panel__option-label">Active chat</span>
+    <span class="home-interaction-settings-panel__option-description">Current chat identity will connect to the conversation registry</span>
+  </span>
+  <button class="home-interaction-settings-panel__drill-indicator" type="button" data-home-interaction-settings-drill-control data-home-interaction-settings-target="home-interaction-settings-session-active-chat" aria-label="Open Active chat settings">
+    <img class="ui-icon-theme-aware home-interaction-settings-panel__drill-indicator-icon" src="/assets/icons/core/navigation/unclassified/right.svg" alt="">
+  </button>
+</div>
 ```
 
-When a nested panel is active, the shell must expose a reversible navigation state.
+The drill row icon must use a local native icon asset.
 
-Approved shell behavior:
+Approved right-side drill icon asset:
+
+```text
+/assets/icons/core/navigation/unclassified/right.svg
+```
+
+Hardcoded arrow characters are rejected.
+
+Rejected patterns:
+
+```text
+›
+‹
+textContent = '›'
+textContent = '‹'
+External icon imports
+Internet icon sources
+Full-row drill buttons
+```
+
+When a nested panel is active, the shell exposes a reusable left/right navigation wrapper after the Control Center title.
+
+Approved shell navigation behavior:
 
 ```text
 Control Center title remains stable
-A back control appears near the Control Center title area
-The active nested panel owns the right panel content
-The parent section can be restored without resetting Control Center state
-The left navigation remains intact
+Left/right navigation wrapper appears after the title
+Wrapper does not push the Control Center title from the left
+Wrapper uses local native left.svg and right.svg icons
+Wrapper uses a rounded theme-aware container
+A minimal divider appears between the left and right controls
+Left control returns to the parent section
+Right control is present but disabled until forward navigation exists
+The left navigation sidebar remains intact
 ```
 
-The previously disabled top active-description system may remain available as reusable shell infrastructure, but it must not be reintroduced as a visible description layer for the current Control Center section headers.
+Approved shell navigation icon assets:
 
-Required global primitive candidates:
+```text
+/assets/icons/core/navigation/unclassified/left.svg
+/assets/icons/core/navigation/unclassified/right.svg
+```
+
+The navigation wrapper is generated by the Control Center shell runtime and styled by the Control Center shell CSS.
+
+Canonical runtime owner:
+
+```text
+/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js
+```
+
+Canonical style owner:
+
+```text
+/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css
+```
+
+Required reusable primitive candidates:
 
 ```text
 Drill-in row primitive
 Accessory icon primitive
-Back control primitive
+Nested left/right navigation wrapper
 Nested panel state controller
 Section module loader
-Nested panel breadcrumb or context label
 Fragment authority registration pattern
 ```
 
@@ -721,33 +799,169 @@ These primitives must be implemented cleanly from root ownership and not patched
 
 ---
 
-## XXIII. Next Implementation Sequence
+## XXIII. Runtime and Fragment Authority System
 
-The next implementation phase must follow this sequence:
+Nested panel runtime is owned by the Control Center shell script.
+
+Approved runtime responsibilities:
 
 ```text
-1. Rescan the Control Center section folder and shell files
-2. Rescan fragment authority and include registration files
-3. Map current flat section ownership
-4. Map the required folder-based section module structure
-5. Define the reusable drill-in row primitive
-6. Define the accessory icon primitive
-7. Define the nested panel state controller
-8. Define the shell back-control location and behavior
-9. Register the section-folder loading model through fragment authority
-10. Implement the pattern first in Session as the pilot section
-11. Verify visual and runtime behavior
-12. Propagate only after Session is approved
-13. Record the approved pattern for Platform Menu reuse
+Track active parent section
+Track active nested panel
+Load registered child fragments into the active right-panel mount
+Preserve left navigation selection
+Generate the nested navigation wrapper after the Control Center title
+Return to the parent section through the left navigation control
+Guard nested fragment mounts from rebooting the shell
 ```
 
-The Stage section remains the visual baseline for surface styling, header rhythm, typography, icon alignment, token usage, primitive ownership, and no-overlay execution.
+The runtime must not duplicate the shell.
 
-The Session nested panel pilot must not start until the fragment authority path and runtime ownership are scanned and mapped.
+The runtime must not create overlays.
+
+The runtime must not use hardcoded icon characters.
+
+The runtime must dispatch nested fragment mount events with a source value that prevents full shell reset.
+
+Approved event guard:
+
+```text
+fragment:mounted with source home-interaction-settings-nested-panel does not reboot the shell
+```
+
+Fragment paths must be registered through the canonical fragment authority owner.
+
+Canonical fragment authority owner:
+
+```text
+/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js
+```
+
+Approved Session fragment keys:
+
+```text
+home-interaction-settings-session
+home-interaction-settings-session-active-chat
+home-interaction-settings-session-reset-behavior
+home-interaction-settings-session-persistence
+```
+
+Approved folder-based paths:
+
+```text
+/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html
+/assets/fragments/layers/website/home/interaction-settings/sections/session/active-chat.html
+/assets/fragments/layers/website/home/interaction-settings/sections/session/reset-behavior.html
+/assets/fragments/layers/website/home/interaction-settings/sections/session/persistence.html
+```
+
+The runtime may carry a local nested path map during pilot development, but the authoritative path map must remain aligned with fragment authorities.
 
 ---
 
-## XXIV. Platform Menu Reuse Requirement
+## XXIV. Token and UX Baseline for Nested Navigation
+
+The nested navigation and drill-in controls are token-based.
+
+No fixed pixel values are approved for the final baseline.
+
+Approved nested navigation token responsibilities:
+
+```text
+Wrapper radius
+Wrapper background
+Wrapper border
+Divider color
+Divider height
+Control size
+Arrow icon size
+Control opacity
+Disabled opacity
+Hover color
+Focus ring
+```
+
+The approved arrow icon sizing uses one shared token:
+
+```css
+--home-interaction-settings-arrow-icon-size:var(--layout-interaction-settings-arrow-icon-size, calc(((var(--global-close-button-size, var(--close-control-size)) + var(--global-close-button-line-width, var(--close-control-line-width))) / 2) * 0.45));
+```
+
+The same arrow size token feeds both:
+
+```text
+Nested shell left/right icons
+Drill row right-side icons
+```
+
+The drill-in row uses the same right-side control lane as toggles.
+
+Approved drill-in control alignment:
+
+```css
+--home-interaction-settings-drill-indicator-control-width:var(--home-interaction-settings-panel-toggle-width);
+--home-interaction-settings-drill-indicator-control-height:var(--home-interaction-settings-panel-toggle-height);
+justify-content:flex-end;
+```
+
+This creates a shared right rail while keeping the icon visually aligned to the outside edge.
+
+The nested shell navigation wrapper uses a rounded theme-aware surface with a visible divider.
+
+Approved wrapper behavior:
+
+```text
+Rounded container
+Theme-aware background
+Theme-aware border
+Theme-aware divider
+No hardcoded arrows
+No external icons
+No row-level overlay behavior
+```
+
+The Control Center header uses symmetrical vertical padding so the title and nested navigation wrapper remain geometrically centered.
+
+Approved header principle:
+
+```text
+Header top and bottom padding must be symmetrical
+The separator line must not be used as spacing compensation
+The navigation wrapper must align to the vertical center of the Control Center title row
+```
+
+---
+
+## XXV. Current Implementation Sequence
+
+The current implementation phase followed this sequence:
+
+```text
+1. Stage was approved as the visual baseline
+2. All Control Center sections were propagated to Stage-style headers
+3. Row descriptions were preserved in markup and visually hidden
+4. Inner item labels were bound to left navigation typography tokens
+5. Section files were converted from flat files into section folders
+6. Legacy duplicate flat files were removed
+7. Session child panels were created
+8. Session drill-in rows were added
+9. Fragment authorities were updated for folder-based section paths
+10. Nested runtime was added to the shell script
+11. Nested left/right navigation wrapper was generated after the Control Center title
+12. Hardcoded arrows were removed
+13. Native local left.svg and right.svg icons were used
+14. Drill row interaction was limited to the right-side icon only
+15. Nested and drill arrow sizing was unified under one token
+16. Header vertical padding was normalized for geometric centering
+17. Drill indicators were aligned to the toggle lane
+18. Nested navigation wrapper was rounded, bordered, divided, and theme-aware
+```
+
+The next phase must document this as a reusable global pattern before Platform Menu adoption.
+
+---
+
+## XXVI. Platform Menu Reuse Requirement
 
 The nested settings architecture must be documented and implemented as a reusable website system, not as a Control Center-only feature.
 
@@ -760,10 +974,14 @@ Grouped surface tokens
 Section header system
 Drill-in row primitive
 Accessory icon primitive
-Back control primitive
+Nested left/right navigation wrapper
 Nested panel state controller
 Folder-based module structure
 Fragment authority registration model
+Local native icon system
+Token-based arrow sizing
+Icon-only interaction ownership
+Theme-aware rounded navigation container
 ```
 
 This prevents the Platform Menu from becoming a separate immature system with duplicated logic, duplicated visual rules, or independent navigation behavior.
@@ -772,10 +990,13 @@ The Control Center Session pilot is the proof model.
 
 After Session is approved, the architecture must be propagated into a global reusable primitive layer before Platform Menu adoption.
 
+Platform Menu adoption must not begin until the Control Center nested settings pilot is fully verified and the reusable primitive ownership is mapped.
+
 ---
 
 ## Change Log
 
+- 2026-05-03 — v1.3.0 Locked the Control Center nested settings pilot as a reusable Neuroartan company-style baseline. Documented the folder-based section module migration, Session child panels, fragment authority registration, nested panel runtime, shell-generated left/right navigation wrapper, icon-only drill-in interaction model, local native icon requirement, token-based arrow sizing, toggle-lane drill alignment, symmetrical header centering, rounded theme-aware navigation container, and future Platform Menu propagation requirement. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent (WSDA). Agent ID: A-0205-0022. Execution Date: 2026-05-03. Execution Context: Control Center nested settings pilot approval, design-system doctrine expansion, and global reusable interface baseline documentation.
 - 2026-05-03 — v1.2.0 Expanded the doctrine into an Apple-native nested settings architecture specification. Documented the folder-based section module direction, drill-in row primitive requirement, reusable back-navigation system, fragment authority registration requirement, Session pilot sequence, and future Platform Menu reuse requirement. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent (WSDA). Agent ID: A-0205-0022. Execution Date: 2026-05-03. Execution Context: Apple-native nested settings architecture planning and reusable Platform Menu propagation requirement.
 - 2026-05-03 — v1.1.0 Baseline locked after Control Center surface propagation and final header refinement. Recorded unified Stage-native section headers, token-based icon/title/description system, disabled top-shell active description for the Control Center surface, hidden row-level descriptions through CSS while preserving markup, Stage-native radio and toggle primitive propagation, left-navigation typography token reuse for inner item labels, and the next-phase nested panel architecture direction for drill-in rows and reversible Control Center subpanels. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent (WSDA). Agent ID: A-0205-0022. Execution Date: 2026-05-03. Execution Context: Control Center baseline lock, Stage-style propagation, and nested panel architecture planning.
 - 2026-05-03 — v1.0.0 Initial doctrine created and normalized. Established the Stage section as the canonical grouped settings surface reference for Control Center, menu settings, and comparable website configuration interfaces. Bound the approved grouped surface model, radio-list primitive, toggle ownership, typography ownership, spacing tokens, separator rules, period rule, interaction ownership rule, and no-cursor-override rule into a reusable architecture specification. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent (WSDA). Agent ID: A-0205-0022. Execution Date: 2026-05-03. Execution Context: Control Center Stage section design finalization and global website design-system doctrine creation.
@@ -789,7 +1010,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Active — Architecture Locked  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 1.2.0
+VERSION: 1.3.0
 
 ---
 

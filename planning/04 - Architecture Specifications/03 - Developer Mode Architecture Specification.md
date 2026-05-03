@@ -32,11 +32,11 @@ system: "Neuroartan Website"
 
 spine_version: "1.0"
 template_lock: true
-version: "0.1"
+version: "0.2"
 
 created_date: "2026-05-02"
-last_updated: "2026-05-02"
-last_reviewed: "2026-05-02"
+last_updated: "2026-05-03"
+last_reviewed: "2026-05-03"
 review_cycle: "Monthly"
 
 effective_date: "2026-05-02"
@@ -53,6 +53,11 @@ scope:
   - "Provider selection interface"
   - "Repository-aware development command surface"
   - "Secure backend runtime coordination"
+  - "Developer-specific top menu architecture"
+  - "Developer left and right sidebar architecture"
+  - "Repository-aware developer workspace architecture"
+  - "Codex-equivalent developer navigation model"
+  - "Developer command and review surface architecture"
 
 index_targets:
   - "Website Planning Index"
@@ -69,6 +74,7 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/07 - Voice-to-Agent Command Pipeline Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md"
 
 tags:
   - "developer-mode"
@@ -77,6 +83,11 @@ tags:
   - "github-access"
   - "model-provider-routing"
   - "website-architecture"
+  - "developer-topbar"
+  - "developer-sidebar"
+  - "repository-workspace"
+  - "codex-style-interface"
+  - "developer-command-surface"
 ---
 
 # Developer Mode Architecture Specification
@@ -93,7 +104,7 @@ Developer Mode must not expose repository mutation, provider secrets, GitHub cre
 
 ## II. Current State
 
-The existing platform already includes a development cockpit frontend with command-generation capability.
+The existing platform already includes early Developer Mode and development cockpit surfaces, but the architecture is still immature.
 
 Current reusable elements include:
 
@@ -113,10 +124,42 @@ Current reusable elements include:
 - workflow registry data
 - model creation interface layer
 - voice interaction foundations
+- Platform Menu workspace destination for Developer Mode
+- homepage stage developer workbench controls
+- repository selector placeholder
+- environment selector placeholder
+- GitHub connection placeholder
+- repository discovery placeholder
+- workspace creation placeholder
 
-The current cockpit is not yet an autonomous coding agent runtime. It does not currently provide secure API execution, repository authorization, sandboxed worktrees, internet egress control, patch application, automated testing, commits, or pull request creation.
+The current cockpit is not yet an autonomous coding agent runtime.
 
----
+It does not currently provide secure API execution, repository authorization, sandboxed worktrees, internet egress control, patch application, automated testing, commits, or pull request creation.
+
+It also does not yet provide a dedicated developer-specific top menu or developer workspace navigation environment.
+
+Current gaps include:
+
+```text
+No developer-specific topbar
+No developer-specific left sidebar
+No developer-specific right sidebar
+No repository workspace navigation model
+No developer-only replacement for platform navigation items such as Feed or public Dashboard
+No Codex-style session navigation model
+No visible command categories for scan, plan, debug, patch, review, test, commit, and pull request
+No repository connection and discovery workflow surface
+No prompt engineering workspace
+No code review workspace
+No issue debugging workspace
+No runtime status workspace
+No approval queue workspace
+No reusable developer menu fragment authority model
+No developer navigation doctrine based on the approved Control Center nested settings baseline
+```
+
+The immediate architecture task is to define Developer Mode as its own developer workspace with dedicated navigation, not as a generic Platform Menu destination.
+----
 
 ## III. Target Architecture
 
@@ -124,6 +167,10 @@ The target architecture is:
 
 ```text
 Developer Mode Toggle
+→ Developer Workspace Shell
+→ Developer-Specific Top Menu
+→ Developer Left Sidebar
+→ Developer Right Sidebar
 → Developer Command Surface
 → Voice/Text Command Composer
 → Provider Router
@@ -136,13 +183,347 @@ Developer Mode Toggle
 → Commit / Pull Request Execution
 ```
 
-The browser is the command and review surface.
+The browser is the command, navigation, context, and review surface.
 
 The backend runtime is the execution authority.
 
+Developer Mode must not reuse the public platform top menu as-is.
+
+Developer Mode requires its own top menu because the developer surface has different information architecture from the public platform surface.
+
+Public platform navigation may include:
+
+```text
+Menu
+Search
+Models
+Feed
+Dashboard
+Profile
+```
+
+Developer Mode navigation should instead prioritize:
+
+```text
+Workspace
+Repositories
+Branches
+Prompt
+Scan
+Plan
+Debug
+Patch
+Review
+Tests
+Commits
+Pull requests
+Runtime
+Logs
+Settings
+```
+
+Developer Mode must feel like a focused coding-agent workspace, not a public content or profile navigation surface.
+----
+
+## IV. Developer-Specific Top Menu Architecture
+
+Developer Mode requires a dedicated top menu that replaces the generic platform topbar while Developer Mode is active.
+
+The developer top menu must be fragmented, reusable, token-based, and registered through the website fragment authority system.
+
+The developer top menu must not include irrelevant public-platform items unless explicitly required.
+
+Items to exclude from the default developer top menu:
+
+```text
+Feed
+Public dashboard shortcut
+Public model directory shortcut
+Generic public platform navigation
+```
+
+Required developer top menu zones:
+
+```text
+Developer mode identity
+Repository connection state
+Active repository selector
+Branch selector
+Runtime/provider status
+Command mode selector
+Review queue shortcut
+Logs/status shortcut
+Developer settings shortcut
+Profile/account utility
+```
+
+The developer top menu should expose high-signal actions only.
+
+It must stay calm, sparse, and operational.
+
+It must not become a crowded command ribbon.
+
+Approved top menu candidate items:
+
+```text
+Repository
+Branch
+Prompt
+Scan
+Debug
+Review
+Tests
+Pull request
+Runtime
+Settings
+```
+
+The top menu is for global developer context and mode switching.
+
+Detailed controls belong in sidebars or the main command surface.
+
 ---
 
-## IV. Frontend Responsibilities
+## V. Developer Workspace Shell Architecture
+
+Developer Mode requires its own workspace shell.
+
+Approved shell regions:
+
+```text
+Developer top menu
+Developer left sidebar
+Main command/review surface
+Developer right sidebar
+Runtime/status footer or status rail
+```
+
+The developer shell must be modular.
+
+Potential fragment structure:
+
+```text
+home/developer-mode/
+  developer-mode-shell.html
+  developer-mode-topbar.html
+  developer-mode-left-sidebar.html
+  developer-mode-right-sidebar.html
+  developer-mode-command-surface.html
+  developer-mode-status-rail.html
+```
+
+Potential style ownership:
+
+```text
+assets/css/layers/website/home/developer-mode/developer-mode-shell.css
+assets/css/layers/website/home/developer-mode/developer-mode-topbar.css
+assets/css/layers/website/home/developer-mode/developer-mode-sidebar.css
+assets/css/layers/website/home/developer-mode/developer-mode-command-surface.css
+```
+
+Potential runtime ownership:
+
+```text
+assets/js/layers/website/home/developer-mode/developer-mode-shell.js
+assets/js/layers/website/home/developer-mode/developer-mode-navigation.js
+assets/js/layers/website/home/developer-mode/developer-mode-runtime-state.js
+```
+
+The final file structure must be created only after a live scan of the current website architecture.
+
+---
+
+## VI. Developer Left Sidebar Architecture
+
+The developer left sidebar should own workspace navigation.
+
+It should behave like a developer cockpit navigation rail, not like public website navigation.
+
+Recommended left sidebar sections:
+
+```text
+Overview
+Repositories
+Workspaces
+Prompts
+Scans
+Plans
+Debugging
+Patches
+Reviews
+Tests
+Commits
+Pull requests
+Logs
+Settings
+```
+
+The left sidebar should support nested Apple-native navigation using the approved Control Center nested settings baseline.
+
+Examples:
+
+```text
+Repositories
+  Connected repositories
+  Discover repositories
+  Repository permissions
+  Protected paths
+
+Debugging
+  Current issue
+  Console errors
+  Runtime traces
+  Failed tests
+
+Reviews
+  Pending patches
+  Test results
+  Approval queue
+  Commit draft
+```
+
+The left sidebar must remain stable while the main panel changes.
+
+---
+
+## VII. Developer Right Sidebar Architecture
+
+The developer right sidebar should own context, not primary navigation.
+
+Recommended right sidebar panels:
+
+```text
+Active repository
+Active branch
+Current file target
+Runtime provider
+Sandbox status
+Approval status
+Risk warnings
+Recent logs
+Current task metadata
+```
+
+The right sidebar should support collapsible visibility.
+
+It should be useful for developer awareness without overwhelming the command surface.
+
+The right sidebar must not contain secrets, credentials, or direct mutation controls.
+
+---
+
+## VIII. Developer Command Surface Architecture
+
+The main command surface is the core Developer Mode working area.
+
+Required command categories:
+
+```text
+Prompt engineering
+Repository scan
+File targeting
+Plan generation
+Debug issue
+Fix code
+Patch review
+Test command generation
+Commit preparation
+Pull request preparation
+Runtime log review
+```
+
+The command surface should support both voice and text input.
+
+It should provide structured command templates rather than one uncontrolled freeform field.
+
+Recommended command mode options:
+
+```text
+Scan repository
+Explain architecture
+Find file
+Open file
+Debug issue
+Fix code
+Review patch
+Generate tests
+Prepare commit
+Prepare pull request
+Document change
+```
+
+Developer Mode must retain the established Neuroartan workflow:
+
+```text
+Scan
+Analyze
+Open exact file
+Edit only after confirmation
+Verify
+Document
+Propagate
+```
+
+---
+
+## IX. Developer Navigation Reuse Rule
+
+Developer Mode must reuse the approved Control Center nested settings doctrine where appropriate.
+
+Reusable patterns include:
+
+```text
+Folder-based module structure
+Fragment authority registration
+Icon-only drill-in rows
+Native local icons
+Token-based left/right navigation wrapper
+Stable left navigation with right-panel replacement
+Theme-aware rounded grouped surfaces
+No hardcoded icons
+No cursor overrides
+No overlays
+```
+
+The Control Center Session pilot is the current reference baseline for nested navigation.
+
+Developer Mode must not create a separate immature navigation system when the approved baseline already exists.
+
+Platform Menu and Developer Mode should both inherit from the same reusable navigation doctrine after primitive extraction.
+
+---
+
+## X. Missing Architecture To Define Before Implementation
+
+Before implementation, the following architecture must be mapped and documented:
+
+```text
+Developer topbar fragment ownership
+Developer topbar CSS ownership
+Developer topbar JS ownership
+Developer shell mount location
+Developer left sidebar fragment structure
+Developer right sidebar fragment structure
+Developer command surface fragment structure
+Developer runtime state object
+Repository selector data source
+Branch selector data source
+Provider/runtime status data source
+Command mode registry
+Prompt template registry extension
+Debug workflow registry
+Review queue registry
+Approval gate registry
+Fragment authority registration keys
+Route behavior from Platform Menu into Developer Mode
+Visibility behavior when Developer Mode is active
+Exit behavior back to normal platform mode
+```
+
+No implementation should begin until the current architecture is scanned and the missing ownership map is confirmed.
+----
+
+## XI. Frontend Responsibilities
 
 The frontend may own:
 
@@ -174,7 +555,7 @@ The frontend must never own:
 
 ---
 
-## V. Backend Runtime Responsibilities
+## XII. Backend Runtime Responsibilities
 
 The backend/runtime layer must own:
 
@@ -198,7 +579,7 @@ The runtime must enforce explicit approval gates before repository mutation.
 
 ---
 
-## VI. Security Boundaries
+## XIII. Security Boundaries
 
 Developer Mode must follow these boundaries:
 
@@ -220,7 +601,7 @@ This architecture must treat Codex-style execution as a controlled environment, 
 
 ---
 
-## VII. Developer Mode Activation Model
+## XIV. Developer Mode Activation Model
 
 Developer Mode should be exposed through a developer-only toggle.
 
@@ -237,7 +618,7 @@ Developer Mode must remain hidden from normal public users unless explicitly aut
 
 ---
 
-## VIII. Provider Routing Model
+## XV. Provider Routing Model
 
 Developer Mode must support provider routing without binding the platform to one model vendor.
 
@@ -254,7 +635,7 @@ The frontend may display provider options, but it must not contain provider secr
 
 ---
 
-## IX. Repository Scope Model
+## XVI. Repository Scope Model
 
 Developer Mode must allow repository selection through a governed repository scope registry.
 
@@ -274,7 +655,7 @@ No repository may be mutated without explicit authorization.
 
 ---
 
-## X. Implementation Phases
+## XVII. Implementation Phases
 
 Phase 01 — Architecture Documentation
 
@@ -292,6 +673,17 @@ Phase 02 — Frontend Surface Consolidation
 - connect developer toggle to cockpit visibility
 - map provider, repository, scan, and workflow registries
 - preserve page-local isolation until runtime architecture is ready
+
+Phase 02A — Developer Navigation Architecture
+
+- scan current platform topbar, Platform Menu, developer cockpit, and stage workbench ownership
+- define developer-specific top menu fragment structure
+- define developer left sidebar fragment structure
+- define developer right sidebar fragment structure
+- define command surface routing model
+- define developer navigation fragment authority keys
+- document which public platform navigation items are excluded from Developer Mode
+- document which developer actions belong in top menu, sidebars, or command surface
 
 Phase 03 — Backend Interface Stub
 
@@ -317,7 +709,7 @@ Phase 05 — Patch Review Pipeline
 
 ---
 
-## XI. Verification Requirements
+## XVIII. Verification Requirements
 
 Required verification before runtime activation:
 
@@ -335,7 +727,7 @@ Required verification before runtime activation:
 
 ---
 
-## XII. Approval Routing
+## XIX. Approval Routing
 
 Review order:
 
@@ -349,18 +741,22 @@ Legal review is required before external user exposure, third-party provider exe
 
 ---
 
-## XIII. Status
+## XX. Status
 
 Developer Mode is approved for architecture definition.
 
 Developer Mode is not yet approved for live autonomous repository mutation.
 
-Implementation must proceed through document completion, index propagation, frontend consolidation, backend interface design, and then runtime prototype.
+Developer Mode is also not yet mature enough for advanced Codex-equivalent UX because the developer-specific navigation architecture is missing.
 
----
+The next maturity step is to define and implement a dedicated Developer Mode top menu, left sidebar, right sidebar, and command surface using the same reusable, fragmented, token-based, Apple-native navigation doctrine approved through the Control Center nested settings pilot.
+
+Implementation must proceed through scan, ownership mapping, architecture update, fragment registration planning, frontend consolidation, backend interface design, and then runtime prototype.
+----
 
 ## Change Log
 
+- 2026-05-03 — v0.2 Expanded Developer Mode architecture to define the missing developer-specific top menu, developer workspace shell, left sidebar, right sidebar, command surface, Codex-equivalent navigation model, Control Center nested settings doctrine reuse requirement, and missing ownership map before implementation. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture maturity audit under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Created Developer Mode Architecture Specification to define the governed frontend/backend boundary for Codex-equivalent developer functionality. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture specification under `/Users/artan/Documents/Neuroartan/website`.
 
 ---
@@ -372,6 +768,6 @@ GSA PROTOCOL STATUS: Pending Review
 GSA APPROVAL: false  
 LEGAL REVIEW REQUIRED: true  
 CREO REVIEW REQUIRED: true  
-VERSION: 0.1
+VERSION: 0.2
 
 END OF DOCUMENT

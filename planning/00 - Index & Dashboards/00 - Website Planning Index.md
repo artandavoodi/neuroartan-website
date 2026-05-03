@@ -32,11 +32,11 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.3"
+version: "0.5"
 
 created_date: "2026-05-02"
-last_updated: "2026-05-02"
-last_reviewed: "2026-05-02"
+last_updated: "2026-05-03"
+last_reviewed: "2026-05-03"
 review_cycle: "Weekly"
 
 effective_date: "2026-05-02"
@@ -54,13 +54,22 @@ scope:
   - "Codex prompt governance"
   - "Repository development workflow planning"
   - "Website modular architecture governance"
+  - "Control Center nested settings design doctrine"
+  - "Apple-native settings surface baseline governance"
+  - "Platform Menu reusable settings architecture preparation"
+  - "Developer Mode dedicated top menu architecture governance"
+  - "Developer Mode sidebar and command surface architecture governance"
+  - "Codex-style developer workspace maturity planning"
 
 index_targets:
   - "Strategic Decisions Register"
   - "Execution Roadmaps Register"
   - "Codex Prompt Queue Register"
   - "Architecture Specifications Register"
+  - "Developer Mode Architecture Specification Register"
   - "Website Modular Architecture Doctrine Register"
+  - "Control Center Grouped Settings Surface Design Doctrine Register"
+  - "AI Development Cockpit Implementation Change Log Register"
   - "Provider Strategy Register"
   - "Repository Workflow Register"
   - "Daily Execution Records Register"
@@ -79,9 +88,11 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/07 - Voice-to-Agent Command Pipeline Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/01 - Model Provider Strategy.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md"
 
 tags:
   - "website-planning"
@@ -91,9 +102,18 @@ tags:
   - "development-continuity"
   - "website-modular-architecture"
   - "developer-mode"
+  - "developer-topbar"
+  - "developer-sidebar"
+  - "developer-command-surface"
+  - "codex-style-interface"
   - "ai-coding-agent-runtime"
   - "importer-doctrine"
   - "no-overlaying"
+  - "control-center"
+  - "nested-settings"
+  - "apple-native-settings"
+  - "platform-menu-reuse"
+  - "company-style"
 ---
 
 # Website Planning Index
@@ -129,15 +149,17 @@ It must not be treated as public website content unless explicit publication app
 | Codex Daily Prompt Queue | `/Users/artan/Documents/Neuroartan/website/planning/03 - Codex Prompt Queue/01 - Codex Daily Prompt Queue.md` | Controls daily Codex prompts and execution sequencing. |
 | AI Development Cockpit Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/01 - AI Development Cockpit Architecture Specification.md` | Defines modular architecture, file ownership, and implementation boundaries. |
 | Website Modular Architecture Doctrine | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/02 - Website Modular Architecture Doctrine.md` | Governs CSS, JavaScript, fragment, namespace, importer, and no-overlay modular architecture discipline for the website layer. |
-| Developer Mode Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md` | Defines the Developer Mode frontend/backend boundary for repository-aware AI development. |
+| Developer Mode Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md` | Defines the Developer Mode frontend/backend boundary, dedicated developer top menu, left/right sidebars, command surface, Codex-style developer workspace model, and Control Center nested settings reuse requirement. |
 | AI Coding Agent Runtime Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/04 - AI Coding Agent Runtime Specification.md` | Defines the secure server-side runtime required for provider execution, repository work, scan, patch, test, and audit flows. |
 | GitHub Repository Access & Permission Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/05 - GitHub Repository Access & Permission Specification.md` | Defines scoped GitHub App/OAuth access, repository permissions, branch policy, and mutation attribution. |
 | Agent Sandbox & Internet Egress Governance Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md` | Defines sandbox isolation, worktree containment, domain allowlists, HTTP method policy, and egress risk controls. |
 | Voice-to-Agent Command Pipeline Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/07 - Voice-to-Agent Command Pipeline Specification.md` | Defines voice command capture, normalization, risk classification, confirmation, and runtime routing boundaries. |
 | Patch Review, Test, Commit & PR Workflow Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md` | Defines reviewable patch artifacts, test approval, commit attribution, and pull request governance. |
+| Control Center Grouped Settings Surface Design Doctrine | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md` | Defines the approved Control Center grouped settings surface, Stage-native section header baseline, folder-based section module structure, Session nested panel pilot, icon-only drill-in interaction, local native icon rule, nested left/right navigation wrapper, and Platform Menu reuse requirement. |
 | Model Provider Strategy | `/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/01 - Model Provider Strategy.md` | Defines cloud, local, and manual provider routing strategy. |
 | Repository Development Workflow Specification | `/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md` | Defines terminal scan, file targeting, patch instruction, and GitHub commit workflows. |
 | Daily Execution Log | `/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md` | Records daily execution, verification, blockers, and next actions. |
+| AI Development Cockpit Implementation Change Log | `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md` | Records implementation sessions, file changes, verification results, blockers, and reusable system baselines including the Control Center nested settings pilot. |
 
 ---
 
@@ -156,11 +178,13 @@ The AI Development Cockpit should become the internal command surface for prompt
 Current priority:
 
 1. preserve the existing command-generation cockpit frontend
-2. complete Developer Mode architecture documentation before runtime work
+2. complete Developer Mode navigation ownership mapping before runtime work, including dedicated developer top menu, left sidebar, right sidebar, and command surface
 3. keep provider, GitHub, sandbox, internet egress, patch, test, commit, and pull request execution server-side
 4. prohibit frontend secrets and browser-side repository mutation
 5. define backend interface contracts before implementing runtime code
 6. proceed to read-only backend stubs only after architecture review
+7. preserve the Control Center nested settings pilot as the canonical Apple-native company-style baseline before Platform Menu reuse or global primitive extraction
+8. treat Developer Mode as a dedicated developer workspace requiring its own top menu, sidebars, command surface, and Codex-style navigation before implementation
 
 ---
 
@@ -212,26 +236,34 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 | Codex Daily Prompt Queue | Draft | Prompt 01 ready for review before execution. |
 | AI Development Cockpit Architecture Specification | Draft | Requires architecture review before Codex execution. |
 | Website Modular Architecture Doctrine | Draft | Active continuation reference for modular website architecture stabilization. |
-| Developer Mode Architecture Specification | Draft | Active architecture reference for repository-aware AI development boundaries. |
+| Developer Mode Architecture Specification | Draft | Expanded to version 0.2; now requires ownership mapping for dedicated developer top menu, sidebars, command surface, repository workspace, and Codex-style navigation before implementation. |
 | AI Coding Agent Runtime Specification | Draft | Requires backend/runtime architecture review before implementation. |
 | GitHub Repository Access & Permission Specification | Draft | Requires security and repository governance review before implementation. |
 | Agent Sandbox & Internet Egress Governance Specification | Draft | Requires security review before any network-capable runtime implementation. |
 | Voice-to-Agent Command Pipeline Specification | Draft | Requires UX, security, and command-risk review before runtime binding. |
 | Patch Review, Test, Commit & PR Workflow Specification | Draft | Requires repository mutation and approval workflow review before implementation. |
+| Control Center Grouped Settings Surface Design Doctrine | Active | Approved visual and runtime baseline for Control Center Session pilot; requires propagation review before Platform Menu adoption. |
 | Model Provider Strategy | Draft | Requires provider/security review before implementation. |
 | Repository Development Workflow Specification | Draft | Requires workflow review before cockpit implementation. |
 | Daily Execution Log | Draft | Active for continuity tracking. |
+| AI Development Cockpit Implementation Change Log | Active | Updated with Control Center nested settings baseline and company-style system lock. |
 
 ---
 
 ## 9. Next Action
 
-Next action is to define backend interface contracts for read-only Developer Mode runtime stubs. Runtime code must not be implemented until provider secrets, GitHub authorization, sandbox isolation, internet egress policy, patch review, and approval gates are reviewed.
+Next action is to scan Developer Mode, Platform Menu, topbar, sidebar, cockpit, and stage workbench ownership before implementing the dedicated developer workspace navigation system.
+
+The Control Center Session nested settings pilot remains the canonical reusable Apple-native settings baseline for nested navigation, drill-in rows, native icon controls, and future Platform Menu or Developer Mode reuse.
+
+Developer Mode runtime work remains gated until provider secrets, GitHub authorization, sandbox isolation, internet egress policy, patch review, and approval gates are reviewed.
 
 ---
 
 ## Change Log
 
+- 2026-05-03 — v0.5 Indexed Developer Mode Architecture Specification version 0.2 as the active maturity reference for dedicated developer top menu, developer left and right sidebars, command surface, repository workspace, Codex-style navigation, and Control Center nested settings doctrine reuse. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update for Developer Mode architecture maturity under `/Users/artan/Documents/Neuroartan/website`.
+- 2026-05-03 — v0.4 Indexed Control Center Grouped Settings Surface Design Doctrine and AI Development Cockpit Implementation Change Log as active planning records. Registered the Control Center Session nested settings pilot as the canonical Apple-native company-style baseline for future Platform Menu reuse and reusable primitive extraction planning. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.3 Indexed Developer Mode, AI Coding Agent Runtime, GitHub repository access, sandbox and internet egress governance, voice-to-agent command pipeline, and patch/test/commit/PR workflow specifications as active planning records. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture documentation under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.2 Indexed Website Modular Architecture Doctrine as an active planning and governance record for website stabilization continuity. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning index update under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Initial website planning index created for the thirty-day AI Development Cockpit documentation layer. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning layer under `/Users/artan/Documents/Neuroartan/website`.
@@ -245,7 +277,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — Website Planning Index  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.3
+VERSION: 0.5
 
 ---
 

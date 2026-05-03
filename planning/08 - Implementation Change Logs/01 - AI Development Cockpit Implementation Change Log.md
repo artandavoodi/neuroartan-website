@@ -32,11 +32,11 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.1"
+version: "0.2"
 
 created_date: "2026-05-02"
-last_updated: "2026-05-02"
-last_reviewed: "2026-05-02"
+last_updated: "2026-05-03"
+last_reviewed: "2026-05-03"
 review_cycle: "Daily"
 
 effective_date: "2026-05-02"
@@ -53,6 +53,9 @@ scope:
   - "Profile and model creation implementation tracking"
   - "Homepage and platform menu continuation tracking"
   - "Next-action preservation"
+  - "Control Center nested settings implementation trace"
+  - "Apple-native settings surface baseline tracking"
+  - "Reusable Platform Menu design-system propagation tracking"
 
 index_targets:
   - "Website Planning Index"
@@ -70,6 +73,11 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/01 - Model Provider Strategy.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md"
+  - "/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html"
+  - "/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css"
+  - "/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js"
+  - "/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js"
 
 tags:
   - "website-planning"
@@ -77,6 +85,11 @@ tags:
   - "ai-development-cockpit"
   - "codex-workflow"
   - "development-continuity"
+  - "control-center"
+  - "nested-settings"
+  - "apple-native-settings"
+  - "platform-menu-reuse"
+  - "company-style"
 ---
 
 # AI Development Cockpit Implementation Change Log
@@ -114,6 +127,146 @@ Unverified work must be marked as unverified.
 ---
 
 ## 3. Current Session Record
+
+### 2026-05-03 — Control Center Nested Settings Baseline and Company-Style System Lock
+
+Execution Agent: ChatGPT / Website Systems & Development Agent
+
+Implementation Objective:
+
+Finalize and document the Control Center grouped settings surface as the approved Neuroartan Apple-native settings baseline; convert Control Center sections into folder-based modules; implement the Session nested settings pilot; replace hardcoded arrows with local native icons; normalize drill-in interaction ownership; and record the reusable Platform Menu propagation requirement.
+
+Documents Read:
+
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/core/03-primitives/radio-list.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/radio-list.js`
+
+Files Created:
+
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/accessibility/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/changelog/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/chat-history/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/developer/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/memory/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/model/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/overview/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/privacy/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/response/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/active-chat.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/reset-behavior.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/persistence.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/stage/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/voice/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/workspace/index.html`
+
+Files Removed:
+
+- Legacy flat section files under `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/*.html` were removed after their folder-based `index.html` equivalents were created and fragment authorities were updated.
+
+Files Modified:
+
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/00-interaction-settings-shell.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/session/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/interaction-settings-shell.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js`
+
+Systems Implemented:
+
+- Stage-approved grouped settings surface propagated as Control Center baseline.
+- Unified section headers with local native icons, title row, and in-section descriptions.
+- Top-shell active description disabled for this Control Center surface while preserved as reusable infrastructure.
+- Row-level descriptions preserved in markup and hidden through CSS for the quiet Apple-native surface.
+- Inner setting labels bound to the same typography tokens as the left Control Center navigation labels.
+- All Control Center section fragments migrated into folder-based modules with `index.html` ownership.
+- Fragment authorities updated to point parent Control Center sections to folder-based `index.html` files.
+- Session nested child fragments created for `active-chat`, `reset-behavior`, and `persistence`.
+- Session parent rows converted into drill-in rows.
+- Drill-in rows normalized so only the right-side native icon button is interactive; row text and empty row area are non-interactive.
+- Drill indicators aligned to the same right-side lane as toggles through shared control-width tokens.
+- Nested left/right navigation wrapper generated after the Control Center title by the shell runtime.
+- Nested navigation wrapper styled as a rounded, theme-aware container with visible divider.
+- Hardcoded arrow characters removed from active nested controls.
+- Local native `left.svg` and `right.svg` assets used for shell navigation and drill indicators.
+- Shared arrow icon size token introduced and applied to both shell navigation and drill rows.
+- Control Center header vertical padding normalized symmetrically for geometric centering.
+- `fragment:mounted` guard added so nested fragment loading does not reboot or reset the shell.
+- Control Center grouped settings doctrine upgraded to version `1.3.0` as a global reusable company-style baseline.
+
+Systems Scaffolded Only:
+
+- Session nested navigation is the first approved pilot; full propagation to every Control Center section remains pending.
+- Right-side forward navigation control exists visually but is disabled until forward-history behavior is defined.
+- Platform Menu reuse is documented as a requirement but not yet implemented.
+- Global primitive extraction for drill-in rows and nested navigation remains a future refactor after pilot verification.
+- Icon artwork final refinement remains with Artan; the runtime and token system are ready for native icon replacement/refinement.
+
+Verification Performed:
+
+- Confirmed all Control Center sections use folder-based `index.html` files and no duplicate flat legacy section files remain.
+- Confirmed Session child panel files exist.
+- Confirmed fragment authorities point to folder-based parent sections and registered Session child panels.
+- Confirmed hardcoded arrow characters were removed from active nested Control Center controls.
+- Confirmed nested shell navigation uses local native `left.svg` and `right.svg` icons.
+- Confirmed Session drill indicators use local native `right.svg` icons.
+- Confirmed drill-in row interactivity is limited to the icon button only.
+- Confirmed nested navigation wrapper appears after the Control Center title and does not push the title from the left.
+- Confirmed header padding symmetry and nested navigation visual centering were corrected.
+- Confirmed final visual state was approved by Artan as elegant, beautiful, and complete, with only icon artwork refinement remaining under Artan’s ownership.
+
+Verification Commands Run:
+
+```bash
+cd "/Users/artan/Documents/Neuroartan/website" && {
+  find "docs/assets/fragments/layers/website/home/interaction-settings/sections" -maxdepth 2 -type f | sort
+  grep -nE "home-interaction-settings-(overview|workspace|model|response|voice|memory|session|stage|developer|changelog|privacy|accessibility)" "docs/assets/js/core/01-foundation/fragment-authorities.js"
+  grep -RInE "textContent = '‹'|textContent = '›'|>›<|>‹<|›|‹|back.svg" "docs/assets/js/layers/website/home/interaction-settings" "docs/assets/fragments/layers/website/home/interaction-settings" || true
+  grep -nE "drill-row|drill-indicator|nested-navigation|arrow-icon-size|header-padding-y" "docs/assets/css/layers/website/home/interaction-settings/interaction-settings-shell.css"
+}
+```
+
+Verification Result:
+
+- Folder-based section module structure is clean.
+- Session child panels are present and registered.
+- Hardcoded active arrow characters are removed.
+- Native local icon paths are used.
+- Nested runtime works for Session pilot.
+- Visual baseline is approved.
+- Documentation doctrine was upgraded and verified at version `1.3.0`.
+
+Blockers:
+
+- Platform Menu adoption must wait until the Control Center pilot is treated as the canonical reusable system.
+- Final icon vector polish remains outside this implementation entry and is owned by Artan.
+- Global primitive extraction is not yet separated into a standalone primitive layer.
+
+Remaining Work:
+
+- Propagate nested section-folder architecture beyond Session only after the Session pilot is locked as global reusable doctrine.
+- Extract drill-in row and nested navigation into a formal reusable primitive layer if required by Platform Menu adoption.
+- Reuse this pattern for Platform Menu after a dedicated scan of Platform Menu ownership, fragment authority, and runtime structure.
+- Update any downstream website planning indexes or dashboards if required by the Website Planning Index.
+- Run a final browser pass after icon vectors are finalized by Artan.
+
+Next Exact Action:
+
+Use the Control Center Session pilot as the reference baseline for the next Platform Menu architecture scan and reusable primitive extraction planning.
+
+Next Exact File To Open:
+
+`/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
+
+---
 
 ### 2026-05-02 — Planning and Codex Execution Preparation
 
@@ -398,6 +551,7 @@ cd "/Users/artan/Documents/Neuroartan/website" && {
 
 ## Change Log
 
+- 2026-05-03 — v0.2 Control Center nested settings baseline recorded. Documented Stage-style grouped surface propagation, folder-based section module migration, Session nested child panels, fragment authority updates, icon-only drill-in interaction, local native icon enforcement, token-based nested navigation, rounded theme-aware left/right wrapper, symmetrical header centering, and Platform Menu reuse requirement. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Control Center nested settings pilot under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Codex implementation session recorded for modular AI Development Cockpit scaffolding, model creation route, Supabase-ready profile media storage, and touched CSS tokenization. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Codex. Agent ID: Codex. Execution Context: Website implementation layer under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Initial AI Development Cockpit implementation change log created for Codex/ChatGPT continuity and next-action preservation. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning layer under `/Users/artan/Documents/Neuroartan/website`.
 
@@ -410,7 +564,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — AI Development Cockpit Implementation Change Log  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.1
+VERSION: 0.2
 
 ---
 

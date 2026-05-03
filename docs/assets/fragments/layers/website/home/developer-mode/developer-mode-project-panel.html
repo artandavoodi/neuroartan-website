@@ -1,0 +1,28 @@
+<!-- =============================================================================
+     01) HOMEPAGE DEVELOPER PROJECT PANEL
+============================================================================= -->
+<section class="home-developer-mode-panel" data-home-developer-project-panel aria-label="Project navigator">
+  <header class="home-developer-mode-panel__header">
+    <p class="home-developer-mode-panel__eyebrow">Project</p>
+    <h3 class="home-developer-mode-panel__title">Create and bind development projects</h3>
+    <p class="home-developer-mode-panel__copy">Project records bind workspace, repository, provider, and environment state to the backend session pending Supabase profile linkage.</p>
+  </header>
+
+  <form class="home-developer-mode-form" data-home-developer-project-form>
+    <label class="home-developer-mode-field">
+      <span>Project name</span>
+      <input name="projectName" type="text" autocomplete="off" placeholder="Website development workspace">
+    </label>
+    <label class="home-developer-mode-field">
+      <span>Workspace name</span>
+      <input name="workspaceName" type="text" autocomplete="off" placeholder="Homepage Developer Mode">
+    </label>
+    <label class="home-developer-mode-field">
+      <span>Environment</span>
+      <select name="environmentMode" data-home-developer-environment-mode></select>
+    </label>
+    <button class="home-developer-mode-button home-developer-mode-button--primary" type="submit">Create project</button>
+  </form>
+
+  <pre class="home-developer-mode-output" data-home-developer-output="projects">No project created.</pre>
+</section>

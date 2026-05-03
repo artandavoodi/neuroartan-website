@@ -4,6 +4,7 @@
      02) DEVELOPER SECTION HEADER
      03) DEVELOPER RUNTIME
      04) DEVELOPER CONTROLS
+     05) DEVELOPER CONNECTIONS
 ============================================================================= -->
 
 <!-- =============================================================================
@@ -33,21 +34,21 @@
       <div class="home-interaction-settings-panel__toggle-row" aria-label="Local runtime status">
         <span>
           <span class="home-interaction-settings-panel__option-label">Local runtime</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare health checks for Ollama and local model execution</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="local-runtime">Checking local runtime boundary</span>
         </span>
       </div>
 
       <div class="home-interaction-settings-panel__toggle-row" aria-label="Cloud provider status">
         <span>
           <span class="home-interaction-settings-panel__option-label">Cloud providers</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare API routing for external model providers</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="cloud-providers">Checking server-side provider credentials</span>
         </span>
       </div>
 
       <div class="home-interaction-settings-panel__toggle-row" aria-label="Provider registry status">
         <span>
           <span class="home-interaction-settings-panel__option-label">Provider registry</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare a governed registry for local, cloud, and custom models</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="provider-registry">Registry status pending</span>
         </span>
       </div>
     </div>
@@ -63,7 +64,7 @@
       <div class="home-interaction-settings-panel__toggle-row" aria-pressed="false">
         <span>
           <span class="home-interaction-settings-panel__option-label">Developer mode</span>
-          <span class="home-interaction-settings-panel__option-description">Expose governed development controls when authorization is available</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="developer-mode">Homepage Developer Mode routes to Workspace / Developer Mode</span>
         </span>
         <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="developer-mode" data-home-interaction-setting-value="disabled"><span></span></button>
       </div>
@@ -71,9 +72,39 @@
       <div class="home-interaction-settings-panel__toggle-row" aria-pressed="false">
         <span>
           <span class="home-interaction-settings-panel__option-label">GitHub authorization</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare repository-aware development actions for future integration</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="github">Authorization status pending</span>
         </span>
         <button class="home-interaction-settings-panel__toggle" type="button" data-home-interaction-toggle-control aria-label="Toggle setting" data-home-interaction-setting="github-authorization" data-home-interaction-setting-value="disabled"><span></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================================
+       05) DEVELOPER CONNECTIONS
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-developer-connections-title">
+    <h3 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-developer-connections-title">Connections</h3>
+
+    <div class="home-interaction-settings-panel__section-group" aria-label="Developer connection state">
+      <div class="home-interaction-settings-panel__toggle-row" aria-label="Active repository">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Active repository</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="active-repository">Not selected</span>
+        </span>
+      </div>
+
+      <div class="home-interaction-settings-panel__toggle-row" aria-label="Active agent">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Active agent</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="active-agent">Not active</span>
+        </span>
+      </div>
+
+      <div class="home-interaction-settings-panel__toggle-row" aria-label="Approval gate">
+        <span>
+          <span class="home-interaction-settings-panel__option-label">Approval gate</span>
+          <span class="home-interaction-settings-panel__option-description" data-home-developer-setting-status="approval">Repository mutation requires approval</span>
+        </span>
       </div>
     </div>
   </section>

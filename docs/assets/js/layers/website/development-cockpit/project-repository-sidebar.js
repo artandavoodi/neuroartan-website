@@ -46,14 +46,16 @@ function renderRepositoryButton(context, root, repository) {
       entry.setAttribute('aria-pressed', 'false');
     });
     button.setAttribute('aria-pressed', 'true');
-    const response = await requestDeveloperRuntimeAction(context, 'github-connection-status', {
-      repository: repository.id
+    const response = await requestDeveloperRuntimeAction(context, 'developer-state-update', {
+      activeRepository: repository.fullName || repository.id,
+      activeBranch: repository.defaultBranch || ''
     });
     writeCockpitOutput(root, '[data-project-repository-output]', [
       `Repository: ${repository.label || repository.id}`,
       `Root: ${repository.root || ''}`,
-      `GitHub status: ${response.status}`,
-      `Reason: ${response.reason}`
+      `Selection status: ${response.status}`,
+      `Active branch: ${response.developerState?.activeBranch || repository.defaultBranch || 'not selected'}`,
+      `Persistence: ${response.developerState?.canonicalPersistence || 'server_session_pending_supabase_profile_link'}`
     ].join('\n'));
   });
 
@@ -83,7 +85,28 @@ export function initProjectRepositorySidebar(context) {
     ? context.registries.repositoryScopes.repositories
     : [];
 
-  renderRepositoryList(context, root, repositories);
+  async function renderInitialRepositories() {
+    const stateResponse = await requestDeveloperRuntimeAction(context, 'developer-state-read', {
+      source:'project-repository-sidebar'
+    });
+    const stateRepositories = Array.isArray(stateResponse?.developerState?.repositories)
+      ? stateResponse.developerState.repositories
+      : [];
+    renderRepositoryList(context, root, stateRepositories.length ? stateRepositories : repositories);
+    if (stateResponse?.developerState?.activeRepository) {
+      const activeButton = Array.from(root.querySelectorAll('[data-repository-id]')).find((button) => {
+        return button.dataset.repositoryId === stateResponse.developerState.activeRepository;
+      });
+      activeButton?.setAttribute('aria-pressed', 'true');
+      writeCockpitOutput(root, '[data-project-repository-output]', [
+        `Active repository: ${stateResponse.developerState.activeRepository}`,
+        `GitHub status: ${stateResponse.developerState.github?.connected ? 'connected' : 'authorization_required'}`,
+        `Persistence: ${stateResponse.developerState.canonicalPersistence}`
+      ].join('\n'));
+    }
+  }
+
+  void renderInitialRepositories();
 
   if (discoverButton instanceof HTMLButtonElement) {
     discoverButton.addEventListener('click', async () => {
@@ -94,8 +117,8 @@ export function initProjectRepositorySidebar(context) {
         'GitHub repository discovery requested.',
         `Runtime status: ${response.status}`,
         `Route: ${response.route}`,
-        `Reason: ${response.reason}`,
-        'Repository listing becomes live after server-side GitHub App/OAuth authorization is implemented.'
+        `Reason: ${response.reason || 'Repository data returned from backend session.'}`,
+        `Persistence: ${response.developerState?.canonicalPersistence || 'server_session_pending_supabase_profile_link'}`
       ].join('\n'));
 
       if (Array.isArray(response.repositories) && response.repositories.length > 0) {

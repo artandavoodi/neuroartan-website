@@ -73,9 +73,9 @@
           "label": "Developer Mode",
           "detail_title": "Developer Mode",
           "detail_copy": "Open the governed Codex Sessions layer for provider selection, repository scope, voice/text commands, review, approval, and release traceability.",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/developer-mode.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/developer-mode.css",
-          "module": "/assets/js/layers/website/home/platform-menu/workspace/developer-mode.js"
+          "fragment": "/assets/fragments/layers/website/home/developer-mode/developer-mode-shell.html",
+          "stylesheet": "/assets/css/layers/website/home/developer-mode/00-developer-mode-all.css",
+          "module": "/assets/js/layers/website/home/developer-mode/developer-mode-shell.js"
         },
         {
           "id": "model-sources",

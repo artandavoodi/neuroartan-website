@@ -32,7 +32,7 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.2"
+version: "0.3"
 
 created_date: "2026-05-02"
 last_updated: "2026-05-03"
@@ -56,6 +56,9 @@ scope:
   - "Control Center nested settings implementation trace"
   - "Apple-native settings surface baseline tracking"
   - "Reusable Platform Menu design-system propagation tracking"
+  - "Homepage Developer Mode workspace implementation trace"
+  - "Developer Mode backend session-state tracking"
+  - "GitHub and provider backend boundary tracking"
 
 index_targets:
   - "Website Planning Index"
@@ -511,6 +514,181 @@ Next Exact File To Open:
 
 ---
 
+### 2026-05-03 — Developer Mode Backend, Homepage Workspace, GitHub, Provider, and Agent State Session
+
+Session Date:
+
+- 2026-05-03
+
+Execution Agent:
+
+- Codex
+
+Implementation Objective:
+
+- Mature Developer Mode from disconnected cockpit/UI placeholders into a homepage-routed developer workspace with backend session state, GitHub OAuth/repository discovery boundary, provider configuration, agent activation, project binding, repository scan, and locked mutation gates.
+- Preserve the approved Control Center grouped settings baseline while extending the Developer settings section with operational state.
+
+Documents Read:
+
+- `/Users/artan/Documents/Neuroartan/website/planning/00 - Index & Dashboards/00 - Website Planning Index.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/04 - AI Coding Agent Runtime Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/05 - GitHub Repository Access & Permission Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/06 - Agent Sandbox & Internet Egress Governance Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/08 - Patch Review, Test, Commit & PR Workflow Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/09 - Control Center Grouped Settings Surface Design Doctrine.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
+
+Files Created:
+
+- `/Users/artan/Documents/Neuroartan/website/server/developer-mode/provider-service.mjs`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/data/website/development-cockpit/homepage-developer-mode-registry.json`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-shell.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-topbar.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-left-sidebar.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-right-sidebar.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-command-surface.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-repository-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-project-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-provider-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-runtime-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-review-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/developer-mode/developer-mode-settings-panel.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/developer-mode/00-developer-mode-all.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/developer-mode/developer-mode-shell.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/developer-mode/developer-mode-topbar.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/developer-mode/developer-mode-sidebar.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/css/layers/website/home/developer-mode/developer-mode-command-surface.css`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/developer-mode/developer-mode-api.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/developer-mode/developer-mode-state.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/developer-mode/developer-mode-navigation.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/developer-mode/developer-mode-shell.js`
+
+Files Modified:
+
+- `/Users/artan/Documents/Neuroartan/website/.env.example`
+- `/Users/artan/Documents/Neuroartan/website/server/developer-mode/config.mjs`
+- `/Users/artan/Documents/Neuroartan/website/server/developer-mode/runtime-store.mjs`
+- `/Users/artan/Documents/Neuroartan/website/server/developer-mode/api-router.mjs`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/data/platform/home-platform-shell.json`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/data/website/development-cockpit/developer-runtime-interface-registry.json`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/data/website/development-cockpit/provider-registry.json`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/data/website/development-cockpit/developer-home-action-registry.json`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/core/01-foundation/fragment-authorities.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/platform-menu/home-platform-shell.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/stage/home-interaction-panel.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/home/interaction-settings/sections/developer/index.html`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/home/interaction-settings/sections/developer.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/development-cockpit/provider-router.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/development-cockpit/project-repository-sidebar.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/development-cockpit/project-environment-panel.js`
+- `/Users/artan/Documents/Neuroartan/website/docs/assets/js/layers/website/development-cockpit/developer-command-composer.js`
+- `/Users/artan/Documents/Neuroartan/website/planning/00 - Index & Dashboards/00 - Website Planning Index.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/03 - Developer Mode Architecture Specification.md`
+- `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md`
+
+Systems Implemented:
+
+- Homepage-routed Developer Mode workspace inside the existing home platform shell.
+- Registered Developer Mode homepage fragments for shell, topbar, sidebars, command surface, repository panel, project panel, provider panel, runtime panel, review panel, and settings panel.
+- Backend Developer Mode state route with safe session persistence for active repository, branch, workspace, project, configured providers, active agent, and developer preferences.
+- Backend provider status/configuration route that rejects browser-supplied secret fields.
+- Backend agent activation route with provider/model/role state.
+- Backend GitHub disconnect route.
+- GitHub repository discovery now caches safe repository metadata into developer session state when OAuth credentials are configured.
+- Project creation now updates active repository, workspace, project, provider, and environment state.
+- Standalone cockpit provider selector now configures provider and activates agent through backend routes.
+- Standalone cockpit repository/project/command modules now read/write developer session state.
+- Homepage interaction panel quick actions now route into the homepage Developer Mode workspace instead of only leaving the homepage.
+- Control Center Developer section now displays backend-derived GitHub, repository, provider, agent, and approval status.
+
+Systems Scaffolded Only:
+
+- GitHub OAuth is structurally operational but requires `GITHUB_OAUTH_CLIENT_ID` and `GITHUB_OAUTH_CLIENT_SECRET` in `.env`.
+- Cloud providers are credential-gated and require server-side `OPENAI_API_KEY`, `HUGGINGFACE_API_TOKEN`, or `GEMINI_API_KEY`.
+- Gemma/Ollama local provider is route-ready but requires `OLLAMA_BASE_URL` and a live local runtime.
+- Provider execution is not live; provider configuration and agent activation are stateful but execution remains backend/runtime-gated.
+- Repository patch/test/commit/PR mutation remains locked behind approval/runtime requirements.
+- Developer state persists through backend session cookies, not canonical Supabase profile storage yet.
+
+Systems Not Completed:
+
+- Supabase profile linkage for canonical commercial persistence was not implemented in this session.
+- Production GitHub App installation flow was not implemented beyond OAuth route boundary.
+- Sandbox/worktree cloning was not implemented.
+- Provider execution adapters were not implemented.
+- Patch artifact storage, test execution, commit creation, and pull request creation were not implemented.
+- In-app browser verification was not completed because the Browser Use Node REPL JavaScript execution tool was not exposed in this session.
+
+Verification Command Run:
+
+```bash
+cd "/Users/artan/Documents/Neuroartan/website" && {
+  npm run check:developer-mode
+  find docs/assets/js/layers/website/home/developer-mode docs/assets/js/layers/website/development-cockpit docs/assets/js/layers/website/home/interaction-settings/sections -name '*.js' -print0 | xargs -0 -n1 node --check
+  python3 - <<'PY'
+from pathlib import Path
+import re
+roots = [Path('docs/assets/js/layers/website'), Path('docs/assets/js/core')]
+broken = []
+for root in roots:
+    for file in sorted(root.rglob('*.js')):
+        text = file.read_text(errors='ignore')
+        for pattern in [
+            r"import\s+['\"]([^'\"]+)['\"]",
+            r"import\s+[^'\"]+?\s+from\s+['\"]([^'\"]+)['\"]",
+            r"import\(['\"]([^'\"]+)['\"]\)",
+            r"export\s+[^'\"]+?\s+from\s+['\"]([^'\"]+)['\"]",
+            r"export\s+\*\s+from\s+['\"]([^'\"]+)['\"]",
+        ]:
+            for match in re.finditer(pattern, text):
+                target = match.group(1)
+                if target.startswith(('http://', 'https://', '/')):
+                    continue
+                resolved = (file.parent / target).resolve()
+                if not resolved.exists():
+                    broken.append((str(file), target))
+print('NO BROKEN JS IMPORTS' if not broken else '\n'.join(f'BROKEN {f} -> {t}' for f, t in broken))
+PY
+}
+```
+
+Verification Result:
+
+- `npm run check:developer-mode` passed.
+- JavaScript syntax checks for new/touched Developer Mode modules passed.
+- JavaScript import path verification returned `NO BROKEN JS IMPORTS`.
+- Local server smoke test on port `8893` returned `200` for `/index.html`, `/pages/development-cockpit/index.html`, new Developer Mode fragments, CSS, JS, and registry data.
+- API smoke test confirmed state read, provider status, provider configure, agent activation, project create, read-only repository scan, and locked patch proposal behavior.
+- Session-cookie refresh equivalent confirmed active repository, active workspace, active project, configured provider, and active agent remained available after repeated backend requests.
+
+Blockers:
+
+- Supabase profile persistence must become the canonical commercial layer for developer state.
+- GitHub OAuth cannot authorize repositories until `.env` has valid GitHub OAuth credentials.
+- Provider execution cannot run until server-side provider credentials or local runtime are configured.
+- Repository mutation remains correctly blocked until sandbox, patch artifact review, test execution, commit/PR attribution, and approval gates exist.
+
+Remaining Work:
+
+- Link backend Developer Mode session state to authenticated Supabase profile records.
+- Add durable database tables or profile fields for connected service references, selected repository, active project, provider configuration, active agent, and developer preferences.
+- Implement provider execution adapters server-side.
+- Implement sandbox/worktree clone and file-read routes.
+- Implement patch artifact storage and approval UI.
+- Implement test execution and commit/PR routes only after approval policy is complete.
+
+Next Exact Action:
+
+- Implement Supabase-backed developer profile persistence for Developer Mode state, then retest profile load/save after hard refresh and sign-in.
+
+Next Exact File To Open:
+
+`/Users/artan/Documents/Neuroartan/website/server/developer-mode/runtime-store.mjs`
+
+---
+
 ## 4. Required Codex Update Instruction
 
 At the end of every Codex implementation session, Codex must update this document with:
@@ -551,6 +729,7 @@ cd "/Users/artan/Documents/Neuroartan/website" && {
 
 ## Change Log
 
+- 2026-05-03 — v0.3 Recorded Developer Mode backend, homepage workspace, GitHub authorization boundary, repository discovery boundary, provider configuration, agent activation, project binding, Control Center Developer status, and verification results. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Codex. Agent ID: Codex. Execution Context: Website Developer Mode implementation layer under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-03 — v0.2 Control Center nested settings baseline recorded. Documented Stage-style grouped surface propagation, folder-based section module migration, Session nested child panels, fragment authority updates, icon-only drill-in interaction, local native icon enforcement, token-based nested navigation, rounded theme-aware left/right wrapper, symmetrical header centering, and Platform Menu reuse requirement. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Control Center nested settings pilot under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Codex implementation session recorded for modular AI Development Cockpit scaffolding, model creation route, Supabase-ready profile media storage, and touched CSS tokenization. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Codex. Agent ID: Codex. Execution Context: Website implementation layer under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Initial AI Development Cockpit implementation change log created for Codex/ChatGPT continuity and next-action preservation. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website planning layer under `/Users/artan/Documents/Neuroartan/website`.
@@ -564,7 +743,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — AI Development Cockpit Implementation Change Log  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.2
+VERSION: 0.3
 
 ---
 

@@ -1204,7 +1204,12 @@ function bindHomePlatformShellEvents() {
   });
 
   document.addEventListener('home:platform-shell-open-request', (event) => {
-    openHomePlatformShell(event?.detail?.destination || 'home');
+    const destination = event?.detail?.destination || 'home';
+    const subdestination = event?.detail?.subdestination || '';
+    openHomePlatformShell(destination);
+    if (subdestination) {
+      void setHomePlatformDestination(destination, subdestination);
+    }
   });
 
   document.addEventListener('home:platform-shell-close-request', () => {

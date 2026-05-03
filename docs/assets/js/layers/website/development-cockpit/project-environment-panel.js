@@ -44,6 +44,24 @@ export function initProjectEnvironmentPanel(context) {
   fillCockpitSelect(root.querySelector('[data-project-environment-provider]'), providers);
   fillCockpitSelect(root.querySelector('[data-project-environment-mode]'), modes);
 
+  void requestDeveloperRuntimeAction(context, 'developer-state-read', {
+    source:'project-environment-panel'
+  }).then((response) => {
+    const state = response?.developerState || {};
+    const repositorySelect = root.querySelector('[data-project-environment-repository]');
+    const providerSelect = root.querySelector('[data-project-environment-provider]');
+    const modeSelect = root.querySelector('[data-project-environment-mode]');
+    if (repositorySelect instanceof HTMLSelectElement && state.activeRepository) {
+      repositorySelect.value = state.activeRepository;
+    }
+    if (providerSelect instanceof HTMLSelectElement && state.developerPreferences?.defaultProvider) {
+      providerSelect.value = state.developerPreferences.defaultProvider;
+    }
+    if (modeSelect instanceof HTMLSelectElement && state.developerPreferences?.defaultEnvironmentMode) {
+      modeSelect.value = state.developerPreferences.defaultEnvironmentMode;
+    }
+  });
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const values = readCockpitForm(form);
@@ -57,7 +75,7 @@ export function initProjectEnvironmentPanel(context) {
       `Provider: ${values.provider}`,
       `Environment: ${values.environmentMode}`,
       `Canonical persistence: ${response.status}`,
-      `Reason: ${response.reason}`
+      `State persistence: ${response.developerState?.canonicalPersistence || 'server_session_pending_supabase_profile_link'}`
     ].join('\n'));
   });
 }

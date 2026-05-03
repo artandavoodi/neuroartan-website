@@ -1,0 +1,61 @@
+{
+  "version": "2026-05-03",
+  "canonicalStatus": "homepage_developer_mode_registry",
+  "topbarItems": [
+    { "id": "projects", "label": "Project", "panel": "projects" },
+    { "id": "repositories", "label": "Repository", "panel": "repositories" },
+    { "id": "branch", "label": "Branch", "panel": "repositories" },
+    { "id": "agents", "label": "Agent", "panel": "agents" },
+    { "id": "prompt", "label": "Prompt", "panel": "command" },
+    { "id": "scan", "label": "Scan", "panel": "runtime", "mode": "scan-repository" },
+    { "id": "debug", "label": "Debug", "panel": "command", "mode": "debug-issue" },
+    { "id": "review", "label": "Review", "panel": "review" },
+    { "id": "tests", "label": "Tests", "panel": "review", "mode": "generate-tests" },
+    { "id": "pull-request", "label": "Pull request", "panel": "review", "mode": "prepare-pull-request" },
+    { "id": "runtime", "label": "Runtime", "panel": "runtime" },
+    { "id": "settings", "label": "Settings", "panel": "settings" }
+  ],
+  "sidebarItems": [
+    { "id": "overview", "label": "Overview", "panel": "command" },
+    { "id": "projects", "label": "Projects", "panel": "projects" },
+    { "id": "repositories", "label": "Repositories", "panel": "repositories" },
+    { "id": "agents", "label": "Agents", "panel": "agents" },
+    { "id": "prompts", "label": "Prompts", "panel": "command", "mode": "create-prompt" },
+    { "id": "scans", "label": "Scans", "panel": "runtime", "mode": "scan-repository" },
+    { "id": "plans", "label": "Plans", "panel": "command", "mode": "explain-architecture" },
+    { "id": "debugging", "label": "Debugging", "panel": "command", "mode": "debug-issue" },
+    { "id": "patches", "label": "Patches", "panel": "review", "mode": "generate-patch" },
+    { "id": "reviews", "label": "Reviews", "panel": "review", "mode": "review-patch" },
+    { "id": "tests", "label": "Tests", "panel": "review", "mode": "generate-tests" },
+    { "id": "commits", "label": "Commits", "panel": "review", "mode": "prepare-commit" },
+    { "id": "pull-requests", "label": "Pull requests", "panel": "review", "mode": "prepare-pull-request" },
+    { "id": "logs", "label": "Logs", "panel": "runtime" },
+    { "id": "settings", "label": "Settings", "panel": "settings" }
+  ],
+  "commandModes": [
+    { "id": "scan-repository", "label": "Scan repository", "runtimeInterface": "repository-scan-request", "description": "Run a read-only repository structure scan through the backend runtime." },
+    { "id": "find-file", "label": "Find file", "runtimeInterface": "agent-session-create", "description": "Create a coding-agent session for locating relevant files." },
+    { "id": "read-file", "label": "Read file", "runtimeInterface": "agent-session-create", "description": "Create a coding-agent session for safe file-reading instructions." },
+    { "id": "explain-architecture", "label": "Explain architecture", "runtimeInterface": "agent-session-create", "description": "Ask the agent to explain owner chains and architecture." },
+    { "id": "debug-issue", "label": "Debug issue", "runtimeInterface": "agent-session-create", "description": "Ask the agent to reproduce, isolate, and root-cause a defect." },
+    { "id": "fix-code", "label": "Fix code", "runtimeInterface": "agent-session-create", "description": "Ask the agent to prepare a safe implementation plan and patch proposal." },
+    { "id": "generate-patch", "label": "Generate patch", "runtimeInterface": "patch-proposal-request", "description": "Request a reviewable patch artifact without applying it." },
+    { "id": "review-patch", "label": "Review patch", "runtimeInterface": "agent-session-create", "description": "Ask the agent to review proposed changes and risk." },
+    { "id": "generate-tests", "label": "Generate tests", "runtimeInterface": "test-request", "description": "Prepare approval-gated test execution." },
+    { "id": "prepare-commit", "label": "Prepare commit", "runtimeInterface": "agent-session-create", "description": "Generate commit summary and verification notes." },
+    { "id": "prepare-pull-request", "label": "Prepare pull request", "runtimeInterface": "commit-pr-request", "description": "Prepare a locked commit and pull request workflow." },
+    { "id": "document-change", "label": "Document change", "runtimeInterface": "agent-session-create", "description": "Ask the agent to update governed change records." }
+  ],
+  "fragmentKeys": {
+    "topbar": "home-developer-mode-topbar",
+    "leftSidebar": "home-developer-mode-left-sidebar",
+    "rightSidebar": "home-developer-mode-right-sidebar",
+    "command": "home-developer-mode-command-surface",
+    "repositories": "home-developer-mode-repository-panel",
+    "projects": "home-developer-mode-project-panel",
+    "agents": "home-developer-mode-provider-panel",
+    "runtime": "home-developer-mode-runtime-panel",
+    "review": "home-developer-mode-review-panel",
+    "settings": "home-developer-mode-settings-panel"
+  }
+}

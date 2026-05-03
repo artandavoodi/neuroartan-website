@@ -1,0 +1,93 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) ACTIONS
+   02) FORMS
+   03) LISTS
+============================================================================= */
+
+/* =============================================================================
+   01) ACTIONS
+============================================================================= */
+.home-developer-mode-actions,
+.home-developer-mode-command__modes,
+.home-developer-mode-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--layout-home-platform-destination-action-gap);
+}
+
+.home-developer-mode-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:var(--control-height-sm);
+  padding:var(--spacing-none) var(--control-padding-x-md);
+  border:var(--home-developer-mode-border);
+  background:var(--surface-2);
+  color:var(--text-primary-color);
+  font:inherit;
+  cursor:pointer;
+}
+
+.home-developer-mode-button--primary{
+  background:var(--home-panel-card-surface);
+}
+
+.home-developer-mode-button[aria-pressed="true"],
+.home-developer-mode-list__item[aria-pressed="true"]{
+  background:var(--home-panel-card-surface);
+  color:var(--text-primary-color);
+}
+
+/* =============================================================================
+   02) FORMS
+============================================================================= */
+.home-developer-mode-form,
+.home-developer-mode-command__form{
+  display:grid;
+  gap:var(--home-developer-mode-gap);
+}
+
+.home-developer-mode-field{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+  color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+}
+
+.home-developer-mode-field input,
+.home-developer-mode-field select,
+.home-developer-mode-field textarea{
+  width:var(--size-full);
+  min-height:var(--control-height-md);
+  padding:var(--spacing-sm) var(--control-padding-x-md);
+  border:var(--home-developer-mode-border);
+  background:var(--surface-2);
+  color:var(--text-primary-color);
+  font:inherit;
+  resize:vertical;
+}
+
+/* =============================================================================
+   03) LISTS
+============================================================================= */
+.home-developer-mode-list{
+  align-items:stretch;
+}
+
+.home-developer-mode-list__item{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+  min-width:min(var(--size-full), var(--panel-width));
+  padding:var(--spacing-sm) var(--control-padding-x-md);
+  border:var(--home-developer-mode-border);
+  background:var(--surface-2);
+  color:var(--text-secondary-color);
+  font:inherit;
+  text-align:start;
+  cursor:pointer;
+}
+
+.home-developer-mode-list__item strong{
+  color:var(--text-primary-color);
+}

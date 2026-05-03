@@ -5,15 +5,17 @@
     {
       "id": "open-developer-mode",
       "label": "Developer Mode",
-      "kind": "link",
-      "href": "/pages/development-cockpit/index.html",
+      "kind": "platform-route",
+      "destination": "workspace",
+      "subdestination": "developer-mode",
       "description": "Open the governed coding-agent cockpit."
     },
     {
       "id": "repository-discovery",
       "label": "Git repositories",
-      "kind": "link",
-      "href": "/pages/development-cockpit/index.html#project-repository-sidebar",
+      "kind": "platform-route",
+      "destination": "workspace",
+      "subdestination": "developer-mode",
       "description": "Select or connect governed repositories through backend-safe routing."
     },
     {

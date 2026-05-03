@@ -1,0 +1,19 @@
+<!-- =============================================================================
+     01) HOMEPAGE DEVELOPER REPOSITORY PANEL
+============================================================================= -->
+<section class="home-developer-mode-panel" data-home-developer-repository-panel aria-label="Repository navigator">
+  <header class="home-developer-mode-panel__header">
+    <p class="home-developer-mode-panel__eyebrow">Repository</p>
+    <h3 class="home-developer-mode-panel__title">Connect and select repositories</h3>
+    <p class="home-developer-mode-panel__copy">GitHub OAuth and repository discovery are backend-only. Tokens never enter browser JavaScript.</p>
+  </header>
+
+  <div class="home-developer-mode-actions">
+    <button class="home-developer-mode-button home-developer-mode-button--primary" type="button" data-home-developer-github-connect>Connect GitHub</button>
+    <button class="home-developer-mode-button" type="button" data-home-developer-repository-discover>Discover repositories</button>
+    <button class="home-developer-mode-button" type="button" data-home-developer-github-disconnect>Disconnect</button>
+  </div>
+
+  <div class="home-developer-mode-list" data-home-developer-repository-list></div>
+  <pre class="home-developer-mode-output" data-home-developer-output="repositories">No repository selected.</pre>
+</section>

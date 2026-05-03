@@ -32,7 +32,7 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.5"
+version: "0.6"
 
 created_date: "2026-05-02"
 last_updated: "2026-05-03"
@@ -236,7 +236,7 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 | Codex Daily Prompt Queue | Draft | Prompt 01 ready for review before execution. |
 | AI Development Cockpit Architecture Specification | Draft | Requires architecture review before Codex execution. |
 | Website Modular Architecture Doctrine | Draft | Active continuation reference for modular website architecture stabilization. |
-| Developer Mode Architecture Specification | Draft | Expanded to version 0.2; now requires ownership mapping for dedicated developer top menu, sidebars, command surface, repository workspace, and Codex-style navigation before implementation. |
+| Developer Mode Architecture Specification | Draft | Expanded to version 0.3; homepage Developer Mode workspace, backend session state, GitHub OAuth/repository discovery boundary, provider configuration, agent activation, project binding, and approval-gated runtime status are now recorded. |
 | AI Coding Agent Runtime Specification | Draft | Requires backend/runtime architecture review before implementation. |
 | GitHub Repository Access & Permission Specification | Draft | Requires security and repository governance review before implementation. |
 | Agent Sandbox & Internet Egress Governance Specification | Draft | Requires security review before any network-capable runtime implementation. |
@@ -252,16 +252,17 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 
 ## 9. Next Action
 
-Next action is to scan Developer Mode, Platform Menu, topbar, sidebar, cockpit, and stage workbench ownership before implementing the dedicated developer workspace navigation system.
+Next action is to connect Developer Mode backend session state to canonical Supabase profile persistence, then configure GitHub OAuth credentials and provider runtime credentials for live authorization and provider validation.
 
 The Control Center Session nested settings pilot remains the canonical reusable Apple-native settings baseline for nested navigation, drill-in rows, native icon controls, and future Platform Menu or Developer Mode reuse.
 
-Developer Mode runtime work remains gated until provider secrets, GitHub authorization, sandbox isolation, internet egress policy, patch review, and approval gates are reviewed.
+Developer Mode runtime mutation remains gated until sandbox isolation, internet egress policy, patch artifact storage, test execution, commit/PR attribution, and approval gates are implemented and reviewed.
 
 ---
 
 ## Change Log
 
+- 2026-05-03 — v0.6 Indexed Developer Mode Architecture Specification version 0.3 and recorded the first homepage-routed Developer Mode workspace plus backend session-state implementation boundary. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Codex. Agent ID: Codex. Execution Context: Website Planning Index update for Developer Mode implementation under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-03 — v0.5 Indexed Developer Mode Architecture Specification version 0.2 as the active maturity reference for dedicated developer top menu, developer left and right sidebars, command surface, repository workspace, Codex-style navigation, and Control Center nested settings doctrine reuse. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update for Developer Mode architecture maturity under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-03 — v0.4 Indexed Control Center Grouped Settings Surface Design Doctrine and AI Development Cockpit Implementation Change Log as active planning records. Registered the Control Center Session nested settings pilot as the canonical Apple-native company-style baseline for future Platform Menu reuse and reusable primitive extraction planning. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.3 Indexed Developer Mode, AI Coding Agent Runtime, GitHub repository access, sandbox and internet egress governance, voice-to-agent command pipeline, and patch/test/commit/PR workflow specifications as active planning records. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture documentation under `/Users/artan/Documents/Neuroartan/website`.
@@ -277,7 +278,7 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — Website Planning Index  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.5
+VERSION: 0.6
 
 ---
 

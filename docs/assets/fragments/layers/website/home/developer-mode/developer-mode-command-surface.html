@@ -1,0 +1,22 @@
+<!-- =============================================================================
+     01) HOMEPAGE DEVELOPER COMMAND SURFACE
+============================================================================= -->
+<section class="home-developer-mode-panel home-developer-mode-command" data-home-developer-command-surface aria-label="Developer command surface">
+  <header class="home-developer-mode-panel__header">
+    <p class="home-developer-mode-panel__eyebrow">Command Surface</p>
+    <h3 class="home-developer-mode-panel__title">Issue repository-aware coding commands</h3>
+    <p class="home-developer-mode-panel__copy">Commands create backend-safe sessions, scans, or approval-gated runtime requests. Repository mutation remains locked until review and approval exist.</p>
+  </header>
+
+  <div class="home-developer-mode-command__modes" data-home-developer-command-modes role="group" aria-label="Developer command modes"></div>
+
+  <form class="home-developer-mode-command__form" data-home-developer-command-form>
+    <label class="home-developer-mode-field">
+      <span>Command</span>
+      <textarea name="command" rows="4" data-home-developer-command-input placeholder="Ask the agent to scan, review, debug, or propose a patch."></textarea>
+    </label>
+    <button class="home-developer-mode-button home-developer-mode-button--primary" type="submit">Create agent request</button>
+  </form>
+
+  <pre class="home-developer-mode-output" data-home-developer-output="command">No command submitted.</pre>
+</section>

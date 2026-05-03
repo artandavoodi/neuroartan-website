@@ -93,6 +93,20 @@ export function initDeveloperCommandComposer(context) {
   fillCockpitSelect(root.querySelector('[data-developer-command-repository]'), repositories);
   bindVoiceControl(root);
 
+  void requestDeveloperRuntimeAction(context, 'developer-state-read', {
+    source:'developer-command-composer'
+  }).then((response) => {
+    const state = response?.developerState || {};
+    const repositorySelect = root.querySelector('[data-developer-command-repository]');
+    const providerSelect = root.querySelector('[data-developer-command-provider]');
+    if (repositorySelect instanceof HTMLSelectElement && state.activeRepository) {
+      repositorySelect.value = state.activeRepository;
+    }
+    if (providerSelect instanceof HTMLSelectElement && (state.activeAgent?.providerId || state.developerPreferences?.defaultProvider)) {
+      providerSelect.value = state.activeAgent?.providerId || state.developerPreferences.defaultProvider;
+    }
+  });
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const values = readCockpitForm(form);
@@ -103,7 +117,7 @@ export function initDeveloperCommandComposer(context) {
       `Provider: ${values.provider}`,
       `Agent role: ${values.agentRole}`,
       `Runtime status: ${response.status}`,
-      `Reason: ${response.reason}`
+      `State persistence: ${response.developerState?.canonicalPersistence || 'server_session_pending_supabase_profile_link'}`
     ].join('\n'));
   });
 }

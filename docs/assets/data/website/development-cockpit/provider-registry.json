@@ -23,6 +23,26 @@
       "description": "Future cloud provider route for coding-capable Gemini models through backend-owned provider credentials."
     },
     {
+      "id": "huggingface-inference",
+      "label": "Hugging Face Inference",
+      "mode": "cloud",
+      "runtime": "huggingface",
+      "status": "available_when_server_token_exists",
+      "requiresBackend": true,
+      "frontendSecretsAllowed": false,
+      "description": "Backend-owned Hugging Face provider route for inference or free-tier model evaluation when a server-side token is configured."
+    },
+    {
+      "id": "gemma-ollama-local",
+      "label": "Gemma / Ollama Local",
+      "mode": "local",
+      "runtime": "ollama",
+      "status": "available_when_local_runtime_exists",
+      "requiresBackend": true,
+      "frontendSecretsAllowed": false,
+      "description": "Local Gemma-compatible provider route through a backend-side Ollama runtime. Browser JavaScript never receives local runtime credentials."
+    },
+    {
       "id": "local-codex",
       "label": "Local Codex",
       "mode": "local",

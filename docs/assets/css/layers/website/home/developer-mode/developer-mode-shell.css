@@ -1,0 +1,117 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) SHELL TOKENS
+   02) SHELL LAYOUT
+   03) PANEL SURFACES
+   04) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) SHELL TOKENS
+============================================================================= */
+:root{
+  --home-developer-mode-gap:var(--layout-home-platform-destination-card-inner-gap);
+  --home-developer-mode-panel-padding-y:var(--layout-home-platform-destination-card-padding-y);
+  --home-developer-mode-panel-padding-x:var(--layout-home-platform-destination-card-padding-x);
+  --home-developer-mode-border:var(--border-width-hairline) solid var(--home-panel-card-border);
+  --home-developer-mode-surface:var(--home-panel-card-surface);
+  --home-developer-mode-title-size:var(--layout-home-platform-destination-title-size);
+  --home-developer-mode-copy-size:var(--layout-home-platform-destination-copy-size);
+  --home-developer-mode-copy-line:var(--layout-home-platform-destination-copy-line-height);
+}
+
+/* =============================================================================
+   02) SHELL LAYOUT
+============================================================================= */
+.home-developer-mode-shell{
+  display:grid;
+  gap:var(--home-developer-mode-gap);
+  width:var(--size-full);
+}
+
+.home-developer-mode-shell__layout{
+  display:grid;
+  grid-template-columns:repeat(var(--layout-home-platform-destination-grid-count), minmax(var(--spacing-none), var(--grid-column-single)));
+  gap:var(--home-developer-mode-gap);
+  align-items:start;
+}
+
+.home-developer-mode-shell__left,
+.home-developer-mode-shell__right,
+.home-developer-mode-shell__main{
+  min-width:var(--spacing-none);
+}
+
+/* =============================================================================
+   03) PANEL SURFACES
+============================================================================= */
+.home-developer-mode-panel,
+.home-developer-mode-context,
+.home-developer-mode-sidebar,
+.home-developer-mode-topbar{
+  border:var(--home-developer-mode-border);
+  background:var(--home-developer-mode-surface);
+}
+
+.home-developer-mode-panel,
+.home-developer-mode-context,
+.home-developer-mode-sidebar{
+  display:grid;
+  gap:var(--home-developer-mode-gap);
+  padding:var(--home-developer-mode-panel-padding-y) var(--home-developer-mode-panel-padding-x);
+}
+
+.home-developer-mode-panel__header{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+}
+
+.home-developer-mode-panel__eyebrow,
+.home-developer-mode-panel__title,
+.home-developer-mode-panel__copy{
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-panel__eyebrow,
+.home-developer-mode-context__label,
+.home-developer-mode-sidebar__label{
+  color:var(--text-secondary-color);
+  font-size:var(--layout-home-platform-destination-label-size);
+  font-weight:var(--layout-home-platform-destination-label-weight);
+  letter-spacing:var(--layout-home-platform-destination-label-tracking);
+  text-transform:uppercase;
+}
+
+.home-developer-mode-panel__title{
+  color:var(--text-primary-color);
+  font-size:var(--home-developer-mode-title-size);
+  font-weight:var(--layout-home-platform-destination-title-weight);
+  line-height:var(--layout-home-platform-destination-title-line-height);
+}
+
+.home-developer-mode-panel__copy,
+.home-developer-mode-output,
+.home-developer-mode-context__list{
+  color:var(--text-secondary-color);
+  font-size:var(--home-developer-mode-copy-size);
+  line-height:var(--home-developer-mode-copy-line);
+}
+
+.home-developer-mode-output{
+  overflow:auto;
+  min-height:var(--control-height-lg);
+  margin:var(--spacing-none);
+  padding:var(--spacing-sm) var(--control-padding-x-md);
+  border:var(--home-developer-mode-border);
+  background:var(--surface-2);
+  white-space:pre-wrap;
+}
+
+/* =============================================================================
+   04) RESPONSIVE
+============================================================================= */
+@media (max-width:980px){
+  .home-developer-mode-shell__layout{
+    grid-template-columns:var(--grid-column-single);
+  }
+}

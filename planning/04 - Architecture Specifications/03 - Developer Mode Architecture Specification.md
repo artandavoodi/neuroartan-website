@@ -32,7 +32,7 @@ system: "Neuroartan Website"
 
 spine_version: "1.0"
 template_lock: true
-version: "0.2"
+version: "0.3"
 
 created_date: "2026-05-02"
 last_updated: "2026-05-03"
@@ -58,6 +58,9 @@ scope:
   - "Repository-aware developer workspace architecture"
   - "Codex-equivalent developer navigation model"
   - "Developer command and review surface architecture"
+  - "Homepage Developer Mode workspace implementation boundary"
+  - "Backend session-state boundary"
+  - "GitHub and provider configuration route boundary"
 
 index_targets:
   - "Website Planning Index"
@@ -747,15 +750,73 @@ Developer Mode is approved for architecture definition.
 
 Developer Mode is not yet approved for live autonomous repository mutation.
 
-Developer Mode is also not yet mature enough for advanced Codex-equivalent UX because the developer-specific navigation architecture is missing.
+Developer Mode now has a first homepage-routed developer workspace foundation and a backend session-state foundation.
 
-The next maturity step is to define and implement a dedicated Developer Mode top menu, left sidebar, right sidebar, and command surface using the same reusable, fragmented, token-based, Apple-native navigation doctrine approved through the Control Center nested settings pilot.
+Implemented architecture now includes:
 
-Implementation must proceed through scan, ownership mapping, architecture update, fragment registration planning, frontend consolidation, backend interface design, and then runtime prototype.
+- homepage Developer Mode shell fragment
+- developer-specific topbar
+- developer left sidebar
+- developer right context sidebar
+- command surface
+- repository panel
+- project panel
+- provider / agent panel
+- runtime panel
+- review / approval panel
+- settings panel
+- backend Developer Mode state route
+- backend provider status and configuration route
+- backend agent activation route
+- backend GitHub OAuth initiation/callback/status/repository discovery route
+- backend session persistence for selected project, repository, workspace, provider, and active agent
+
+Developer Mode is still not approved for autonomous repository mutation.
+
+Remaining maturity requirements:
+
+- Supabase profile linkage for canonical long-term developer state persistence
+- production GitHub App or OAuth credentials
+- secure provider credential vault or server-side environment configuration
+- sandbox/worktree runtime
+- reviewable patch artifact storage
+- test execution approval workflow
+- commit and pull request mutation route after approval
+
+---
+
+## XXI. Homepage Developer Workspace Implementation Boundary
+
+The homepage Developer Mode workspace may render and route operational controls.
+
+Homepage Developer Mode frontend may:
+
+- route developer-specific topbar items
+- route developer left-sidebar items
+- display backend session state
+- request GitHub authorization
+- request repository discovery
+- select active repository
+- create project/workspace records
+- configure a provider reference without secrets
+- activate an agent reference without secrets
+- request read-only repository scans
+- request locked review, test, commit, and pull request actions
+
+Homepage Developer Mode frontend must not:
+
+- store GitHub tokens
+- store provider API keys
+- mutate repositories directly
+- claim provider execution is live when credentials/runtime are missing
+- bypass review/approval gates
+
+Backend session state is transitional and is not the final commercial persistence layer. Canonical commercial persistence must graduate to Supabase profile state or a future company-owned profile/runtime service.
 ----
 
 ## Change Log
 
+- 2026-05-03 — v0.3 Recorded first implemented homepage Developer Mode workspace and backend session-state boundary. Added status language for fragment-based topbar/sidebar/command/panel routing, GitHub OAuth/repository discovery, provider configuration, agent activation, project binding, and remaining Supabase/runtime blockers. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Codex. Agent ID: Codex. Execution Context: Developer Mode implementation pass under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-03 — v0.2 Expanded Developer Mode architecture to define the missing developer-specific top menu, developer workspace shell, left sidebar, right sidebar, command surface, Codex-equivalent navigation model, Control Center nested settings doctrine reuse requirement, and missing ownership map before implementation. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture maturity audit under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-02 — v0.1 Created Developer Mode Architecture Specification to define the governed frontend/backend boundary for Codex-equivalent developer functionality. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Developer Mode architecture specification under `/Users/artan/Documents/Neuroartan/website`.
 
@@ -768,6 +829,6 @@ GSA PROTOCOL STATUS: Pending Review
 GSA APPROVAL: false  
 LEGAL REVIEW REQUIRED: true  
 CREO REVIEW REQUIRED: true  
-VERSION: 0.2
+VERSION: 0.3
 
 END OF DOCUMENT

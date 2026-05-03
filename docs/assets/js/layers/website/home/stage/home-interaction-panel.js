@@ -38,6 +38,7 @@ const HOME_INTERACTION_PANEL_STATE = {
   developerRepositories: [],
   developerEnvironmentModes: [],
   developerRuntimeInterfaces: {},
+  developerState: null,
   developerWorkbenchLoaded: false,
 };
 
@@ -201,6 +202,14 @@ async function loadHomeDeveloperWorkbenchData() {
   }
 }
 
+function buildHomeDeveloperRuntimeContext() {
+  return {
+    registries: {
+      runtimeInterfaces: HOME_INTERACTION_PANEL_STATE.developerRuntimeInterfaces
+    }
+  };
+}
+
 /* =========================================================
    07. COMPOSER RENDERING
    ========================================================= */
@@ -296,11 +305,31 @@ async function renderHomeDeveloperWorkbench() {
   }
 
   await loadHomeDeveloperWorkbenchData();
-  fillHomeDeveloperSelect(nodes.developerRepository, HOME_INTERACTION_PANEL_STATE.developerRepositories);
+  const context = buildHomeDeveloperRuntimeContext();
+  const stateResponse = await requestDeveloperRuntimeAction(context, 'developer-state-read', {
+    source:'homepage-developer-workbench'
+  });
+  HOME_INTERACTION_PANEL_STATE.developerState = stateResponse?.developerState || null;
+  const stateRepositories = Array.isArray(stateResponse?.developerState?.repositories)
+    ? stateResponse.developerState.repositories
+    : [];
+  const repositories = stateRepositories.length ? stateRepositories : HOME_INTERACTION_PANEL_STATE.developerRepositories;
+
+  fillHomeDeveloperSelect(nodes.developerRepository, repositories);
   fillHomeDeveloperSelect(nodes.developerEnvironment, HOME_INTERACTION_PANEL_STATE.developerEnvironmentModes);
 
+  if (nodes.developerRepository instanceof HTMLSelectElement && stateResponse?.developerState?.activeRepository) {
+    nodes.developerRepository.value = stateResponse.developerState.activeRepository;
+  }
+
+  if (nodes.developerEnvironment instanceof HTMLSelectElement && stateResponse?.developerState?.developerPreferences?.defaultEnvironmentMode) {
+    nodes.developerEnvironment.value = stateResponse.developerState.developerPreferences.defaultEnvironmentMode;
+  }
+
   if (nodes.developerStatus) {
-    nodes.developerStatus.textContent = 'Developer Mode is ready for repository selection. GitHub discovery becomes live through the server runtime.';
+    nodes.developerStatus.textContent = stateResponse?.developerState?.github?.connected
+      ? `Developer Mode connected as ${stateResponse.developerState.github.viewer?.login || 'GitHub user'}. Active repository: ${stateResponse.developerState.activeRepository || 'not selected'}.`
+      : 'Developer Mode is ready. Connect GitHub to discover repositories through the server runtime.';
   }
 }
 
@@ -333,6 +362,15 @@ function runHomeDeveloperAction(actionId) {
 
   if (action.kind === 'link' && action.href) {
     window.location.href = action.href;
+    return;
+  }
+
+  if (action.kind === 'platform-route') {
+    dispatchHomeInteractionEvent('home:platform-shell-open-request', {
+      source: 'home-developer-action',
+      destination: action.destination || 'workspace',
+      subdestination: action.subdestination || 'developer-mode',
+    });
     return;
   }
 
@@ -411,6 +449,24 @@ async function discoverHomeDeveloperRepositories() {
     nodes.developerStatus.textContent = response.ok
       ? `Repository discovery complete. ${response.repositories?.length || 0} repositories available.`
       : `Connect GitHub through the Developer Mode server: ${response.reason || response.status}.`;
+  }
+}
+
+async function persistHomeDeveloperRepositorySelection() {
+  const nodes = getHomeInteractionPanelNodes();
+  if (!(nodes.developerRepository instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const context = buildHomeDeveloperRuntimeContext();
+  const response = await requestDeveloperRuntimeAction(context, 'developer-state-update', {
+    activeRepository:nodes.developerRepository.value
+  });
+
+  if (nodes.developerStatus) {
+    nodes.developerStatus.textContent = response.ok
+      ? `Active repository saved: ${response.developerState?.activeRepository || nodes.developerRepository.value}.`
+      : `Repository selection could not be saved: ${response.reason || response.status}.`;
   }
 }
 
@@ -536,6 +592,12 @@ function bindHomeInteractionPanel() {
   });
 
   document.addEventListener('change', (event) => {
+    const developerRepository = event.target.closest('[data-home-developer-repository]');
+    if (developerRepository instanceof HTMLSelectElement) {
+      void persistHomeDeveloperRepositorySelection();
+      return;
+    }
+
     const fileInput = event.target.closest('#home-interaction-panel-file-input');
     if (!(fileInput instanceof HTMLInputElement)) {
       return;

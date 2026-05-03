@@ -1,0 +1,51 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) SIDEBAR
+   02) CONTEXT LIST
+============================================================================= */
+
+/* =============================================================================
+   01) SIDEBAR
+============================================================================= */
+.home-developer-mode-sidebar__label,
+.home-developer-mode-context__label{
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-sidebar__items{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+}
+
+.home-developer-mode-sidebar .home-developer-mode-route{
+  justify-content:flex-start;
+  width:var(--size-full);
+}
+
+/* =============================================================================
+   02) CONTEXT LIST
+============================================================================= */
+.home-developer-mode-context__list{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-context__list div{
+  display:grid;
+  gap:var(--spacing-3xs);
+}
+
+.home-developer-mode-context__list dt,
+.home-developer-mode-context__list dd{
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-context__list dt{
+  color:var(--text-secondary-color);
+  font-size:var(--field-label-size);
+}
+
+.home-developer-mode-context__list dd{
+  color:var(--text-primary-color);
+}

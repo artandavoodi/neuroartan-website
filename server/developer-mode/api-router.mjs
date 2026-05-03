@@ -22,13 +22,19 @@ import {
 } from './http-utils.mjs';
 import {
   attachGitHubSession,
+  activateAgent,
+  cacheGitHubRepositories,
+  clearGitHubSession,
+  configureProvider,
   consumeOAuthState,
   createAgentSession,
   createOAuthState,
   createProject,
   ensureSession,
+  getDeveloperState,
   listAgentSessions,
-  listProjects
+  listProjects,
+  updateDeveloperState
 } from './runtime-store.mjs';
 import {
   buildGitHubAuthorizeUrl,
@@ -38,6 +44,11 @@ import {
   hasGitHubOAuthConfig
 } from './github-service.mjs';
 import { scanRepository } from './repository-scan-service.mjs';
+import {
+  assertNoFrontendSecrets as rejectProviderFrontendSecrets,
+  buildProviderConfiguration,
+  getProviderStatuses
+} from './provider-service.mjs';
 
 /* =============================================================================
    02) SESSION HELPERS
@@ -130,7 +141,8 @@ function handleGitHubStatus(request, response) {
     connected:Boolean(session.github?.accessToken),
     viewer:session.github?.viewer || null,
     scope:session.github?.scope || '',
-    status:session.github?.accessToken ? 'connected' : 'authorization_required'
+    status:session.github?.accessToken ? 'connected' : 'authorization_required',
+    developerState:getDeveloperState(session.id)
   }, headers);
 }
 
@@ -147,10 +159,12 @@ async function handleGitHubRepositories(request, response) {
 
   try {
     const repositories = await fetchGitHubRepositories(session.github.accessToken);
+    const developerState = cacheGitHubRepositories(session.id, repositories);
     sendJson(response, 200, {
       ok:true,
       status:'repositories_loaded',
-      repositories
+      repositories,
+      developerState
     }, headers);
   } catch (error) {
     sendJson(response, 502, {
@@ -161,16 +175,92 @@ async function handleGitHubRepositories(request, response) {
   }
 }
 
+function handleGitHubDisconnect(request, response) {
+  const { session, headers } = getRuntimeSession(request, response);
+  clearGitHubSession(session.id);
+  sendJson(response, 200, {
+    ok:true,
+    status:'github_connection_cleared',
+    developerState:getDeveloperState(session.id)
+  }, headers);
+}
+
 /* =============================================================================
    04) DEVELOPER MODE ROUTES
 ============================================================================= */
 function handleProviderStatus(request, response) {
-  const { headers } = getRuntimeSession(request, response);
+  const { session, headers } = getRuntimeSession(request, response);
   sendJson(response, 200, {
     ok:true,
-    status:'provider_runtime_pending',
-    providers:[],
-    reason:'Provider secrets must be configured server-side before live coding-agent execution.'
+    status:'provider_status_loaded',
+    providers:getProviderStatuses(),
+    developerState:getDeveloperState(session.id),
+    reason:'Provider execution requires server-side credentials or local runtime availability. No provider secrets are exposed to browser JavaScript.'
+  }, headers);
+}
+
+function handleDeveloperStateRead(request, response) {
+  const { session, headers } = getRuntimeSession(request, response);
+  sendJson(response, 200, {
+    ok:true,
+    status:'developer_state_loaded',
+    developerState:getDeveloperState(session.id)
+  }, headers);
+}
+
+async function handleDeveloperStateUpdate(request, response) {
+  const { session, headers } = getRuntimeSession(request, response);
+  const payload = await readJsonBody(request);
+  const rejected = rejectProviderFrontendSecrets(payload);
+  if (rejected) {
+    sendJson(response, 400, rejected, headers);
+    return;
+  }
+
+  const developerState = updateDeveloperState(session.id, payload.developerState || payload);
+  sendJson(response, 200, {
+    ok:true,
+    status:'developer_state_updated',
+    developerState
+  }, headers);
+}
+
+async function handleProviderConfigure(request, response) {
+  const { session, headers } = getRuntimeSession(request, response);
+  const payload = await readJsonBody(request);
+  const rejected = rejectProviderFrontendSecrets(payload);
+  if (rejected) {
+    sendJson(response, 400, rejected, headers);
+    return;
+  }
+
+  const provider = buildProviderConfiguration(payload.provider || payload);
+  const developerState = configureProvider(session.id, provider);
+  sendJson(response, 200, {
+    ok:true,
+    status:'provider_configuration_saved',
+    provider,
+    developerState,
+    persistence:'server_session_pending_supabase_profile_link'
+  }, headers);
+}
+
+async function handleAgentActivate(request, response) {
+  const { session, headers } = getRuntimeSession(request, response);
+  const payload = await readJsonBody(request);
+  const rejected = rejectProviderFrontendSecrets(payload);
+  if (rejected) {
+    sendJson(response, 400, rejected, headers);
+    return;
+  }
+
+  const developerState = activateAgent(session.id, payload.agent || payload);
+  sendJson(response, 200, {
+    ok:true,
+    status:'agent_activated',
+    activeAgent:developerState.activeAgent,
+    developerState,
+    runtime:'provider_execution_pending'
   }, headers);
 }
 
@@ -182,6 +272,7 @@ async function handleProjectCreate(request, response) {
     ok:true,
     status:'project_workspace_created',
     project,
+    developerState:getDeveloperState(session.id),
     persistence:'server_memory_until_supabase_profile_link'
   }, headers);
 }
@@ -191,7 +282,8 @@ function handleProjectList(request, response) {
   sendJson(response, 200, {
     ok:true,
     status:'projects_loaded',
-    projects:listProjects(session.id)
+    projects:listProjects(session.id),
+    developerState:getDeveloperState(session.id)
   }, headers);
 }
 
@@ -203,6 +295,7 @@ async function handleAgentSessionCreate(request, response) {
     ok:true,
     status:'agent_session_created',
     session:agentSession,
+    developerState:getDeveloperState(session.id),
     runtime:'provider_execution_pending'
   }, headers);
 }
@@ -212,17 +305,22 @@ function handleAgentSessionList(request, response) {
   sendJson(response, 200, {
     ok:true,
     status:'agent_sessions_loaded',
-    sessions:listAgentSessions(session.id)
+    sessions:listAgentSessions(session.id),
+    developerState:getDeveloperState(session.id)
   }, headers);
 }
 
 async function handleRepositoryScan(request, response) {
-  const { headers } = getRuntimeSession(request, response);
+  const { session, headers } = getRuntimeSession(request, response);
   const payload = await readJsonBody(request);
+  const developerState = getDeveloperState(session.id);
   const scan = await scanRepository({
-    repositoryId:payload.repository || payload.repositoryId || payload.repository_id || 'website'
+    repositoryId:payload.repository || payload.repositoryId || payload.repository_id || developerState.activeRepository || 'website'
   });
-  sendJson(response, scan.ok ? 200 : 400, scan, headers);
+  sendJson(response, scan.ok ? 200 : 400, {
+    ...scan,
+    developerState
+  }, headers);
 }
 
 function handlePatchProposal(request, response) {
@@ -262,8 +360,33 @@ export async function handleDeveloperModeApi(request, response, url) {
       return true;
     }
 
+    if (request.method === 'POST' && url.pathname === '/api/developer-mode/github/disconnect') {
+      handleGitHubDisconnect(request, response);
+      return true;
+    }
+
+    if (request.method === 'GET' && (url.pathname === '/api/developer-mode/state' || url.pathname === '/api/developer-mode/profile/state')) {
+      handleDeveloperStateRead(request, response);
+      return true;
+    }
+
+    if (request.method === 'PATCH' && (url.pathname === '/api/developer-mode/state' || url.pathname === '/api/developer-mode/profile/state')) {
+      await handleDeveloperStateUpdate(request, response);
+      return true;
+    }
+
     if (request.method === 'GET' && url.pathname === '/api/developer-mode/providers/status') {
       handleProviderStatus(request, response);
+      return true;
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/developer-mode/providers/configure') {
+      await handleProviderConfigure(request, response);
+      return true;
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/developer-mode/agents/activate') {
+      await handleAgentActivate(request, response);
       return true;
     }
 

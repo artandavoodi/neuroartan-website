@@ -60,6 +60,9 @@ export const developerModeConfig = Object.freeze({
     clientId: process.env.GITHUB_OAUTH_CLIENT_ID || '',
     clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET || '',
     scope: process.env.GITHUB_OAUTH_SCOPE || 'repo read:user'
+  },
+  providers: {
+    ollamaBaseUrl: process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434'
   }
 });
 

@@ -10,6 +10,26 @@
   },
   "interfaces": [
     {
+      "id": "developer-state-read",
+      "label": "Developer state read",
+      "method": "GET",
+      "route": "/api/developer-mode/state",
+      "frontendStatus": "backend_session_available",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Returns profile-bound developer session state including active project, repository, provider, and agent references without secrets."
+    },
+    {
+      "id": "developer-state-update",
+      "label": "Developer state update",
+      "method": "PATCH",
+      "route": "/api/developer-mode/state",
+      "frontendStatus": "backend_session_available",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Persists safe developer preferences and selected project/repository/agent references to the backend session pending Supabase profile linkage."
+    },
+    {
       "id": "provider-connection-status",
       "label": "Provider connection status",
       "method": "GET",
@@ -18,6 +38,26 @@
       "mutation": false,
       "requiresApproval": false,
       "description": "Returns provider availability without exposing provider secrets."
+    },
+    {
+      "id": "provider-configure",
+      "label": "Provider configuration",
+      "method": "POST",
+      "route": "/api/developer-mode/providers/configure",
+      "frontendStatus": "backend_session_available",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Saves provider and model selection state without accepting browser-supplied credentials."
+    },
+    {
+      "id": "agent-activate",
+      "label": "Agent activation",
+      "method": "POST",
+      "route": "/api/developer-mode/agents/activate",
+      "frontendStatus": "backend_session_available",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Activates a coding-agent profile for the selected provider/model. Provider execution remains backend/runtime-gated."
     },
     {
       "id": "github-connection-status",
@@ -38,6 +78,16 @@
       "mutation": false,
       "requiresApproval": false,
       "description": "Lists repositories authorized through a server-side GitHub App or OAuth scope. No GitHub token is exposed to the browser."
+    },
+    {
+      "id": "github-disconnect",
+      "label": "GitHub disconnect",
+      "method": "POST",
+      "route": "/api/developer-mode/github/disconnect",
+      "frontendStatus": "backend_session_available",
+      "mutation": false,
+      "requiresApproval": false,
+      "description": "Clears the server-side GitHub session token and safe repository references."
     },
     {
       "id": "developer-project-create",

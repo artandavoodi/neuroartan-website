@@ -1,52 +1,83 @@
 <!-- =============================================================================
      00) FILE INDEX
-     01) HOMEPAGE DEVELOPER MODE TOPBAR
-     02) DEVELOPER MODE TOPBAR IDENTITY
-     03) DEVELOPER MODE TOPBAR NAVIGATION
-     04) DEVELOPER MODE TOPBAR STATUS
-     05) END OF FILE
+     01) DEVELOPER MODE TOPBAR
+     02) DEVELOPER MODE TOPBAR INNER RAIL
+     03) DEVELOPER MODE BRAND
+     04) DEVELOPER MODE NAVIGATION
+     05) DEVELOPER MODE STATUS
+     06) END OF FILE
 ============================================================================= -->
 
 <!-- =============================================================================
-     01) HOMEPAGE DEVELOPER MODE TOPBAR
+     01) DEVELOPER MODE TOPBAR
 ============================================================================= -->
-<nav class="home-developer-mode-topbar" data-home-developer-topbar aria-label="Developer Mode topbar">
+<header class="home-dashboard-topbar home-developer-mode-topbar" data-home-developer-topbar aria-label="Developer Mode topbar">
   <!-- =============================================================================
-       02) DEVELOPER MODE TOPBAR IDENTITY
+       02) DEVELOPER MODE TOPBAR INNER RAIL
   ============================================================================= -->
-  <div class="home-developer-mode-topbar__identity">
-    <span class="home-developer-mode-topbar__icon" aria-hidden="true">
-      <img class="ui-icon-theme-aware" src="/assets/icons/core/files/unclassified/code.svg" alt="">
-    </span>
-    <span class="home-developer-mode-topbar__label">Developer Mode</span>
-  </div>
+  <div class="home-dashboard-topbar__inner">
+    <!-- =============================================================================
+         03) DEVELOPER MODE BRAND
+    ============================================================================= -->
+    <a class="home-dashboard-topbar__brand" href="/" aria-label="Neuroartan developer home">
+      <img
+        class="home-dashboard-topbar__brand-mark"
+        src="/assets/icons/core/identity/brand/neuroartan/logo-plain.svg"
+        alt="Neuroartan symbol">
+    </a>
+    <span class="home-dashboard-topbar__label" data-home-developer-topbar-title>Developer Mode</span>
 
-  <!-- =============================================================================
-       03) DEVELOPER MODE TOPBAR NAVIGATION
-  ============================================================================= -->
-  <div class="home-developer-mode-topbar__items" data-home-developer-topbar-items role="navigation" aria-label="Developer workspace navigation">
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="projects" aria-pressed="false">Project</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="repositories" aria-pressed="false">Repository</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="agents" aria-pressed="false">Agent</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="command" aria-pressed="true">Prompt</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="scan" aria-pressed="false">Scan</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="debug" aria-pressed="false">Debug</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="review" aria-pressed="false">Review</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="tests" aria-pressed="false">Tests</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-command-mode="pull-request" aria-pressed="false">Pull request</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="runtime" aria-pressed="false">Runtime</button>
-    <button class="home-developer-mode-topbar__item" type="button" data-home-developer-panel-trigger="settings" aria-pressed="false">Settings</button>
-  </div>
+    <!-- =============================================================================
+         04) DEVELOPER MODE NAVIGATION
+    ============================================================================= -->
+    <div class="home-dashboard-topbar__nav-group">
+      <nav class="home-dashboard-topbar__nav" data-home-developer-topbar-items aria-label="Developer workspace navigation">
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="projects" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Project</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="repositories" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Repository</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="agents" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Agent</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="command" aria-pressed="true">
+          <span class="home-dashboard-topbar__label">Prompt</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-command-mode="scan" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Scan</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-command-mode="debug" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Debug</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="review" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Review</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-command-mode="tests" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Tests</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-command-mode="pull-request" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Pull request</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="runtime" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Runtime</span>
+        </button>
+        <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" data-home-developer-panel-trigger="settings" aria-pressed="false">
+          <span class="home-dashboard-topbar__label">Settings</span>
+        </button>
+      </nav>
+    </div>
 
-  <!-- =============================================================================
-       04) DEVELOPER MODE TOPBAR STATUS
-  ============================================================================= -->
-  <div class="home-developer-mode-topbar__status" data-home-developer-topbar-status aria-live="polite">
-    <span class="home-developer-mode-topbar__status-dot" aria-hidden="true"></span>
-    <span class="home-developer-mode-topbar__status-label">Local session</span>
+    <!-- =============================================================================
+         05) DEVELOPER MODE STATUS
+    ============================================================================= -->
+    <div class="home-dashboard-topbar__utility" data-home-developer-topbar-status aria-live="polite">
+      <span class="home-dashboard-topbar__icon home-dashboard-topbar__action home-dashboard-topbar__action--utility" aria-hidden="true"></span>
+      <span class="home-dashboard-topbar__label">Local session</span>
+    </div>
   </div>
-</nav>
+</header>
 
 <!-- =============================================================================
-     05) END OF FILE
+     06) END OF FILE
 ============================================================================= -->

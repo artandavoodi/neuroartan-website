@@ -16,6 +16,7 @@
    14) META / STATUS
    15) SETTINGS-OPEN PAGE STATE
    16) STAGE SETTINGS PAGE BINDINGS
+   16A) HOME DEVELOPER MODE FIRST-PAINT BINDINGS
    17) RESPONSIVE
 ============================================================================= */
 
@@ -1003,6 +1004,20 @@ body[data-home-stage-mode="developer-focus"]{
 body[data-home-stage-mode="developer-focus"] #home-footer-mount,
 body[data-home-stage-mode="developer-focus"] .home-shell__footer,
 body[data-home-stage-mode="developer-focus"] .home-shell__footer-separator{
+  display:none;
+}
+
+/* =============================================================================
+   16A) HOME DEVELOPER MODE FIRST-PAINT BINDINGS
+============================================================================= */
+html[data-home-developer-mode="active"] #home-footer-mount,
+html[data-home-developer-mode="active"] .home-shell__footer,
+html[data-home-developer-mode="active"] .home-shell__footer-separator,
+html[data-home-developer-mode="active"] #stage-center-core,
+html[data-home-developer-mode="active"] #stage-cognitive-core-shell,
+html[data-home-developer-mode="active"] .home-stage-interactive-text,
+html[data-home-developer-mode="active"] #home-stage-interactive-text,
+html[data-home-developer-mode="active"] #home-stage-interactive-text-mount{
   display:none;
 }
 

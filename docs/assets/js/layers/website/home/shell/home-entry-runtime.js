@@ -18,24 +18,22 @@
 ============================================================================= */
 
 (() => {
-  const INTRO_RELEASE_DELAY = 900;
 
   const releaseIntroVisibility = () => {
     if (!document.body || !document.body.classList.contains('home-page')) return;
     if (document.body.classList.contains('site-entered')) return;
+    if (document.documentElement.dataset.homeFirstPaint !== 'ready') return;
 
     document.body.classList.remove('intro-loading');
     document.body.classList.add('intro-reveal');
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      window.setTimeout(releaseIntroVisibility, INTRO_RELEASE_DELAY);
-    }, { once: true });
+    document.addEventListener('DOMContentLoaded', releaseIntroVisibility, { once: true });
     return;
   }
 
-  window.setTimeout(releaseIntroVisibility, INTRO_RELEASE_DELAY);
+  releaseIntroVisibility();
 })();
 
 /* =============================================================================

@@ -1,164 +1,46 @@
-
 /* =============================================================================
    00) FILE INDEX
-   01) TOPBAR SHELL
-   02) TOPBAR ACTIONS
-   03) STATUS
-   04) RESPONSIVE
-   05) END OF FILE
+   01) GLOBAL TOPBAR EXTENSION
+   02) DEVELOPER TITLE
+   03) DEVELOPER ACTIVE STATE
+   04) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
-   01) TOPBAR SHELL
+   01) GLOBAL TOPBAR EXTENSION
 ============================================================================= */
-.home-developer-mode-topbar{
-  position:relative;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  gap:var(--home-dashboard-topbar-gap);
-  width:var(--size-full);
-  min-height:var(--home-dashboard-topbar-height);
-  padding:var(--home-dashboard-topbar-padding-y) var(--home-dashboard-topbar-padding-x);
-  border:var(--home-dashboard-topbar-border);
-  border-radius:var(--home-dashboard-topbar-radius);
-  background:var(--home-dashboard-topbar-surface);
-  box-shadow:var(--home-dashboard-topbar-shadow);
-  -webkit-backdrop-filter:var(--home-dashboard-topbar-backdrop-filter);
-  backdrop-filter:var(--home-dashboard-topbar-backdrop-filter);
-  color:var(--text-primary-color);
-}
-
-.home-developer-mode-topbar__identity{
-  display:inline-flex;
-  align-items:center;
-  gap:var(--home-dashboard-topbar-action-gap);
-  min-width:max-content;
-}
-
-.home-developer-mode-topbar__icon,
-.home-developer-mode-topbar__status-dot{
-  display:inline-grid;
-  place-items:center;
-  inline-size:var(--home-dashboard-topbar-icon-size);
-  block-size:var(--home-dashboard-topbar-icon-size);
-  flex:0 0 auto;
-}
-
-.home-developer-mode-topbar__icon img{
-  display:block;
-  inline-size:var(--home-dashboard-topbar-icon-size);
-  block-size:var(--home-dashboard-topbar-icon-size);
-  opacity:var(--home-dashboard-topbar-icon-opacity);
-  filter:var(--home-dashboard-topbar-icon-filter);
-}
-
-.home-developer-mode-topbar__label{
-  color:var(--home-dashboard-topbar-action-color);
-  font-size:var(--home-dashboard-topbar-action-font-size);
-  font-weight:var(--home-dashboard-topbar-action-font-weight);
-  line-height:var(--line-height-tight);
-  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
-  white-space:nowrap;
-}
-
-/* =============================================================================
-   02) TOPBAR ACTIONS
-============================================================================= */
-.home-developer-mode-topbar__items{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:var(--home-dashboard-topbar-action-gap);
-  min-width:0;
+.home-developer-mode-topbar .home-dashboard-topbar__nav{
   overflow-x:auto;
   scrollbar-width:none;
 }
 
-.home-developer-mode-topbar__items::-webkit-scrollbar{
+.home-developer-mode-topbar .home-dashboard-topbar__nav::-webkit-scrollbar{
   display:none;
 }
 
-.home-developer-mode-topbar__item{
-  -webkit-appearance:none;
-  appearance:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:var(--home-dashboard-topbar-action-height);
-  padding:var(--home-dashboard-topbar-action-padding-y) var(--home-dashboard-topbar-action-padding-x);
-  border:var(--home-dashboard-topbar-action-border);
-  border-radius:var(--home-dashboard-topbar-action-radius);
-  background:var(--home-dashboard-topbar-action-surface);
-  color:var(--home-dashboard-topbar-action-color);
-  font:inherit;
-  font-size:var(--home-dashboard-topbar-action-font-size);
-  font-weight:var(--home-dashboard-topbar-action-font-weight);
-  line-height:var(--line-height-tight);
-  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
-  text-decoration:none;
-  outline:none;
-  white-space:nowrap;
-  transition:var(--home-dashboard-topbar-action-transition);
-}
-
-.home-developer-mode-topbar__item:hover,
-.home-developer-mode-topbar__item:focus-visible,
-.home-developer-mode-topbar__item[aria-pressed="true"]{
-  border-color:var(--home-dashboard-topbar-action-border-color-active);
-  background:var(--home-dashboard-topbar-action-surface-active);
-  color:var(--home-dashboard-topbar-action-color-active);
-}
-
-.home-developer-mode-topbar__item:focus-visible{
-  outline:var(--home-dashboard-topbar-focus-outline);
-  outline-offset:var(--home-dashboard-topbar-focus-outline-offset);
-}
-
 /* =============================================================================
-   03) STATUS
+   02) DEVELOPER TITLE
 ============================================================================= */
-.home-developer-mode-topbar__status{
+.home-developer-mode-topbar [data-home-developer-topbar-title]{
   display:inline-flex;
   align-items:center;
-  justify-content:flex-end;
-  gap:var(--home-dashboard-topbar-action-gap);
-  min-width:max-content;
-  color:var(--home-dashboard-topbar-action-color);
-  font-size:var(--home-dashboard-topbar-action-font-size);
-  font-weight:var(--home-dashboard-topbar-action-font-weight);
+  flex:0 0 auto;
+  color:var(--text-primary-color);
+  font-size:var(--font-size-body-1);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
   line-height:var(--line-height-tight);
-  letter-spacing:var(--home-dashboard-topbar-action-letter-spacing);
   white-space:nowrap;
 }
 
-.home-developer-mode-topbar__status-dot{
-  inline-size:var(--home-dashboard-topbar-status-dot-size);
-  block-size:var(--home-dashboard-topbar-status-dot-size);
-  border-radius:var(--radius-round);
-  background:var(--home-dashboard-topbar-status-dot-color);
-}
-
 /* =============================================================================
-   04) RESPONSIVE
+   03) DEVELOPER ACTIVE STATE
 ============================================================================= */
-@media (max-width: 760px){
-  .home-developer-mode-topbar{
-    grid-template-columns:1fr;
-    justify-items:center;
-  }
-
-  .home-developer-mode-topbar__identity,
-  .home-developer-mode-topbar__status{
-    display:none;
-  }
-
-  .home-developer-mode-topbar__items{
-    justify-content:flex-start;
-    width:var(--size-full);
-  }
+.home-developer-mode-topbar .home-dashboard-topbar__action[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  opacity:1;
 }
 
 /* =============================================================================
-   05) END OF FILE
+   04) END OF FILE
 ============================================================================= */

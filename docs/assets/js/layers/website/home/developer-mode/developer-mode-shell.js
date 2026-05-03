@@ -3,7 +3,7 @@
    01) MODULE IDENTITY
    02) IMPORTS
    03) CONSTANTS
-   04) FRAGMENT LOADING
+   04) SHELL REGISTRATION
    05) RENDERING
    06) BACKEND ACTIONS
    07) EVENT BINDING
@@ -43,57 +43,10 @@ const PROVIDER_REGISTRY_PATH = '/assets/data/website/development-cockpit/provide
 const PROJECT_REGISTRY_PATH = '/assets/data/website/development-cockpit/developer-project-registry.json';
 
 /* =============================================================================
-   04) FRAGMENT LOADING
+   04) SHELL REGISTRATION
 ============================================================================= */
-function resolveFragmentPath(fragmentKey) {
-  return window.NeuroartanFragmentAuthorities?.resolveFragmentPath?.(fragmentKey) || '';
-}
-
-async function fetchFragment(fragmentKey) {
-  const path = resolveFragmentPath(fragmentKey);
-  if (!path) {
-    throw new Error(`HOME_DEVELOPER_FRAGMENT_UNREGISTERED:${fragmentKey}`);
-  }
-
-  const response = await fetch(path, {
-    cache:'no-store',
-    credentials:'same-origin'
-  });
-
-  if (!response.ok) {
-    throw new Error(`HOME_DEVELOPER_FRAGMENT_FAILED:${fragmentKey}:${response.status}`);
-  }
-
-  return response.text();
-}
-
-async function mountFragment(root, selector, fragmentKey) {
-  const mount = root.querySelector(selector);
-  if (!mount) return;
-  mount.innerHTML = await fetchFragment(fragmentKey);
-  mount.dispatchEvent(new CustomEvent('fragment:mounted', {
-    bubbles:true,
-    detail:{
-      name:fragmentKey,
-      source:'home-developer-mode'
-    }
-  }));
-}
-
-async function mountDeveloperFragments(root, registry) {
-  const keys = registry.fragmentKeys || {};
-  await Promise.all([
-    mountFragment(root, '[data-home-developer-region="topbar"]', keys.topbar),
-    mountFragment(root, '[data-home-developer-region="left-sidebar"]', keys.leftSidebar),
-    mountFragment(root, '[data-home-developer-region="right-sidebar"]', keys.rightSidebar),
-    mountFragment(root, '[data-home-developer-panel="command"]', keys.command),
-    mountFragment(root, '[data-home-developer-panel="repositories"]', keys.repositories),
-    mountFragment(root, '[data-home-developer-panel="projects"]', keys.projects),
-    mountFragment(root, '[data-home-developer-panel="agents"]', keys.agents),
-    mountFragment(root, '[data-home-developer-panel="runtime"]', keys.runtime),
-    mountFragment(root, '[data-home-developer-panel="review"]', keys.review),
-    mountFragment(root, '[data-home-developer-panel="settings"]', keys.settings)
-  ]);
+function markDeveloperShellRegistered(root) {
+  root.dataset.homeDeveloperModeMounted = 'true';
 }
 
 /* =============================================================================
@@ -211,7 +164,6 @@ function renderProjectForm(root) {
 
 function renderDeveloperMode(root) {
   const state = getHomeDeveloperModeState();
-  renderHomeDeveloperRouteButtons(root.querySelector('[data-home-developer-topbar-items]'), state.registry?.topbarItems || []);
   renderHomeDeveloperRouteButtons(root.querySelector('[data-home-developer-sidebar-items]'), state.registry?.sidebarItems || []);
   renderCommandModes(root, state.registry || {});
   renderRepositoryList(root);
@@ -466,7 +418,7 @@ export async function mountHomeDeveloperModeShell(root) {
     return;
   }
 
-  root.dataset.homeDeveloperModeMounted = 'true';
+  markDeveloperShellRegistered(root);
   const [registry, providers, projects] = await Promise.all([
     loadHomeDeveloperJson(HOMEPAGE_DEVELOPER_MODE_REGISTRY_PATH),
     loadHomeDeveloperJson(PROVIDER_REGISTRY_PATH),
@@ -479,7 +431,6 @@ export async function mountHomeDeveloperModeShell(root) {
     projects
   });
 
-  await mountDeveloperFragments(root, registry);
   bindDeveloperModeEvents(root);
   await refreshDeveloperState(root);
 }

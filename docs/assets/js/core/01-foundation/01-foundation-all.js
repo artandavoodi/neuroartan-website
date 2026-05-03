@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) FOUNDATION AUTHORITIES
-   03) RESERVED SOVEREIGN CONFIG SLOT
+   03) FOUNDATION CONFIG BOOTSTRAP
    04) END OF FILE
 ============================================================================= */
 
@@ -41,11 +41,12 @@ import './motion.js';
 import './overlays.js';
 
 /* =============================================================================
-   03) RESERVED SOVEREIGN CONFIG SLOT
+   03) FOUNDATION CONFIG BOOTSTRAP
 ============================================================================= */
 /*
- * Reserved for the dedicated sovereign config bootstrap import once the
- * config-owned foundation file has been created.
+ * Foundation config bootstrap remains registered through the shared module
+ * orchestrator. First-paint homepage state bootstraps must be loaded directly
+ * in the document head before visual stylesheets.
  */
 import './config-bootstrap.js';
 

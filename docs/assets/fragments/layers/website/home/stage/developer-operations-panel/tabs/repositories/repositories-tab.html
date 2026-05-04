@@ -16,10 +16,18 @@
 ============================================================================= -->
 <template data-home-stage-developer-operations-tab-template="repositories">
   <section class="home-stage-developer-operations-panel__tab-panel" data-home-stage-developer-operations-tab-panel="repositories" aria-label="Repository operations">
-    <select class="home-stage-developer-operations-panel__control" data-home-developer-repository aria-label="Repository"></select>
-    <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-repository-actions>
-      <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-github-connect>Connect GitHub</button>
-      <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-repositories-discover>Discover repos</button>
+    <div class="home-stage-developer-operations-panel__section" data-home-stage-developer-operations-repository-section>
+      <div class="home-stage-developer-operations-panel__field" data-home-stage-developer-operations-repository-field>
+        <label class="home-stage-developer-operations-panel__label" for="home-stage-developer-operations-repository-select">Repository</label>
+        <select id="home-stage-developer-operations-repository-select" class="home-stage-developer-operations-panel__control" data-home-developer-repository aria-label="Repository"></select>
+      </div>
+
+      <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-repository-actions>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-github-connect>Connect GitHub</button>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-repositories-discover>Discover repos</button>
+      </div>
+
+      <pre class="home-stage-developer-operations-panel__output" data-home-developer-output="repositories">Repository state not loaded.</pre>
     </div>
   </section>
 </template>

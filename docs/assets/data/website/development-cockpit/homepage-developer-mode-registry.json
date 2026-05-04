@@ -2,36 +2,14 @@
   "version": "2026-05-03",
   "canonicalStatus": "homepage_developer_mode_registry",
   "topbarItems": [
-    { "id": "projects", "label": "Project", "panel": "projects" },
-    { "id": "repositories", "label": "Repository", "panel": "repositories" },
-    { "id": "branch", "label": "Branch", "panel": "repositories" },
-    { "id": "agents", "label": "Agent", "panel": "agents" },
-    { "id": "prompt", "label": "Prompt", "panel": "review", "mode": "create-prompt" },
-    { "id": "scan", "label": "Scan", "panel": "runtime", "mode": "scan-repository" },
-    { "id": "debug", "label": "Debug", "panel": "runtime", "mode": "debug-issue" },
-    { "id": "review", "label": "Review", "panel": "review" },
-    { "id": "tests", "label": "Tests", "panel": "review", "mode": "generate-tests" },
-    { "id": "pull-request", "label": "Pull request", "panel": "review", "mode": "prepare-pull-request" },
-    { "id": "runtime", "label": "Runtime", "panel": "runtime" },
-    { "id": "settings", "label": "Settings", "panel": "settings" }
+    { "id": "code", "label": "Code", "workspace": "code", "icon": "/assets/icons/core/files/unclassified/code.svg", "active": true },
+    { "id": "app", "label": "App", "workspace": "app", "icon": "/assets/icons/layers/software/app/app.svg", "active": false },
+    { "id": "docs", "label": "Docs", "workspace": "docs", "icon": "/assets/icons/layers/developer/docs/docs.svg", "active": false },
+    { "id": "notifications", "label": "Notifications", "utility": "notifications", "icon": "/assets/icons/core/system/unclassified/bell.svg" },
+    { "id": "settings", "label": "Settings", "utility": "settings", "icon": "/assets/icons/core/system/unclassified/settings.svg" },
+    { "id": "account", "label": "Account", "utility": "account", "icon": "/assets/icons/core/identity/unclassified/account.svg" }
   ],
-  "sidebarItems": [
-    { "id": "overview", "label": "Overview", "panel": "repositories" },
-    { "id": "projects", "label": "Projects", "panel": "projects" },
-    { "id": "repositories", "label": "Repositories", "panel": "repositories" },
-    { "id": "agents", "label": "Agents", "panel": "agents" },
-    { "id": "prompts", "label": "Prompts", "panel": "review", "mode": "create-prompt" },
-    { "id": "scans", "label": "Scans", "panel": "runtime", "mode": "scan-repository" },
-    { "id": "plans", "label": "Plans", "panel": "runtime", "mode": "explain-architecture" },
-    { "id": "debugging", "label": "Debugging", "panel": "runtime", "mode": "debug-issue" },
-    { "id": "patches", "label": "Patches", "panel": "review", "mode": "generate-patch" },
-    { "id": "reviews", "label": "Reviews", "panel": "review", "mode": "review-patch" },
-    { "id": "tests", "label": "Tests", "panel": "review", "mode": "generate-tests" },
-    { "id": "commits", "label": "Commits", "panel": "review", "mode": "prepare-commit" },
-    { "id": "pull-requests", "label": "Pull requests", "panel": "review", "mode": "prepare-pull-request" },
-    { "id": "logs", "label": "Logs", "panel": "runtime" },
-    { "id": "settings", "label": "Settings", "panel": "settings" }
-  ],
+  "sidebarItems": [],
   "commandModes": [
     { "id": "scan-repository", "label": "Scan repository", "runtimeInterface": "repository-scan-request", "description": "Run a read-only repository structure scan through the backend runtime." },
     { "id": "find-file", "label": "Find file", "runtimeInterface": "agent-session-create", "description": "Create a coding-agent session for locating relevant files." },
@@ -49,12 +27,6 @@
   "fragmentKeys": {
     "topbar": "home-developer-mode-topbar",
     "leftSidebar": "home-developer-mode-left-sidebar",
-    "rightSidebar": "home-developer-mode-right-sidebar",
-    "repositories": "home-developer-mode-repository-panel",
-    "projects": "home-developer-mode-project-panel",
-    "agents": "home-developer-mode-provider-panel",
-    "runtime": "home-developer-mode-runtime-panel",
-    "review": "home-developer-mode-review-panel",
-    "settings": "home-developer-mode-settings-panel"
+    "rightSidebar": "home-developer-mode-right-sidebar"
   }
 }

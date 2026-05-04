@@ -13,15 +13,27 @@
 /* =============================================================================
    01) GLOBAL TOPBAR EXTENSION
 ============================================================================= */
+.home-developer-mode-topbar .home-dashboard-topbar__nav-group{
+  flex:0 1 auto;
+  min-width:0;
+  margin-inline-start:auto;
+}
+
 .home-developer-mode-topbar .home-dashboard-topbar__nav{
-  overflow-x:auto;
+  justify-content:flex-end;
+  flex:0 1 auto;
+  min-width:0;
+  margin-inline-start:auto;
   gap:var(--home-topbar-menu-gap);
+  overflow-x:auto;
+  overflow-y:hidden;
   scrollbar-width:none;
 }
 
 .home-developer-mode-topbar .home-dashboard-topbar__nav::-webkit-scrollbar{
   display:none;
 }
+
 
 /* =============================================================================
    02) DEVELOPER TITLE

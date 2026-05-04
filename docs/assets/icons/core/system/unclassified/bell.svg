@@ -1,1 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="bell.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="5.314823"
+     inkscape:cx="12.982558"
+     inkscape:cy="21.731674"
+     inkscape:window-width="1472"
+     inkscape:window-height="756"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <path
+     id="rect1-7"
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+     d="m -17.607657,11.769288 0.07158,0.542468 c 0.27224,1.676387 0.106351,3.39636 -0.480942,4.986491 -0.443029,1.093857 0.34528,2.296035 1.505557,2.295985 h 12.3058304 c 1.1599306,-4.86e-4 1.9476522,-1.202451 1.5047535,-2.295985 -0.5870251,-1.590204 -0.752636,-3.310175 -0.4801404,-4.986491 l 0.070777,-0.542468 c -7.75e-5,-5.4944985 -4.8952778,-7.8014979 -7.2483045,-7.8014979 -2.354608,0 -7.248987,2.3075365 -7.249109,7.8014979 z"
+     sodipodi:nodetypes="cccccccccc"
+     transform="translate(22.358947,-0.91660999)" />
+  <path
+     id="path6"
+     mask="none"
+     style="display:inline;stroke:#000000;stroke-linecap:round;stroke-linejoin:round"
+     transform="translate(22.358947,-0.91660999)"
+     d="m -7.2073455,19.76834 c -0.1730814,0.41079 -0.4235341,0.780731 -0.7330189,1.091411 -0.6189698,0.62136 -1.4740686,1.005679 -2.4185846,1.005679 -0.944516,0 -1.799615,-0.384319 -2.418584,-1.005679 -0.309485,-0.31068 -0.559938,-0.680621 -0.733019,-1.091411"
+     sodipodi:nodetypes="csssc" />
+</svg>

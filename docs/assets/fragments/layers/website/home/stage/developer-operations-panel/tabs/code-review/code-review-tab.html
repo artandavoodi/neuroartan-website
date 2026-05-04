@@ -15,6 +15,18 @@
      01) CODE REVIEW TAB FRAGMENT
 ============================================================================= -->
 <template data-home-stage-developer-operations-tab-template="code-review">
+  <section class="home-stage-developer-operations-panel__tab-panel" data-home-stage-developer-operations-tab-panel="code-review" aria-label="Code Review operations">
+    <div class="home-stage-developer-operations-panel__section" data-home-stage-developer-operations-review-section>
+      <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-review-actions>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-locked-action="patch">Generate patch</button>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-locked-action="review">Run review</button>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-locked-action="test">Run tests</button>
+      </div>
+
+      <div class="home-stage-developer-operations-panel__list" data-home-developer-review-artifacts></div>
+      <pre class="home-stage-developer-operations-panel__output" data-home-developer-output="review">No review artifact selected.</pre>
+    </div>
+  </section>
 </template>
 
 <!-- =============================================================================

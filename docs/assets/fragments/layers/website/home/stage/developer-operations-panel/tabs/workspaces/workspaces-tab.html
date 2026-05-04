@@ -16,10 +16,18 @@
 ============================================================================= -->
 <template data-home-stage-developer-operations-tab-template="workspaces">
   <section class="home-stage-developer-operations-panel__tab-panel" data-home-stage-developer-operations-tab-panel="workspaces" aria-label="Workspace operations">
-    <input class="home-stage-developer-operations-panel__control" data-home-developer-workspace-name type="text" autocomplete="off" placeholder="Workspace name" aria-label="Workspace name">
-    <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-workspace-actions>
-      <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-workspace-create>Create workspace</button>
-    </div>
+    <form class="home-stage-developer-operations-panel__form" data-home-developer-project-form>
+      <div class="home-stage-developer-operations-panel__field" data-home-stage-developer-operations-project-field>
+        <label class="home-stage-developer-operations-panel__label" for="home-stage-developer-operations-project-name">Project</label>
+        <input id="home-stage-developer-operations-project-name" class="home-stage-developer-operations-panel__control" data-home-developer-project-name type="text" autocomplete="off" placeholder="Project name" aria-label="Project name">
+      </div>
+
+      <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-workspace-actions>
+        <button class="home-stage-developer-operations-panel__button" type="submit">Create project</button>
+      </div>
+    </form>
+
+    <pre class="home-stage-developer-operations-panel__output" data-home-developer-output="projects">No project created.</pre>
   </section>
 </template>
 

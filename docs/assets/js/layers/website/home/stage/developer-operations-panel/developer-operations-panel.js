@@ -21,8 +21,29 @@
 /* =============================================================================
    01) IMPORTS
 ============================================================================= */
-import { getHomeDeveloperModeState } from '../../developer-mode/developer-mode-state.js';
+import {
+  getHomeDeveloperModeState,
+  setHomeDeveloperModeState
+} from '../../developer-mode/developer-mode-state.js';
+import { requestHomeDeveloperAction } from '../../developer-mode/developer-mode-api.js';
 import { getFilteredDeveloperOperationsIndex } from './index/developer-operations-index.js';
+import {
+  executeDeveloperOperationsRepositoriesEvent,
+  renderDeveloperOperationsRepositoriesTab
+} from './tabs/repositories/repositories-tab.js';
+import {
+  executeDeveloperOperationsWorkspacesEvent,
+  renderDeveloperOperationsWorkspacesTab
+} from './tabs/workspaces/workspaces-tab.js';
+import {
+  executeDeveloperOperationsEnvironmentsEvent,
+  renderDeveloperOperationsEnvironmentsTab
+} from './tabs/environments/environments-tab.js';
+
+import {
+  executeDeveloperOperationsCodeReviewEvent,
+  renderDeveloperOperationsCodeReviewTab
+} from './tabs/code-review/code-review-tab.js';
 
 const HOME_STAGE_DEVELOPER_OPERATIONS_VIEW_ICONS = {
   full:'/assets/icons/core/actions/unclassified/collapse.svg',
@@ -86,6 +107,33 @@ function getConsoleViewToggleIcon(panel) {
 function setDeveloperConsoleView(view) {
   HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view = view === 'full' ? 'full' : 'mini';
   document.documentElement.dataset.homeDeveloperConsoleView = HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view;
+}
+
+function scheduleDeveloperOperationsPanelRender() {
+  window.requestAnimationFrame(() => {
+    renderDeveloperOperationsPanel();
+  });
+}
+
+function writeDeveloperOperationsOutput(root = document, key = '', value = '') {
+  const output = root.querySelector(`[data-home-developer-output="${key}"]`);
+  if (!output) return;
+
+  output.textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+}
+
+function getDeveloperOperationsRuntimeContext(root = document) {
+  return {
+    root,
+    getState:getHomeDeveloperModeState,
+    setState:setHomeDeveloperModeState,
+    requestAction:requestHomeDeveloperAction,
+    render:renderDeveloperOperationsPanel,
+    writeOutput:writeDeveloperOperationsOutput,
+    redirect:(url) => {
+      window.location.href = url;
+    }
+  };
 }
 
 /* =============================================================================
@@ -169,6 +217,41 @@ function renderDeveloperOperationsTabs(panel) {
   });
 }
 
+function renderDeveloperOperationsActiveTab(panel) {
+  const state = getHomeDeveloperModeState();
+  const developerState = state.developerState || {};
+
+  if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'repositories') {
+    renderDeveloperOperationsRepositoriesTab(panel, {
+      repositories:developerState.repositories || [],
+      activeRepository:developerState.activeRepository || '',
+      output:developerState.repositoryOutput || 'Repository state not loaded.'
+    });
+  }
+
+  if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'workspaces') {
+    renderDeveloperOperationsWorkspacesTab(panel, {
+      output:developerState.projectOutput || 'No project created.'
+    });
+  }
+
+  if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'environments') {
+    renderDeveloperOperationsEnvironmentsTab(panel, {
+      providers:developerState.providers || developerState.agents || [],
+      activeProvider:developerState.activeProvider || developerState.provider || '',
+      providerOutput:developerState.providerOutput || 'No provider configured.',
+      runtimeOutput:developerState.runtimeOutput || 'Runtime state pending.'
+    });
+  }
+
+  if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'code-review') {
+    renderDeveloperOperationsCodeReviewTab(panel, {
+      reviewArtifacts:developerState.reviewArtifacts || developerState.artifacts || [],
+      reviewOutput:developerState.reviewOutput || 'No review artifact selected.'
+    });
+  }
+}
+
 function renderDeveloperOperationsPanel() {
   const panel = getPanel();
   if (!panel) return;
@@ -182,6 +265,7 @@ function renderDeveloperOperationsPanel() {
   renderDeveloperOperationsConsoleView(panel);
   renderDeveloperOperationsTabs(panel);
   renderDeveloperOperationsTabPanel(panel);
+  renderDeveloperOperationsActiveTab(panel);
   renderDeveloperOperationsResults(panel);
   renderDeveloperOperationsSummary(panel);
 }
@@ -210,7 +294,7 @@ function renderDeveloperOperationsSummary(panel) {
    06) EVENT BINDING
 ============================================================================= */
 function bindDeveloperOperationsPanelEvents() {
-  document.addEventListener('click', (event) => {
+  document.addEventListener('click', async (event) => {
     const target = event.target instanceof Element ? event.target : null;
     const tab = target?.closest('[data-home-stage-developer-operations-tab]');
     const viewToggle = target?.closest('[data-home-stage-developer-operations-view-toggle]');
@@ -221,11 +305,26 @@ function bindDeveloperOperationsPanelEvents() {
       renderDeveloperOperationsPanel();
       return;
     }
+    if (tab) {
+      HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab = tab.dataset.homeStageDeveloperOperationsTab || 'tasks';
+      renderDeveloperOperationsPanel();
+      return;
+    }
 
-    if (!tab) return;
+    if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'repositories') {
+      const handled = await executeDeveloperOperationsRepositoriesEvent(event, getDeveloperOperationsRuntimeContext(document));
+      if (handled) return;
+    }
 
-    HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab = tab.dataset.homeStageDeveloperOperationsTab || 'tasks';
-    renderDeveloperOperationsPanel();
+    if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'environments') {
+      const handled = await executeDeveloperOperationsEnvironmentsEvent(event, getDeveloperOperationsRuntimeContext(document));
+      if (handled) return;
+    }
+
+    if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'code-review') {
+      const handled = await executeDeveloperOperationsCodeReviewEvent(event, getDeveloperOperationsRuntimeContext(document));
+      if (handled) return;
+    }
   });
 
   document.addEventListener('input', (event) => {
@@ -234,6 +333,18 @@ function bindDeveloperOperationsPanelEvents() {
 
     HOME_STAGE_DEVELOPER_OPERATIONS_STATE.query = target.value;
     renderDeveloperOperationsPanel();
+  });
+  document.addEventListener('change', async (event) => {
+    if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'repositories') {
+      const handled = await executeDeveloperOperationsRepositoriesEvent(event, getDeveloperOperationsRuntimeContext(document));
+      if (handled) return;
+    }
+  });
+  document.addEventListener('submit', async (event) => {
+    if (HOME_STAGE_DEVELOPER_OPERATIONS_STATE.activeTab === 'workspaces') {
+      const handled = await executeDeveloperOperationsWorkspacesEvent(event, getDeveloperOperationsRuntimeContext(document));
+      if (handled) return;
+    }
   });
 
   document.addEventListener('home-developer-mode:activated', renderDeveloperOperationsPanel);

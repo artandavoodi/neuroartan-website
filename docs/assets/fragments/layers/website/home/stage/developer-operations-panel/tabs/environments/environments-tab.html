@@ -16,7 +16,17 @@
 ============================================================================= -->
 <template data-home-stage-developer-operations-tab-template="environments">
   <section class="home-stage-developer-operations-panel__tab-panel" data-home-stage-developer-operations-tab-panel="environments" aria-label="Environment operations">
-    <select class="home-stage-developer-operations-panel__control" data-home-developer-environment aria-label="Environment mode"></select>
+    <div class="home-stage-developer-operations-panel__section" data-home-stage-developer-operations-provider-section>
+      <div class="home-stage-developer-operations-panel__list" data-home-developer-provider-list></div>
+      <pre class="home-stage-developer-operations-panel__output" data-home-developer-output="providers">No provider configured.</pre>
+    </div>
+
+    <div class="home-stage-developer-operations-panel__section" data-home-stage-developer-operations-runtime-section>
+      <div class="home-stage-developer-operations-panel__actions" data-home-stage-developer-operations-runtime-actions>
+        <button class="home-stage-developer-operations-panel__button" type="button" data-home-developer-runtime-scan>Run scan</button>
+      </div>
+      <pre class="home-stage-developer-operations-panel__output" data-home-developer-output="runtime">Runtime state pending.</pre>
+    </div>
   </section>
 </template>
 

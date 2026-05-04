@@ -1,7 +1,8 @@
 /* =============================================================================
    NEUROARTAN · HOME STAGE · DEVELOPER OPERATIONS SUMMARY
    -----------------------------------------------------------------------------
-   Purpose: Styles the Developer Operations summary surface.
+   Purpose: Owns Developer Operations summary/footer styling. Console shell,
+   panel frame, scroll, and runtime summary rendering remain separately owned.
 ============================================================================= */
 
 /* =============================================================================
@@ -17,9 +18,10 @@
 ============================================================================= */
 .home-stage-developer-operations-panel__summary{
   display:grid;
-  gap:var(--spacing-2xs);
+  grid-template-columns:repeat(4, minmax(var(--spacing-none), 1fr));
+  gap:var(--home-stage-developer-operations-gap-compact);
   min-width:0;
-  padding-top:var(--spacing-xs);
+  padding-top:var(--home-stage-developer-operations-gap-compact);
   border-top:var(--border-width-hairline) solid var(--home-stage-developer-operations-border);
 }
 
@@ -27,11 +29,16 @@
    02) SUMMARY ITEMS
 ============================================================================= */
 .home-stage-developer-operations-panel__summary-item{
+  margin:var(--spacing-none);
   min-width:0;
-  margin:0;
   color:var(--home-stage-developer-operations-muted);
-  font-size:var(--font-size-caption);
-  line-height:var(--line-height-caption);
+  font-size:var(--home-stage-developer-operations-label-font-size);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
+  line-height:var(--line-height-tight);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 /* =============================================================================

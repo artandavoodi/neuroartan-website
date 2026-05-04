@@ -6,11 +6,16 @@
    04) END OF FILE
 ============================================================================= */
 
+.home-developer-mode-topbar{
+  --home-topbar-menu-gap:var(--nav-global-topbar-menu-gap);
+}
+
 /* =============================================================================
    01) GLOBAL TOPBAR EXTENSION
 ============================================================================= */
 .home-developer-mode-topbar .home-dashboard-topbar__nav{
   overflow-x:auto;
+  gap:var(--home-topbar-menu-gap);
   scrollbar-width:none;
 }
 

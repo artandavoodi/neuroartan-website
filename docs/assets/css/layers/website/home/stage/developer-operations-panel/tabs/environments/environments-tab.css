@@ -1,7 +1,9 @@
 /* =============================================================================
    NEUROARTAN · HOME STAGE · DEVELOPER OPERATIONS · ENVIRONMENTS TAB
    -----------------------------------------------------------------------------
-   Purpose: Styles Environments-tab-specific surfaces when promoted from shared tab tokens.
+   Purpose: Registers the Environments tab module without overriding parent-owned
+   tab layout, spacing, typography, hover, active, icon, border, radius, or accent
+   styling.
 ============================================================================= */
 
 /* =============================================================================
@@ -14,9 +16,7 @@
 /* =============================================================================
    01) ENVIRONMENTS TAB SURFACE
 ============================================================================= */
-.home-stage-developer-operations-panel__tab[data-home-stage-developer-operations-tab="environments"]{
-  --home-stage-developer-operations-tab-accent:var(--home-stage-developer-operations-text);
-}
+/* Parent-owned in developer-operations-panel.css. */
 
 /* =============================================================================
    02) END OF FILE

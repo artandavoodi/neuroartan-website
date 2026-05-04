@@ -44,6 +44,7 @@
   width:100%;
   pointer-events:auto;
   isolation:isolate;
+  --home-topbar-menu-gap:var(--nav-global-topbar-menu-gap);
 }
 
 /* =============================================================================
@@ -136,7 +137,7 @@
 
 #profile-menu-mount .home-dashboard-topbar__nav{
   justify-content:flex-end;
-  gap:1.2rem;
+  gap:var(--home-topbar-menu-gap);
   flex:0 1 auto;
 }
 
@@ -291,7 +292,7 @@
   }
 
   #profile-menu-mount .home-dashboard-topbar__nav{
-    gap:1rem;
+    gap:var(--home-topbar-menu-gap);
   }
 }
 
@@ -310,7 +311,7 @@
   }
 
   #profile-menu-mount .home-dashboard-topbar__nav{
-    gap:0.72rem;
+    gap:var(--home-topbar-menu-gap);
   }
 
   #profile-menu-mount .home-dashboard-topbar__label{

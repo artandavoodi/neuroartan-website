@@ -12,10 +12,11 @@
      02) CONSOLE HEADER
      03) SEARCH MOUNT
      04) TABS MOUNT
-     05) TAB CONTENT MOUNT
-     06) RESULTS MOUNT
-     07) SUMMARY MOUNT
-     08) END OF FILE
+     05) CONTENT VIEWPORT
+     06) TAB CONTENT MOUNT
+     07) RESULTS MOUNT
+     08) SUMMARY MOUNT
+     09) END OF FILE
 ============================================================================= -->
 
 <!-- =============================================================================
@@ -26,11 +27,10 @@
        02) CONSOLE HEADER
   ============================================================================= -->
   <header class="home-stage-developer-operations-panel__header" data-home-stage-developer-operations-header>
-    <div class="home-stage-developer-operations-panel__header-copy">
-      <p class="home-stage-developer-operations-panel__eyebrow">Developer Console</p>
-      <h2 class="home-stage-developer-operations-panel__title">Operations</h2>
-    </div>
     <button class="home-stage-developer-operations-panel__view-toggle" type="button" data-home-stage-developer-operations-view-toggle aria-pressed="false" aria-label="Expand developer console">
+      <span class="home-stage-developer-operations-panel__view-toggle-icon" aria-hidden="true">
+        <img class="ui-icon-theme-aware" src="/assets/icons/core/actions/unclassified/expand.svg" alt="">
+      </span>
       <span class="home-stage-developer-operations-panel__view-toggle-label" data-home-stage-developer-operations-view-toggle-label>Full View</span>
     </button>
   </header>
@@ -46,21 +46,26 @@
   <div data-include="home-stage-developer-operations-tabs"></div>
 
   <!-- =============================================================================
-       05) TAB CONTENT MOUNT
+       05) CONTENT VIEWPORT
   ============================================================================= -->
-  <div class="home-stage-developer-operations-panel__tab-content" data-home-stage-developer-operations-tab-content></div>
+  <div class="home-stage-developer-operations-panel__content" data-home-stage-developer-operations-content>
+    <!-- =============================================================================
+         06) TAB CONTENT MOUNT
+    ============================================================================= -->
+    <div class="home-stage-developer-operations-panel__tab-content" data-home-stage-developer-operations-tab-content></div>
+
+    <!-- =============================================================================
+         07) RESULTS MOUNT
+    ============================================================================= -->
+    <div data-include="home-stage-developer-operations-results"></div>
+  </div>
 
   <!-- =============================================================================
-       06) RESULTS MOUNT
-  ============================================================================= -->
-  <div data-include="home-stage-developer-operations-results"></div>
-
-  <!-- =============================================================================
-       07) SUMMARY MOUNT
+       08) SUMMARY MOUNT
   ============================================================================= -->
   <div data-include="home-stage-developer-operations-summary"></div>
 </section>
 
 <!-- =============================================================================
-     08) END OF FILE
+     09) END OF FILE
 ============================================================================= -->

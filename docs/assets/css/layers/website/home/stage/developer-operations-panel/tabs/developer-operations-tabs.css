@@ -1,7 +1,8 @@
 /* =============================================================================
    NEUROARTAN · HOME STAGE · DEVELOPER OPERATIONS TABS
    -----------------------------------------------------------------------------
-   Purpose: Styles the Developer Operations tab navigation surface.
+   Purpose: Owns Developer Operations tab navigation styling. Console layout,
+   shell spacing, scroll, and panel surface styling remain parent-owned.
 ============================================================================= */
 
 /* =============================================================================
@@ -9,7 +10,11 @@
    -----------------------------------------------------------------------------
    01) TABS SURFACE
    02) TAB BUTTONS
-   03) END OF FILE
+   03) TAB ICONS
+   04) TAB LABELS
+   05) TAB SEPARATOR
+   06) TAB STATES
+   07) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -17,11 +22,26 @@
 ============================================================================= */
 .home-stage-developer-operations-panel__tabs{
   display:flex;
+  position:relative;
   flex:0 0 auto;
-  gap:var(--spacing-xs);
+  gap:var(--nav-global-topbar-menu-gap);
+  align-items:center;
   min-width:0;
   overflow-x:auto;
   overflow-y:hidden;
+  min-height:var(--products-local-nav-height);
+  padding-bottom:0;
+}
+.home-stage-developer-operations-panel__tabs::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:var(--border-width-hairline);
+  background:var(--border-color);
+  opacity:1;
+  pointer-events:none;
 }
 
 /* =============================================================================
@@ -29,24 +49,90 @@
 ============================================================================= */
 .home-stage-developer-operations-panel__tab{
   display:inline-flex;
+  position:relative;
   align-items:center;
   justify-content:center;
-  min-height:var(--home-stage-developer-operations-control-height);
-  padding:var(--home-stage-developer-operations-control-padding);
-  color:var(--home-stage-developer-operations-muted);
+  gap:0.42rem;
+  min-width:0;
+  height:1rem;
+  min-height:1rem;
+  padding:0;
+  color:var(--text-secondary-color);
   background:transparent;
-  border:var(--border-width-hairline) solid var(--home-stage-developer-operations-border);
-  border-radius:var(--home-stage-developer-operations-button-radius);
+  border:0;
+  border-radius:0;
   font:inherit;
+  font-size:0.8rem;
+  font-weight:400;
+  letter-spacing:0.008em;
+  line-height:1rem;
   white-space:nowrap;
+  text-align:left;
+  text-decoration:none;
+  opacity:1;
   cursor:pointer;
-}
-
-.home-stage-developer-operations-panel__tab[aria-pressed="true"]{
-  color:var(--home-stage-developer-operations-text);
-  background:color-mix(in srgb, var(--home-stage-developer-operations-border) 22%, transparent);
+  transform:none !important;
+  transition:color var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
 
 /* =============================================================================
-   03) END OF FILE
+   03) TAB ICONS
+============================================================================= */
+.home-stage-developer-operations-panel__tab-icon{
+  width:1rem;
+  height:1rem;
+  flex:0 0 1rem;
+  line-height:1rem;
+}
+
+/* =============================================================================
+   04) TAB LABELS
+============================================================================= */
+.home-stage-developer-operations-panel__tab-label{
+  display:inline-flex;
+  align-items:center;
+  height:1rem;
+  min-width:0;
+  color:inherit;
+  font-size:0.8rem;
+  font-weight:400;
+  letter-spacing:0.008em;
+  line-height:1rem;
+}
+
+/* =============================================================================
+   05) TAB SEPARATOR
+============================================================================= */
+.home-stage-developer-operations-panel__tab::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:calc((var(--products-local-nav-height) - 100%) / -2);
+  z-index:1;
+  height:var(--border-width-hairline);
+  background:var(--local-nav-active-indicator-color);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity var(--products-local-nav-motion-fast, 220ms) var(--interaction-ease-standard);
+}
+
+.home-stage-developer-operations-panel__tab[aria-pressed="true"]::after{
+  opacity:var(--selected-indicator-opacity);
+}
+
+/* =============================================================================
+   06) TAB STATES
+============================================================================= */
+.home-stage-developer-operations-panel__tab:hover,
+.home-stage-developer-operations-panel__tab:focus-visible,
+.home-stage-developer-operations-panel__tab[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  outline:none;
+  text-decoration:none;
+  transform:none !important;
+}
+
+/* =============================================================================
+   07) END OF FILE
 ============================================================================= */

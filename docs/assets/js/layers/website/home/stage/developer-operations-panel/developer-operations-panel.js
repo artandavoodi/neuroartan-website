@@ -24,6 +24,11 @@
 import { getHomeDeveloperModeState } from '../../developer-mode/developer-mode-state.js';
 import { getFilteredDeveloperOperationsIndex } from './index/developer-operations-index.js';
 
+const HOME_STAGE_DEVELOPER_OPERATIONS_VIEW_ICONS = {
+  full:'/assets/icons/core/actions/unclassified/collapse.svg',
+  mini:'/assets/icons/core/actions/unclassified/expand.svg'
+};
+
 /* =============================================================================
    02) MODULE STATE
 ============================================================================= */
@@ -74,6 +79,10 @@ function getConsoleViewToggleLabel(panel) {
   return panel.querySelector('[data-home-stage-developer-operations-view-toggle-label]');
 }
 
+function getConsoleViewToggleIcon(panel) {
+  return panel.querySelector('[data-home-stage-developer-operations-view-toggle] img');
+}
+
 function setDeveloperConsoleView(view) {
   HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view = view === 'full' ? 'full' : 'mini';
   document.documentElement.dataset.homeDeveloperConsoleView = HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view;
@@ -85,6 +94,7 @@ function setDeveloperConsoleView(view) {
 function renderDeveloperOperationsConsoleView(panel) {
   const toggle = getConsoleViewToggle(panel);
   const label = getConsoleViewToggleLabel(panel);
+  const icon = getConsoleViewToggleIcon(panel);
   const full = HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view === 'full';
 
   document.documentElement.dataset.homeDeveloperConsoleView = HOME_STAGE_DEVELOPER_OPERATIONS_STATE.view;
@@ -95,6 +105,10 @@ function renderDeveloperOperationsConsoleView(panel) {
   }
 
   if (label) label.textContent = full ? 'Mini View' : 'Full View';
+
+  if (icon instanceof HTMLImageElement) {
+    icon.src = full ? HOME_STAGE_DEVELOPER_OPERATIONS_VIEW_ICONS.full : HOME_STAGE_DEVELOPER_OPERATIONS_VIEW_ICONS.mini;
+  }
 }
 
 function renderDeveloperOperationsTabPanel(panel) {

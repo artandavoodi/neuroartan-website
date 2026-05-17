@@ -47,7 +47,7 @@
   visibility:hidden;
 }
 
-html[data-homepage-theme-breathing-circle="true"] .home-breathing-circle{
+html[data-homepage-theme-breathing-circle="true"] body.home-page.site-entered .home-breathing-circle{
   opacity:1;
   visibility:visible;
 }

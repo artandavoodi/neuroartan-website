@@ -1,0 +1,20 @@
+.home-usage-switch{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--spacing-2);
+}
+
+.home-usage-switch__item{
+  min-height:var(--control-height-sm);
+  padding-inline:var(--spacing-3);
+  border:var(--line-subtle);
+  border-radius:var(--radius-control);
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+}
+
+.home-usage-switch__item.is-active{
+  border-color:var(--line-strong);
+  background:var(--surface-panel-muted);
+}

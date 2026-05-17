@@ -507,14 +507,8 @@ html[data-theme-effective="light"]{
   overflow:visible;
 }
 
-.home-platform-shell__rail-toggle[aria-pressed="true"] .inline-stroke-icon__shape,
-.home-platform-shell__nav-item[aria-pressed="true"] .inline-stroke-icon__shape,
-.home-platform-shell__nav-item[aria-current="page"] .inline-stroke-icon__shape,
-.home-platform-shell__nav-item.is-active .inline-stroke-icon__shape,
-.home-platform-shell__subnav-item[aria-pressed="true"] .inline-stroke-icon__shape,
-.home-platform-shell__subnav-item.is-active .inline-stroke-icon__shape{
-  stroke-width:var(--interactive-icon-stroke-width-active);
-}
+/* Active icon stroke emphasis temporarily disabled.
+   The active-state architecture remains reserved for later refinement. */
 
 
 

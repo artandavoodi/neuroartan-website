@@ -3,9 +3,20 @@
     {
       "id": "home",
       "eyebrow": "Home",
-      "title": "Home",
-      "description": "Unified platform shell ready. Select a destination from the left rail to continue through one stable navigation and content surface.",
-      "default_subdestination": ""
+      "title": "Your ICOS State",
+      "description": "A continuous dashboard canvas for model readiness, continuity, memory, activity, and next-strengthening actions.",
+      "default_subdestination": "overview",
+      "subdestinations": [
+        {
+          "id": "overview",
+          "label": "Overview",
+          "detail_title": "Your ICOS State",
+          "detail_copy": "A unified dashboard canvas that composes all Home overview modules in one scrollable system surface.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/home/overview-canvas.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/home/00-home-all.css",
+          "module": "/assets/js/layers/website/home/platform-menu/home/overview-canvas.js"
+        }
+      ]
     },
     {
       "id": "continuity",

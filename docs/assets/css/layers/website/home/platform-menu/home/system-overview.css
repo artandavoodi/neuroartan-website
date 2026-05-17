@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Home Overview Shared Module Frame
+   ========================================================================== */
+
+.home-overview-module{
+  display:grid;
+  gap:var(--spacing-4);
+  min-width:0;
+}
+
+.home-overview-module__header{
+  display:grid;
+  gap:var(--spacing-2);
+}
+
+.home-overview-module__eyebrow{
+  margin:0;
+  font:var(--type-label);
+  letter-spacing:var(--tracking-label);
+  text-transform:uppercase;
+  opacity:var(--state-opacity-muted);
+}
+
+.home-overview-module__title{
+  margin:0;
+  font:var(--type-title-sm);
+}
+
+.home-overview-grid{
+  display:grid;
+  gap:var(--spacing-3);
+}
+
+.home-overview-card,
+.home-readiness-detail,
+.home-continuity-preview,
+.home-graph-status,
+.home-usage-panel,
+.home-guidance-detail{
+  display:grid;
+  gap:var(--spacing-2);
+  padding:var(--spacing-4);
+  border:var(--line-subtle);
+  border-radius:var(--radius-panel);
+  background:var(--surface-panel-muted);
+}
+
+.home-overview-card__label,
+.home-readiness-detail__label,
+.home-continuity-preview__label,
+.home-graph-status__label,
+.home-usage-panel__label,
+.home-guidance-detail__label{
+  font:var(--type-label);
+  opacity:var(--state-opacity-muted);
+}
+
+.home-overview-card__value,
+.home-readiness-detail__value,
+.home-continuity-preview__value,
+.home-graph-status__value,
+.home-usage-panel__value,
+.home-guidance-detail__value{
+  font:var(--type-body-strong);
+}
+
+.home-overview-grid--system{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}

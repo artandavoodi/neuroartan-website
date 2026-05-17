@@ -1,0 +1,20 @@
+.home-guidance-actions{
+  display:grid;
+  gap:var(--spacing-2);
+}
+
+.home-guidance-action{
+  min-height:var(--control-height-sm);
+  padding:var(--spacing-3);
+  border:var(--line-subtle);
+  border-radius:var(--radius-control);
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.home-guidance-action.is-active{
+  border-color:var(--line-strong);
+  background:var(--surface-panel-muted);
+}

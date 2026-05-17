@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Home Overview Canvas
+   Parent scrollable dashboard shell.
+   Child modules remain independently owned.
+   ========================================================================== */
+
+.home-overview-canvas{
+  display:grid;
+  gap:var(--spacing-6);
+  min-width:0;
+}
+
+.home-overview-canvas__header{
+  display:grid;
+  gap:var(--spacing-3);
+  padding:var(--spacing-6);
+  border:var(--line-subtle);
+  border-radius:var(--radius-panel);
+  background:var(--surface-panel-muted);
+}
+
+.home-overview-canvas__eyebrow{
+  margin:0;
+  font:var(--type-label);
+  letter-spacing:var(--tracking-label);
+  text-transform:uppercase;
+  opacity:var(--state-opacity-muted);
+}
+
+.home-overview-canvas__title{
+  margin:0;
+  font:var(--type-title-md);
+}
+
+.home-overview-canvas__copy{
+  margin:0;
+  max-width:68ch;
+  font:var(--type-body);
+  opacity:var(--state-opacity-soft);
+}
+
+.home-overview-canvas__stack{
+  display:grid;
+  gap:var(--spacing-none);
+  padding:var(--spacing-6);
+  border:var(--line-subtle);
+  border-radius:var(--radius-panel);
+  background:var(--surface-panel-muted);
+}
+
+.home-overview-canvas__slot{
+  min-width:0;
+  padding-block:var(--spacing-6);
+  border-top:var(--border-width-hairline) solid var(--control-border);
+}
+
+.home-overview-canvas__slot:first-child{
+  padding-top:var(--spacing-none);
+  border-top:var(--spacing-none);
+}
+
+.home-overview-canvas__slot:last-child{
+  padding-bottom:var(--spacing-none);
+}
+
+.home-overview-canvas__slot:empty{
+  display:none;
+}

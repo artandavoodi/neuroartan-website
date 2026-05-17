@@ -79,7 +79,6 @@ import {
   ============================================================================= */
   const RUNTIME = (window.__NEUROARTAN_ACCOUNT_COMPLETION__ ||= {
     authBound: false,
-    firebaseReadyBound: false,
     supabaseReadyBound: false,
     authSource: 'none',
     profileRequestId: 0,
@@ -292,69 +291,7 @@ import {
   const USERNAME_SUGGESTIONS_EVENT = 'account:profile-setup-username-suggestions';
   const USERNAME_VALIDATION_DEBOUNCE_MS = 240;
   /* =============================================================================
-     06) FIREBASE HELPERS
-  ============================================================================= */
-  function hasFirebaseAuth() {
-    return !!(window.firebase && typeof window.firebase.auth === 'function');
-  }
-
-  function hasFirestore() {
-    return !!(window.firebase && typeof window.firebase.firestore === 'function');
-  }
-
-  function getFirebaseAuth() {
-    if (!hasFirebaseAuth()) return null;
-
-    try {
-      return window.firebase.auth();
-    } catch (_) {
-      return null;
-    }
-  }
-
-  function getFirestore() {
-    if (!hasFirestore()) return null;
-
-    try {
-      return window.firebase.firestore();
-    } catch (_) {
-      return null;
-    }
-  }
-
-  async function waitForFirebaseReady(timeoutMs = 15000) {
-    if (hasFirebaseAuth() && hasFirestore()) return true;
-
-    return new Promise((resolve) => {
-      let settled = false;
-
-      const finish = (value) => {
-        if (settled) return;
-        settled = true;
-        window.clearTimeout(timeoutId);
-        document.removeEventListener('neuroartan:firebase-ready', handleReady);
-        resolve(value);
-      };
-
-      const handleReady = () => {
-        finish(hasFirebaseAuth() && hasFirestore());
-      };
-
-      const timeoutId = window.setTimeout(() => {
-        finish(false);
-      }, timeoutMs);
-
-      document.addEventListener('neuroartan:firebase-ready', handleReady);
-    });
-  }
-
-  async function ensureFirebaseServices() {
-    if (hasFirebaseAuth() && hasFirestore()) return true;
-    return waitForFirebaseReady();
-  }
-
-  /* =============================================================================
-     07) ROUTE AND DRAWER HELPERS
+     06) ROUTE AND DRAWER HELPERS
   ============================================================================= */
   function isProfileRoute(pathname = window.location.pathname) {
     return PROFILE_ROUTE_MATCHERS.some((route) => pathname.endsWith(route));
@@ -536,14 +473,12 @@ import {
   }
 
   function getPrimaryProviderId(user) {
-    const firebaseProviderId = user?.providerData?.find((entry) => entry?.providerId && entry.providerId !== 'firebase')?.providerId || '';
-    const supabaseProviderId = normalizeString(
+    const providerId = normalizeString(
       user?.app_metadata?.provider
       || (Array.isArray(user?.app_metadata?.providers) ? user.app_metadata.providers[0] : '')
       || user?.identities?.[0]?.provider
       || ''
     );
-    const providerId = firebaseProviderId || supabaseProviderId;
 
     switch (providerId) {
       case 'apple.com':
@@ -562,12 +497,12 @@ import {
     }
   }
 
-  function mapFirebaseError(error, fallbackMessage) {
+  function mapAuthError(error, fallbackMessage) {
     const code = normalizeString(error?.code || '');
     const message = normalizeString(error?.message || '').toLowerCase();
 
     if (code.startsWith('auth/requests-from-referer-') || message.includes('requests-from-referer-')) {
-      return `Firebase Auth is blocking ${window.location.origin}. Add this origin to the authorized domains or API referrer allowlist for neuroartan-core.`;
+      return `Authentication is blocked for ${window.location.origin}. Verify the approved local-origin and redirect configuration.`;
     }
 
     if (code === 'invalid_credentials' || message.includes('invalid login credentials')) {
@@ -601,7 +536,8 @@ import {
       case 'auth/too-many-requests':
         return 'Too many attempts were made. Please wait and try again.';
       case 'SUPABASE_NOT_READY':
-        return 'Supabase account backend is still loading. Wait a moment and try again.';
+      case 'AUTH_BACKEND_NOT_READY':
+        return 'Account services are still loading. Wait a moment and try again.';
       case 'permission-denied':
       case 'unavailable':
         return 'Profile storage is not available right now.';
@@ -617,9 +553,7 @@ import {
     return (
       code === 'permission-denied'
       || code === 'unavailable'
-      || message.includes('cloud firestore api has not been used')
       || message.includes('failed to get document because the client is offline')
-      || message.includes('could not reach cloud firestore backend')
     );
   }
 
@@ -789,16 +723,9 @@ import {
     if (!normalizedUid) return null;
 
     const supabase = getSupabaseClient();
-    if (supabase) {
-      return getSupabaseProfile(normalizedUid);
-    }
+    if (!supabase) return null;
 
-    const firestore = getFirestore();
-    if (!firestore) return null;
-
-    const snapshot = await firestore.collection(PROFILE_COLLECTION).doc(normalizedUid).get();
-    if (!snapshot.exists) return null;
-    return snapshot.data() || null;
+    return getSupabaseProfile(normalizedUid);
   }
 
   async function resolveEmailIdentity(identity) {
@@ -814,17 +741,7 @@ import {
       return normalizeEmail(normalizedIdentity);
     }
 
-    if (isPhoneIdentity(normalizedIdentity)) {
-      return '';
-    }
-
-    const profile = await findProfileByUsername({
-      firestore: getFirestore(),
-      username: normalizedIdentity,
-      profileCollection: PROFILE_COLLECTION
-    });
-
-    return normalizeEmail(profile?.email || '');
+    return '';
   }
 
   /* =============================================================================
@@ -991,42 +908,18 @@ import {
   /* =============================================================================
      14) ACCOUNT FLOW HELPERS
   ============================================================================= */
-  async function ensureFirebaseReadyOrThrow() {
-    const ready = await ensureFirebaseServices();
-    if (!ready) {
-      throw createUsernameError('FIREBASE_NOT_READY');
-    }
-
-    const auth = getFirebaseAuth();
-    const firestore = getFirestore();
-    if (!auth || !firestore) {
-      throw createUsernameError('FIREBASE_NOT_READY');
-    }
-
-    return { auth, firestore };
-  }
-
-  /* =============================================================================
+    /* =============================================================================
      14A) BACKEND READINESS HELPERS
   ============================================================================= */
   async function ensureAccountBackendReadyOrThrow() {
     const supabase = await waitForSupabaseClient();
-    if (supabase) {
-      return {
-        source: 'supabase',
-        supabase
-      };
+    if (!supabase) {
+      throw createUsernameError('AUTH_BACKEND_NOT_READY');
     }
 
-    if (hasSupabaseRuntimeConfig()) {
-      throw createUsernameError('SUPABASE_NOT_READY');
-    }
-
-    const { auth, firestore } = await ensureFirebaseReadyOrThrow();
     return {
-      source: 'firebase',
-      auth,
-      firestore
+      source: 'auth',
+      supabase
     };
   }
 
@@ -1071,24 +964,13 @@ import {
     }
   }
 
-  async function updateFirebaseDisplayName(user, displayName) {
-    const nextDisplayName = normalizeString(displayName);
-    if (!user || !nextDisplayName || typeof user.updateProfile !== 'function') return;
-    if (normalizeString(user.displayName) === nextDisplayName) return;
-
-    await user.updateProfile({
-      displayName: nextDisplayName,
-      photoURL: user.photoURL || null
-    });
-  }
-
-  /* =============================================================================
+    /* =============================================================================
      15) USERNAME STATUS FLOW
   ============================================================================= */
   function requestUsernameAvailability(detail = {}) {
     const normalized = normalizeUsername(detail.username || detail.raw_username || '');
     const requestId = ++RUNTIME.usernameValidationRequestId;
-    const currentUid = normalizeString(getFirebaseAuth()?.currentUser?.uid || '');
+    let currentUid = '';
 
     window.clearTimeout(RUNTIME.usernameValidationTimer);
 
@@ -1134,6 +1016,7 @@ import {
 
             if (supabase) {
               const sessionUser = await getSupabaseSessionUser();
+              currentUid = normalizeString(sessionUser?.id || sessionUser?.uid || '');
               const availability = await getUsernameAvailability({
                 supabase,
                 username:localValidation.normalized,
@@ -1162,42 +1045,12 @@ import {
               return;
             }
 
-            if (hasSupabaseRuntimeConfig()) {
-              emitUsernameStatus({
-                state:'checking',
-                normalized:localValidation.normalized,
-                message:'Account backend is still loading. Try again in a moment.'
-              });
-              return;
-            }
-
-            const firestore = getFirestore() || (await waitForFirebaseReady(1500) ? getFirestore() : null);
-            const availability = await getUsernameAvailability({
-              firestore,
-              username: localValidation.normalized,
-              currentUid,
-              policy,
-              profileCollection: PROFILE_COLLECTION,
-              reservationCollection: USERNAME_RESERVATION_COLLECTION
-            });
-
-            if (requestId !== RUNTIME.usernameValidationRequestId) return;
-
             emitUsernameStatus({
-              state: availability.state,
-              normalized: availability.normalized,
-              message: availability.message
+              state:'checking',
+              normalized:localValidation.normalized,
+              message:'Account services are still loading. Try again in a moment.'
             });
-            if (!availability.ok || availability.state === 'unavailable') {
-              void emitAvailableUsernameSuggestions(detail, policy, {
-                currentUid
-              });
-            } else {
-              emitUsernameSuggestions({
-                normalized:availability.normalized,
-                suggestions:[]
-              });
-            }
+            return;
           } catch (error) {
             if (requestId !== RUNTIME.usernameValidationRequestId) return;
 
@@ -1243,50 +1096,10 @@ import {
         return;
       }
 
-      if (hasSupabaseRuntimeConfig()) {
-        throw createUsernameError('SUPABASE_NOT_READY');
-      }
-
-      const { auth } = await ensureFirebaseReadyOrThrow();
-      let providerInstance = null;
-
-      if (provider === 'google') {
-        providerInstance = new window.firebase.auth.GoogleAuthProvider();
-      }
-
-      if (provider === 'apple') {
-        providerInstance = new window.firebase.auth.OAuthProvider('apple.com');
-        providerInstance.addScope?.('email');
-        providerInstance.addScope?.('name');
-      }
-
-      if (!providerInstance) {
-        throw createUsernameError('UNSUPPORTED_PROVIDER');
-      }
-
-      const result = await auth.signInWithPopup(providerInstance);
-      const providerProfile = result?.additionalUserInfo?.profile || {};
-      const splitName = splitFullName(result?.user?.displayName || providerProfile?.name || '');
-
-      setLastProviderContext({
-        method: provider,
-        provider,
-        email: normalizeEmail(result?.user?.email || providerProfile?.email || ''),
-        first_name: providerProfile?.given_name || splitName.first_name || '',
-        last_name: providerProfile?.family_name || splitName.last_name || '',
-        display_name: normalizeString(result?.user?.displayName || providerProfile?.name || ''),
-        username: buildUsernameSuggestion({
-          email: result?.user?.email || providerProfile?.email || '',
-          display_name: result?.user?.displayName || providerProfile?.name || ''
-        })
-      });
-
-      if (result?.user) {
-        await handleSignedInState(result.user);
-      }
+      throw createUsernameError('AUTH_BACKEND_NOT_READY');
     } catch (error) {
       clearFlowState();
-      const message = mapFirebaseError(error, `Unable to continue with ${provider} right now.`);
+      const message = mapAuthError(error, `Unable to continue with ${provider} right now.`);
       if (!message) return;
       window.alert(message);
       console.error('Provider auth error:', error);
@@ -1364,19 +1177,10 @@ import {
         return;
       }
 
-      if (hasSupabaseRuntimeConfig()) {
-        throw createUsernameError('SUPABASE_NOT_READY');
-      }
-
-      const { auth } = await ensureFirebaseReadyOrThrow();
-      const credential = await auth.signInWithEmailAndPassword(email, password);
-      if (credential?.user) {
-        emitSignInStatus('success', 'Signed in. Opening your private profile...');
-        await handleSignedInState(credential.user);
-      }
+      throw createUsernameError('AUTH_BACKEND_NOT_READY');
     } catch (error) {
       clearFlowState();
-      const message = mapFirebaseError(error, 'Unable to sign in right now.');
+      const message = mapAuthError(error, 'Unable to sign in right now.');
       if (message) {
         emitSignInStatus('error', message);
         setFieldError(passwordField || identityField, message);
@@ -1483,7 +1287,7 @@ import {
       throw createUsernameError('AUTHENTICATED_USER_REQUIRED');
     } catch (error) {
       clearFlowState();
-      const message = mapFirebaseError(error, 'Unable to continue with phone right now.');
+      const message = mapAuthError(error, 'Unable to continue with phone right now.');
       emitPhoneAuthStatus('error', message);
       setFieldError(code ? codeField : phoneField, message);
       console.error('Phone auth error:', error);
@@ -1525,15 +1329,9 @@ import {
         return;
       }
 
-      if (hasSupabaseRuntimeConfig()) {
-        throw createUsernameError('SUPABASE_NOT_READY');
-      }
-
-      const { auth } = await ensureFirebaseReadyOrThrow();
-      await auth.sendPasswordResetEmail(email);
-      form.reset();
+      throw createUsernameError('AUTH_BACKEND_NOT_READY');
     } catch (error) {
-      const message = mapFirebaseError(error, 'Unable to send a reset link right now.');
+      const message = mapAuthError(error, 'Unable to send a reset link right now.');
       if (message) {
         setFieldError(emailField, message);
       }
@@ -1581,11 +1379,9 @@ import {
       loadAccountPasswordPolicy()
     ]);
     const context = patchOnboardingContext(detail);
-    const auth = getFirebaseAuth();
-    const currentUser = auth?.currentUser || null;
     const supabase = await waitForSupabaseClient();
     const supabaseSessionUser = supabase ? await getSupabaseSessionUser() : null;
-    const activeUser = supabase ? (supabaseSessionUser || null) : (currentUser || null);
+    const activeUser = supabaseSessionUser || null;
     const method = normalizeString(detail.method || context.method || getPrimaryProviderId(activeUser));
     const firstName = normalizeString(detail.first_name || context.first_name || '');
     const lastName = normalizeString(detail.last_name || context.last_name || '');
@@ -1700,7 +1496,6 @@ import {
       await ensureAccountBackendReadyOrThrow();
 
       let user = activeUser;
-      let firestore = getFirestore();
 
       if (supabase) {
         const currentSession = await getSupabaseSession();
@@ -1789,69 +1584,6 @@ import {
         return;
       }
 
-      const readyServices = await ensureFirebaseReadyOrThrow();
-      const authInstance = readyServices.auth;
-      firestore = readyServices.firestore;
-      user = authInstance.currentUser || user;
-
-      await assertUsernameAvailable({
-        firestore,
-        username: values.username,
-        currentUid: user?.uid || '',
-        policy,
-        profileCollection: PROFILE_COLLECTION,
-        reservationCollection: USERNAME_RESERVATION_COLLECTION
-      });
-
-      if (method === 'email' && !user) {
-        const credential = await authInstance.createUserWithEmailAndPassword(values.email, values.password);
-        user = credential.user || null;
-      }
-
-      if (!user) {
-        throw createUsernameError('AUTHENTICATED_USER_REQUIRED');
-      }
-
-      await assertUsernameAvailable({
-        firestore,
-        username: values.username,
-        currentUid: user.uid,
-        policy,
-        profileCollection: PROFILE_COLLECTION,
-        reservationCollection: USERNAME_RESERVATION_COLLECTION
-      });
-
-      await updateFirebaseDisplayName(user, values.display_name);
-
-      const savedProfile = await reserveUsernameProfile({
-        firestore,
-        firebaseNamespace: window.firebase,
-        user,
-        values: {
-          ...values,
-          eligibility_age_years: eligibility.ageYears,
-          minimum_eligible_age_years: eligibility.minimumAge
-        },
-        policy,
-        profileCollection: PROFILE_COLLECTION,
-        reservationCollection: USERNAME_RESERVATION_COLLECTION
-      });
-
-      emitUsernameStatus({
-        state: 'available',
-        normalized: values.username,
-        message: buildUsernameStatus('available', values.username, policy)
-      });
-
-      clearPendingProfileState();
-      clearOnboardingContext();
-      clearFlowState();
-      emitProfileState(user, savedProfile);
-      emitProfileSetupSubmitStatus({
-        state: 'success',
-        message: 'Profile created. Opening your private profile…'
-      });
-      redirectToProfile();
     } catch (error) {
       const usernameCode = resolveProfileSetupUsernameErrorCode(error);
 
@@ -1901,7 +1633,7 @@ import {
         const supabaseMessage = normalizeString(error?.message || '').toLowerCase();
         const message = supabaseMessage.includes('row-level security')
           ? 'Profile creation is blocked by backend access policy right now.'
-          : mapFirebaseError(error, 'Unable to complete profile setup right now.');
+          : mapAuthError(error, 'Unable to complete profile setup right now.');
         emitProfileSetupSubmitStatus({
           state: 'error',
           message
@@ -1996,23 +1728,6 @@ import {
     if (hasSupabaseRuntimeConfig()) {
       return;
     }
-
-    if (RUNTIME.authBound && RUNTIME.authSource === 'firebase') return;
-
-    const auth = getFirebaseAuth();
-    if (!auth) return;
-
-    RUNTIME.authBound = true;
-    RUNTIME.authSource = 'firebase';
-
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        void handleSignedInState(user);
-        return;
-      }
-
-      handleSignedOutState();
-    });
   }
 
   /* =============================================================================
@@ -2023,18 +1738,6 @@ import {
     RUNTIME.supabaseReadyBound = true;
 
     window.addEventListener('neuroartan:supabase-ready', () => {
-      RUNTIME.authBound = false;
-      RUNTIME.authSource = 'none';
-      bindAuthState();
-    });
-  }
-
-  function bindFirebaseReadyEvents() {
-    if (RUNTIME.firebaseReadyBound) return;
-    RUNTIME.firebaseReadyBound = true;
-
-    document.addEventListener('neuroartan:firebase-ready', () => {
-      if (hasSupabaseRuntimeConfig()) return;
       RUNTIME.authBound = false;
       RUNTIME.authSource = 'none';
       bindAuthState();
@@ -2064,24 +1767,6 @@ import {
         }
       } catch (error) {
         console.error('Supabase account entry resolution failed:', error);
-      }
-
-      if (!hasSupabaseRuntimeConfig()) {
-        const firebaseUser = getFirebaseAuth()?.currentUser || null;
-
-        if (firebaseUser) {
-          if (isProfileRoute()) {
-            document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-              detail: {
-                section: 'overview'
-              }
-            }));
-            return;
-          }
-
-          redirectToProfile();
-          return;
-        }
       }
 
       requestGuestAccountEntry(detail);
@@ -2129,19 +1814,14 @@ import {
     document.addEventListener('account:sign-out-request', async () => {
       try {
         const supabase = await waitForSupabaseClient();
-        if (supabase) {
-          const { error } = await supabase.auth.signOut();
-          if (error) {
-            throw error;
-          }
-        } else if (hasSupabaseRuntimeConfig()) {
+        if (!supabase) {
           return;
-        } else {
-          const auth = getFirebaseAuth();
-          if (!auth) return;
-          await auth.signOut();
         }
 
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          throw error;
+        }
         clearOnboardingContext();
         clearFlowState();
         if (!isIndexRoute()) {
@@ -2168,12 +1848,6 @@ import {
         console.error('Supabase profile refresh failed:', error);
       }
 
-      if (hasSupabaseRuntimeConfig()) return;
-
-      const firebaseUser = getFirebaseAuth()?.currentUser || null;
-      if (firebaseUser) {
-        void handleSignedInState(firebaseUser);
-      }
     });
 
     document.addEventListener('submit', (event) => {
@@ -2223,7 +1897,6 @@ import {
       });
 
     bindSupabaseReadyEvents();
-    bindFirebaseReadyEvents();
     bindAccountEvents();
     bindAuthState();
   }

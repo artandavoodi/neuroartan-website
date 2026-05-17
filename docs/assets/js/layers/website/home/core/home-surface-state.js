@@ -197,16 +197,11 @@ function readLocaleFromRuntime() {
 }
 
 function readAccountFromRuntime() {
-  let currentUser = null;
-
-  try {
-    currentUser = window.firebase?.auth?.()?.currentUser || null;
-  } catch (_) {
-    currentUser = null;
-  }
+  const account = window.NEUROARTAN_AUTH_STATE || {};
+  const currentUser = account.user || null;
 
   return {
-    signedIn: !!currentUser,
+    signedIn: !!account.signedIn,
     user: normalizeUserSnapshot(currentUser),
     profile: HOME_SURFACE_STATE.account.profile,
     profileComplete: HOME_SURFACE_STATE.account.profileComplete,
@@ -432,10 +427,6 @@ function bindHomeSurfaceStateEvents() {
     emitHomeSurfaceState();
   });
 
-  document.addEventListener('neuroartan:firebase-ready', () => {
-    syncSignedInAccountState();
-    emitHomeSurfaceState();
-  });
 }
 
 /* =========================================================

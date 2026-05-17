@@ -32,7 +32,7 @@ async function syncModelOverview(root) {
 
   if (summary) {
     summary.innerHTML = [
-      renderMetric('Backend', backend.supabaseConfigured ? 'Supabase active' : 'Supabase unavailable'),
+      renderMetric('Backend', backend.supabaseConfigured ? 'Account backend active' : 'Account backend unavailable'),
       renderMetric('Owned models', String(models.length)),
       renderMetric('Canonical state', backend.migrationStatus.replaceAll('_', ' '))
     ].join('');
@@ -68,14 +68,14 @@ function bindModelCreation(root) {
       });
       form.reset();
       await syncModelOverview(root);
-      if (status) status.textContent = 'Model created in Supabase.';
+      if (status) status.textContent = 'Model created in the account backend.';
     } catch (error) {
       if (status) {
         status.textContent = error?.code === 'PROFILE_REQUIRED' || error?.code === 'PROFILE_COMPLETE_REQUIRED'
           ? 'Complete your profile before creating a model.'
           : error?.code === 'AUTH_REQUIRED'
             ? 'Sign in before creating a model.'
-            : 'Model creation is blocked until the Supabase schema is available.';
+            : 'Model creation is blocked until the required account schema is available.';
       }
       console.error('[home-platform][model-overview] Model creation failed.', error);
     }

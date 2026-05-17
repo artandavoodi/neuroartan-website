@@ -199,15 +199,8 @@
     const avatarShell = getAccountAvatarShell(menu);
     const avatarImage = getAccountAvatarImage(menu);
     const accountIcon = getAccountAvatarIcon(menu);
-    let liveUser = user;
-
-    if (!liveUser && window.firebase && typeof window.firebase.auth === 'function') {
-      try {
-        liveUser = window.firebase.auth().currentUser || null;
-      } catch (_error) {
-        liveUser = null;
-      }
-    }
+    const runtimeAccount = window.NEUROARTAN_AUTH_STATE || {};
+    const liveUser = user || runtimeAccount.user || null;
 
     const photo = normalizeString(profile?.photo_url || liveUser?.photoURL || '');
     const hasSignedInAccount = Boolean(profile || liveUser);

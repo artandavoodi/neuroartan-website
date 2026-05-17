@@ -63,25 +63,20 @@ function getDashboardRoot() {
 }
 
 function getAccountSummary() {
-  try {
-    const currentUser = window.firebase?.auth?.()?.currentUser || null;
-    if (!currentUser) {
-      return {
-        label: 'Guest Access',
-        detail: 'Sign in to connect dashboard controls to a private profile and owner-specific runtime.'
-      };
-    }
+  const account = window.NEUROARTAN_AUTH_STATE || {};
+  const currentUser = account.user || null;
 
-    return {
-      label: currentUser.displayName || currentUser.email || 'Signed in',
-      detail: currentUser.emailVerified ? 'Verified sign-in runtime active.' : 'Signed-in runtime active. Email verification is still pending.'
-    };
-  } catch (_) {
+  if (!account.signedIn || !currentUser) {
     return {
       label: 'Guest Access',
-      detail: 'Authentication runtime is not currently connected.'
+      detail: 'Sign in to connect dashboard controls to a private profile and owner-specific runtime.'
     };
   }
+
+  return {
+    label: currentUser.displayName || currentUser.email || 'Signed in',
+    detail: currentUser.emailVerified ? 'Verified sign-in runtime active.' : 'Signed-in runtime active. Email verification is still pending.'
+  };
 }
 
 function groupDashboardSections() {

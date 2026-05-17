@@ -62,7 +62,7 @@ async function renderModels() {
       ? profileComplete && backend.supabaseConfigured
         ? 'Model registry is connected. Create and manage models from the canonical model creation control panel.'
         : profileComplete
-          ? 'Open model creation to prepare a model draft. Canonical save requires the Supabase models table and policies.'
+          ? 'Open model creation to prepare a model draft. Canonical save requires the active models table and account policies.'
           : 'Open model creation after completing the private profile identity and username requirements.'
       : state.viewerState !== 'authenticated'
         ? 'Sign in to activate model registry access.'

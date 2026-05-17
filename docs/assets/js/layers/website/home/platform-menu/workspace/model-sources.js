@@ -15,7 +15,7 @@ async function syncModelSources(root) {
   if (summary) {
     summary.innerHTML = `
       <p class="home-model-source-workspace__label">Source authorization</p>
-      <p class="home-model-source-workspace__title">${backend.supabaseConfigured ? 'Supabase connector records' : 'Backend unavailable'}</p>
+      <p class="home-model-source-workspace__title">${backend.supabaseConfigured ? 'Connector records available' : 'Backend unavailable'}</p>
       <p class="home-model-source-workspace__copy">Sources are model-owned. Authorization, ingestion, and training remain separate record boundaries.</p>
     `;
   }

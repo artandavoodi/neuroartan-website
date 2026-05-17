@@ -33,7 +33,6 @@
   ============================================================================= */
   let bootBound = false;
   let authBound = false;
-  let firebaseReadyEventsBound = false;
   let profileStateEventsBound = false;
   let authSource = 'none';
   let supabaseReadyEventsBound = false;
@@ -55,17 +54,6 @@
   /* =============================================================================
      04) FIREBASE FALLBACK STATE
   ============================================================================= */
-  function getFirebaseAuth() {
-    const firebaseReady = typeof window !== 'undefined' && typeof window.firebase !== 'undefined';
-    if (!firebaseReady || typeof window.firebase.auth !== 'function') return null;
-
-    try {
-      return window.firebase.auth();
-    } catch (_) {
-      return null;
-    }
-  }
-
   /* =============================================================================
      05) PROFILE ROUTES
   ============================================================================= */
@@ -239,30 +227,7 @@
       return;
     }
 
-    if (hasSupabaseRuntimeConfig()) {
-      updateSignedOutSurface();
-      return;
-    }
-
-    const authInstance = getFirebaseAuth();
-    if (!authInstance) {
-      updateSignedOutSurface();
-      return;
-    }
-
-    if (authSource === 'firebase') return;
-
-    authSource = 'firebase';
-    authBound = true;
-
-    authInstance.onAuthStateChanged((user) => {
-      if (user) {
-        handleSignedInState(user);
-        return;
-      }
-
-      handleSignedOutState();
-    });
+    updateSignedOutSurface();
   }
 
   /* =============================================================================
@@ -348,30 +313,6 @@
     });
   }
 
-  function bindFirebaseReadyEvents() {
-    if (firebaseReadyEventsBound) return;
-    firebaseReadyEventsBound = true;
-
-    document.addEventListener('neuroartan:firebase-ready', () => {
-      if (hasSupabaseRuntimeConfig()) return;
-      authBound = false;
-      authSource = 'none';
-      bindAuthState();
-    });
-
-    window.addEventListener('neuroartan:supabase-ready', () => {
-      authBound = false;
-      authSource = 'none';
-      bindAuthState();
-    });
-
-    window.addEventListener('load', () => {
-      authBound = false;
-      authSource = 'none';
-      bindAuthState();
-    }, { once: true });
-  }
-
   /* =============================================================================
      17) INITIALIZATION
   ============================================================================= */
@@ -380,7 +321,6 @@
     bootBound = true;
 
     bindSupabaseReadyEvents();
-    bindFirebaseReadyEvents();
     bindProfileStateEvents();
     bindAuthState();
     window.logout = requestLogout;

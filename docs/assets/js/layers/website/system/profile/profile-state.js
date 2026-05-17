@@ -20,8 +20,7 @@ import {
   getSupabaseClient as getProfileIdentitySupabaseClient,
   getSupabaseProfileByUsername,
   loadProfileIdentityPolicy,
-  normalizeString,
-  resolvePublicProfileByUsername
+  normalizeString
 } from '../account/identity/account-profile-identity.js';
 import {
   getPublicModelByUsername,
@@ -120,56 +119,13 @@ async function resolveSupabasePublicProfileByUsername(route, policy) {
 /* =============================================================================
    04) FIREBASE CONTINUITY HELPERS
 ============================================================================= */
-function hasFirestore() {
-  return !!(window.firebase && typeof window.firebase.firestore === 'function');
-}
-
-function getFirestore() {
-  if (!hasFirestore()) return null;
-
-  try {
-    return window.firebase.firestore();
-  } catch (_) {
-    return null;
-  }
-}
-
-async function waitForFirebaseReady(timeoutMs = 1200) {
-  if (hasFirestore()) return true;
-
-  return new Promise((resolve) => {
-    let settled = false;
-
-    const finish = (value) => {
-      if (settled) return;
-      settled = true;
-      window.clearTimeout(timeoutId);
-      document.removeEventListener('neuroartan:firebase-ready', handleReady);
-      resolve(value);
-    };
-
-    const handleReady = () => {
-      finish(hasFirestore());
-    };
-
-    const timeoutId = window.setTimeout(() => {
-      finish(false);
-    }, timeoutMs);
-
-    document.addEventListener('neuroartan:firebase-ready', handleReady);
-  });
-}
-
 /* =============================================================================
    05) STATE HELPERS
 ============================================================================= */
 /*
- * Transitional rule:
- * Public-profile resolution below must now prefer Supabase-backed canonical
- * profile truth, while Firestore and static registry fallbacks remain tolerated
- * continuity only for still-unmigrated scopes. This file must not silently
- * treat Firebase, browser-local continuity, or static projection layers as the
- * canonical owner of public profile truth.
+ * Public-profile resolution must prefer the live canonical account backend,
+ * then fall back only to the governed public registry projection when no live
+ * renderable profile is available.
  */
 function buildBaseState(route = getPublicRouteState()) {
   return {
@@ -361,48 +317,8 @@ async function resolveStateForRoute(route) {
       return;
     }
 
-    const firebaseReady = await waitForFirebaseReady();
-
-    if (requestId !== RUNTIME.requestId) return;
-
-    if (!firebaseReady) {
-      setState(await buildRegistryResolutionState(route));
-      return;
-    }
-
-    const firestore = getFirestore();
-    if (!firestore) {
-      setState(await buildRegistryResolutionState(route));
-      return;
-    }
-
-    const resolution = await resolvePublicProfileByUsername({
-      firestore,
-      username: route.normalizedUsername || route.routeCandidate,
-      policy
-    });
-
-    if (requestId !== RUNTIME.requestId) return;
-
-    if (resolution.outcome !== 'found_renderable') {
-      const registryResolution = await buildRegistryResolutionState(route);
-
-      if (requestId !== RUNTIME.requestId) return;
-
-      if (registryResolution.outcome === 'found_renderable' && resolution.outcome === 'not_found') {
-        setState(registryResolution);
-        return;
-      }
-    }
-
-    setState({
-      ...baseState,
-      ...resolution,
-      loading: false,
-      route,
-      model: resolution.outcome === 'found_renderable' ? (registryModel || null) : null,
-      creator: resolution.outcome === 'found_renderable' ? registryCreator : null
-    });
+    setState(await buildRegistryResolutionState(route));
+    return;
   } catch (error) {
     if (requestId !== RUNTIME.requestId) return;
 

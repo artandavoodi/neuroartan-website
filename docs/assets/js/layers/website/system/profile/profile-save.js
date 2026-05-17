@@ -198,60 +198,6 @@ async function ensureSupabaseUsernameAvailability(values, existingProfile, user,
 /* =============================================================================
    05) FIREBASE HELPERS
 ============================================================================= */
-function hasFirebaseAuth() {
-  return !!(window.firebase && typeof window.firebase.auth === 'function');
-}
-
-function hasFirestore() {
-  return !!(window.firebase && typeof window.firebase.firestore === 'function');
-}
-
-function getFirebaseAuth() {
-  if (!hasFirebaseAuth()) return null;
-
-  try {
-    return window.firebase.auth();
-  } catch (_) {
-    return null;
-  }
-}
-
-function getFirestore() {
-  if (!hasFirestore()) return null;
-
-  try {
-    return window.firebase.firestore();
-  } catch (_) {
-    return null;
-  }
-}
-
-async function waitForFirebaseReady(timeoutMs = 15000) {
-  if (hasFirebaseAuth() && hasFirestore()) return true;
-
-  return new Promise((resolve) => {
-    let settled = false;
-
-    const finish = (value) => {
-      if (settled) return;
-      settled = true;
-      window.clearTimeout(timeoutId);
-      document.removeEventListener('neuroartan:firebase-ready', handleReady);
-      resolve(value);
-    };
-
-    const handleReady = () => {
-      finish(hasFirebaseAuth() && hasFirestore());
-    };
-
-    const timeoutId = window.setTimeout(() => {
-      finish(false);
-    }, timeoutMs);
-
-    document.addEventListener('neuroartan:firebase-ready', handleReady);
-  });
-}
-
 /* =============================================================================
    06) STATE STORE
 ============================================================================= */
@@ -518,9 +464,7 @@ function resolveProfileSaveErrorCode(error) {
   if (code) return code;
   if (message.includes('api_key_http_referrer_blocked')) return 'API_KEY_HTTP_REFERRER_BLOCKED';
   if (message.includes('http referrer')) return 'API_KEY_HTTP_REFERRER_BLOCKED';
-  if (message.includes('cloud firestore api has not been used')) return 'FIRESTORE_API_DISABLED';
   if (message.includes('client is offline')) return 'PROFILE_STORE_UNAVAILABLE';
-  if (message.includes('could not reach cloud firestore backend')) return 'PROFILE_STORE_UNAVAILABLE';
   if (message.includes('row-level security')) return 'PROFILE_SAVE_BLOCKED';
   if (message.includes('jwt')) return 'AUTH_REQUIRED';
   if (message.includes('duplicate key')) return 'USERNAME_TAKEN';
@@ -530,15 +474,12 @@ function resolveProfileSaveErrorCode(error) {
 
 function messageForProfileSaveError(code) {
   switch (code) {
-    case 'FIREBASE_NOT_READY':
     case 'PROFILE_STORE_UNAVAILABLE':
       return 'Profile storage is not available right now.';
     case 'PROFILE_SAVE_BLOCKED':
       return 'Profile save is blocked by backend access policy right now.';
     case 'API_KEY_HTTP_REFERRER_BLOCKED':
-      return 'Profile runtime is blocked by Firebase referrer restrictions for this origin.';
-    case 'FIRESTORE_API_DISABLED':
-      return 'Profile runtime is blocked because the Firestore API is not enabled for the active Firebase project.';
+      return 'Authentication is blocked for this local origin. Verify the approved redirect and origin configuration.';
     case 'USERNAME_CHANGE_LOCKED':
       return 'Username changes are locked once a canonical handle has been claimed.';
     case 'USERNAME_TAKEN':
@@ -679,52 +620,6 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
   });
 }
 
-export async function persistProfileWithFirebase(scope, values, existingProfile, user, policy, firestore) {
-  const normalizedUsername = normalizeUsername(values.username || existingProfile?.username || '');
-
-  if (scope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
-    const error = new Error('USERNAME_REQUIRED');
-    error.code = 'USERNAME_REQUIRED';
-    throw error;
-  }
-
-  if (values.date_of_birth) {
-    const eligibility = evaluateEligibility(values.date_of_birth, policy);
-    if (!eligibility.eligible) {
-      const error = new Error(eligibility.reason || 'INVALID_DATE_OF_BIRTH');
-      error.code = eligibility.reason || 'INVALID_DATE_OF_BIRTH';
-      throw error;
-    }
-
-    values.eligibility_age_years = eligibility.ageYears;
-    values.minimum_eligible_age_years = eligibility.minimumAge;
-  }
-
-  if (normalizedUsername) {
-    return reserveUsernameProfile({
-      firestore,
-      user,
-      values: {
-        ...values,
-        username: normalizedUsername
-      },
-      policy,
-      profileCollection: PROFILE_COLLECTION,
-      reservationCollection: USERNAME_RESERVATION_COLLECTION
-    });
-  }
-
-  const payload = buildProfilePayload({
-    user,
-    values,
-    existingProfile,
-    policy
-  });
-
-  await firestore.collection(PROFILE_COLLECTION).doc(user.uid).set(payload, { merge: true });
-  return payload;
-}
-
 async function handleSaveRequest(form) {
   const scope = normalizeString(form?.dataset?.profileSaveScope || '');
   if (!SAVE_SCOPES.includes(scope)) return;
@@ -765,40 +660,6 @@ async function handleSaveRequest(form) {
       });
 
       await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
-    } else {
-      const ready = await waitForFirebaseReady();
-      if (!ready) {
-        const error = new Error('FIREBASE_NOT_READY');
-        error.code = 'FIREBASE_NOT_READY';
-        throw error;
-      }
-
-      const auth = getFirebaseAuth();
-      const firestore = getFirestore();
-      const user = auth?.currentUser || null;
-
-      if (!auth || !firestore || !user?.uid) {
-        const error = new Error('AUTH_REQUIRED');
-        error.code = 'AUTH_REQUIRED';
-        throw error;
-      }
-
-      const policy = await loadProfileIdentityPolicy();
-      const existingProfile = await getProfileByUid({
-        firestore,
-        uid: user.uid,
-        profileCollection: PROFILE_COLLECTION
-      });
-      const values = await resolveMediaUploadValues({
-        scope,
-        values: buildScopedValues(scope, submittedFormData, existingProfile, user),
-        form:submittedFormData,
-        existingProfile,
-        user,
-        supabase: null
-      });
-
-      await persistProfileWithFirebase(scope, values, existingProfile, user, policy, firestore);
     }
 
     setScopeState(scope, {
@@ -833,8 +694,7 @@ export async function savePrivateProfileScope({
   existingProfile = null,
   user = null,
   policy = null,
-  supabase = getSupabaseClient(),
-  firestore = null
+  supabase = getSupabaseClient()
 } = {}) {
   const normalizedScope = normalizeString(scope || 'identity') || 'identity';
 
@@ -862,10 +722,6 @@ export async function savePrivateProfileScope({
     return persistProfileWithSupabase(normalizedScope, resolvedValues, existingProfile, user, resolvedPolicy, supabase);
   }
 
-  if (firestore) {
-    return persistProfileWithFirebase(normalizedScope, resolvedValues, existingProfile, user, resolvedPolicy, firestore);
-  }
-
   const error = new Error('PROFILE_STORE_UNAVAILABLE');
   error.code = 'PROFILE_STORE_UNAVAILABLE';
   throw error;
@@ -876,8 +732,7 @@ export async function createPrivateBaselineProfile({
   existingProfile = null,
   user = null,
   policy = null,
-  supabase = getSupabaseClient(),
-  firestore = null
+  supabase = getSupabaseClient()
 } = {}) {
   return savePrivateProfileScope({
     scope:'route',
@@ -889,8 +744,7 @@ export async function createPrivateBaselineProfile({
     existingProfile,
     user,
     policy,
-    supabase,
-    firestore
+    supabase
   });
 }
 

@@ -126,14 +126,14 @@ function messageForModelCreateError(error) {
       return 'That model route is already reserved.';
     default:
       if (message.includes('row-level security') || message.includes('violates row-level security')) {
-        return 'Model creation is blocked by Supabase model policy. Apply the latest model/developer policy migration, then retry while signed in with a complete profile.';
+        return 'Model creation is blocked by active model policy. Apply the latest model and developer policy migration, then retry while signed in with a complete profile.';
       }
 
       if (message.includes('permission denied')) {
         return 'Model creation is blocked by backend permissions. Confirm the models table owner policies are deployed.';
       }
 
-      return 'Model creation could not complete. Review Supabase schema and policies.';
+      return 'Model creation could not complete. Review the active account schema and model policies.';
   }
 }
 
@@ -171,7 +171,7 @@ async function initModelCreate() {
 
   renderModelCreateFields(root, schema);
   bindModelCreateForm(root);
-  setStatus(root, 'Model creation is ready. Canonical save requires Supabase auth, complete profile, and the models table.');
+  setStatus(root, 'Model creation is ready. Canonical save requires an active account session, a complete profile, and the models table.');
 }
 
 if (document.readyState === 'loading') {

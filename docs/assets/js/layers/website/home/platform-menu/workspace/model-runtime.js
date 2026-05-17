@@ -16,7 +16,7 @@ function syncModelRuntime(root) {
     <p class="home-model-runtime-workspace__label">Runtime and publication</p>
     <p class="home-model-runtime-workspace__title">${activeModel?.display_name || activeModel?.model_name || 'No active model selected'}</p>
     <p class="home-model-runtime-workspace__copy">Provider: ${routing.activeModel ? routing.engineLabel || 'configured route' : 'not selected'}</p>
-    <p class="home-model-runtime-workspace__copy">Canonical model backend: ${backend.supabaseConfigured ? 'Supabase available' : 'unavailable'}. Local active-model state remains continuity-only until active model preferences are migrated.</p>
+    <p class="home-model-runtime-workspace__copy">Canonical model backend: ${backend.supabaseConfigured ? 'available' : 'unavailable'}. Local active-model state remains continuity-only until active model preferences are migrated.</p>
   `;
 }
 

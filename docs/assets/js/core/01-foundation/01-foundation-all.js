@@ -44,9 +44,11 @@ import './overlays.js';
    03) FOUNDATION CONFIG BOOTSTRAP
 ============================================================================= */
 /*
- * Foundation config bootstrap remains canonical for homepage release lifecycle,
- * first-paint hydration, and visual unlock sequencing.
+ * Foundation config bootstrap remains canonical for shared backend/runtime
+ * configuration, homepage release lifecycle, first-paint hydration, and visual
+ * unlock sequencing.
  */
+import './config-bootstrap.js';
 import './home-first-paint-bootstrap.js';
 
 /* =============================================================================

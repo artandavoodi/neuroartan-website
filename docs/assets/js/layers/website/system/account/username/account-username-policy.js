@@ -164,15 +164,20 @@ export async function validateAccountUsernamePolicy(username, options = {}) {
 
   const reservedMatch = findReservedUsernameMatch(normalized, registry);
   if (reservedMatch) {
+    const policyRejected = reservedMatch.enforcement === 'blocked'
+      && reservedMatch.adminOverride === false;
+
     return {
       ok:false,
       normalized,
-      state:'reserved',
-      code:'USERNAME_RESERVED',
+      state:policyRejected ? 'forbidden' : 'reserved',
+      code:policyRejected ? 'USERNAME_FORBIDDEN' : 'USERNAME_RESERVED',
       category:reservedMatch.category,
       enforcement:reservedMatch.enforcement,
       adminOverride:reservedMatch.adminOverride,
-      message:'This username is reserved.'
+      message:policyRejected
+        ? 'This username cannot be used under the username policy.'
+        : 'This username is reserved.'
     };
   }
 

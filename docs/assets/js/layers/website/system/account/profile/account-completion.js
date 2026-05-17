@@ -33,13 +33,11 @@
 ============================================================================= */
 import {
   REQUIRED_PROFILE_FIELDS,
-  assertUsernameAvailable,
   buildDisplayName,
   buildUsernameStatus,
   buildUsernameSuggestion,
   createUsernameError,
   evaluateEligibility,
-  findProfileByUsername,
   getSupabaseProfileByAuthUserId,
   getSupabaseProfileByUsername,
   getSupabaseUsernameReservation,
@@ -50,7 +48,6 @@ import {
   normalizeGenderValue,
   normalizeString,
   normalizeUsername,
-  reserveUsernameProfile,
   splitFullName,
   validateUsernameLocally
 } from '../identity/account-profile-identity.js';
@@ -65,6 +62,9 @@ import {
   suggestAccountUsernames,
   suggestAvailableAccountUsernames
 } from '../username/account-username-suggestions.js';
+import {
+  validateAccountUsernamePolicy
+} from '../username/account-username-policy.js';
 
 /* =============================================================================
    02) MODULE IDENTITY
@@ -402,7 +402,14 @@ import {
 
     node.textContent = message;
     node.hidden = !message;
-    node.setAttribute(selector.includes('phone') ? 'data-account-phone-auth-submit-status' : 'data-account-sign-in-submit-status', state || 'idle');
+
+    const statusAttribute = selector.includes('phone')
+      ? 'data-account-phone-auth-submit-status'
+      : selector.includes('email-auth')
+        ? 'data-account-email-auth-status'
+        : 'data-account-sign-in-submit-status';
+
+    node.setAttribute(statusAttribute, state || 'idle');
   }
 
   function clearSignInStatus() {
@@ -411,6 +418,14 @@ import {
 
   function emitSignInStatus(state, message) {
     setInlineStatus('[data-account-sign-in-submit-status]', state, message);
+  }
+
+  function clearEmailAuthStatus() {
+    setInlineStatus('[data-account-email-auth-status]', 'idle', '');
+  }
+
+  function emitEmailAuthStatus(state, message) {
+    setInlineStatus('[data-account-email-auth-status]', state, message);
   }
 
   function clearPhoneAuthStatus() {
@@ -500,6 +515,18 @@ import {
   function mapAuthError(error, fallbackMessage) {
     const code = normalizeString(error?.code || '');
     const message = normalizeString(error?.message || '').toLowerCase();
+    const status = Number(error?.status || error?.statusCode || 0);
+
+    if (
+      status === 429
+      || code === 'over_email_send_rate_limit'
+      || code === 'over_request_rate_limit'
+      || message.includes('email rate limit exceeded')
+      || message.includes('rate limit')
+      || message.includes('too many requests')
+    ) {
+      return 'Too many verification requests were sent. Wait a few minutes, then try again.';
+    }
 
     if (code.startsWith('auth/requests-from-referer-') || message.includes('requests-from-referer-')) {
       return `Authentication is blocked for ${window.location.origin}. Verify the approved local-origin and redirect configuration.`;
@@ -975,7 +1002,7 @@ import {
     window.clearTimeout(RUNTIME.usernameValidationTimer);
 
     loadProfileIdentityPolicy()
-      .then((policy) => {
+      .then(async (policy) => {
         if (requestId !== RUNTIME.usernameValidationRequestId) return;
 
         if (!normalized) {
@@ -991,7 +1018,23 @@ import {
           return;
         }
 
-        const localValidation = validateUsernameLocally(normalized, policy);
+        const accountPolicyValidation = await validateAccountUsernamePolicy(normalized);
+        if (requestId !== RUNTIME.usernameValidationRequestId) return;
+
+        if (!accountPolicyValidation.ok) {
+          emitUsernameStatus({
+            state: accountPolicyValidation.state,
+            normalized: accountPolicyValidation.normalized,
+            message: accountPolicyValidation.message
+          });
+          emitUsernameSuggestions({
+            normalized: accountPolicyValidation.normalized,
+            suggestions: []
+          });
+          return;
+        }
+
+        const localValidation = validateUsernameLocally(accountPolicyValidation.normalized, policy);
         if (requestId !== RUNTIME.usernameValidationRequestId) return;
 
         if (!localValidation.ok) {
@@ -1194,21 +1237,63 @@ import {
   /* =============================================================================
      18) EMAIL ONBOARDING FLOW
   ============================================================================= */
-  function handleEmailOnboardingRequest(detail = {}) {
-    const email = normalizeEmail(detail.email || '');
-    if (!email) return;
+  async function handleEmailOnboardingRequest(detail = {}) {
+    const form = document.querySelector('[data-account-email-auth-form="true"]');
+    const emailField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-email-auth-email')
+      : null;
+    const email = normalizeEmail(detail.email || emailField?.value || '');
 
-    patchOnboardingContext({
-      ...detail,
-      method: 'email',
-      provider: 'email',
-      email
-    });
+    if (!(form instanceof HTMLFormElement)) return;
 
-    setFlowState({
-      resolveProfile: true,
-      redirectToProfile: true
-    });
+    clearFormErrors(form);
+    clearEmailAuthStatus();
+
+    if (!email) {
+      setFieldError(emailField, 'Enter your email address.');
+      return;
+    }
+
+    setFormBusy(form, true);
+    emitEmailAuthStatus('sending', 'Sending verification email…');
+
+    try {
+      const supabase = await waitForSupabaseClient();
+      if (!supabase) {
+        throw createUsernameError('AUTH_BACKEND_NOT_READY');
+      }
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}${INDEX_ROUTE}?account_return=profile_setup`,
+          shouldCreateUser: true
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      patchOnboardingContext({
+        ...detail,
+        method: 'email',
+        provider: 'email',
+        email
+      });
+
+      emitEmailAuthStatus(
+        'success',
+        'Verification email sent. Open the link in your inbox to continue to profile setup.'
+      );
+    } catch (error) {
+      emitEmailAuthStatus(
+        'error',
+        mapAuthError(error, 'Unable to send verification email. Try again.')
+      );
+    } finally {
+      setFormBusy(form, false);
+    }
   }
 
   /* =============================================================================
@@ -1441,7 +1526,18 @@ import {
       return;
     }
 
-    const localUsernameValidation = validateUsernameLocally(values.username, policy);
+    const accountPolicyUsernameValidation = await validateAccountUsernamePolicy(values.username);
+    if (!accountPolicyUsernameValidation.ok) {
+      emitUsernameStatus({
+        state: accountPolicyUsernameValidation.state,
+        normalized: accountPolicyUsernameValidation.normalized,
+        message: accountPolicyUsernameValidation.message
+      });
+      setFieldError(usernameField, accountPolicyUsernameValidation.message);
+      return;
+    }
+
+    const localUsernameValidation = validateUsernameLocally(accountPolicyUsernameValidation.normalized, policy);
     if (!localUsernameValidation.ok) {
       emitUsernameStatus({
         state: localUsernameValidation.state,
@@ -1462,9 +1558,12 @@ import {
       return;
     }
 
-    if (method === 'email' && !activeUser) {
-      if (!values.email) {
-        setFieldError(firstNameField, 'Email onboarding lost context. Start again from Continue with email.');
+    if (method === 'email') {
+      if (!activeUser) {
+        emitProfileSetupSubmitStatus({
+          state: 'error',
+          message: 'Verify your email before completing your profile.'
+        });
         return;
       }
 
@@ -1500,35 +1599,6 @@ import {
       if (supabase) {
         const currentSession = await getSupabaseSession();
         user = currentSession?.user || user;
-
-        if (method === 'email' && !user) {
-          const { data, error } = await supabase.auth.signUp({
-            email: values.email,
-            password: values.password,
-            options: {
-              emailRedirectTo: `${window.location.origin}${PROFILE_ROUTE}`
-            }
-          });
-
-          if (error) {
-            throw error;
-          }
-
-          if (isSupabaseEmailVerificationPending(data)) {
-            writePendingProfileState(values);
-            setFlowState({
-              resolveProfile: true,
-              redirectToProfile: true
-            });
-            emitProfileSetupSubmitStatus({
-              state: 'success',
-              message: 'Check your email to verify your account. Your profile setup details are saved locally for completion after verification.'
-            });
-            return;
-          }
-
-          user = data?.session?.user || data?.user || null;
-        }
 
         if (!user) {
           throw createUsernameError('AUTHENTICATED_USER_REQUIRED');
@@ -1870,8 +1940,10 @@ import {
       }
 
       if (form.matches('[data-account-email-auth-form="true"]')) {
+        event.preventDefault();
+
         const emailField = getFieldFromForm(form, '#account-email-auth-email');
-        handleEmailOnboardingRequest({
+        void handleEmailOnboardingRequest({
           method: 'email',
           provider: 'email',
           email: normalizeEmail(emailField?.value || '')
@@ -1884,6 +1956,19 @@ import {
      23) INITIALIZATION
   ============================================================================= */
   function boot() {
+    const returnParams = new URLSearchParams(window.location.search);
+    if (returnParams.get('account_return') === 'profile_setup') {
+      setFlowState({
+        resolveProfile: true,
+        redirectToProfile: false
+      });
+
+      returnParams.delete('account_return');
+      const nextSearch = returnParams.toString();
+      const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`;
+      window.history.replaceState({}, '', nextUrl);
+    }
+
     void loadProfileIdentityPolicy()
       .then((policy) => {
         emitUsernameStatus({

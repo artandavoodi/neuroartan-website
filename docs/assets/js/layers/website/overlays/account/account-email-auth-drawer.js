@@ -134,7 +134,7 @@
     }));
   }
 
-  function requestProfileSetupView() {
+  function requestEmailVerification() {
     const emailInput = getEmailInput();
     const email = emailInput?.value?.trim() || '';
 
@@ -146,22 +146,10 @@
 
     emailInput?.setCustomValidity('');
 
-    document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
+    document.dispatchEvent(new CustomEvent('account:email-onboarding-request', {
       detail: {
         source: 'account-email-auth-drawer',
-        action: 'profile-setup',
-        method: getHiddenMethodInput()?.value?.trim() || 'email',
-        auth_provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
-        provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
-        email
-      }
-    }));
-
-    document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-      detail: {
-        source: 'account-email-auth-drawer',
-        state: 'guest',
-        surface: 'profile-setup',
+        action: 'verify-email',
         method: getHiddenMethodInput()?.value?.trim() || 'email',
         auth_provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
         provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
@@ -316,7 +304,7 @@
 
       event.preventDefault();
       event.stopPropagation();
-      requestProfileSetupView();
+      requestEmailVerification();
     });
   }
 

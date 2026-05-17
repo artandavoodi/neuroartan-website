@@ -21,7 +21,6 @@
 import {
   buildProfilePayload,
   evaluateEligibility,
-  getProfileByUid,
   getSupabaseClient as getProfileIdentitySupabaseClient,
   getSupabaseProfileByAuthUserId as getSupabaseIdentityProfileByAuthUserId,
   getSupabaseProfileByUsername,
@@ -31,7 +30,6 @@ import {
   normalizeString,
   normalizeUsername,
   reserveSupabaseUsernameProfile,
-  reserveUsernameProfile
 } from '../account/identity/account-profile-identity.js';
 import { uploadProfileImage } from './profile-image-storage.js';
 

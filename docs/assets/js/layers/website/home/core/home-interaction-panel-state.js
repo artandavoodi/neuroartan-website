@@ -36,7 +36,7 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
         submitLabel: 'Listening',
         submitDisabled: true,
         submitIntent: 'listening',
-        submitIcon: '/registry/icons/public/assets/system/states/loading.svg',
+        submitIcon: 'https://studio.neuroartan.com/registry/icons/public/assets/system/states/loading.svg',
       };
     case 'thinking':
       return {
@@ -44,7 +44,7 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
         submitLabel: 'Thinking',
         submitDisabled: true,
         submitIntent: 'thinking',
-        submitIcon: '/registry/icons/public/assets/system/states/loading.svg',
+        submitIcon: 'https://studio.neuroartan.com/registry/icons/public/assets/system/states/loading.svg',
       };
     case 'responding':
       if (hasTypedInput) {
@@ -53,7 +53,7 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
           submitLabel: 'Send',
           submitDisabled: false,
           submitIntent: 'submit',
-          submitIcon: '/registry/icons/public/assets/core/actions/send/send.svg',
+          submitIcon: 'https://studio.neuroartan.com/registry/icons/public/assets/core/actions/send/send.svg',
         };
       }
 
@@ -62,7 +62,7 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
         submitLabel: 'Reset',
         submitDisabled: false,
         submitIntent: 'reset',
-        submitIcon: '/registry/icons/public/assets/core/actions/create/plus.svg',
+        submitIcon: 'https://studio.neuroartan.com/registry/icons/public/assets/core/actions/create/plus.svg',
       };
     default:
       return {
@@ -70,7 +70,7 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
         submitLabel: 'Send',
         submitDisabled: false,
         submitIntent: 'submit',
-        submitIcon: '/registry/icons/public/assets/core/actions/send/send.svg',
+        submitIcon: 'https://studio.neuroartan.com/registry/icons/public/assets/core/actions/send/send.svg',
       };
   }
 }

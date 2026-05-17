@@ -270,6 +270,24 @@ function fetchHomePlatformText(path) {
   });
 }
 
+function dispatchHomePlatformLoadingStart(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
+    detail: {
+      reason,
+      source: 'home-platform-shell'
+    }
+  }));
+}
+
+function dispatchHomePlatformLoadingStop(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
+    detail: {
+      reason,
+      source: 'home-platform-shell'
+    }
+  }));
+}
+
 /* =============================================================================
 04) CONFIG HELPERS
 ============================================================================= */
@@ -562,6 +580,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
   const destinationConfig = getHomePlatformDestinationConfig(destination);
   const subdestinationConfig = getHomePlatformSubdestinationConfig(destination, subdestination);
   const renderToken = ++HOME_PLATFORM_SHELL_STATE.renderToken;
+  const loadingReason = `home-platform:${destination}:${subdestination || 'default'}:${renderToken}`;
 
   if (!contentRoot || !destinationConfig) {
     return;
@@ -596,6 +615,8 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     }));
     return;
   }
+
+  dispatchHomePlatformLoadingStart(loadingReason);
 
   if (subdestinationConfig.stylesheet) {
     ensureStylesheetOnce(subdestinationConfig.stylesheet);
@@ -652,6 +673,16 @@ async function renderHomePlatformShellContent(destination, subdestination) {
       href: subdestinationConfig?.href || '',
       action: subdestinationConfig?.action || '',
     }));
+  } finally {
+    if (renderToken === HOME_PLATFORM_SHELL_STATE.renderToken) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          dispatchHomePlatformLoadingStop(loadingReason);
+        });
+      });
+    } else {
+      dispatchHomePlatformLoadingStop(loadingReason);
+    }
   }
 }
 

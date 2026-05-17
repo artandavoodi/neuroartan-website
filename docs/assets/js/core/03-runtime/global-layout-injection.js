@@ -152,6 +152,24 @@ const NEURO_MAIN_RUNTIME = (window.__NEURO_MAIN_RUNTIME__ ||= {
   countryOverlayMountDispatched: false
 });
 
+function dispatchRuntimeLoadingStart(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
+    detail: {
+      reason,
+      source: 'core/03-runtime/global-layout-injection.js'
+    }
+  }));
+}
+
+function dispatchRuntimeLoadingStop(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
+    detail: {
+      reason,
+      source: 'core/03-runtime/global-layout-injection.js'
+    }
+  }));
+}
+
 /* =============================================================================
    03) ASSET LOADERS
 ============================================================================= */
@@ -344,55 +362,66 @@ function broadcastFooterMounted(mount) {
 async function injectGlobalLayout() {
   if (NEURO_MAIN_RUNTIME.globalLayoutInjected) return;
 
+  const loadingReason = 'global-layout';
+  dispatchRuntimeLoadingStart(loadingReason);
+
   let shouldScanAgain = true;
 
-  while (shouldScanAgain) {
-    shouldScanAgain = false;
-    let mountedInThisPass = false;
+  try {
+    while (shouldScanAgain) {
+      shouldScanAgain = false;
+      let mountedInThisPass = false;
 
-    const targets = document.querySelectorAll('[data-include]');
-    for (const el of targets) {
-      if (el.dataset.includeMounted === 'true') continue;
+      const targets = document.querySelectorAll('[data-include]');
+      for (const el of targets) {
+        if (el.dataset.includeMounted === 'true') continue;
 
-      const name = el.getAttribute('data-include');
-      try {
-        const result = await fetchTextFromCandidates(resolveFragmentPath(name), 'no-store');
-        if (!result.ok) continue;
-        const html = result.text;
-        el.innerHTML = html;
-        el.dataset.includeMounted = 'true';
-        mountedInThisPass = true;
+        const name = el.getAttribute('data-include');
+        try {
+          const result = await fetchTextFromCandidates(resolveFragmentPath(name), 'no-store');
+          if (!result.ok) continue;
+          const html = result.text;
+          el.innerHTML = html;
+          el.dataset.includeMounted = 'true';
+          mountedInThisPass = true;
 
-        if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
-          window.NeuroMotion.scan(el);
-        }
+          if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
+            window.NeuroMotion.scan(el);
+          }
 
-        el.dispatchEvent(new CustomEvent('fragment:mounted', {
-          bubbles: true,
-          detail: { name, root: el, mount: el }
-        }));
+          el.dispatchEvent(new CustomEvent('fragment:mounted', {
+            bubbles: true,
+            detail: { name, root: el, mount: el }
+          }));
 
-        if (name === 'account-drawer') {
-          dispatchAccountDrawerMount(el);
-        }
+          if (name === 'account-drawer') {
+            dispatchAccountDrawerMount(el);
+          }
 
-        if (name === 'cookie-consent') {
-          dispatchCookieConsentMount(el);
-        }
+          if (name === 'cookie-consent') {
+            dispatchCookieConsentMount(el);
+          }
 
-        if (name === 'country-overlay') {
-          dispatchCountryOverlayMount(el);
-        }
+          if (name === 'country-overlay') {
+            dispatchCountryOverlayMount(el);
+          }
 
-        if (name === 'menu' || name === 'institutional-menu') {
-          broadcastMenuMounted(el);
-        }
-      } catch (_) {}
+          if (name === 'menu' || name === 'institutional-menu') {
+            broadcastMenuMounted(el);
+          }
+        } catch (_) {}
+      }
+
+      if (mountedInThisPass) {
+        shouldScanAgain = true;
+      }
     }
-
-    if (mountedInThisPass) {
-      shouldScanAgain = true;
-    }
+  } finally {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        dispatchRuntimeLoadingStop(loadingReason);
+      });
+    });
   }
 
   NEURO_MAIN_RUNTIME.globalLayoutInjected = true;

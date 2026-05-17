@@ -408,8 +408,16 @@
   const applyTranslation = async (lang) => {
     const normalized = normalizeLang(lang);
     const api = getLocaleAPI();
+    const loadingReason = `locale:${normalized}`;
 
     if (!api) return false;
+
+    document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
+      detail: {
+        reason: loadingReason,
+        source: MODULE_PATH
+      }
+    }));
 
     try {
       if (typeof api.setLanguage === 'function') {
@@ -425,6 +433,13 @@
       }
     } catch {
       return false;
+    } finally {
+      document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
+        detail: {
+          reason: loadingReason,
+          source: MODULE_PATH
+        }
+      }));
     }
 
     return false;

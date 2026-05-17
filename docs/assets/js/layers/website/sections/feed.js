@@ -309,7 +309,7 @@ function renderFeedPost(post = {}) {
             <h2 class="feed-post__entity">${escapeHtml(post.entityLabel || 'Entity')}</h2>
             ${post.verified ? `
               <span class="feed-post__badge" aria-label="Verified entity">
-                <img class="feed-post__badge-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
+                <img class="feed-post__badge-icon ui-icon-theme-aware" src="https://studio.neuroartan.com/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
                 <span>Verified</span>
               </span>
             ` : ''}

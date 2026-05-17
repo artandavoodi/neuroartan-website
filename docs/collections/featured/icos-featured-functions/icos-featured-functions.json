@@ -28,7 +28,7 @@
       "slug": "voice-reflection",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/voice-reflection.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/reflection/reflection.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/reflection/reflection.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -43,7 +43,7 @@
       "slug": "thought-capture",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/thought-capture.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/capture/capture.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/capture/capture.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -58,7 +58,7 @@
       "slug": "pattern-mapping",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/pattern-mapping.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/patterning/patterning.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/patterning/patterning.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -73,7 +73,7 @@
       "slug": "cognitive-graph",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/cognitive-graph.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/structure/structure.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/structure/structure.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -88,7 +88,7 @@
       "slug": "emotional-tracking",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/emotional-tracking.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/signals/signals.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/signals/signals.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -103,7 +103,7 @@
       "slug": "longitudinal-continuity",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/longitudinal-continuity.scene.json",
-      "icon": "/registry/icons/public/assets/core/cognition/continuity/continuity.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/continuity/continuity.svg",
       "theme": "dark",
       "visibility": "public"
     }

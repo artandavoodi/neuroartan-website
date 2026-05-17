@@ -491,8 +491,8 @@
     transform var(--home-stage-motion-fast) var(--interaction-ease-standard),
     opacity var(--home-stage-motion-fast) var(--interaction-ease-standard);
   background-color:currentColor;
-  -webkit-mask-image:url("/registry/icons/public/assets/core/media/audio/mic.svg");
-  mask-image:url("/registry/icons/public/assets/core/media/audio/mic.svg");
+  -webkit-mask-image:url("https://studio.neuroartan.com/registry/icons/public/assets/core/media/audio/mic.svg");
+  mask-image:url("https://studio.neuroartan.com/registry/icons/public/assets/core/media/audio/mic.svg");
   -webkit-mask-repeat:no-repeat;
   mask-repeat:no-repeat;
   -webkit-mask-position:center;

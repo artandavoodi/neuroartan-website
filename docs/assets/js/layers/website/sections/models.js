@@ -310,7 +310,7 @@ function renderModelCard(model = {}) {
       <span class="models-directory-card__verification" aria-label="${escapeHtml(verificationLabel)} model">
         <img
           class="models-directory-card__verification-icon ui-icon-theme-aware"
-          src="/registry/icons/public/assets/core/identity/trust/verified.svg"
+          src="https://studio.neuroartan.com/registry/icons/public/assets/core/identity/trust/verified.svg"
           alt=""
           aria-hidden="true">
         <span>${escapeHtml(verificationLabel)}</span>

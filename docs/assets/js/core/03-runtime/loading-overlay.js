@@ -35,10 +35,13 @@
   let visible = false;
   let visibleSince = 0;
   let hideTimer = null;
+  let initialLoadBound = false;
 
   const SHOW_DELAY_MS = 90;
   const MIN_VISIBLE_MS = 320;
   const FINAL_PAINT_SETTLE_MS = 120;
+  const INITIAL_LOAD_REASON = 'initial-page-load';
+  const THEME_PAINT_REASON = 'theme-paint';
 
   /* =============================================================================
      03) OVERLAY RESOLUTION
@@ -57,6 +60,14 @@
     visibleSince = state ? Date.now() : 0;
     overlay.classList.toggle('is-active', state);
     overlay.setAttribute('aria-hidden', state ? 'false' : 'true');
+
+    document.documentElement.setAttribute('data-loading-overlay', state ? 'active' : 'idle');
+    document.dispatchEvent(new CustomEvent('neuroartan:loading-state-changed', {
+      detail: {
+        active: state,
+        reasons: Array.from(activeReasons)
+      }
+    }));
   };
 
   /* =============================================================================
@@ -124,13 +135,18 @@
     }
   };
 
+  const normalizeReason = (reason = 'generic') => {
+    const normalized = String(reason || '').trim();
+    return normalized || 'generic';
+  };
+
   const start = (reason = 'generic') => {
-    activeReasons.add(reason);
+    activeReasons.add(normalizeReason(reason));
     updateVisibility();
   };
 
   const stop = (reason = 'generic') => {
-    activeReasons.delete(reason);
+    activeReasons.delete(normalizeReason(reason));
     updateVisibility();
   };
 
@@ -161,6 +177,49 @@
     document.addEventListener('translation:error', () => {
       stop('translation');
     });
+
+    document.addEventListener('neuroartan:loading-start', (event) => {
+      start(event?.detail?.reason || 'runtime');
+    });
+
+    document.addEventListener('neuroartan:loading-stop', (event) => {
+      stop(event?.detail?.reason || 'runtime');
+    });
+
+    document.addEventListener('neuroartan:loading-clear', () => {
+      clear();
+    });
+
+    document.addEventListener('neuroartan:theme-changed', () => {
+      start(THEME_PAINT_REASON);
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          stop(THEME_PAINT_REASON);
+        });
+      });
+    });
+  };
+
+  const completeInitialLoad = () => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        stop(INITIAL_LOAD_REASON);
+      });
+    });
+  };
+
+  const bindInitialLoad = () => {
+    if (initialLoadBound) return;
+    initialLoadBound = true;
+
+    if (document.readyState !== 'complete') {
+      start(INITIAL_LOAD_REASON);
+      window.addEventListener('load', completeInitialLoad, { once: true });
+      return;
+    }
+
+    completeInitialLoad();
   };
 
   /* =============================================================================
@@ -206,7 +265,8 @@
       start,
       stop,
       clear,
-      isActive: () => activeReasons.size > 0
+      isActive: () => activeReasons.size > 0,
+      getReasons: () => Array.from(activeReasons)
     });
 
     window.ARTAN_LOADING_OVERLAY = api;
@@ -217,6 +277,8 @@
     visible = overlay.classList.contains('is-active');
     visibleSince = visible ? Date.now() : 0;
     overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
+
+    bindInitialLoad();
   };
 
   if (document.readyState === 'loading') {

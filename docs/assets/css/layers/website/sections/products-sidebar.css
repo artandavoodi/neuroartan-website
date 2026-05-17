@@ -73,11 +73,11 @@
   width: 1.3rem;
   height: 1.3rem;
   background-color: currentColor;
-  -webkit-mask-image: url('https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/sidebar/sidebar-left.svg');
+  -webkit-mask-image: url('/registry/icons/public/assets/core/navigation/sidebar/sidebar-left.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  mask-image: url('https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/sidebar/sidebar-left.svg');
+  mask-image: url('/registry/icons/public/assets/core/navigation/sidebar/sidebar-left.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;

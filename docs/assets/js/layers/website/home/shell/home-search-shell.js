@@ -421,7 +421,7 @@ function renderVerificationBadge(entry = {}) {
 
   return `
     <span class="home-search-shell__result-badge" aria-label="${escapeHomeSearchHtml(entry.verificationLabel || 'Verified')}">
-      <img src="https://studio.neuroartan.com/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
+      <img src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
       <span>${escapeHomeSearchHtml(entry.verificationLabel || 'Verified')}</span>
     </span>
   `;

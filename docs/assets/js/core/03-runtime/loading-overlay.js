@@ -36,6 +36,7 @@
   let visibleSince = 0;
   let hideTimer = null;
   let initialLoadBound = false;
+  let introObserver = null;
 
   const SHOW_DELAY_MS = 90;
   const MIN_VISIBLE_MS = 320;
@@ -48,6 +49,21 @@
   ============================================================================= */
   const getOverlayNode = () => {
     return document.getElementById('global-loading-overlay');
+  };
+
+  const isLogoIntroActive = () => {
+    const body = document.body;
+    if (!body || !body.classList.contains('home-page')) {
+      return false;
+    }
+
+    if (document.querySelector('[data-logo-intro-overlay="true"]')) {
+      return true;
+    }
+
+    return body.classList.contains('intro-loading') &&
+      !body.classList.contains('site-entered') &&
+      !body.classList.contains('hero-stage-hidden');
   };
 
   /* =============================================================================
@@ -112,16 +128,27 @@
     if (!overlay) return;
 
     const shouldShow = activeReasons.size > 0;
+    const introActive = isLogoIntroActive();
 
     if (shouldShow) {
       clearHideTimer();
+
+      if (introActive) {
+        clearShowTimer();
+
+        if (visible) {
+          setVisible(false);
+        }
+
+        return;
+      }
 
       if (visible) return;
       if (showTimer) return;
 
       showTimer = window.setTimeout(() => {
         showTimer = null;
-        if (activeReasons.size > 0) {
+        if (activeReasons.size > 0 && !isLogoIntroActive()) {
           setVisible(true);
         }
       }, SHOW_DELAY_MS);
@@ -222,6 +249,26 @@
     completeInitialLoad();
   };
 
+  const bindIntroStateObserver = () => {
+    if (introObserver) return;
+
+    introObserver = new MutationObserver(() => {
+      updateVisibility();
+    });
+
+    if (document.body) {
+      introObserver.observe(
+        document.body,
+        {
+          attributes: true,
+          attributeFilter: ['class'],
+          childList: true,
+          subtree: true
+        }
+      );
+    }
+  };
+
   /* =============================================================================
      08) EVENT REBINDING
   ============================================================================= */
@@ -260,6 +307,7 @@
     bootBound = true;
     bindEvents();
     bindMountEvents();
+    bindIntroStateObserver();
 
     const api = Object.freeze({
       start,

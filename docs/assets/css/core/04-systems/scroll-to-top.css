@@ -61,11 +61,11 @@
   width: var(--close-control-line-width);
   height: var(--close-control-line-width);
   background-color: currentColor;
-  -webkit-mask-image: url('https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/direction/arrow-up.svg');
+  -webkit-mask-image: url('/registry/icons/public/assets/core/navigation/direction/arrow-up.svg');
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-position: center;
   -webkit-mask-size: contain;
-  mask-image: url('https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/direction/arrow-up.svg');
+  mask-image: url('/registry/icons/public/assets/core/navigation/direction/arrow-up.svg');
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: contain;

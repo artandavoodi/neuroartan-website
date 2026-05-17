@@ -148,7 +148,7 @@ function ensureHomeInteractionSettingsNestedBackControl(nodes) {
   previousControl.setAttribute('aria-label', 'Previous');
 
   previousIcon.className = 'ui-icon-theme-aware home-interaction-settings-panel__nested-navigation-icon';
-  previousIcon.src = 'https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/direction/left.svg';
+  previousIcon.src = '/registry/icons/public/assets/core/navigation/direction/left.svg';
   previousIcon.alt = '';
   previousIcon.setAttribute('aria-hidden', 'true');
 
@@ -163,7 +163,7 @@ function ensureHomeInteractionSettingsNestedBackControl(nodes) {
   nextControl.setAttribute('aria-disabled', 'true');
 
   nextIcon.className = 'ui-icon-theme-aware home-interaction-settings-panel__nested-navigation-icon';
-  nextIcon.src = 'https://studio.neuroartan.com/registry/icons/public/assets/core/navigation/direction/right.svg';
+  nextIcon.src = '/registry/icons/public/assets/core/navigation/direction/right.svg';
   nextIcon.alt = '';
   nextIcon.setAttribute('aria-hidden', 'true');
 

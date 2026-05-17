@@ -1,0 +1,63 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) DEVELOPER MODE SETTINGS PANEL SECTION · OVERVIEW
+   02) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) DEVELOPER MODE SETTINGS PANEL SECTION · OVERVIEW
+============================================================================= */
+.developer-mode-settings-panel-section--overview{
+  display:grid;
+  gap:var(--nav-global-topbar-menu-gap);
+  padding:var(--home-composition-panel-padding);
+  border:0;
+  border-radius:var(--home-composition-panel-radius);
+  background:var(--surface-primary-color);
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__header{
+  display:grid;
+  gap:var(--home-composition-section-gap);
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__eyebrow{
+  margin:0;
+  color:var(--text-secondary-color);
+  font:var(--text-xxs-label-font);
+  letter-spacing:var(--tracking-wide);
+  text-transform:uppercase;
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__title{
+  margin:0;
+  color:var(--text-primary-color);
+  font:var(--heading-5-font);
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__copy{
+  margin:0;
+  color:var(--text-secondary-color);
+  font:var(--body-small-font);
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__body{
+  display:grid;
+  gap:var(--home-composition-section-gap);
+}
+
+.developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  min-block-size:var(--home-composition-panel-min-block-size);
+  padding:var(--home-composition-panel-padding);
+  border:0;
+  border-radius:var(--home-composition-panel-radius);
+  color:var(--text-tertiary-color);
+  background:transparent;
+}
+
+/* =============================================================================
+   02) END OF FILE
+============================================================================= */

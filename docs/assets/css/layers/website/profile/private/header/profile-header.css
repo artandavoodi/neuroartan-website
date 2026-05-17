@@ -63,7 +63,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-header__identity{
@@ -113,7 +113,7 @@
 
 .profile-header__creator-line{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-header__meta-list{
@@ -123,7 +123,7 @@
 }
 
 .profile-header__meta-item{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-header__meta-item::before{
@@ -133,7 +133,7 @@
   height:4px;
   margin-right:0.5rem;
   border-radius:var(--control-radius-pill);
-  background:color-mix(in srgb, var(--cc-color) 32%, transparent);
+  background:color-mix(in srgb, var(--text-color) 32%, transparent);
   vertical-align:middle;
 }
 
@@ -160,7 +160,7 @@
   font-weight:500;
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-header__route,
@@ -169,7 +169,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-header__summary{
@@ -178,7 +178,7 @@
   font-weight:var(--body-2-weight);
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 /* =============================================================================
@@ -212,7 +212,7 @@
   font-weight:var(--headline-4-weight);
   line-height:1;
   letter-spacing:var(--headline-4-tracking);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-header__avatar-action{
@@ -268,7 +268,7 @@
   line-height:var(--body-3-line-height);
   letter-spacing:var(--tracking-ui);
   text-transform:uppercase;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-header__metric-value{
@@ -277,7 +277,7 @@
   font-weight:var(--headline-4-weight);
   line-height:var(--headline-4-line-height);
   letter-spacing:var(--headline-4-tracking);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-header__metric-copy{
@@ -286,7 +286,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 @media (max-width:980px){

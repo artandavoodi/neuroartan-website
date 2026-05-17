@@ -17,94 +17,94 @@
    00A) CATALOG SECTION TOKENS
 ============================================================================= */
 :root{
-  --catalog-rail-padding-top:var(--cc-catalog-rail-padding-top);
-  --catalog-rail-padding-bottom:var(--cc-catalog-rail-padding-bottom);
-  --catalog-rail-padding-top-mobile:var(--cc-catalog-rail-padding-top-mobile);
-  --catalog-rail-padding-bottom-mobile:var(--cc-catalog-rail-padding-bottom-mobile);
-  --catalog-section-margin-top:var(--cc-catalog-section-margin-top);
-  --catalog-hero-gap:var(--cc-catalog-hero-gap);
-  --catalog-hero-padding-bottom:var(--cc-catalog-hero-padding-bottom);
-  --catalog-eyebrow-size:var(--cc-catalog-eyebrow-size);
-  --catalog-eyebrow-weight:var(--cc-catalog-eyebrow-weight);
-  --catalog-eyebrow-tracking:var(--cc-catalog-eyebrow-tracking);
-  --catalog-title-size:var(--cc-catalog-title-size);
-  --catalog-title-weight:var(--cc-catalog-title-weight);
-  --catalog-title-line-height:var(--cc-catalog-title-line-height);
-  --catalog-title-tracking:var(--cc-catalog-title-tracking);
-  --catalog-description-max-width:var(--cc-catalog-description-max-width);
-  --catalog-description-size:var(--cc-catalog-description-size);
-  --catalog-description-line-height:var(--cc-catalog-description-line-height);
-  --catalog-chip-gap:var(--cc-catalog-chip-gap);
-  --catalog-chip-min-height:var(--cc-catalog-chip-min-height);
-  --catalog-chip-padding-x:var(--cc-catalog-chip-padding-x);
-  --catalog-chip-size:var(--cc-catalog-chip-size);
-  --catalog-chip-line-height:var(--cc-catalog-chip-line-height);
-  --catalog-toolbar-gap:var(--cc-catalog-toolbar-gap);
-  --catalog-search-gap:var(--cc-catalog-search-gap);
-  --catalog-filter-note-size:var(--cc-catalog-filter-note-size);
-  --catalog-filter-note-line-height:var(--cc-catalog-filter-note-line-height);
-  --catalog-search-row-min-height:var(--cc-catalog-search-row-min-height);
-  --catalog-search-row-padding-x:var(--cc-catalog-search-row-padding-x);
-  --catalog-search-row-radius:var(--cc-catalog-search-row-radius);
-  --catalog-grid-gap:var(--cc-catalog-grid-gap);
-  --catalog-grid-compact-gap:var(--cc-catalog-grid-compact-gap);
-  --catalog-card-radius:var(--cc-catalog-card-radius);
-  --catalog-card-body-gap:var(--cc-catalog-card-body-gap);
-  --catalog-card-body-padding:var(--cc-catalog-card-body-padding);
-  --catalog-card-header-gap:var(--cc-catalog-card-header-gap);
-  --catalog-card-eyebrow-size:var(--cc-catalog-card-eyebrow-size);
-  --catalog-card-eyebrow-weight:var(--cc-catalog-card-eyebrow-weight);
-  --catalog-card-eyebrow-tracking:var(--cc-catalog-card-eyebrow-tracking);
-  --catalog-card-title-size:var(--cc-catalog-card-title-size);
-  --catalog-card-title-weight:var(--cc-catalog-card-title-weight);
-  --catalog-card-title-line-height:var(--cc-catalog-card-title-line-height);
-  --catalog-card-summary-line-height:var(--cc-catalog-card-summary-line-height);
-  --catalog-action-gap:var(--cc-catalog-action-gap);
-  --catalog-detail-gap:var(--cc-catalog-detail-gap);
-  --catalog-panel-gap:var(--cc-catalog-panel-gap);
-  --catalog-panel-padding:var(--cc-catalog-panel-padding);
-  --catalog-panel-radius:var(--cc-catalog-panel-radius);
-  --catalog-panel-title-size:var(--cc-catalog-panel-title-size);
-  --catalog-panel-title-weight:var(--cc-catalog-panel-title-weight);
-  --catalog-panel-copy-line-height:var(--cc-catalog-panel-copy-line-height);
-  --catalog-rows-gap:var(--cc-catalog-rows-gap);
-  --catalog-row-gap:var(--cc-catalog-row-gap);
-  --catalog-row-padding-bottom:var(--cc-catalog-row-padding-bottom);
-  --catalog-row-label-size:var(--cc-catalog-row-label-size);
-  --catalog-row-label-tracking:var(--cc-catalog-row-label-tracking);
-  --catalog-row-value-line-height:var(--cc-catalog-row-value-line-height);
-  --catalog-list-gap:var(--cc-catalog-list-gap);
-  --catalog-list-line-height:var(--cc-catalog-list-line-height);
-  --catalog-timeline-gap:var(--cc-catalog-timeline-gap);
-  --catalog-timeline-year-gap:var(--cc-catalog-timeline-year-gap);
-  --catalog-timeline-year-size:var(--cc-catalog-timeline-year-size);
-  --catalog-timeline-year-weight:var(--cc-catalog-timeline-year-weight);
-  --catalog-timeline-entry-gap:var(--cc-catalog-timeline-entry-gap);
-  --catalog-timeline-entry-padding-y:var(--cc-catalog-timeline-entry-padding-y);
-  --catalog-timeline-entry-padding-x:var(--cc-catalog-timeline-entry-padding-x);
-  --catalog-timeline-entry-radius:var(--cc-catalog-timeline-entry-radius);
-  --catalog-timeline-eyebrow-size:var(--cc-catalog-timeline-eyebrow-size);
-  --catalog-timeline-eyebrow-tracking:var(--cc-catalog-timeline-eyebrow-tracking);
-  --catalog-timeline-title-size:var(--cc-catalog-timeline-title-size);
-  --catalog-timeline-title-weight:var(--cc-catalog-timeline-title-weight);
-  --catalog-timeline-copy-line-height:var(--cc-catalog-timeline-copy-line-height);
-  --catalog-sitemap-group-gap:var(--cc-catalog-sitemap-group-gap);
-  --catalog-sitemap-group-padding-top:var(--cc-catalog-sitemap-group-padding-top);
-  --catalog-sitemap-title-size:var(--cc-catalog-sitemap-title-size);
-  --catalog-sitemap-title-weight:var(--cc-catalog-sitemap-title-weight);
-  --catalog-sitemap-item-gap:var(--cc-catalog-sitemap-item-gap);
-  --catalog-sitemap-path-size:var(--cc-catalog-sitemap-path-size);
-  --catalog-empty-gap:var(--cc-catalog-empty-gap);
-  --catalog-empty-padding:var(--cc-catalog-empty-padding);
-  --catalog-empty-radius:var(--cc-catalog-empty-radius);
-  --catalog-empty-title-size:var(--cc-catalog-empty-title-size);
-  --catalog-empty-title-weight:var(--cc-catalog-empty-title-weight);
-  --catalog-empty-copy-line-height:var(--cc-catalog-empty-copy-line-height);
-  --catalog-media-card-min:var(--cc-catalog-media-card-min);
-  --catalog-media-card-max:var(--cc-catalog-media-card-max);
-  --catalog-media-card-gap:var(--cc-catalog-media-card-gap);
-  --catalog-media-figure-radius:var(--cc-catalog-media-figure-radius);
-  --catalog-media-body-gap:var(--cc-catalog-media-body-gap);
+  --catalog-rail-padding-top:var(--layout-catalog-rail-padding-top);
+  --catalog-rail-padding-bottom:var(--layout-catalog-rail-padding-bottom);
+  --catalog-rail-padding-top-mobile:var(--layout-catalog-rail-padding-top-mobile);
+  --catalog-rail-padding-bottom-mobile:var(--layout-catalog-rail-padding-bottom-mobile);
+  --catalog-section-margin-top:var(--layout-catalog-section-margin-top);
+  --catalog-hero-gap:var(--layout-catalog-hero-gap);
+  --catalog-hero-padding-bottom:var(--layout-catalog-hero-padding-bottom);
+  --catalog-eyebrow-size:var(--layout-catalog-eyebrow-size);
+  --catalog-eyebrow-weight:var(--layout-catalog-eyebrow-weight);
+  --catalog-eyebrow-tracking:var(--layout-catalog-eyebrow-tracking);
+  --catalog-title-size:var(--layout-catalog-title-size);
+  --catalog-title-weight:var(--layout-catalog-title-weight);
+  --catalog-title-line-height:var(--layout-catalog-title-line-height);
+  --catalog-title-tracking:var(--layout-catalog-title-tracking);
+  --catalog-description-max-width:var(--layout-catalog-description-max-width);
+  --catalog-description-size:var(--layout-catalog-description-size);
+  --catalog-description-line-height:var(--layout-catalog-description-line-height);
+  --catalog-chip-gap:var(--layout-catalog-chip-gap);
+  --catalog-chip-min-height:var(--layout-catalog-chip-min-height);
+  --catalog-chip-padding-x:var(--layout-catalog-chip-padding-x);
+  --catalog-chip-size:var(--layout-catalog-chip-size);
+  --catalog-chip-line-height:var(--layout-catalog-chip-line-height);
+  --catalog-toolbar-gap:var(--layout-catalog-toolbar-gap);
+  --catalog-search-gap:var(--layout-catalog-search-gap);
+  --catalog-filter-note-size:var(--layout-catalog-filter-note-size);
+  --catalog-filter-note-line-height:var(--layout-catalog-filter-note-line-height);
+  --catalog-search-row-min-height:var(--layout-catalog-search-row-min-height);
+  --catalog-search-row-padding-x:var(--layout-catalog-search-row-padding-x);
+  --catalog-search-row-radius:var(--layout-catalog-search-row-radius);
+  --catalog-grid-gap:var(--layout-catalog-grid-gap);
+  --catalog-grid-compact-gap:var(--layout-catalog-grid-compact-gap);
+  --catalog-card-radius:var(--layout-catalog-card-radius);
+  --catalog-card-body-gap:var(--layout-catalog-card-body-gap);
+  --catalog-card-body-padding:var(--layout-catalog-card-body-padding);
+  --catalog-card-header-gap:var(--layout-catalog-card-header-gap);
+  --catalog-card-eyebrow-size:var(--layout-catalog-card-eyebrow-size);
+  --catalog-card-eyebrow-weight:var(--layout-catalog-card-eyebrow-weight);
+  --catalog-card-eyebrow-tracking:var(--layout-catalog-card-eyebrow-tracking);
+  --catalog-card-title-size:var(--layout-catalog-card-title-size);
+  --catalog-card-title-weight:var(--layout-catalog-card-title-weight);
+  --catalog-card-title-line-height:var(--layout-catalog-card-title-line-height);
+  --catalog-card-summary-line-height:var(--layout-catalog-card-summary-line-height);
+  --catalog-action-gap:var(--layout-catalog-action-gap);
+  --catalog-detail-gap:var(--layout-catalog-detail-gap);
+  --catalog-panel-gap:var(--layout-catalog-panel-gap);
+  --catalog-panel-padding:var(--layout-catalog-panel-padding);
+  --catalog-panel-radius:var(--layout-catalog-panel-radius);
+  --catalog-panel-title-size:var(--layout-catalog-panel-title-size);
+  --catalog-panel-title-weight:var(--layout-catalog-panel-title-weight);
+  --catalog-panel-copy-line-height:var(--layout-catalog-panel-copy-line-height);
+  --catalog-rows-gap:var(--layout-catalog-rows-gap);
+  --catalog-row-gap:var(--layout-catalog-row-gap);
+  --catalog-row-padding-bottom:var(--layout-catalog-row-padding-bottom);
+  --catalog-row-label-size:var(--layout-catalog-row-label-size);
+  --catalog-row-label-tracking:var(--layout-catalog-row-label-tracking);
+  --catalog-row-value-line-height:var(--layout-catalog-row-value-line-height);
+  --catalog-list-gap:var(--layout-catalog-list-gap);
+  --catalog-list-line-height:var(--layout-catalog-list-line-height);
+  --catalog-timeline-gap:var(--layout-catalog-timeline-gap);
+  --catalog-timeline-year-gap:var(--layout-catalog-timeline-year-gap);
+  --catalog-timeline-year-size:var(--layout-catalog-timeline-year-size);
+  --catalog-timeline-year-weight:var(--layout-catalog-timeline-year-weight);
+  --catalog-timeline-entry-gap:var(--layout-catalog-timeline-entry-gap);
+  --catalog-timeline-entry-padding-y:var(--layout-catalog-timeline-entry-padding-y);
+  --catalog-timeline-entry-padding-x:var(--layout-catalog-timeline-entry-padding-x);
+  --catalog-timeline-entry-radius:var(--layout-catalog-timeline-entry-radius);
+  --catalog-timeline-eyebrow-size:var(--layout-catalog-timeline-eyebrow-size);
+  --catalog-timeline-eyebrow-tracking:var(--layout-catalog-timeline-eyebrow-tracking);
+  --catalog-timeline-title-size:var(--layout-catalog-timeline-title-size);
+  --catalog-timeline-title-weight:var(--layout-catalog-timeline-title-weight);
+  --catalog-timeline-copy-line-height:var(--layout-catalog-timeline-copy-line-height);
+  --catalog-sitemap-group-gap:var(--layout-catalog-sitemap-group-gap);
+  --catalog-sitemap-group-padding-top:var(--layout-catalog-sitemap-group-padding-top);
+  --catalog-sitemap-title-size:var(--layout-catalog-sitemap-title-size);
+  --catalog-sitemap-title-weight:var(--layout-catalog-sitemap-title-weight);
+  --catalog-sitemap-item-gap:var(--layout-catalog-sitemap-item-gap);
+  --catalog-sitemap-path-size:var(--layout-catalog-sitemap-path-size);
+  --catalog-empty-gap:var(--layout-catalog-empty-gap);
+  --catalog-empty-padding:var(--layout-catalog-empty-padding);
+  --catalog-empty-radius:var(--layout-catalog-empty-radius);
+  --catalog-empty-title-size:var(--layout-catalog-empty-title-size);
+  --catalog-empty-title-weight:var(--layout-catalog-empty-title-weight);
+  --catalog-empty-copy-line-height:var(--layout-catalog-empty-copy-line-height);
+  --catalog-media-card-min:var(--layout-catalog-media-card-min);
+  --catalog-media-card-max:var(--layout-catalog-media-card-max);
+  --catalog-media-card-gap:var(--layout-catalog-media-card-gap);
+  --catalog-media-figure-radius:var(--layout-catalog-media-figure-radius);
+  --catalog-media-body-gap:var(--layout-catalog-media-body-gap);
 }
 
 /* =============================================================================
@@ -140,12 +140,12 @@ body.sitemap-page{
   display:grid;
   gap:var(--catalog-hero-gap);
   padding-bottom:var(--catalog-hero-padding-bottom);
-  border-bottom:1px solid var(--cc-color);
+  border-bottom:1px solid var(--border-color);
 }
 
 .catalog-page-eyebrow{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-eyebrow-size);
   font-weight:var(--catalog-eyebrow-weight);
   letter-spacing:var(--catalog-eyebrow-tracking);
@@ -154,7 +154,7 @@ body.sitemap-page{
 
 .catalog-page-title{
   margin:0;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-title-size);
   font-weight:var(--catalog-title-weight);
   line-height:var(--catalog-title-line-height);
@@ -164,7 +164,7 @@ body.sitemap-page{
 .catalog-page-description{
   max-width:var(--catalog-description-max-width);
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-description-size);
   line-height:var(--catalog-description-line-height);
 }
@@ -188,7 +188,7 @@ body.sitemap-page{
   border:1px solid var(--control-border);
   border-radius:var(--control-radius-pill);
   background:var(--control-bg);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-chip-size);
   line-height:var(--catalog-chip-line-height);
 }
@@ -209,7 +209,7 @@ body.sitemap-page{
 .catalog-search__label,
 .catalog-filter-note{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-filter-note-size);
   line-height:var(--catalog-filter-note-line-height);
 }
@@ -229,12 +229,12 @@ body.sitemap-page{
   border:0;
   outline:0;
   background:transparent;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
 }
 
 .catalog-search__input::placeholder{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 /* =============================================================================
@@ -287,7 +287,7 @@ body.sitemap-page{
 
 .catalog-card__eyebrow{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-card-eyebrow-size);
   font-weight:var(--catalog-card-eyebrow-weight);
   letter-spacing:var(--catalog-card-eyebrow-tracking);
@@ -296,7 +296,7 @@ body.sitemap-page{
 
 .catalog-card__title{
   margin:0;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-card-title-size);
   font-weight:var(--catalog-card-title-weight);
   line-height:var(--catalog-card-title-line-height);
@@ -304,7 +304,7 @@ body.sitemap-page{
 
 .catalog-card__summary{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   line-height:var(--catalog-card-summary-line-height);
 }
 
@@ -350,13 +350,13 @@ body.sitemap-page{
 }
 
 .catalog-panel__title{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-panel-title-size);
   font-weight:var(--catalog-panel-title-weight);
 }
 
 .catalog-panel__copy{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   line-height:var(--catalog-panel-copy-line-height);
 }
 
@@ -369,7 +369,7 @@ body.sitemap-page{
   display:grid;
   gap:var(--catalog-row-gap);
   padding-bottom:var(--catalog-row-padding-bottom);
-  border-bottom:1px solid var(--cc-color);
+  border-bottom:1px solid var(--border-color);
 }
 
 .catalog-row:last-child{
@@ -383,14 +383,14 @@ body.sitemap-page{
 }
 
 .catalog-row__label{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-row-label-size);
   letter-spacing:var(--catalog-row-label-tracking);
   text-transform:uppercase;
 }
 
 .catalog-row__value{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   line-height:var(--catalog-row-value-line-height);
 }
 
@@ -403,7 +403,7 @@ body.sitemap-page{
 }
 
 .catalog-list-item{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   line-height:var(--catalog-list-line-height);
 }
 
@@ -418,7 +418,7 @@ body.sitemap-page{
 
 .catalog-timeline-year__label{
   margin:0;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-timeline-year-size);
   font-weight:var(--catalog-timeline-year-weight);
 }
@@ -439,20 +439,20 @@ body.sitemap-page{
 }
 
 .catalog-timeline-entry__eyebrow{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-timeline-eyebrow-size);
   letter-spacing:var(--catalog-timeline-eyebrow-tracking);
   text-transform:uppercase;
 }
 
 .catalog-timeline-entry__title{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-timeline-title-size);
   font-weight:var(--catalog-timeline-title-weight);
 }
 
 .catalog-timeline-entry__copy{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   line-height:var(--catalog-timeline-copy-line-height);
 }
 
@@ -460,13 +460,13 @@ body.sitemap-page{
    08) SITEMAP / INLINE LINKS
 ============================================================================= */
 .catalog-inline-link{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   text-decoration:none;
 }
 
 .catalog-inline-link:hover,
 .catalog-inline-link:focus-visible{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   text-decoration:underline;
 }
 
@@ -474,7 +474,7 @@ body.sitemap-page{
   display:grid;
   gap:var(--catalog-sitemap-group-gap);
   padding-top:var(--catalog-sitemap-group-padding-top);
-  border-top:1px solid var(--cc-color);
+  border-top:1px solid var(--border-color);
 }
 
 .catalog-sitemap-group:first-child{
@@ -484,7 +484,7 @@ body.sitemap-page{
 
 .catalog-sitemap-group__title{
   margin:0;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-sitemap-title-size);
   font-weight:var(--catalog-sitemap-title-weight);
 }
@@ -496,7 +496,7 @@ body.sitemap-page{
 
 .catalog-sitemap-item__path{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--catalog-sitemap-path-size);
 }
 
@@ -518,13 +518,13 @@ body.sitemap-page{
 }
 
 .catalog-empty-state__title{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--catalog-empty-title-size);
   font-weight:var(--catalog-empty-title-weight);
 }
 
 .catalog-empty-state__copy{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   line-height:var(--catalog-empty-copy-line-height);
 }
 

@@ -40,7 +40,7 @@ const CLOSE_BUTTON_SELECTORS = [
   '.home-interaction-settings-panel__close',
   '[data-core-close-button="true"]',
   '[data-cookie-consent-close="true"]',
-  '[data-account-drawer-close="true"]',
+  '[data-account-drawer-close="true"]:not(.account-drawer-backdrop)',
   '[data-home-navigation-drawer-close]',
   '[data-home-workspace-panel-close]',
   '[data-home-profile-control-panel-close]',

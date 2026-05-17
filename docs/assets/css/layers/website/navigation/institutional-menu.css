@@ -60,9 +60,9 @@
   --institutional-menu-motion-panel-slow:var(--nav-institutional-motion-panel-slow);
   --institutional-menu-motion-ease:var(--nav-institutional-motion-ease);
   --institutional-menu-panel-ease:var(--nav-institutional-panel-ease);
-  --institutional-menu-panel-shell-bg:color-mix(in srgb, var(--surface-color) 58%, transparent);
-  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--surface-color) 0.2%, transparent) 100%);
-  --institutional-menu-panel-shadow:var(--cc-shadow-unified);
+  --institutional-menu-panel-shell-bg:var(--glass-overlay-shell-bg);
+  --institutional-menu-panel-backdrop-bg:var(--glass-overlay-backdrop-bg);
+  --institutional-menu-panel-shadow:var(--panel-shadow-unified);
   --institutional-menu-search-border:var(--control-border-unified);
   --institutional-menu-closed-y:var(--nav-institutional-closed-y);
   --institutional-menu-panel-closed-y:var(--nav-institutional-panel-closed-y);
@@ -166,8 +166,6 @@
   height:var(--institutional-menu-surface-height);
   border-radius: var(--spacing-none);
   background:var(--institutional-menu-surface-bg);
-  border-bottom:var(--cc-width-hairline) solid var(--institutional-menu-surface-border);
-  box-shadow:var(--institutional-menu-surface-shadow);
   backdrop-filter:blur(var(--institutional-menu-surface-blur)) saturate(var(--institutional-menu-surface-saturate));
   -webkit-backdrop-filter:blur(var(--institutional-menu-surface-blur)) saturate(var(--institutional-menu-surface-saturate));
   opacity:var(--overlay-opacity-closed);
@@ -425,10 +423,10 @@ html[data-theme-effective="light"]{
 
 .institutional-menu-search-trigger .institutional-menu-utility-label{
   position: absolute;
-  width: var(--cc-width-hairline);
-  height: var(--cc-width-hairline);
+  width: var(--border-width-hairline);
+  height: var(--border-width-hairline);
   padding: var(--spacing-none);
-  margin: calc(var(--cc-width-hairline) * -1);
+  margin: calc(var(--border-width-hairline) * -1);
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -545,7 +543,7 @@ html[data-theme-effective="light"]{
 .institutional-menu-toggle-line{
   display: block;
   width:var(--institutional-menu-search-shell-padding-x);
-  height: var(--cc-width-hairline);
+  height: var(--border-width-hairline);
   background:var(--institutional-menu-text-hover-color);
   transition:
     opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
@@ -570,8 +568,8 @@ html[data-theme-effective="light"]{
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity var(--institutional-menu-motion-panel) var(--institutional-menu-panel-ease),
-    visibility var(--institutional-menu-motion-panel) var(--interaction-ease-standard);
+    opacity var(--duration-instant) linear,
+    visibility var(--duration-instant) linear;
   z-index: 2;
 }
 
@@ -588,19 +586,19 @@ body.institutional-menu-panel-open .institutional-menu-panels{
   opacity:var(--overlay-opacity-open);
   pointer-events: auto;
   background:var(--institutional-menu-panel-backdrop-bg);
-  backdrop-filter:blur(var(--nav-institutional-panel-backdrop-blur)) saturate(var(--nav-institutional-panel-backdrop-saturate));
-  -webkit-backdrop-filter:blur(var(--nav-institutional-panel-backdrop-blur)) saturate(var(--nav-institutional-panel-backdrop-saturate));
+  backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
   box-shadow:var(--institutional-menu-panel-shadow);
 }
 
 html[data-theme-effective="light"]{
-  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--surface-color) 0.2%, transparent) 100%);
-  --institutional-menu-panel-shadow:var(--cc-shadow-unified);
+  --institutional-menu-panel-backdrop-bg:var(--glass-overlay-backdrop-bg);
+  --institutional-menu-panel-shadow:var(--panel-shadow-unified);
 }
 
 html[data-theme-effective="dark"]{
-  --institutional-menu-panel-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 0.3%, transparent) 0%, color-mix(in srgb, var(--bg-color) 0.2%, transparent) 100%);
-  --institutional-menu-panel-shadow:var(--cc-shadow-unified);
+  --institutional-menu-panel-backdrop-bg:var(--glass-overlay-backdrop-bg);
+  --institutional-menu-panel-shadow:var(--panel-shadow-unified);
 }
 
 .institutional-menu-panel{
@@ -666,8 +664,8 @@ body.institutional-menu-panel-open{
   direction: ltr;
   pointer-events: auto;
   background:var(--institutional-menu-panel-shell-bg);
-  backdrop-filter:blur(var(--nav-institutional-panel-shell-blur)) saturate(var(--nav-institutional-panel-shell-saturate));
-  -webkit-backdrop-filter:blur(var(--nav-institutional-panel-shell-blur)) saturate(var(--nav-institutional-panel-shell-saturate));
+  backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   transition:
     opacity var(--institutional-menu-motion-panel) var(--institutional-menu-panel-ease),
     transform var(--institutional-menu-motion-panel-slow) var(--institutional-menu-panel-ease),
@@ -675,7 +673,7 @@ body.institutional-menu-panel-open{
 }
 
 html[data-theme-effective="dark"]{
-  --institutional-menu-panel-shell-bg:color-mix(in srgb, var(--surface-color) 48%, transparent);
+  --institutional-menu-panel-shell-bg:var(--glass-overlay-shell-bg);
 }
 
 html[data-theme-effective="dark"]{
@@ -707,7 +705,7 @@ html[data-theme-effective="light"]{
 ============================================================================= */
 .institutional-menu-panel-label{
   margin:var(--spacing-none) var(--spacing-none) var(--institutional-menu-panel-eyebrow-margin-bottom);
-  color:color-mix(in srgb, var(--cc-secondary-color) 86%, transparent);
+  color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   font-size:var(--institutional-menu-panel-eyebrow-size);
   font-weight:var(--institutional-menu-panel-eyebrow-weight);
   letter-spacing:var(--institutional-menu-panel-eyebrow-tracking);
@@ -779,7 +777,7 @@ html[data-theme-effective="light"]{
   margin:var(--spacing-none) auto;
   min-height:var(--institutional-menu-search-shell-min-height);
   padding:var(--institutional-menu-search-shell-padding-y) var(--institutional-menu-search-shell-padding-x);
-  border:var(--cc-width-hairline) solid var(--institutional-menu-search-border);
+  border:var(--border-width-hairline) solid var(--institutional-menu-search-border);
   border-radius: var(--shape-control-radius);
   background: transparent;
   box-sizing: border-box;
@@ -890,7 +888,7 @@ html[data-theme-effective="light"]{
   box-sizing: border-box;
   border: var(--spacing-none);
   background: transparent;
-  color: color-mix(in srgb, var(--cc-primary-color) 78%, transparent);
+  color: color-mix(in srgb, var(--text-primary-color) 78%, transparent);
   font-size:var(--institutional-menu-search-input-size);
   font-weight:var(--institutional-menu-search-input-weight);
   letter-spacing:-0.012em;
@@ -904,7 +902,7 @@ html[data-theme-effective="light"]{
 }
 
 .institutional-menu-search-input::placeholder{
-  color: color-mix(in srgb, var(--cc-secondary-color) 78%, transparent);
+  color: color-mix(in srgb, var(--text-secondary-color) 78%, transparent);
 }
 
 .institutional-menu-search-input::-webkit-search-cancel-button,
@@ -940,7 +938,7 @@ html[data-theme-effective="light"]{
 .institutional-menu-search-results-empty{
   margin: var(--spacing-none);
   padding:var(--institutional-menu-search-panel-padding-top) var(--spacing-none) var(--spacing-none);
-  color: color-mix(in srgb, var(--cc-secondary-color) 84%, transparent);
+  color: color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
   font-size:var(--institutional-menu-search-panel-size);
   font-weight:var(--institutional-menu-search-panel-weight);
   letter-spacing:-0.01em;
@@ -955,7 +953,7 @@ html[data-theme-effective="light"]{
   gap:var(--institutional-menu-search-list-gap);
   width: var(--size-full);
   padding:var(--institutional-menu-search-list-padding-y) var(--spacing-none);
-  border-bottom: var(--cc-width-hairline) solid color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  border-bottom: var(--border-width-hairline) solid color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   color:var(--institutional-menu-text-hover-color);
   text-decoration: none;
   transition:
@@ -984,7 +982,7 @@ html[data-theme-effective="light"]{
 }
 
 .institutional-menu-search-result-meta{
-  color: color-mix(in srgb, var(--cc-secondary-color) 84%, transparent);
+  color: color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
   font-size:var(--institutional-menu-search-result-meta-size);
   font-weight:var(--institutional-menu-search-result-meta-weight);
   letter-spacing: -0.008em;

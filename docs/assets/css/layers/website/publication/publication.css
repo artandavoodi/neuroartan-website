@@ -23,12 +23,12 @@
 /* BLOCK: PUBLICATION TEXT BASE */
 .publication-title{
   font-family:var(--font-base);
-  color:var(--cc-color);
+  color:var(--text-color);
   margin:0 0 0.75rem;
 }
 
 .publication-content{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .publication-content h1,
@@ -37,7 +37,7 @@
 .publication-content h4,
 .publication-content h5,
 .publication-content h6{
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .publication-content p,
@@ -58,7 +58,7 @@
 /* BLOCK: PUBLICATION HEADER */
 .publication-heading{
   font-family:var(--font-base);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:2rem;
   font-weight:600;
   letter-spacing:-0.02em;
@@ -66,7 +66,7 @@
 }
 
 .publication-sub{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:0.95rem;
   margin:0 0 2.25rem;
   max-width:72ch;
@@ -94,7 +94,7 @@
   right:0;
   top:0;
   height:1px;
-  background:var(--cc-color, rgba(255,255,255,0.14));
+  background:var(--border-color, rgba(255,255,255,0.14));
   opacity:1;
 }
 
@@ -104,7 +104,7 @@
   gap:0.45rem;
   width:100%;
   font-family:var(--font-base);
-  color:var(--cc-color);
+  color:var(--text-color);
   text-decoration:none;
   padding:0;
   border-radius:0;
@@ -129,7 +129,7 @@
   display:block;
   margin-top:0.4rem;
   font-size:0.9rem;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 /* BLOCK: PUBLICATION IDENTITY MARKS */
@@ -163,27 +163,27 @@
   font-size:1.05rem;
   font-weight:600;
   letter-spacing:-0.01em;
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .publication-item-meta{
   display:block;
   font-size:0.92rem;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   margin:0;
 }
 
 /* BLOCK: PUBLICATION LINK FALLBACKS */
 .publication-link{
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .publication-link:visited{
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .publication-link:focus-visible{
-  outline:1px solid var(--cc-color);
+  outline:1px solid var(--border-color);
   outline-offset:6px;
   border-radius:var(--control-radius);
 }

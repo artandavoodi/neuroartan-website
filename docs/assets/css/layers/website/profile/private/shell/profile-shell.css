@@ -32,7 +32,7 @@
 .profile-shell{
   position:relative;
   width:100%;
-  color:var(--cc-primary);
+  color:var(--text-primary);
   background:transparent;
   padding-top:var(--profile-shell-top-clearance);
   overflow:visible;

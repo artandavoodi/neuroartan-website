@@ -14,8 +14,8 @@
   --glass-surface-height-mobile:3.18rem;
   --glass-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
   --glass-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
-  --glass-surface-border:var(--cc-color);
-  --glass-surface-border-light:var(--cc-color);
+  --glass-surface-border:var(--border-color);
+  --glass-surface-border-light:var(--border-color);
   --glass-surface-shadow:none;
   --glass-surface-blur:var(--effect-blur-sm);
   --glass-surface-saturate:120%;

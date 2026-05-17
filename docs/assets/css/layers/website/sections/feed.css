@@ -19,58 +19,58 @@
    01A) FEED TOKENS
 ============================================================================= */
 :root{
-  --feed-main-column:var(--cc-feed-main-column);
-  --feed-discovery-min:var(--cc-feed-discovery-min);
-  --feed-discovery-column:var(--cc-feed-discovery-column);
-  --feed-layout-gap:var(--cc-feed-layout-gap);
-  --feed-panel-gap:var(--cc-feed-panel-gap);
-  --feed-composer-min-height:var(--cc-feed-composer-min-height);
-  --feed-input-line-height:var(--cc-feed-input-line-height);
-  --feed-action-min-height:var(--cc-feed-action-min-height);
-  --feed-action-padding-x:var(--cc-feed-action-padding-x);
-  --feed-action-radius:var(--cc-feed-action-radius);
-  --feed-motion:var(--cc-feed-motion);
-  --feed-header-gap:var(--cc-feed-header-gap);
-  --feed-tab-gap:var(--cc-feed-tab-gap);
-  --feed-tab-min-height:var(--cc-feed-tab-min-height);
-  --feed-tab-padding-x:var(--cc-feed-tab-padding-x);
-  --feed-sort-gap:var(--cc-feed-sort-gap);
-  --feed-sort-label-size:var(--cc-feed-sort-label-size);
-  --feed-sort-label-line-height:var(--cc-feed-sort-label-line-height);
-  --feed-select-min-height:var(--cc-feed-select-min-height);
-  --feed-select-padding-x:var(--cc-feed-select-padding-x);
-  --feed-select-radius:var(--cc-feed-select-radius);
-  --feed-stream-gap:var(--cc-feed-stream-gap);
-  --feed-post-gap:var(--cc-feed-post-gap);
-  --feed-post-padding-bottom:var(--cc-feed-post-padding-bottom);
-  --feed-post-identity-gap:var(--cc-feed-post-identity-gap);
-  --feed-avatar-size:var(--cc-feed-avatar-size);
-  --feed-avatar-radius:var(--cc-feed-avatar-radius);
-  --feed-avatar-fallback-size:var(--cc-feed-avatar-fallback-size);
-  --feed-avatar-fallback-weight:var(--cc-feed-avatar-fallback-weight);
-  --feed-avatar-fallback-tracking:var(--cc-feed-avatar-fallback-tracking);
-  --feed-identity-gap:var(--cc-feed-identity-gap);
-  --feed-row-gap:var(--cc-feed-row-gap);
-  --feed-entity-size:var(--cc-feed-entity-size);
-  --feed-entity-weight:var(--cc-feed-entity-weight);
-  --feed-entity-line-height:var(--cc-feed-entity-line-height);
-  --feed-handle-size:var(--cc-feed-handle-size);
-  --feed-handle-line-height:var(--cc-feed-handle-line-height);
-  --feed-chip-min-height:var(--cc-feed-chip-min-height);
-  --feed-chip-padding-x:var(--cc-feed-chip-padding-x);
-  --feed-chip-radius:var(--cc-feed-chip-radius);
-  --feed-chip-size:var(--cc-feed-chip-size);
-  --feed-chip-tracking:var(--cc-feed-chip-tracking);
-  --feed-badge-gap:var(--cc-feed-badge-gap);
-  --feed-badge-blue:var(--cc-feed-badge-blue);
-  --feed-badge-border-mix:var(--cc-feed-badge-border-mix);
-  --feed-badge-bg-mix:var(--cc-feed-badge-bg-mix);
-  --feed-badge-weight:var(--cc-feed-badge-weight);
-  --feed-badge-icon-size:var(--cc-feed-badge-icon-size);
-  --feed-copy-line-height:var(--cc-feed-copy-line-height);
-  --feed-post-action-min-height:var(--cc-feed-post-action-min-height);
-  --feed-post-action-padding-x:var(--cc-feed-post-action-padding-x);
-  --feed-post-action-size:var(--cc-feed-post-action-size);
+  --feed-main-column:var(--layout-feed-main-column);
+  --feed-discovery-min:var(--layout-feed-discovery-min);
+  --feed-discovery-column:var(--layout-feed-discovery-column);
+  --feed-layout-gap:var(--layout-feed-layout-gap);
+  --feed-panel-gap:var(--layout-feed-panel-gap);
+  --feed-composer-min-height:var(--layout-feed-composer-min-height);
+  --feed-input-line-height:var(--layout-feed-input-line-height);
+  --feed-action-min-height:var(--layout-feed-action-min-height);
+  --feed-action-padding-x:var(--layout-feed-action-padding-x);
+  --feed-action-radius:var(--layout-feed-action-radius);
+  --feed-motion:var(--layout-feed-motion);
+  --feed-header-gap:var(--layout-feed-header-gap);
+  --feed-tab-gap:var(--layout-feed-tab-gap);
+  --feed-tab-min-height:var(--layout-feed-tab-min-height);
+  --feed-tab-padding-x:var(--layout-feed-tab-padding-x);
+  --feed-sort-gap:var(--layout-feed-sort-gap);
+  --feed-sort-label-size:var(--layout-feed-sort-label-size);
+  --feed-sort-label-line-height:var(--layout-feed-sort-label-line-height);
+  --feed-select-min-height:var(--layout-feed-select-min-height);
+  --feed-select-padding-x:var(--layout-feed-select-padding-x);
+  --feed-select-radius:var(--layout-feed-select-radius);
+  --feed-stream-gap:var(--layout-feed-stream-gap);
+  --feed-post-gap:var(--layout-feed-post-gap);
+  --feed-post-padding-bottom:var(--layout-feed-post-padding-bottom);
+  --feed-post-identity-gap:var(--layout-feed-post-identity-gap);
+  --feed-avatar-size:var(--layout-feed-avatar-size);
+  --feed-avatar-radius:var(--layout-feed-avatar-radius);
+  --feed-avatar-fallback-size:var(--layout-feed-avatar-fallback-size);
+  --feed-avatar-fallback-weight:var(--layout-feed-avatar-fallback-weight);
+  --feed-avatar-fallback-tracking:var(--layout-feed-avatar-fallback-tracking);
+  --feed-identity-gap:var(--layout-feed-identity-gap);
+  --feed-row-gap:var(--layout-feed-row-gap);
+  --feed-entity-size:var(--layout-feed-entity-size);
+  --feed-entity-weight:var(--layout-feed-entity-weight);
+  --feed-entity-line-height:var(--layout-feed-entity-line-height);
+  --feed-handle-size:var(--layout-feed-handle-size);
+  --feed-handle-line-height:var(--layout-feed-handle-line-height);
+  --feed-chip-min-height:var(--layout-feed-chip-min-height);
+  --feed-chip-padding-x:var(--layout-feed-chip-padding-x);
+  --feed-chip-radius:var(--layout-feed-chip-radius);
+  --feed-chip-size:var(--layout-feed-chip-size);
+  --feed-chip-tracking:var(--layout-feed-chip-tracking);
+  --feed-badge-gap:var(--layout-feed-badge-gap);
+  --feed-badge-blue:var(--layout-feed-badge-blue);
+  --feed-badge-border-mix:var(--layout-feed-badge-border-mix);
+  --feed-badge-bg-mix:var(--layout-feed-badge-bg-mix);
+  --feed-badge-weight:var(--layout-feed-badge-weight);
+  --feed-badge-icon-size:var(--layout-feed-badge-icon-size);
+  --feed-copy-line-height:var(--layout-feed-copy-line-height);
+  --feed-post-action-min-height:var(--layout-feed-post-action-min-height);
+  --feed-post-action-padding-x:var(--layout-feed-post-action-padding-x);
+  --feed-post-action-size:var(--layout-feed-post-action-size);
 }
 
 /* =============================================================================
@@ -99,13 +99,13 @@
   outline:0;
   resize:vertical;
   background:transparent;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
   line-height:var(--feed-input-line-height);
 }
 
 .feed-composer__input::placeholder{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .feed-composer__action{
@@ -117,7 +117,7 @@
   border:1px solid var(--control-border);
   border-radius:var(--feed-action-radius);
   background:var(--control-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
   transition:
     color var(--feed-motion) ease,
@@ -158,7 +158,7 @@
   border:1px solid var(--control-border);
   border-radius:var(--feed-action-radius);
   background:transparent;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font:inherit;
   transition:
     color var(--feed-motion) ease,
@@ -169,7 +169,7 @@
 .feed-tab:hover,
 .feed-tab:focus-visible,
 .feed-tab[aria-pressed="true"]{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   background:var(--control-bg);
   border-color:var(--control-border-strong);
   outline:none;
@@ -182,7 +182,7 @@
 
 .feed-sort__label{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--feed-sort-label-size);
   line-height:var(--feed-sort-label-line-height);
 }
@@ -193,7 +193,7 @@
   border:1px solid var(--field-border);
   border-radius:var(--feed-select-radius);
   background:var(--field-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
 }
 
@@ -209,7 +209,7 @@
   display:grid;
   gap:var(--feed-post-gap);
   padding-bottom:var(--feed-post-padding-bottom);
-  border-bottom:1px solid var(--cc-color);
+  border-bottom:1px solid var(--border-color);
 }
 
 .feed-post:last-child{
@@ -244,7 +244,7 @@
 }
 
 .feed-post__avatar-fallback{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--feed-avatar-fallback-size);
   font-weight:var(--feed-avatar-fallback-weight);
   letter-spacing:var(--feed-avatar-fallback-tracking);
@@ -273,14 +273,14 @@
 }
 
 .feed-post__entity{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--feed-entity-size);
   font-weight:var(--feed-entity-weight);
   line-height:var(--feed-entity-line-height);
 }
 
 .feed-post__handle{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--feed-handle-size);
   line-height:var(--feed-handle-line-height);
 }
@@ -299,8 +299,8 @@
 
 .feed-post__type,
 .feed-post__meta-chip{
-  border:1px solid color-mix(in srgb, var(--cc-secondary-color) 84%, transparent);
-  color:color-mix(in srgb, var(--cc-secondary-color) 84%, transparent);
+  border:1px solid color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
+  color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
 }
 
 .feed-post__badge{
@@ -319,7 +319,7 @@
 }
 
 .feed-post__copy{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   line-height:var(--feed-copy-line-height);
 }
 
@@ -332,7 +332,7 @@
   border:1px solid var(--control-border);
   border-radius:var(--feed-action-radius);
   background:transparent;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   text-decoration:none;
   font:inherit;
   font-size:var(--feed-post-action-size);
@@ -345,7 +345,7 @@
 .feed-post__action:hover,
 .feed-post__action:focus-visible,
 .feed-post__action[aria-pressed="true"]{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   background:var(--control-bg);
   border-color:var(--control-border-strong);
   outline:none;
@@ -353,7 +353,7 @@
 
 .feed-post__action--primary{
   background:var(--control-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
 }
 
 /* =============================================================================

@@ -11,9 +11,9 @@
    00A) PROFILE SETTINGS TOKENS
    ============================================================================= */
 :root{
-  --profile-settings-muted-color:var(--cc-secondary-color);
-  --profile-settings-status-color:var(--cc-secondary-color);
-  --profile-settings-status-success-color:var(--status-success-color, var(--cc-color));
+  --profile-settings-muted-color:var(--text-secondary-color);
+  --profile-settings-status-color:var(--text-secondary-color);
+  --profile-settings-status-success-color:var(--status-success-color, var(--text-color));
   --profile-settings-status-error-color:var(--status-danger-color, var(--color-primary7));
   --profile-settings-motion-fast:var(--interaction-motion-medium);
 }
@@ -235,7 +235,7 @@
 
 .profile-settings__media-label{
   margin:0;
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 @media (max-width:820px){

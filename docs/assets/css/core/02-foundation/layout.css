@@ -104,7 +104,7 @@ body.menu-open #header-controls .theme-toggle{
   height:1px;
   border:none;
   margin:1.5rem auto;
-  background-color:var(--cc-color);
+  background-color:var(--border-color);
   display:block;
 }
 
@@ -115,7 +115,7 @@ body.menu-open #header-controls .theme-toggle{
   width:var(--footer-rail-width);
   max-width:none;
   margin:0 auto 1rem auto;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:0.75rem;
 }
 

@@ -28,7 +28,7 @@
   --feedback-warning-color:#b9822b;
   --feedback-error-color:#b84a4a;
   --feedback-info-color:#4f7fa8;
-  --feedback-neutral-color:var(--cc-secondary-color);
+  --feedback-neutral-color:var(--text-secondary-color);
 
   /* State aliases for platform status mapping. */
   --status-active-color:var(--feedback-success-color);
@@ -238,8 +238,8 @@
   --system-message-radius:var(--radius-lg);
   --system-message-bg:var(--feedback-neutral-bg);
   --system-message-border:var(--feedback-neutral-border);
-  --system-message-title-color:var(--cc-primary-color);
-  --system-message-body-color:var(--cc-secondary-color);
+  --system-message-title-color:var(--text-primary-color);
+  --system-message-body-color:var(--text-secondary-color);
 }
 
 /* =============================================================================

@@ -73,25 +73,25 @@
   transform: translateZ(0);
   will-change: opacity, background, backdrop-filter;
 
-  background-color: rgb(var(--cc-matte-rgb-dark));
+  background-color: rgb(var(--home-matte-rgb-dark));
   background:
     linear-gradient(
       180deg,
-      rgba(var(--cc-matte-rgb-dark), var(--cc-matte-opacity-top)) 0%,
-      rgba(var(--cc-matte-rgb-dark), var(--cc-matte-opacity-mid)) 38%,
-      rgba(var(--cc-matte-rgb-dark), var(--cc-matte-opacity-low)) 68%,
-      rgba(var(--cc-matte-rgb-dark), var(--cc-matte-opacity-bottom)) 100%
+      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-top)) 0%,
+      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-mid)) 38%,
+      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-low)) 68%,
+      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-bottom)) 100%
     );
 
-  backdrop-filter: blur(var(--cc-matte-blur)) saturate(var(--cc-matte-saturate));
-  -webkit-backdrop-filter: blur(var(--cc-matte-blur)) saturate(var(--cc-matte-saturate));
+  backdrop-filter: blur(var(--home-matte-blur)) saturate(var(--home-matte-saturate));
+  -webkit-backdrop-filter: blur(var(--home-matte-blur)) saturate(var(--home-matte-saturate));
   transition:
-    background var(--cc-matte-transition-duration) var(--cc-matte-transition-ease),
-    background-color var(--cc-matte-transition-duration) var(--cc-matte-transition-ease),
-    opacity var(--cc-matte-transition-duration) var(--cc-matte-transition-ease),
-    visibility var(--cc-matte-transition-duration) var(--cc-matte-transition-ease),
-    backdrop-filter var(--cc-matte-transition-duration) var(--cc-matte-transition-ease),
-    -webkit-backdrop-filter var(--cc-matte-transition-duration) var(--cc-matte-transition-ease);
+    background var(--home-matte-transition-duration) var(--home-matte-transition-ease),
+    background-color var(--home-matte-transition-duration) var(--home-matte-transition-ease),
+    opacity var(--home-matte-transition-duration) var(--home-matte-transition-ease),
+    visibility var(--home-matte-transition-duration) var(--home-matte-transition-ease),
+    backdrop-filter var(--home-matte-transition-duration) var(--home-matte-transition-ease),
+    -webkit-backdrop-filter var(--home-matte-transition-duration) var(--home-matte-transition-ease);
 }
 
 @supports (height: 100dvh){
@@ -126,18 +126,18 @@ html[data-homepage-theme-matte-atmosphere="true"] .home-hero-matte{
 ============================================================================= */
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-blur{
-  --home-matte-opacity-top: var(--cc-matte-opacity-top-light);
-  --home-matte-opacity-mid: var(--cc-matte-opacity-mid-light);
-  --home-matte-opacity-low: var(--cc-matte-opacity-low-light);
-  --home-matte-opacity-bottom: var(--cc-matte-opacity-bottom-light);
+  --home-matte-opacity-top: var(--home-matte-opacity-top-light);
+  --home-matte-opacity-mid: var(--home-matte-opacity-mid-light);
+  --home-matte-opacity-low: var(--home-matte-opacity-low-light);
+  --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-light);
   --home-matte-blur: 24px;
 }
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-soft{
-  --home-matte-opacity-top: var(--cc-matte-opacity-top-soft);
-  --home-matte-opacity-mid: var(--cc-matte-opacity-mid-soft);
-  --home-matte-opacity-low: var(--cc-matte-opacity-low-soft);
-  --home-matte-opacity-bottom: var(--cc-matte-opacity-bottom-soft);
+  --home-matte-opacity-top: var(--home-matte-opacity-top-soft);
+  --home-matte-opacity-mid: var(--home-matte-opacity-mid-soft);
+  --home-matte-opacity-low: var(--home-matte-opacity-low-soft);
+  --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-soft);
   --home-matte-blur: 30px;
 }
 
@@ -155,18 +155,18 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid{
 ============================================================================= */
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-clear{
-  --home-matte-opacity-top: var(--cc-matte-opacity-top-clear);
-  --home-matte-opacity-mid: var(--cc-matte-opacity-mid-clear);
-  --home-matte-opacity-low: var(--cc-matte-opacity-low-clear);
-  --home-matte-opacity-bottom: var(--cc-matte-opacity-bottom-clear);
+  --home-matte-opacity-top: var(--home-matte-opacity-top-clear);
+  --home-matte-opacity-mid: var(--home-matte-opacity-mid-clear);
+  --home-matte-opacity-low: var(--home-matte-opacity-low-clear);
+  --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-clear);
   --home-matte-blur: 10px;
 }
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid-softedge{
-  --home-matte-opacity-top: var(--cc-matte-opacity-top-solid-softedge);
-  --home-matte-opacity-mid: var(--cc-matte-opacity-mid-solid-softedge);
-  --home-matte-opacity-low: var(--cc-matte-opacity-low-solid-softedge);
-  --home-matte-opacity-bottom: var(--cc-matte-opacity-bottom-solid-softedge);
+  --home-matte-opacity-top: var(--home-matte-opacity-top-solid-softedge);
+  --home-matte-opacity-mid: var(--home-matte-opacity-mid-solid-softedge);
+  --home-matte-opacity-low: var(--home-matte-opacity-low-solid-softedge);
+  --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-solid-softedge);
   --home-matte-blur: 32px;
 }
 

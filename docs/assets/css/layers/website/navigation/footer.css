@@ -17,8 +17,8 @@
    02) FOOTER TOKENS
 ============================================================================= */
 :root{
-  --footer-text-color:var(--cc-secondary-color);
-  --footer-text-hover-color:var(--cc-primary-color);
+  --footer-text-color:var(--text-secondary-color);
+  --footer-text-hover-color:var(--text-primary-color);
   --footer-reveal-duration:var(--interaction-motion-slow);
   --footer-motion-ease:var(--overlay-motion-ease);
   --footer-interaction-duration:var(--interaction-motion-medium);
@@ -39,7 +39,7 @@
   letter-spacing:var(--type-body-tracking);
   margin:var(--footer-outer-top-spacing) var(--spacing-none) var(--spacing-none) var(--spacing-none);
   padding:var(--footer-inner-top-padding) var(--spacing-none) var(--footer-inner-bottom-padding) var(--spacing-none);
-  border-top:var(--cc-width-hairline) solid var(--cc-color);
+  border-top:var(--border-width-hairline) solid var(--border-color);
   background-color:transparent;
   color:var(--footer-text-color);
   text-align:initial;

@@ -21,9 +21,9 @@
   -webkit-appearance: none;
   min-height: 36px;
   padding: 0 14px;
-  border: 1px solid var(--cc-color);
+  border: 1px solid var(--border-color);
   background: rgba(255, 255, 255, 0.04);
-  color: var(--cc-color);
+  color: var(--text-color);
   font-family: var(--font-base);
   font-size: 0.78rem;
   font-weight: 500;

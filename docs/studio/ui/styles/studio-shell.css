@@ -357,3 +357,38 @@
   color:
     var(--home-interaction-panel-file-chip-text);
 }
+
+.studio-panel-value{
+  display:block;
+
+  margin-top:
+    var(--spacing-16);
+
+  color:
+    var(--home-interaction-panel-submit-text);
+
+  font-size:
+    var(--home-interaction-panel-model-name-size);
+
+  font-weight:
+    var(--home-interaction-panel-model-name-weight);
+
+  line-height:
+    var(--home-interaction-panel-model-name-line-height);
+}
+
+.studio-panel-detail{
+  margin:
+    var(--spacing-8)
+    var(--spacing-none)
+    var(--spacing-none);
+
+  color:
+    var(--home-interaction-panel-muted);
+
+  font-size:
+    var(--home-interaction-panel-file-chip-size);
+
+  line-height:
+    var(--home-interaction-panel-input-line-height);
+}

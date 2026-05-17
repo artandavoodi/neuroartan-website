@@ -18,12 +18,12 @@
 .ui-drawer-shell{
   width:min(var(--size-full), var(--drawer-width-md));
   padding:var(--drawer-padding);
-  border-radius:var(--cc-radius-unified);
-  border:var(--cc-width-hairline) solid var(--cc-border-unified);
-  background:var(--cc-surface-unified);
-  box-shadow:var(--cc-shadow-unified);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  border-radius:var(--panel-radius-unified);
+  border:var(--border-width-hairline) solid var(--panel-border-unified);
+  background:var(--panel-surface-unified);
+  box-shadow:var(--panel-shadow-unified);
+  backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
   transition:var(--interaction-transition-control);
 }
 

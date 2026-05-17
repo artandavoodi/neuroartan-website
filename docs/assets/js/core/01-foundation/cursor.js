@@ -177,14 +177,13 @@ function writeStoredCursorState() {
 }
 
 function syncCursorRootAttributes() {
-  const html = document.documentElement;
-  const active = supportsFinePointer && state.mode === CURSOR_MODE_CUSTOM;
+  const root = document.documentElement;
+  const viewportActive = Boolean(state.enabled && state.pointerActive && !state.isHidden);
 
-  html.dataset.cursorMode = state.mode;
-  html.dataset.cursorCustom = active ? 'true' : 'false';
-  html.style.setProperty('--cursor-accent-color', state.color);
-
-  state.enabled = active;
+  root.dataset.cursorMode = state.mode;
+  root.dataset.cursorCustom = viewportActive ? 'true' : 'false';
+  root.dataset.cursorViewportActive = viewportActive ? 'true' : 'false';
+  root.dataset.cursorPointer = POINTER_FINE_QUERY.matches ? 'fine' : 'coarse';
 }
 
 function applyStoredCursorState() {
@@ -362,27 +361,51 @@ function handlePointerEnter(event) {
   syncToPointer(event.clientX, event.clientY, true);
   state.pointerActive = true;
   state.isHidden = false;
+
+  if (state.enabled) {
+    ensureCursorNode();
+    startLoop();
+  }
+
+  syncCursorRootAttributes();
   syncInteractiveStateFromPointerPosition();
+  applyVisualState();
 }
 
 function handlePointerLeave() {
   state.pointerActive = false;
   state.isInteractive = false;
   state.isHidden = true;
+
+  // Restore native OS cursor as soon as the pointer leaves the document.
+  stopLoop();
+  syncCursorRootAttributes();
+  applyVisualState();
 }
 
 /* =============================================================================
    12) VISIBILITY / LIFECYCLE EVENTS
 ============================================================================= */
 function handleVisibilityChange() {
-  state.isHidden = document.hidden;
   if (document.hidden) {
-    document.documentElement.dataset.cursorCustom = 'false';
-  } else if (state.enabled) {
-    document.documentElement.dataset.cursorCustom = 'true';
+    state.isHidden = true;
+    syncCursorRootAttributes();
+    stopLoop();
+    applyVisualState();
+    return;
+  }
+
+  const shouldRestoreCustomCursor = state.enabled && state.pointerActive;
+  state.isHidden = !shouldRestoreCustomCursor;
+  syncCursorRootAttributes();
+
+  if (shouldRestoreCustomCursor) {
     ensureCursorNode();
     startLoop();
+  } else {
+    stopLoop();
   }
+
   applyVisualState();
 }
 
@@ -391,35 +414,44 @@ function handleScroll() {
 }
 
 function handleWindowFocus() {
-  state.isHidden = false;
-  // Restore custom cursor state
-  if (state.enabled) {
-    document.documentElement.dataset.cursorCustom = 'true';
-  }
-  applyVisualState();
-  if (state.enabled) {
+  const shouldRestoreCustomCursor = state.enabled && state.pointerActive;
+  state.isHidden = !shouldRestoreCustomCursor;
+  syncCursorRootAttributes();
+
+  if (shouldRestoreCustomCursor) {
     ensureCursorNode();
     startLoop();
+  } else {
+    stopLoop();
   }
+
+  applyVisualState();
 }
 
 function handleWindowBlur() {
+  state.pointerActive = false;
+  state.isInteractive = false;
   state.isHidden = true;
-  // Restore native OS cursor — prevents cursor:none leaking to macOS
-  document.documentElement.dataset.cursorCustom = 'false';
+
+  // Restore native OS cursor — prevents cursor:none leaking to macOS.
+  stopLoop();
+  syncCursorRootAttributes();
   applyVisualState();
 }
 
 function handlePointerMediaChange(event) {
   state.enabled = event.matches && state.mode === CURSOR_MODE_CUSTOM;
 
-  if (!state.enabled) {
-    state.isHidden = true;
-    stopLoop();
-  } else {
-    state.isHidden = false;
+  const shouldActivateCustomCursor = state.enabled && state.pointerActive;
+
+  state.isHidden = !shouldActivateCustomCursor;
+  syncCursorRootAttributes();
+
+  if (shouldActivateCustomCursor) {
     ensureCursorNode();
     startLoop();
+  } else {
+    stopLoop();
   }
 
   syncCursorRootAttributes();
@@ -442,7 +474,7 @@ function bindEvents() {
   window.addEventListener('blur', handleWindowBlur, { passive: true });
 
   document.documentElement.addEventListener('mouseleave', handlePointerLeave, { passive: true });
-  document.documentElement.addEventListener('mouseenter', handleWindowFocus, { passive: true });
+  document.documentElement.addEventListener('mouseenter', handlePointerEnter, { passive: true });
 
   // When a text input is focused, restore native cursor so macOS does not
   // lose cursor state when the user switches to another application.
@@ -453,7 +485,7 @@ function bindEvents() {
       target instanceof HTMLTextAreaElement ||
       target instanceof HTMLSelectElement
     ) {
-      document.documentElement.dataset.cursorCustom = 'false';
+      syncCursorRootAttributes();
     }
   });
 
@@ -464,8 +496,14 @@ function bindEvents() {
       target instanceof HTMLTextAreaElement ||
       target instanceof HTMLSelectElement
     ) {
-      if (state.enabled && !state.isHidden) {
-        document.documentElement.dataset.cursorCustom = 'true';
+      const shouldRestoreCustomCursor = state.enabled && state.pointerActive && !state.isHidden;
+      syncCursorRootAttributes();
+
+      if (shouldRestoreCustomCursor) {
+        ensureCursorNode();
+        startLoop();
+      } else {
+        stopLoop();
       }
     }
   });
@@ -490,12 +528,16 @@ function setCursorState(nextState = {}) {
   syncCursorRootAttributes();
   writeStoredCursorState();
 
-  if (state.enabled) {
+  const shouldActivateCustomCursor = state.enabled && state.pointerActive;
+
+  if (shouldActivateCustomCursor) {
     ensureCursorNode();
     state.isHidden = false;
+    syncCursorRootAttributes();
     startLoop();
   } else {
     state.isHidden = true;
+    syncCursorRootAttributes();
     stopLoop();
   }
 
@@ -577,7 +619,11 @@ function initCursorPrimitive() {
   customCursor.style.willChange = 'left, top, transform, opacity';
 
   bindEvents();
-  startLoop();
+
+  // Custom cursor authority activates only after the pointer enters the website viewport.
+  state.isHidden = true;
+  syncCursorRootAttributes();
+  stopLoop();
   applyVisualState();
 
   if (!getRuntimeFlag(FLAG_READY)) {

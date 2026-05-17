@@ -15,14 +15,14 @@
   --stage-circle-wide:840px;
   --stage-circle-max-desktop:1200px;
   --home-stage-circle-motion:620ms;
-  --home-stage-circle-blur:var(--cc-home-circle-blur);
-  --home-stage-circle-halo-scale:var(--cc-home-circle-halo-scale);
-  --home-stage-circle-halo-opacity:var(--cc-home-circle-halo-opacity);
-  --home-stage-circle-start-scale:var(--cc-home-circle-start-scale);
-  --home-stage-circle-mid-scale:var(--cc-home-circle-mid-scale);
-  --home-stage-circle-breathe-duration:var(--cc-home-circle-breathe-duration);
-  --home-stage-halo-start-opacity:var(--cc-home-halo-start-opacity);
-  --home-stage-halo-breathe-duration:var(--cc-home-halo-breathe-duration);
+  --home-stage-circle-blur:var(--layout-home-circle-blur);
+  --home-stage-circle-halo-scale:var(--layout-home-circle-halo-scale);
+  --home-stage-circle-halo-opacity:var(--layout-home-circle-halo-opacity);
+  --home-stage-circle-start-scale:var(--layout-home-circle-start-scale);
+  --home-stage-circle-mid-scale:var(--layout-home-circle-mid-scale);
+  --home-stage-circle-breathe-duration:var(--layout-home-circle-breathe-duration);
+  --home-stage-halo-start-opacity:var(--layout-home-halo-start-opacity);
+  --home-stage-halo-breathe-duration:var(--layout-home-halo-breathe-duration);
 }
 
 /* =============================================================================
@@ -87,11 +87,11 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
     color-mix(in srgb, var(--color-primary1) 1.2%, transparent) 97%,
     transparent 100%
   );
-  filter:blur(var(--cc-stage-circle-blur));
-  -webkit-filter:blur(var(--cc-stage-circle-blur));
+  filter:blur(var(--home-stage-circle-blur));
+  -webkit-filter:blur(var(--home-stage-circle-blur));
   opacity:1;
   z-index:2;
-  animation:dial-breathe var(--cc-stage-circle-breathe-duration) var(--interaction-ease-standard) infinite;
+  animation:dial-breathe var(--home-stage-circle-breathe-duration) var(--interaction-ease-standard) infinite;
 }
 
 .home-breathing-circle::after{
@@ -100,26 +100,26 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-  width:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--cc-stage-circle-halo-scale));
-  height:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--cc-stage-circle-halo-scale));
+  width:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--home-stage-circle-halo-scale));
+  height:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--home-stage-circle-halo-scale));
   border-radius:var(--control-radius-pill);
   background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 12%, transparent), transparent 75%);
-  opacity:var(--cc-stage-circle-halo-opacity);
+  opacity:var(--home-stage-circle-halo-opacity);
   z-index:2;
-  animation:halo-breathe var(--cc-stage-halo-breathe-duration) var(--interaction-ease-standard) infinite;
+  animation:halo-breathe var(--home-stage-halo-breathe-duration) var(--interaction-ease-standard) infinite;
 }
 
 /* =============================================================================
    03) BREATHING CIRCLE KEYFRAMES
 ============================================================================= */
 @keyframes dial-breathe{
-  0%{transform:translate(-50%, -50%) scale(var(--cc-stage-circle-start-scale));}
-  35%{transform:translate(-50%, -50%) scale(var(--cc-stage-circle-mid-scale));}
-  100%{transform:translate(-50%, -50%) scale(var(--cc-stage-circle-start-scale));}
+  0%{transform:translate(-50%, -50%) scale(var(--home-stage-circle-start-scale));}
+  35%{transform:translate(-50%, -50%) scale(var(--home-stage-circle-mid-scale));}
+  100%{transform:translate(-50%, -50%) scale(var(--home-stage-circle-start-scale));}
 }
 
 @keyframes halo-breathe{
-  0%{opacity:var(--cc-stage-halo-start-opacity);}
+  0%{opacity:var(--home-stage-halo-start-opacity);}
   50%{opacity:1;}
-  100%{opacity:var(--cc-stage-halo-start-opacity);}
+  100%{opacity:var(--home-stage-halo-start-opacity);}
 }

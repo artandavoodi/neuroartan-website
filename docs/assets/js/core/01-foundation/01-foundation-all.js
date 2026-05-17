@@ -44,11 +44,10 @@ import './overlays.js';
    03) FOUNDATION CONFIG BOOTSTRAP
 ============================================================================= */
 /*
- * Foundation config bootstrap remains registered through the shared module
- * orchestrator. First-paint homepage state bootstraps must be loaded directly
- * in the document head before visual stylesheets.
+ * Foundation config bootstrap remains canonical for homepage release lifecycle,
+ * first-paint hydration, and visual unlock sequencing.
  */
-import './';
+import './home-first-paint-bootstrap.js';
 
 /* =============================================================================
    04) END OF FILE

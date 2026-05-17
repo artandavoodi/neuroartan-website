@@ -17,26 +17,26 @@
    ========================================================= */
 :root{
   --error404-page-background:var(--bg-color);
-  --error404-page-text:var(--cc-primary-color);
+  --error404-page-text:var(--text-primary-color);
   --error404-shell-max-width:760px;
   --error404-shell-padding-y:56px;
   --error404-shell-padding-x:40px;
   --error404-shell-radius:28px;
   --error404-shell-border:var(--control-border);
   --error404-shell-surface:var(--control-bg);
-  --error404-mark-color:color-mix(in srgb, var(--cc-primary-color) 60%, transparent);
-  --error404-eyebrow-color:color-mix(in srgb, var(--cc-primary-color) 50%, transparent);
-  --error404-body-color:color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
-  --error404-primary-text:var(--cc-primary-color);
+  --error404-mark-color:color-mix(in srgb, var(--text-primary-color) 60%, transparent);
+  --error404-eyebrow-color:color-mix(in srgb, var(--text-primary-color) 50%, transparent);
+  --error404-body-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --error404-primary-text:var(--text-primary-color);
   --error404-secondary-border:var(--control-border);
-  --error404-secondary-text:var(--cc-primary-color);
+  --error404-secondary-text:var(--text-primary-color);
   --error404-secondary-border-hover:var(--control-border-strong);
-  --error404-focus-outline:color-mix(in srgb, var(--cc-primary-color) 55%, transparent);
+  --error404-focus-outline:color-mix(in srgb, var(--text-primary-color) 55%, transparent);
   --error404-shader-overlay-top:color-mix(in srgb, var(--bg-color) 8%, transparent);
   --error404-shader-overlay-bottom:color-mix(in srgb, var(--bg-color) 16%, transparent);
   --error404-shader-canvas-opacity:0.96;
   --error404-shader-canvas-duration:720ms;
-  --error404-shader-veil-surface:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
+  --error404-shader-veil-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --error404-shader-veil-blur:18px;
   --error404-page-padding-y:48px;
   --error404-page-padding-x:24px;

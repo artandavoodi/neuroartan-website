@@ -46,7 +46,7 @@
 
 .main-nav a{
   text-decoration:none;
-  color:var(--cc-color);
+  color:var(--text-color);
   font-weight:500;
   transition:color var(--interaction-motion-medium) var(--interaction-ease-standard);
 }

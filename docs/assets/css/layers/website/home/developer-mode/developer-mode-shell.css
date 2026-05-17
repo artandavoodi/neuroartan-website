@@ -1,0 +1,119 @@
+/* =============================================================================
+   NEUROARTAN · HOME DEVELOPER MODE · SHELL
+   -----------------------------------------------------------------------------
+   Purpose: Owns the sovereign Developer Mode shell layout, viewport, and three
+   clean structural slots. Slot content and component styling are owned by their
+   future dedicated slot modules.
+============================================================================= */
+
+/* =============================================================================
+   00) FILE INDEX
+   -----------------------------------------------------------------------------
+   01) SHELL LAYOUT TOKENS
+   02) SHELL FRAME
+   03) TOPBAR SLOT
+   04) SOVEREIGN VIEWPORT AND WORKSPACE GRID
+   05) SOVEREIGN SLOT FRAME
+   06) RESPONSIVE SAFETY
+   07) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) SHELL LAYOUT TOKENS
+============================================================================= */
+:root{
+  --home-developer-mode-shell-padding-y:var(--spacing-lg);
+  --home-developer-mode-shell-padding-x:var(--spacing-lg);
+  --home-developer-mode-shell-viewport-height:calc(100vh - var(--home-dashboard-topbar-height, var(--control-height-xl)));
+  --home-developer-mode-shell-slot-gap:var(--spacing-lg);
+  --home-developer-mode-shell-left-slot-width:minmax(var(--spacing-none), var(--layout-home-platform-rail-width));
+  --home-developer-mode-shell-right-slot-width:minmax(var(--spacing-none), var(--layout-home-platform-subrail-width));
+  --home-developer-mode-shell-left-slot-border:var(--text-primary-color);
+  --home-developer-mode-shell-center-slot-border:var(--text-secondary-color);
+  --home-developer-mode-shell-right-slot-border:var(--border-color);
+}
+
+/* =============================================================================
+   02) SHELL FRAME
+============================================================================= */
+.home-developer-mode-shell{
+  display:flex;
+  flex-direction:column;
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:100vh;
+  max-height:100vh;
+  overflow:hidden;
+}
+
+/* =============================================================================
+   03) TOPBAR SLOT
+============================================================================= */
+.home-developer-mode-shell__topbar{
+  flex:0 0 auto;
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+/* =============================================================================
+   04) SOVEREIGN VIEWPORT AND WORKSPACE GRID
+============================================================================= */
+.home-developer-mode-shell__viewport{
+  display:flex;
+  flex:1 1 auto;
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  height:var(--home-developer-mode-shell-viewport-height);
+  padding:var(--home-developer-mode-shell-padding-y) var(--home-developer-mode-shell-padding-x);
+  overflow:hidden;
+}
+
+.home-developer-mode-shell__workspace{
+  display:grid;
+  grid-template-columns:var(--home-developer-mode-shell-left-slot-width) minmax(var(--spacing-none), 1fr) var(--home-developer-mode-shell-right-slot-width);
+  gap:var(--home-developer-mode-shell-slot-gap);
+  align-items:stretch;
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  height:var(--size-full);
+}
+
+/* =============================================================================
+   05) SOVEREIGN SLOT FRAME
+============================================================================= */
+.home-developer-mode-shell__slot{
+  display:flex;
+  flex-direction:column;
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  height:var(--size-full);
+  overflow:hidden;
+  box-sizing:border-box;
+}
+
+.home-developer-mode-shell__slot--left{
+  border:0;
+}
+
+.home-developer-mode-shell__slot--center{
+  border:0;
+}
+
+.home-developer-mode-shell__slot--right{
+  border:0;
+}
+
+/* =============================================================================
+   06) RESPONSIVE SAFETY
+============================================================================= */
+@media (max-width: 1200px){
+  .home-developer-mode-shell__workspace{
+    grid-template-columns:var(--home-developer-mode-shell-left-slot-width) minmax(var(--spacing-none), 1fr) var(--home-developer-mode-shell-right-slot-width);
+  }
+}
+
+/* =============================================================================
+   07) END OF FILE
+============================================================================= */

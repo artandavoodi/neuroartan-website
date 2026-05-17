@@ -450,13 +450,6 @@
         return;
       }
 
-      const backdrop = getBackdrop();
-      if (backdrop && event.target === backdrop) {
-        event.preventDefault();
-        closeDrawer('backdrop');
-        return;
-      }
-
       const closeControl = event.target instanceof Element
         ? event.target.closest('[data-account-drawer-close="true"]')
         : null;
@@ -680,11 +673,6 @@
 
     drawer.dataset.moduleId = MODULE_ID;
     drawer.dataset.modulePath = MODULE_PATH;
-
-    const backdrop = getBackdrop();
-    if (backdrop) {
-      backdrop.dataset.accountDrawerClose = 'true';
-    }
 
     const viewMount = getViewMount();
     if (viewMount) {

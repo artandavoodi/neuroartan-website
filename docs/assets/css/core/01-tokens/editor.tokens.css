@@ -27,9 +27,9 @@
 :root{
   /* Primary writing and composition surfaces. */
   --editor-surface-bg:var(--surface-primary, var(--bg-color));
-  --editor-surface-bg-muted:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
+  --editor-surface-bg-muted:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --editor-surface-bg-hover:var(--hover-bg-subtle);
-  --editor-surface-border:var(--cc-color);
+  --editor-surface-border:var(--border-color);
   --editor-surface-border-hover:var(--hover-border-subtle);
   --editor-surface-radius:var(--radius-lg);
   --editor-surface-shadow:var(--effect-shadow-none);
@@ -51,14 +51,14 @@
   --editor-content-weight:var(--body-1-weight);
   --editor-content-line-height:var(--line-height-body-relaxed);
   --editor-content-tracking:var(--body-1-tracking);
-  --editor-content-color:var(--cc-primary-color);
+  --editor-content-color:var(--text-primary-color);
 
   /* Supporting editor text. */
   --editor-supporting-size:var(--body-3-size);
   --editor-supporting-weight:var(--body-3-weight);
   --editor-supporting-line-height:var(--body-3-line-height);
   --editor-supporting-tracking:var(--body-3-tracking);
-  --editor-supporting-color:var(--cc-secondary-color);
+  --editor-supporting-color:var(--text-secondary-color);
 
   /* Editor measure and spacing. */
   --editor-content-max-width:46rem;
@@ -75,15 +75,15 @@
   --editor-toolbar-padding-y:0.42rem;
   --editor-toolbar-padding-x:0.52rem;
   --editor-toolbar-radius:var(--radius-md);
-  --editor-toolbar-bg:color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --editor-toolbar-border:var(--cc-color);
+  --editor-toolbar-bg:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --editor-toolbar-border:var(--border-color);
 
   /* Toolbar controls. */
   --editor-toolbar-control-size:var(--control-sm-size);
   --editor-toolbar-control-weight:var(--control-sm-weight);
   --editor-toolbar-control-line-height:var(--control-sm-line-height);
   --editor-toolbar-control-tracking:var(--control-sm-tracking);
-  --editor-toolbar-control-color:var(--cc-secondary-color);
+  --editor-toolbar-control-color:var(--text-secondary-color);
   --editor-toolbar-control-hover-color:var(--hover-text-color);
   --editor-toolbar-control-hover-bg:var(--control-hover-bg);
 }
@@ -93,8 +93,8 @@
 ============================================================================= */
 :root{
   /* Text selection and selected block states. */
-  --editor-selection-bg:color-mix(in srgb, var(--cc-primary-color) 18%, transparent);
-  --editor-selection-color:var(--cc-primary-color);
+  --editor-selection-bg:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --editor-selection-color:var(--text-primary-color);
   --editor-block-selected-bg:var(--selected-bg-subtle);
   --editor-block-selected-border:var(--selected-border-color);
 }
@@ -104,7 +104,7 @@
 ============================================================================= */
 :root{
   /* Editor cursor and caret control. */
-  --editor-caret-color:var(--cc-primary-color);
+  --editor-caret-color:var(--text-primary-color);
   --editor-caret-width:1px;
   --editor-caret-opacity:1;
   --editor-cursor-target-bg:var(--hover-bg-subtle);
@@ -120,7 +120,7 @@
   --editor-placeholder-weight:var(--body-2-weight);
   --editor-placeholder-line-height:var(--body-2-line-height);
   --editor-placeholder-tracking:var(--body-2-tracking);
-  --editor-placeholder-color:var(--cc-secondary-color);
+  --editor-placeholder-color:var(--text-secondary-color);
   --editor-placeholder-opacity:0.62;
 }
 
@@ -129,13 +129,13 @@
 ============================================================================= */
 :root{
   /* Markdown syntax and preview states. */
-  --editor-markdown-syntax-color:var(--cc-secondary-color);
+  --editor-markdown-syntax-color:var(--text-secondary-color);
   --editor-markdown-syntax-opacity:0.72;
-  --editor-markdown-heading-color:var(--cc-primary-color);
-  --editor-markdown-link-color:var(--cc-primary-color);
-  --editor-markdown-link-underline-color:var(--cc-color);
-  --editor-markdown-code-bg:color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --editor-markdown-code-border:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
+  --editor-markdown-heading-color:var(--text-primary-color);
+  --editor-markdown-link-color:var(--text-primary-color);
+  --editor-markdown-link-underline-color:var(--border-color);
+  --editor-markdown-code-bg:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --editor-markdown-code-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
 }
 
 /* =============================================================================
@@ -147,17 +147,17 @@
   --editor-block-padding-y:0.72rem;
   --editor-block-padding-x:0.84rem;
   --editor-block-radius:var(--radius-md);
-  --editor-block-border:var(--cc-color);
-  --editor-block-bg:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
+  --editor-block-border:var(--border-color);
+  --editor-block-bg:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
 
   --editor-quote-border-width:1px;
-  --editor-quote-border-color:color-mix(in srgb, var(--cc-primary-color) 18%, transparent);
+  --editor-quote-border-color:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
   --editor-quote-padding-x:0.92rem;
-  --editor-quote-color:var(--cc-secondary-color);
+  --editor-quote-color:var(--text-secondary-color);
 
   --editor-list-indent:1.2rem;
   --editor-list-gap:0.34rem;
-  --editor-divider-color:var(--cc-color);
+  --editor-divider-color:var(--border-color);
   --editor-divider-width:1px;
 }
 
@@ -176,13 +176,13 @@
   --editor-inline-code-padding-y:0.08rem;
   --editor-inline-code-padding-x:0.24rem;
 
-  --editor-link-color:var(--cc-primary-color);
+  --editor-link-color:var(--text-primary-color);
   --editor-link-hover-color:var(--hover-text-color);
-  --editor-link-underline-color:var(--cc-color);
+  --editor-link-underline-color:var(--border-color);
   --editor-link-underline-hover-color:var(--hover-border-medium);
 
-  --editor-highlight-bg:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
-  --editor-highlight-color:var(--cc-primary-color);
+  --editor-highlight-bg:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --editor-highlight-color:var(--text-primary-color);
 }
 
 /* =============================================================================

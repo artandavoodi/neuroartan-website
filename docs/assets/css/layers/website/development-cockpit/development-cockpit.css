@@ -49,16 +49,16 @@
    03) COCKPIT SHARED TOKENS
 ============================================================================= */
 .development-cockpit{
-  --cockpit-surface:var(--cc-surface-unified);
-  --cockpit-border:var(--cc-border-unified);
-  --cockpit-radius:var(--cc-radius-unified);
+  --cockpit-surface:var(--panel-surface-unified);
+  --cockpit-border:var(--panel-border-unified);
+  --cockpit-radius:var(--panel-radius-unified);
   --cockpit-card-radius:var(--shape-card-radius);
-  --cockpit-shadow:var(--cc-shadow-unified);
-  --cockpit-blur:var(--cc-blur-unified);
+  --cockpit-shadow:var(--panel-shadow-unified);
+  --cockpit-blur:var(--panel-blur-unified);
   --cockpit-gap:var(--spacing-lg);
   --cockpit-gap-large:var(--spacing-2xl);
-  --cockpit-text:var(--cc-primary-color);
-  --cockpit-muted:var(--cc-secondary-color);
+  --cockpit-text:var(--text-primary-color);
+  --cockpit-muted:var(--text-secondary-color);
   --cockpit-control-surface:var(--control-surface);
   --cockpit-control-hover:var(--control-surface-hover);
   --cockpit-control-active:var(--control-surface-active);
@@ -79,7 +79,7 @@
   display:grid;
   gap:var(--spacing-md);
   padding:var(--spacing-2xl);
-  border:var(--cc-width-hairline) solid var(--cockpit-border);
+  border:var(--border-width-hairline) solid var(--cockpit-border);
   border-radius:var(--cockpit-radius);
   background:var(--cockpit-surface);
   box-shadow:var(--cockpit-shadow);
@@ -128,7 +128,7 @@
 
 .development-cockpit__status{
   padding:var(--spacing-lg);
-  border:var(--cc-width-hairline) solid var(--cockpit-control-border);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
   border-radius:var(--cockpit-card-radius);
   background:var(--cockpit-control-surface);
 }
@@ -148,7 +148,7 @@
 .development-cockpit__module-nav button{
   min-height:var(--control-height-sm);
   padding:var(--spacing-none) var(--control-padding-x-md);
-  border:var(--cc-width-hairline) solid var(--cockpit-control-border);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
   border-radius:var(--control-radius-pill);
   background:var(--cockpit-control-surface);
   color:var(--cockpit-muted);
@@ -181,7 +181,7 @@
   gap:var(--spacing-lg);
   min-width:0;
   padding:var(--spacing-xl);
-  border:var(--cc-width-hairline) solid var(--cockpit-border);
+  border:var(--border-width-hairline) solid var(--cockpit-border);
   border-radius:var(--cockpit-card-radius);
   background:var(--cockpit-surface);
   box-shadow:var(--cockpit-shadow);
@@ -222,10 +222,10 @@
   width:var(--size-full);
   min-height:var(--input-height-md);
   padding:var(--spacing-sm) var(--input-padding-x-md);
-  border:var(--cc-width-hairline) solid var(--field-border);
+  border:var(--border-width-hairline) solid var(--field-border);
   border-radius:var(--input-radius-md);
   background:var(--field-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
   font-size:var(--font-size-field-input);
   line-height:var(--line-height-body-tight);
@@ -250,10 +250,10 @@
   justify-content:center;
   min-height:var(--button-height-md);
   padding:var(--spacing-none) var(--button-padding-x-lg);
-  border:var(--cc-width-hairline) solid var(--control-border-unified);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
   border-radius:var(--button-radius-md);
   background:var(--control-surface);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
   font-size:var(--font-size-button-md);
   font-weight:var(--button-font-weight);
@@ -272,7 +272,7 @@
   display:block;
   min-height:var(--control-height-lg);
   padding:var(--spacing-md);
-  border:var(--cc-width-hairline) solid var(--cockpit-control-border);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
   border-radius:var(--cockpit-card-radius);
   background:var(--cockpit-control-surface);
   color:var(--cockpit-text);

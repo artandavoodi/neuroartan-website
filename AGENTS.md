@@ -3,48 +3,9 @@
 ## Purpose
 This repository is the sovereign public website layer of Neuroartan.
 
-Codex must preserve modular architecture, institutional discipline, and section ownership at all times.
+All agents must preserve modular architecture, institutional discipline, and section ownership at all times.
 
-This file governs how Codex should read, audit, modify, and extend the website.
-
----
-
-## Local Agent Integration (Continue.dev + LM Studio)
-
-This repository is now actively operated through a local-first AI execution layer.
-
-### Runtime Binding
-- Interface: Continue.dev (VS Code)
-- Runtime: LM Studio (local)
-- Endpoint: http://localhost:1234/v1
-- Model: Qwen Coder (GGUF)
-
-### Agent Identity
-- Name: Neuroartan Local Development Agent (NLDA)
-- Role: Local execution agent for file-level coding, auditing, and system edits
-- Authority: Bound to External Agent Systems doctrine and all Neuroartan governance layers
-
-### Behavioral Requirements
-- Must follow External Agent Execution Protocol at all times
-- Must follow Prompt Packet Standard for structured reasoning
-- Must respect Authority & Permission Matrix (default Level 2)
-- Must validate using Validation & Verification Standard
-
-### Critical Rules
-- Local runtime does NOT replace doctrine
-- Continue.dev settings do NOT override AGENTS.md
-- LM Studio model limitations must be acknowledged
-- Complex reasoning must be decomposed into smaller steps
-
-### Execution Loop
-SCAN → ANALYZE → TARGET → EDIT → VERIFY
-
-### Escalation
-If task exceeds local model capability:
-- Stop execution
-- Mark: "REQUIRES HIGHER-LEVEL REASONING"
-
-This ensures alignment between the local coding agent and the Neuroartan institutional system.
+This file governs how all agents should read, audit, modify, and extend the website.
 
 ---
 
@@ -58,14 +19,14 @@ This ensures alignment between the local coding agent and the Neuroartan institu
 - Vault remains the private source-of-truth infrastructure.
 - Public website work must never be confused with Vault governance work.
 
-## Codex Execution Boundary
+## Agent Execution Boundary
 
-Codex must treat this repository as a bounded operating environment.
+All agents must treat this repository as a bounded operating environment.
 
 ### Environment
 - Primary execution target: local repository at `/Users/artan/Documents/Neuroartan/website`
 - Active runtime surface: `/Users/artan/Documents/Neuroartan/website/docs`
-- Preferred Codex execution modes: Local or Worktree
+- Preferred agent execution modes: Local or Worktree
 - Do not edit outside this repository unless explicitly instructed
 - Do not assume neighboring repositories share ownership of website files
 
@@ -88,7 +49,20 @@ Codex must treat this repository as a bounded operating environment.
 
 ## Core Architectural Law
 
-Codex must preserve and strengthen modularity.
+All agents must preserve and strengthen modularity.
+
+### Core Execution Rules
+- No hardcoding
+- No workarounds
+- No hacks
+- Only clean, production-safe, future-proof solutions
+- No temporary workarounds
+
+### Structure and Ownership Requirements
+- All agents must analyze and understand the full structure before acting
+- Audit first, then act
+- Understand ownership boundaries
+- No duplication, conflicting, or overriding allowed
 
 ### Non-negotiable rules
 
@@ -171,7 +145,7 @@ Preferred direction:
 - global consistency across pages
 
 Homepage is the canonical baseline for global systems.
-Once a behavior is correctly established on the homepage baseline, Codex must preserve it and remove conflicting local overrides elsewhere instead of layering additional fixes.
+Once a behavior is correctly established on the homepage baseline, all agents must preserve it and remove conflicting local overrides elsewhere instead of layering additional fixes.
 
 ---
 
@@ -216,9 +190,9 @@ Do not hardcode values already defined in collections or structured data.
 
 ---
 
-## Modularity Rules for Codex
+## Modularity Rules for All Agents
 
-Codex must preserve all of the following:
+All agents must preserve all of the following:
 
 - fragment-based mounting
 - section-level modularity
@@ -229,7 +203,7 @@ Codex must preserve all of the following:
 - clean import structure
 - clear ownership boundaries
 
-When a new feature is needed, Codex must ask internally:
+When a new feature is needed, all agents must ask internally:
 
 1. Which existing layer owns this concern?
 2. Is there already a shared file for this?
@@ -245,7 +219,7 @@ If the answer suggests duplicate ownership or a page-level override, do not do i
 
 Neuroartan website work follows a strict anti-overlay doctrine.
 
-Codex must not:
+All agents must not:
 
 - stack workaround upon workaround
 - add CSS masks to hide broken structure when structure itself is wrong
@@ -275,7 +249,7 @@ Never say something is fixed based on assumption alone.
 
 ## Product and Company Awareness
 
-Codex must remain aware that this website is being built for Neuroartan as a public institutional layer.
+All agents must remain aware that this website is being built for Neuroartan as a public institutional layer.
 
 ### Company mission posture
 Neuroartan is being built as a serious cognitive institution and software company.
@@ -301,7 +275,7 @@ Public-facing descriptions should remain simple, precise, and category-defining.
 ICOS should be communicated as a distinct invention/category rather than a generic AI assistant.
 
 ### Product communication constraints
-Codex must preserve language that is:
+All agents must preserve language that is:
 
 - clear
 - category-defining
@@ -347,7 +321,7 @@ Avoid:
 
 ## Privacy, Legal, and Sensitivity Awareness
 
-Codex must assume that parts of the public website may intersect with legal-sensitive, privacy-sensitive, identity-sensitive, and trust-sensitive material.
+All agents must assume that parts of the public website may intersect with legal-sensitive, privacy-sensitive, identity-sensitive, and trust-sensitive material.
 
 ### Required posture
 - Treat privacy policy, terms, cookie policy, account flows, profile flows, auth surfaces, form handling, and public claims as sensitive surfaces
@@ -376,7 +350,7 @@ If a label, icon, or title comes from JSON, it must remain there.
 
 ## CSS Rules
 
-Codex must respect the following CSS rules:
+All agents must respect the following CSS rules:
 
 - do not use CSS `clamp()` unless the repository already uses it in that context or the user explicitly accepts it
 - do not create fake sameness; same means same source logic
@@ -391,7 +365,7 @@ If the user asks for exact matching, match exact values and source logic, not ap
 
 ## Visual System Discipline
 
-Codex must preserve the visual doctrine of the website.
+All agents must preserve the visual doctrine of the website.
 
 ### Required characteristics
 - premium restraint
@@ -410,13 +384,13 @@ Codex must preserve the visual doctrine of the website.
 - page-specific hacks that fight the homepage baseline
 
 ### Exactness rule
-When the user says `same`, `exact`, or equivalent, Codex must treat that as literal source-level sameness, not approximation.
+When the user asks for exact matching, all agents must treat that as literal source-level sameness, not approximation.
 
 ---
 
 ## JS Rules
 
-Codex must respect the following JS rules:
+All agents must respect the following JS rules:
 
 - preserve modular imports
 - preserve section authority files
@@ -459,7 +433,7 @@ Codex must respect the following HTML rules:
 
 ## File Creation Rules
 
-Before creating any new file or folder, Codex must:
+Before creating any new file or folder, all agents must:
 
 - inspect the existing structure first
 - preserve canonical hierarchy
@@ -471,9 +445,9 @@ If an existing file can own the feature cleanly, do not create a new file.
 
 ---
 
-## Review Standard for Codex Changes
+## Review Standard for Agent Changes
 
-Every Codex change should be able to answer:
+Every agent change should be able to answer:
 
 - Why is this the owner file?
 - What conflicting layer was avoided?
@@ -483,6 +457,15 @@ Every Codex change should be able to answer:
 - Is the behavior verified or only inferred?
 
 If the answer is weak, the change is not good enough.
+
+---
+
+## Communication Discipline
+
+All agents must:
+- Respond in max 5 sentences unless explicitly asked for a full report
+- Keep responses concise and direct
+- No long conversations unless requested by the user
 
 ---
 
@@ -516,7 +499,7 @@ When rules conflict, use this order:
 
 ## Verification Standard
 
-Before considering a task complete, Codex should internally verify:
+Before considering a task complete, all agents should internally verify:
 
 - the owner file was correctly identified
 - no duplicate ownership was introduced
@@ -525,14 +508,14 @@ Before considering a task complete, Codex should internally verify:
 - the change matches the established homepage/global baseline where applicable
 - unresolved behavior is not described as fixed
 
-If verification is not possible, Codex should state that the change is unverified rather than claim success.
+If verification is not possible, all agents should state that the change is unverified rather than claim success.
 
 ---
 
-## Final Instruction to Codex
+## Final Instruction to All Agents
 
-Do not behave like a generic code generator.
-Behave like a disciplined systems editor operating inside a governed institutional website.
+Do not behave like generic code generators.
+Behave like disciplined systems editors operating inside a governed institutional website.
 
 Preserve structure.
 Preserve modularity.

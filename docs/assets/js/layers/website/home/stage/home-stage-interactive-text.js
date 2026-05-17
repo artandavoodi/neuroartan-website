@@ -23,7 +23,7 @@ const HOME_STAGE_INTERACTIVE_TEXT_STATE = {
 };
 
 const HOME_STAGE_INTERACTIVE_TEXT_IDLE_LABELS = Object.freeze([
-  'What is in my mind?',
+  'What is in your mind?',
   'Ready when you are',
   'I am here',
   'Continue when ready',

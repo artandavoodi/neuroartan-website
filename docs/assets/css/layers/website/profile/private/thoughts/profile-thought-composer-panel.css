@@ -23,7 +23,7 @@
 .profile-thought-composer__title{
   font-size:var(--headline-5-size);
   line-height:var(--headline-5-line-height);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-thought-composer__intro,
@@ -32,7 +32,7 @@
 .profile-thought-composer__label{
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-thought-composer__form,
@@ -51,13 +51,13 @@
 }
 
 .profile-thought-composer__audience{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-thought-composer__audience:hover,
 .profile-thought-composer__audience:focus-visible,
 .profile-thought-composer__audience[data-profile-thought-audience-active="true"]{
-  color:var(--cc-color);
+  color:var(--text-color);
   border-color:var(--selected-border-color);
   outline:none;
 }

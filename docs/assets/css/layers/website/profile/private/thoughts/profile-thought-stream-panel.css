@@ -30,7 +30,7 @@
 .profile-thought-stream__lane-title{
   font-size:var(--body-1-size);
   line-height:var(--body-1-line-height);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-thought-stream__lane-copy,
@@ -38,7 +38,7 @@
 .profile-thought-stream__entry-header time{
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-thought-stream__list{
@@ -50,12 +50,12 @@
   display:grid;
   gap:var(--spacing-sm);
   padding-top:var(--spacing-md);
-  border-top:var(--cc-width-hairline) solid var(--data-surface-border);
+  border-top:var(--border-width-hairline) solid var(--data-surface-border);
 }
 
 .profile-thought-stream__entry-text{
   white-space:pre-wrap;
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
 }

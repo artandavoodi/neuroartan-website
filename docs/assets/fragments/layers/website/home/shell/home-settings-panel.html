@@ -3,8 +3,10 @@
      01) HOME SETTINGS PANEL ROOT
      02) PANEL HEADER
      03) APPEARANCE SECTION
-     04) LANGUAGE / REGION / PRIVACY SECTION
-     05) IDENTITY / ROUTE SECTION
+     04) GENERAL SECTION
+     05) VOICE SECTION
+     06) PRIVACY SECTION
+     07) PERSONALIZATION / SECURITY SECTION
 ============================================================================= -->
 
 <!-- =============================================================================
@@ -18,7 +20,7 @@
     <div class="home-settings-panel__header">
       <div class="home-settings-panel__heading-group">
         <p class="home-settings-panel__eyebrow">Settings</p>
-        <h2 class="home-settings-panel__title">Appearance, language, privacy, and identity settings</h2>
+        <h2 class="home-settings-panel__title">General, appearance, voice, privacy, and runtime settings</h2>
       </div>
 
       <button
@@ -46,10 +48,23 @@
     </section>
 
     <!-- =============================================================================
-         04) LANGUAGE / REGION / PRIVACY SECTION
+         04) GENERAL SECTION
     ============================================================================= -->
-    <section class="home-settings-panel__section" data-home-settings-section="language-privacy" aria-label="Language and privacy settings">
-      <p class="home-settings-panel__section-title">Language, region, and privacy</p>
+    <section class="home-settings-panel__section" data-home-settings-section="general" aria-label="General settings">
+      <p class="home-settings-panel__section-title">General</p>
+      <div class="home-settings-panel__stack">
+        <button class="home-settings-panel__item" data-home-settings-action="settings" type="button">
+          <span>Open full settings</span>
+          <span class="home-settings-panel__item-value">General, Appearance, Voice, Permissions, Privacy, and Runtime</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =============================================================================
+         05) VOICE SECTION
+    ============================================================================= -->
+    <section class="home-settings-panel__section" data-home-settings-section="voice" aria-label="Voice settings">
+      <p class="home-settings-panel__section-title">Voice</p>
       <div class="home-settings-panel__stack">
         <button class="home-settings-panel__item" data-home-settings-action="language" type="button">
           <span>Language</span>
@@ -59,6 +74,15 @@
           <span>Country</span>
           <span class="home-settings-panel__item-value" data-home-settings-country-value>United States</span>
         </button>
+      </div>
+    </section>
+
+    <!-- =============================================================================
+         06) PRIVACY SECTION
+    ============================================================================= -->
+    <section class="home-settings-panel__section" data-home-settings-section="privacy" aria-label="Privacy settings">
+      <p class="home-settings-panel__section-title">Privacy</p>
+      <div class="home-settings-panel__stack">
         <button class="home-settings-panel__item" data-home-settings-action="privacy" type="button">
           <span>Privacy</span>
           <span class="home-settings-panel__item-value">Cookie settings and privacy controls</span>
@@ -67,10 +91,10 @@
     </section>
 
     <!-- =============================================================================
-         05) IDENTITY / ROUTE SECTION
+         07) PERSONALIZATION / SECURITY SECTION
     ============================================================================= -->
-    <section class="home-settings-panel__section" data-home-settings-section="identity-route" aria-label="Profile and route settings">
-      <p class="home-settings-panel__section-title">Identity and route</p>
+    <section class="home-settings-panel__section" data-home-settings-section="personalization-security" aria-label="Personalization and security settings">
+      <p class="home-settings-panel__section-title">Personalization &amp; Security</p>
       <div class="home-settings-panel__stack">
         <button class="home-settings-panel__item" data-home-settings-action="profile" type="button">
           <span>Private profile</span>

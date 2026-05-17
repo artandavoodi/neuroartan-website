@@ -121,6 +121,20 @@ const repositoryIntelligenceConfiguration = Object.freeze({
 export const developerModeConfig = Object.freeze({
   repositoryRoot: REPOSITORY_ROOT,
   docsRoot: path.join(REPOSITORY_ROOT, 'docs'),
+  staticRoots: Object.freeze([
+    Object.freeze({
+      routePrefix: '/',
+      root: path.join(REPOSITORY_ROOT, 'docs')
+    }),
+    Object.freeze({
+      routePrefix: '/control-center',
+      root: path.resolve(REPOSITORY_ROOT, '../control-center')
+    }),
+    Object.freeze({
+      routePrefix: '/design-system-core',
+      root: path.join(REPOSITORY_ROOT, 'design-system-core')
+    })
+  ]),
   host: process.env.DEVELOPER_MODE_HOST || '127.0.0.1',
   port: Number(process.env.DEVELOPER_MODE_PORT || 8891),
   publicOrigin: process.env.DEVELOPER_MODE_PUBLIC_ORIGIN || 'http://127.0.0.1:8891',

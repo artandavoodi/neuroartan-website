@@ -906,18 +906,18 @@
   --text-transform-none:none;
   --text-transform-uppercase:uppercase;
 
-  --eyebrow-transform:var(--cc-transform-uppercase);
-  --overline-transform:var(--cc-transform-uppercase);
-  --label-1-transform:var(--cc-transform-none);
-  --label-2-transform:var(--cc-transform-none);
-  --section-title-transform:var(--cc-transform-none);
-  --nav-primary-transform:var(--cc-transform-none);
-  --nav-secondary-transform:var(--cc-transform-none);
-  --nav-local-label-transform:var(--cc-transform-none);
-  --nav-local-link-transform:var(--cc-transform-none);
-  --button-transform:var(--cc-transform-none);
-  --control-transform:var(--cc-transform-none);
-  --product-kicker-transform:var(--cc-transform-uppercase);
+  --eyebrow-transform:var(--text-transform-uppercase);
+  --overline-transform:var(--text-transform-uppercase);
+  --label-1-transform:var(--text-transform-none);
+  --label-2-transform:var(--text-transform-none);
+  --section-title-transform:var(--text-transform-none);
+  --nav-primary-transform:var(--text-transform-none);
+  --nav-secondary-transform:var(--text-transform-none);
+  --nav-local-label-transform:var(--text-transform-none);
+  --nav-local-link-transform:var(--text-transform-none);
+  --button-transform:var(--text-transform-none);
+  --control-transform:var(--text-transform-none);
+  --product-kicker-transform:var(--text-transform-uppercase);
 }
 
 /* =============================================================================

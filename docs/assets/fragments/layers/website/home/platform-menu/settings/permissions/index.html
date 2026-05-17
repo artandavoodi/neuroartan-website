@@ -1,0 +1,56 @@
+<section class="home-platform-destination home-platform-destination--settings-permissions" data-home-platform-destination-root aria-label="Permissions settings destination">
+  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="permissions">
+    <header class="home-platform-settings-category__header">
+      <p class="home-platform-settings-category__eyebrow">Settings</p>
+      <h1 class="home-platform-settings-category__title">Permissions</h1>
+      <p class="home-platform-settings-category__summary">Files, microphone, camera, notifications, browser, contacts, and accessibility access.</p>
+    </header>
+
+    <section class="home-platform-settings-category__section" aria-labelledby="settings-permissions-browser">
+      <div class="home-platform-settings-category__section-header">
+        <p class="home-platform-settings-category__section-eyebrow">Browser permissions</p>
+        <h2 class="home-platform-settings-category__section-title" id="settings-permissions-browser">Request access</h2>
+      </div>
+      <div class="home-platform-settings-category__grid">
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="permission-files">
+          <span class="home-platform-settings-category__label">Files</span>
+          <span class="home-platform-settings-category__caption">Choose a browser filesystem scope if supported.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="permission-microphone">
+          <span class="home-platform-settings-category__label">Microphone</span>
+          <span class="home-platform-settings-category__caption">Request audio input access.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="permission-camera">
+          <span class="home-platform-settings-category__label">Camera</span>
+          <span class="home-platform-settings-category__caption">Request camera access.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="permission-notifications">
+          <span class="home-platform-settings-category__label">Notifications</span>
+          <span class="home-platform-settings-category__caption">Request notification permission.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-settings-category__section" aria-labelledby="settings-permissions-system">
+      <div class="home-platform-settings-category__section-header">
+        <p class="home-platform-settings-category__section-eyebrow">System permissions</p>
+        <h2 class="home-platform-settings-category__section-title" id="settings-permissions-system">Runtime boundaries</h2>
+      </div>
+      <div class="home-platform-settings-category__grid">
+        <div class="home-platform-settings-category__field">
+          <span class="home-platform-settings-category__label">Browser</span>
+          <span class="home-platform-settings-category__caption">Browser runtime access is mediated by the user agent and account session.</span>
+        </div>
+        <div class="home-platform-settings-category__field">
+          <span class="home-platform-settings-category__label">Contacts</span>
+          <span class="home-platform-settings-category__caption">Contacts require an account connector before browser runtime access.</span>
+        </div>
+        <div class="home-platform-settings-category__field">
+          <span class="home-platform-settings-category__label">Accessibility</span>
+          <span class="home-platform-settings-category__caption">OS accessibility access belongs to the native ICOS app permission layer.</span>
+        </div>
+      </div>
+      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Permission state is browser-bound.</p>
+    </section>
+  </div>
+</section>

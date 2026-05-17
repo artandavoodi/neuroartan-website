@@ -30,6 +30,16 @@
   --color-primary8:#66ff00;
   --color-primary9:#00ffff;
   --color-primary10:#ffcc00;
+
+  --color-secondary1:#73655a;
+  --color-secondary2:#7d766f;
+  --color-secondary3:#96786b;
+  --color-secondary4:#855b4a;
+  --color-secondary5:#5c463e;
+  --color-secondary6:#aa8d83;
+  --color-secondary7:#76655b;
+  --color-secondary8:#755e00;
+  --color-secondary9:#7d5e4f;
 }
 
 /* =============================================================================
@@ -38,7 +48,7 @@
 :root{
   --bg-color:var(--color-black);
   --text-color:var(--color-white);
-  --text-primary-color:var(--cc-color);
+  --text-primary-color:var(--text-color);
   --text-secondary-color:var(--color-primary3);
   --link-color:var(--color-primary5);
   --link-hover-color:var(--color-primary6);

@@ -39,7 +39,7 @@
   --account-profile-setup-date-grid-gap: var(--account-profile-setup-content-gap-sm);
   --account-profile-setup-password-meter-gap: calc(var(--account-profile-setup-content-gap-xs) * 0.75);
   --account-profile-setup-password-meter-segment-radius:var(--shape-control-radius);
-  --account-profile-setup-password-meter-track: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  --account-profile-setup-password-meter-track: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --account-profile-setup-password-meter-fill-weak:var(--status-danger-color, var(--color-primary7));
   --account-profile-setup-password-meter-fill-medium:var(--status-warning-color, var(--color-primary1));
   --account-profile-setup-password-meter-fill-strong:var(--status-success-color, var(--color-primary1));
@@ -52,20 +52,20 @@
   --account-profile-setup-field-letter-spacing: var(--account-field-letter-spacing);
   --account-profile-setup-field-border:var(--control-border-unified);
   --account-profile-setup-field-background:var(--control-surface);
-  --account-profile-setup-field-foreground: var(--cc-color);
-  --account-profile-setup-field-placeholder: var(--cc-secondary-color);
+  --account-profile-setup-field-foreground: var(--text-color);
+  --account-profile-setup-field-placeholder: var(--text-secondary-color);
   --account-profile-setup-field-focus-border:var(--control-border-hover-unified);
   --account-profile-setup-field-focus-ring:var(--focus-ring-shadow);
 
   --account-profile-setup-note-font-size: var(--body-2-size);
   --account-profile-setup-note-line-height: var(--body-2-line-height);
   --account-profile-setup-note-letter-spacing: var(--body-2-tracking);
-  --account-profile-setup-note-color: var(--cc-secondary-color);
+  --account-profile-setup-note-color: var(--text-secondary-color);
 
   --account-profile-setup-status-font-size: var(--body-2-size);
   --account-profile-setup-status-line-height: var(--body-2-line-height);
   --account-profile-setup-status-letter-spacing: var(--body-2-tracking);
-  --account-profile-setup-status-color: var(--cc-color);
+  --account-profile-setup-status-color: var(--text-color);
 
   --account-profile-setup-action-height: var(--account-button-height);
   --account-profile-setup-action-radius:var(--shape-control-radius);
@@ -80,8 +80,8 @@
   --account-profile-setup-action-border-hover:var(--control-border-hover-unified);
   --account-profile-setup-action-background:var(--control-surface);
   --account-profile-setup-action-background-hover:var(--control-surface-hover);
-  --account-profile-setup-action-foreground: var(--cc-color);
-  --account-profile-setup-submit-status-color: var(--cc-secondary-color);
+  --account-profile-setup-action-foreground: var(--text-color);
+  --account-profile-setup-submit-status-color: var(--text-secondary-color);
   --account-profile-setup-suggestion-gap: var(--account-profile-setup-content-gap-xs);
   --account-profile-setup-suggestion-height: var(--control-height-sm, var(--account-button-height));
   --account-profile-setup-suggestion-radius: var(--shape-control-radius);
@@ -89,7 +89,7 @@
   --account-profile-setup-suggestion-border-hover: var(--control-border-hover-unified);
   --account-profile-setup-suggestion-background: var(--control-surface);
   --account-profile-setup-suggestion-background-hover: var(--control-surface-hover);
-  --account-profile-setup-suggestion-foreground: var(--cc-color);
+  --account-profile-setup-suggestion-foreground: var(--text-color);
 
   --account-profile-setup-back-control-size: var(--account-back-control-size);
   --account-profile-setup-back-icon-size: var(--account-back-icon-size);
@@ -169,7 +169,7 @@
   height: var(--account-profile-setup-field-height);
   padding-inline: var(--account-profile-setup-field-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--account-profile-setup-field-border);
+  border: var(--border-width-hairline) solid var(--account-profile-setup-field-border);
   border-radius: var(--account-profile-setup-field-radius);
   background: var(--account-profile-setup-field-background);
   color: var(--account-profile-setup-field-foreground);
@@ -266,7 +266,7 @@
   appearance: none;
   min-height: var(--account-profile-setup-suggestion-height);
   padding-inline: var(--account-profile-setup-field-padding-x);
-  border: var(--cc-width-hairline) solid var(--account-profile-setup-suggestion-border);
+  border: var(--border-width-hairline) solid var(--account-profile-setup-suggestion-border);
   border-radius: var(--account-profile-setup-suggestion-radius);
   background: var(--account-profile-setup-suggestion-background);
   color: var(--account-profile-setup-suggestion-foreground);
@@ -366,7 +366,7 @@
   height: var(--account-profile-setup-action-height);
   padding-inline: var(--account-profile-setup-action-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--account-profile-setup-action-border);
+  border: var(--border-width-hairline) solid var(--account-profile-setup-action-border);
   border-radius: var(--account-profile-setup-action-radius);
   background: var(--account-profile-setup-action-background);
   color: var(--account-profile-setup-action-foreground);

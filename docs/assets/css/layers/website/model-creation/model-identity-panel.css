@@ -2,5 +2,5 @@
    00) MODEL IDENTITY PANEL OWNER
 ============================================================================= */
 .model-creation-panel--identity{
-  border-color:var(--cc-panel-card-border);
+  border-color:var(--home-panel-card-border);
 }

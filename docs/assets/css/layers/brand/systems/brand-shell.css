@@ -29,7 +29,7 @@
   --brand-shell-section-gap: 2.4rem;
   --brand-shell-block-gap: 1.4rem;
   --brand-shell-card-radius: var(--control-radius);
-  --brand-shell-card-border: var(--cc-color);
+  --brand-shell-card-border: var(--border-color);
   --brand-shell-card-bg: transparent;
 }
 
@@ -98,7 +98,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--cc-secondary-color);
+  color: var(--text-secondary-color);
 }
 
 .brand-page-title{
@@ -151,7 +151,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--cc-secondary-color);
+  color: var(--text-secondary-color);
 }
 
 .brand-resource-card__title{
@@ -191,7 +191,7 @@
   width: 100%;
   height: 1px;
   border: 0;
-  background-color: var(--cc-color);
+  background-color: var(--border-color);
 }
 
 /* =============================================================================
@@ -212,7 +212,7 @@
 
 .brand-note-block{
   padding: 1.2rem 1.25rem;
-  border: 1px solid var(--cc-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--brand-shell-card-radius);
 }
 

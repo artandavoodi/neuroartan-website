@@ -72,7 +72,7 @@ section p{
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
   margin-bottom:var(--spacing-md);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 html[data-theme-effective="light"] div[style*='flex-direction:column'] p{

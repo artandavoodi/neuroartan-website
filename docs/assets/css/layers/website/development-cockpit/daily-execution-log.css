@@ -21,12 +21,12 @@
   display:grid;
   gap:var(--spacing-xs);
   padding:var(--spacing-md);
-  border:var(--cc-width-hairline) solid var(--control-border-unified);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
   border-radius:var(--shape-card-radius);
   background:var(--control-surface);
 }
 
 .daily-execution-log__entry time{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--font-size-meta-2);
 }

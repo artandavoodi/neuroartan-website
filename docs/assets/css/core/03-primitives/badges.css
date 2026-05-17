@@ -28,7 +28,7 @@
   min-width:var(--spacing-none);
   padding:var(--spacing-2xs) var(--control-padding-x-sm);
   border-radius:var(--shape-control-radius);
-  border:var(--cc-width-hairline) solid transparent;
+  border:var(--border-width-hairline) solid transparent;
   background:var(--control-surface);
   color:var(--control-text-unified);
   font-family:var(--font-family);

@@ -23,7 +23,7 @@
   gap:var(--spacing-xs);
   width:var(--size-full);
   padding:var(--spacing-md);
-  border:var(--cc-width-hairline) solid var(--cockpit-control-border);
+  border:var(--border-width-hairline) solid var(--cockpit-control-border);
   border-radius:var(--cockpit-card-radius);
   background:var(--cockpit-control-surface);
   color:var(--cockpit-text);

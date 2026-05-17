@@ -28,12 +28,12 @@
   --ui-radio-list-item-bg:transparent;
   --ui-radio-list-item-bg-hover:transparent;
   --ui-radio-list-item-bg-active:transparent;
-  --ui-radio-list-item-color:var(--cc-secondary-color);
-  --ui-radio-list-item-color-hover:var(--cc-primary-color);
-  --ui-radio-list-item-color-active:var(--cc-primary-color);
+  --ui-radio-list-item-color:var(--text-secondary-color);
+  --ui-radio-list-item-color-hover:var(--text-primary-color);
+  --ui-radio-list-item-color-active:var(--text-primary-color);
   --ui-radio-list-indicator-size:var(--icon-size-sm);
   --ui-radio-list-indicator-dot-size:calc(var(--ui-radio-list-indicator-size) * 0.44);
-  --ui-radio-list-indicator-border:var(--cc-border-unified);
+  --ui-radio-list-indicator-border:var(--panel-border-unified);
   --ui-radio-list-indicator-border-active:var(--color-primary1);
   --ui-radio-list-indicator-bg:transparent;
   --ui-radio-list-indicator-bg-active:var(--color-primary1);
@@ -64,7 +64,7 @@
   width:var(--size-full);
   margin:var(--spacing-none);
   padding:var(--ui-radio-list-item-padding-y) var(--ui-radio-list-item-padding-x);
-  border:var(--cc-width-hairline) solid var(--ui-radio-list-item-border);
+  border:var(--border-width-hairline) solid var(--ui-radio-list-item-border);
   border-radius:var(--ui-radio-list-item-radius);
   background:var(--ui-radio-list-item-bg);
   color:var(--ui-radio-list-item-color);
@@ -89,7 +89,7 @@
   justify-content:center;
   width:var(--ui-radio-list-indicator-size);
   height:var(--ui-radio-list-indicator-size);
-  border:var(--cc-width-hairline) solid var(--ui-radio-list-indicator-border);
+  border:var(--border-width-hairline) solid var(--ui-radio-list-indicator-border);
   border-radius:var(--control-radius-pill);
   background:var(--ui-radio-list-indicator-bg);
   transition:var(--ui-radio-list-transition);

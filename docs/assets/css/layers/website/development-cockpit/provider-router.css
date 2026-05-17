@@ -21,10 +21,10 @@
   display:grid;
   gap:var(--spacing-xs);
   padding:var(--spacing-md);
-  border:var(--cc-width-hairline) solid var(--control-border-unified);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
   border-radius:var(--shape-card-radius);
   background:var(--control-surface);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   cursor:pointer;
   text-align:left;
   transition:var(--interaction-transition-control);
@@ -39,7 +39,7 @@
 }
 
 .provider-router__option span{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--font-size-body-4);
   line-height:var(--line-height-body);
 }

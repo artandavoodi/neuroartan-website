@@ -1,0 +1,52 @@
+<section class="home-platform-destination home-platform-destination--settings-voice" data-home-platform-destination-root aria-label="Voice settings destination">
+  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="voice">
+    <header class="home-platform-settings-category__header">
+      <p class="home-platform-settings-category__eyebrow">Settings</p>
+      <h1 class="home-platform-settings-category__title">Voice</h1>
+      <p class="home-platform-settings-category__summary">Input, output, training, language, and wake/hold controls aligned with ICOS voice settings.</p>
+    </header>
+
+    <section class="home-platform-settings-category__section" aria-labelledby="settings-voice-input-output">
+      <div class="home-platform-settings-category__section-header">
+        <p class="home-platform-settings-category__section-eyebrow">Input / Output</p>
+        <h2 class="home-platform-settings-category__section-title" id="settings-voice-input-output">Voice runtime</h2>
+      </div>
+      <div class="home-platform-settings-category__grid">
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="voice-input">
+          <span class="home-platform-settings-category__label">Input</span>
+          <span class="home-platform-settings-category__caption">Request the homepage microphone runtime.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="voice-output">
+          <span class="home-platform-settings-category__label">Output</span>
+          <span class="home-platform-settings-category__caption">Test browser speech synthesis when available.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="country-language">
+          <span class="home-platform-settings-category__label">Language</span>
+          <span class="home-platform-settings-category__caption">Current language: <span data-home-settings-language-value>EN</span>.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="permission-microphone">
+          <span class="home-platform-settings-category__label">Microphone permission</span>
+          <span class="home-platform-settings-category__caption">Request browser microphone access.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-settings-category__section" aria-labelledby="settings-voice-training">
+      <div class="home-platform-settings-category__section-header">
+        <p class="home-platform-settings-category__section-eyebrow">Training</p>
+        <h2 class="home-platform-settings-category__section-title" id="settings-voice-training">Voice identity</h2>
+      </div>
+      <div class="home-platform-settings-category__stack">
+        <div class="home-platform-settings-category__field">
+          <span class="home-platform-settings-category__label">Training</span>
+          <span class="home-platform-settings-category__caption">Voice training remains governed by account and ICOS runtime permissions before browser exposure.</span>
+        </div>
+        <div class="home-platform-settings-category__field">
+          <span class="home-platform-settings-category__label">Wake / Hold</span>
+          <span class="home-platform-settings-category__caption">Wake and hold behavior is represented as a runtime boundary until the web voice engine owns it.</span>
+        </div>
+      </div>
+      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Voice settings are ready.</p>
+    </section>
+  </div>
+</section>

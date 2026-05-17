@@ -18,94 +18,94 @@
    01) AWARENESS FEATURE TOKENS
 ============================================================================= */
 :root{
-  --awareness-wrap-min-height:var(--cc-awareness-wrap-min-height);
-  --awareness-wrap-padding:var(--cc-awareness-wrap-padding);
-  --awareness-panel-width:var(--cc-awareness-panel-width);
-  --awareness-panel-radius:var(--cc-awareness-panel-radius);
-  --awareness-panel-padding:var(--cc-awareness-panel-padding);
-  --awareness-title-margin-bottom:var(--cc-awareness-title-margin-bottom);
-  --awareness-title-size:var(--cc-awareness-title-size);
-  --awareness-title-weight:var(--cc-awareness-title-weight);
-  --awareness-lead-margin-bottom:var(--cc-awareness-lead-margin-bottom);
-  --awareness-lead-size:var(--cc-awareness-lead-size);
-  --awareness-lead-line-height:var(--cc-awareness-lead-line-height);
-  --awareness-question-size:var(--cc-awareness-question-size);
-  --awareness-question-line-height:var(--cc-awareness-question-line-height);
-  --awareness-question-margin-top:var(--cc-awareness-question-margin-top);
-  --awareness-question-margin-bottom:var(--cc-awareness-question-margin-bottom);
-  --awareness-note-margin-top:var(--cc-awareness-note-margin-top);
-  --awareness-note-size:var(--cc-awareness-note-size);
-  --awareness-row-gap:var(--cc-awareness-row-gap);
-  --awareness-row-margin-bottom:var(--cc-awareness-row-margin-bottom);
-  --awareness-select-padding-y:var(--cc-awareness-select-padding-y);
-  --awareness-select-padding-x:var(--cc-awareness-select-padding-x);
-  --awareness-select-size:var(--cc-awareness-select-size);
-  --awareness-select-radius:var(--cc-awareness-select-radius);
-  --awareness-slider-width:var(--cc-awareness-slider-width);
-  --awareness-slider-margin-top:var(--cc-awareness-slider-margin-top);
-  --awareness-slider-margin-bottom:var(--cc-awareness-slider-margin-bottom);
-  --awareness-slider-gap:var(--cc-awareness-slider-gap);
-  --awareness-track-height:var(--cc-awareness-track-height);
-  --awareness-track-radius:var(--cc-awareness-track-radius);
-  --awareness-thumb-width:var(--cc-awareness-thumb-width);
-  --awareness-thumb-height:var(--cc-awareness-thumb-height);
-  --awareness-thumb-radius:var(--cc-awareness-thumb-radius);
-  --awareness-thumb-shadow:var(--cc-awareness-thumb-shadow);
-  --awareness-thumb-margin-top:var(--cc-awareness-thumb-margin-top);
-  --awareness-thumb-margin-top-moz:var(--cc-awareness-thumb-margin-top-moz);
-  --awareness-thumb-motion:var(--cc-awareness-thumb-motion);
-  --awareness-label-size:var(--cc-awareness-label-size);
-  --awareness-label-margin-top:var(--cc-awareness-label-margin-top);
-  --awareness-label-margin-bottom:var(--cc-awareness-label-margin-bottom);
-  --awareness-button-padding-y:var(--cc-awareness-button-padding-y);
-  --awareness-button-padding-x:var(--cc-awareness-button-padding-x);
-  --awareness-button-radius:var(--cc-awareness-button-radius);
-  --awareness-button-size:var(--cc-awareness-button-size);
-  --awareness-button-margin-top:var(--cc-awareness-button-margin-top);
-  --awareness-result-margin-top:var(--cc-awareness-result-margin-top);
-  --awareness-result-size:var(--cc-awareness-result-size);
-  --awareness-result-gap:var(--cc-awareness-result-gap);
-  --awareness-stage-weight:var(--cc-awareness-stage-weight);
-  --awareness-stage-padding:var(--cc-awareness-stage-padding);
-  --awareness-stage-radius:var(--cc-awareness-stage-radius);
-  --awareness-stage-motion:var(--cc-awareness-stage-motion);
-  --awareness-stage-hover-shadow:var(--cc-awareness-stage-hover-shadow);
-  --awareness-score-size:var(--cc-awareness-score-size);
-  --awareness-score-margin-top:var(--cc-awareness-score-margin-top);
-  --awareness-score-weight:var(--cc-awareness-score-weight);
-  --awareness-desc-padding-y:var(--cc-awareness-desc-padding-y);
-  --awareness-desc-padding-x:var(--cc-awareness-desc-padding-x);
-  --awareness-desc-margin-top:var(--cc-awareness-desc-margin-top);
-  --awareness-desc-radius:var(--cc-awareness-desc-radius);
-  --awareness-desc-size:var(--cc-awareness-desc-size);
-  --awareness-desc-line-height:var(--cc-awareness-desc-line-height);
-  --awareness-dominant-margin-top:var(--cc-awareness-dominant-margin-top);
-  --awareness-dominant-radius:var(--cc-awareness-dominant-radius);
-  --awareness-dominant-padding:var(--cc-awareness-dominant-padding);
-  --awareness-dominant-size:var(--cc-awareness-dominant-size);
-  --awareness-dominant-line-height:var(--cc-awareness-dominant-line-height);
-  --awareness-mobile-panel-padding:var(--cc-awareness-mobile-panel-padding);
-  --awareness-mobile-question-size:var(--cc-awareness-mobile-question-size);
-  --awareness-mobile-button-padding-y:var(--cc-awareness-mobile-button-padding-y);
-  --awareness-mobile-button-padding-x:var(--cc-awareness-mobile-button-padding-x);
-  --awareness-mobile-button-margin-top:var(--cc-awareness-mobile-button-margin-top);
-  --awareness-mobile-button-size:var(--cc-awareness-mobile-button-size);
-  --awareness-mobile-slider-width:var(--cc-awareness-mobile-slider-width);
-  --awareness-mobile-slider-max-width:var(--cc-awareness-mobile-slider-max-width);
-  --awareness-mobile-slider-margin-top:var(--cc-awareness-mobile-slider-margin-top);
-  --awareness-mobile-slider-margin-bottom:var(--cc-awareness-mobile-slider-margin-bottom);
-  --awareness-mobile-slider-gap:var(--cc-awareness-mobile-slider-gap);
-  --awareness-mobile-label-size:var(--cc-awareness-mobile-label-size);
-  --awareness-mobile-label-margin-bottom:var(--cc-awareness-mobile-label-margin-bottom);
-  --awareness-mobile-thumb-width:var(--cc-awareness-mobile-thumb-width);
-  --awareness-mobile-thumb-height:var(--cc-awareness-mobile-thumb-height);
-  --awareness-progress-width:var(--cc-awareness-progress-width);
-  --awareness-progress-max-width:var(--cc-awareness-progress-max-width);
-  --awareness-progress-height:var(--cc-awareness-progress-height);
-  --awareness-progress-radius:var(--cc-awareness-progress-radius);
-  --awareness-progress-margin-top:var(--cc-awareness-progress-margin-top);
-  --awareness-progress-margin-bottom:var(--cc-awareness-progress-margin-bottom);
-  --awareness-progress-fill-width:var(--cc-awareness-progress-fill-width);
+  --awareness-wrap-min-height:var(--layout-awareness-wrap-min-height);
+  --awareness-wrap-padding:var(--layout-awareness-wrap-padding);
+  --awareness-panel-width:var(--layout-awareness-panel-width);
+  --awareness-panel-radius:var(--layout-awareness-panel-radius);
+  --awareness-panel-padding:var(--layout-awareness-panel-padding);
+  --awareness-title-margin-bottom:var(--layout-awareness-title-margin-bottom);
+  --awareness-title-size:var(--layout-awareness-title-size);
+  --awareness-title-weight:var(--layout-awareness-title-weight);
+  --awareness-lead-margin-bottom:var(--layout-awareness-lead-margin-bottom);
+  --awareness-lead-size:var(--layout-awareness-lead-size);
+  --awareness-lead-line-height:var(--layout-awareness-lead-line-height);
+  --awareness-question-size:var(--layout-awareness-question-size);
+  --awareness-question-line-height:var(--layout-awareness-question-line-height);
+  --awareness-question-margin-top:var(--layout-awareness-question-margin-top);
+  --awareness-question-margin-bottom:var(--layout-awareness-question-margin-bottom);
+  --awareness-note-margin-top:var(--layout-awareness-note-margin-top);
+  --awareness-note-size:var(--layout-awareness-note-size);
+  --awareness-row-gap:var(--layout-awareness-row-gap);
+  --awareness-row-margin-bottom:var(--layout-awareness-row-margin-bottom);
+  --awareness-select-padding-y:var(--layout-awareness-select-padding-y);
+  --awareness-select-padding-x:var(--layout-awareness-select-padding-x);
+  --awareness-select-size:var(--layout-awareness-select-size);
+  --awareness-select-radius:var(--layout-awareness-select-radius);
+  --awareness-slider-width:var(--layout-awareness-slider-width);
+  --awareness-slider-margin-top:var(--layout-awareness-slider-margin-top);
+  --awareness-slider-margin-bottom:var(--layout-awareness-slider-margin-bottom);
+  --awareness-slider-gap:var(--layout-awareness-slider-gap);
+  --awareness-track-height:var(--layout-awareness-track-height);
+  --awareness-track-radius:var(--layout-awareness-track-radius);
+  --awareness-thumb-width:var(--layout-awareness-thumb-width);
+  --awareness-thumb-height:var(--layout-awareness-thumb-height);
+  --awareness-thumb-radius:var(--layout-awareness-thumb-radius);
+  --awareness-thumb-shadow:var(--layout-awareness-thumb-shadow);
+  --awareness-thumb-margin-top:var(--layout-awareness-thumb-margin-top);
+  --awareness-thumb-margin-top-moz:var(--layout-awareness-thumb-margin-top-moz);
+  --awareness-thumb-motion:var(--layout-awareness-thumb-motion);
+  --awareness-label-size:var(--layout-awareness-label-size);
+  --awareness-label-margin-top:var(--layout-awareness-label-margin-top);
+  --awareness-label-margin-bottom:var(--layout-awareness-label-margin-bottom);
+  --awareness-button-padding-y:var(--layout-awareness-button-padding-y);
+  --awareness-button-padding-x:var(--layout-awareness-button-padding-x);
+  --awareness-button-radius:var(--layout-awareness-button-radius);
+  --awareness-button-size:var(--layout-awareness-button-size);
+  --awareness-button-margin-top:var(--layout-awareness-button-margin-top);
+  --awareness-result-margin-top:var(--layout-awareness-result-margin-top);
+  --awareness-result-size:var(--layout-awareness-result-size);
+  --awareness-result-gap:var(--layout-awareness-result-gap);
+  --awareness-stage-weight:var(--layout-awareness-stage-weight);
+  --awareness-stage-padding:var(--layout-awareness-stage-padding);
+  --awareness-stage-radius:var(--layout-awareness-stage-radius);
+  --awareness-stage-motion:var(--layout-awareness-stage-motion);
+  --awareness-stage-hover-shadow:var(--layout-awareness-stage-hover-shadow);
+  --awareness-score-size:var(--layout-awareness-score-size);
+  --awareness-score-margin-top:var(--layout-awareness-score-margin-top);
+  --awareness-score-weight:var(--layout-awareness-score-weight);
+  --awareness-desc-padding-y:var(--layout-awareness-desc-padding-y);
+  --awareness-desc-padding-x:var(--layout-awareness-desc-padding-x);
+  --awareness-desc-margin-top:var(--layout-awareness-desc-margin-top);
+  --awareness-desc-radius:var(--layout-awareness-desc-radius);
+  --awareness-desc-size:var(--layout-awareness-desc-size);
+  --awareness-desc-line-height:var(--layout-awareness-desc-line-height);
+  --awareness-dominant-margin-top:var(--layout-awareness-dominant-margin-top);
+  --awareness-dominant-radius:var(--layout-awareness-dominant-radius);
+  --awareness-dominant-padding:var(--layout-awareness-dominant-padding);
+  --awareness-dominant-size:var(--layout-awareness-dominant-size);
+  --awareness-dominant-line-height:var(--layout-awareness-dominant-line-height);
+  --awareness-mobile-panel-padding:var(--layout-awareness-mobile-panel-padding);
+  --awareness-mobile-question-size:var(--layout-awareness-mobile-question-size);
+  --awareness-mobile-button-padding-y:var(--layout-awareness-mobile-button-padding-y);
+  --awareness-mobile-button-padding-x:var(--layout-awareness-mobile-button-padding-x);
+  --awareness-mobile-button-margin-top:var(--layout-awareness-mobile-button-margin-top);
+  --awareness-mobile-button-size:var(--layout-awareness-mobile-button-size);
+  --awareness-mobile-slider-width:var(--layout-awareness-mobile-slider-width);
+  --awareness-mobile-slider-max-width:var(--layout-awareness-mobile-slider-max-width);
+  --awareness-mobile-slider-margin-top:var(--layout-awareness-mobile-slider-margin-top);
+  --awareness-mobile-slider-margin-bottom:var(--layout-awareness-mobile-slider-margin-bottom);
+  --awareness-mobile-slider-gap:var(--layout-awareness-mobile-slider-gap);
+  --awareness-mobile-label-size:var(--layout-awareness-mobile-label-size);
+  --awareness-mobile-label-margin-bottom:var(--layout-awareness-mobile-label-margin-bottom);
+  --awareness-mobile-thumb-width:var(--layout-awareness-mobile-thumb-width);
+  --awareness-mobile-thumb-height:var(--layout-awareness-mobile-thumb-height);
+  --awareness-progress-width:var(--layout-awareness-progress-width);
+  --awareness-progress-max-width:var(--layout-awareness-progress-max-width);
+  --awareness-progress-height:var(--layout-awareness-progress-height);
+  --awareness-progress-radius:var(--layout-awareness-progress-radius);
+  --awareness-progress-margin-top:var(--layout-awareness-progress-margin-top);
+  --awareness-progress-margin-bottom:var(--layout-awareness-progress-margin-bottom);
+  --awareness-progress-fill-width:var(--layout-awareness-progress-fill-width);
 }
 
 /* =============================================================================
@@ -123,15 +123,15 @@
 }
 
 .panel{
-  width:min(var(--awareness-panel-width), var(--cc-width));
-  max-width:var(--cc-width);
+  width:min(var(--awareness-panel-width), var(--panel-width));
+  max-width:var(--panel-width);
   background:transparent !important;
   border-radius:var(--awareness-panel-radius);
   box-shadow:none !important;
   padding:var(--awareness-panel-padding);
   box-sizing:border-box;
   text-align:center;
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 /* =============================================================================
@@ -140,13 +140,13 @@
 h1{
   margin:var(--spacing-none) var(--spacing-none) var(--awareness-title-margin-bottom) var(--spacing-none);
   font-weight:var(--awareness-title-weight);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--awareness-title-size);
 }
 
 p.lead{
   margin:var(--spacing-none) var(--spacing-none) var(--awareness-lead-margin-bottom) var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--awareness-lead-size);
   line-height:var(--awareness-lead-line-height);
 }
@@ -157,12 +157,12 @@ p.lead{
   margin:var(--awareness-question-margin-top) var(--spacing-none) var(--awareness-question-margin-bottom) var(--spacing-none);
   text-align:center;
   word-break:break-word;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 footer.note{
   margin-top:var(--awareness-note-margin-top);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--awareness-note-size);
 }
 
@@ -181,9 +181,9 @@ select{
   padding:var(--awareness-select-padding-y) var(--awareness-select-padding-x);
   font-size:var(--awareness-select-size);
   border-radius:var(--awareness-select-radius);
-  border:var(--cc-width-hairline) solid var(--cc-color, #e6e6e6);
+  border:var(--border-width-hairline) solid var(--border-color, #e6e6e6);
   background:var(--bg-color);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 /* =============================================================================
@@ -209,7 +209,7 @@ input[type="range"]{
   appearance:none;
   height:var(--awareness-track-height);
   border-radius:var(--awareness-track-radius);
-  background:var(--cc-color, #e6e6e6);
+  background:var(--border-color, #e6e6e6);
   outline:none;
   margin:var(--spacing-none) var(--spacing-none) var(--awareness-lead-margin-bottom) var(--spacing-none);
   padding:var(--spacing-none);
@@ -254,7 +254,7 @@ input[type="range"]::-moz-range-thumb:hover{
   font-size:var(--awareness-label-size);
   margin-top:var(--awareness-label-margin-top);
   margin-bottom:var(--awareness-label-margin-bottom);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   user-select:none;
   box-sizing:border-box;
 }
@@ -270,8 +270,8 @@ input[type="range"]::-moz-range-thumb:hover{
   padding:var(--awareness-button-padding-y) var(--awareness-button-padding-x);
   border-radius:var(--awareness-button-radius);
   background:transparent !important;
-  color:var(--cc-color) !important;
-  border:var(--cc-width-hairline) solid var(--cc-secondary-color);
+  color:var(--text-color) !important;
+  border:var(--border-width-hairline) solid var(--text-secondary-color);
   box-shadow:none !important;
   font-size:var(--awareness-button-size);
   margin-top:var(--awareness-button-margin-top);
@@ -287,9 +287,9 @@ input[type="range"]::-moz-range-thumb:hover{
 #restartBtn:active,
 #startBtn:active{
   background:transparent !important;
-  color:var(--cc-color) !important;
+  color:var(--text-color) !important;
   box-shadow:none !important;
-  border:var(--cc-width-hairline) solid var(--cc-secondary-color);
+  border:var(--border-width-hairline) solid var(--text-secondary-color);
 }
 
 .hidden{
@@ -301,7 +301,7 @@ input[type="range"]::-moz-range-thumb:hover{
 ============================================================================= */
 .result-grid{
   margin-top:var(--awareness-result-margin-top);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--awareness-result-size);
   display:flex;
   gap:var(--awareness-result-gap);
@@ -318,7 +318,7 @@ input[type="range"]::-moz-range-thumb:hover{
   position:relative;
   transition:background var(--awareness-stage-motion) ease;
   box-shadow:none !important;
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .result-stage:hover{
@@ -329,7 +329,7 @@ input[type="range"]::-moz-range-thumb:hover{
 
 .result-score{
   font-size:var(--awareness-score-size);
-  color:var(--cc-color);
+  color:var(--text-color);
   margin-top:var(--awareness-score-margin-top);
   font-weight:var(--awareness-score-weight);
 }
@@ -347,7 +347,7 @@ input[type="range"]::-moz-range-thumb:hover{
   line-height:var(--awareness-desc-line-height);
   display:none;
   white-space:pre-wrap;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   box-shadow:none !important;
 }
 
@@ -359,7 +359,7 @@ input[type="range"]::-moz-range-thumb:hover{
   background:transparent !important;
   border-radius:var(--awareness-dominant-radius);
   padding:var(--awareness-dominant-padding);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--awareness-dominant-size);
   line-height:var(--awareness-dominant-line-height);
   box-shadow:none !important;
@@ -432,7 +432,7 @@ input[type="range"]::-moz-range-thumb:hover{
   width:var(--awareness-progress-width);
   max-width:var(--awareness-progress-max-width);
   height:var(--awareness-progress-height);
-  background:var(--cc-color, #e6e6e6);
+  background:var(--border-color, #e6e6e6);
   border-radius:var(--awareness-progress-radius);
   margin:var(--awareness-progress-margin-top) auto var(--awareness-progress-margin-bottom) auto;
   overflow:hidden;

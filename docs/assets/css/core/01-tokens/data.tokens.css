@@ -26,9 +26,9 @@
 :root{
   /* Shared data surfaces for dashboards, metrics, analytics, and institutional gauges. */
   --data-surface-bg:var(--surface-primary, var(--bg-color));
-  --data-surface-bg-muted:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
+  --data-surface-bg-muted:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --data-surface-bg-hover:var(--hover-bg-subtle);
-  --data-surface-border:var(--cc-color);
+  --data-surface-border:var(--border-color);
   --data-surface-border-hover:var(--hover-border-subtle);
   --data-surface-radius:var(--radius-lg);
   --data-surface-shadow:var(--effect-shadow-none);
@@ -85,9 +85,9 @@
 ============================================================================= */
 :root{
   /* Table shell and row rhythm for governed data surfaces. */
-  --data-table-border:var(--cc-color);
+  --data-table-border:var(--border-color);
   --data-table-border-hover:var(--hover-border-subtle);
-  --data-table-header-bg:color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
+  --data-table-header-bg:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
   --data-table-row-bg:transparent;
   --data-table-row-bg-hover:var(--hover-bg-subtle);
   --data-table-row-bg-selected:var(--selected-bg-subtle);
@@ -106,7 +106,7 @@
   --chart-padding-y:1rem;
   --chart-padding-x:1rem;
   --chart-radius:var(--radius-lg);
-  --chart-border:var(--cc-color);
+  --chart-border:var(--border-color);
   --chart-bg:var(--data-surface-bg);
   --chart-bg-muted:var(--data-surface-bg-muted);
   --chart-min-height-sm:12rem;
@@ -119,12 +119,12 @@
 ============================================================================= */
 :root{
   /* Axis, gridline, and annotation styling. */
-  --chart-axis-color:var(--cc-secondary-color);
+  --chart-axis-color:var(--text-secondary-color);
   --chart-axis-opacity:0.72;
-  --chart-gridline-color:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
+  --chart-gridline-color:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --chart-gridline-width:1px;
   --chart-gridline-opacity:0.62;
-  --chart-annotation-color:var(--cc-secondary-color);
+  --chart-annotation-color:var(--text-secondary-color);
   --chart-annotation-opacity:0.82;
 }
 
@@ -133,11 +133,11 @@
 ============================================================================= */
 :root{
   /* Neutral institutional chart series colors. */
-  --chart-series-1:var(--cc-primary-color);
-  --chart-series-2:color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
-  --chart-series-3:color-mix(in srgb, var(--cc-primary-color) 52%, transparent);
-  --chart-series-4:color-mix(in srgb, var(--cc-primary-color) 34%, transparent);
-  --chart-series-5:color-mix(in srgb, var(--cc-primary-color) 22%, transparent);
+  --chart-series-1:var(--text-primary-color);
+  --chart-series-2:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --chart-series-3:color-mix(in srgb, var(--text-primary-color) 52%, transparent);
+  --chart-series-4:color-mix(in srgb, var(--text-primary-color) 34%, transparent);
+  --chart-series-5:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
 
   /* Semantic chart series aliases. */
   --chart-series-success:var(--feedback-success-color);
@@ -156,7 +156,7 @@
   --chart-legend-item-gap:0.34rem;
   --chart-legend-marker-size:0.48rem;
   --chart-legend-marker-radius:999px;
-  --chart-legend-color:var(--cc-secondary-color);
+  --chart-legend-color:var(--text-secondary-color);
 }
 
 /* =============================================================================
@@ -164,17 +164,17 @@
 ============================================================================= */
 :root{
   /* Progress bars, maturity gauges, valuation gauges, and institutional meters. */
-  --data-progress-track-bg:color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --data-progress-fill-bg:var(--cc-primary-color);
+  --data-progress-track-bg:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --data-progress-fill-bg:var(--text-primary-color);
   --data-progress-height-sm:0.22rem;
   --data-progress-height-md:0.34rem;
   --data-progress-height-lg:0.52rem;
   --data-progress-radius:999px;
 
   --data-gauge-track-width:1px;
-  --data-gauge-track-color:color-mix(in srgb, var(--cc-primary-color) 18%, transparent);
+  --data-gauge-track-color:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
   --data-gauge-dot-size:0.56rem;
-  --data-gauge-dot-bg:var(--cc-primary-color);
+  --data-gauge-dot-bg:var(--text-primary-color);
   --data-gauge-dot-border:var(--bg-color);
   --data-gauge-label-gap:0.42rem;
 }

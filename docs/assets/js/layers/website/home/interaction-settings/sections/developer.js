@@ -34,8 +34,10 @@ async function renderDeveloperSettingsSection(root) {
   root.dataset.homeDeveloperSettingsHydrated = 'true';
   const [stateResponse, providerResponse] = await Promise.all([
     requestHomeDeveloperAction('developer-state-read', {
+      source:'control-center-developer-section'
     }),
     requestHomeDeveloperAction('provider-connection-status', {
+      source:'control-center-developer-section'
     })
   ]);
 

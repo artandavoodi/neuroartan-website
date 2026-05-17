@@ -32,7 +32,7 @@
   --nav-global-min-height:auto;
 
   /* Global navigation state behavior. */
-  --nav-global-color:var(--cc-secondary-color);
+  --nav-global-color:var(--text-secondary-color);
   --nav-global-hover-color:var(--nav-hover-text-color);
   --nav-global-active-color:var(--nav-active-text-color);
   --nav-global-hover-opacity:var(--nav-hover-opacity);
@@ -50,7 +50,7 @@
   --nav-local-min-height:auto;
 
   /* Local navigation state behavior. */
-  --nav-local-color:var(--cc-secondary-color);
+  --nav-local-color:var(--text-secondary-color);
   --nav-local-hover-color:var(--local-nav-hover-text-color);
   --nav-local-active-color:var(--local-nav-active-text-color);
   --nav-local-hover-opacity:var(--local-nav-hover-opacity);
@@ -69,7 +69,7 @@
   --nav-tab-padding-y:0;
   --nav-tab-padding-x:0;
   --nav-tab-min-height:auto;
-  --nav-tab-color:var(--cc-secondary-color);
+  --nav-tab-color:var(--text-secondary-color);
   --nav-tab-hover-color:var(--local-nav-hover-text-color);
   --nav-tab-active-color:var(--local-nav-active-text-color);
   --nav-tab-hover-opacity:var(--local-nav-hover-opacity);
@@ -82,10 +82,10 @@
   /* Breadcrumb spacing and separator ownership. */
   --nav-breadcrumb-gap:0.42rem;
   --nav-breadcrumb-separator-gap:0.34rem;
-  --nav-breadcrumb-color:var(--cc-secondary-color);
+  --nav-breadcrumb-color:var(--text-secondary-color);
   --nav-breadcrumb-hover-color:var(--hover-text-color);
-  --nav-breadcrumb-current-color:var(--cc-primary-color);
-  --nav-breadcrumb-separator-color:var(--cc-muted-color, var(--cc-secondary-color));
+  --nav-breadcrumb-current-color:var(--text-primary-color);
+  --nav-breadcrumb-separator-color:var(--text-muted-color, var(--text-secondary-color));
 }
 
 /* =============================================================================
@@ -96,7 +96,7 @@
   --nav-footer-gap:0.84rem;
   --nav-footer-column-gap:1.4rem;
   --nav-footer-row-gap:0.42rem;
-  --nav-footer-color:var(--cc-secondary-color);
+  --nav-footer-color:var(--text-secondary-color);
   --nav-footer-hover-color:var(--hover-text-color);
   --nav-footer-hover-opacity:var(--state-opacity-hover-strong);
 }
@@ -110,7 +110,7 @@
   --nav-menu-item-gap:0.42rem;
   --nav-menu-padding-y:0.42rem;
   --nav-menu-padding-x:0;
-  --nav-menu-color:var(--cc-secondary-color);
+  --nav-menu-color:var(--text-secondary-color);
   --nav-menu-hover-color:var(--hover-text-color);
   --nav-menu-active-color:var(--selected-text-color);
 }
@@ -158,8 +158,8 @@
   --nav-glass-surface-height-mobile:3.18rem;
   --nav-glass-surface-bg:color-mix(in srgb, var(--bg-color) 32%, transparent);
   --nav-glass-surface-bg-light:color-mix(in srgb, var(--surface-color) 26%, transparent);
-  --nav-glass-surface-border:var(--cc-color);
-  --nav-glass-surface-border-light:var(--cc-color);
+  --nav-glass-surface-border:var(--border-color);
+  --nav-glass-surface-border-light:var(--border-color);
   --nav-glass-surface-shadow:none;
   --nav-glass-surface-blur:var(--effect-blur-sm);
   --nav-glass-surface-saturate:120%;
@@ -173,7 +173,7 @@
   --nav-primitive-shell-gap:0.5rem;
   --nav-primitive-section-gap:0.4rem;
   --nav-primitive-section-padding-top:0.6rem;
-  --nav-primitive-section-border:1px solid color-mix(in srgb, var(--cc-color) 8%, transparent);
+  --nav-primitive-section-border:1px solid color-mix(in srgb, var(--text-color) 8%, transparent);
   --nav-primitive-group-gap:0.22rem;
   --nav-primitive-group-header-gap:0.75rem;
   --nav-primitive-group-title-size:0.72rem;
@@ -194,10 +194,10 @@
   --nav-primitive-label-line-height:1.3;
   --nav-primitive-description-size:0.78rem;
   --nav-primitive-description-line-height:1.35;
-  --nav-primitive-hover-border:color-mix(in srgb, var(--cc-color) 12%, transparent);
+  --nav-primitive-hover-border:color-mix(in srgb, var(--text-color) 12%, transparent);
   --nav-primitive-hover-background:color-mix(in srgb, var(--bg-color) 16%, transparent);
   --nav-primitive-hover-y:-1px;
-  --nav-primitive-active-border:color-mix(in srgb, var(--color-primary1) 46%, var(--cc-color) 18%);
+  --nav-primitive-active-border:color-mix(in srgb, var(--color-primary1) 46%, var(--text-color) 18%);
   --nav-primitive-active-background:color-mix(in srgb, var(--color-primary1) 10%, transparent);
   --nav-primitive-disabled-opacity:0.45;
   --nav-primitive-breadcrumb-gap:0.42rem;
@@ -230,9 +230,9 @@
   --nav-institutional-surface-shadow:var(--nav-glass-surface-shadow);
   --nav-institutional-surface-blur:var(--nav-glass-surface-blur);
   --nav-institutional-surface-saturate:var(--nav-glass-surface-saturate);
-  --nav-institutional-text-color:var(--cc-secondary-color);
-  --nav-institutional-text-hover-color:var(--cc-primary-color);
-  --nav-institutional-brand-color:var(--cc-primary-color);
+  --nav-institutional-text-color:var(--text-secondary-color);
+  --nav-institutional-text-hover-color:var(--text-primary-color);
+  --nav-institutional-brand-color:var(--text-primary-color);
   --nav-institutional-icon-opacity:0.82;
   --nav-institutional-icon-hover-opacity:1;
   --nav-institutional-motion-fast:220ms;
@@ -260,9 +260,9 @@
   --nav-institutional-brand-wordmark-height-mobile:0.44rem;
   --nav-institutional-trigger-size:1.12rem;
   --nav-institutional-trigger-size-tablet:1rem;
-  --nav-institutional-panel-backdrop-blur:4px;
+  --nav-institutional-panel-backdrop-blur:var(--effect-blur-lg);
   --nav-institutional-panel-backdrop-saturate:115%;
-  --nav-institutional-panel-shell-blur:18px;
+  --nav-institutional-panel-shell-blur:var(--effect-blur-xl);
   --nav-institutional-panel-shell-saturate:145%;
   --nav-institutional-panel-shadow:0 28px 90px color-mix(in srgb, var(--shadow-color, #000000) 10%, transparent);
   --nav-institutional-panel-shadow-light:0 28px 90px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);

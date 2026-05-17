@@ -22,13 +22,13 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-sign-in-surface:var(--cc-surface-unified);
-  --account-sign-in-border:var(--cc-border-unified);
-  --account-sign-in-muted: color-mix(in srgb, var(--cc-secondary-color) 86%, transparent);
-  --account-sign-in-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-sign-in-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
-  --account-sign-in-header-divider: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --account-sign-in-primary-shadow:var(--cc-shadow-unified);
+  --account-sign-in-surface:var(--panel-surface-unified);
+  --account-sign-in-border:var(--panel-border-unified);
+  --account-sign-in-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  --account-sign-in-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-in-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --account-sign-in-primary-shadow:var(--panel-shadow-unified);
   --account-sign-in-section-gap: var(--spacing-md);
   --account-sign-in-content-max-width: var(--account-control-width-max);
   --account-sign-in-content-max-width-wide: var(--account-control-width-max-wide);
@@ -81,29 +81,29 @@
   --account-sign-in-input-focus:var(--field-border-focus);
   --account-sign-in-control-height: var(--account-sign-in-field-height);
   --account-sign-in-control-inline-padding: var(--account-sign-in-field-padding-x);
-  --account-sign-in-divider-line:color-mix(in srgb, var(--cc-primary-color) 16%, transparent);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --account-sign-in-header-brand-margin-bottom: var(--account-sign-in-content-gap-xl);
   --account-sign-in-header-brand-margin-bottom-mobile: var(--account-sign-in-content-gap-lg);
 }
 
 html[data-theme-effective="light"]{
-  --account-sign-in-surface:var(--cc-surface-unified);
-  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 2.2%, transparent) 0%, transparent 22%);
-  --account-sign-in-header-divider: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --account-sign-in-primary-shadow:var(--cc-shadow-unified);
-  --account-sign-in-input-border: color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
-  --account-sign-in-input-focus: color-mix(in srgb, var(--cc-primary-color) 18%, transparent);
-  --account-sign-in-divider-line:color-mix(in srgb, var(--cc-primary-color) 16%, transparent);
+  --account-sign-in-surface:var(--panel-surface-unified);
+  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
+  --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --account-sign-in-primary-shadow:var(--panel-shadow-unified);
+  --account-sign-in-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --account-sign-in-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 html[data-theme-effective="dark"]{
-  --account-sign-in-surface:var(--cc-surface-unified);
-  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
-  --account-sign-in-header-divider: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --account-sign-in-primary-shadow:var(--cc-shadow-unified);
-  --account-sign-in-divider-line:color-mix(in srgb, var(--cc-primary-color) 16%, transparent);
+  --account-sign-in-surface:var(--panel-surface-unified);
+  --account-sign-in-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-sign-in-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --account-sign-in-primary-shadow:var(--panel-shadow-unified);
+  --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 
@@ -211,10 +211,10 @@ html[data-theme-effective="dark"]{
   height: var(--account-sign-in-field-height);
   padding: var(--spacing-none) var(--account-sign-in-field-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--account-sign-in-input-border);
+  border: var(--border-width-hairline) solid var(--account-sign-in-input-border);
   border-radius: var(--account-sign-in-field-radius);
   background: var(--account-sign-in-input-surface);
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-size: var(--account-sign-in-field-font-size);
   font-weight: var(--type-body-regular-weight);
   line-height: var(--account-sign-in-field-line-height);
@@ -271,10 +271,10 @@ html[data-theme-effective="dark"]{
   height: var(--account-sign-in-button-height);
   padding: var(--spacing-none) var(--account-sign-in-button-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--control-border-unified);
+  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--account-sign-in-button-radius);
   background: var(--control-surface);
-  color: var(--cc-color);
+  color: var(--text-color);
   text-decoration: none;
   transition:var(--interaction-transition-control);
   backdrop-filter: blur(var(--glass-blur-sm));
@@ -288,7 +288,7 @@ html[data-theme-effective="dark"]{
   justify-content: center;
   width: var(--size-full);
   height: var(--account-sign-in-button-height);
-  color: var(--cc-color);
+  color: var(--text-color);
   font-size: var(--account-sign-in-button-font-size);
   font-weight: var(--account-sign-in-button-font-weight);
   letter-spacing: var(--account-sign-in-button-letter-spacing);
@@ -323,7 +323,7 @@ html[data-theme-effective="dark"]{
 .account-sign-in-drawer-divider-line{
   flex: 1 1 0;
   min-width: var(--spacing-none);
-  height: var(--cc-width-hairline);
+  height: var(--border-width-hairline);
   background: var(--account-sign-in-divider-line);
 }
 

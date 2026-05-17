@@ -21,11 +21,11 @@
   --products-local-nav-transition:320ms var(--interaction-ease-standard);
   --products-local-nav-motion-fast:220ms;
   --products-local-nav-surface-bg:var(--nav-glass-surface-bg);
-  --products-local-nav-surface-border:var(--cc-color);
+  --products-local-nav-surface-border:var(--border-color);
   --products-local-nav-surface-shadow:var(--nav-glass-surface-shadow);
   --products-local-nav-surface-blur:var(--nav-glass-surface-blur);
   --products-local-nav-surface-saturate:var(--nav-glass-surface-saturate);
-  --products-local-nav-label-color:var(--cc-primary-color);
+  --products-local-nav-label-color:var(--text-primary-color);
   --products-local-nav-link-color:var(--nav-local-color);
   --products-local-nav-link-hover-color:var(--local-nav-hover-text-color);
   --products-local-nav-active-underline-bg:var(--local-nav-active-indicator-color);
@@ -39,7 +39,7 @@
 
 html[data-theme-effective="light"]{
   --products-local-nav-surface-bg:var(--nav-glass-surface-bg-light);
-  --products-local-nav-surface-border:var(--cc-color);
+  --products-local-nav-surface-border:var(--border-color);
   --products-local-nav-surface-shadow:var(--nav-glass-surface-shadow);
 }
 
@@ -90,7 +90,7 @@ html[data-theme-effective="light"]{
   height: var(--products-local-nav-height, 3.55rem);
   border-radius: 0;
   background:var(--products-local-nav-surface-bg);
-  border-bottom:var(--cc-width-hairline) solid var(--products-local-nav-surface-border);
+  border-bottom:var(--border-width-hairline) solid var(--products-local-nav-surface-border);
   box-shadow:var(--products-local-nav-surface-shadow);
   backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));
   -webkit-backdrop-filter:blur(var(--products-local-nav-surface-blur)) saturate(var(--products-local-nav-surface-saturate));

@@ -46,7 +46,7 @@
   height:var(--global-close-button-size);
   padding:var(--spacing-none);
   margin:var(--spacing-none);
-  border:var(--cc-width-hairline) solid var(--global-close-button-border);
+  border:var(--border-width-hairline) solid var(--global-close-button-border);
   border-radius:var(--global-close-button-radius);
   background:var(--global-close-button-surface);
   color:var(--global-close-button-color);

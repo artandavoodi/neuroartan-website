@@ -233,6 +233,19 @@ function handleHomeSettingsPanelAction(action, context = 'source-panel') {
     return;
   }
 
+  if (normalized === 'settings') {
+    dispatchHomeSettingsPanelEvent('home:platform-shell-open-request', {
+      source: 'home-settings-panel',
+      destination: 'settings',
+      subdestination: 'general',
+    });
+
+    if (context === 'source-panel') {
+      closeHomeSettingsPanel();
+    }
+    return;
+  }
+
   if (normalized === 'privacy') {
     dispatchHomeSettingsPanelEvent('neuroartan:cookie-consent-open-requested', {
       source: 'home-settings-panel',

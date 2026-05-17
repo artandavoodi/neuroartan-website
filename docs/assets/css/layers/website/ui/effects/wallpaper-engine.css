@@ -1,0 +1,39 @@
+/* =============================================================================
+   NEUROARTAN WALLPAPER ENGINE / SHARED CSS OWNER
+============================================================================= */
+
+.neuroartan-wallpaper{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  contain:layout paint style;
+  isolation:isolate;
+}
+
+.neuroartan-wallpaper__svg{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+.neuroartan-wallpaper__base{
+  width:100%;
+  height:100%;
+}
+
+.neuroartan-wallpaper__layer{
+  transform-box:fill-box;
+  transform-origin:center;
+}
+
+.neuroartan-wallpaper[data-wallpaper-state="scene-unavailable"]{
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .neuroartan-wallpaper__layer{
+    transform:none !important;
+  }
+}

@@ -1,0 +1,16 @@
+/* ==========================================================================
+   CONTROL CENTER FOUNDATION TOKENS
+   Canonical completion tokens.
+   ========================================================================== */
+
+:root {
+  --surface-primary: var(--surface-1);
+  --control-border: rgba(255,255,255,0.08);
+  --menu-fg: var(--text-color);
+
+  --cc-muted-color: var(--text-secondary-color);
+  --cc-shell-panel-inline-padding: var(--spacing-lg);
+
+  --cc-interaction-settings-panel-top: var(--spacing-lg);
+  --cc-interaction-settings-panel-bottom: var(--spacing-lg);
+}

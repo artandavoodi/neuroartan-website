@@ -16,6 +16,6 @@
   width: 100%;
   height: 1px;
   margin: 0.4rem 0 0.2rem;
-  background: color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
+  background: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   pointer-events: none;
 }

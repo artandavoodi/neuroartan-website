@@ -1,0 +1,35 @@
+/* ==========================================================================
+   CONTROL CENTER RUNTIME TOKENS
+   Final canonical bridge tokens.
+   ========================================================================== */
+
+:root {
+
+  --cc-interaction-panel-control-height: 44px;
+  --cc-interaction-panel-control-padding: 0 14px;
+
+  --cc-interaction-panel-muted:
+  var(--text-secondary-color);
+
+  --cc-interaction-panel-text:
+  var(--text-color);
+
+  --cc-platform-shell-nav-icon-opacity:
+  0.72;
+
+  --control-bg:
+  var(--surface-1);
+
+  --control-border-strong:
+  rgba(255,255,255,0.14);
+
+  --field-border-focus:
+  color-mix(
+    in srgb,
+    var(--color-primary1) 32%,
+    rgba(255,255,255,0.24)
+  );
+
+  --font-size-caption:
+  12px;
+}

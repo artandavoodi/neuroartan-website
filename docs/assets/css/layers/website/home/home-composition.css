@@ -19,22 +19,22 @@
 :root{
   --home-composition-topbar-clearance:3.55rem;
   --home-composition-footer-clearance:3.25rem;
-  --home-composition-shell-block-padding:calc(var(--cc-composition-stage-component-gap) * 2);
-  --home-composition-circle-to-text-gap:var(--cc-composition-stage-component-gap);
-  --home-composition-text-to-panel-gap:var(--cc-composition-stage-component-gap);
+  --home-composition-shell-block-padding:calc(var(--home-composition-stage-component-gap) * 2);
+  --home-composition-circle-to-text-gap:var(--home-composition-stage-component-gap);
+  --home-composition-text-to-panel-gap:var(--home-composition-stage-component-gap);
   --home-composition-panel-to-response-gap:1rem;
-  --home-composition-stage-component-gap:var(--cc-composition-panel-to-response-gap);
-  --home-composition-panel-stack-gap:var(--cc-composition-stage-component-gap);
-  --home-composition-stage-width:var(--cc-home-interaction-panel-width);
-  --home-composition-stage-width-mobile:var(--cc-home-interaction-panel-width-mobile);
+  --home-composition-stage-component-gap:var(--home-composition-panel-to-response-gap);
+  --home-composition-panel-stack-gap:var(--home-composition-stage-component-gap);
+  --home-composition-stage-width:var(--layout-home-interaction-panel-width);
+  --home-composition-stage-width-mobile:var(--layout-home-interaction-panel-width-mobile);
 }
 
 /* =============================================================================
    00C) HOME STAGE CORE GEOMETRY
 ============================================================================= */
 #stage-center-core{
-  width:var(--cc-stage-motion-core-width);
-  height:var(--cc-stage-motion-core-height);
+  width:var(--home-stage-motion-core-width);
+  height:var(--home-stage-motion-core-height);
   max-width:100%;
   max-height:100%;
   min-height:0;
@@ -44,7 +44,7 @@
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:var(--cc-layout-stage-center-gap, 24px);
+  gap:var(--home-layout-stage-center-gap, 24px);
 }
 
 #stage .stage-region{
@@ -59,7 +59,7 @@
   display:flex;
   flex-direction:column;
   justify-content:center;
-  width:var(--cc-composition-stage-width);
+  width:var(--home-composition-stage-width);
   max-width:100%;
   min-width:0;
   min-height:100%;
@@ -74,12 +74,12 @@
 }
 
 #stage-intro{
-  height:calc(100dvh - var(--cc-composition-topbar-clearance) - var(--cc-composition-footer-clearance));
-  max-height:calc(100dvh - var(--cc-composition-topbar-clearance) - var(--cc-composition-footer-clearance));
-  margin-block:var(--cc-composition-topbar-clearance) var(--cc-composition-footer-clearance);
+  height:calc(100dvh - var(--home-composition-topbar-clearance) - var(--home-composition-footer-clearance));
+  max-height:calc(100dvh - var(--home-composition-topbar-clearance) - var(--home-composition-footer-clearance));
+  margin-block:var(--home-composition-topbar-clearance) var(--home-composition-footer-clearance);
   display:grid;
   place-items:center;
-  padding-block:var(--cc-composition-shell-block-padding);
+  padding-block:var(--home-composition-shell-block-padding);
   box-sizing:border-box;
   overflow:hidden;
   contain:layout paint;
@@ -95,7 +95,7 @@
 
 #stage-center{
   align-self:center;
-  margin-bottom:var(--cc-composition-stage-component-gap);
+  margin-bottom:var(--home-composition-stage-component-gap);
 }
 
 #home-stage-interactive-text-mount{
@@ -107,7 +107,7 @@
 ============================================================================= */
 #stage-copy{
   margin-top:0;
-  margin-bottom:var(--cc-composition-stage-component-gap);
+  margin-bottom:var(--home-composition-stage-component-gap);
 }
 
 #stage-bottom{
@@ -138,7 +138,7 @@
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:var(--cc-composition-stage-component-gap);
+  gap:var(--home-composition-stage-component-gap);
   width:100%;
   max-width:100%;
   min-width:0;
@@ -169,7 +169,7 @@
 ============================================================================= */
 @media (max-width:760px){
   .stage-stack{
-    width:var(--cc-composition-stage-width-mobile);
+    width:var(--home-composition-stage-width-mobile);
   }
 }
 

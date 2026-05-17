@@ -29,8 +29,8 @@
   position: absolute;
   inset: var(--spacing-none);
   background: color-mix(in srgb, var(--bg-color) 72%, transparent);
-  -webkit-backdrop-filter: blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  backdrop-filter: blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  -webkit-backdrop-filter: blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  backdrop-filter: blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
 }
 
 .loading-overlay__surface{
@@ -46,14 +46,14 @@
   width: var(--control-height-lg);
   height: var(--control-height-lg);
   border-radius: var(--radius-circle);
-  border: var(--cc-width-thin) solid color-mix(in srgb, var(--color-primary1) 18%, transparent);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--color-primary1) 18%, transparent);
   border-top-color: var(--color-primary1);
   animation: loading-overlay-spin var(--interaction-motion-slow) linear infinite;
 }
 
 .loading-overlay__label{
   margin: var(--spacing-none);
-  color: var(--cc-color);
+  color: var(--text-color);
   font-size: var(--body-3-size);
   line-height: var(--type-body-sm-line-height);
   letter-spacing: var(--tracking-ui);

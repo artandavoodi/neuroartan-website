@@ -199,7 +199,6 @@ function syncHomepageThemeToggleAttributesFromStorage() {
   Object.keys(HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP).forEach((key) => {
     const storageId = `homepage-theme:${key}`;
     const checked = storageId in storedState ? Boolean(storedState[storageId]) : false;
-
     restored[key] = checked;
     setHomepageThemeToggleAttribute(key, checked);
   });

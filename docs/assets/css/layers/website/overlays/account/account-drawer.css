@@ -37,24 +37,24 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-drawer-panel-width: var(--cc-account-drawer-panel-width);
-  --account-drawer-surface:var(--cc-surface-unified);
-  --account-drawer-border:var(--cc-border-unified);
-  --account-drawer-muted: color-mix(in srgb, var(--cc-secondary-color) 86%, transparent);
+  --account-drawer-panel-width: var(--layout-account-drawer-panel-width);
+  --account-drawer-surface:var(--glass-overlay-drawer-shell-bg);
+  --account-drawer-border:var(--panel-border-unified);
+  --account-drawer-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   --account-drawer-backdrop: var(--overlay-backdrop);
 
-  --account-drawer-card-surface:var(--cc-surface-unified);
-  --account-drawer-card-border:var(--cc-border-unified);
-  --account-drawer-card-shadow:var(--cc-shadow-unified);
-  --account-drawer-badge-surface: color-mix(in srgb, var(--cc-primary-color) 5%, transparent);
-  --account-drawer-badge-text: color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
+  --account-drawer-card-surface:var(--panel-surface-unified);
+  --account-drawer-card-border:var(--panel-border-unified);
+  --account-drawer-card-shadow:var(--panel-shadow-unified);
+  --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 5%, transparent);
+  --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 72%, transparent);
 
-  --account-drawer-profile-surface:var(--cc-surface-unified);
-  --account-drawer-profile-border:var(--cc-border-unified);
-  --account-drawer-profile-shadow:var(--cc-shadow-unified);
+  --account-drawer-profile-surface:var(--panel-surface-unified);
+  --account-drawer-profile-border:var(--panel-border-unified);
+  --account-drawer-profile-shadow:var(--panel-shadow-unified);
 
-  --account-drawer-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-drawer-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-drawer-shell-inner-shadow:none;
+  --account-drawer-shell-highlight:none;
   --account-drawer-header-divider: transparent;
 
   --account-drawer-title-max: 14ch;
@@ -64,9 +64,9 @@
   --account-drawer-segment-title-size: var(--headline-4-size);
   --account-drawer-segment-title-line-height: var(--headline-4-line-height);
   --account-drawer-segment-title-letter-spacing: var(--tracking-copy);
-  --account-drawer-segment-title-font-weight: var(--cc-account-drawer-segment-title-weight);
+  --account-drawer-segment-title-font-weight: var(--layout-account-drawer-segment-title-weight);
   --account-drawer-segment-title-align: center;
-  --account-drawer-segment-title-max-width: var(--cc-account-drawer-segment-title-max-width);
+  --account-drawer-segment-title-max-width: var(--layout-account-drawer-segment-title-max-width);
   --account-drawer-segment-title-size-mobile: var(--headline-5-size);
   --account-drawer-segment-title-line-height-mobile: var(--headline-5-line-height);
 
@@ -81,22 +81,22 @@
   --account-drawer-content-gap-xl: var(--account-content-gap-xl);
 
   --account-drawer-header-padding-bottom: var(--spacing-md);
-  --account-drawer-header-padding-bottom-mobile: var(--cc-account-drawer-header-padding-bottom-mobile);
+  --account-drawer-header-padding-bottom-mobile: var(--layout-account-drawer-header-padding-bottom-mobile);
 
-  --account-drawer-content-stage-padding-inline: var(--cc-account-drawer-content-stage-padding-inline);
-  --account-drawer-content-stage-padding-inline-tablet: var(--cc-account-drawer-content-stage-padding-inline-tablet);
-  --account-drawer-content-stage-padding-inline-mobile: var(--cc-account-drawer-content-stage-padding-inline-mobile);
+  --account-drawer-content-stage-padding-inline: var(--layout-account-drawer-content-stage-padding-inline);
+  --account-drawer-content-stage-padding-inline-tablet: var(--layout-account-drawer-content-stage-padding-inline-tablet);
+  --account-drawer-content-stage-padding-inline-mobile: var(--layout-account-drawer-content-stage-padding-inline-mobile);
 
-  --account-drawer-body-gap-mobile: var(--cc-account-drawer-body-gap-mobile);
+  --account-drawer-body-gap-mobile: var(--layout-account-drawer-body-gap-mobile);
 
-  --account-drawer-entry-card-padding: var(--cc-account-drawer-entry-card-padding);
-  --account-drawer-entry-card-padding-mobile: var(--cc-account-drawer-entry-card-padding-mobile);
+  --account-drawer-entry-card-padding: var(--layout-account-drawer-entry-card-padding);
+  --account-drawer-entry-card-padding-mobile: var(--layout-account-drawer-entry-card-padding-mobile);
   --account-drawer-entry-title-size: var(--headline-5-size);
-  --account-drawer-entry-title-size-mobile: var(--cc-account-drawer-entry-title-size-mobile);
+  --account-drawer-entry-title-size-mobile: var(--layout-account-drawer-entry-title-size-mobile);
   --account-drawer-entry-copy-size: var(--body-2-size);
-  --account-drawer-entry-copy-size-mobile: var(--cc-account-drawer-entry-copy-size-mobile);
-  --account-drawer-meta-link-size: var(--cc-account-drawer-meta-link-size);
-  --account-drawer-meta-link-size-mobile: var(--cc-account-drawer-meta-link-size-mobile);
+  --account-drawer-entry-copy-size-mobile: var(--layout-account-drawer-entry-copy-size-mobile);
+  --account-drawer-meta-link-size: var(--layout-account-drawer-meta-link-size);
+  --account-drawer-meta-link-size-mobile: var(--layout-account-drawer-meta-link-size-mobile);
 
   --account-drawer-button-height: var(--account-button-height);
   --account-drawer-button-radius: var(--account-button-radius);
@@ -122,21 +122,21 @@
   --account-drawer-text-action-font-size: var(--account-text-action-font-size);
   --account-drawer-text-action-line-height: var(--account-text-action-line-height);
   --account-drawer-text-action-letter-spacing: var(--account-text-action-letter-spacing);
-  --account-drawer-text-link-color: var(--cc-primary-color);
+  --account-drawer-text-link-color: var(--text-primary-color);
   --account-drawer-text-link-color-hover: var(--color-primary1);
   --account-drawer-accent-hover:var(--color-primary1);
   --account-drawer-text-link-font-size: var(--account-text-action-font-size);
   --account-drawer-text-link-line-height: var(--account-text-action-line-height);
   --account-drawer-text-link-letter-spacing: var(--account-text-action-letter-spacing);
-  --account-drawer-text-link-font-weight: var(--cc-account-drawer-text-link-weight);
-  --account-drawer-text-link-opacity: var(--cc-account-drawer-text-link-opacity);
-  --account-drawer-text-link-opacity-hover: var(--cc-account-drawer-text-link-opacity-hover);
+  --account-drawer-text-link-font-weight: var(--layout-account-drawer-text-link-weight);
+  --account-drawer-text-link-opacity: var(--layout-account-drawer-text-link-opacity);
+  --account-drawer-text-link-opacity-hover: var(--layout-account-drawer-text-link-opacity-hover);
 
   --account-drawer-back-control-size: var(--account-back-control-size);
   --account-drawer-back-icon-size: var(--account-back-icon-size);
 
   --account-drawer-card-radius:var(--shape-card-radius);
-  --account-drawer-primary-shadow:var(--cc-shadow-unified);
+  --account-drawer-primary-shadow:var(--panel-shadow-unified);
 
   --account-drawer-close-size:var(--global-close-button-size);
   --account-drawer-close-color:var(--global-close-button-color);
@@ -149,56 +149,56 @@
    02A) ACCOUNT DRAWER LAYOUT TOKENS
 ============================================================================= */
 :root{
-  --account-drawer-shell-padding-y:var(--cc-account-drawer-shell-padding-y);
-  --account-drawer-shell-padding-x:var(--cc-account-drawer-shell-padding-x);
-  --account-drawer-shell-padding-y-tablet:var(--cc-account-drawer-shell-padding-y-tablet);
-  --account-drawer-shell-padding-x-tablet:var(--cc-account-drawer-shell-padding-x-tablet);
-  --account-drawer-shell-padding-y-mobile:var(--cc-account-drawer-shell-padding-y-mobile);
-  --account-drawer-shell-padding-x-mobile:var(--cc-account-drawer-shell-padding-x-mobile);
-  --account-drawer-close-offset:var(--cc-account-drawer-close-offset);
-  --account-drawer-close-offset-tablet:var(--cc-account-drawer-close-offset-tablet);
-  --account-drawer-close-offset-mobile:var(--cc-account-drawer-close-offset-mobile);
-  --account-drawer-copy-weight:var(--cc-account-drawer-copy-weight);
-  --account-drawer-entry-badge-min-height:var(--cc-account-drawer-entry-badge-min-height);
-  --account-drawer-entry-badge-padding-y:var(--cc-account-drawer-entry-badge-padding-y);
-  --account-drawer-entry-badge-padding-x:var(--cc-account-drawer-entry-badge-padding-x);
-  --account-drawer-entry-badge-weight:var(--cc-account-drawer-entry-badge-weight);
-  --account-drawer-entry-badge-line-height:var(--cc-account-drawer-entry-badge-line-height);
-  --account-drawer-entry-title-weight:var(--cc-account-drawer-entry-title-weight);
-  --account-drawer-profile-title-max-width:var(--cc-account-drawer-profile-title-max-width);
-  --account-drawer-profile-copy-max-width:var(--cc-account-drawer-profile-copy-max-width);
+  --account-drawer-shell-padding-y:var(--layout-account-drawer-shell-padding-y);
+  --account-drawer-shell-padding-x:var(--layout-account-drawer-shell-padding-x);
+  --account-drawer-shell-padding-y-tablet:var(--layout-account-drawer-shell-padding-y-tablet);
+  --account-drawer-shell-padding-x-tablet:var(--layout-account-drawer-shell-padding-x-tablet);
+  --account-drawer-shell-padding-y-mobile:var(--layout-account-drawer-shell-padding-y-mobile);
+  --account-drawer-shell-padding-x-mobile:var(--layout-account-drawer-shell-padding-x-mobile);
+  --account-drawer-close-offset:var(--layout-account-drawer-close-offset);
+  --account-drawer-close-offset-tablet:var(--layout-account-drawer-close-offset-tablet);
+  --account-drawer-close-offset-mobile:var(--layout-account-drawer-close-offset-mobile);
+  --account-drawer-copy-weight:var(--layout-account-drawer-copy-weight);
+  --account-drawer-entry-badge-min-height:var(--layout-account-drawer-entry-badge-min-height);
+  --account-drawer-entry-badge-padding-y:var(--layout-account-drawer-entry-badge-padding-y);
+  --account-drawer-entry-badge-padding-x:var(--layout-account-drawer-entry-badge-padding-x);
+  --account-drawer-entry-badge-weight:var(--layout-account-drawer-entry-badge-weight);
+  --account-drawer-entry-badge-line-height:var(--layout-account-drawer-entry-badge-line-height);
+  --account-drawer-entry-title-weight:var(--layout-account-drawer-entry-title-weight);
+  --account-drawer-profile-title-max-width:var(--layout-account-drawer-profile-title-max-width);
+  --account-drawer-profile-copy-max-width:var(--layout-account-drawer-profile-copy-max-width);
 }
 
 html[data-theme-effective="light"]{
-  --account-drawer-surface:var(--cc-surface-unified);
-  --account-drawer-card-surface:var(--cc-surface-unified);
-  --account-drawer-card-border:var(--cc-border-unified);
-  --account-drawer-card-shadow:var(--cc-shadow-unified);
-  --account-drawer-badge-surface: color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --account-drawer-badge-text: color-mix(in srgb, var(--cc-primary-color) 62%, transparent);
-  --account-drawer-profile-surface:var(--cc-surface-unified);
-  --account-drawer-profile-border:var(--cc-border-unified);
-  --account-drawer-profile-shadow:var(--cc-shadow-unified);
-  --account-drawer-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-drawer-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 2.2%, transparent) 0%, transparent 22%);
+  --account-drawer-surface:var(--glass-overlay-drawer-shell-bg);
+  --account-drawer-card-surface:var(--panel-surface-unified);
+  --account-drawer-card-border:var(--panel-border-unified);
+  --account-drawer-card-shadow:var(--panel-shadow-unified);
+  --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --account-drawer-profile-surface:var(--panel-surface-unified);
+  --account-drawer-profile-border:var(--panel-border-unified);
+  --account-drawer-profile-shadow:var(--panel-shadow-unified);
+  --account-drawer-shell-inner-shadow:none;
+  --account-drawer-shell-highlight:none;
   --account-drawer-header-divider: transparent;
-  --account-drawer-primary-shadow:var(--cc-shadow-unified);
+  --account-drawer-primary-shadow:var(--panel-shadow-unified);
 }
 
 html[data-theme-effective="dark"]{
-  --account-drawer-surface:var(--cc-surface-unified);
-  --account-drawer-card-surface:var(--cc-surface-unified);
-  --account-drawer-card-border:var(--cc-border-unified);
-  --account-drawer-card-shadow:var(--cc-shadow-unified);
-  --account-drawer-badge-surface: color-mix(in srgb, var(--cc-primary-color) 7%, transparent);
-  --account-drawer-badge-text: color-mix(in srgb, var(--cc-primary-color) 74%, transparent);
-  --account-drawer-profile-surface:var(--cc-surface-unified);
-  --account-drawer-profile-border:var(--cc-border-unified);
-  --account-drawer-profile-shadow:var(--cc-shadow-unified);
-  --account-drawer-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --account-drawer-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-drawer-surface:var(--glass-overlay-drawer-shell-bg);
+  --account-drawer-card-surface:var(--panel-surface-unified);
+  --account-drawer-card-border:var(--panel-border-unified);
+  --account-drawer-card-shadow:var(--panel-shadow-unified);
+  --account-drawer-badge-surface: color-mix(in srgb, var(--text-primary-color) 7%, transparent);
+  --account-drawer-badge-text: color-mix(in srgb, var(--text-primary-color) 74%, transparent);
+  --account-drawer-profile-surface:var(--panel-surface-unified);
+  --account-drawer-profile-border:var(--panel-border-unified);
+  --account-drawer-profile-shadow:var(--panel-shadow-unified);
+  --account-drawer-shell-inner-shadow:none;
+  --account-drawer-shell-highlight:none;
   --account-drawer-header-divider: transparent;
-  --account-drawer-primary-shadow:var(--cc-shadow-unified);
+  --account-drawer-primary-shadow:var(--panel-shadow-unified);
 }
 
 /* =============================================================================
@@ -239,10 +239,12 @@ body.account-drawer-closing{
 .account-drawer-backdrop{
   position: absolute;
   inset: var(--spacing-none);
-  background: var(--account-drawer-backdrop);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  z-index: var(--z-overlay-backdrop);
   opacity: var(--overlay-opacity-closed);
+  pointer-events: auto;
+  background:var(--glass-overlay-backdrop-bg);
+  backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
   transition: none;
 }
 
@@ -264,13 +266,15 @@ body.account-drawer-closing .account-drawer-backdrop{
 .account-drawer-shell{
   position: absolute;
   inset: var(--spacing-none) auto var(--spacing-none) var(--spacing-none);
+  z-index: var(--z-overlay-surface);
   width: var(--account-drawer-panel-width);
   max-width: var(--size-full);
   height: var(--size-full);
   padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x);
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
-  border-right: var(--cc-width-hairline) solid var(--account-drawer-border);
+  backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
   transform: none;
   transition:var(--interaction-transition-control);
@@ -281,8 +285,6 @@ body.account-drawer-closing .account-drawer-backdrop{
   overflow: visible;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
 }
 
 body.account-drawer-open .account-drawer-shell{
@@ -322,7 +324,7 @@ body.account-drawer-closing .account-drawer-shell{
   margin: var(--spacing-none);
   width: var(--size-full);
   max-width: var(--account-drawer-segment-title-max-width);
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-size: var(--account-drawer-segment-title-size);
   font-weight: var(--account-drawer-segment-title-font-weight);
   letter-spacing: var(--account-drawer-segment-title-letter-spacing);
@@ -421,14 +423,14 @@ body.account-drawer-closing .account-drawer-close{
   min-height: var(--account-drawer-button-height);
   padding: var(--spacing-none) var(--account-drawer-button-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--control-border-unified);
+  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--shape-control-radius);
   background: var(--control-surface);
-  color: var(--cc-color);
+  color: var(--text-color);
   text-decoration: none;
   transition:var(--interaction-transition-control);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
 }
 
 .account-drawer-action-label{
@@ -438,7 +440,7 @@ body.account-drawer-closing .account-drawer-close{
   justify-content: center;
   width: var(--size-full);
   min-height: var(--account-drawer-button-height);
-  color: var(--cc-color);
+  color: var(--text-color);
   font-size: var(--account-drawer-button-font-size);
   font-weight: var(--account-drawer-button-font-weight);
   letter-spacing: var(--account-drawer-button-letter-spacing);
@@ -448,7 +450,7 @@ body.account-drawer-closing .account-drawer-close{
 
 .account-drawer-action--primary{
   background: var(--control-surface);
-  color: var(--cc-color);
+  color: var(--text-color);
   border-color: var(--control-border);
   box-shadow: none;
 }
@@ -724,11 +726,11 @@ body.account-drawer-closing .account-drawer-close{
   justify-content: flex-start;
   gap: var(--spacing-sm);
   padding: var(--account-drawer-entry-card-padding);
-  border: var(--cc-width-hairline) solid var(--account-drawer-card-border);
+  border: var(--border-width-hairline) solid var(--account-drawer-card-border);
   background: var(--account-drawer-card-surface);
   box-shadow: var(--account-drawer-card-shadow);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
   border-radius: var(--account-drawer-card-radius);
 }
 
@@ -754,7 +756,7 @@ body.account-drawer-closing .account-drawer-close{
 }
 
 .account-drawer-entry-title{
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-size: var(--headline-5-size);
   font-weight: var(--account-drawer-entry-title-weight);
   letter-spacing: var(--tracking-copy);
@@ -793,15 +795,15 @@ body.account-drawer-closing .account-drawer-close{
   min-height: var(--account-drawer-provider-button-height);
   padding: var(--spacing-none) var(--account-drawer-provider-button-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--control-border-unified);
+  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--shape-control-radius);
   background: var(--control-surface);
-  color: var(--cc-color);
+  color: var(--text-color);
   text-decoration: none;
   font: inherit;
   transition:var(--interaction-transition-control);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
 }
 
 .account-drawer-identity-content{
@@ -833,7 +835,7 @@ body.account-drawer-closing .account-drawer-close{
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--cc-color);
+  color: var(--text-color);
   font-size: var(--account-drawer-button-font-size);
   font-weight: var(--account-drawer-button-font-weight);
   letter-spacing: var(--account-drawer-button-letter-spacing);
@@ -1016,7 +1018,7 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 @media (max-width:768px){
   :root{
-    --account-drawer-panel-width: var(--cc-account-drawer-panel-width-mobile);
+    --account-drawer-panel-width: var(--layout-account-drawer-panel-width-mobile);
   }
 
   .account-drawer-shell{

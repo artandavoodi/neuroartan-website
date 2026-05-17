@@ -1,0 +1,190 @@
+/* =============================================================================
+   NEUROARTAN · HOME DEVELOPER MODE · RIGHT SIDEBAR
+   -----------------------------------------------------------------------------
+   Purpose: Local right-sidebar context component styling. Parent layout,
+   viewport, columns, and section slots are owned by developer-mode-shell.css.
+============================================================================= */
+
+/* =============================================================================
+   00) FILE INDEX
+   -----------------------------------------------------------------------------
+   01) CONTEXT COMPONENT TOKENS
+   02) CONTEXT COMPONENT FRAME
+   03) CONTEXT COMPONENT HEADER
+   04) CONTEXT COMPONENT BODY
+   05) CONTEXT GROUPS
+   06) CONTEXT DATA LIST
+   07) COMPACT VARIANT
+   08) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) CONTEXT COMPONENT TOKENS
+============================================================================= */
+.home-developer-mode-context{
+  --home-developer-mode-context-surface:var(--home-interaction-settings-control-group-surface-bg, var(--home-interaction-panel-bg, var(--surface-primary-color)));
+  --home-developer-mode-context-border:var(--home-interaction-settings-control-group-surface-border, var(--home-interaction-panel-border, var(--border-color)));
+  --home-developer-mode-context-separator:var(--home-interaction-settings-control-group-row-separator, var(--border-color));
+  --home-developer-mode-context-text:var(--text-primary-color);
+  --home-developer-mode-context-muted:var(--text-secondary-color);
+  --home-developer-mode-context-padding-block:var(--spacing-md);
+  --home-developer-mode-context-padding-inline:var(--spacing-md);
+  --home-developer-mode-context-gap:var(--spacing-md);
+  --home-developer-mode-context-copy-gap:var(--spacing-xs);
+  --home-developer-mode-context-row-gap:var(--spacing-sm);
+  --home-developer-mode-context-row-padding-block:var(--spacing-sm);
+  --home-developer-mode-context-row-padding-inline:var(--spacing-md);
+}
+
+/* =============================================================================
+   02) CONTEXT COMPONENT FRAME
+============================================================================= */
+.home-developer-mode-context{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  color:var(--home-developer-mode-context-text);
+  background:var(--home-developer-mode-context-surface);
+  border:0;
+  overflow:hidden;
+}
+
+/* =============================================================================
+   03) CONTEXT COMPONENT HEADER
+============================================================================= */
+.home-developer-mode-context__header{
+  display:flex;
+  flex:0 0 auto;
+  flex-direction:column;
+  gap:var(--home-developer-mode-context-copy-gap);
+  padding:var(--home-developer-mode-context-padding-block) var(--home-developer-mode-context-padding-inline);
+  border-bottom:0;
+}
+
+.home-developer-mode-context__eyebrow,
+.home-developer-mode-context__title,
+.home-developer-mode-context__description{
+  margin:var(--spacing-none);
+}
+
+.home-developer-mode-context__eyebrow,
+.home-developer-mode-context__group-title{
+  color:var(--home-developer-mode-context-muted);
+  font-size:var(--font-size-caption);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-label);
+  line-height:var(--line-height-tight);
+  text-transform:uppercase;
+}
+
+.home-developer-mode-context__title{
+  color:var(--home-developer-mode-context-text);
+  font-size:var(--font-size-body-1);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
+  line-height:var(--line-height-tight);
+}
+
+.home-developer-mode-context__description{
+  color:var(--home-developer-mode-context-muted);
+  font-size:var(--font-size-body-3);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
+  line-height:var(--line-height-copy);
+}
+
+/* =============================================================================
+   04) CONTEXT COMPONENT BODY
+============================================================================= */
+.home-developer-mode-context__body{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  gap:var(--home-developer-mode-context-gap);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  padding:var(--home-developer-mode-context-padding-block) var(--home-developer-mode-context-padding-inline);
+  overflow:auto;
+}
+
+/* =============================================================================
+   05) CONTEXT GROUPS
+============================================================================= */
+.home-developer-mode-context__group{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-developer-mode-context-copy-gap);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+}
+
+.home-developer-mode-context__group-title{
+  margin:var(--spacing-none);
+}
+
+/* =============================================================================
+   06) CONTEXT DATA LIST
+============================================================================= */
+.home-developer-mode-context__list{
+  display:flex;
+  flex-direction:column;
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  overflow:hidden;
+  background:transparent;
+  border:0;
+}
+
+.home-developer-mode-context__item{
+  display:grid;
+  grid-template-columns:minmax(var(--spacing-none), 0.82fr) minmax(var(--spacing-none), 1fr);
+  gap:var(--home-developer-mode-context-row-gap);
+  align-items:start;
+  padding:var(--home-developer-mode-context-row-padding-block) var(--home-developer-mode-context-row-padding-inline);
+}
+
+.home-developer-mode-context__item + .home-developer-mode-context__item{
+  border-top:0;
+}
+
+.home-developer-mode-context__item dt,
+.home-developer-mode-context__item dd{
+  margin:var(--spacing-none);
+  min-width:var(--spacing-none);
+  font-size:var(--font-size-body-3);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
+  line-height:var(--line-height-copy);
+}
+
+.home-developer-mode-context__item dt{
+  color:var(--home-developer-mode-context-muted);
+}
+
+.home-developer-mode-context__item dd{
+  color:var(--home-developer-mode-context-text);
+  overflow-wrap:anywhere;
+}
+
+/* =============================================================================
+   07) COMPACT VARIANT
+============================================================================= */
+.home-developer-mode-context--compact .home-developer-mode-context__header{
+  display:none;
+}
+
+.home-developer-mode-context--compact .home-developer-mode-context__body{
+  flex:0 1 auto;
+}
+
+/* =============================================================================
+   08) RESPONSIVE
+============================================================================= */
+@media (max-width: 980px){
+  .home-developer-mode-context{
+    min-height:auto;
+  }
+}

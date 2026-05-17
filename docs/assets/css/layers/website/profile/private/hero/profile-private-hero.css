@@ -31,13 +31,13 @@
   --profile-private-hero-surface-layer-bg:var(--bg-color);
   --profile-private-hero-surface-layer-opacity:0;
   --profile-private-hero-surface-layer-opacity-active:1;
-  --profile-private-hero-surface-layer-border:var(--cc-width-hairline) solid var(--cc-color);
-  --profile-private-hero-cover-bg:color-mix(in srgb, var(--cc-primary-color) 5%, transparent);
-  --profile-private-hero-cover-border:color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  --profile-private-hero-surface-layer-border:var(--border-width-hairline) solid var(--border-color);
+  --profile-private-hero-cover-bg:color-mix(in srgb, var(--text-primary-color) 5%, transparent);
+  --profile-private-hero-cover-border:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --profile-private-hero-avatar-bg:var(--surface-secondary);
   --profile-private-hero-avatar-border:var(--bg-color);
   --profile-private-hero-control-bg:color-mix(in srgb, var(--bg-color) 88%, transparent);
-  --profile-private-hero-control-border:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
+  --profile-private-hero-control-border:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   --profile-private-hero-motion-fast:var(--interaction-motion-medium);
   --profile-private-hero-motion-ease:var(--interaction-ease-standard);
   --profile-private-hero-avatar-initials-size:var(--data-value-lg-size);
@@ -119,7 +119,7 @@
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--cc-primary-color) 5%, transparent) 100%);
+  background:linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--text-primary-color) 5%, transparent) 100%);
   pointer-events:none;
 }
 
@@ -177,7 +177,7 @@
   border-radius:var(--control-radius-pill);
   border:var(--profile-private-hero-avatar-border-width) solid var(--profile-private-hero-avatar-border);
   background:var(--profile-private-hero-avatar-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   overflow:hidden;
   box-sizing:border-box;
 }
@@ -209,7 +209,7 @@
   border:1px solid var(--profile-private-hero-control-border);
   border-radius:var(--control-radius-pill);
   background:var(--profile-private-hero-control-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   backdrop-filter:blur(var(--effect-blur-sm)) saturate(120%);
   -webkit-backdrop-filter:blur(var(--effect-blur-sm)) saturate(120%);
   transition:var(--interaction-transition-control);
@@ -222,7 +222,7 @@
 
 .profile-private-hero__media-action:hover,
 .profile-private-hero__media-action:focus-visible{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   opacity:var(--profile-private-hero-media-action-hover-opacity);
   outline:none;
 }
@@ -258,7 +258,7 @@
   font-weight:var(--headline-3-weight);
   line-height:var(--headline-3-line-height);
   letter-spacing:var(--headline-3-tracking);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
 }
 
 .profile-private-hero__meta,
@@ -270,7 +270,7 @@
   font-weight:var(--body-2-weight);
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-private-hero__description{
@@ -326,7 +326,7 @@
 }
 
 .profile-private-hero__stat strong{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-weight:var(--profile-private-hero-stat-strong-weight);
 }
 

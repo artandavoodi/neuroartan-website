@@ -61,7 +61,7 @@
   font-weight:var(--headline-5-weight);
   line-height:var(--headline-5-line-height);
   letter-spacing:var(--headline-5-tracking);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-panel__intro,
@@ -71,7 +71,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-panel__action{
@@ -104,7 +104,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-panel__value{
@@ -112,7 +112,7 @@
   font-weight:500;
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
-  color:var(--cc-color);
+  color:var(--text-color);
   text-align:right;
   overflow-wrap:anywhere;
 }

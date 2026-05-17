@@ -1,0 +1,319 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) APPEARANCE SETTINGS TOKENS
+   02) DESTINATION ROOT
+   03) SURFACE SHELL
+   04) HEADER
+   05) SECTION STRUCTURE
+   06) MODE GRID
+   07) COLOR PICKER CONSUMER STATE
+   08) TOGGLE LIST CONSUMER LAYOUT
+   09) SCROLL SAFETY
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+
+/* =============================================================================
+   01) THEME SETTINGS TOKENS
+============================================================================= */
+:root{
+  --home-platform-theme-eyebrow-opacity:var(--layout-home-platform-theme-eyebrow-opacity);
+  --home-platform-theme-summary-opacity:var(--layout-home-platform-theme-summary-opacity);
+  --home-platform-theme-caption-opacity:var(--layout-home-platform-theme-caption-opacity);
+  --home-platform-theme-token-grid-disabled-opacity:var(--layout-home-platform-theme-token-grid-disabled-opacity);
+  --home-platform-theme-token-grid-enabled-opacity:var(--layout-home-platform-theme-token-grid-enabled-opacity);
+  --home-platform-theme-motion-fast:var(--interaction-motion-medium);
+  --home-platform-theme-shell-gap:var(--layout-home-platform-theme-shell-gap);
+  --home-platform-theme-header-gap:var(--layout-home-platform-theme-header-gap);
+  --home-platform-theme-eyebrow-size:var(--layout-home-platform-theme-eyebrow-size);
+  --home-platform-theme-eyebrow-weight:var(--layout-home-platform-theme-eyebrow-weight);
+  --home-platform-theme-eyebrow-tracking:var(--layout-home-platform-theme-eyebrow-tracking);
+  --home-platform-theme-title-size:var(--layout-home-platform-theme-title-size);
+  --home-platform-theme-title-weight:var(--layout-home-platform-theme-title-weight);
+  --home-platform-theme-title-line-height:var(--layout-home-platform-theme-title-line-height);
+  --home-platform-theme-title-tracking:var(--layout-home-platform-theme-title-tracking);
+  --home-platform-theme-summary-max-width:var(--layout-home-platform-theme-summary-max-width);
+  --home-platform-theme-summary-size:var(--layout-home-platform-theme-summary-size);
+  --home-platform-theme-summary-line-height:var(--layout-home-platform-theme-summary-line-height);
+  --home-platform-theme-section-gap:var(--layout-home-platform-theme-section-gap);
+  --home-platform-theme-section-padding-top:var(--layout-home-platform-theme-section-padding-top);
+  --home-platform-theme-section-header-gap:var(--layout-home-platform-theme-section-header-gap);
+  --home-platform-theme-mode-grid-count:var(--layout-home-platform-theme-mode-grid-count);
+  --home-platform-theme-mode-grid-gap:var(--layout-home-platform-theme-mode-grid-gap);
+  --home-platform-theme-mode-option-gap:var(--layout-home-platform-theme-mode-option-gap);
+  --home-platform-theme-mode-option-min-height:var(--layout-home-platform-theme-mode-option-min-height);
+  --home-platform-theme-mode-option-padding-y:var(--layout-home-platform-theme-mode-option-padding-y);
+  --home-platform-theme-mode-option-padding-x:var(--layout-home-platform-theme-mode-option-padding-x);
+  --home-platform-theme-mode-option-radius:var(--control-radius-composer);
+  --home-platform-theme-mode-label-size:var(--layout-home-platform-theme-mode-label-size);
+  --home-platform-theme-mode-label-weight:var(--layout-home-platform-theme-mode-label-weight);
+  --home-platform-theme-mode-label-line-height:var(--layout-home-platform-theme-mode-label-line-height);
+  --home-platform-theme-caption-size:var(--layout-home-platform-theme-caption-size);
+  --home-platform-theme-caption-line-height:var(--layout-home-platform-theme-caption-line-height);
+  --home-platform-theme-token-grid-count:var(--layout-home-platform-theme-token-grid-count);
+  --home-platform-theme-token-grid-gap:var(--layout-home-platform-theme-token-grid-gap);
+  --home-platform-theme-token-field-gap:var(--layout-home-platform-theme-token-field-gap);
+  --home-platform-theme-token-field-min-height:var(--layout-home-platform-theme-token-field-min-height);
+  --home-platform-theme-token-field-padding-y:var(--layout-home-platform-theme-token-field-padding-y);
+  --home-platform-theme-token-field-padding-x:var(--layout-home-platform-theme-token-field-padding-x);
+  --home-platform-theme-token-field-radius:var(--control-radius-composer);
+  --home-platform-theme-token-label-size:var(--layout-home-platform-theme-token-label-size);
+  --home-platform-theme-token-label-weight:var(--layout-home-platform-theme-token-label-weight);
+  --home-platform-theme-token-label-line-height:var(--layout-home-platform-theme-token-label-line-height);
+  --home-platform-theme-toggle-list-gap:var(--layout-home-platform-theme-toggle-list-gap);
+  --home-platform-theme-toggle-row-gap:var(--layout-home-platform-theme-toggle-row-gap);
+  --home-platform-theme-toggle-row-padding-y:var(--layout-home-platform-theme-toggle-row-padding-y);
+}
+
+/* =============================================================================
+   02) DESTINATION ROOT
+============================================================================= */
+.home-platform-destination--settings-appearance{
+  width:var(--size-full);
+  max-width:var(--size-full);
+  overflow-x:hidden;
+}
+
+/* =============================================================================
+   02) SURFACE SHELL
+============================================================================= */
+.home-platform-theme{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-theme-shell-gap);
+  width:var(--size-full);
+  max-width:var(--size-full);
+  overflow-x:hidden;
+}
+
+/* =============================================================================
+   03) HEADER
+============================================================================= */
+.home-platform-theme__header{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-theme-header-gap);
+}
+
+.home-platform-theme__eyebrow,
+.home-platform-theme__section-eyebrow{
+  margin:var(--spacing-none);
+  font-size:var(--home-platform-theme-eyebrow-size);
+  font-weight:var(--home-platform-theme-eyebrow-weight);
+  letter-spacing:var(--home-platform-theme-eyebrow-tracking);
+  text-transform:uppercase;
+  opacity:var(--home-platform-theme-eyebrow-opacity);
+}
+
+.home-platform-theme__title,
+.home-platform-theme__section-title{
+  margin:var(--spacing-none);
+  font-size:var(--home-platform-theme-title-size);
+  font-weight:var(--home-platform-theme-eyebrow-weight);
+  line-height:var(--home-platform-theme-title-line-height);
+  letter-spacing:var(--home-platform-theme-title-tracking);
+}
+
+.home-platform-theme__summary{
+  margin:var(--spacing-none);
+  max-width:var(--home-platform-theme-summary-max-width);
+  font-size:var(--home-platform-theme-summary-size);
+  line-height:var(--home-platform-theme-summary-line-height);
+  opacity:var(--home-platform-theme-summary-opacity);
+}
+
+/* =============================================================================
+   05) SECTION STRUCTURE
+============================================================================= */
+.home-platform-theme__section{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-theme-section-gap);
+  padding:var(--home-platform-theme-section-padding-top) var(--spacing-none) var(--spacing-none);
+  border-top:var(--border-width-hairline) solid var(--control-border);
+}
+
+.home-platform-theme__section:first-of-type{
+  padding-top:var(--spacing-none);
+  border-top:var(--spacing-none);
+}
+
+.home-platform-theme__section-header{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-theme-section-header-gap);
+}
+
+/* =============================================================================
+   06) MODE GRID
+============================================================================= */
+.home-platform-theme__mode-grid{
+  display:grid;
+  grid-template-columns:repeat(var(--home-platform-theme-mode-grid-count), minmax(var(--spacing-none), 1fr));
+  gap:var(--home-platform-theme-mode-grid-gap);
+}
+
+.home-platform-theme__mode-option{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:var(--home-platform-theme-mode-option-gap);
+  min-height:var(--home-platform-theme-mode-option-min-height);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  padding:var(--home-platform-theme-mode-option-padding-y) var(--home-platform-theme-mode-option-padding-x);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-platform-theme-mode-option-radius);
+  background:transparent;
+  color:var(--text-color);
+  text-align:left;
+  transition:var(--interaction-transition-control);
+}
+
+.home-platform-theme__mode-option:hover,
+.home-platform-theme__mode-option:focus-visible{
+  border-color:var(--control-border);
+  background:var(--control-bg);
+  outline:none;
+}
+
+.home-platform-theme__mode-option[aria-pressed="true"]{
+  border-color:var(--control-border-strong);
+  background:var(--control-bg);
+}
+
+.home-platform-theme__mode-label,
+.home-platform-theme__toggle-title{
+  margin:var(--spacing-none);
+  font-size:var(--home-platform-theme-mode-label-size);
+  font-weight:var(--home-platform-theme-eyebrow-weight);
+  line-height:var(--home-platform-theme-mode-label-line-height);
+}
+
+.home-platform-theme__mode-caption{
+  margin:var(--spacing-none);
+  font-size:var(--home-platform-theme-caption-size);
+  line-height:var(--home-platform-theme-caption-line-height);
+  opacity:var(--home-platform-theme-caption-opacity);
+}
+
+/* =============================================================================
+   07) COLOR PICKER CONSUMER STATE
+============================================================================= */
+.home-platform-theme__token-grid{
+  display:grid;
+  grid-template-columns:repeat(var(--home-platform-theme-token-grid-count), minmax(var(--spacing-none), 1fr));
+  gap:var(--home-platform-theme-token-grid-gap);
+}
+
+.home-platform-theme__token-field{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--home-platform-theme-token-field-gap);
+  min-height:var(--home-platform-theme-token-field-min-height);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  padding:var(--home-platform-theme-token-field-padding-y) var(--home-platform-theme-token-field-padding-x);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-platform-theme-token-field-radius);
+  background:transparent;
+  color:var(--text-color);
+}
+
+.home-platform-theme__token-label{
+  margin:var(--spacing-none);
+  font-size:var(--home-platform-theme-token-label-size);
+  font-weight:var(--home-platform-theme-eyebrow-weight);
+  line-height:var(--home-platform-theme-token-label-line-height);
+}
+
+.home-platform-theme__token-input{
+  flex:0 0 auto;
+}
+
+.home-platform-theme[data-active-theme="system"] .home-platform-theme__token-grid,
+.home-platform-theme[data-active-theme="dark"] .home-platform-theme__token-grid,
+.home-platform-theme[data-active-theme="light"] .home-platform-theme__token-grid{
+  opacity:var(--home-platform-theme-token-grid-disabled-opacity);
+  pointer-events:none;
+}
+
+.home-platform-theme[data-active-theme="custom"] .home-platform-theme__token-grid{
+  opacity:var(--home-platform-theme-token-grid-enabled-opacity);
+  pointer-events:auto;
+}
+
+/* =============================================================================
+   08) TOGGLE LIST CONSUMER LAYOUT
+============================================================================= */
+.home-platform-theme__toggle-list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-theme-toggle-list-gap);
+}
+
+.home-platform-theme__toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--home-platform-theme-toggle-row-gap);
+  padding:var(--home-platform-theme-toggle-row-padding-y) var(--spacing-none);
+  border-top:var(--border-width-hairline) solid var(--control-border);
+}
+
+.home-platform-theme__toggle-row:first-child{
+  padding-top:var(--spacing-none);
+  border-top:var(--spacing-none);
+}
+
+.home-platform-theme__toggle-copy{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  gap:var(--spacing-none);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-theme__toggle-row .na-toggle{
+  flex:0 0 auto;
+  align-self:center;
+}
+
+/* =============================================================================
+   09) SCROLL SAFETY
+============================================================================= */
+.home-platform-theme,
+.home-platform-theme *{
+  box-sizing:border-box;
+}
+
+.home-platform-theme__mode-grid,
+.home-platform-theme__token-grid,
+.home-platform-theme__toggle-list,
+.home-platform-theme__toggle-row{
+  max-width:var(--size-full);
+}
+
+.home-platform-theme__toggle-row .na-toggle{
+  flex:0 0 auto;
+}
+
+/* =============================================================================
+   10) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width:900px){
+  .home-platform-theme__mode-grid{
+    grid-template-columns:var(--grid-column-single);
+  }
+
+  .home-platform-theme__token-grid{
+    grid-template-columns:var(--grid-column-single);
+  }
+}
+
+@media (max-width:640px){
+  .home-platform-theme__toggle-row .na-toggle{
+    align-self:flex-start;
+  }
+}

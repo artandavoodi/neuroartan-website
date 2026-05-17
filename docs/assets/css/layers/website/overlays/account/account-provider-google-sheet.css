@@ -19,14 +19,14 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --account-provider-google-surface:var(--cc-surface-unified);
-  --account-provider-google-border:var(--cc-border-unified);
-  --account-provider-google-muted: color-mix(in srgb, var(--cc-secondary-color) 86%, transparent);
-  --account-provider-google-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-provider-google-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
-  --account-provider-google-header-divider: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --account-provider-google-primary-shadow:var(--cc-shadow-unified);
-  --account-provider-google-foreground: var(--cc-color);
+  --account-provider-google-surface:var(--panel-surface-unified);
+  --account-provider-google-border:var(--panel-border-unified);
+  --account-provider-google-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
+  --account-provider-google-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-provider-google-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --account-provider-google-primary-shadow:var(--panel-shadow-unified);
+  --account-provider-google-foreground: var(--text-color);
 
   --account-provider-google-content-max-width: var(--account-control-width-max);
   --account-provider-google-content-max-width-wide: var(--account-control-width-max-wide);
@@ -66,19 +66,19 @@
 }
 
 html[data-theme-effective="light"]{
-  --account-provider-google-surface:var(--cc-surface-unified);
-  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 2.2%, transparent) 0%, transparent 22%);
-  --account-provider-google-header-divider: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --account-provider-google-primary-shadow:var(--cc-shadow-unified);
+  --account-provider-google-surface:var(--panel-surface-unified);
+  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 2.2%, transparent) 0%, transparent 22%);
+  --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --account-provider-google-primary-shadow:var(--panel-shadow-unified);
 }
 
 html[data-theme-effective="dark"]{
-  --account-provider-google-surface:var(--cc-surface-unified);
-  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--cc-primary-color) 3%, transparent) 0%, transparent 22%);
-  --account-provider-google-header-divider: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --account-provider-google-primary-shadow:var(--cc-shadow-unified);
+  --account-provider-google-surface:var(--panel-surface-unified);
+  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
+  --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --account-provider-google-primary-shadow:var(--panel-shadow-unified);
 }
 
 /* =============================================================================
@@ -156,7 +156,7 @@ html[data-theme-effective="dark"]{
   height: var(--account-provider-google-button-height);
   padding: var(--spacing-none) var(--account-provider-google-button-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--account-provider-google-button-border);
+  border: var(--border-width-hairline) solid var(--account-provider-google-button-border);
   border-radius: var(--account-provider-google-button-radius);
   background: var(--account-provider-google-button-background);
   color: var(--account-provider-google-foreground);
@@ -204,10 +204,10 @@ html[data-theme-effective="dark"]{
 
 .account-provider-google-sheet-text-action{
   display: inline;
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   text-decoration: underline;
   text-decoration-color: currentColor;
-  text-decoration-thickness: var(--cc-width-hairline);
+  text-decoration-thickness: var(--border-width-hairline);
   text-underline-offset: 0.14em;
   text-decoration-skip-ink: auto;
   font-size: var(--account-provider-google-text-action-font-size);

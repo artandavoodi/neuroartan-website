@@ -20,7 +20,7 @@
   width:var(--size-full);
   height:var(--spacing-none);
   border:var(--spacing-none);
-  border-top:var(--cc-width-hairline) solid var(--cc-color);
+  border-top:var(--border-width-hairline) solid var(--border-color);
   margin:var(--spacing-none);
 }
 
@@ -28,7 +28,7 @@
    03) DIVIDER SOFT VARIANT
 ============================================================================= */
 .ui-divider--soft{
-  border-top-color:var(--cc-color);
+  border-top-color:var(--border-color);
   opacity:var(--state-opacity-muted);
 }
 
@@ -49,7 +49,7 @@
   user-select:none;
   display:inline-block;
   line-height:var(--control-line-height);
-  transform:translateY(calc(var(--cc-width-hairline) * -0.5));
+  transform:translateY(calc(var(--border-width-hairline) * -0.5));
 }
 
 /* =============================================================================

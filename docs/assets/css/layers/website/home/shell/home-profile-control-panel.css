@@ -14,60 +14,60 @@
    01) HOME PROFILE CONTROL PANEL TOKENS
 ============================================================================= */
 :root{
-  --home-profile-control-panel-width:var(--cc-home-profile-control-panel-width);
-  --home-profile-control-panel-inner-gap:var(--cc-home-profile-control-panel-inner-gap);
-  --home-profile-control-panel-inner-padding-top:var(--cc-home-profile-control-panel-inner-padding-top);
-  --home-profile-control-panel-inner-padding-right:var(--cc-home-profile-control-panel-inner-padding-right);
-  --home-profile-control-panel-inner-padding-bottom:var(--cc-home-profile-control-panel-inner-padding-bottom);
-  --home-profile-control-panel-inner-padding-left:var(--cc-home-profile-control-panel-inner-padding-left);
-  --home-profile-control-panel-inner-padding-top-mobile:var(--cc-home-profile-control-panel-inner-padding-top-mobile);
-  --home-profile-control-panel-header-gap:var(--cc-home-profile-control-panel-header-gap);
-  --home-profile-control-panel-header-padding-bottom:var(--cc-home-profile-control-panel-header-padding-bottom);
-  --home-profile-control-panel-eyebrow-margin-bottom:var(--cc-home-profile-control-panel-eyebrow-margin-bottom);
-  --home-profile-control-panel-section-gap:var(--cc-home-profile-control-panel-section-gap);
-  --home-profile-control-panel-stack-gap:var(--cc-home-profile-control-panel-stack-gap);
-  --home-profile-control-panel-identity-gap:var(--cc-home-profile-control-panel-identity-gap);
-  --home-profile-control-panel-identity-padding-y:var(--cc-home-profile-control-panel-identity-padding-y);
-  --home-profile-control-panel-identity-padding-x:var(--cc-home-profile-control-panel-identity-padding-x);
-  --home-profile-control-panel-avatar-size:var(--cc-home-profile-control-panel-avatar-size);
+  --home-profile-control-panel-width:var(--layout-home-profile-control-panel-width);
+  --home-profile-control-panel-inner-gap:var(--layout-home-profile-control-panel-inner-gap);
+  --home-profile-control-panel-inner-padding-top:var(--layout-home-profile-control-panel-inner-padding-top);
+  --home-profile-control-panel-inner-padding-right:var(--layout-home-profile-control-panel-inner-padding-right);
+  --home-profile-control-panel-inner-padding-bottom:var(--layout-home-profile-control-panel-inner-padding-bottom);
+  --home-profile-control-panel-inner-padding-left:var(--layout-home-profile-control-panel-inner-padding-left);
+  --home-profile-control-panel-inner-padding-top-mobile:var(--layout-home-profile-control-panel-inner-padding-top-mobile);
+  --home-profile-control-panel-header-gap:var(--layout-home-profile-control-panel-header-gap);
+  --home-profile-control-panel-header-padding-bottom:var(--layout-home-profile-control-panel-header-padding-bottom);
+  --home-profile-control-panel-eyebrow-margin-bottom:var(--layout-home-profile-control-panel-eyebrow-margin-bottom);
+  --home-profile-control-panel-section-gap:var(--layout-home-profile-control-panel-section-gap);
+  --home-profile-control-panel-stack-gap:var(--layout-home-profile-control-panel-stack-gap);
+  --home-profile-control-panel-identity-gap:var(--layout-home-profile-control-panel-identity-gap);
+  --home-profile-control-panel-identity-padding-y:var(--layout-home-profile-control-panel-identity-padding-y);
+  --home-profile-control-panel-identity-padding-x:var(--layout-home-profile-control-panel-identity-padding-x);
+  --home-profile-control-panel-avatar-size:var(--layout-home-profile-control-panel-avatar-size);
   --home-profile-control-panel-avatar-radius:var(--control-radius-pill);
-  --home-profile-control-panel-avatar-fallback-size:var(--cc-home-profile-control-panel-avatar-fallback-size);
-  --home-profile-control-panel-avatar-fallback-weight:var(--cc-home-profile-control-panel-avatar-fallback-weight);
-  --home-profile-control-panel-avatar-fallback-tracking:var(--cc-home-profile-control-panel-avatar-fallback-tracking);
-  --home-profile-control-panel-name-margin-bottom:var(--cc-home-profile-control-panel-name-margin-bottom);
-  --home-profile-control-panel-name-size:var(--cc-home-profile-control-panel-name-size);
-  --home-profile-control-panel-name-weight:var(--cc-home-profile-control-panel-name-weight);
-  --home-profile-control-panel-username-margin-bottom:var(--cc-home-profile-control-panel-username-margin-bottom);
-  --home-profile-control-panel-username-size:var(--cc-home-profile-control-panel-username-size);
-  --home-profile-control-panel-username-weight:var(--cc-home-profile-control-panel-username-weight);
-  --home-profile-control-panel-username-tracking:var(--cc-home-profile-control-panel-username-tracking);
-  --home-profile-control-panel-plan-margin-bottom:var(--cc-home-profile-control-panel-plan-margin-bottom);
-  --home-profile-control-panel-plan-size:var(--cc-home-profile-control-panel-plan-size);
-  --home-profile-control-panel-plan-weight:var(--cc-home-profile-control-panel-plan-weight);
-  --home-profile-control-panel-plan-tracking:var(--cc-home-profile-control-panel-plan-tracking);
-  --home-profile-control-panel-meta-size:var(--cc-home-profile-control-panel-meta-size);
-  --home-profile-control-panel-meta-line-height:var(--cc-home-profile-control-panel-meta-line-height);
-  --home-profile-control-panel-route-link-margin-top:var(--cc-home-profile-control-panel-route-link-margin-top);
-  --home-profile-control-panel-route-link-size:var(--cc-home-profile-control-panel-route-link-size);
-  --home-profile-control-panel-route-link-line-height:var(--cc-home-profile-control-panel-route-link-line-height);
-  --home-profile-control-panel-status-grid-gap:var(--cc-home-profile-control-panel-status-grid-gap);
-  --home-profile-control-panel-status-card-gap:var(--cc-home-profile-control-panel-status-card-gap);
-  --home-profile-control-panel-status-card-padding-y:var(--cc-home-profile-control-panel-status-card-padding-y);
-  --home-profile-control-panel-status-card-padding-x:var(--cc-home-profile-control-panel-status-card-padding-x);
-  --home-profile-control-panel-status-label-size:var(--cc-home-profile-control-panel-status-label-size);
-  --home-profile-control-panel-status-label-weight:var(--cc-home-profile-control-panel-status-label-weight);
-  --home-profile-control-panel-status-label-tracking:var(--cc-home-profile-control-panel-status-label-tracking);
-  --home-profile-control-panel-status-value-size:var(--cc-home-profile-control-panel-status-value-size);
-  --home-profile-control-panel-status-value-weight:var(--cc-home-profile-control-panel-status-value-weight);
-  --home-profile-control-panel-status-value-line-height:var(--cc-home-profile-control-panel-status-value-line-height);
-  --home-profile-control-panel-route-status-size:var(--cc-home-profile-control-panel-route-status-size);
-  --home-profile-control-panel-route-status-line-height:var(--cc-home-profile-control-panel-route-status-line-height);
-  --home-profile-control-panel-item-min-height:var(--cc-home-profile-control-panel-item-min-height);
-  --home-profile-control-panel-item-padding-y:var(--cc-home-profile-control-panel-item-padding-y);
-  --home-profile-control-panel-item-padding-x:var(--cc-home-profile-control-panel-item-padding-x);
-  --home-profile-control-panel-item-size:var(--cc-home-profile-control-panel-item-size);
-  --home-profile-control-panel-item-weight:var(--cc-home-profile-control-panel-item-weight);
-  --home-profile-control-panel-item-tracking:var(--cc-home-profile-control-panel-item-tracking);
+  --home-profile-control-panel-avatar-fallback-size:var(--layout-home-profile-control-panel-avatar-fallback-size);
+  --home-profile-control-panel-avatar-fallback-weight:var(--layout-home-profile-control-panel-avatar-fallback-weight);
+  --home-profile-control-panel-avatar-fallback-tracking:var(--layout-home-profile-control-panel-avatar-fallback-tracking);
+  --home-profile-control-panel-name-margin-bottom:var(--layout-home-profile-control-panel-name-margin-bottom);
+  --home-profile-control-panel-name-size:var(--layout-home-profile-control-panel-name-size);
+  --home-profile-control-panel-name-weight:var(--layout-home-profile-control-panel-name-weight);
+  --home-profile-control-panel-username-margin-bottom:var(--layout-home-profile-control-panel-username-margin-bottom);
+  --home-profile-control-panel-username-size:var(--layout-home-profile-control-panel-username-size);
+  --home-profile-control-panel-username-weight:var(--layout-home-profile-control-panel-username-weight);
+  --home-profile-control-panel-username-tracking:var(--layout-home-profile-control-panel-username-tracking);
+  --home-profile-control-panel-plan-margin-bottom:var(--layout-home-profile-control-panel-plan-margin-bottom);
+  --home-profile-control-panel-plan-size:var(--layout-home-profile-control-panel-plan-size);
+  --home-profile-control-panel-plan-weight:var(--layout-home-profile-control-panel-plan-weight);
+  --home-profile-control-panel-plan-tracking:var(--layout-home-profile-control-panel-plan-tracking);
+  --home-profile-control-panel-meta-size:var(--layout-home-profile-control-panel-meta-size);
+  --home-profile-control-panel-meta-line-height:var(--layout-home-profile-control-panel-meta-line-height);
+  --home-profile-control-panel-route-link-margin-top:var(--layout-home-profile-control-panel-route-link-margin-top);
+  --home-profile-control-panel-route-link-size:var(--layout-home-profile-control-panel-route-link-size);
+  --home-profile-control-panel-route-link-line-height:var(--layout-home-profile-control-panel-route-link-line-height);
+  --home-profile-control-panel-status-grid-gap:var(--layout-home-profile-control-panel-status-grid-gap);
+  --home-profile-control-panel-status-card-gap:var(--layout-home-profile-control-panel-status-card-gap);
+  --home-profile-control-panel-status-card-padding-y:var(--layout-home-profile-control-panel-status-card-padding-y);
+  --home-profile-control-panel-status-card-padding-x:var(--layout-home-profile-control-panel-status-card-padding-x);
+  --home-profile-control-panel-status-label-size:var(--layout-home-profile-control-panel-status-label-size);
+  --home-profile-control-panel-status-label-weight:var(--layout-home-profile-control-panel-status-label-weight);
+  --home-profile-control-panel-status-label-tracking:var(--layout-home-profile-control-panel-status-label-tracking);
+  --home-profile-control-panel-status-value-size:var(--layout-home-profile-control-panel-status-value-size);
+  --home-profile-control-panel-status-value-weight:var(--layout-home-profile-control-panel-status-value-weight);
+  --home-profile-control-panel-status-value-line-height:var(--layout-home-profile-control-panel-status-value-line-height);
+  --home-profile-control-panel-route-status-size:var(--layout-home-profile-control-panel-route-status-size);
+  --home-profile-control-panel-route-status-line-height:var(--layout-home-profile-control-panel-route-status-line-height);
+  --home-profile-control-panel-item-min-height:var(--layout-home-profile-control-panel-item-min-height);
+  --home-profile-control-panel-item-padding-y:var(--layout-home-profile-control-panel-item-padding-y);
+  --home-profile-control-panel-item-padding-x:var(--layout-home-profile-control-panel-item-padding-x);
+  --home-profile-control-panel-item-size:var(--layout-home-profile-control-panel-item-size);
+  --home-profile-control-panel-item-weight:var(--layout-home-profile-control-panel-item-weight);
+  --home-profile-control-panel-item-tracking:var(--layout-home-profile-control-panel-item-tracking);
 }
 
 /* =============================================================================
@@ -75,10 +75,10 @@
 ============================================================================= */
 .home-profile-control-panel{
   position:fixed;
-  top:var(--cc-shell-panel-top);
-  right:var(--cc-shell-panel-inline-padding);
-  bottom:var(--cc-shell-panel-bottom);
-  width:var(--cc-profile-control-panel-width);
+  top:var(--home-shell-panel-top);
+  right:var(--home-shell-panel-inline-padding);
+  bottom:var(--home-shell-panel-bottom);
+  width:var(--home-profile-control-panel-width);
   z-index:calc(var(--z-fixed) - 1);
   pointer-events:none;
 }
@@ -93,9 +93,9 @@
 .home-profile-control-panel__inner{
   display:flex;
   flex-direction:column;
-  gap:var(--cc-profile-control-panel-inner-gap);
+  gap:var(--home-profile-control-panel-inner-gap);
   height:100%;
-  padding:var(--cc-profile-control-panel-inner-padding-top) var(--cc-profile-control-panel-inner-padding-right) var(--cc-profile-control-panel-inner-padding-bottom) var(--cc-profile-control-panel-inner-padding-left);
+  padding:var(--home-profile-control-panel-inner-padding-top) var(--home-profile-control-panel-inner-padding-right) var(--home-profile-control-panel-inner-padding-bottom) var(--home-profile-control-panel-inner-padding-left);
   background:transparent;
   overflow:auto;
   pointer-events:auto;
@@ -108,9 +108,9 @@
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
-  gap:var(--cc-profile-control-panel-header-gap);
-  padding:var(--spacing-none) var(--spacing-none) var(--cc-profile-control-panel-header-padding-bottom);
-  border-bottom:1px solid var(--cc-subtle);
+  gap:var(--home-profile-control-panel-header-gap);
+  padding:var(--spacing-none) var(--spacing-none) var(--home-profile-control-panel-header-padding-bottom);
+  border-bottom:1px solid var(--border-subtle);
 }
 
 .home-profile-control-panel__heading-group{
@@ -118,7 +118,7 @@
 }
 
 .home-profile-control-panel__eyebrow{
-  margin:var(--spacing-none) var(--spacing-none) var(--cc-profile-control-panel-eyebrow-margin-bottom);
+  margin:var(--spacing-none) var(--spacing-none) var(--home-profile-control-panel-eyebrow-margin-bottom);
 }
 
 .home-profile-control-panel__title{
@@ -127,7 +127,7 @@
 
 .home-profile-control-panel__close{
   flex:0 0 auto;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   pointer-events:auto;
 }
 
@@ -137,7 +137,7 @@
 .home-profile-control-panel__section{
   display:flex;
   flex-direction:column;
-  gap:var(--cc-profile-control-panel-section-gap);
+  gap:var(--home-profile-control-panel-section-gap);
 }
 
 .home-profile-control-panel__section-title{
@@ -147,7 +147,7 @@
 .home-profile-control-panel__stack{
   display:flex;
   flex-direction:column;
-  gap:var(--cc-profile-control-panel-stack-gap);
+  gap:var(--home-profile-control-panel-stack-gap);
 }
 
 /* =============================================================================
@@ -156,16 +156,16 @@
 .home-profile-control-panel__identity-card{
   display:flex;
   align-items:flex-start;
-  gap:var(--cc-profile-control-panel-identity-gap);
-  padding:var(--cc-profile-control-panel-identity-padding-y) var(--cc-profile-control-panel-identity-padding-x);
+  gap:var(--home-profile-control-panel-identity-gap);
+  padding:var(--home-profile-control-panel-identity-padding-y) var(--home-profile-control-panel-identity-padding-x);
 }
 
 .home-profile-control-panel__avatar{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:var(--cc-profile-control-panel-avatar-size);
-  height:var(--cc-profile-control-panel-avatar-size);
+  width:var(--home-profile-control-panel-avatar-size);
+  height:var(--home-profile-control-panel-avatar-size);
   border-radius:var(--control-radius-pill);
   overflow:hidden;
 }
@@ -183,9 +183,9 @@
   justify-content:center;
   width:100%;
   height:100%;
-  font-size:var(--cc-profile-control-panel-avatar-fallback-size);
-  font-weight:var(--cc-profile-control-panel-avatar-fallback-weight);
-  letter-spacing:var(--cc-profile-control-panel-avatar-fallback-tracking);
+  font-size:var(--home-profile-control-panel-avatar-fallback-size);
+  font-weight:var(--home-profile-control-panel-avatar-fallback-weight);
+  letter-spacing:var(--home-profile-control-panel-avatar-fallback-tracking);
   text-transform:uppercase;
 }
 
@@ -194,72 +194,72 @@
 }
 
 .home-profile-control-panel__name{
-  margin:var(--spacing-none) var(--spacing-none) var(--cc-profile-control-panel-name-margin-bottom);
-  font-size:var(--cc-profile-control-panel-name-size);
-  font-weight:var(--cc-profile-control-panel-name-weight);
+  margin:var(--spacing-none) var(--spacing-none) var(--home-profile-control-panel-name-margin-bottom);
+  font-size:var(--home-profile-control-panel-name-size);
+  font-weight:var(--home-profile-control-panel-name-weight);
 }
 
 .home-profile-control-panel__username{
-  margin:var(--spacing-none) var(--spacing-none) var(--cc-profile-control-panel-username-margin-bottom);
-  font-size:var(--cc-profile-control-panel-username-size);
-  font-weight:var(--cc-profile-control-panel-username-weight);
-  letter-spacing:var(--cc-profile-control-panel-username-tracking);
+  margin:var(--spacing-none) var(--spacing-none) var(--home-profile-control-panel-username-margin-bottom);
+  font-size:var(--home-profile-control-panel-username-size);
+  font-weight:var(--home-profile-control-panel-username-weight);
+  letter-spacing:var(--home-profile-control-panel-username-tracking);
   text-transform:uppercase;
 }
 
 .home-profile-control-panel__plan{
-  margin:var(--spacing-none) var(--spacing-none) var(--cc-profile-control-panel-plan-margin-bottom);
-  font-size:var(--cc-profile-control-panel-plan-size);
-  font-weight:var(--cc-profile-control-panel-plan-weight);
-  letter-spacing:var(--cc-profile-control-panel-plan-tracking);
+  margin:var(--spacing-none) var(--spacing-none) var(--home-profile-control-panel-plan-margin-bottom);
+  font-size:var(--home-profile-control-panel-plan-size);
+  font-weight:var(--home-profile-control-panel-plan-weight);
+  letter-spacing:var(--home-profile-control-panel-plan-tracking);
   text-transform:uppercase;
 }
 
 .home-profile-control-panel__meta{
   margin:var(--spacing-none);
-  font-size:var(--cc-profile-control-panel-meta-size);
-  line-height:var(--cc-profile-control-panel-meta-line-height);
+  font-size:var(--home-profile-control-panel-meta-size);
+  line-height:var(--home-profile-control-panel-meta-line-height);
 }
 
 .home-profile-control-panel__route-link{
   display:inline-flex;
-  margin-top:var(--cc-profile-control-panel-route-link-margin-top);
+  margin-top:var(--home-profile-control-panel-route-link-margin-top);
   text-decoration:none;
-  font-size:var(--cc-profile-control-panel-route-link-size);
-  line-height:var(--cc-profile-control-panel-route-link-line-height);
+  font-size:var(--home-profile-control-panel-route-link-size);
+  line-height:var(--home-profile-control-panel-route-link-line-height);
 }
 
 .home-profile-control-panel__status-grid{
   display:grid;
   grid-template-columns:repeat(3, minmax(0, 1fr));
-  gap:var(--cc-profile-control-panel-status-grid-gap);
+  gap:var(--home-profile-control-panel-status-grid-gap);
 }
 
 .home-profile-control-panel__status-card{
   display:grid;
-  gap:var(--cc-profile-control-panel-status-card-gap);
-  padding:var(--cc-profile-control-panel-status-card-padding-y) var(--cc-profile-control-panel-status-card-padding-x);
+  gap:var(--home-profile-control-panel-status-card-gap);
+  padding:var(--home-profile-control-panel-status-card-padding-y) var(--home-profile-control-panel-status-card-padding-x);
 }
 
 .home-profile-control-panel__status-label{
   margin:var(--spacing-none);
-  font-size:var(--cc-profile-control-panel-status-label-size);
-  font-weight:var(--cc-profile-control-panel-status-label-weight);
-  letter-spacing:var(--cc-profile-control-panel-status-label-tracking);
+  font-size:var(--home-profile-control-panel-status-label-size);
+  font-weight:var(--home-profile-control-panel-status-label-weight);
+  letter-spacing:var(--home-profile-control-panel-status-label-tracking);
   text-transform:uppercase;
 }
 
 .home-profile-control-panel__status-value{
   margin:var(--spacing-none);
-  font-size:var(--cc-profile-control-panel-status-value-size);
-  font-weight:var(--cc-profile-control-panel-status-value-weight);
-  line-height:var(--cc-profile-control-panel-status-value-line-height);
+  font-size:var(--home-profile-control-panel-status-value-size);
+  font-weight:var(--home-profile-control-panel-status-value-weight);
+  line-height:var(--home-profile-control-panel-status-value-line-height);
 }
 
 .home-profile-control-panel__route-status{
   margin:var(--spacing-none);
-  font-size:var(--cc-profile-control-panel-meta-size);
-  line-height:var(--cc-profile-control-panel-meta-line-height);
+  font-size:var(--home-profile-control-panel-meta-size);
+  line-height:var(--home-profile-control-panel-meta-line-height);
 }
 
 /* =============================================================================
@@ -270,11 +270,11 @@
   align-items:center;
   justify-content:flex-start;
   width:100%;
-  min-height:var(--cc-profile-control-panel-item-min-height);
-  padding:var(--cc-profile-control-panel-item-padding-y) var(--cc-profile-control-panel-item-padding-x);
-  font-size:var(--cc-profile-control-panel-item-size);
-  font-weight:var(--cc-profile-control-panel-item-weight);
-  letter-spacing:var(--cc-profile-control-panel-item-tracking);
+  min-height:var(--home-profile-control-panel-item-min-height);
+  padding:var(--home-profile-control-panel-item-padding-y) var(--home-profile-control-panel-item-padding-x);
+  font-size:var(--home-profile-control-panel-item-size);
+  font-weight:var(--home-profile-control-panel-item-weight);
+  letter-spacing:var(--home-profile-control-panel-item-tracking);
   text-align:left;
   pointer-events:auto;
 }
@@ -284,15 +284,15 @@
 ============================================================================= */
 @media (max-width: 760px){
   .home-profile-control-panel{
-    top:var(--cc-shell-panel-top);
-    left:var(--cc-shell-panel-inline-padding);
-    right:var(--cc-shell-panel-inline-padding);
-    bottom:var(--cc-shell-panel-bottom);
+    top:var(--home-shell-panel-top);
+    left:var(--home-shell-panel-inline-padding);
+    right:var(--home-shell-panel-inline-padding);
+    bottom:var(--home-shell-panel-bottom);
     width:auto;
   }
 
   .home-profile-control-panel__inner{
-    padding-top:var(--cc-profile-control-panel-inner-padding-top-mobile);
+    padding-top:var(--home-profile-control-panel-inner-padding-top-mobile);
   }
 
   .home-profile-control-panel__status-grid{

@@ -43,9 +43,9 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  opacity: var(--cc-hero-shader-opacity);
+  opacity: var(--home-hero-shader-opacity);
   visibility: hidden;
-  transition: opacity var(--cc-hero-shader-transition), visibility var(--cc-hero-shader-transition);
+  transition: opacity var(--home-hero-shader-transition), visibility var(--home-hero-shader-transition);
   isolation: isolate;
 }
 
@@ -78,10 +78,10 @@
   height: 100%;
   display: block;
   transform: translateZ(0) scale(1.02);
-  filter: blur(var(--cc-hero-shader-canvas-softness));
+  filter: blur(var(--home-hero-shader-canvas-softness));
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--cc-hero-shader-transition), visibility var(--cc-hero-shader-transition);
+  transition: opacity var(--home-hero-shader-transition), visibility var(--home-hero-shader-transition);
 }
 
 /* =============================================================================
@@ -93,10 +93,10 @@
   inset: 0;
   pointer-events: none;
   visibility: hidden;
-  opacity: var(--cc-hero-shader-veil-opacity);
-  transition: opacity var(--cc-hero-shader-transition), visibility var(--cc-hero-shader-transition);
-  backdrop-filter: blur(var(--cc-hero-shader-veil-blur));
-  -webkit-backdrop-filter: blur(var(--cc-hero-shader-veil-blur));
+  opacity: var(--home-hero-shader-veil-opacity);
+  transition: opacity var(--home-hero-shader-transition), visibility var(--home-hero-shader-transition);
+  backdrop-filter: blur(var(--home-hero-shader-veil-blur));
+  -webkit-backdrop-filter: blur(var(--home-hero-shader-veil-blur));
 }
 
 /* =============================================================================
@@ -107,19 +107,19 @@
   z-index: 2;
   inset: 0;
   pointer-events: none;
-  backdrop-filter: blur(var(--cc-hero-shader-matte-blur));
-  -webkit-backdrop-filter: blur(var(--cc-hero-shader-matte-blur));
+  backdrop-filter: blur(var(--home-hero-shader-matte-blur));
+  -webkit-backdrop-filter: blur(var(--home-hero-shader-matte-blur));
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--cc-hero-shader-transition), visibility var(--cc-hero-shader-transition);
+  transition: opacity var(--home-hero-shader-transition), visibility var(--home-hero-shader-transition);
 }
 
 html[data-theme-effective="light"] .home-hero-shader-matte{
-  background: var(--cc-hero-shader-matte-surface-light);
+  background: var(--home-hero-shader-matte-surface-light);
 }
 
 html[data-theme-effective="dark"] .home-hero-shader-matte{
-  background: var(--cc-hero-shader-matte-surface-dark);
+  background: var(--home-hero-shader-matte-surface-dark);
 }
 
 /* =============================================================================
@@ -173,13 +173,13 @@ html[data-homepage-theme-hero-shader="true"] .home-hero-shader .home-hero-shader
 
 html[data-homepage-theme-hero-shader="true"] #home-hero-shader .home-hero-shader-veil,
 html[data-homepage-theme-hero-shader="true"] .home-hero-shader .home-hero-shader-veil{
-  opacity: var(--cc-hero-shader-veil-opacity);
+  opacity: var(--home-hero-shader-veil-opacity);
   visibility: visible;
 }
 
 html[data-homepage-theme-hero-shader="true"][data-homepage-theme-matte-atmosphere="true"] #home-hero-shader .home-hero-shader-matte,
 html[data-homepage-theme-hero-shader="true"][data-homepage-theme-matte-atmosphere="true"] .home-hero-shader .home-hero-shader-matte{
-  opacity: calc(var(--cc-hero-shader-matte-opacity) + 0.06);
+  opacity: calc(var(--home-hero-shader-matte-opacity) + 0.06);
   visibility: visible;
 }
 

@@ -51,7 +51,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 /* =============================================================================
@@ -85,10 +85,10 @@
 .profile-thought-composer__audience{
   min-height:2.5rem;
   padding:0 var(--spacing-md);
-  border:1px solid color-mix(in srgb, var(--cc-color) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--text-color) 12%, transparent);
   border-radius:var(--control-radius-pill);
   background:transparent;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font:inherit;
   letter-spacing:inherit;
   transition:var(--interaction-transition-control);
@@ -97,9 +97,9 @@
 .profile-thought-composer__audience[data-profile-thought-audience-active="true"],
 .profile-thought-composer__audience:hover,
 .profile-thought-composer__audience:focus-visible{
-  border-color:color-mix(in srgb, var(--cc-color) 18%, transparent);
+  border-color:color-mix(in srgb, var(--text-color) 18%, transparent);
   background:color-mix(in srgb, var(--surface-color, var(--background-color)) 86%, white 14%);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-thought-composer__field-grid{
@@ -180,7 +180,7 @@
   display:grid;
   gap:var(--spacing-sm);
   padding:var(--spacing-md);
-  border:1px solid color-mix(in srgb, var(--cc-color) 10%, transparent);
+  border:1px solid color-mix(in srgb, var(--text-color) 10%, transparent);
   border-radius:var(--radius-lg);
   background:color-mix(in srgb, var(--surface-color, var(--background-color)) 84%, white 16%);
 }
@@ -197,7 +197,7 @@
   font-weight:var(--body-2-weight, var(--body-3-weight));
   line-height:var(--body-2-line-height, var(--body-3-line-height));
   letter-spacing:var(--body-2-tracking, var(--body-3-tracking));
-  color:var(--cc-color);
+  color:var(--text-color);
   white-space:pre-wrap;
 }
 

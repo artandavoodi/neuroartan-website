@@ -26,10 +26,10 @@
   display: grid;
   gap: var(--space-4, 1.5rem);
   padding: var(--space-4, 1.5rem);
-  border: 1px solid var(--control-border-color, var(--cc-soft, rgba(255, 255, 255, 0.08)));
+  border: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
   border-radius: var(--radius-xl, 1.5rem);
   background: var(--control-bg, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--cc-primary-color, #fff) 4%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text-primary-color, #fff) 4%, transparent);
 }
 
 /* =============================================================================
@@ -50,7 +50,7 @@
   min-width: 1.3rem;
   height: 1.3rem;
   min-height: 1.3rem;
-  color: var(--cc-secondary-color, var(--cc-secondary, rgba(255, 255, 255, 0.72)));
+  color: var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
   transform: none !important;
   transition:
     color 220ms var(--interaction-ease-standard),
@@ -61,7 +61,7 @@
 .products-page .products-sidebar__toggle:hover,
 .products-page .products-sidebar__toggle:focus-visible,
 .products-page .products-sidebar__toggle[aria-expanded="true"] {
-  color: var(--cc-primary-color, var(--cc-primary, #fff));
+  color: var(--text-primary-color, var(--text-primary, #fff));
   opacity: 1;
   transform: none !important;
   outline: none;
@@ -119,8 +119,8 @@
   display: flex;
   align-items: center;
   min-height: 1.3rem;
-  color: var(--cc-primary-color, var(--cc-primary, #fff));
-  font-size: var(--cc-section-title-size);
+  color: var(--text-primary-color, var(--text-primary, #fff));
+  font-size: var(--home-section-title-size);
   font-weight: 300;
   line-height: 1;
   letter-spacing: var(--tracking-copy);
@@ -140,7 +140,7 @@
   white-space: normal;
   overflow-wrap: normal;
   word-break: normal;
-  color: var(--cc-secondary-color, var(--cc-secondary, rgba(255, 255, 255, 0.72)));
+  color: var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
   font-size: var(--font-size-body-1);
   line-height: var(--line-height-body);
 }
@@ -148,7 +148,7 @@
 .products-page .products-sidebar__panel {
   width: 100%;
   padding-top: var(--space-3, 1rem);
-  border-top: 1px solid var(--control-border-color, var(--cc-soft, rgba(255, 255, 255, 0.08)));
+  border-top: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
 }
 
 /* =============================================================================
@@ -177,7 +177,7 @@
   padding: 0.74rem 0.88rem;
   border: 1px solid transparent;
   border-radius:var(--products-sidebar-link-radius);
-  color: var(--cc-primary-color, var(--cc-primary, #fff));
+  color: var(--text-primary-color, var(--text-primary, #fff));
   text-decoration: none;
   background: transparent;
   transition:
@@ -192,7 +192,7 @@
 .products-page .products-sidebar__link--active {
   border-color:var(--products-sidebar-link-border-hover);
   background:var(--products-sidebar-link-surface-hover);
-  color: var(--cc-primary-color, var(--cc-primary, #fff));
+  color: var(--text-primary-color, var(--text-primary, #fff));
 }
 
 /* =============================================================================

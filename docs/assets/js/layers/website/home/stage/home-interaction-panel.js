@@ -258,7 +258,7 @@ function renderHomeInteractionActiveModel() {
   }
 
   if (nodes.input instanceof HTMLTextAreaElement) {
-    nodes.input.placeholder = 'Ask anything.';
+    nodes.input.placeholder = 'Ask anything';
   }
 }
 

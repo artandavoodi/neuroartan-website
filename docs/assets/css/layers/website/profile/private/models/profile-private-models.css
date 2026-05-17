@@ -29,7 +29,7 @@
 .profile-private-models__status{
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .profile-private-models__eyebrow,
@@ -41,7 +41,7 @@
 .profile-private-models__title{
   font-size:var(--headline-5-size);
   line-height:var(--headline-5-line-height);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-private-models__grid{
@@ -59,7 +59,7 @@
 .profile-private-models__value{
   font-size:var(--data-value-lg-size);
   line-height:var(--data-value-lg-line-height);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .profile-private-models__button{

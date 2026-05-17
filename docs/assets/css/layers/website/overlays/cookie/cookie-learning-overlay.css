@@ -17,8 +17,8 @@
   --cookie-learning-overlay-radius: var(--cookie-language-overlay-radius);
   --cookie-learning-overlay-back-icon-size:var(--close-control-line-width);
   --cookie-learning-overlay-back-icon-filter:var(--icon-image-filter, none);
-  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--cc-border-unified));
-  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--cc-surface-unified));
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--panel-border-unified));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--panel-surface-unified));
   --cookie-consent-learning-shell-min-height:10.5rem;
   --cookie-consent-learning-shell-radius:var(--shape-card-radius);
   --cookie-consent-learning-shell-padding:var(--space-4);
@@ -42,14 +42,14 @@
 
 html[data-theme-effective="light"]{
   --cookie-learning-overlay-back-icon-filter:var(--icon-image-filter, none);
-  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--cc-border-unified));
-  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--cc-surface-unified));
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--panel-border-unified));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--panel-surface-unified));
 }
 
 html[data-theme-effective="dark"]{
   --cookie-learning-overlay-back-icon-filter:var(--icon-image-filter, none);
-  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--cc-border-unified));
-  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--cc-surface-unified));
+  --cookie-learning-overlay-divider:var(--cookie-language-overlay-divider, var(--panel-border-unified));
+  --cookie-learning-overlay-surface:var(--cookie-language-overlay-surface, var(--panel-surface-unified));
 }
 
 .cookie-learning-overlay{
@@ -150,7 +150,7 @@ html[data-theme-effective="dark"]{
 ============================================================================= */
 .cookie-learning-overlay-article-topline strong,
 .cookie-learning-overlay-point strong{
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-size: var(--cookie-learning-overlay-title-size);
   font-weight: var(--cookie-learning-overlay-title-weight);
   letter-spacing: var(--cookie-learning-overlay-title-tracking);
@@ -160,7 +160,7 @@ html[data-theme-effective="dark"]{
 .cookie-learning-overlay-article-body p,
 .cookie-learning-overlay-point p{
   margin: var(--spacing-none);
-  color: var(--cc-secondary-color);
+  color: var(--text-secondary-color);
   font-size: var(--cookie-learning-overlay-copy-size);
   font-weight: var(--cookie-learning-overlay-copy-weight);
   letter-spacing: var(--cookie-learning-overlay-copy-tracking);

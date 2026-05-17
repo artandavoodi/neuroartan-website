@@ -25,34 +25,36 @@
   02) SHELL CHROME CONTROLS
   ========================================================================= -->
   <div class="home-platform-shell__chrome">
-    <button
-      type="button"
-      class="global-close-button home-platform-shell__close"
-      id="home-platform-shell-close"
-      aria-label="Close platform shell"
-      data-home-platform-shell-close
-    >
-      <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-      <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-    </button>
-    <button
-      type="button"
-      class="home-platform-shell__rail-toggle"
-      id="home-platform-shell-rail-toggle"
-      aria-label="Toggle navigation rail"
-      aria-pressed="false"
-      data-home-platform-shell-rail-toggle
-    >
-      <span class="home-platform-shell__rail-toggle-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-        <img
-          class="ui-icon-theme-aware"
-          src="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
-          alt=""
-          data-home-platform-rail-toggle-icon
-          data-home-platform-rail-icon-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
-          data-home-platform-rail-icon-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg">
-      </span>
-    </button>
+    <div class="home-platform-shell__chrome-controls">
+      <button
+        type="button"
+        class="global-close-button home-platform-shell__close"
+        id="home-platform-shell-close"
+        aria-label="Close platform shell"
+        data-home-platform-shell-close
+      >
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
+      <button
+        type="button"
+        class="home-platform-shell__rail-toggle"
+        id="home-platform-shell-rail-toggle"
+        aria-label="Toggle navigation rail"
+        aria-pressed="false"
+        data-home-platform-shell-rail-toggle
+      >
+        <span class="home-platform-shell__rail-toggle-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+          <img
+            class="ui-icon-theme-aware"
+            src="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+            alt=""
+            data-home-platform-rail-toggle-icon
+            data-home-platform-rail-icon-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+            data-home-platform-rail-icon-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg">
+        </span>
+      </button>
+    </div>
   </div>
 
   <!-- ========================================================================
@@ -67,7 +69,7 @@
         <!-- ================================================================
         05) PRIMARY NAVIGATION
         ================================================================= -->
-        <div class="home-platform-shell__group">
+        <div class="home-platform-shell__group" data-home-platform-rail-group="primary">
           <nav class="home-platform-shell__nav" aria-label="Primary platform navigation">
             <button type="button" class="home-platform-shell__nav-item is-active" data-home-platform-destination="home" aria-pressed="true" id="home-platform-shell-nav-home">
               <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/primary/home.svg" alt=""></span>
@@ -109,26 +111,21 @@
         <!-- ================================================================
         06) SECONDARY LINKED ITEMS
         ================================================================= -->
-        <div class="home-platform-shell__group">
+<div class="home-platform-shell__group" data-home-platform-rail-group="secondary">
           <nav class="home-platform-shell__nav" aria-label="Secondary linked items">
-            <button type="button" class="home-platform-shell__nav-item" data-home-platform-link-href="/pages/about/index.html" id="home-platform-shell-link-about">
-              <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/institutional/about.svg" alt=""></span>
+            <button type="button" class="home-platform-shell__nav-item home-platform-shell__nav-item--footer-link" data-home-platform-link-href="/pages/about/index.html" id="home-platform-shell-link-about">
               <span class="home-platform-shell__nav-text">About</span>
             </button>
-            <button type="button" class="home-platform-shell__nav-item" data-home-platform-link-href="/pages/careers/index.html" id="home-platform-shell-link-careers">
-              <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/institutional/careers.svg" alt=""></span>
+            <button type="button" class="home-platform-shell__nav-item home-platform-shell__nav-item--footer-link" data-home-platform-link-href="/pages/careers/index.html" id="home-platform-shell-link-careers">
               <span class="home-platform-shell__nav-text">Careers</span>
             </button>
-            <button type="button" class="home-platform-shell__nav-item" data-home-platform-link-href="/pages/legal/privacy/index.html" id="home-platform-shell-link-privacy">
-              <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt=""></span>
+            <button type="button" class="home-platform-shell__nav-item home-platform-shell__nav-item--footer-link" data-home-platform-link-href="/pages/legal/privacy/index.html" id="home-platform-shell-link-privacy">
               <span class="home-platform-shell__nav-text">Privacy Policy</span>
             </button>
-            <button type="button" class="home-platform-shell__nav-item" data-home-platform-link-href="/pages/legal/terms/index.html" id="home-platform-shell-link-terms">
-              <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/terms/terms.svg" alt=""></span>
+            <button type="button" class="home-platform-shell__nav-item home-platform-shell__nav-item--footer-link" data-home-platform-link-href="/pages/legal/terms/index.html" id="home-platform-shell-link-terms">
               <span class="home-platform-shell__nav-text">Terms of Use</span>
             </button>
-            <button type="button" class="home-platform-shell__nav-item" data-home-platform-destination="cookie-settings" aria-pressed="false" id="home-platform-shell-nav-cookie-settings">
-              <span class="home-platform-shell__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/interface/cookies/cookies.svg" alt=""></span>
+            <button type="button" class="home-platform-shell__nav-item home-platform-shell__nav-item--footer-link" data-home-platform-destination="cookie-settings" aria-pressed="false" id="home-platform-shell-nav-cookie-settings">
               <span class="home-platform-shell__nav-text">Cookie Settings</span>
             </button>
           </nav>

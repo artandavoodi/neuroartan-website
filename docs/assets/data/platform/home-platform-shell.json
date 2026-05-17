@@ -163,36 +163,117 @@
     {
       "id": "settings",
       "eyebrow": "Settings",
-      "title": "Theme, language, privacy, and identity controls",
-      "description": "Theme, language, privacy, and identity controls belong here in one stable shell destination.",
-      "default_subdestination": "theme",
+      "title": "General, appearance, voice, permissions, privacy, and runtime controls",
+      "description": "Website settings mirror the ICOS software settings taxonomy from one stable shell destination.",
+      "default_subdestination": "general",
       "subdestinations": [
         {
-          "id": "theme",
-          "label": "Theme",
-          "detail_title": "Theme",
-          "detail_copy": "Color, dark, and light modes governed by the canonical shared theme system.",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/theme.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/theme.css",
-          "module": "/assets/js/layers/website/home/platform-menu/settings/theme.js"
+          "id": "general",
+          "label": "General",
+          "detail_title": "General",
+          "detail_copy": "Defaults, startup posture, behavior, shortcuts, and reset controls.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/general/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/general/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/general/index.js"
         },
         {
-          "id": "language-privacy",
-          "label": "Language & Privacy",
-          "detail_title": "Language, Region, and Privacy",
-          "detail_copy": "Country, language, and cookie/privacy controls linked to the global systems.",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/language-privacy.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/language-privacy.css",
-          "module": "/assets/js/layers/website/home/platform-menu/settings/language-privacy.js"
+          "id": "appearance",
+          "label": "Appearance",
+          "detail_title": "Appearance",
+          "detail_copy": "Mode, palette, colors, contrast, motion, display, and shell visual controls.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/appearance/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/appearance/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/appearance/index.js"
         },
         {
-          "id": "identity-route",
-          "label": "Identity & Route",
-          "detail_title": "Identity and Route",
-          "detail_copy": "Private profile access and public-route readiness from one settings layer.",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/identity-route.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/identity-route.css",
-          "module": "/assets/js/layers/website/home/platform-menu/settings/identity-route.js"
+          "id": "voice",
+          "label": "Voice",
+          "detail_title": "Voice",
+          "detail_copy": "Input, output, training, language, and wake/hold settings.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/voice/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/voice/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/voice/index.js"
+        },
+        {
+          "id": "permissions",
+          "label": "Permissions",
+          "detail_title": "Permissions",
+          "detail_copy": "Files, microphone, camera, notifications, browser, contacts, and accessibility access.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/permissions/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/permissions/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/permissions/index.js"
+        },
+        {
+          "id": "privacy",
+          "label": "Privacy",
+          "detail_title": "Privacy",
+          "detail_copy": "Retention, export/delete, public/private state, telemetry, and linked sources.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/privacy/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/privacy/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/privacy/index.js"
+        },
+        {
+          "id": "accessibility",
+          "label": "Accessibility",
+          "detail_title": "Accessibility",
+          "detail_copy": "Text, contrast, motion, captions, keyboard, and screen reader settings.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/accessibility/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/accessibility/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/accessibility/index.js"
+        },
+        {
+          "id": "configuration",
+          "label": "Configuration",
+          "detail_title": "Configuration",
+          "detail_copy": "Runtime, environment, worktree, browser use, chat management, and events.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/configuration/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/configuration/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/configuration/index.js"
+        },
+        {
+          "id": "connectors",
+          "label": "Connectors",
+          "detail_title": "Connectors",
+          "detail_copy": "Cloud providers, Local LLM, API keys, models, and health.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/connectors/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/connectors/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/connectors/index.js"
+        },
+        {
+          "id": "personalization",
+          "label": "Personalization",
+          "detail_title": "Personalization",
+          "detail_copy": "Profile, identity, memory, tone, style, and social graph settings.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/personalization/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/personalization/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/personalization/index.js"
+        },
+        {
+          "id": "dashboard",
+          "label": "Dashboard",
+          "detail_title": "Dashboard",
+          "detail_copy": "Model dashboard, activity, analytics, health, readiness, and knowledge graph surfaces.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/dashboard/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/dashboard/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/dashboard/index.js"
+        },
+        {
+          "id": "storage-backup",
+          "label": "Storage & Backup",
+          "detail_title": "Storage & Backup",
+          "detail_copy": "Local data, backup, restore, sync, export, and archive controls.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/storage-backup/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/storage-backup/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/storage-backup/index.js"
+        },
+        {
+          "id": "security",
+          "label": "Security",
+          "detail_title": "Security",
+          "detail_copy": "Sign-in, sessions, linked accounts, trust, two-factor, and anti-impersonation controls.",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/security/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/security/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/security/index.js"
         }
       ]
     },

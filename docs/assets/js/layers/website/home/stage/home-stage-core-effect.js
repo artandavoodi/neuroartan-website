@@ -32,6 +32,8 @@ const HOME_STAGE_CORE_EFFECT_STATE = {
   targetEnergy: 0,
   isResetting: false,
   resizeTimer: null,
+  isLifecyclePaused: false,
+  lastRenderTimestamp: 0,
 };
 
 /* =========================================================
@@ -86,6 +88,17 @@ function setHomeStageCoreEffectMode(mode) {
   if (nodes.vessel) {
     nodes.vessel.dataset.coreEffectMode = nextMode;
   }
+
+  if (nodes.visual) {
+    nodes.visual.dataset.coreEffectMode = nextMode;
+  }
+
+  if (shouldRunHomeStageCoreEffectLoop()) {
+    startHomeStageCoreEffectLoop();
+    return;
+  }
+
+  renderHomeStageCoreEffectStaticFrame();
 }
 
 function scheduleHomeStageCoreEffectResize() {
@@ -202,6 +215,27 @@ function drawHomeStageCoreEffectOrb(context, cx, cy, radius, color, alpha, blur)
 }
 
 function renderHomeStageCoreEffectFrame(timestamp) {
+  const activeMode = HOME_STAGE_CORE_EFFECT_STATE.mode !== 'idle';
+  const targetFrameInterval = activeMode ? (1000 / 60) : (1000 / 12);
+  const elapsedSinceLastRender = timestamp - HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp;
+
+  if (
+    HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp &&
+    elapsedSinceLastRender < targetFrameInterval
+  ) {
+    if (
+      !HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused &&
+      !document.hidden &&
+      shouldRunHomeStageCoreEffectLoop()
+    ) {
+      HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+    } else {
+      HOME_STAGE_CORE_EFFECT_STATE.rafId = null;
+    }
+    return;
+  }
+
+  HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp = timestamp;
   const {
     context,
     width,
@@ -211,7 +245,15 @@ function renderHomeStageCoreEffectFrame(timestamp) {
   } = HOME_STAGE_CORE_EFFECT_STATE;
 
   if (!context || !width || !height) {
-    HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+    if (
+      !HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused &&
+      !document.hidden &&
+      shouldRunHomeStageCoreEffectLoop()
+    ) {
+      HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+    } else {
+      HOME_STAGE_CORE_EFFECT_STATE.rafId = null;
+    }
     return;
   }
 
@@ -317,15 +359,72 @@ function renderHomeStageCoreEffectFrame(timestamp) {
     18 + energy * 18
   );
 
-  HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+  if (
+    !HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused &&
+    !document.hidden &&
+    shouldRunHomeStageCoreEffectLoop()
+  ) {
+    HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+  } else {
+    HOME_STAGE_CORE_EFFECT_STATE.rafId = null;
+  }
+}
+
+function shouldRunHomeStageCoreEffectLoop() {
+  return (
+    HOME_STAGE_CORE_EFFECT_STATE.mode !== 'idle' ||
+    HOME_STAGE_CORE_EFFECT_STATE.isResetting
+  );
+}
+
+function renderHomeStageCoreEffectStaticFrame() {
+  HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp = 0;
+  renderHomeStageCoreEffectFrame(performance.now());
+  stopHomeStageCoreEffectLoop();
 }
 
 function startHomeStageCoreEffectLoop() {
-  if (HOME_STAGE_CORE_EFFECT_STATE.rafId) {
+  if (
+    HOME_STAGE_CORE_EFFECT_STATE.rafId ||
+    HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused ||
+    document.hidden ||
+    !shouldRunHomeStageCoreEffectLoop()
+  ) {
     return;
   }
 
   HOME_STAGE_CORE_EFFECT_STATE.rafId = window.requestAnimationFrame(renderHomeStageCoreEffectFrame);
+}
+
+function stopHomeStageCoreEffectLoop() {
+  if (!HOME_STAGE_CORE_EFFECT_STATE.rafId) {
+    return;
+  }
+
+  window.cancelAnimationFrame(HOME_STAGE_CORE_EFFECT_STATE.rafId);
+  HOME_STAGE_CORE_EFFECT_STATE.rafId = null;
+}
+
+function pauseHomeStageCoreEffectLoop() {
+  HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused = true;
+  HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp = 0;
+  stopHomeStageCoreEffectLoop();
+}
+
+function resumeHomeStageCoreEffectLoop() {
+  HOME_STAGE_CORE_EFFECT_STATE.isLifecyclePaused = false;
+  HOME_STAGE_CORE_EFFECT_STATE.lastRenderTimestamp = 0;
+
+  if (document.hidden) {
+    return;
+  }
+
+  if (shouldRunHomeStageCoreEffectLoop()) {
+    startHomeStageCoreEffectLoop();
+    return;
+  }
+
+  renderHomeStageCoreEffectStaticFrame();
 }
 
 /* =========================================================
@@ -408,6 +507,30 @@ function bindHomeStageCoreEffectEvents() {
   } else {
     window.addEventListener('resize', resizeHomeStageCoreEffectCanvas, { passive: true });
   }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pauseHomeStageCoreEffectLoop();
+      return;
+    }
+
+    resumeHomeStageCoreEffectLoop();
+    scheduleHomeStageCoreEffectResize();
+  });
+
+  window.addEventListener('blur', pauseHomeStageCoreEffectLoop);
+
+  window.addEventListener('focus', () => {
+    resumeHomeStageCoreEffectLoop();
+    scheduleHomeStageCoreEffectResize();
+  });
+
+  window.addEventListener('pagehide', pauseHomeStageCoreEffectLoop);
+
+  window.addEventListener('pageshow', () => {
+    resumeHomeStageCoreEffectLoop();
+    scheduleHomeStageCoreEffectResize();
+  });
 }
 
 /* =========================================================
@@ -429,7 +552,13 @@ function bootHomeStageCoreEffect() {
   resizeHomeStageCoreEffectCanvas();
   scheduleHomeStageCoreEffectResize();
   bindHomeStageCoreEffectEvents();
-  startHomeStageCoreEffectLoop();
+
+  if (shouldRunHomeStageCoreEffectLoop()) {
+    startHomeStageCoreEffectLoop();
+    return;
+  }
+
+  renderHomeStageCoreEffectStaticFrame();
 }
 
 if (document.readyState === 'loading') {

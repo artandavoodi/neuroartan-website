@@ -154,7 +154,7 @@
     const logoEl = qs("#stage-logo .site-logo");
     const introLogoSource = logoEl || (() => {
       const img = document.createElement("img");
-      img.src = "assets/images/layers/website/brand/logo.svg";
+      img.src = "/assets/images/layers/website/brand/logo.svg";
       img.alt = "Neuroartan Logo";
       img.className = "intro-logo-source";
       return img;

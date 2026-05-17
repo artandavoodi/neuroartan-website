@@ -20,9 +20,9 @@
    01) LINKS TOKENS
 ============================================================================= */
 :root{
-  --institutional-links-title-color:var(--cc-color);
+  --institutional-links-title-color:var(--text-color);
   --institutional-links-title-opacity:0.42;
-  --institutional-links-text-color:var(--cc-secondary-color);
+  --institutional-links-text-color:var(--text-secondary-color);
   --institutional-links-hover-color:var(--color-primary1);
   --institutional-links-reveal-y:22px;
   --institutional-links-reveal-transform-duration:1.05s;
@@ -79,7 +79,7 @@ html[data-theme-effective="dark"]{
   min-height:0;
   margin:0 0 0 calc(50% - 50vw);
   padding:0;
-  border-top:var(--cc-width-hairline) solid var(--cc-color);
+  border-top:var(--border-width-hairline) solid var(--border-color);
   pointer-events:none;
 }
 

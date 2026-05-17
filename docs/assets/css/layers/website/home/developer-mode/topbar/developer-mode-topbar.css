@@ -1,0 +1,63 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) GLOBAL TOPBAR EXTENSION
+   02) DEVELOPER TITLE
+   03) DEVELOPER ACTIVE STATE
+   04) END OF FILE
+============================================================================= */
+
+.home-developer-mode-topbar{
+  --home-topbar-menu-gap:var(--nav-global-topbar-menu-gap);
+}
+
+/* =============================================================================
+   01) GLOBAL TOPBAR EXTENSION
+============================================================================= */
+.home-developer-mode-topbar .home-dashboard-topbar__nav-group{
+  flex:0 1 auto;
+  min-width:0;
+  margin-inline-start:auto;
+}
+
+.home-developer-mode-topbar .home-dashboard-topbar__nav{
+  justify-content:flex-end;
+  flex:0 1 auto;
+  min-width:0;
+  margin-inline-start:auto;
+  gap:var(--home-topbar-menu-gap);
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+}
+
+.home-developer-mode-topbar .home-dashboard-topbar__nav::-webkit-scrollbar{
+  display:none;
+}
+
+
+/* =============================================================================
+   02) DEVELOPER TITLE
+============================================================================= */
+.home-developer-mode-topbar [data-home-developer-topbar-title]{
+  display:inline-flex;
+  align-items:center;
+  flex:0 0 auto;
+  color:var(--text-primary-color);
+  font-size:var(--font-size-body-1);
+  font-weight:var(--font-weight-light);
+  letter-spacing:var(--tracking-copy);
+  line-height:var(--line-height-tight);
+  white-space:nowrap;
+}
+
+/* =============================================================================
+   03) DEVELOPER ACTIVE STATE
+============================================================================= */
+.home-developer-mode-topbar .home-dashboard-topbar__action[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  opacity:1;
+}
+
+/* =============================================================================
+   04) END OF FILE
+============================================================================= */

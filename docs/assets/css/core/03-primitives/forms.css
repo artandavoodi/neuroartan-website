@@ -54,7 +54,7 @@
   display:inline-flex;
   align-items:center;
   gap:var(--control-gap);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--body-3-size);
   font-weight:var(--body-3-weight);
   letter-spacing:var(--tracking-ui);
@@ -78,7 +78,7 @@
 }
 
 .ui-help-text{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
 }
 
 .ui-error-text{
@@ -95,7 +95,7 @@
   gap:var(--spacing-md);
   width:var(--size-full);
   padding:var(--space-4) var(--spacing-none);
-  border-top:var(--cc-width-hairline) solid color-mix(in srgb, var(--cc-color) 8%, transparent);
+  border-top:var(--border-width-hairline) solid color-mix(in srgb, var(--text-color) 8%, transparent);
 }
 
 .ui-settings-row:first-child{
@@ -113,7 +113,7 @@
 
 .ui-settings-row__title{
   margin:var(--spacing-none);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--body-2-size);
   font-weight:var(--body-2-weight);
   line-height:var(--type-body-sm-line-height);
@@ -121,7 +121,7 @@
 
 .ui-settings-row__description{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
@@ -151,7 +151,7 @@
 
 .ui-choice-row__title{
   margin:var(--spacing-none);
-  color:var(--cc-color);
+  color:var(--text-color);
   font-size:var(--body-3-size);
   font-weight:var(--body-3-weight);
   line-height:var(--type-body-sm-line-height);
@@ -159,7 +159,7 @@
 
 .ui-choice-row__description{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--body-3-tracking);
@@ -179,8 +179,8 @@
 
 .ui-check:focus-visible,
 .ui-radio:focus-visible{
-  outline:var(--cc-width-thin) solid color-mix(in srgb, var(--color-primary1) 42%, transparent);
-  outline-offset:var(--cc-width-thin);
+  outline:var(--border-width-thin) solid color-mix(in srgb, var(--color-primary1) 42%, transparent);
+  outline-offset:var(--border-width-thin);
 }
 
 /* =============================================================================

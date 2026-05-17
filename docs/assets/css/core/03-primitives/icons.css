@@ -21,8 +21,8 @@
 :root{
   --icon-image-filter:brightness(0) invert(1);
   --icon-image-filter-strong:brightness(0) invert(1);
-  --icon-color:var(--cc-color);
-  --icon-color-muted:var(--cc-secondary-color);
+  --icon-color:var(--text-color);
+  --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);
 }
 
@@ -30,16 +30,16 @@
 html[data-theme-effective="light"]{
   --icon-image-filter:brightness(0) saturate(100%);
   --icon-image-filter-strong:brightness(0) saturate(100%);
-  --icon-color:var(--cc-color);
-  --icon-color-muted:var(--cc-secondary-color);
+  --icon-color:var(--text-color);
+  --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);
 }
 
 html[data-theme-effective="dark"]{
   --icon-image-filter:brightness(0) invert(1);
   --icon-image-filter-strong:brightness(0) invert(1);
-  --icon-color:var(--cc-color);
-  --icon-color-muted:var(--cc-secondary-color);
+  --icon-color:var(--text-color);
+  --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);
 }
 
@@ -55,7 +55,7 @@ html[data-theme-effective="dark"]{
   min-height:var(--control-height-md);
   padding:var(--spacing-none);
   border-radius:var(--shape-icon-button-radius);
-  border:var(--cc-width-hairline) solid transparent;
+  border:var(--border-width-hairline) solid transparent;
   background:transparent;
   color:var(--control-text-unified);
   display:inline-flex;

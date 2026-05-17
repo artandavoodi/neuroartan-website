@@ -28,7 +28,7 @@
 
   --bg-color:var(--color-black);
   --text-color:var(--color-white);
-  --text-primary-color:var(--cc-color);
+  --text-primary-color:var(--text-color);
   --text-secondary-color:var(--color-primary3);
   --link-color:var(--color-primary5);
   --link-hover-color:var(--color-primary6);
@@ -65,9 +65,9 @@
   --theme-accent-color:var(--link-color);
   --theme-accent-hover-color:var(--link-hover-color);
   --theme-custom-bg-color:var(--bg-color);
-  --theme-custom-text-color:var(--cc-color);
+  --theme-custom-text-color:var(--text-color);
   --theme-custom-surface-color:var(--surface-primary);
-  --theme-custom-border-color:var(--cc-color);
+  --theme-custom-border-color:var(--border-color);
 }
 
 /* =============================================================================
@@ -83,7 +83,7 @@ html[data-theme="custom"][data-theme-effective="dark"]{
 
   --bg-color:var(--color-black);
   --text-color:var(--color-white);
-  --text-primary-color:var(--cc-color);
+  --text-primary-color:var(--text-color);
   --text-secondary-color:var(--color-primary3);
   --link-color:var(--color-primary5);
   --link-hover-color:var(--color-primary6);
@@ -131,7 +131,7 @@ html[data-theme="custom"][data-theme-effective="light"]{
 
   --bg-color:var(--color-white);
   --text-color:var(--color-black);
-  --text-primary-color:var(--cc-color);
+  --text-primary-color:var(--text-color);
   --text-secondary-color:var(--color-black);
   --link-color:var(--color-primary5);
   --link-hover-color:var(--color-primary6);
@@ -185,7 +185,7 @@ html[data-theme="custom"]{
 ============================================================================= */
 html[data-theme-contrast="low"]{
   --theme-contrast:low;
-  --border-color:color-mix(in srgb,var(--cc-color-base) 52%,transparent);
+  --border-color:color-mix(in srgb,var(--border-color-base) 52%,transparent);
   --control-border:color-mix(in srgb,var(--control-border-base) 52%,transparent);
   --control-border-strong:color-mix(in srgb,var(--control-border-strong-base) 52%,transparent);
   --field-border:color-mix(in srgb,var(--field-border-base) 52%,transparent);
@@ -198,11 +198,11 @@ html[data-theme-contrast="standard"]{
 
 html[data-theme-contrast="high"]{
   --theme-contrast:high;
-  --border-color:color-mix(in srgb,var(--cc-color-base) 72%,var(--cc-color));
-  --control-border:color-mix(in srgb,var(--control-border-base) 72%,var(--cc-color));
-  --control-border-strong:color-mix(in srgb,var(--control-border-strong-base) 72%,var(--cc-color));
-  --field-border:color-mix(in srgb,var(--field-border-base) 72%,var(--cc-color));
-  --field-border-focus:color-mix(in srgb,var(--field-border-focus-base) 72%,var(--cc-color));
+  --border-color:color-mix(in srgb,var(--border-color-base) 72%,var(--text-color));
+  --control-border:color-mix(in srgb,var(--control-border-base) 72%,var(--text-color));
+  --control-border-strong:color-mix(in srgb,var(--control-border-strong-base) 72%,var(--text-color));
+  --field-border:color-mix(in srgb,var(--field-border-base) 72%,var(--text-color));
+  --field-border-focus:color-mix(in srgb,var(--field-border-focus-base) 72%,var(--text-color));
 }
 
 /* =============================================================================

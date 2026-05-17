@@ -17,57 +17,57 @@
    01A) MODELS DIRECTORY TOKENS
 ============================================================================= */
 :root{
-  --models-toolbar-gap:var(--cc-models-toolbar-gap);
-  --models-toolbar-top-gap:var(--cc-models-toolbar-top-gap);
-  --models-sort-gap:var(--cc-models-sort-gap);
-  --models-sort-label-size:var(--cc-models-sort-label-size);
-  --models-sort-label-line-height:var(--cc-models-sort-label-line-height);
-  --models-select-min-height:var(--cc-models-select-min-height);
-  --models-select-padding-x:var(--cc-models-select-padding-x);
-  --models-select-radius:var(--cc-models-select-radius);
-  --models-filter-row-gap:var(--cc-models-filter-row-gap);
-  --models-filter-chip-min-height:var(--cc-models-filter-chip-min-height);
-  --models-filter-chip-padding-x:var(--cc-models-filter-chip-padding-x);
-  --models-filter-chip-radius:var(--cc-models-filter-chip-radius);
-  --models-motion:var(--cc-models-motion);
-  --models-filter-groups-count:var(--cc-models-filter-groups-count);
-  --models-filter-groups-gap:var(--cc-models-filter-groups-gap);
-  --models-filter-group-gap:var(--cc-models-filter-group-gap);
-  --models-filter-label-size:var(--cc-models-filter-label-size);
-  --models-filter-label-weight:var(--cc-models-filter-label-weight);
-  --models-filter-label-tracking:var(--cc-models-filter-label-tracking);
-  --models-card-column-span:var(--cc-models-card-column-span);
-  --models-card-column-span-mobile:var(--cc-models-card-column-span-mobile);
-  --models-card-identity-gap:var(--cc-models-card-identity-gap);
-  --models-avatar-size:var(--cc-models-avatar-size);
-  --models-avatar-radius:var(--cc-models-avatar-radius);
-  --models-avatar-fallback-size:var(--cc-models-avatar-fallback-size);
-  --models-avatar-fallback-weight:var(--cc-models-avatar-fallback-weight);
-  --models-avatar-fallback-tracking:var(--cc-models-avatar-fallback-tracking);
-  --models-identity-copy-gap:var(--cc-models-identity-copy-gap);
-  --models-title-row-gap:var(--cc-models-title-row-gap);
-  --models-verification-gap:var(--cc-models-verification-gap);
-  --models-verification-min-height:var(--cc-models-verification-min-height);
-  --models-verification-padding-x:var(--cc-models-verification-padding-x);
-  --models-verification-radius:var(--cc-models-verification-radius);
-  --models-verification-blue:var(--cc-models-verification-blue);
-  --models-verification-border-mix:var(--cc-models-verification-border-mix);
-  --models-verification-bg-mix:var(--cc-models-verification-bg-mix);
-  --models-verification-size:var(--cc-models-verification-size);
-  --models-verification-weight:var(--cc-models-verification-weight);
-  --models-verification-tracking:var(--cc-models-verification-tracking);
-  --models-verification-icon-size:var(--cc-models-verification-icon-size);
-  --models-handle-size:var(--cc-models-handle-size);
-  --models-handle-tracking:var(--cc-models-handle-tracking);
-  --models-meta-gap:var(--cc-models-meta-gap);
-  --models-meta-row-gap:var(--cc-models-meta-row-gap);
-  --models-meta-size:var(--cc-models-meta-size);
-  --models-meta-line-height:var(--cc-models-meta-line-height);
-  --models-meta-strong-weight:var(--cc-models-meta-strong-weight);
-  --models-actions-gap:var(--cc-models-actions-gap);
-  --models-action-min-height:var(--cc-models-action-min-height);
-  --models-action-padding-x:var(--cc-models-action-padding-x);
-  --models-action-radius:var(--cc-models-action-radius);
+  --models-toolbar-gap:var(--layout-models-toolbar-gap);
+  --models-toolbar-top-gap:var(--layout-models-toolbar-top-gap);
+  --models-sort-gap:var(--layout-models-sort-gap);
+  --models-sort-label-size:var(--layout-models-sort-label-size);
+  --models-sort-label-line-height:var(--layout-models-sort-label-line-height);
+  --models-select-min-height:var(--layout-models-select-min-height);
+  --models-select-padding-x:var(--layout-models-select-padding-x);
+  --models-select-radius:var(--layout-models-select-radius);
+  --models-filter-row-gap:var(--layout-models-filter-row-gap);
+  --models-filter-chip-min-height:var(--layout-models-filter-chip-min-height);
+  --models-filter-chip-padding-x:var(--layout-models-filter-chip-padding-x);
+  --models-filter-chip-radius:var(--layout-models-filter-chip-radius);
+  --models-motion:var(--layout-models-motion);
+  --models-filter-groups-count:var(--layout-models-filter-groups-count);
+  --models-filter-groups-gap:var(--layout-models-filter-groups-gap);
+  --models-filter-group-gap:var(--layout-models-filter-group-gap);
+  --models-filter-label-size:var(--layout-models-filter-label-size);
+  --models-filter-label-weight:var(--layout-models-filter-label-weight);
+  --models-filter-label-tracking:var(--layout-models-filter-label-tracking);
+  --models-card-column-span:var(--layout-models-card-column-span);
+  --models-card-column-span-mobile:var(--layout-models-card-column-span-mobile);
+  --models-card-identity-gap:var(--layout-models-card-identity-gap);
+  --models-avatar-size:var(--layout-models-avatar-size);
+  --models-avatar-radius:var(--layout-models-avatar-radius);
+  --models-avatar-fallback-size:var(--layout-models-avatar-fallback-size);
+  --models-avatar-fallback-weight:var(--layout-models-avatar-fallback-weight);
+  --models-avatar-fallback-tracking:var(--layout-models-avatar-fallback-tracking);
+  --models-identity-copy-gap:var(--layout-models-identity-copy-gap);
+  --models-title-row-gap:var(--layout-models-title-row-gap);
+  --models-verification-gap:var(--layout-models-verification-gap);
+  --models-verification-min-height:var(--layout-models-verification-min-height);
+  --models-verification-padding-x:var(--layout-models-verification-padding-x);
+  --models-verification-radius:var(--layout-models-verification-radius);
+  --models-verification-blue:var(--layout-models-verification-blue);
+  --models-verification-border-mix:var(--layout-models-verification-border-mix);
+  --models-verification-bg-mix:var(--layout-models-verification-bg-mix);
+  --models-verification-size:var(--layout-models-verification-size);
+  --models-verification-weight:var(--layout-models-verification-weight);
+  --models-verification-tracking:var(--layout-models-verification-tracking);
+  --models-verification-icon-size:var(--layout-models-verification-icon-size);
+  --models-handle-size:var(--layout-models-handle-size);
+  --models-handle-tracking:var(--layout-models-handle-tracking);
+  --models-meta-gap:var(--layout-models-meta-gap);
+  --models-meta-row-gap:var(--layout-models-meta-row-gap);
+  --models-meta-size:var(--layout-models-meta-size);
+  --models-meta-line-height:var(--layout-models-meta-line-height);
+  --models-meta-strong-weight:var(--layout-models-meta-strong-weight);
+  --models-actions-gap:var(--layout-models-actions-gap);
+  --models-action-min-height:var(--layout-models-action-min-height);
+  --models-action-padding-x:var(--layout-models-action-padding-x);
+  --models-action-radius:var(--layout-models-action-radius);
 }
 
 /* =============================================================================
@@ -92,7 +92,7 @@
 
 .models-directory-sort__label{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--models-sort-label-size);
   line-height:var(--models-sort-label-line-height);
 }
@@ -103,7 +103,7 @@
   border:1px solid var(--field-border);
   border-radius:var(--models-select-radius);
   background:var(--field-bg);
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
 }
 
@@ -125,7 +125,7 @@
   border:1px solid var(--control-border);
   border-radius:var(--models-filter-chip-radius);
   background:transparent;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font:inherit;
   transition:
     color var(--models-motion) ease,
@@ -136,7 +136,7 @@
 .models-directory-filter-chip:hover,
 .models-directory-filter-chip:focus-visible,
 .models-directory-filter-chip[aria-pressed="true"]{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   background:var(--control-bg);
   border-color:var(--control-border-strong);
   outline:none;
@@ -155,7 +155,7 @@
 
 .models-directory-filter-group__label{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--models-filter-label-size);
   font-weight:var(--models-filter-label-weight);
   letter-spacing:var(--models-filter-label-tracking);
@@ -201,7 +201,7 @@
   justify-content:center;
   width:100%;
   height:100%;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:var(--models-avatar-fallback-size);
   font-weight:var(--models-avatar-fallback-weight);
   letter-spacing:var(--models-avatar-fallback-tracking);
@@ -245,7 +245,7 @@
 
 .models-directory-card__handle{
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--models-handle-size);
   letter-spacing:var(--models-verification-tracking);
   text-transform:uppercase;
@@ -261,13 +261,13 @@
   justify-content:space-between;
   gap:var(--models-meta-row-gap);
   margin:var(--spacing-none);
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--models-handle-size);
   line-height:var(--models-meta-line-height);
 }
 
 .models-directory-card__meta-row strong{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-weight:var(--models-meta-strong-weight);
 }
 
@@ -286,7 +286,7 @@
   border:1px solid var(--control-border);
   border-radius:var(--models-filter-chip-radius);
   background:transparent;
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font:inherit;
   text-decoration:none;
   transition:

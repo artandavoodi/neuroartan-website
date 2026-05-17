@@ -19,10 +19,10 @@
 .home-stage-developer-operations-panel__summary{
   display:grid;
   grid-template-columns:repeat(4, minmax(var(--spacing-none), 1fr));
-  gap:var(--cc-stage-developer-operations-gap-compact);
+  gap:var(--home-stage-developer-operations-gap-compact);
   min-width:0;
-  padding-top:var(--cc-stage-developer-operations-gap-compact);
-  border-top:var(--cc-width-hairline) solid var(--cc-stage-developer-operations-border);
+  padding-top:var(--home-stage-developer-operations-gap-compact);
+  border-top:0;
 }
 
 /* =============================================================================
@@ -31,8 +31,8 @@
 .home-stage-developer-operations-panel__summary-item{
   margin:var(--spacing-none);
   min-width:0;
-  color:var(--cc-stage-developer-operations-muted);
-  font-size:var(--cc-stage-developer-operations-label-font-size);
+  color:var(--home-stage-developer-operations-muted);
+  font-size:var(--home-stage-developer-operations-label-font-size);
   font-weight:var(--font-weight-light);
   letter-spacing:var(--tracking-copy);
   line-height:var(--line-height-tight);

@@ -61,7 +61,7 @@
 
 .ui-nav__group-title{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--nav-primitive-group-title-size);
   font-weight:var(--nav-primitive-group-title-weight);
   letter-spacing:var(--nav-primitive-group-title-tracking);
@@ -86,7 +86,7 @@
   border:var(--nav-primitive-row-border);
   border-radius:var(--nav-primitive-row-radius);
   background:transparent;
-  color:var(--cc-color);
+  color:var(--text-color);
   text-decoration:none;
   text-align:left;
   transition:
@@ -159,7 +159,7 @@
 .ui-nav__description,
 .ui-nav__meta{
   min-width:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--nav-primitive-description-size);
   line-height:var(--nav-primitive-description-line-height);
 }
@@ -193,7 +193,7 @@
 .ui-nav__button.is-active{
   border-color:var(--nav-primitive-active-border);
   background:var(--nav-primitive-active-background);
-  color:var(--cc-color);
+  color:var(--text-color);
 }
 
 .ui-nav__item[aria-disabled="true"],
@@ -225,7 +225,7 @@
 .ui-breadcrumbs__link,
 .ui-breadcrumbs__current{
   min-width:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--nav-primitive-breadcrumb-size);
   line-height:var(--nav-primitive-breadcrumb-line-height);
   text-decoration:none;
@@ -234,17 +234,17 @@
 
 .ui-breadcrumbs__link:hover,
 .ui-breadcrumbs__link:focus-visible{
-  color:var(--cc-color);
+  color:var(--text-color);
   outline:none;
 }
 
 .ui-breadcrumbs__current{
-  color:var(--cc-color);
+  color:var(--text-color);
   font-weight:var(--nav-primitive-breadcrumb-current-weight);
 }
 
 .ui-breadcrumbs__separator{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   opacity:var(--nav-primitive-breadcrumb-separator-opacity);
 }
 
@@ -275,7 +275,7 @@
 
 .ui-sidebar-nav__caption{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:var(--nav-primitive-sidebar-caption-size);
   line-height:var(--nav-primitive-sidebar-caption-line-height);
 }

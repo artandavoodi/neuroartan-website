@@ -284,10 +284,9 @@ function bindStageDeveloperModeEvents(){
 
   document.documentElement.dataset.homeStageDeveloperModeBound = 'true';
 
-    setStageDeveloperModeActive(true);
-  });
-
-    setStageDeveloperModeActive(false);
+  document.addEventListener('home:developer-mode-state-changed', (event) => {
+    const state = event.detail?.state || {};
+    setStageDeveloperModeActive(Boolean(state.enabled || state.active || state.developerState?.enabled || state.developerState?.active));
   });
 }
 

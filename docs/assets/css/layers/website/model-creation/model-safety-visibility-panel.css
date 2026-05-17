@@ -2,5 +2,5 @@
    00) MODEL SAFETY VISIBILITY PANEL OWNER
 ============================================================================= */
 .model-creation-panel--safety{
-  border-color:var(--cc-panel-card-border);
+  border-color:var(--home-panel-card-border);
 }

@@ -27,7 +27,7 @@
   min-height:var(--control-height-md);
   padding:var(--spacing-none) var(--control-padding-x-md);
   border-radius:var(--shape-control-radius);
-  border:var(--cc-width-hairline) solid var(--control-border-unified);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
   background:var(--control-surface);
   color:var(--control-text-unified);
   font-family:var(--font-family);
@@ -72,7 +72,7 @@
    04) PRIMARY BUTTON VARIANT
 ============================================================================= */
 .ui-button--primary{
-  background:var(--cc-color);
+  background:var(--text-color);
   color:var(--bg-color);
   border-color:transparent;
 }
@@ -86,13 +86,13 @@
 ============================================================================= */
 .ui-button--brand{
   background:var(--color-primary1);
-  color:var(--cc-color);
+  color:var(--text-color);
   border-color:transparent;
 }
 
 .ui-button--brand:hover{
   background:var(--color-primary1);
-  color:var(--cc-color);
+  color:var(--text-color);
   border-color:transparent;
   opacity:var(--state-opacity-high);
 }

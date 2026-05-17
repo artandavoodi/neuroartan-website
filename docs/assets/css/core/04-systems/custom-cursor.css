@@ -11,10 +11,10 @@
 /* =============================================================================
    01) GLOBAL CUSTOM CURSOR MODE
 ============================================================================= */
-html[data-cursor-custom="true"],
-html[data-cursor-custom="true"] *,
-html[data-cursor-custom="true"] *::before,
-html[data-cursor-custom="true"] *::after{
+html[data-cursor-custom="true"][data-cursor-viewport-active="true"],
+html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *,
+html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *::before,
+html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *::after{
   cursor:none;
 }
 

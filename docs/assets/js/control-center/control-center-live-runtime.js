@@ -30,20 +30,3 @@ window.addEventListener("CC_THEME_CHANGED", (event) => {
   );
 
 });
-
-window.dispatchEvent(
-  new CustomEvent("CC_TOKEN_UPDATED", {
-    detail: {
-      id: "surface.background",
-      value: "#151618"
-    }
-  })
-);
-
-window.dispatchEvent(
-  new CustomEvent("CC_THEME_CHANGED", {
-    detail: {
-      id: "control-center-live"
-    }
-  })
-);

@@ -22,11 +22,11 @@
   height: var(--control-height-md);
   min-height: var(--control-height-md);
   padding: var(--spacing-none);
-  border: var(--cc-width-hairline) solid var(--control-border-unified);
+  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--shape-icon-button-radius);
   background: var(--control-surface);
   color: var(--control-text-unified);
-  box-shadow: inset var(--spacing-none) var(--cc-width-hairline) var(--spacing-none) color-mix(in srgb, var(--control-text-unified) 4%, transparent);
+  box-shadow: inset var(--spacing-none) var(--border-width-hairline) var(--spacing-none) color-mix(in srgb, var(--control-text-unified) 4%, transparent);
   opacity: var(--overlay-opacity-closed);
   visibility: hidden;
   pointer-events: none;

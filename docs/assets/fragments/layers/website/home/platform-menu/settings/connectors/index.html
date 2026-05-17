@@ -1,0 +1,35 @@
+<section class="home-platform-destination home-platform-destination--settings-connectors" data-home-platform-destination-root aria-label="Connectors settings destination">
+  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="connectors">
+    <header class="home-platform-settings-category__header">
+      <p class="home-platform-settings-category__eyebrow">Settings</p>
+      <h1 class="home-platform-settings-category__title">Connectors</h1>
+      <p class="home-platform-settings-category__summary">Cloud providers, Local LLM, API keys, models, and health.</p>
+    </header>
+
+    <section class="home-platform-settings-category__section" aria-labelledby="settings-connectors-providers">
+      <div class="home-platform-settings-category__section-header">
+        <p class="home-platform-settings-category__section-eyebrow">Providers</p>
+        <h2 class="home-platform-settings-category__section-title" id="settings-connectors-providers">Model connectors</h2>
+      </div>
+      <div class="home-platform-settings-category__grid">
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="open:configuration">
+          <span class="home-platform-settings-category__label">Cloud Providers</span>
+          <span class="home-platform-settings-category__caption">Configure OpenAI-compatible, Gemini, or future cloud providers.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="scan-local-models">
+          <span class="home-platform-settings-category__label">Local LLM</span>
+          <span class="home-platform-settings-category__caption">Scan LM Studio at http://localhost:1234/v1/models.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="open:configuration">
+          <span class="home-platform-settings-category__label">API Keys</span>
+          <span class="home-platform-settings-category__caption">Open Configuration for provider credential input.</span>
+        </button>
+        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="scan-local-models">
+          <span class="home-platform-settings-category__label">Health</span>
+          <span class="home-platform-settings-category__caption">Check local model server availability.</span>
+        </button>
+      </div>
+      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Connector health has not been checked in this session.</p>
+    </section>
+  </div>
+</section>

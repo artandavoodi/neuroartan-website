@@ -2,5 +2,5 @@
    00) MODEL PROFILE LINK PANEL OWNER
 ============================================================================= */
 .model-creation-panel--profile-link{
-  border-color:var(--cc-panel-card-border);
+  border-color:var(--home-panel-card-border);
 }

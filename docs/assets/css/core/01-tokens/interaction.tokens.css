@@ -74,9 +74,9 @@
   --control-surface:color-mix(in srgb, var(--surface-color, var(--bg-color)) 82%, transparent);
   --control-surface-hover:var(--hover-bg-medium);
   --control-surface-active:var(--active-bg-medium);
-  --control-border-unified:var(--control-border-color, var(--cc-color));
+  --control-border-unified:var(--control-border-color, var(--border-color));
   --control-border-hover-unified:var(--hover-border-medium);
-  --control-text-unified:var(--cc-color);
+  --control-text-unified:var(--text-color);
   --control-text-hover-unified:var(--hover-text-color);
 
   /* Universal close button. */
@@ -89,12 +89,12 @@
   --close-control-surface-hover:var(--hover-bg-medium);
   --close-control-border:transparent;
   --close-control-border-hover:var(--hover-border-medium);
-  --close-control-color:var(--cc-color);
-  --close-control-color-hover:var(--cc-color);
+  --close-control-color:var(--text-color);
+  --close-control-color-hover:var(--text-color);
 
   /* Universal panel/dialog surface. */
   --panel-surface-unified:color-mix(in srgb, var(--surface-color, var(--bg-color)) 86%, transparent);
-  --panel-border-unified:var(--control-border-color, var(--cc-color));
+  --panel-border-unified:var(--control-border-color, var(--border-color));
   --panel-shadow-unified:var(--dialog-overlay-shadow);
   --panel-blur-unified:var(--dialog-overlay-panel-blur);
   --panel-saturate-unified:1.18;
@@ -138,16 +138,16 @@
 ============================================================================= */
 :root{
   /* Subtle hover surface for restrained UI rows, cards, tabs, and links. */
-  --hover-bg-subtle:color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
+  --hover-bg-subtle:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
 
   /* Medium hover surface for controls and visible interactive panels. */
-  --hover-bg-medium:color-mix(in srgb, var(--cc-primary-color) 7%, transparent);
+  --hover-bg-medium:color-mix(in srgb, var(--text-primary-color) 7%, transparent);
 
   /* Strong hover surface for high-emphasis actions and selected panels. */
-  --hover-bg-strong:color-mix(in srgb, var(--cc-primary-color) 11%, transparent);
+  --hover-bg-strong:color-mix(in srgb, var(--text-primary-color) 11%, transparent);
 
   /* Inverted hover surface for dark-on-light or light-on-dark emphasis moments. */
-  --hover-bg-inverted:var(--cc-primary-color);
+  --hover-bg-inverted:var(--text-primary-color);
 }
 
 /* =============================================================================
@@ -155,10 +155,10 @@
 ============================================================================= */
 :root{
   /* Standard hover text color for links and navigation. */
-  --hover-text-color:var(--cc-primary-color);
+  --hover-text-color:var(--text-primary-color);
 
   /* Muted hover text color for secondary interface elements. */
-  --hover-text-muted-color:var(--cc-secondary-color);
+  --hover-text-muted-color:var(--text-secondary-color);
 
   /* Inverted hover text color used when hover background becomes primary text color. */
   --hover-text-inverted-color:var(--bg-color);
@@ -169,13 +169,13 @@
 ============================================================================= */
 :root{
   /* Subtle hover border for low-emphasis cards and rows. */
-  --hover-border-subtle:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
+  --hover-border-subtle:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
 
   /* Medium hover border for controls and local navigation. */
-  --hover-border-medium:color-mix(in srgb, var(--cc-primary-color) 18%, transparent);
+  --hover-border-medium:color-mix(in srgb, var(--text-primary-color) 18%, transparent);
 
   /* Strong hover border for high-emphasis interactive surfaces. */
-  --hover-border-strong:color-mix(in srgb, var(--cc-primary-color) 28%, transparent);
+  --hover-border-strong:color-mix(in srgb, var(--text-primary-color) 28%, transparent);
 }
 
 /* =============================================================================
@@ -185,11 +185,11 @@
   /* Global accessible focus ring. */
   --focus-ring-width:2px;
   --focus-ring-offset:3px;
-  --focus-ring-color:color-mix(in srgb, var(--cc-primary-color) 52%, transparent);
+  --focus-ring-color:color-mix(in srgb, var(--text-primary-color) 52%, transparent);
   --focus-ring-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-color);
 
   /* Softer internal focus state for dense platform controls. */
-  --focus-ring-soft-color:color-mix(in srgb, var(--cc-primary-color) 24%, transparent);
+  --focus-ring-soft-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
   --focus-ring-soft-shadow:0 0 0 var(--focus-ring-width) var(--focus-ring-soft-color);
 }
 
@@ -198,9 +198,9 @@
 ============================================================================= */
 :root{
   /* Pressed interaction feedback. */
-  --active-bg-subtle:color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --active-bg-medium:color-mix(in srgb, var(--cc-primary-color) 12%, transparent);
-  --active-border-color:color-mix(in srgb, var(--cc-primary-color) 24%, transparent);
+  --active-bg-subtle:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --active-bg-medium:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --active-border-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
   --active-transform:translateY(0);
   --active-scale:0.99;
 }
@@ -210,11 +210,11 @@
 ============================================================================= */
 :root{
   /* Selected/current state for tabs, nav items, filters, and active controls. */
-  --selected-bg-subtle:color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --selected-bg-medium:color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
-  --selected-text-color:var(--cc-primary-color);
-  --selected-border-color:color-mix(in srgb, var(--cc-primary-color) 20%, transparent);
-  --selected-indicator-color:var(--cc-primary-color);
+  --selected-bg-subtle:color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --selected-bg-medium:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --selected-text-color:var(--text-primary-color);
+  --selected-border-color:color-mix(in srgb, var(--text-primary-color) 20%, transparent);
+  --selected-indicator-color:var(--text-primary-color);
   --selected-indicator-opacity:1;
 }
 
@@ -270,9 +270,9 @@
 :root{
   /* Shadow effects should consume shadow primitives where available. */
   --effect-shadow-none:none;
-  --effect-shadow-hover-subtle:0 10px 28px color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --effect-shadow-hover-medium:0 18px 52px color-mix(in srgb, var(--cc-primary-color) 12%, transparent);
-  --effect-shadow-hover-strong:0 28px 80px color-mix(in srgb, var(--cc-primary-color) 16%, transparent);
+  --effect-shadow-hover-subtle:0 10px 28px color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --effect-shadow-hover-medium:0 18px 52px color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --effect-shadow-hover-strong:0 28px 80px color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
 /* =============================================================================
@@ -391,7 +391,7 @@
   --dialog-consent-row-link-weight:400;
   --dialog-consent-row-link-line-height:1.3;
   --dialog-consent-row-link-tracking:-0.01em;
-  --dialog-consent-row-hover:color-mix(in srgb, var(--cc-primary-color) 12%, transparent);
+  --dialog-consent-row-hover:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
   --dialog-consent-row-icon-size:1.68rem;
   --dialog-consent-row-expand-size:0.92rem;
   --dialog-consent-row-expand-icon-size:0.68rem;
@@ -479,10 +479,10 @@
 ============================================================================= */
 :root{
   /* Shared feedback effect states for success, warning, error, and info surfaces. */
-  --feedback-success-bg-hover:color-mix(in srgb, var(--feedback-success-color, var(--cc-primary-color)) 10%, transparent);
-  --feedback-warning-bg-hover:color-mix(in srgb, var(--feedback-warning-color, var(--cc-primary-color)) 10%, transparent);
-  --feedback-error-bg-hover:color-mix(in srgb, var(--feedback-error-color, var(--cc-primary-color)) 10%, transparent);
-  --feedback-info-bg-hover:color-mix(in srgb, var(--feedback-info-color, var(--cc-primary-color)) 10%, transparent);
+  --feedback-success-bg-hover:color-mix(in srgb, var(--feedback-success-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-warning-bg-hover:color-mix(in srgb, var(--feedback-warning-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-error-bg-hover:color-mix(in srgb, var(--feedback-error-color, var(--text-primary-color)) 10%, transparent);
+  --feedback-info-bg-hover:color-mix(in srgb, var(--feedback-info-color, var(--text-primary-color)) 10%, transparent);
 }
 
 /* =============================================================================
@@ -532,8 +532,8 @@
 :root{
   /* Buttons, toggles, chips, pills, and form controls. */
   --toggle-track-bg:var(--toggle-track-bg-off);
-  --toggle-track-bg-off:color-mix(in srgb, var(--cc-primary-color) 12%, transparent);
-  --toggle-track-bg-on:var(--cc-primary-color);
+  --toggle-track-bg-off:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  --toggle-track-bg-on:var(--text-primary-color);
   --control-hover-bg:var(--hover-bg-subtle);
   --control-hover-border-color:var(--hover-border-medium);
   --control-hover-text-color:var(--hover-text-color);
@@ -596,3 +596,28 @@
 /* =============================================================================
    22) END OF FILE
 ============================================================================= */
+
+/* =============================================================================
+   SHARED GLASS BACKDROP SYSTEM
+   Canonical full-viewport overlay + glass panel parity system.
+============================================================================= */
+:root{
+  --glass-overlay-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 10%, transparent) 0%, color-mix(in srgb, var(--surface-color) 8%, transparent) 100%);
+  --glass-overlay-backdrop-blur:var(--nav-institutional-panel-backdrop-blur);
+  --glass-overlay-backdrop-saturate:var(--nav-institutional-panel-backdrop-saturate);
+
+  --glass-overlay-shell-bg:color-mix(in srgb, var(--surface-color) 58%, transparent);
+  --glass-overlay-drawer-shell-bg:color-mix(in srgb, var(--surface-color) 76%, transparent);
+  --glass-overlay-shell-blur:var(--nav-institutional-panel-shell-blur);
+  --glass-overlay-shell-saturate:var(--nav-institutional-panel-shell-saturate);
+}
+
+html[data-theme-effective="light"]{
+  --glass-overlay-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 10%, transparent) 0%, color-mix(in srgb, var(--surface-color) 8%, transparent) 100%);
+}
+
+html[data-theme-effective="dark"]{
+  --glass-overlay-backdrop-bg:linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 10%, transparent) 0%, color-mix(in srgb, var(--bg-color) 8%, transparent) 100%);
+  --glass-overlay-shell-bg:color-mix(in srgb, var(--surface-color) 58%, transparent);
+  --glass-overlay-drawer-shell-bg:color-mix(in srgb, var(--surface-color) 76%, transparent);
+}

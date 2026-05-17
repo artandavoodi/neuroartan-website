@@ -58,7 +58,7 @@
   --account-email-auth-action-border-hover:var(--control-border-hover-unified);
   --account-email-auth-action-background:var(--control-surface);
   --account-email-auth-action-background-hover:var(--control-surface-hover);
-  --account-email-auth-action-foreground: var(--cc-color);
+  --account-email-auth-action-foreground: var(--text-color);
 
   --account-email-auth-text-action-font-size: var(--account-text-action-font-size);
   --account-email-auth-text-action-line-height: var(--account-text-action-line-height);
@@ -163,9 +163,9 @@ html[data-theme-effective="light"]{
   width: var(--size-full);
   height: var(--account-email-auth-input-height);
   border-radius: var(--account-email-auth-input-radius);
-  border: var(--cc-width-hairline) solid var(--account-email-auth-input-border);
+  border: var(--border-width-hairline) solid var(--account-email-auth-input-border);
   background: var(--account-email-auth-input-background);
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   padding-inline: var(--account-email-auth-input-padding-inline);
   font-size: var(--account-email-auth-input-font-size);
   font-weight: var(--type-body-regular-weight);
@@ -176,7 +176,7 @@ html[data-theme-effective="light"]{
 }
 
 .account-email-auth-drawer-input::placeholder{
-  color: color-mix(in srgb, var(--cc-primary-color) 52%, transparent);
+  color: color-mix(in srgb, var(--text-primary-color) 52%, transparent);
 }
 
 .account-email-auth-drawer-input:focus{
@@ -207,7 +207,7 @@ html[data-theme-effective="light"]{
   min-height: var(--account-email-auth-action-height);
   padding-inline: var(--account-email-auth-action-padding-x);
   box-sizing: border-box;
-  border: var(--cc-width-hairline) solid var(--account-email-auth-action-border);
+  border: var(--border-width-hairline) solid var(--account-email-auth-action-border);
   border-radius: var(--account-email-auth-action-radius);
   background: var(--account-email-auth-action-background);
   color: var(--account-email-auth-action-foreground);

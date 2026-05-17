@@ -31,8 +31,8 @@
 
 #menu-overlay.menu-overlay{
   --menu-bg:var(--bg-color);
-  --menu-fg:var(--cc-color);
-  --menu-fg-muted:var(--cc-secondary-color);
+  --menu-fg:var(--text-color);
+  --menu-fg-muted:var(--text-secondary-color);
   --menu-accent: var(--color-primary1);
 
   --menu-border-color:var(--menu-border, var(--control-border-unified));
@@ -217,7 +217,7 @@ body.menu-active{ overflow: hidden; }
 }
 #menu-button .line{
   position:absolute;top:50%;left:50%;
-  width:var(--menu-button-line-width);height:var(--menu-button-line-height);background-color:var(--cc-color);
+  width:var(--menu-button-line-width);height:var(--menu-button-line-height);background-color:var(--text-color);
   transform-origin:center;
   transition:transform var(--menu-motion-line-fast) var(--menu-hover-ease),background-color var(--menu-motion-line-fast) ease;
   backface-visibility:hidden;
@@ -327,10 +327,10 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
 .sr-only,
 #menu-overlay .sr-only{
   position: absolute !important;
-  width: var(--cc-width-hairline) !important;
-  height: var(--cc-width-hairline) !important;
+  width: var(--border-width-hairline) !important;
+  height: var(--border-width-hairline) !important;
   padding: var(--spacing-none) !important;
-  margin: calc(var(--cc-width-hairline) * -1) !important;
+  margin: calc(var(--border-width-hairline) * -1) !important;
   overflow: hidden !important;
   clip: rect(0,0,0,0) !important;
   clip-path: inset(50%) !important;
@@ -452,7 +452,7 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
   height: var(--size-full);
   display: grid;
 
-  grid-template-columns: max-content var(--cc-width-hairline) minmax(var(--spacing-none), 1fr);
+  grid-template-columns: max-content var(--border-width-hairline) minmax(var(--spacing-none), 1fr);
   align-items: stretch;
 
   column-gap: var(--menu-g1);
@@ -460,7 +460,7 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
 }
 
 #menu-overlay .menu-col-a-sep{
-  width: var(--cc-width-hairline);
+  width: var(--border-width-hairline);
   height: var(--menu-vline-height);
   align-self: center;
   background: var(--menu-separator-color);
@@ -935,7 +935,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 }
 
 #menu-overlay .menu-col-b-section-b .menu-list .menu-sep{
-  flex: 0 0 var(--cc-width-hairline);
+  flex: 0 0 var(--border-width-hairline);
   height: var(--size-full);
   background: var(--menu-separator-color);
   align-self: stretch;
@@ -1134,7 +1134,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   height:var(--menu-close-size);
   border-radius: var(--shape-icon-button-radius);
 
-  border: var(--cc-width-hairline) solid var(--menu-border-color);
+  border: var(--border-width-hairline) solid var(--menu-border-color);
   background: transparent;
   color: var(--menu-fg);
 
@@ -1216,8 +1216,8 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 
   #menu-overlay .menu-col-b-section-b .menu-list .menu-sep{
     width: var(--size-full);
-    height: var(--cc-width-hairline);
-    flex: 0 0 var(--cc-width-hairline);
+    height: var(--border-width-hairline);
+    flex: 0 0 var(--border-width-hairline);
   }
 
   #menu-overlay .menu-col-b-section-b .menu-list .menu-item{

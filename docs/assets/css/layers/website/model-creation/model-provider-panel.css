@@ -2,5 +2,5 @@
    00) MODEL PROVIDER PANEL OWNER
 ============================================================================= */
 .model-creation-panel--provider{
-  border-color:var(--cc-panel-card-border);
+  border-color:var(--home-panel-card-border);
 }

@@ -1,0 +1,274 @@
+{
+  "document_id": "NA-LEG-PUB-2026-0003-ACT",
+  "source_document_id": "NA-LEG-PUB-2026-0003-ACT",
+  "contract_version": "NA-WEB-STD-LEGALSYNC-0001:v1.0",
+  "source_path": "/Users/artan/Documents/Neuroartan/I/01 - Governance/02 - Legal/03 - Public Legal Pages/01 - Public Legal Pages/03 - Terms of Use.md",
+  "route_family": "pages/legal",
+  "route_path": "pages/legal/terms",
+  "shell_family": "legal",
+  "render_family": "legal",
+  "page": "terms",
+  "destination_class": "legal_page",
+  "lang": "en",
+  "pageTitle": "Terms of Use | Neuroartan",
+  "title": "Terms of Use",
+  "eyebrow": "Public Legal Page",
+  "description": "Terms of Use for Neuroartan websites, digital surfaces, content, accounts, profiles, and related online services.",
+  "canonicalUrl": "https://neuroartan.com/pages/legal/terms/",
+  "robots": "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
+  "effectiveDate": "2026-03-26",
+  "lastUpdated": "2026-03-26",
+  "intro": "These Terms of Use govern access to and use of Neuroartan websites, digital surfaces, content, account-related entry points, profile-related entry points, and related online services.",
+  "meta": [
+    "Effective date: 2026-03-26",
+    "Last updated: 2026-03-26",
+    "Language: English"
+  ],
+  "sections": [
+    {
+      "id": "1-acceptance-of-these-terms",
+      "title": "1. Acceptance of These Terms",
+      "paragraphs": [
+        "These Terms of Use govern access to and use of Neuroartan websites, digital surfaces, content, account-related entry points, profile-related entry points, and related online services.",
+        "By accessing or using the website, the user agrees to be bound by these Terms to the extent permitted by applicable law.",
+        "If the user does not agree to these Terms, the website should not be used.",
+        "Because Neuroartan is operating in a pre-incorporation development stage, these Terms must not be interpreted or presented as implying incorporation, registered-office status, revenue maturity, or broader commercial finality that does not yet legally exist. Public-facing website terms, legal-page presentation, contact surfaces, footer references, account-entry presentation, and institutional language must remain accurate to Neuroartan’s actual legal and operational stage.",
+        "In these Terms of Use, “Neuroartan”, “we”, “us”, and “our” refer to the Neuroartan project and, at the current stage, its founder-operator, Saeed Davoodi (public name: Artan Davoodi), unless the context clearly requires a different meaning."
+      ]
+    },
+    {
+      "id": "2-scope-of-use",
+      "title": "2. Scope of Use",
+      "paragraphs": [
+        "These Terms apply to website visitors, readers, subscribers, contact-channel users, account users, profile users, and any other person interacting with Neuroartan through the website or related digital interfaces.",
+        "Certain features, materials, or services may also be subject to additional terms, notices, or policies where expressly stated.",
+        "These Terms also govern public legal-page presentation and disclosure language used during the pre-incorporation stage to the extent such presentation relates to website access, website use, public communications, account access, profile access, and institutional representation through the website."
+      ]
+    },
+    {
+      "id": "2a-additional-and-feature-specific-terms",
+      "title": "2A. Additional and Feature-Specific Terms",
+      "paragraphs": [
+        "Certain features, interfaces, or product contexts may later be governed by additional terms, notices, consent layers, or feature-specific restrictions.",
+        "Those additional terms may apply, for example, to:",
+        "Where such a feature-specific or in-time notice applies, it will govern use of the relevant feature together with these Terms of Use."
+      ],
+      "list": [
+        "account or profile activation",
+        "voice-enabled features",
+        "reflective or thought-related features",
+        "browser prototypes",
+        "future paid or restricted-access services",
+        "higher-sensitivity product contexts"
+      ]
+    },
+    {
+      "id": "3-permitted-use",
+      "title": "3. Permitted Use",
+      "paragraphs": [
+        "The website may be used only for lawful purposes and in a manner consistent with these Terms.",
+        "Users may access, read, and interact with publicly available content for personal, informational, editorial, or otherwise lawful purposes, provided that such use does not violate applicable law, intellectual property rights, platform integrity, or stated restrictions.",
+        "Where account or profile functionality is enabled, users may use those functions only for their intended and lawful purpose and only in accordance with these Terms and any related policy or feature-specific notice."
+      ]
+    },
+    {
+      "id": "4-prohibited-conduct",
+      "title": "4. Prohibited Conduct",
+      "paragraphs": [
+        "Users must not:"
+      ],
+      "list": [
+        "use the website in violation of applicable law or regulation",
+        "attempt unauthorized access to restricted systems, interfaces, infrastructure, accounts, or profile areas",
+        "interfere with website security, performance, availability, or integrity",
+        "introduce malicious code, abusive automation, scraping abuse, credential abuse, or harmful technical behavior",
+        "misrepresent identity, affiliation, authority, or relationship with Neuroartan",
+        "create false accounts, impersonate another person, or use account/profile systems in a deceptive, abusive, or unlawful manner",
+        "use reflective, thought-related, voice-related, or profile-related features for unlawful harm, credible violent threats, coercion, abuse, exploitation, or other serious misuse",
+        "use the website or future ICOS-related features to solicit, organize, facilitate, or meaningfully operationalize illegal activity",
+        "use the website in a way that intentionally exploits highly sensitive personal-input environments, including thought, profile, or voice features, for abuse, manipulation, or harm",
+        "reproduce, republish, distribute, or exploit protected content beyond what is permitted by law or express authorization",
+        "use the website in a way that creates material legal, technical, reputational, operational, privacy, or security risk"
+      ]
+    },
+    {
+      "id": "5-intellectual-property-notice",
+      "title": "5. Intellectual Property Notice",
+      "paragraphs": [
+        "Unless otherwise stated, website content, structure, branding, names, marks, text, visuals, publications, system elements, and related materials are owned by Neuroartan or used under applicable rights or permissions.",
+        "No license, transfer, or ownership right is granted except where expressly stated or required by applicable law.",
+        "Use of protected materials remains subject to applicable copyright, trademark, licensing, and related legal protections."
+      ]
+    },
+    {
+      "id": "6-website-content-and-information",
+      "title": "6. Website Content and Information",
+      "paragraphs": [
+        "Website content is provided for general informational, editorial, institutional, or communication purposes unless otherwise expressly stated.",
+        "Neuroartan seeks to present content with care, but does not guarantee that all website content is complete, current, error-free, uninterrupted, or suitable for every purpose.",
+        "Nothing on the website should be interpreted as legal, financial, regulatory, medical, or other professional advice unless explicitly designated as such.",
+        "Nothing on the website should be interpreted as a representation that Neuroartan has already reached a registered, revenue-generating, fully operational, or otherwise commercially mature status unless such status is expressly and accurately stated."
+      ]
+    },
+    {
+      "id": "7-accounts-and-profile-features",
+      "title": "7. Accounts and Profile Features",
+      "paragraphs": [
+        "Where Neuroartan enables account creation, authentication, or profile functionality, users are responsible for maintaining the accuracy of submitted information, protecting access credentials, and using the relevant features lawfully and in good faith.",
+        "Neuroartan may suspend, restrict, or terminate account or profile access where reasonably necessary to protect legal compliance, security, infrastructure integrity, operational continuity, platform integrity, other users, or institutional interests.",
+        "These Terms do not represent that all account, profile, or user-feature functionality is always active. References to such features describe the legal terms that apply where they are enabled."
+      ]
+    },
+    {
+      "id": "7a-voice-reflection-and-thought-related-features",
+      "title": "7A. Voice, Reflection, and Thought-Related Features",
+      "paragraphs": [
+        "Where Neuroartan enables voice, reflection, journaling, thought-banking, profile-memory, or similar ICOS-related features, those features must be used lawfully, responsibly, and in accordance with these Terms, the Privacy Policy, the Disclaimer, and any related consent notice.",
+        "Such features are not provided as crisis services, emergency services, therapy, diagnosis, treatment, or law-enforcement substitutes unless explicitly and lawfully designated as such.",
+        "Users must not rely on these features as if they guarantee intervention, rescue, or prevention in safety-critical situations."
+      ]
+    },
+    {
+      "id": "8-external-links-and-third-party-services",
+      "title": "8. External Links and Third-Party Services",
+      "paragraphs": [
+        "The website may contain links, references, integrations, or embedded elements associated with third-party services or external websites.",
+        "Neuroartan does not control all external services and is not responsible for third-party content, policies, availability, or practices except to the extent required by law.",
+        "Access to third-party services may be subject to separate legal terms and privacy practices."
+      ]
+    },
+    {
+      "id": "9-service-availability",
+      "title": "9. Service Availability",
+      "paragraphs": [
+        "Neuroartan may modify, suspend, restrict, or discontinue part or all of the website, content, features, account functions, profile functions, or technical availability at any time, with or without notice, where operationally, legally, strategically, or technically necessary.",
+        "No specific level of uptime, uninterrupted access, perpetual account availability, or perpetual feature availability is guaranteed unless expressly committed in a separate binding agreement.",
+        "Website features, communication channels, institutional descriptions, account functions, profile functions, or public-facing functional surfaces may evolve during the pre-incorporation stage and should not be interpreted as a representation of fixed corporate scale, registration maturity, or final commercial operating state."
+      ]
+    },
+    {
+      "id": "10-disclaimer-of-warranties",
+      "title": "10. Disclaimer of Warranties",
+      "paragraphs": [
+        "To the extent permitted by applicable law, the website and its content are provided on an “as is” and “as available” basis.",
+        "Neuroartan disclaims warranties, representations, and guarantees not expressly stated, including implied warranties relating to availability, merchantability, fitness for a particular purpose, non-infringement, uninterrupted operation, or uninterrupted account/profile access, except where such disclaimers are not legally permitted."
+      ]
+    },
+    {
+      "id": "11-limitation-of-liability",
+      "title": "11. Limitation of Liability",
+      "paragraphs": [
+        "To the extent permitted by applicable law, Neuroartan shall not be liable for indirect, incidental, consequential, special, exemplary, or similar damages arising from or related to access to or use of the website, inability to use the website, reliance on website content, technical failure, service interruption, third-party behavior, account restrictions, profile restrictions, or unauthorized access events.",
+        "Nothing in these Terms excludes liability to the extent liability cannot be lawfully excluded or limited under applicable law."
+      ]
+    },
+    {
+      "id": "12-privacy-and-cookie-related-matters",
+      "title": "12. Privacy and Cookie-Related Matters",
+      "paragraphs": [
+        "Use of the website may involve processing of personal data and use of cookies or similar technologies as described in the Privacy Policy and Cookie Policy.",
+        "Those policies form part of the broader public legal disclosure framework governing the website.",
+        "Where account or profile functionality is enabled, related personal-data processing is also subject to the Privacy Policy."
+      ]
+    },
+    {
+      "id": "13-suspension-or-restriction-of-access",
+      "title": "13. Suspension or Restriction of Access",
+      "paragraphs": [
+        "Neuroartan may suspend, restrict, or block access where reasonably necessary to protect legal compliance, security, infrastructure integrity, intellectual property, operational continuity, institutional interests, or user safety.",
+        "Such action may be taken in response to suspected misuse, technical threat, policy violation, unlawful behavior, account abuse, profile misuse, fraud indicators, or other material risk indicators."
+      ]
+    },
+    {
+      "id": "13a-safety-self-harm-harm-to-others-and-illegal-use-signals",
+      "title": "13A. Safety, Self-Harm, Harm-to-Others, and Illegal-Use Signals",
+      "paragraphs": [
+        "Because Neuroartan may later provide highly sensitive spaces for reflection, thought-related input, profile development, or voice-enabled interaction, certain user activity or submitted content may raise serious trust, safety, legal, or misuse concerns.",
+        "Where content, usage, or related system signals suggest an imminent safety risk, serious self-harm risk, suicidal-risk context, credible harm-to-others risk, abuse risk, severe misuse risk, or meaningful illegal-use risk, Neuroartan may take protective, compliance, or security-related action where lawful and reasonably necessary.",
+        "Such action may include, depending on the context and legal basis:",
+        "Nothing in these Terms should be interpreted as a promise that Neuroartan will detect, interpret, or prevent every safety-critical or unlawful situation. At the same time, Neuroartan reserves the right to act where safety, legal, or trust-surface conditions reasonably require it."
+      ],
+      "list": [
+        "internal review of the relevant content, account, or feature context",
+        "restriction, suspension, or interruption of a feature or account",
+        "preservation of relevant records for safety, compliance, security, or legal reasons",
+        "use of internal or third-party moderation, security, or escalation tools where applicable",
+        "notification to lawful authorities, emergency channels, or other appropriate parties where required by law or where Neuroartan reasonably determines that such escalation is necessary to address serious and imminent risk"
+      ]
+    },
+    {
+      "id": "14-changes-to-these-terms",
+      "title": "14. Changes to These Terms",
+      "paragraphs": [
+        "These Terms of Use may be updated from time to time to reflect legal, operational, technical, editorial, structural, account-related, or profile-related changes.",
+        "Where material changes occur, the revised version will be published with an updated effective date.",
+        "The “Last Updated” date at the top of these Terms indicates when these Terms were last revised. Changes become effective when the revised Terms are posted, unless a different effective rule is stated in the updated notice.",
+        "Continued use of the website after such publication may constitute acceptance of the revised Terms to the extent permitted by applicable law.",
+        "Where changes in legal status, incorporation stage, public contact posture, communication architecture, account architecture, profile architecture, or public representation risk materially affect website-facing legal disclosures, these Terms should be reviewed by GCA before the revised public version is treated as production-ready."
+      ]
+    },
+    {
+      "id": "15-governing-law-and-interpretation",
+      "title": "15. Governing Law and Interpretation",
+      "paragraphs": [
+        "These Terms shall be interpreted in accordance with the governing legal framework applicable to Neuroartan’s operation, subject to any mandatory laws that apply based on user location, consumer protections, or non-waivable legal rights.",
+        "Jurisdiction-specific language may be supplemented where required by applicable law."
+      ]
+    },
+    {
+      "id": "15a-children-and-minors",
+      "title": "15A. Children and Minors",
+      "paragraphs": [
+        "Neuroartan takes children’s and minors’ protection seriously.",
+        "Because Neuroartan may develop highly sensitive environments involving reflection, thought organization, profile development, or voice interaction, additional caution applies where children or minors are concerned.",
+        "Where a feature, service, or environment is not intended for children or minors, Neuroartan may restrict access, require age-related confirmation, or refuse activation of certain functions.",
+        "Where additional parental authorization, age-gating, supervision, or legal safeguards are required, those conditions must be satisfied before the relevant feature is used."
+      ]
+    },
+    {
+      "id": "16-contact",
+      "title": "16. Contact",
+      "paragraphs": [
+        "Questions regarding these Terms of Use may be directed through Neuroartan’s designated legal or official contact channel as published on the website.",
+        "During the pre-incorporation stage, public contact presentation must remain accurate to Neuroartan’s actual legal and operational posture and must not imply a registered-office or mature corporate status that does not yet legally exist.",
+        "---"
+      ]
+    },
+    {
+      "id": "change-log",
+      "title": "Change Log",
+      "paragraphs": [
+        "---"
+      ],
+      "list": [
+        "2026-03-29 — v1.3.0 Terms of Use updated to add the institutional “we / us / our” clarification, additional feature-specific terms logic, stronger prohibited-use language for reflective / thought / voice / profile-related misuse, a safety / self-harm / harm-to-others / illegal-use action posture, and children-and-minors protection language for higher-sensitivity product contexts. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Hardening of Terms of Use for public brand language, sensitive-thought product controls, and child-protection posture.",
+        "2026-03-26 — v1.2.0 Terms of Use finalized for current public-facing auth, profile, and legal-page linkage readiness. Scope and stakeholder coverage were expanded to include Firebase auth/profile terms readiness, account and user-conduct terms, and software / implementation stakeholders. The body was hardened to include account/profile-specific permitted-use, prohibited-conduct, service-availability, warranty, liability, privacy-linkage, and review-trigger language so Firebase-style public entry points can be linked without contradicting the current legal posture. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Public-legal hardening for Firebase auth/profile linkage and website legal-page finalization.",
+        "2026-03-10 — v1.1.0 Terms of Use synchronized to GCA legal review. Scope and stakeholder coverage expanded to include pre-incorporation public disclosure accuracy and public representation risk control; public-facing terms language was hardened so the Terms do not imply incorporation, registered-office status, revenue maturity, or broader commercial finality beyond verified fact; scope, informational-content, service-availability, policy-update, and contact clauses were strengthened to preserve accurate public legal posture during the pre-incorporation stage. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Public terms-of-use hardening to align website-facing legal disclosures with pre-incorporation stage accuracy and public representation risk control.",
+        "2026-03-08 — v1.0.0 Terms of Use created from empty file and normalized into the canonical public-legal-page structure; acceptable-use, IP, availability, disclaimer, liability, privacy linkage, governing-law, and publication controls added; canonical end-section sequence applied. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: Vault Governance Agent (A-2026-0001). Execution Context: Initial creation of public terms-of-use page."
+      ]
+    },
+    {
+      "id": "document-control-validation",
+      "title": "Document Control & Validation",
+      "paragraphs": [
+        "GSA PROTOCOL STATUS: Pending Founder Validation",
+        "GSA APPROVAL: false",
+        "DOCUMENT STATUS: Draft — Terms of Use",
+        "VISIBILITY: Public",
+        "PUBLISH TO WEBSITE: Yes",
+        "VERSION: 1.3.0",
+        "---",
+        "END OF DOCUMENT"
+      ]
+    }
+  ],
+  "footer": "These Terms are published as part of Neuroartan public legal disclosures and must remain synchronized with the governed source document.",
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Terms of Use | Neuroartan",
+    "url": "https://neuroartan.com/pages/legal/terms/",
+    "identifier": "NA-LEG-PUB-2026-0003-ACT",
+    "dateModified": "2026-03-26"
+  }
+}

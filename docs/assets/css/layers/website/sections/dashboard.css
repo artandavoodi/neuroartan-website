@@ -27,7 +27,7 @@
 
 .dashboard-summary-card__eyebrow{
   margin:0;
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:0.74rem;
   font-weight:500;
   letter-spacing:0.12em;
@@ -58,7 +58,7 @@
 }
 
 .dashboard-section-group__eyebrow{
-  color:var(--cc-secondary-color);
+  color:var(--text-secondary-color);
   font-size:0.74rem;
   font-weight:500;
   letter-spacing:0.12em;
@@ -66,7 +66,7 @@
 }
 
 .dashboard-section-group__title{
-  color:var(--cc-primary-color);
+  color:var(--text-primary-color);
   font-size:1.02rem;
   font-weight:500;
 }

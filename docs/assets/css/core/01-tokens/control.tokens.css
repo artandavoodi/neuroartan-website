@@ -99,7 +99,7 @@
   --toggle-thumb-size:1rem;
   --toggle-radius:999px;
   --toggle-track-border-width:0;
-  --toggle-track-bg-off:color-mix(in srgb, var(--cc-primary-color) 14%, transparent);
+  --toggle-track-bg-off:color-mix(in srgb, var(--text-primary-color) 14%, transparent);
   --toggle-track-bg-on:var(--color-primary1);
   --toggle-track-border-color:transparent;
   --toggle-track-border-hover-color:transparent;

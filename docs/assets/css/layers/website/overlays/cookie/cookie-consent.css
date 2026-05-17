@@ -38,35 +38,35 @@
 ============================================================================= */
 :root{
   --cookie-consent-backdrop:color-mix(in srgb, var(--shadow-color, #000000) 16%, transparent);
-  --cookie-consent-surface:var(--cc-surface-unified);
-  --cookie-consent-border:var(--cc-border-unified);
-  --cookie-consent-shadow:var(--cc-shadow-unified);
+  --cookie-consent-surface:var(--panel-surface-unified);
+  --cookie-consent-border:var(--panel-border-unified);
+  --cookie-consent-shadow:var(--panel-shadow-unified);
   --cookie-consent-width: min(36rem, calc(100vw - (2 * var(--cookie-consent-min-viewport-gap))));
   --cookie-consent-min-viewport-gap:var(--dialog-overlay-viewport-gap);
-  --cookie-consent-viewport-gap-top:var(--cc-shell-topbar-height, var(--site-header-height, 4rem));
-  --cookie-consent-viewport-gap-bottom:var(--cc-shell-footer-separator-offset, var(--footer-height, 5rem));
+  --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--site-header-height, 4rem));
+  --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--footer-height, 5rem));
   --cookie-consent-footer-links-max-width:100%;
   --cookie-consent-max-height:calc(100dvh - var(--cookie-consent-viewport-gap-top) - var(--cookie-consent-viewport-gap-bottom));
   --cookie-consent-radius:var(--dialog-radius-unified);
   --cookie-consent-card-radius:var(--shape-card-radius);
   --cookie-consent-pill-radius:var(--control-radius);
-  --cookie-consent-divider: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --cookie-consent-header-divider: color-mix(in srgb, var(--cc-secondary-color) 35%, transparent);
-  --cookie-consent-muted: color-mix(in srgb, var(--cc-primary-color) 58%, transparent);
-  --cookie-consent-support-text: color-mix(in srgb, var(--cc-primary-color) 54%, transparent);
-  --cookie-consent-row-title-secondary: color-mix(in srgb, var(--cc-primary-color) 78%, transparent);
+  --cookie-consent-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-consent-header-divider: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
+  --cookie-consent-muted: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-support-text: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
+  --cookie-consent-row-title-secondary: color-mix(in srgb, var(--text-primary-color) 78%, transparent);
   --cookie-consent-row-shadow:var(--dialog-overlay-row-shadow);
-  --cookie-consent-education-border: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --cookie-consent-sticky-actions-border: color-mix(in srgb, var(--cc-secondary-color) 35%, transparent);
+  --cookie-consent-education-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-consent-sticky-actions-border: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
   --cookie-consent-brand-image-filter: var(--icon-image-filter, none);
   --cookie-consent-brand-symbol-filter: var(--icon-image-filter, none);
-  --cookie-consent-soft: color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --cookie-consent-soft-strong: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  --cookie-consent-soft: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-consent-soft-strong: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-consent-row-surface: color-mix(in srgb, var(--bg-primary-color) 72%, transparent);
-  --cookie-consent-row-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  --cookie-consent-row-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-consent-row-hover:var(--dialog-consent-row-hover);
-  --cookie-consent-row-icon-surface: color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --cookie-consent-row-icon-color: color-mix(in srgb, var(--cc-primary-color) 76%, transparent);
+  --cookie-consent-row-icon-surface: color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-consent-row-icon-color: color-mix(in srgb, var(--text-primary-color) 76%, transparent);
   --cookie-consent-row-icon-image-filter: var(--icon-image-filter, none);
   --cookie-consent-row-icon-size:var(--dialog-consent-row-icon-size);
   --cookie-consent-row-expand-size:var(--dialog-consent-row-expand-size);
@@ -84,32 +84,32 @@
   --cookie-consent-brand-symbol-size:var(--dialog-consent-brand-symbol-size);
   --cookie-consent-brand-wordmark-width:var(--dialog-consent-brand-wordmark-width);
   --cookie-consent-action-gap:var(--dialog-consent-action-gap);
-  --cookie-consent-action-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
+  --cookie-consent-action-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --cookie-consent-action-surface: var(--cookie-consent-soft);
   --cookie-consent-action-surface-hover: var(--cookie-consent-soft-strong);
-  --cookie-consent-action-text: var(--cc-primary-color);
+  --cookie-consent-action-text: var(--text-primary-color);
   --cookie-consent-content-gutter:var(--dialog-consent-content-gutter);
   --cookie-consent-body-edge-inset:var(--dialog-consent-body-edge-inset);
-  --cookie-consent-toggle-ring: color-mix(in srgb, var(--cc-primary-color) 16%, transparent);
-  --cookie-consent-subitem-surface: color-mix(in srgb, var(--cc-primary-color) 2%, transparent);
-  --cookie-consent-subitem-border: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --cookie-consent-subitem-copy: color-mix(in srgb, var(--cc-primary-color) 54%, transparent);
-  --cookie-consent-subitem-state: color-mix(in srgb, var(--cc-primary-color) 52%, transparent);
+  --cookie-consent-toggle-ring: color-mix(in srgb, var(--text-primary-color) 16%, transparent);
+  --cookie-consent-subitem-surface: color-mix(in srgb, var(--text-primary-color) 2%, transparent);
+  --cookie-consent-subitem-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-consent-subitem-copy: color-mix(in srgb, var(--text-primary-color) 54%, transparent);
+  --cookie-consent-subitem-state: color-mix(in srgb, var(--text-primary-color) 52%, transparent);
   --cookie-consent-subitem-gap:var(--dialog-consent-subitem-gap);
-  --cookie-consent-row-title-color: var(--cc-primary-color);
-  --cookie-consent-row-copy-color: color-mix(in srgb, var(--cc-primary-color) 68%, transparent);
-  --cookie-consent-row-status-color: color-mix(in srgb, var(--cc-primary-color) 62%, transparent);
-  --cookie-consent-row-detail-color: color-mix(in srgb, var(--cc-primary-color) 62%, transparent);
-  --cookie-consent-subitem-title-color: var(--cc-primary-color);
-  --cookie-consent-subitem-copy-color-strong: color-mix(in srgb, var(--cc-primary-color) 66%, transparent);
-  --cookie-consent-subitem-status-color-strong: color-mix(in srgb, var(--cc-primary-color) 62%, transparent);
-  --cookie-consent-footer-border: color-mix(in srgb, var(--cc-primary-color) 6%, transparent);
-  --cookie-consent-footer-link-color: color-mix(in srgb, var(--cc-primary-color) 74%, transparent);
-  --cookie-consent-footer-link-hover: var(--cc-primary-color);
-  --cookie-consent-footer-language-surface: color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --cookie-consent-footer-language-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --cookie-consent-footer-language-label: color-mix(in srgb, var(--cc-primary-color) 58%, transparent);
-  --cookie-consent-footer-language-value: var(--cc-primary-color);
+  --cookie-consent-row-title-color: var(--text-primary-color);
+  --cookie-consent-row-copy-color: color-mix(in srgb, var(--text-primary-color) 68%, transparent);
+  --cookie-consent-row-status-color: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --cookie-consent-row-detail-color: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --cookie-consent-subitem-title-color: var(--text-primary-color);
+  --cookie-consent-subitem-copy-color-strong: color-mix(in srgb, var(--text-primary-color) 66%, transparent);
+  --cookie-consent-subitem-status-color-strong: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --cookie-consent-footer-border: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
+  --cookie-consent-footer-link-color: color-mix(in srgb, var(--text-primary-color) 74%, transparent);
+  --cookie-consent-footer-link-hover: var(--text-primary-color);
+  --cookie-consent-footer-language-surface: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-consent-footer-language-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-footer-language-label: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-footer-language-value: var(--text-primary-color);
   --cookie-consent-learning-shell-min-height:var(--dialog-consent-learning-shell-min-height);
   --cookie-consent-learning-shell-radius:var(--dialog-consent-learning-shell-radius);
   --cookie-consent-learning-shell-padding:var(--dialog-consent-learning-shell-padding);
@@ -273,7 +273,7 @@
 
 html[data-theme-effective="light"]{
   --cookie-consent-backdrop:color-mix(in srgb, var(--shadow-color, #000000) 16%, transparent);
-  --cookie-consent-surface:var(--cc-surface-unified);
+  --cookie-consent-surface:var(--panel-surface-unified);
   --cookie-consent-brand-image-filter: var(--icon-image-filter, none);
   --cookie-consent-brand-symbol-filter: var(--icon-image-filter, none);
   --cookie-consent-row-shadow:var(--dialog-overlay-row-shadow-light);
@@ -283,48 +283,48 @@ html[data-theme-effective="light"]{
 
 html[data-theme-effective="dark"]{
   --cookie-consent-backdrop:color-mix(in srgb, var(--shadow-color, #000000) 28%, transparent);
-  --cookie-consent-surface:var(--cc-surface-unified);
-  --cookie-consent-border:var(--cc-border-unified);
-  --cookie-consent-shadow:var(--cc-shadow-unified);
-  --cookie-consent-divider: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --cookie-consent-header-divider: color-mix(in srgb, var(--cc-secondary-color) 35%, transparent);
-  --cookie-consent-muted: color-mix(in srgb, var(--cc-primary-color) 62%, transparent);
-  --cookie-consent-support-text: color-mix(in srgb, var(--cc-primary-color) 58%, transparent);
-  --cookie-consent-education-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --cookie-consent-sticky-actions-border: color-mix(in srgb, var(--cc-secondary-color) 35%, transparent);
+  --cookie-consent-surface:var(--panel-surface-unified);
+  --cookie-consent-border:var(--panel-border-unified);
+  --cookie-consent-shadow:var(--panel-shadow-unified);
+  --cookie-consent-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-header-divider: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
+  --cookie-consent-muted: color-mix(in srgb, var(--text-primary-color) 62%, transparent);
+  --cookie-consent-support-text: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-education-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-sticky-actions-border: color-mix(in srgb, var(--text-secondary-color) 35%, transparent);
   --cookie-consent-brand-image-filter: var(--icon-image-filter, brightness(0) invert(1));
   --cookie-consent-brand-symbol-filter: var(--icon-image-filter, brightness(0) invert(1));
-  --cookie-consent-soft:color-mix(in srgb, var(--cc-primary-color) 2%, transparent);
-  --cookie-consent-soft-strong:color-mix(in srgb, var(--cc-primary-color) 5%, transparent);
-  --cookie-consent-row-surface:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --cookie-consent-row-border: color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
-  --cookie-consent-row-hover: color-mix(in srgb, var(--cc-primary-color) 14%, transparent);
-  --cookie-consent-row-icon-surface:color-mix(in srgb, var(--cc-primary-color) 4%, transparent);
-  --cookie-consent-row-icon-color: var(--cc-primary-color);
+  --cookie-consent-soft:color-mix(in srgb, var(--text-primary-color) 2%, transparent);
+  --cookie-consent-soft-strong:color-mix(in srgb, var(--text-primary-color) 5%, transparent);
+  --cookie-consent-row-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-consent-row-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-consent-row-hover: color-mix(in srgb, var(--text-primary-color) 14%, transparent);
+  --cookie-consent-row-icon-surface:color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --cookie-consent-row-icon-color: var(--text-primary-color);
   --cookie-consent-row-icon-image-filter: var(--icon-image-filter, brightness(0) invert(1));
   --cookie-consent-row-expand-icon-filter: var(--icon-image-filter, brightness(0) invert(1));
-  --cookie-consent-row-title-secondary: color-mix(in srgb, var(--cc-primary-color) 84%, transparent);
+  --cookie-consent-row-title-secondary: color-mix(in srgb, var(--text-primary-color) 84%, transparent);
   --cookie-consent-row-shadow:var(--dialog-overlay-row-shadow-dark);
   --cookie-consent-toggle-off: var(--toggle-track-bg-off);
   --cookie-consent-toggle-on-accent: var(--cookie-consent-toggle-on);
-  --cookie-consent-subitem-surface:color-mix(in srgb, var(--cc-primary-color) 2.2%, transparent);
-  --cookie-consent-subitem-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --cookie-consent-subitem-copy: color-mix(in srgb, var(--cc-primary-color) 60%, transparent);
-  --cookie-consent-subitem-state: color-mix(in srgb, var(--cc-primary-color) 58%, transparent);
-  --cookie-consent-row-title-color:color-mix(in srgb, var(--cc-primary-color) 96%, transparent);
-  --cookie-consent-row-copy-color:color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
-  --cookie-consent-row-status-color:color-mix(in srgb, var(--cc-primary-color) 66%, transparent);
-  --cookie-consent-row-detail-color:color-mix(in srgb, var(--cc-primary-color) 68%, transparent);
-  --cookie-consent-subitem-title-color:color-mix(in srgb, var(--cc-primary-color) 96%, transparent);
-  --cookie-consent-subitem-copy-color-strong:color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
-  --cookie-consent-subitem-status-color-strong:color-mix(in srgb, var(--cc-primary-color) 66%, transparent);
-  --cookie-consent-footer-border: color-mix(in srgb, var(--cc-primary-color) 8%, transparent);
-  --cookie-consent-footer-link-color:color-mix(in srgb, var(--cc-primary-color) 74%, transparent);
-  --cookie-consent-footer-link-hover:color-mix(in srgb, var(--cc-primary-color) 96%, transparent);
-  --cookie-consent-footer-language-surface:color-mix(in srgb, var(--cc-primary-color) 3%, transparent);
-  --cookie-consent-footer-language-border: color-mix(in srgb, var(--cc-primary-color) 10%, transparent);
-  --cookie-consent-footer-language-label:color-mix(in srgb, var(--cc-primary-color) 58%, transparent);
-  --cookie-consent-footer-language-value:color-mix(in srgb, var(--cc-primary-color) 96%, transparent);
+  --cookie-consent-subitem-surface:color-mix(in srgb, var(--text-primary-color) 2.2%, transparent);
+  --cookie-consent-subitem-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-subitem-copy: color-mix(in srgb, var(--text-primary-color) 60%, transparent);
+  --cookie-consent-subitem-state: color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-row-title-color:color-mix(in srgb, var(--text-primary-color) 96%, transparent);
+  --cookie-consent-row-copy-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --cookie-consent-row-status-color:color-mix(in srgb, var(--text-primary-color) 66%, transparent);
+  --cookie-consent-row-detail-color:color-mix(in srgb, var(--text-primary-color) 68%, transparent);
+  --cookie-consent-subitem-title-color:color-mix(in srgb, var(--text-primary-color) 96%, transparent);
+  --cookie-consent-subitem-copy-color-strong:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+  --cookie-consent-subitem-status-color-strong:color-mix(in srgb, var(--text-primary-color) 66%, transparent);
+  --cookie-consent-footer-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-footer-link-color:color-mix(in srgb, var(--text-primary-color) 74%, transparent);
+  --cookie-consent-footer-link-hover:color-mix(in srgb, var(--text-primary-color) 96%, transparent);
+  --cookie-consent-footer-language-surface:color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --cookie-consent-footer-language-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  --cookie-consent-footer-language-label:color-mix(in srgb, var(--text-primary-color) 58%, transparent);
+  --cookie-consent-footer-language-value:color-mix(in srgb, var(--text-primary-color) 96%, transparent);
 }
 
 /* =============================================================================
@@ -415,12 +415,12 @@ body.cookie-consent-closing .cookie-consent-backdrop{
   flex-direction:column;
   overflow:hidden;
   padding:var(--cookie-consent-panel-padding-y) var(--cookie-consent-panel-padding-x) var(--spacing-none) var(--cookie-consent-panel-padding-x);
-  border:var(--cc-width-hairline) solid var(--cookie-consent-border);
+  border:var(--border-width-hairline) solid var(--cookie-consent-border);
   border-radius:var(--cookie-consent-radius);
   background:var(--cookie-consent-surface);
   box-shadow:var(--cookie-consent-shadow);
-  backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
-  -webkit-backdrop-filter:blur(var(--cc-blur-unified)) saturate(var(--cc-saturate-unified));
+  backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
   transform:var(--cookie-consent-panel-transform-closed);
   transition:transform var(--cookie-consent-motion-panel-transform) var(--cookie-consent-motion-ease), opacity var(--cookie-consent-motion-panel-opacity) var(--interaction-ease-standard);
 }
@@ -453,7 +453,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   left: var(--cookie-consent-body-edge-inset);
   right: var(--cookie-consent-body-edge-inset);
   bottom: var(--spacing-none);
-  height: var(--cc-width-hairline);
+  height: var(--border-width-hairline);
   background: var(--cookie-consent-header-divider);
   pointer-events: none;
 }
@@ -467,7 +467,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   left: var(--cookie-consent-body-edge-inset);
   right: var(--cookie-consent-body-edge-inset);
   top: var(--spacing-none);
-  height: var(--cc-width-hairline);
+  height: var(--border-width-hairline);
   background: var(--cookie-consent-header-divider);
   pointer-events: none;
   z-index: 2;
@@ -590,7 +590,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-eyebrow{
   margin:var(--spacing-none);
   align-self:center;
-  color:color-mix(in srgb, var(--cc-primary-color) 72%, transparent);
+  color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
   font-size:var(--cookie-consent-eyebrow-size);
   font-weight:var(--cookie-consent-eyebrow-weight);
   letter-spacing:var(--cookie-consent-eyebrow-tracking);
@@ -714,7 +714,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   justify-content: center;
   min-height:var(--cookie-consent-action-min-height);
   padding:var(--cookie-consent-action-padding-y) var(--cookie-consent-action-padding-x);
-  border: var(--cc-width-hairline) solid var(--cookie-consent-action-border);
+  border: var(--border-width-hairline) solid var(--cookie-consent-action-border);
   border-radius: var(--control-radius);
   background: var(--cookie-consent-action-surface);
   color: var(--cookie-consent-action-text);
@@ -759,7 +759,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-row{
   display: flex;
   flex-direction: column;
-  border: var(--cc-width-hairline) solid var(--cookie-consent-row-border);
+  border: var(--border-width-hairline) solid var(--cookie-consent-row-border);
   border-radius: var(--cookie-consent-card-radius);
   background: var(--cookie-consent-row-surface);
   box-shadow: var(--cookie-consent-row-shadow);
@@ -892,7 +892,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-banner .cookie-consent-note strong,
 .cookie-consent-settings .cookie-consent-note strong,
 .cookie-consent-education .cookie-consent-note strong{
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-weight:var(--cookie-consent-strong-weight);
 }
 
@@ -970,7 +970,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   flex-direction: column;
   gap:var(--cookie-consent-row-detail-gap);
   padding:var(--cookie-consent-row-detail-padding-y) var(--cookie-consent-content-gutter) var(--cookie-consent-row-margin-bottom) var(--cookie-consent-content-gutter);
-  border-top: var(--cc-width-hairline) solid var(--cookie-consent-divider);
+  border-top: var(--border-width-hairline) solid var(--cookie-consent-divider);
 }
 
 .cookie-consent-row-detail:not([hidden]){
@@ -978,7 +978,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 .cookie-consent-row-link{
-  color: color-mix(in srgb, var(--cc-primary-color) 84%, transparent);
+  color: color-mix(in srgb, var(--text-primary-color) 84%, transparent);
   text-decoration: none;
   font-size:var(--cookie-consent-row-link-size);
   font-weight:var(--cookie-consent-row-link-weight);
@@ -989,7 +989,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-row-link:hover,
 .cookie-consent-row-link:focus-visible,
 .cookie-consent-row-link:active{
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   outline: none;
 }
 
@@ -1060,7 +1060,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   min-height: var(--cookie-consent-learning-shell-min-height);
   box-sizing: border-box;
   padding: var(--cookie-consent-learning-shell-padding);
-  border: var(--cc-width-hairline) solid var(--cookie-consent-education-border);
+  border: var(--border-width-hairline) solid var(--cookie-consent-education-border);
   border-radius: var(--cookie-consent-learning-shell-radius);
   background: var(--cookie-consent-subitem-surface);
 }
@@ -1091,7 +1091,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 .cookie-consent-learning-copy strong{
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   font-size:var(--cookie-consent-learning-title-size);
   font-weight:var(--cookie-consent-learning-title-weight);
   letter-spacing:var(--cookie-consent-learning-title-tracking);
@@ -1121,7 +1121,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   border: var(--spacing-none);
   background: transparent;
   appearance: none;
-  color: var(--cc-primary-color);
+  color: var(--text-primary-color);
   transition:var(--interaction-transition-control);
   flex: 0 0 auto;
 }
@@ -1131,7 +1131,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   top: 50%;
   left: 50%;
   width:var(--cookie-consent-row-expand-icon-size);
-  height:var(--cc-width-hairline);
+  height:var(--border-width-hairline);
   background: currentColor;
   pointer-events: none;
   transform-origin: center;
@@ -1175,7 +1175,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   align-items: center;
   gap:var(--cookie-consent-subitem-layout-gap);
   padding:var(--cookie-consent-subitem-padding-y) var(--cookie-consent-content-gutter);
-  border: var(--cc-width-hairline) solid var(--cookie-consent-subitem-border);
+  border: var(--border-width-hairline) solid var(--cookie-consent-subitem-border);
   border-radius:var(--cookie-consent-subitem-radius);
   background: var(--cookie-consent-subitem-surface);
 }
@@ -1336,7 +1336,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   gap:var(--cookie-consent-footer-language-gap);
   min-height:var(--cookie-consent-footer-language-min-height);
   padding:var(--cookie-consent-footer-language-padding-y) var(--cookie-consent-footer-language-padding-x);
-  border: var(--cc-width-hairline) solid var(--cookie-consent-footer-language-border);
+  border: var(--border-width-hairline) solid var(--cookie-consent-footer-language-border);
   border-radius: var(--control-radius);
   background: var(--cookie-consent-footer-language-surface);
 }
@@ -1399,8 +1399,8 @@ body.cookie-consent-closing .cookie-consent-panel{
   :root{
     --cookie-consent-width: min(39rem, calc(100vw - (2 * var(--cookie-consent-mobile-min-viewport-gap))));
     --cookie-consent-min-viewport-gap:var(--cookie-consent-mobile-min-viewport-gap);
-    --cookie-consent-viewport-gap-top:var(--cc-shell-topbar-height, var(--site-header-height, 4rem));
-    --cookie-consent-viewport-gap-bottom:var(--cc-shell-footer-separator-offset, var(--footer-height, 5rem));
+    --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--site-header-height, 4rem));
+    --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--footer-height, 5rem));
     --cookie-consent-footer-links-max-width: min(var(--size-full), 31rem);
     --cookie-consent-toggle-track-width: 2.5rem;
     --cookie-consent-toggle-track-height: 1.3rem;

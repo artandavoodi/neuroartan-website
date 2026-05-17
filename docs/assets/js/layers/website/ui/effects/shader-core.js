@@ -36,6 +36,7 @@
       this.vertexBuffer = null;
       this.animationFrame = null;
       this.isRunning = false;
+      this.shouldResumeAfterLifecycle = false;
       this.startTime = 0;
       this.pointer = {
         x: 0.5,
@@ -51,6 +52,11 @@
       this.boundPointerMove = (event) => this.handlePointerMove(event);
       this.boundPointerLeave = () => this.handlePointerLeave();
       this.boundObservedResize = () => this.scheduleResize();
+      this.boundVisibilityChange = () => this.handleVisibilityChange();
+      this.boundWindowBlur = () => this.handleWindowBlur();
+      this.boundWindowFocus = () => this.handleWindowFocus();
+      this.boundPageHide = () => this.handlePageHide();
+      this.boundPageShow = () => this.handlePageShow();
       this.resizeObserver = null;
       this.resizeFrame = null;
     }
@@ -277,6 +283,11 @@
       window.addEventListener('resize', this.boundResize, { passive: true });
       this.canvas.addEventListener('pointermove', this.boundPointerMove, { passive: true });
       this.canvas.addEventListener('pointerleave', this.boundPointerLeave, { passive: true });
+      document.addEventListener('visibilitychange', this.boundVisibilityChange);
+      window.addEventListener('blur', this.boundWindowBlur);
+      window.addEventListener('focus', this.boundWindowFocus);
+      window.addEventListener('pagehide', this.boundPageHide);
+      window.addEventListener('pageshow', this.boundPageShow);
 
       if (typeof ResizeObserver === 'function') {
         const resizeTarget = this.getResizeTarget();
@@ -292,6 +303,11 @@
       window.removeEventListener('resize', this.boundResize, { passive: true });
       this.canvas.removeEventListener('pointermove', this.boundPointerMove, { passive: true });
       this.canvas.removeEventListener('pointerleave', this.boundPointerLeave, { passive: true });
+      document.removeEventListener('visibilitychange', this.boundVisibilityChange);
+      window.removeEventListener('blur', this.boundWindowBlur);
+      window.removeEventListener('focus', this.boundWindowFocus);
+      window.removeEventListener('pagehide', this.boundPageHide);
+      window.removeEventListener('pageshow', this.boundPageShow);
 
       if (this.resizeObserver) {
         this.resizeObserver.disconnect();
@@ -385,8 +401,64 @@
       }
     }
 
+    /* =============================================================================
+       07B) BROWSER LIFECYCLE GOVERNOR
+    ============================================================================= */
+    suspendForLifecycle() {
+      if (this.isRunning) {
+        this.shouldResumeAfterLifecycle = true;
+      }
+
+      this.isRunning = false;
+
+      if (this.animationFrame) {
+        window.cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = null;
+      }
+    }
+
+    resumeFromLifecycle() {
+      if (!this.shouldResumeAfterLifecycle || document.hidden) {
+        return;
+      }
+
+      this.shouldResumeAfterLifecycle = false;
+      this.start();
+      this.scheduleResize();
+    }
+
+    handleVisibilityChange() {
+      if (document.hidden) {
+        this.suspendForLifecycle();
+        return;
+      }
+
+      this.resumeFromLifecycle();
+    }
+
+    handleWindowBlur() {
+      this.suspendForLifecycle();
+    }
+
+    handleWindowFocus() {
+      this.resumeFromLifecycle();
+    }
+
+    handlePageHide() {
+      this.suspendForLifecycle();
+    }
+
+    handlePageShow() {
+      this.resumeFromLifecycle();
+    }
+
     render = (timestamp) => {
       if (!this.gl || !this.program) return;
+
+      if (document.hidden) {
+        this.suspendForLifecycle();
+        return;
+      }
 
       if (typeof timestamp !== 'number') {
         this.drawFrame(performance.now());
@@ -417,12 +489,20 @@
       if (this.isRunning) return;
       if (!this.gl && !this.init()) return;
 
+      if (document.hidden) {
+        this.shouldResumeAfterLifecycle = true;
+        return;
+      }
+
+      this.shouldResumeAfterLifecycle = false;
       this.isRunning = true;
       this.animationFrame = window.requestAnimationFrame(this.render);
     }
 
     stop() {
+      this.shouldResumeAfterLifecycle = false;
       this.isRunning = false;
+
       if (this.animationFrame) {
         window.cancelAnimationFrame(this.animationFrame);
         this.animationFrame = null;

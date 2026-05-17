@@ -61,17 +61,50 @@ function buildRuntimeHeaders() {
 /* =============================================================================
    04) STATIC SERVING
 ============================================================================= */
+function getStaticRoots() {
+  const roots = Array.isArray(developerModeConfig.staticRoots)
+    ? developerModeConfig.staticRoots
+    : [{ routePrefix:'/', root:developerModeConfig.docsRoot }];
+
+  return [...roots].sort(
+    (a, b) => String(b.routePrefix || '/').length - String(a.routePrefix || '/').length
+  );
+}
+
+function matchesStaticRoot(normalizedPath, routePrefix) {
+  if (routePrefix === '/') return true;
+  return normalizedPath === routePrefix || normalizedPath.startsWith(`${routePrefix}/`);
+}
+
+function getStaticRootRelativePath(normalizedPath, routePrefix) {
+  if (routePrefix === '/') return normalizedPath;
+
+  const relativePath = normalizedPath.slice(routePrefix.length) || '/';
+  return relativePath === '/' ? '/index.html' : relativePath;
+}
+
 function resolveStaticPath(urlPath) {
   const decodedPath = decodeURIComponent(urlPath.split('?')[0] || '/');
   const normalizedPath = decodedPath === '/' ? '/index.html' : decodedPath;
-  const absolutePath = path.resolve(developerModeConfig.docsRoot, `.${normalizedPath}`);
-  const relative = path.relative(developerModeConfig.docsRoot, absolutePath);
 
-  if (relative.startsWith('..') || path.isAbsolute(relative)) {
-    return '';
+  for (const staticRoot of getStaticRoots()) {
+    const routePrefix = String(staticRoot.routePrefix || '/').replace(/\/+$/u, '') || '/';
+    const root = path.resolve(staticRoot.root || developerModeConfig.docsRoot);
+
+    if (!matchesStaticRoot(normalizedPath, routePrefix)) continue;
+
+    const rootRelativePath = getStaticRootRelativePath(normalizedPath, routePrefix);
+    const absolutePath = path.resolve(root, `.${rootRelativePath}`);
+    const relative = path.relative(root, absolutePath);
+
+    if (relative.startsWith('..') || path.isAbsolute(relative)) {
+      return '';
+    }
+
+    return absolutePath;
   }
 
-  return absolutePath;
+  return '';
 }
 
 export async function serveStatic(request, response, url) {
@@ -85,6 +118,11 @@ export async function serveStatic(request, response, url) {
     const fileStat = await stat(filePath);
     if (fileStat.isDirectory()) {
       filePath = path.join(filePath, 'index.html');
+      const indexStat = await stat(filePath);
+      if (!indexStat.isFile()) {
+        sendText(response, 404, 'Not found');
+        return true;
+      }
     }
 
     const contentType = CONTENT_TYPES[path.extname(filePath)] || 'application/octet-stream';
@@ -93,7 +131,16 @@ export async function serveStatic(request, response, url) {
       'cache-control':'no-store',
       ...buildRuntimeHeaders()
     });
-    createReadStream(filePath).pipe(response);
+    const stream = createReadStream(filePath);
+    stream.on('error', () => {
+      if (!response.headersSent) {
+        sendText(response, 404, 'Not found');
+        return;
+      }
+
+      response.destroy();
+    });
+    stream.pipe(response);
     return true;
   } catch (_) {
     sendText(response, 404, 'Not found');

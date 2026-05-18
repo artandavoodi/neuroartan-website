@@ -143,6 +143,11 @@
   --account-drawer-close-hover-color:var(--global-close-button-hover-color);
   --account-drawer-close-duration:var(--global-close-button-duration);
   --account-drawer-close-ease:var(--global-close-button-ease);
+  --account-drawer-dialog-radius:var(--dialog-radius-unified);
+  --account-drawer-dialog-max-height:calc(100dvh - var(--home-shell-topbar-height, var(--site-header-height, 4rem)) - var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  --account-drawer-dialog-viewport-gap:var(--dialog-overlay-viewport-gap);
+  --account-drawer-panel-transform-closed:var(--overlay-transform-closed);
+  --account-drawer-panel-transform-open:var(--overlay-transform-open);
 }
 
 /* =============================================================================
@@ -208,7 +213,11 @@ html[data-theme-effective="dark"]{
   position: fixed;
   inset: var(--spacing-none);
   z-index: var(--z-overlay-surface);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding:calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, var(--site-header-height, 4rem))) var(--account-drawer-dialog-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
   pointer-events: none;
   opacity: var(--overlay-opacity-closed);
   visibility: hidden;
@@ -264,19 +273,21 @@ body.account-drawer-closing .account-drawer-backdrop{
    07) DRAWER PANEL
 ============================================================================= */
 .account-drawer-shell{
-  position: absolute;
-  inset: var(--spacing-none) auto var(--spacing-none) var(--spacing-none);
+  position: relative;
   z-index: var(--z-overlay-surface);
   width: var(--account-drawer-panel-width);
-  max-width: var(--size-full);
-  height: var(--size-full);
+  max-width: calc(100vw - (2 * var(--account-drawer-dialog-viewport-gap)));
+  height: auto;
+  max-height: var(--account-drawer-dialog-max-height);
   padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x);
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
+  border: var(--border-width-hairline) solid var(--account-drawer-border);
+  border-radius: var(--account-drawer-dialog-radius);
   backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
-  transform: none;
+  transform: var(--account-drawer-panel-transform-closed);
   transition:var(--interaction-transition-control);
   display: flex;
   flex-direction: column;
@@ -288,12 +299,12 @@ body.account-drawer-closing .account-drawer-backdrop{
 }
 
 body.account-drawer-open .account-drawer-shell{
-  transform: none;
+  transform: var(--account-drawer-panel-transform-open);
 }
 
 body.account-drawer-closing .account-drawer-shell{
   transition:var(--interaction-transition-control);
-  transform: translateX(-100%);
+  transform: var(--account-drawer-panel-transform-closed);
 }
 
 /* =============================================================================
@@ -377,6 +388,10 @@ body.account-drawer-closing .account-drawer-close{
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.account-drawer[data-account-drawer-surface="phone-auth"] .account-drawer-body{
+  overflow: visible;
 }
 
 .account-drawer-body::-webkit-scrollbar{
@@ -510,6 +525,10 @@ body.account-drawer-closing .account-drawer-close{
 
 .account-drawer-view-mount:not([hidden]){
   display: flex;
+}
+
+.account-drawer[data-account-drawer-surface="phone-auth"] .account-drawer-view-mount{
+  overflow: visible;
 }
 
 .account-drawer-inner-view{

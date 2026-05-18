@@ -1323,7 +1323,7 @@ import {
 
     const supabase = await waitForSupabaseClient();
     if (!supabase) {
-      const message = 'Phone sign-in requires the Supabase authentication backend.';
+      const message = 'Phone verification services are still loading. Try again in a moment.';
       emitPhoneAuthStatus('error', message);
       setFieldError(phoneField, message);
       return;
@@ -1332,11 +1332,6 @@ import {
     setFormBusy(form, true);
 
     try {
-      setFlowState({
-        resolveProfile: true,
-        redirectToProfile: true
-      });
-
       if (!code) {
         emitPhoneAuthStatus('saving', 'Sending verification code...');
         const { error } = await supabase.auth.signInWithOtp({ phone });
@@ -1344,11 +1339,17 @@ import {
           throw error;
         }
 
-        setPhoneVerificationVisible(true);
-        emitPhoneAuthStatus('success', 'Verification code sent. Enter the code to continue.');
-        window.setTimeout(() => {
-          codeField?.focus();
-        }, 0);
+        setPhoneVerificationVisible(false);
+        emitPhoneAuthStatus('success', 'Verification code sent. Enter it in the verification window.');
+
+        document.dispatchEvent(new CustomEvent('account:phone-verification-open-request', {
+          detail: {
+            source: 'account-completion',
+            phone,
+            displayPhone: normalizeString(detail.displayPhone || phone)
+          }
+        }));
+
         return;
       }
 
@@ -1375,6 +1376,16 @@ import {
       const message = mapAuthError(error, 'Unable to continue with phone right now.');
       emitPhoneAuthStatus('error', message);
       setFieldError(code ? codeField : phoneField, message);
+
+      if (code) {
+        document.dispatchEvent(new CustomEvent('account:phone-verification-status', {
+          detail: {
+            state: 'error',
+            message
+          }
+        }));
+      }
+
       console.error('Phone auth error:', error);
     } finally {
       setFormBusy(form, false);

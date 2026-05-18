@@ -42,7 +42,14 @@
   const MIN_VISIBLE_MS = 320;
   const FINAL_PAINT_SETTLE_MS = 120;
   const INITIAL_LOAD_REASON = 'initial-page-load';
-  const THEME_PAINT_REASON = 'theme-paint';
+  const BLOCKING_LOADING_REASONS = new Set([
+    INITIAL_LOAD_REASON,
+    'global-layout',
+    'translation'
+  ]);
+  const BLOCKING_LOADING_REASON_PREFIXES = [
+    'locale:'
+  ];
 
   /* =============================================================================
      03) OVERLAY RESOLUTION
@@ -167,6 +174,21 @@
     return normalized || 'generic';
   };
 
+  const isBlockingLoadingReason = (event, reason) => {
+    const detail = event?.detail || {};
+
+    if (detail.blocking === true || detail.critical === true) {
+      return true;
+    }
+
+    if (detail.blocking === false || detail.critical === false) {
+      return false;
+    }
+
+    return BLOCKING_LOADING_REASONS.has(reason) ||
+      BLOCKING_LOADING_REASON_PREFIXES.some((prefix) => reason.startsWith(prefix));
+  };
+
   const start = (reason = 'generic') => {
     activeReasons.add(normalizeReason(reason));
     updateVisibility();
@@ -206,7 +228,9 @@
     });
 
     document.addEventListener('neuroartan:loading-start', (event) => {
-      start(event?.detail?.reason || 'runtime');
+      const reason = normalizeReason(event?.detail?.reason || 'runtime');
+      if (!isBlockingLoadingReason(event, reason)) return;
+      start(reason);
     });
 
     document.addEventListener('neuroartan:loading-stop', (event) => {
@@ -215,16 +239,6 @@
 
     document.addEventListener('neuroartan:loading-clear', () => {
       clear();
-    });
-
-    document.addEventListener('neuroartan:theme-changed', () => {
-      start(THEME_PAINT_REASON);
-
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          stop(THEME_PAINT_REASON);
-        });
-      });
     });
   };
 

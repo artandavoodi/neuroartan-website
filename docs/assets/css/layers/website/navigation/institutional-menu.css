@@ -384,8 +384,7 @@ html[data-theme-effective="light"]{
   transform: none !important;
   transition:
     color var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
-    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
-    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease);
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
 }
 
 .institutional-menu-link:hover,
@@ -833,8 +832,7 @@ html[data-theme-effective="light"]{
   transform: none !important;
   transition:
     color var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
-    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
-    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease);
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
 }
 
 .institutional-menu-mic-button:hover,
@@ -842,7 +840,7 @@ html[data-theme-effective="light"]{
 .institutional-menu-mic-button:active{
   color: var(--color-primary1);
   opacity:var(--overlay-opacity-open);
-  transform:scale(var(--institutional-menu-search-button-hover-scale)) !important;
+  transform:none !important;
   outline: none;
 }
 
@@ -865,7 +863,6 @@ html[data-theme-effective="light"]{
   opacity:var(--institutional-menu-icon-opacity);
   transition:
     opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
-    transform var(--institutional-menu-motion-fast) var(--institutional-menu-motion-ease),
     background-color var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
   transform-origin: center center;
 }
@@ -874,7 +871,7 @@ html[data-theme-effective="light"]{
 .institutional-menu-mic-button:focus-visible .institutional-menu-mic-icon,
 .institutional-menu-mic-button:active .institutional-menu-mic-icon{
   opacity:var(--overlay-opacity-open);
-  transform:scale(1.03) !important;
+  transform:none !important;
 }
 
 .institutional-menu-search-input{

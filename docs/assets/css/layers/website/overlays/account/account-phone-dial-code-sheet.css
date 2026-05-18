@@ -1,0 +1,158 @@
+/* =============================================================================
+   Neuroartan Website — Account Phone Dial Code Sheet
+   -----------------------------------------------------------------------------
+   Purpose:
+   - Dedicated Apple-like account sheet for selecting country calling codes.
+   - Stable internal scroll without clipping or dropdown stretching.
+============================================================================= */
+
+.account-phone-dial-code-sheet{
+  --account-phone-dial-code-content-max-width: var(--account-drawer-content-max-width, 26rem);
+  --account-phone-dial-code-section-gap: var(--space-7);
+  --account-phone-dial-code-list-radius: var(--radius-lg);
+  --account-phone-dial-code-list-max-height: min(22rem, 48vh);
+}
+
+.account-drawer-view-mount .account-phone-dial-code-sheet,
+.account-drawer-view-mount .account-drawer-inner-view[data-account-view="phone-dial-code"]{
+  display: block;
+}
+
+.account-phone-dial-code-sheet-header{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-inline: var(--space-5);
+}
+
+.account-phone-dial-code-sheet-back-control{
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--close-control-size);
+  min-width: var(--close-control-size);
+  height: var(--close-control-size);
+  min-height: var(--close-control-size);
+  padding: var(--spacing-none);
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.account-phone-dial-code-sheet-back-icon{
+  width: var(--space-5);
+  height: var(--space-5);
+  display: block;
+  object-fit: contain;
+  filter: var(--icon-image-filter, none);
+}
+
+.account-phone-dial-code-sheet-content-stage{
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-phone-dial-code-section-gap);
+  padding-inline: var(--space-9);
+}
+
+.account-phone-dial-code-sheet-center-stage{
+  width: var(--size-full);
+  max-width: var(--account-phone-dial-code-content-max-width);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.account-phone-dial-code-sheet-kicker{
+  margin: 0;
+  color: var(--text-secondary-color);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-body-medium-weight);
+  letter-spacing: var(--type-caption-tracking);
+  line-height: var(--type-caption-line-height);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.account-phone-dial-code-sheet-title{
+  margin: 0;
+  color: var(--text-primary-color);
+  font-size: var(--type-title-sm-size);
+  font-weight: var(--type-heading-semibold-weight);
+  letter-spacing: var(--type-title-sm-tracking);
+  line-height: var(--type-title-sm-line-height);
+  text-align: center;
+}
+
+.account-phone-dial-code-sheet-note{
+  margin: 0;
+  color: var(--text-secondary-color);
+  font-size: var(--control-font-size);
+  font-weight: var(--type-body-regular-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-sm-line-height);
+  text-align: center;
+}
+
+.account-phone-dial-code-sheet-list{
+  width: var(--size-full);
+  max-height: var(--account-phone-dial-code-list-max-height);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  box-sizing: border-box;
+  padding: var(--space-2);
+  border: var(--border-width-hairline) solid var(--field-border-color);
+  border-radius: var(--account-phone-dial-code-list-radius);
+  background: var(--field-background-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.account-phone-dial-code-sheet-option{
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--size-full);
+  min-height: var(--control-height-md, 2.75rem);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.account-phone-dial-code-sheet-option:hover,
+.account-phone-dial-code-sheet-option:focus-visible{
+  background: var(--control-surface);
+  outline: none;
+}
+
+.account-phone-dial-code-sheet-option-code{
+  color: var(--text-primary-color);
+  font-weight: var(--type-body-medium-weight);
+}
+
+.account-phone-dial-code-sheet-option-region{
+  color: var(--text-secondary-color);
+  font-size: var(--type-body-sm-size);
+  text-align: right;
+}
+
+@media (max-width:768px){
+  .account-phone-dial-code-sheet-content-stage{
+    padding-inline: var(--radius-2xl);
+  }
+
+  .account-phone-dial-code-sheet-list{
+    max-height: min(20rem, 46vh);
+  }
+}

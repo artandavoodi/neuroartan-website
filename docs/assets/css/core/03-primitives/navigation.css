@@ -182,7 +182,7 @@
   border-color:var(--nav-primitive-hover-border);
   background:var(--nav-primitive-hover-background);
   outline:none;
-  transform:translateY(var(--nav-primitive-hover-y));
+  transform:none;
 }
 
 .ui-nav__item[aria-current="page"],

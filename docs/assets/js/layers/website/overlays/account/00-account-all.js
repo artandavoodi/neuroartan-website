@@ -11,6 +11,7 @@ import './account-drawer.js';
 import './account-email-auth-drawer.js';
 import './account-forgot-password-drawer.js';
 import './account-phone-auth-drawer.js';
+import './account-phone-verification-sheet.js';
 import './account-profile-setup-drawer.js';
 import './account-provider-apple-sheet.js';
 import './account-provider-google-sheet.js';

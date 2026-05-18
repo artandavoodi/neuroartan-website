@@ -1,0 +1,211 @@
+/* =============================================================================
+   Neuroartan Website — Account Phone Verification Sheet
+   -----------------------------------------------------------------------------
+   Purpose:
+   - Dedicated OTP overlay surface for phone authentication.
+   - Mirrors the account sheet architecture with restrained, token-driven styling.
+============================================================================= */
+
+.account-phone-verification-sheet{
+  --account-phone-verification-content-max-width: var(--account-drawer-content-max-width, 26rem);
+  --account-phone-verification-section-gap: var(--space-8);
+  --account-phone-verification-field-gap: var(--space-3);
+  --account-phone-verification-form-gap: var(--space-6);
+  --account-phone-verification-action-height: var(--control-height-lg);
+  --account-phone-verification-action-radius: var(--radius-pill);
+  --account-phone-verification-action-padding-x: var(--space-6);
+  --account-phone-verification-code-height: var(--control-height-lg);
+  --account-phone-verification-code-radius: var(--radius-lg);
+  --account-phone-verification-code-padding-x: var(--space-5);
+  --account-phone-verification-code-tracking: 0.18em;
+}
+
+.account-drawer-view-mount .account-phone-verification-sheet,
+.account-drawer-view-mount .account-drawer-inner-view[data-account-view="phone-verification"]{
+  display: block;
+}
+
+.account-phone-verification-sheet-header{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-inline: var(--space-5);
+}
+
+.account-phone-verification-sheet-back-control{
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--close-control-size);
+  min-width: var(--close-control-size);
+  height: var(--close-control-size);
+  min-height: var(--close-control-size);
+  padding: var(--spacing-none);
+  border: var(--spacing-none);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.account-phone-verification-sheet-back-icon{
+  width: var(--space-5);
+  height: var(--space-5);
+  display: block;
+  object-fit: contain;
+  filter: var(--icon-image-filter, none);
+}
+
+.account-phone-verification-sheet-content-stage{
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-phone-verification-section-gap);
+  padding-inline: var(--space-9);
+}
+
+.account-phone-verification-sheet-center-stage{
+  width: var(--size-full);
+  max-width: var(--account-phone-verification-content-max-width);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-5);
+}
+
+.account-phone-verification-sheet-kicker{
+  margin: var(--spacing-none);
+  color: var(--text-secondary-color);
+  font-size: var(--type-caption-size);
+  font-weight: var(--type-body-medium-weight);
+  letter-spacing: var(--type-caption-tracking);
+  line-height: var(--type-caption-line-height);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.account-phone-verification-sheet-title{
+  margin: var(--spacing-none);
+  color: var(--text-primary-color);
+  font-size: var(--type-title-sm-size);
+  font-weight: var(--type-heading-semibold-weight);
+  letter-spacing: var(--type-title-sm-tracking);
+  line-height: var(--type-title-sm-line-height);
+  text-align: center;
+}
+
+.account-phone-verification-sheet-note{
+  margin: var(--spacing-none);
+  color: var(--text-secondary-color);
+  font-size: var(--control-font-size);
+  font-weight: var(--type-body-regular-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-sm-line-height);
+  text-align: center;
+}
+
+.account-phone-verification-sheet-form{
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-phone-verification-form-gap);
+}
+
+.account-phone-verification-sheet-field{
+  display: flex;
+  flex-direction: column;
+  gap: var(--account-phone-verification-field-gap);
+}
+
+.account-phone-verification-sheet-field-label{
+  color: var(--text-secondary-color);
+  font-size: var(--control-font-size);
+  font-weight: var(--type-body-medium-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-sm-line-height);
+}
+
+.account-phone-verification-sheet-code-input{
+  width: var(--size-full);
+  height: var(--account-phone-verification-code-height);
+  box-sizing: border-box;
+  padding-inline: var(--account-phone-verification-code-padding-x);
+  border: var(--border-width-hairline) solid var(--field-border-color);
+  border-radius: var(--account-phone-verification-code-radius);
+  background: var(--field-background-color);
+  color: var(--text-primary-color);
+  font-size: var(--type-title-sm-size);
+  font-weight: var(--type-heading-semibold-weight);
+  letter-spacing: var(--account-phone-verification-code-tracking);
+  text-align: center;
+  outline: none;
+}
+
+.account-phone-verification-sheet-code-input:focus-visible{
+  border-color: var(--field-border-focus-color);
+}
+
+.account-phone-verification-sheet-status{
+  margin: var(--spacing-none);
+  color: var(--text-secondary-color);
+  font-size: var(--control-font-size);
+  font-weight: var(--type-body-regular-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-sm-line-height);
+  text-align: center;
+}
+
+.account-phone-verification-sheet-status[data-state="error"]{
+  color: var(--status-error-color, var(--text-primary-color));
+}
+
+.account-phone-verification-sheet-status[data-state="success"]{
+  color: var(--status-success-color, var(--text-primary-color));
+}
+
+.account-phone-verification-sheet-actions{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.account-phone-verification-sheet-action{
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--account-phone-verification-action-height);
+  padding-inline: var(--account-phone-verification-action-padding-x);
+  box-sizing: border-box;
+  border: var(--border-width-hairline) solid var(--button-border-color);
+  border-radius: var(--account-phone-verification-action-radius);
+  background: var(--button-background-color);
+  color: var(--text-primary-color);
+  transition: var(--interaction-transition-control);
+}
+
+.account-phone-verification-sheet-action-label{
+  color: inherit;
+  font-size: var(--control-font-size);
+  font-weight: var(--type-body-medium-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-line-height);
+}
+
+.account-phone-verification-sheet-action:hover,
+.account-phone-verification-sheet-action:focus-visible{
+  opacity: var(--hover-opacity-strong);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .account-phone-verification-sheet-action{
+    transition: none !important;
+  }
+}
+
+@media (max-width:768px){
+  .account-phone-verification-sheet-content-stage{
+    padding-inline: var(--radius-2xl);
+  }
+}

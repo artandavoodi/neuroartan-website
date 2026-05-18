@@ -44,29 +44,69 @@
       ====================================================================== -->
       <form id="account-phone-auth-drawer-form" class="account-phone-auth-drawer-form" data-account-phone-auth-form="true" novalidate>
         <div class="account-phone-auth-drawer-center-stage">
-          <div class="account-phone-auth-drawer-field-group">
-            <input
-              id="account-phone-auth-number"
-              name="phone"
-              type="tel"
-              class="account-phone-auth-drawer-input"
-              autocomplete="tel"
-              inputmode="tel"
-              data-i18n-placeholder-key="account_phone_auth_phone_placeholder"
-              placeholder="Phone number"
-            >
-          </div>
-          <div class="account-phone-auth-drawer-field-group" data-account-phone-auth-code-group hidden>
-            <input
-              id="account-phone-auth-code"
-              name="code"
-              type="text"
-              class="account-phone-auth-drawer-input"
-              autocomplete="one-time-code"
-              inputmode="numeric"
-              data-i18n-placeholder-key="account_phone_auth_code_placeholder"
-              placeholder="Verification code"
-            >
+          <div class="account-phone-auth-drawer-phone-entry">
+            <div class="account-phone-auth-drawer-field-group account-phone-auth-drawer-field-group--dial-code">
+              <div
+                class="account-phone-auth-drawer-dial-picker"
+                data-account-phone-auth-dial-picker>
+	                <input
+	                  id="account-phone-auth-dial-code"
+	                  name="phone_dial_code"
+	                  type="hidden"
+	                  value="+1"
+	                  data-account-phone-auth-dial-code
+	                  required>
+
+                <button
+                  type="button"
+                  class="account-phone-auth-drawer-input account-phone-auth-drawer-dial-trigger"
+                  data-account-phone-auth-dial-trigger
+                  aria-haspopup="listbox"
+                  aria-expanded="false">
+	                  <span
+	                    class="account-phone-auth-drawer-dial-trigger-value"
+	                    data-account-phone-auth-dial-value>
+	                    +1 · US
+	                  </span>
+	                  <span
+	                    class="account-phone-auth-drawer-dial-trigger-icon"
+	                    aria-hidden="true">
+	                    <img
+	                      src="/registry/icons/public/assets/core/interface/navigation/drop-down.svg"
+	                      alt=""
+	                      class="account-phone-auth-drawer-dial-trigger-icon-image ui-icon-theme-aware"
+	                      aria-hidden="true">
+	                  </span>
+                </button>
+
+                <div
+                  class="account-phone-auth-drawer-dial-panel"
+                  data-account-phone-auth-dial-panel
+                  hidden>
+                  <div
+                    class="account-phone-auth-drawer-dial-list"
+                    data-account-phone-auth-dial-list
+                    role="listbox"
+                    aria-label="Country calling codes">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="account-phone-auth-drawer-field-group account-phone-auth-drawer-field-group--local-number">
+              <input
+                id="account-phone-auth-local-number"
+                name="phone_local_number"
+                type="text"
+                class="account-phone-auth-drawer-input"
+                autocomplete="tel-national"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                data-account-phone-auth-local-number
+                placeholder="Phone number"
+                required
+              >
+            </div>
           </div>
           <p
             class="account-phone-auth-drawer-submit-status"

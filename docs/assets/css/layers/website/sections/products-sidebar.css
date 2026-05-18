@@ -17,9 +17,15 @@
   top: calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem) + var(--space-4, 1.5rem));
   align-self: start;
   min-width: 0;
-  --products-sidebar-link-radius:var(--control-radius-composer);
-  --products-sidebar-link-border-hover:var(--control-border-hover-unified);
-  --products-sidebar-link-surface-hover:var(--control-surface-hover);
+  --products-sidebar-link-min-height:var(--nav-local-min-height);
+  --products-sidebar-link-padding-y:var(--nav-menu-padding-y);
+  --products-sidebar-link-padding-x:var(--nav-menu-padding-x);
+  --products-sidebar-link-color:var(--nav-local-color);
+  --products-sidebar-link-hover-color:var(--nav-local-hover-color);
+  --products-sidebar-link-opacity:var(--state-opacity-muted);
+  --products-sidebar-link-hover-opacity:var(--nav-local-hover-opacity);
+  --products-sidebar-link-border:transparent;
+  --products-sidebar-link-surface:transparent;
 }
 
 .products-page .products-sidebar__inner {
@@ -173,26 +179,27 @@
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: 2.8rem;
-  padding: 0.74rem 0.88rem;
-  border: 1px solid transparent;
-  border-radius:var(--products-sidebar-link-radius);
-  color: var(--text-primary-color, var(--text-primary, #fff));
+  min-height:var(--products-sidebar-link-min-height);
+  padding:var(--products-sidebar-link-padding-y) var(--products-sidebar-link-padding-x);
+  border:var(--border-width-hairline) solid var(--products-sidebar-link-border);
+  border-radius:var(--shape-control-radius);
+  color:var(--products-sidebar-link-color);
   text-decoration: none;
-  background: transparent;
+  background:var(--products-sidebar-link-surface);
+  opacity:var(--products-sidebar-link-opacity);
   transition:
     color 220ms var(--interaction-ease-standard),
-    border-color 220ms var(--interaction-ease-standard),
-    background-color 220ms var(--interaction-ease-standard),
     opacity 220ms var(--interaction-ease-standard);
 }
 
 .products-page .products-sidebar__link:hover,
 .products-page .products-sidebar__link:focus-visible,
 .products-page .products-sidebar__link--active {
-  border-color:var(--products-sidebar-link-border-hover);
-  background:var(--products-sidebar-link-surface-hover);
-  color: var(--text-primary-color, var(--text-primary, #fff));
+  border-color:var(--products-sidebar-link-border);
+  background:var(--products-sidebar-link-surface);
+  color:var(--products-sidebar-link-hover-color);
+  opacity:var(--products-sidebar-link-hover-opacity);
+  outline:none;
 }
 
 /* =============================================================================

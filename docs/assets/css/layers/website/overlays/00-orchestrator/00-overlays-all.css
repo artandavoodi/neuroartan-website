@@ -17,6 +17,7 @@
 @import url('../account/account-email-auth-drawer.css');
 @import url('../account/account-forgot-password-drawer.css');
 @import url('../account/account-phone-auth-drawer.css');
+@import url('../account/account-phone-verification-sheet.css');
 @import url('../account/account-profile-setup-drawer.css');
 @import url('../account/account-provider-apple-sheet.css');
 @import url('../account/account-provider-google-sheet.css');

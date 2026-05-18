@@ -29,6 +29,10 @@
   let closeTimer = null;
   let bootBound = false;
   let mountEventsBound = false;
+  let dialTypeaheadBuffer = '';
+  let dialTypeaheadTimer = null;
+
+  const DIAL_TYPEAHEAD_RESET_MS = 900;
 
   /* =============================================================================
      03) DRAWER QUERY HELPERS
@@ -45,12 +49,88 @@
     return document.querySelector('[data-account-phone-auth-form="true"]');
   }
 
-  function getPhoneInput() {
-    return document.getElementById('account-phone-auth-number');
+  function getDialCodeInput() {
+    return document.querySelector('[data-account-phone-auth-dial-code]');
   }
 
-  function getCodeInput() {
-    return document.getElementById('account-phone-auth-code');
+  function getDialCodeValue() {
+    return document.querySelector('[data-account-phone-auth-dial-value]');
+  }
+
+  function getDialCodePicker() {
+    return document.querySelector('[data-account-phone-auth-dial-picker]');
+  }
+
+  function getDialCodeTrigger() {
+    return document.querySelector('[data-account-phone-auth-dial-trigger]');
+  }
+
+  function getDialCodePanel() {
+    return document.querySelector('[data-account-phone-auth-dial-panel]');
+  }
+
+  function getDialCodeList() {
+    return document.querySelector('[data-account-phone-auth-dial-list]');
+  }
+
+  function getLocalNumberInput() {
+    return document.querySelector('[data-account-phone-auth-local-number]');
+  }
+
+  function getDialCodeOptions() {
+    const list = getDialCodeList();
+    if (!(list instanceof HTMLElement)) return [];
+
+    return Array.from(list.querySelectorAll('[data-account-phone-auth-dial-option]'))
+      .filter((option) => option instanceof HTMLButtonElement);
+  }
+
+  function getPreferredRegion() {
+    const storedRegion = String(
+      window.localStorage?.getItem('neuroartan_country_code')
+      || window.localStorage?.getItem('artan_country_code')
+      || ''
+    ).trim();
+
+    if (/^[A-Za-z]{2}$/.test(storedRegion)) {
+      return storedRegion.toUpperCase();
+    }
+
+    const languageCandidates = [
+      navigator.language,
+      ...(Array.isArray(navigator.languages) ? navigator.languages : [])
+    ].filter(Boolean);
+
+    for (const candidate of languageCandidates) {
+      const region = String(candidate || '').split(/[-_]/).find((value, index) => (
+        index > 0 && /^[A-Za-z]{2}$/.test(value)
+      ));
+
+      if (region) return region.toUpperCase();
+    }
+
+    return 'US';
+  }
+
+  function normalizeDigits(value = '') {
+    return String(value || '').replace(/\D+/g, '');
+  }
+
+  function composeE164Phone(dialCode = '', localNumber = '') {
+    const dialDigits = normalizeDigits(dialCode);
+    const localDigits = normalizeDigits(localNumber).replace(/^0+/, '');
+
+    if (!dialDigits || !localDigits) return '';
+    return `+${dialDigits}${localDigits}`;
+  }
+
+  function sanitizeLocalPhoneInput(input) {
+    if (!(input instanceof HTMLInputElement)) return;
+
+    const sanitized = normalizeDigits(input.value);
+    if (input.value !== sanitized) {
+      input.value = sanitized;
+    }
   }
 
   /* =============================================================================
@@ -72,7 +152,9 @@
     if (!drawer) return;
 
     window.clearTimeout(closeTimer);
+    closeDialCodePicker();
     drawer.classList.add('is-open');
+    drawer.hidden = false;
     drawer.setAttribute('aria-hidden', 'false');
     document.documentElement.classList.add('account-phone-auth-drawer-open');
   }
@@ -81,6 +163,7 @@
     const drawer = getDrawer();
     if (!drawer) return;
 
+    closeDialCodePicker();
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
     document.documentElement.classList.remove('account-phone-auth-drawer-open');
@@ -100,25 +183,296 @@
     }));
   }
 
-  function requestPhoneAuthSubmit() {
-    const phoneInput = getPhoneInput();
-    const codeInput = getCodeInput();
-    const phone = phoneInput?.value?.trim() || '';
-    const code = codeInput?.value?.trim() || '';
+  function closeDialCodePicker() {
+    const panel = getDialCodePanel();
+    const trigger = getDialCodeTrigger();
 
-    if (!phone) {
-      phoneInput?.setCustomValidity('Enter your phone number.');
-      phoneInput?.reportValidity();
+    if (dialTypeaheadTimer) {
+      window.clearTimeout(dialTypeaheadTimer);
+      dialTypeaheadTimer = null;
+    }
+
+    dialTypeaheadBuffer = '';
+
+    if (panel instanceof HTMLElement) {
+      panel.hidden = true;
+    }
+
+    if (trigger instanceof HTMLButtonElement) {
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function openDialCodePicker() {
+    const panel = getDialCodePanel();
+    const trigger = getDialCodeTrigger();
+
+    if (panel instanceof HTMLElement) {
+      panel.hidden = false;
+    }
+
+    if (trigger instanceof HTMLButtonElement) {
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function getDialOptionSearchText(option) {
+    if (!(option instanceof HTMLButtonElement)) return '';
+
+    return [
+      option.dataset.region,
+      option.dataset.dialCode,
+      option.textContent
+    ].filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function focusDialCodeOption(option) {
+    const list = getDialCodeList();
+    if (!(option instanceof HTMLButtonElement) || !(list instanceof HTMLElement)) return;
+
+    option.focus({ preventScroll: true });
+    list.scrollTop = Math.max(0, option.offsetTop - list.offsetTop);
+  }
+
+  function findDialCodeOption(query) {
+    const normalized = String(query || '').trim().toLowerCase();
+    if (!normalized) return null;
+
+    const options = getDialCodeOptions();
+    return options.find((option) => {
+      const region = String(option.dataset.region || '').toLowerCase();
+      const dialCode = String(option.dataset.dialCode || '').toLowerCase();
+      const label = String(option.textContent || '').toLowerCase();
+
+      return region.startsWith(normalized)
+        || dialCode.startsWith(normalized)
+        || label.startsWith(normalized);
+    }) || options.find((option) => getDialOptionSearchText(option).includes(normalized)) || null;
+  }
+
+  function handleDialCodeTypeahead(event) {
+    const panel = getDialCodePanel();
+    if (!(panel instanceof HTMLElement) || panel.hidden) return false;
+    if (event.metaKey || event.ctrlKey || event.altKey) return false;
+    if (event.key.length !== 1) return false;
+
+    dialTypeaheadBuffer += event.key.toLowerCase();
+
+    if (dialTypeaheadTimer) {
+      window.clearTimeout(dialTypeaheadTimer);
+    }
+
+    dialTypeaheadTimer = window.setTimeout(() => {
+      dialTypeaheadBuffer = '';
+      dialTypeaheadTimer = null;
+    }, DIAL_TYPEAHEAD_RESET_MS);
+
+    const match = findDialCodeOption(dialTypeaheadBuffer);
+    if (match instanceof HTMLButtonElement) {
+      focusDialCodeOption(match);
+      event.preventDefault();
+      return true;
+    }
+
+    return false;
+  }
+
+  function focusRelativeDialCodeOption(direction) {
+    const panel = getDialCodePanel();
+    if (!(panel instanceof HTMLElement) || panel.hidden) return false;
+
+    const options = getDialCodeOptions();
+    if (!options.length) return false;
+
+    const active = document.activeElement;
+    const currentIndex = options.findIndex((option) => option === active);
+    const nextIndex = Math.min(
+      options.length - 1,
+      Math.max(0, currentIndex + direction)
+    );
+
+    focusDialCodeOption(options[nextIndex >= 0 ? nextIndex : 0]);
+    return true;
+  }
+
+  function toggleDialCodePicker() {
+    const panel = getDialCodePanel();
+    if (!(panel instanceof HTMLElement)) return;
+
+    if (panel.hidden) {
+      openDialCodePicker();
       return;
     }
 
-    phoneInput?.setCustomValidity('');
+    closeDialCodePicker();
+  }
+
+  async function hydrateDialingCodeSelect() {
+    const list = getDialCodeList();
+    if (!(list instanceof HTMLElement)) return;
+    if (list.dataset.registryHydrated === 'true') return;
+
+    const response = await fetch('/assets/data/account/phone/dialing-codes.json', {
+      credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Unable to load phone dialing codes (${response.status}).`);
+    }
+
+    const payload = await response.json();
+    const entries = Array.isArray(payload?.entries) ? payload.entries : [];
+    const fragment = document.createDocumentFragment();
+
+    entries.forEach((entry) => {
+      const dialCode = String(entry?.dial_code || '').trim();
+      const region = String(entry?.region || '').trim();
+      if (!dialCode || !region) return;
+
+      const option = document.createElement('button');
+      option.type = 'button';
+      option.className = 'account-phone-auth-drawer-dial-option';
+      option.dataset.accountPhoneAuthDialOption = 'true';
+      option.dataset.dialCode = dialCode;
+      option.dataset.region = region;
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', 'false');
+      option.textContent = `${dialCode} · ${region}`;
+      fragment.appendChild(option);
+    });
+
+    list.appendChild(fragment);
+    list.dataset.registryHydrated = 'true';
+
+    const preferredRegion = getPreferredRegion();
+    const preferredOption = list.querySelector(`[data-region="${preferredRegion}"]`)
+      || list.querySelector('[data-region="US"]')
+      || list.querySelector('[data-account-phone-auth-dial-option]');
+
+    if (preferredOption instanceof HTMLButtonElement) {
+      commitDialCodeSelection(preferredOption);
+    }
+  }
+
+  function commitDialCodeSelection(option) {
+    if (!(option instanceof HTMLButtonElement)) return;
+
+    const dialCode = option.dataset.dialCode || '';
+    const region = option.dataset.region || '';
+    const input = getDialCodeInput();
+    const valueNode = getDialCodeValue();
+
+    if (!dialCode || !region) return;
+
+    if (input instanceof HTMLInputElement) {
+      input.value = dialCode;
+      input.setCustomValidity('');
+    }
+
+    if (valueNode instanceof HTMLElement) {
+      valueNode.textContent = `${dialCode} · ${region}`;
+    }
+
+    getDialCodeList()
+      ?.querySelectorAll('[data-account-phone-auth-dial-option]')
+      .forEach((candidate) => {
+        candidate.setAttribute('aria-selected', candidate === option ? 'true' : 'false');
+      });
+
+    closeDialCodePicker();
+  }
+
+  function bindDialCodePickerControls() {
+    if (document.documentElement.dataset.accountPhoneAuthDialPickerBound === 'true') return;
+    document.documentElement.dataset.accountPhoneAuthDialPickerBound = 'true';
+
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest?.('[data-account-phone-auth-dial-trigger]');
+      if (trigger) {
+        event.preventDefault();
+        toggleDialCodePicker();
+        return;
+      }
+
+      const option = event.target.closest?.('[data-account-phone-auth-dial-option]');
+      if (option) {
+        event.preventDefault();
+        commitDialCodeSelection(option);
+        return;
+      }
+
+      const picker = getDialCodePicker();
+      if (picker instanceof HTMLElement && !picker.contains(event.target)) {
+        closeDialCodePicker();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const panel = getDialCodePanel();
+      if (!(panel instanceof HTMLElement) || panel.hidden) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closeDialCodePicker();
+        getDialCodeTrigger()?.focus?.();
+        return;
+      }
+
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        focusRelativeDialCodeOption(event.key === 'ArrowDown' ? 1 : -1);
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        const active = document.activeElement;
+        if (active instanceof HTMLButtonElement && active.matches('[data-account-phone-auth-dial-option]')) {
+          event.preventDefault();
+          commitDialCodeSelection(active);
+        }
+        return;
+      }
+
+      handleDialCodeTypeahead(event);
+    });
+  }
+
+  function requestPhoneAuthSubmit() {
+    const dialCodeInput = getDialCodeInput();
+    const localNumberInput = getLocalNumberInput();
+    const dialCode = dialCodeInput?.value?.trim() || '';
+    const localNumber = localNumberInput?.value?.trim() || '';
+    const phone = composeE164Phone(dialCode, localNumber);
+
+    if (!dialCode) {
+      dialCodeInput?.setCustomValidity('Select a country calling code.');
+      getDialCodeTrigger()?.focus?.();
+      return;
+    }
+
+    dialCodeInput?.setCustomValidity('');
+
+    if (!localNumber) {
+      localNumberInput?.setCustomValidity('Enter your phone number.');
+      localNumberInput?.reportValidity();
+      return;
+    }
+
+    localNumberInput?.setCustomValidity('');
+
+    if (!phone) {
+      localNumberInput?.setCustomValidity('Enter a valid phone number.');
+      localNumberInput?.reportValidity();
+      return;
+    }
 
     document.dispatchEvent(new CustomEvent('account:phone-auth-submit-request', {
       detail: {
         source: 'account-phone-auth-drawer',
         phone,
-        code
+        displayPhone: `${dialCode} ${localNumber}`.trim(),
+        code: ''
       }
     }));
   }
@@ -236,6 +590,12 @@
     if (document.documentElement.dataset.accountPhoneAuthDrawerFormBound === 'true') return;
     document.documentElement.dataset.accountPhoneAuthDrawerFormBound = 'true';
 
+    document.addEventListener('input', (event) => {
+      const input = event.target;
+      if (input !== getLocalNumberInput()) return;
+      sanitizeLocalPhoneInput(input);
+    });
+
     document.addEventListener('submit', (event) => {
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
@@ -243,6 +603,7 @@
 
       event.preventDefault();
       event.stopPropagation();
+      sanitizeLocalPhoneInput(getLocalNumberInput());
       requestPhoneAuthSubmit();
     });
   }
@@ -256,6 +617,9 @@
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
+      const panel = getDialCodePanel();
+      if (panel instanceof HTMLElement && !panel.hidden) return;
+
       const drawer = getDrawer();
       if (!drawer || !drawer.classList.contains('is-open')) return;
       closeDrawer();
@@ -286,6 +650,8 @@
     document.documentElement.dataset.accountPhoneAuthDrawerInitialized = 'true';
 
     normalizeStateVisibility();
+    bindDialCodePickerControls();
+    void hydrateDialingCodeSelect();
 
     const drawer = getDrawer();
     if (drawer) {

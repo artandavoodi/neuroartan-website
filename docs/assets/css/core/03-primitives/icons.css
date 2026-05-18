@@ -71,7 +71,7 @@ html[data-theme-effective="dark"]{
   background:var(--control-surface-hover);
   border-color:var(--control-border-hover-unified);
   color:var(--control-text-hover-unified);
-  transform:translateY(var(--hover-lift-y));
+  transform:none;
 }
 
 .ui-icon-button:focus-visible{
@@ -136,11 +136,11 @@ svg.ui-icon-theme-aware-accent,
    07) GENERIC HOVER HELPERS
 ============================================================================= */
 .ui-hover-lift:hover{
-  transform:translateY(var(--hover-lift-y));
+  transform:none;
 }
 
 .ui-hover-lift-strong:hover{
-  transform:translateY(var(--hover-lift-y-strong)) scale(var(--hover-scale-soft));
+  transform:none;
 }
 
 .ui-hover-opacity:hover{

@@ -1,0 +1,86 @@
+<!-- =============================================================================
+     Neuroartan Website — Account Phone Verification Sheet
+     -------------------------------------------------------------------------------
+     Purpose:
+     - Dedicated OTP verification overlay for phone authentication.
+     - Opens only after SMS dispatch succeeds.
+     - Keeps code entry separate from the initial phone-number drawer.
+============================================================================= -->
+<section
+  class="account-phone-verification-sheet account-drawer-inner-view"
+  data-account-view="phone-verification"
+  data-account-phone-verification-sheet
+  hidden>
+  <header class="account-phone-verification-sheet-header">
+    <button
+      type="button"
+      class="account-phone-verification-sheet-back-control"
+      data-account-phone-verification-back
+      aria-label="Return to phone entry">
+      <img
+        class="account-phone-verification-sheet-back-icon ui-icon-theme-aware"
+        src="/registry/icons/public/assets/core/navigation/direction/back.svg"
+        alt=""
+        aria-hidden="true">
+    </button>
+  </header>
+
+  <div class="account-phone-verification-sheet-content-stage">
+    <div class="account-phone-verification-sheet-center-stage">
+      <p class="account-phone-verification-sheet-kicker">
+        Phone verification
+      </p>
+
+      <h2 class="account-phone-verification-sheet-title">
+        Enter the verification code
+      </h2>
+
+      <p
+        class="account-phone-verification-sheet-note"
+        data-account-phone-verification-note>
+        We sent a verification code to your phone number.
+      </p>
+
+      <form
+        id="account-phone-verification-sheet-form"
+        class="account-phone-verification-sheet-form"
+        data-account-phone-verification-form="true"
+        novalidate>
+        <label class="account-phone-verification-sheet-field">
+          <span class="account-phone-verification-sheet-field-label">
+            Verification code
+          </span>
+          <input
+            id="account-phone-verification-code"
+            class="account-phone-verification-sheet-code-input"
+            name="phone_verification_code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            pattern="[0-9]*"
+            maxlength="8"
+            data-account-phone-verification-code
+            placeholder="Enter code">
+        </label>
+
+        <p
+          class="account-phone-verification-sheet-status"
+          data-account-phone-verification-status
+          hidden>
+        </p>
+
+        <div class="account-phone-verification-sheet-actions">
+          <button
+            type="submit"
+            form="account-phone-verification-sheet-form"
+            class="account-phone-verification-sheet-action account-phone-verification-sheet-action--primary"
+            data-account-phone-verification-submit="true">
+            <span class="account-phone-verification-sheet-action-label">
+              Verify phone
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

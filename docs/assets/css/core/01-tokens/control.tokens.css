@@ -138,7 +138,7 @@
   --account-button-hover-scale:var(--button-hover-scale-subtle);
 
   --account-field-height:var(--input-height-md);
-  --account-field-radius:var(--input-radius-md);
+  --account-field-radius:var(--radius-sm);
   --account-field-padding-x:var(--input-padding-x-md);
   --account-field-font-size:var(--input-font-size);
   --account-field-line-height:var(--input-line-height);

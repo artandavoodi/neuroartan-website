@@ -42,44 +42,27 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="11.674871"
-     inkscape:cx="17.55908"
-     inkscape:cy="13.319205"
+     inkscape:cx="7.2805944"
+     inkscape:cy="12.805281"
      inkscape:window-width="1472"
      inkscape:window-height="812"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
-  <g
-     id="g3"
-     transform="matrix(1.1180437,0,0,1.1189728,-28.405303,-2.5411058)"
-     style="stroke-width:0.894048">
-    <circle
-       style="fill:none;stroke:#000000;stroke-width:0.894047;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-       id="path1"
-       cx="39.074799"
-       cy="7.4281673"
-       r="3.2795277" />
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.894044;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-       id="rect1"
-       width="16.007999"
-       height="5.8031497"
-       x="26.346449"
-       y="12.463602"
-       ry="1.5" />
-    <g
-       id="g2"
-       transform="translate(1.3897644,2.1456677)"
-       style="stroke-width:0.894048">
-      <path
-         style="fill:#333333;stroke:#000000;stroke-width:0.894046;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-         d="M 24.956686,3.8927359 H 27.73684"
-         id="path2" />
-      <path
-         style="fill:#333333;stroke:#000000;stroke-width:0.894044;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-         d="m 24.956685,6.6722643 h 5.047748"
-         id="path2-5" />
-    </g>
-  </g>
+  <ellipse
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path1"
+     cx="9.999999"
+     cy="5.7708116"
+     rx="3.6666553"
+     ry="3.6697023" />
+  <rect
+     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="rect1"
+     width="17.897642"
+     height="6.4935665"
+     x="1.0511782"
+     y="11.405326"
+     ry="1.6784592" />
 </svg>

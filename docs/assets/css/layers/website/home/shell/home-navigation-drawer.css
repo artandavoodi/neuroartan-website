@@ -120,6 +120,15 @@
   display:block;
   width:100%;
   height:100%;
+  opacity:var(--nav-institutional-icon-opacity);
+  transition:opacity var(--interaction-motion-medium) var(--interaction-ease-standard);
+}
+
+.home-navigation-drawer__stack-item:hover .home-navigation-drawer__item-icon img,
+.home-navigation-drawer__stack-item:focus-visible .home-navigation-drawer__item-icon img,
+.home-navigation-drawer__stack-item[aria-current="page"] .home-navigation-drawer__item-icon img,
+.home-navigation-drawer__stack-item.is-active .home-navigation-drawer__item-icon img{
+  opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
 .home-navigation-drawer__item-label{

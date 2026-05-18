@@ -224,7 +224,7 @@ body.menu-active{ overflow: hidden; }
 }
 #menu-button .line-top{transform:translate(-50%,calc(-50% - var(--menu-button-line-offset)));}
 #menu-button .line-bottom{transform:translate(-50%,calc(-50% + var(--menu-button-line-offset)));}
-#menu-button:not(.menu-open):hover{animation:menu-hover-pulse var(--menu-button-hover-duration) forwards;}
+#menu-button:not(.menu-open):hover{animation:none;}
 @keyframes menu-hover-pulse{0%{transform:scale(1);}40%{transform:scale(var(--menu-hover-pulse-scale-down));}70%{transform:scale(var(--menu-hover-pulse-scale-up));}100%{transform:scale(1);}}
 
 @keyframes menu-icon-breathe{
@@ -417,7 +417,7 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
   transform: translateX(var(--menu-pack-toggle-nudge)) scale(1);
   transform-origin: center;
   will-change: transform, filter;
-  transition: transform var(--menu-hover-duration) var(--menu-hover-ease), filter var(--menu-motion-filter) ease;
+  transition: filter var(--menu-motion-filter) ease;
   filter: var(--menu-icon-filter);
 }
 
@@ -426,9 +426,9 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
 }
 
 #menu-overlay .menu-pack-toggle:hover img,
-#menu-overlay .menu-pack-toggle:focus-visible img{ animation: menu-pack-toggle-breathe var(--menu-hover-pulse-duration) var(--menu-hover-ease) both; }
+#menu-overlay .menu-pack-toggle:focus-visible img{ animation:none; }
 
-#menu-overlay .menu-pack-toggle:active img{ transform: translateX(var(--menu-pack-toggle-nudge)) scale(var(--menu-active-scale)); }
+#menu-overlay .menu-pack-toggle:active img{ transform: translateX(var(--menu-pack-toggle-nudge)) scale(1); }
 
 /* Two main columns */
 #menu-overlay .menu-columns{
@@ -500,10 +500,9 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
   place-items: center;
 
   opacity:var(--menu-control-opacity);
-  transform: scale(1);
+  transform: none;
 
   transition:
-    transform var(--menu-hover-duration) var(--menu-hover-ease),
     opacity var(--menu-hover-opacity-duration) ease,
     filter var(--menu-motion-filter) ease,
     color var(--menu-motion-color) ease;
@@ -522,9 +521,9 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
 }
 
 #menu-overlay .menu-control-icon:hover,
-#menu-overlay .menu-control-icon:focus-visible{ animation: menu-icon-breathe var(--menu-hover-pulse-duration) var(--menu-hover-ease) both; }
+#menu-overlay .menu-control-icon:focus-visible{ animation:none; }
 
-#menu-overlay .menu-control-icon:active{ transform: scale(var(--menu-active-scale)); }
+#menu-overlay .menu-control-icon:active{ transform:none; }
 
 /* THEME / TEAM TOGGLE */
 #menu-overlay #theme-toggle.menu-control-icon,
@@ -544,8 +543,8 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
   align-self: center;
   margin-inline: auto;
 
-  transition: transform var(--menu-hover-duration) var(--menu-hover-ease), opacity var(--menu-hover-opacity-duration) ease;
-  transform: scale(1);
+  transition: opacity var(--menu-hover-opacity-duration) ease;
+  transform:none;
 }
 
 #menu-overlay #theme-toggle.menu-control-icon::before,
@@ -559,7 +558,7 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
   background: currentColor;
   opacity:var(--menu-control-active-opacity);
   display: block;
-  transition: transform var(--menu-hover-duration) var(--menu-hover-ease), opacity var(--menu-hover-opacity-duration) ease;
+  transition: opacity var(--menu-hover-opacity-duration) ease;
 }
 
 #menu-overlay #theme-toggle.menu-control-icon:hover,
@@ -569,12 +568,12 @@ body.menu-active .stage-circle{ opacity:var(--menu-opacity-hidden) !important; f
 #menu-overlay .theme-toggle:hover,
 #menu-overlay .theme-toggle:focus-visible,
 #menu-overlay [data-theme-toggle]:hover,
-#menu-overlay [data-theme-toggle]:focus-visible{ transform: scale(var(--menu-hover-scale)); }
+#menu-overlay [data-theme-toggle]:focus-visible{ transform:none; }
 
 #menu-overlay #theme-toggle.menu-control-icon:active,
 #menu-overlay #theme-toggle:active,
 #menu-overlay .theme-toggle:active,
-#menu-overlay [data-theme-toggle]:active{ transform: scale(var(--menu-active-scale)); }
+#menu-overlay [data-theme-toggle]:active{ transform:none; }
 
 /* Packs split (OVERLAYED — one centered footprint, two layers) */
 #menu-overlay .menu-packs-split{
@@ -850,7 +849,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   overflow: hidden;
 
   transform: translateX(0);
-  transition:transform var(--menu-preview-shift-duration) var(--menu-hover-ease);
+  transition:none;
 }
 
 #menu-overlay .menu-preview-title,
@@ -881,7 +880,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 }
 
 @supports selector(:has(*)){
-  #menu-overlay .menu-col-b:has(.menu-col-b-section-b .menu-item:hover) .menu-col-b-section-a{ transform:translateX(var(--menu-preview-shift-x)); }
+  #menu-overlay .menu-col-b:has(.menu-col-b-section-b .menu-item:hover) .menu-col-b-section-a{ transform:none; }
 }
 
 /* Section B (rail) — rotated as a block; children keep their own layout */
@@ -995,12 +994,10 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   opacity:var(--overlay-opacity-closed);
 
   /* LOCKED LABEL ORIENTATION — DO NOT TOUCH */
-  transform: rotate(180deg) scale(1);
+  transform: rotate(180deg);
   transform-origin: center;
-  will-change: transform;
 
   transition:
-    transform var(--menu-rail-link-transform-duration) var(--menu-hover-ease),
     opacity var(--menu-rail-reveal-duration) ease,
     color var(--menu-motion-color) ease;
 
@@ -1018,7 +1015,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-col-b-section-b .menu-item:hover .menu-link,
 #menu-overlay .menu-col-b-section-b .menu-link:hover,
 #menu-overlay .menu-col-b-section-b .menu-link:focus-visible{
-  transform:rotate(180deg) scale(var(--menu-rail-link-hover-scale));
+  transform:rotate(180deg);
   opacity:var(--overlay-opacity-open);
 }
 
@@ -1055,10 +1052,9 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
   place-items: center;
 
   opacity:var(--menu-control-opacity);
-  transform: scale(1);
+  transform:none;
 
   transition:
-    transform var(--menu-hover-duration) var(--menu-hover-ease),
     opacity var(--menu-hover-opacity-duration) ease,
     color var(--menu-motion-color) ease,
     filter var(--menu-motion-filter) ease;
@@ -1068,9 +1064,9 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-pack-icon:focus-visible{ opacity:var(--menu-opacity-visible); outline: none; }
 
 #menu-overlay .menu-pack-icon:hover,
-#menu-overlay .menu-pack-icon:focus-visible{ animation: menu-icon-breathe var(--menu-hover-pulse-duration) var(--menu-hover-ease) both; }
+#menu-overlay .menu-pack-icon:focus-visible{ animation:none; }
 
-#menu-overlay .menu-pack-icon:active{ transform: scale(var(--menu-active-scale)); }
+#menu-overlay .menu-pack-icon:active{ transform:none; }
 
 #menu-overlay .menu-pack-icon{ color: var(--menu-fg); }
 #menu-overlay .menu-pack-icon:hover,
@@ -1147,7 +1143,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 }
 
 #menu-overlay .menu-close:hover{
-  transform:translateX(-50%) scale(var(--menu-close-hover-scale));
+  transform:translateX(-50%);
   opacity:var(--overlay-opacity-open);
   border-color:color-mix(in srgb, var(--menu-close-hover-color) 55%, var(--menu-border-color));
 }

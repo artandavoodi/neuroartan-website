@@ -142,7 +142,7 @@
   white-space:nowrap;
   font-variation-settings:"wght" 400;
   transform:none !important;
-  transition:color var(--interaction-motion-medium) var(--interaction-ease-standard), opacity var(--interaction-motion-medium) var(--interaction-ease-standard), transform var(--interaction-motion-medium) var(--interaction-ease-standard);
+  transition:color var(--interaction-motion-medium) var(--interaction-ease-standard), opacity var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
 
 .home-dashboard-topbar__action:hover,
@@ -176,7 +176,7 @@
   object-fit:contain;
   object-position:center;
   filter:var(--icon-image-filter, none);
-  opacity:0.72;
+  opacity:var(--nav-institutional-icon-opacity);
   transition:opacity var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
 

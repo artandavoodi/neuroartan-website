@@ -1,0 +1,50 @@
+<!-- =============================================================================
+     Neuroartan Website — Account Phone Dial Code Sheet
+     -------------------------------------------------------------------------------
+     Purpose:
+     - Dedicated country calling code selection surface.
+     - Replaces clipped in-drawer dropdown behavior.
+     - Keeps phone entry stable and account-sheet native.
+============================================================================= -->
+<section
+  class="account-phone-dial-code-sheet account-drawer-inner-view"
+  data-account-view="phone-dial-code"
+  data-account-phone-dial-code-sheet
+  hidden>
+  <header class="account-phone-dial-code-sheet-header">
+    <button
+      type="button"
+      class="account-phone-dial-code-sheet-back-control"
+      data-account-phone-dial-code-back
+      aria-label="Return to phone entry">
+      <img
+        class="account-phone-dial-code-sheet-back-icon ui-icon-theme-aware"
+        src="/registry/icons/public/assets/core/navigation/direction/back.svg"
+        alt=""
+        aria-hidden="true">
+    </button>
+  </header>
+
+  <div class="account-phone-dial-code-sheet-content-stage">
+    <div class="account-phone-dial-code-sheet-center-stage">
+      <p class="account-phone-dial-code-sheet-kicker">
+        Phone verification
+      </p>
+
+      <h2 class="account-phone-dial-code-sheet-title">
+        Choose country code
+      </h2>
+
+      <p class="account-phone-dial-code-sheet-note">
+        Select the calling code for your phone number.
+      </p>
+
+      <div
+        class="account-phone-dial-code-sheet-list"
+        data-account-phone-dial-code-list
+        role="listbox"
+        aria-label="Country calling codes">
+      </div>
+    </div>
+  </div>
+</section>

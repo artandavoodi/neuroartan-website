@@ -266,17 +266,35 @@
    07) STACK ITEMS
 ============================================================================= */
 .home-profile-control-panel__item{
+  appearance:none;
+  -webkit-appearance:none;
   display:flex;
   align-items:center;
   justify-content:flex-start;
   width:100%;
   min-height:var(--home-profile-control-panel-item-min-height);
   padding:var(--home-profile-control-panel-item-padding-y) var(--home-profile-control-panel-item-padding-x);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--shape-control-radius);
+  background:var(--control-surface);
+  color:var(--control-text-unified);
+  font-family:var(--font-family);
   font-size:var(--home-profile-control-panel-item-size);
   font-weight:var(--home-profile-control-panel-item-weight);
   letter-spacing:var(--home-profile-control-panel-item-tracking);
+  line-height:var(--control-line-height);
   text-align:left;
+  text-decoration:none;
   pointer-events:auto;
+  transition:var(--interaction-transition-control);
+}
+
+.home-profile-control-panel__item:hover,
+.home-profile-control-panel__item:focus-visible{
+  border-color:var(--control-border-hover-unified);
+  background:var(--control-surface-hover);
+  color:var(--control-text-hover-unified);
+  outline:none;
 }
 
 /* =============================================================================

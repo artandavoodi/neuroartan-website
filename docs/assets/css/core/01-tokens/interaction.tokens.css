@@ -94,6 +94,8 @@
 
   /* Universal panel/dialog surface. */
   --panel-surface-unified:color-mix(in srgb, var(--surface-color, var(--bg-color)) 86%, transparent);
+  --panel-surface-solid-unified:color-mix(in srgb, var(--surface-color, var(--bg-color)) 94%, transparent);
+  --panel-surface-dropdown-unified:color-mix(in srgb, var(--surface-color, var(--bg-color)) 98%, transparent);
   --panel-border-unified:var(--control-border-color, var(--border-color));
   --panel-shadow-unified:var(--dialog-overlay-shadow);
   --panel-blur-unified:var(--dialog-overlay-panel-blur);

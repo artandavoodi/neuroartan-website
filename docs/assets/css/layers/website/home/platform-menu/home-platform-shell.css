@@ -486,13 +486,29 @@ html[data-theme-effective="light"]{
   transition:none;
 }
 
-.home-platform-shell__nav-icon img{
+.home-platform-shell__nav-icon img,
+.home-platform-shell__nav-icon svg{
   display:block;
   width:var(--size-full);
   height:var(--size-full);
   object-fit:contain;
   object-position:center;
+  opacity:var(--nav-institutional-icon-opacity);
   filter:var(--icon-image-filter);
+  transition:opacity var(--home-platform-shell-motion-fast) var(--interaction-ease-standard);
+}
+
+.home-platform-shell__nav-item:hover .home-platform-shell__nav-icon img,
+.home-platform-shell__nav-item:hover .home-platform-shell__nav-icon svg,
+.home-platform-shell__nav-item:focus-visible .home-platform-shell__nav-icon img,
+.home-platform-shell__nav-item:focus-visible .home-platform-shell__nav-icon svg,
+.home-platform-shell__nav-item[aria-pressed="true"] .home-platform-shell__nav-icon img,
+.home-platform-shell__nav-item[aria-pressed="true"] .home-platform-shell__nav-icon svg,
+.home-platform-shell__nav-item[aria-current="page"] .home-platform-shell__nav-icon img,
+.home-platform-shell__nav-item[aria-current="page"] .home-platform-shell__nav-icon svg,
+.home-platform-shell__nav-item.is-active .home-platform-shell__nav-icon img,
+.home-platform-shell__nav-item.is-active .home-platform-shell__nav-icon svg{
+  opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
 
@@ -1002,4 +1018,3 @@ html[data-theme-effective="light"]{
 .home-platform-shell__nav-item--footer-link:active{
   color:var(--cookie-consent-footer-link-hover);
 }
-

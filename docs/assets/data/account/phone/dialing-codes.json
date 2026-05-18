@@ -1,0 +1,1477 @@
+{
+  "schema": "neuroartan.account.phone.dialing-codes.v1",
+  "status": "active",
+  "format": "E.164-compatible country calling code registry",
+  "entries": [
+    {
+      "region": "US",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": true
+    },
+    {
+      "region": "AG",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AI",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AS",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BB",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BM",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BS",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CA",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DM",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DO",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GD",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GU",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "JM",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KN",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KY",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LC",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MP",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MS",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PR",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SX",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TC",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TT",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VC",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VG",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VI",
+      "dial_code": "+1",
+      "dial_code_digits": "1",
+      "main_country_for_code": false
+    },
+    {
+      "region": "RU",
+      "dial_code": "+7",
+      "dial_code_digits": "7",
+      "main_country_for_code": true
+    },
+    {
+      "region": "KZ",
+      "dial_code": "+7",
+      "dial_code_digits": "7",
+      "main_country_for_code": false
+    },
+    {
+      "region": "EG",
+      "dial_code": "+20",
+      "dial_code_digits": "20",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ZA",
+      "dial_code": "+27",
+      "dial_code_digits": "27",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GR",
+      "dial_code": "+30",
+      "dial_code_digits": "30",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NL",
+      "dial_code": "+31",
+      "dial_code_digits": "31",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BE",
+      "dial_code": "+32",
+      "dial_code_digits": "32",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FR",
+      "dial_code": "+33",
+      "dial_code_digits": "33",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ES",
+      "dial_code": "+34",
+      "dial_code_digits": "34",
+      "main_country_for_code": false
+    },
+    {
+      "region": "HU",
+      "dial_code": "+36",
+      "dial_code_digits": "36",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IT",
+      "dial_code": "+39",
+      "dial_code_digits": "39",
+      "main_country_for_code": true
+    },
+    {
+      "region": "VA",
+      "dial_code": "+39",
+      "dial_code_digits": "39",
+      "main_country_for_code": false
+    },
+    {
+      "region": "RO",
+      "dial_code": "+40",
+      "dial_code_digits": "40",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CH",
+      "dial_code": "+41",
+      "dial_code_digits": "41",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AT",
+      "dial_code": "+43",
+      "dial_code_digits": "43",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GB",
+      "dial_code": "+44",
+      "dial_code_digits": "44",
+      "main_country_for_code": true
+    },
+    {
+      "region": "GG",
+      "dial_code": "+44",
+      "dial_code_digits": "44",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IM",
+      "dial_code": "+44",
+      "dial_code_digits": "44",
+      "main_country_for_code": false
+    },
+    {
+      "region": "JE",
+      "dial_code": "+44",
+      "dial_code_digits": "44",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DK",
+      "dial_code": "+45",
+      "dial_code_digits": "45",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SE",
+      "dial_code": "+46",
+      "dial_code_digits": "46",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NO",
+      "dial_code": "+47",
+      "dial_code_digits": "47",
+      "main_country_for_code": true
+    },
+    {
+      "region": "SJ",
+      "dial_code": "+47",
+      "dial_code_digits": "47",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PL",
+      "dial_code": "+48",
+      "dial_code_digits": "48",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DE",
+      "dial_code": "+49",
+      "dial_code_digits": "49",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PE",
+      "dial_code": "+51",
+      "dial_code_digits": "51",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MX",
+      "dial_code": "+52",
+      "dial_code_digits": "52",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CU",
+      "dial_code": "+53",
+      "dial_code_digits": "53",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AR",
+      "dial_code": "+54",
+      "dial_code_digits": "54",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BR",
+      "dial_code": "+55",
+      "dial_code_digits": "55",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CL",
+      "dial_code": "+56",
+      "dial_code_digits": "56",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CO",
+      "dial_code": "+57",
+      "dial_code_digits": "57",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VE",
+      "dial_code": "+58",
+      "dial_code_digits": "58",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MY",
+      "dial_code": "+60",
+      "dial_code_digits": "60",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AU",
+      "dial_code": "+61",
+      "dial_code_digits": "61",
+      "main_country_for_code": true
+    },
+    {
+      "region": "CC",
+      "dial_code": "+61",
+      "dial_code_digits": "61",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CX",
+      "dial_code": "+61",
+      "dial_code_digits": "61",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ID",
+      "dial_code": "+62",
+      "dial_code_digits": "62",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PH",
+      "dial_code": "+63",
+      "dial_code_digits": "63",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NZ",
+      "dial_code": "+64",
+      "dial_code_digits": "64",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SG",
+      "dial_code": "+65",
+      "dial_code_digits": "65",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TH",
+      "dial_code": "+66",
+      "dial_code_digits": "66",
+      "main_country_for_code": false
+    },
+    {
+      "region": "JP",
+      "dial_code": "+81",
+      "dial_code_digits": "81",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KR",
+      "dial_code": "+82",
+      "dial_code_digits": "82",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VN",
+      "dial_code": "+84",
+      "dial_code_digits": "84",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CN",
+      "dial_code": "+86",
+      "dial_code_digits": "86",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TR",
+      "dial_code": "+90",
+      "dial_code_digits": "90",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IN",
+      "dial_code": "+91",
+      "dial_code_digits": "91",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PK",
+      "dial_code": "+92",
+      "dial_code_digits": "92",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AF",
+      "dial_code": "+93",
+      "dial_code_digits": "93",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LK",
+      "dial_code": "+94",
+      "dial_code_digits": "94",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MM",
+      "dial_code": "+95",
+      "dial_code_digits": "95",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IR",
+      "dial_code": "+98",
+      "dial_code_digits": "98",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SS",
+      "dial_code": "+211",
+      "dial_code_digits": "211",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MA",
+      "dial_code": "+212",
+      "dial_code_digits": "212",
+      "main_country_for_code": true
+    },
+    {
+      "region": "EH",
+      "dial_code": "+212",
+      "dial_code_digits": "212",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DZ",
+      "dial_code": "+213",
+      "dial_code_digits": "213",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TN",
+      "dial_code": "+216",
+      "dial_code_digits": "216",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LY",
+      "dial_code": "+218",
+      "dial_code_digits": "218",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GM",
+      "dial_code": "+220",
+      "dial_code_digits": "220",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SN",
+      "dial_code": "+221",
+      "dial_code_digits": "221",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MR",
+      "dial_code": "+222",
+      "dial_code_digits": "222",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ML",
+      "dial_code": "+223",
+      "dial_code_digits": "223",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GN",
+      "dial_code": "+224",
+      "dial_code_digits": "224",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CI",
+      "dial_code": "+225",
+      "dial_code_digits": "225",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BF",
+      "dial_code": "+226",
+      "dial_code_digits": "226",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NE",
+      "dial_code": "+227",
+      "dial_code_digits": "227",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TG",
+      "dial_code": "+228",
+      "dial_code_digits": "228",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BJ",
+      "dial_code": "+229",
+      "dial_code_digits": "229",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MU",
+      "dial_code": "+230",
+      "dial_code_digits": "230",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LR",
+      "dial_code": "+231",
+      "dial_code_digits": "231",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SL",
+      "dial_code": "+232",
+      "dial_code_digits": "232",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GH",
+      "dial_code": "+233",
+      "dial_code_digits": "233",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NG",
+      "dial_code": "+234",
+      "dial_code_digits": "234",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TD",
+      "dial_code": "+235",
+      "dial_code_digits": "235",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CF",
+      "dial_code": "+236",
+      "dial_code_digits": "236",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CM",
+      "dial_code": "+237",
+      "dial_code_digits": "237",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CV",
+      "dial_code": "+238",
+      "dial_code_digits": "238",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ST",
+      "dial_code": "+239",
+      "dial_code_digits": "239",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GQ",
+      "dial_code": "+240",
+      "dial_code_digits": "240",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GA",
+      "dial_code": "+241",
+      "dial_code_digits": "241",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CG",
+      "dial_code": "+242",
+      "dial_code_digits": "242",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CD",
+      "dial_code": "+243",
+      "dial_code_digits": "243",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AO",
+      "dial_code": "+244",
+      "dial_code_digits": "244",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GW",
+      "dial_code": "+245",
+      "dial_code_digits": "245",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IO",
+      "dial_code": "+246",
+      "dial_code_digits": "246",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AC",
+      "dial_code": "+247",
+      "dial_code_digits": "247",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SC",
+      "dial_code": "+248",
+      "dial_code_digits": "248",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SD",
+      "dial_code": "+249",
+      "dial_code_digits": "249",
+      "main_country_for_code": false
+    },
+    {
+      "region": "RW",
+      "dial_code": "+250",
+      "dial_code_digits": "250",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ET",
+      "dial_code": "+251",
+      "dial_code_digits": "251",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SO",
+      "dial_code": "+252",
+      "dial_code_digits": "252",
+      "main_country_for_code": false
+    },
+    {
+      "region": "DJ",
+      "dial_code": "+253",
+      "dial_code_digits": "253",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KE",
+      "dial_code": "+254",
+      "dial_code_digits": "254",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TZ",
+      "dial_code": "+255",
+      "dial_code_digits": "255",
+      "main_country_for_code": false
+    },
+    {
+      "region": "UG",
+      "dial_code": "+256",
+      "dial_code_digits": "256",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BI",
+      "dial_code": "+257",
+      "dial_code_digits": "257",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MZ",
+      "dial_code": "+258",
+      "dial_code_digits": "258",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ZM",
+      "dial_code": "+260",
+      "dial_code_digits": "260",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MG",
+      "dial_code": "+261",
+      "dial_code_digits": "261",
+      "main_country_for_code": false
+    },
+    {
+      "region": "RE",
+      "dial_code": "+262",
+      "dial_code_digits": "262",
+      "main_country_for_code": true
+    },
+    {
+      "region": "YT",
+      "dial_code": "+262",
+      "dial_code_digits": "262",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ZW",
+      "dial_code": "+263",
+      "dial_code_digits": "263",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NA",
+      "dial_code": "+264",
+      "dial_code_digits": "264",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MW",
+      "dial_code": "+265",
+      "dial_code_digits": "265",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LS",
+      "dial_code": "+266",
+      "dial_code_digits": "266",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BW",
+      "dial_code": "+267",
+      "dial_code_digits": "267",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SZ",
+      "dial_code": "+268",
+      "dial_code_digits": "268",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KM",
+      "dial_code": "+269",
+      "dial_code_digits": "269",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SH",
+      "dial_code": "+290",
+      "dial_code_digits": "290",
+      "main_country_for_code": true
+    },
+    {
+      "region": "TA",
+      "dial_code": "+290",
+      "dial_code_digits": "290",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ER",
+      "dial_code": "+291",
+      "dial_code_digits": "291",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AW",
+      "dial_code": "+297",
+      "dial_code_digits": "297",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FO",
+      "dial_code": "+298",
+      "dial_code_digits": "298",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GL",
+      "dial_code": "+299",
+      "dial_code_digits": "299",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GI",
+      "dial_code": "+350",
+      "dial_code_digits": "350",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PT",
+      "dial_code": "+351",
+      "dial_code_digits": "351",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LU",
+      "dial_code": "+352",
+      "dial_code_digits": "352",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IE",
+      "dial_code": "+353",
+      "dial_code_digits": "353",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IS",
+      "dial_code": "+354",
+      "dial_code_digits": "354",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AL",
+      "dial_code": "+355",
+      "dial_code_digits": "355",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MT",
+      "dial_code": "+356",
+      "dial_code_digits": "356",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CY",
+      "dial_code": "+357",
+      "dial_code_digits": "357",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FI",
+      "dial_code": "+358",
+      "dial_code_digits": "358",
+      "main_country_for_code": true
+    },
+    {
+      "region": "AX",
+      "dial_code": "+358",
+      "dial_code_digits": "358",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BG",
+      "dial_code": "+359",
+      "dial_code_digits": "359",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LT",
+      "dial_code": "+370",
+      "dial_code_digits": "370",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LV",
+      "dial_code": "+371",
+      "dial_code_digits": "371",
+      "main_country_for_code": false
+    },
+    {
+      "region": "EE",
+      "dial_code": "+372",
+      "dial_code_digits": "372",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MD",
+      "dial_code": "+373",
+      "dial_code_digits": "373",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AM",
+      "dial_code": "+374",
+      "dial_code_digits": "374",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BY",
+      "dial_code": "+375",
+      "dial_code_digits": "375",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AD",
+      "dial_code": "+376",
+      "dial_code_digits": "376",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MC",
+      "dial_code": "+377",
+      "dial_code_digits": "377",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SM",
+      "dial_code": "+378",
+      "dial_code_digits": "378",
+      "main_country_for_code": false
+    },
+    {
+      "region": "UA",
+      "dial_code": "+380",
+      "dial_code_digits": "380",
+      "main_country_for_code": false
+    },
+    {
+      "region": "RS",
+      "dial_code": "+381",
+      "dial_code_digits": "381",
+      "main_country_for_code": false
+    },
+    {
+      "region": "ME",
+      "dial_code": "+382",
+      "dial_code_digits": "382",
+      "main_country_for_code": false
+    },
+    {
+      "region": "XK",
+      "dial_code": "+383",
+      "dial_code_digits": "383",
+      "main_country_for_code": false
+    },
+    {
+      "region": "HR",
+      "dial_code": "+385",
+      "dial_code_digits": "385",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SI",
+      "dial_code": "+386",
+      "dial_code_digits": "386",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BA",
+      "dial_code": "+387",
+      "dial_code_digits": "387",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MK",
+      "dial_code": "+389",
+      "dial_code_digits": "389",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CZ",
+      "dial_code": "+420",
+      "dial_code_digits": "420",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SK",
+      "dial_code": "+421",
+      "dial_code_digits": "421",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LI",
+      "dial_code": "+423",
+      "dial_code_digits": "423",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FK",
+      "dial_code": "+500",
+      "dial_code_digits": "500",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BZ",
+      "dial_code": "+501",
+      "dial_code_digits": "501",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GT",
+      "dial_code": "+502",
+      "dial_code_digits": "502",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SV",
+      "dial_code": "+503",
+      "dial_code_digits": "503",
+      "main_country_for_code": false
+    },
+    {
+      "region": "HN",
+      "dial_code": "+504",
+      "dial_code_digits": "504",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NI",
+      "dial_code": "+505",
+      "dial_code_digits": "505",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CR",
+      "dial_code": "+506",
+      "dial_code_digits": "506",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PA",
+      "dial_code": "+507",
+      "dial_code_digits": "507",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PM",
+      "dial_code": "+508",
+      "dial_code_digits": "508",
+      "main_country_for_code": false
+    },
+    {
+      "region": "HT",
+      "dial_code": "+509",
+      "dial_code_digits": "509",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GP",
+      "dial_code": "+590",
+      "dial_code_digits": "590",
+      "main_country_for_code": true
+    },
+    {
+      "region": "BL",
+      "dial_code": "+590",
+      "dial_code_digits": "590",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MF",
+      "dial_code": "+590",
+      "dial_code_digits": "590",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BO",
+      "dial_code": "+591",
+      "dial_code_digits": "591",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GY",
+      "dial_code": "+592",
+      "dial_code_digits": "592",
+      "main_country_for_code": false
+    },
+    {
+      "region": "EC",
+      "dial_code": "+593",
+      "dial_code_digits": "593",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GF",
+      "dial_code": "+594",
+      "dial_code_digits": "594",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PY",
+      "dial_code": "+595",
+      "dial_code_digits": "595",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MQ",
+      "dial_code": "+596",
+      "dial_code_digits": "596",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SR",
+      "dial_code": "+597",
+      "dial_code_digits": "597",
+      "main_country_for_code": false
+    },
+    {
+      "region": "UY",
+      "dial_code": "+598",
+      "dial_code_digits": "598",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CW",
+      "dial_code": "+599",
+      "dial_code_digits": "599",
+      "main_country_for_code": true
+    },
+    {
+      "region": "BQ",
+      "dial_code": "+599",
+      "dial_code_digits": "599",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TL",
+      "dial_code": "+670",
+      "dial_code_digits": "670",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NF",
+      "dial_code": "+672",
+      "dial_code_digits": "672",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BN",
+      "dial_code": "+673",
+      "dial_code_digits": "673",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NR",
+      "dial_code": "+674",
+      "dial_code_digits": "674",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PG",
+      "dial_code": "+675",
+      "dial_code_digits": "675",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TO",
+      "dial_code": "+676",
+      "dial_code_digits": "676",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SB",
+      "dial_code": "+677",
+      "dial_code_digits": "677",
+      "main_country_for_code": false
+    },
+    {
+      "region": "VU",
+      "dial_code": "+678",
+      "dial_code_digits": "678",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FJ",
+      "dial_code": "+679",
+      "dial_code_digits": "679",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PW",
+      "dial_code": "+680",
+      "dial_code_digits": "680",
+      "main_country_for_code": false
+    },
+    {
+      "region": "WF",
+      "dial_code": "+681",
+      "dial_code_digits": "681",
+      "main_country_for_code": false
+    },
+    {
+      "region": "CK",
+      "dial_code": "+682",
+      "dial_code_digits": "682",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NU",
+      "dial_code": "+683",
+      "dial_code_digits": "683",
+      "main_country_for_code": false
+    },
+    {
+      "region": "WS",
+      "dial_code": "+685",
+      "dial_code_digits": "685",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KI",
+      "dial_code": "+686",
+      "dial_code_digits": "686",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NC",
+      "dial_code": "+687",
+      "dial_code_digits": "687",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TV",
+      "dial_code": "+688",
+      "dial_code_digits": "688",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PF",
+      "dial_code": "+689",
+      "dial_code_digits": "689",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TK",
+      "dial_code": "+690",
+      "dial_code_digits": "690",
+      "main_country_for_code": false
+    },
+    {
+      "region": "FM",
+      "dial_code": "+691",
+      "dial_code_digits": "691",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MH",
+      "dial_code": "+692",
+      "dial_code_digits": "692",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KP",
+      "dial_code": "+850",
+      "dial_code_digits": "850",
+      "main_country_for_code": false
+    },
+    {
+      "region": "HK",
+      "dial_code": "+852",
+      "dial_code_digits": "852",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MO",
+      "dial_code": "+853",
+      "dial_code_digits": "853",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KH",
+      "dial_code": "+855",
+      "dial_code_digits": "855",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LA",
+      "dial_code": "+856",
+      "dial_code_digits": "856",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BD",
+      "dial_code": "+880",
+      "dial_code_digits": "880",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TW",
+      "dial_code": "+886",
+      "dial_code_digits": "886",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MV",
+      "dial_code": "+960",
+      "dial_code_digits": "960",
+      "main_country_for_code": false
+    },
+    {
+      "region": "LB",
+      "dial_code": "+961",
+      "dial_code_digits": "961",
+      "main_country_for_code": false
+    },
+    {
+      "region": "JO",
+      "dial_code": "+962",
+      "dial_code_digits": "962",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SY",
+      "dial_code": "+963",
+      "dial_code_digits": "963",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IQ",
+      "dial_code": "+964",
+      "dial_code_digits": "964",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KW",
+      "dial_code": "+965",
+      "dial_code_digits": "965",
+      "main_country_for_code": false
+    },
+    {
+      "region": "SA",
+      "dial_code": "+966",
+      "dial_code_digits": "966",
+      "main_country_for_code": false
+    },
+    {
+      "region": "YE",
+      "dial_code": "+967",
+      "dial_code_digits": "967",
+      "main_country_for_code": false
+    },
+    {
+      "region": "OM",
+      "dial_code": "+968",
+      "dial_code_digits": "968",
+      "main_country_for_code": false
+    },
+    {
+      "region": "PS",
+      "dial_code": "+970",
+      "dial_code_digits": "970",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AE",
+      "dial_code": "+971",
+      "dial_code_digits": "971",
+      "main_country_for_code": false
+    },
+    {
+      "region": "IL",
+      "dial_code": "+972",
+      "dial_code_digits": "972",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BH",
+      "dial_code": "+973",
+      "dial_code_digits": "973",
+      "main_country_for_code": false
+    },
+    {
+      "region": "QA",
+      "dial_code": "+974",
+      "dial_code_digits": "974",
+      "main_country_for_code": false
+    },
+    {
+      "region": "BT",
+      "dial_code": "+975",
+      "dial_code_digits": "975",
+      "main_country_for_code": false
+    },
+    {
+      "region": "MN",
+      "dial_code": "+976",
+      "dial_code_digits": "976",
+      "main_country_for_code": false
+    },
+    {
+      "region": "NP",
+      "dial_code": "+977",
+      "dial_code_digits": "977",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TJ",
+      "dial_code": "+992",
+      "dial_code_digits": "992",
+      "main_country_for_code": false
+    },
+    {
+      "region": "TM",
+      "dial_code": "+993",
+      "dial_code_digits": "993",
+      "main_country_for_code": false
+    },
+    {
+      "region": "AZ",
+      "dial_code": "+994",
+      "dial_code_digits": "994",
+      "main_country_for_code": false
+    },
+    {
+      "region": "GE",
+      "dial_code": "+995",
+      "dial_code_digits": "995",
+      "main_country_for_code": false
+    },
+    {
+      "region": "KG",
+      "dial_code": "+996",
+      "dial_code_digits": "996",
+      "main_country_for_code": false
+    },
+    {
+      "region": "UZ",
+      "dial_code": "+998",
+      "dial_code_digits": "998",
+      "main_country_for_code": false
+    }
+  ]
+}

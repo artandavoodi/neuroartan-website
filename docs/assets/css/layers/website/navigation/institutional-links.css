@@ -182,8 +182,7 @@ html[data-theme-effective="dark"]{
   transform-origin: center;
   transition:
     color var(--institutional-links-motion-fast) var(--institutional-links-motion-ease),
-    opacity var(--institutional-links-motion-fast) var(--institutional-links-motion-ease),
-    transform var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
+    opacity var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
 }
 
 .institutional-links-nav a:hover,
@@ -191,7 +190,7 @@ html[data-theme-effective="dark"]{
 .institutional-links-nav a:active{
   color:var(--institutional-links-hover-color);
   text-decoration: none;
-  transform:scale(var(--institutional-links-nav-hover-scale));
+  transform:none;
   outline: none;
 }
 
@@ -216,8 +215,7 @@ html[data-theme-effective="dark"]{
   transform-origin: center;
   transition:
     color var(--institutional-links-motion-fast) var(--institutional-links-motion-ease),
-    opacity var(--institutional-links-motion-fast) var(--institutional-links-motion-ease),
-    transform var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
+    opacity var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
 }
 
 .institutional-links-social svg{
@@ -251,7 +249,7 @@ html[data-theme-effective="dark"]{
 .institutional-links-social svg rect{
   transform-box: fill-box;
   transform-origin: center;
-  transition:transform var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
+  transition:none;
 }
 
 .institutional-links-social:hover,
@@ -259,7 +257,7 @@ html[data-theme-effective="dark"]{
 .institutional-links-social:active{
   color:var(--institutional-links-hover-color);
   text-decoration: none;
-  transform:scale(var(--institutional-links-social-hover-scale));
+  transform:none;
   outline: none;
   opacity: 1;
 }
@@ -273,11 +271,11 @@ html[data-theme-effective="dark"]{
 .institutional-links-social:active svg path,
 .institutional-links-social:active svg circle,
 .institutional-links-social:active svg rect{
-  transform:scale(var(--institutional-links-social-icon-hover-scale));
+  transform:none;
 }
 
 .institutional-links-social:not(:hover):not(:focus-visible):not(:active){
-  transform:scale(1);
+  transform:none;
 }
 
 /* =============================================================================

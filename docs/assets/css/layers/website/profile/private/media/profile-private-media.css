@@ -90,9 +90,8 @@
 }
 
 .profile-private-media__preview{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+  display:inline-grid;
+  place-items:center;
   width:var(--control-height-lg);
   height:var(--control-height-lg);
   border:var(--border-width-hairline) solid var(--control-border-unified);
@@ -100,6 +99,21 @@
   background:var(--control-surface-hover);
   color:var(--text-primary-color);
   overflow:hidden;
+}
+
+.profile-private-media__preview [data-profile-avatar-preview-placeholder]{
+  display:grid;
+  place-items:center;
+  width:var(--size-full);
+  height:var(--size-full);
+}
+
+.profile-private-media__preview [data-profile-avatar-preview-placeholder] img{
+  display:block;
+  width:var(--profile-header-avatar-placeholder-icon-size);
+  height:var(--profile-header-avatar-placeholder-icon-size);
+  object-fit:contain;
+  opacity:var(--state-opacity-muted);
 }
 
 .profile-private-media__preview--avatar{

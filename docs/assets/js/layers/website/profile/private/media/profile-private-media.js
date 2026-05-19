@@ -50,22 +50,6 @@ function setImage(root, selector, src, alt = '') {
   image.alt = '';
 }
 
-function getInitials(profile = {}) {
-  const displayName = String(profile.display_name || profile.displayName || '').trim();
-  const firstName = String(profile.first_name || profile.firstName || '').trim();
-  const lastName = String(profile.last_name || profile.lastName || '').trim();
-  const email = String(profile.email || '').trim();
-  const source = displayName || `${firstName} ${lastName}`.trim() || email || 'Neuroartan';
-
-  return source
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase();
-}
-
 /* =============================================================================
    04) MEDIA STATE RENDERING
 ============================================================================= */
@@ -77,14 +61,13 @@ function renderProfilePrivateMedia(state = getProfileRuntimeState()) {
   const avatarUrl = String(profile.avatar_url || profile.photo_url || '').trim();
   const coverUrl = String(state.coverUrl || profile.cover_url || '').trim();
 
-  setText(root, '[data-profile-avatar-preview-initials]', getInitials(profile));
   setImage(root, '[data-profile-avatar-preview-image]', avatarUrl, `${state.displayName || 'Profile'} avatar`);
   setImage(root, '[data-profile-cover-preview-image]', coverUrl, `${state.displayName || 'Profile'} cover`);
   setText(root, '[data-profile-avatar-status]', avatarUrl ? 'Uploaded' : 'Not uploaded');
   setText(root, '[data-profile-cover-status]', coverUrl ? 'Uploaded' : 'Not uploaded');
-  const initials = root.querySelector('[data-profile-avatar-preview-initials]');
-  if (initials instanceof HTMLElement) {
-    initials.hidden = Boolean(avatarUrl);
+  const placeholder = root.querySelector('[data-profile-avatar-preview-placeholder]');
+  if (placeholder instanceof HTMLElement) {
+    placeholder.hidden = Boolean(avatarUrl);
   }
   const coverLabel = root.querySelector('[data-profile-cover-preview-label]');
   if (coverLabel instanceof HTMLElement) {
@@ -122,8 +105,8 @@ function updateSelectedFileStatus(root, fileInput) {
   }
 
   setImage(root, '[data-profile-avatar-preview-image]', previewUrl, fileName);
-  const initials = root.querySelector('[data-profile-avatar-preview-initials]');
-  if (initials instanceof HTMLElement) initials.hidden = true;
+  const placeholder = root.querySelector('[data-profile-avatar-preview-placeholder]');
+  if (placeholder instanceof HTMLElement) placeholder.hidden = true;
 }
 
 function renderProfilePrivateMediaSaveState(state = {}) {

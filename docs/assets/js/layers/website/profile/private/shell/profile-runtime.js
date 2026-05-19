@@ -26,6 +26,10 @@ import {
   normalizeString,
   normalizeUsername
 } from '../../../system/account/identity/account-profile-identity.js';
+import {
+  followProfile,
+  unfollowProfile
+} from '../../../system/profile/profile-social-graph.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -266,6 +270,8 @@ function buildPrivateProfileState(user = null, profile = null) {
   );
   const coverUrl = normalizeString(profile?.cover_url || profile?.header_image_url || getStructuredProfileFlag(profile, 'profile_cover_url'));
   const avatarHasImage = Boolean(avatarUrl);
+  const verificationStatus = normalizeString(profile?.verification_status || profile?.public_verification_status || 'unverified');
+  const profileVerified = profile?.profile_verified === true || verificationStatus === 'verified';
   const stateKey = !user
     ? 'guest'
     : !profile
@@ -318,6 +324,12 @@ function buildPrivateProfileState(user = null, profile = null) {
     avatarHasImage,
     avatarState: normalizeString(profile?.avatar_state || '') || (avatarHasImage ? 'active' : 'empty'),
     avatarInitials: buildInitials(displayName || normalizeString(profile?.first_name || ''), email),
+    verification: {
+      verified: profileVerified,
+      status: profileVerified ? 'verified' : verificationStatus,
+      verifiedAt: normalizeString(profile?.verified_at || profile?.profile_verified_at || ''),
+      badgeVisible: profileVerified
+    },
     stateBadgeLabel: !user
       ? 'Guest'
       : completion.complete
@@ -438,7 +450,9 @@ function buildPublicProfileState(detail = {}) {
   const availability = normalizeString(model?.availability || '');
   const legacyState = normalizeString(model?.legacy_state || '');
   const modelMaturity = normalizeString(model?.model_maturity || '');
-  const verificationVisible = outcome === 'found_renderable' && Boolean(trustClassification);
+  const profileVerified = publicProfile?.profile_verified === true
+    || normalizeString(publicProfile?.public_verification_status || '') === 'verified';
+  const verificationVisible = outcome === 'found_renderable' && profileVerified;
   const visibilityState = publicProfile?.public_profile_enabled === true
     ? capitalizeWords(publicProfile?.public_profile_visibility || 'Public')
     : outcome === 'reserved_but_hidden'
@@ -455,6 +469,8 @@ function buildPublicProfileState(detail = {}) {
     viewerState: 'public',
     stateKey: outcome || 'idle',
     routeOutcome: outcome,
+    profileId: normalizeString(publicProfile?.id || ''),
+    ownerAuthUserId: normalizeString(publicProfile?.auth_user_id || ''),
     username: {
       raw: detail.username || normalizedUsername,
       normalized: normalizedUsername,
@@ -481,14 +497,14 @@ function buildPublicProfileState(detail = {}) {
     primaryAction: 'copy-link',
     verificationVisible,
     verificationLabel: verificationVisible ? 'Verified' : '',
-    verificationCopy: trustClassification || buildPublicRouteCopy(outcome, normalizedUsername),
+    verificationCopy: verificationVisible ? 'Verified profile' : buildPublicRouteCopy(outcome, normalizedUsername),
     creatorLine,
     joinedYearLabel: joinedYear ? `Joined ${joinedYear}` : 'Joined year pending',
     interactionModeLabel: interactionEntry || 'Interaction pending',
     availabilityLabel: availability || 'Availability pending',
     legacyStateLabel: legacyState || 'State pending',
     trustValue: verificationVisible ? 'Verified' : buildPublicStateBadge(outcome),
-    trustCopy: trustClassification || buildPublicRouteCopy(outcome, normalizedUsername),
+    trustCopy: verificationVisible ? 'Verified profile' : buildPublicRouteCopy(outcome, normalizedUsername),
     availabilityValue: availability || 'Pending',
     availabilityCopy: interactionEntry
       ? `Interaction: ${interactionEntry}`
@@ -522,7 +538,13 @@ function buildPublicProfileState(detail = {}) {
         ])
       : ['Identity', 'Route', 'Continuity'],
     publicProfileDiscoverable: publicProfile?.public_profile_discoverable === true,
-    publicProfileEnabled: publicProfile?.public_profile_enabled === true
+    publicProfileEnabled: publicProfile?.public_profile_enabled === true,
+    verification: {
+      verified: verificationVisible,
+      status: verificationVisible ? 'verified' : normalizeString(publicProfile?.public_verification_status || 'unverified'),
+      verifiedAt: normalizeString(publicProfile?.verified_at || ''),
+      badgeVisible: verificationVisible
+    }
   };
 }
 
@@ -727,6 +749,16 @@ export function requestProfileAction(action, detail = {}) {
       return;
     case 'copy-link':
       void copyProfileLink(state);
+      return;
+    case 'follow-profile':
+      if (state.profileId) {
+        void followProfile(state.profileId);
+      }
+      return;
+    case 'unfollow-profile':
+      if (state.profileId) {
+        void unfollowProfile(state.profileId);
+      }
       return;
     case 'sign-out':
       document.dispatchEvent(new CustomEvent('account:sign-out-request', {

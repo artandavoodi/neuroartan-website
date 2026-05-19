@@ -29,6 +29,18 @@ function bindProfileMenu(root) {
   root.dataset.profileMenuBound = 'true';
 
   root.addEventListener('click', (event) => {
+    const searchTrigger = event.target.closest('[data-profile-search-trigger="true"]');
+    if (searchTrigger instanceof HTMLElement) {
+      event.preventDefault();
+      searchTrigger.setAttribute('aria-expanded', 'true');
+      document.dispatchEvent(new CustomEvent('neuroartan:home-search-shell-open-requested', {
+        detail: {
+          source: MODULE_ID
+        }
+      }));
+      return;
+    }
+
     const trigger = event.target.closest('[data-profile-action]');
     if (!trigger) return;
     if (trigger instanceof HTMLAnchorElement) return;
@@ -54,6 +66,16 @@ function initProfileMenu() {
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-private-menu') return;
     getProfileMenuRoots().forEach(bindProfileMenu);
+  });
+
+  document.addEventListener('neuroartan:home-topbar-reset-triggers', () => {
+    getProfileMenuRoots().forEach((root) => {
+      root.querySelectorAll('[data-profile-search-trigger="true"]').forEach((trigger) => {
+        if (trigger instanceof HTMLElement) {
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
   });
 }
 

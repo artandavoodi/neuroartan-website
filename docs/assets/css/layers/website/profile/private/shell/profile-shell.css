@@ -23,6 +23,8 @@
   --profile-shell-hero-sticky-top:calc(env(safe-area-inset-top, 0px) + 3.55rem - 11rem);
   --profile-shell-hero-sticky-top-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem - 8rem);
   --profile-shell-hero-sticky-z-index:1200;
+  --profile-shell-workspace-sticky-top:calc(var(--profile-shell-top-clearance) + var(--profile-private-hero-cover-height, 13.5rem) + var(--spacing-xl));
+  --profile-shell-workspace-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) + var(--profile-private-hero-cover-height-mobile) + var(--spacing-lg));
 }
 
 /* =============================================================================
@@ -128,5 +130,6 @@
     --profile-shell-mount-gap:var(--spacing-md);
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);
     --profile-shell-hero-sticky-top:var(--profile-shell-hero-sticky-top-mobile);
+    --profile-shell-workspace-sticky-top:var(--profile-shell-workspace-sticky-top-mobile);
   }
 }

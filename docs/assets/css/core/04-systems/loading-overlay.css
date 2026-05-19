@@ -8,7 +8,7 @@
 .loading-overlay{
   position: fixed;
   inset: var(--spacing-none);
-  z-index: var(--z-overlay-modal);
+  z-index: var(--z-overlay-control);
   isolation: isolate;
   display: grid;
   place-items: center;

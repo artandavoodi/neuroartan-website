@@ -1635,6 +1635,11 @@ import {
         const profile = await createPrivateBaselineProfile({
           values:{
             ...values,
+            public_profile_enabled:true,
+            public_profile_discoverable:true,
+            public_profile_visibility:'public',
+            public_route_status:'ready',
+            username_route_ready:true,
             eligibility_age_years:eligibility.ageYears,
             minimum_eligible_age_years:eligibility.minimumAge
           },
@@ -1692,6 +1697,8 @@ import {
         });
         const usernameMessage = usernameCode === 'EMAIL_VERIFICATION_REQUIRED'
           ? 'Verify your email first, then sign in again to complete your profile.'
+          : usernameCode === 'PROFILE_STORE_UNAVAILABLE'
+            ? 'Profile storage is not available right now. This is a backend configuration issue, not a username conflict.'
           : messageForUsernameError(usernameCode, policy);
         emitProfileSetupSubmitStatus({
           state: 'error',

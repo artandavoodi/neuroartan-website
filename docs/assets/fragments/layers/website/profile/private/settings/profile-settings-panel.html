@@ -40,6 +40,12 @@
         </span>
         <span class="home-dashboard-topbar__label">Images</span>
       </button>
+      <button class="profile-settings__nav-item home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" role="tab" data-profile-settings-pane-target="verification">
+        <span class="home-dashboard-topbar__icon" aria-hidden="true">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="">
+        </span>
+        <span class="home-dashboard-topbar__label">Verification</span>
+      </button>
     </div>
   </article>
 
@@ -218,7 +224,9 @@
         <div class="profile-settings__media-preview">
           <div class="profile-settings__media-avatar ui-surface">
             <img data-profile-settings-avatar-image alt="" hidden>
-            <span data-profile-settings-avatar-placeholder>NU</span>
+            <span data-profile-settings-avatar-placeholder>
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="" aria-hidden="true">
+            </span>
           </div>
 
           <div class="profile-settings__media-copy">
@@ -230,6 +238,30 @@
         </div>
 
       </div>
+    </section>
+
+    <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="verification" hidden>
+      <div class="profile-settings__pane-header">
+        <div>
+          <h3 class="profile-settings__pane-title">Verification</h3>
+          <p class="profile-settings__pane-copy">Request profile verification through the canonical Supabase review table. The public badge appears only after a verified backend state exists.</p>
+        </div>
+      </div>
+
+      <form class="profile-settings__form" data-profile-verification-form novalidate>
+        <div class="profile-settings__field-grid">
+          <label class="profile-settings__field profile-settings__field--full">
+            <span class="profile-settings__label">Verification request note</span>
+            <textarea class="ui-field profile-settings__textarea" rows="4" name="request_note" placeholder="Add relevant context for profile verification review."></textarea>
+          </label>
+        </div>
+
+        <div class="profile-settings__status" data-profile-verification-status aria-live="polite"></div>
+
+        <div class="profile-settings__actions">
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-verification-submit>Request Verification</button>
+        </div>
+      </form>
     </section>
   </div>
 </div>

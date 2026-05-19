@@ -21,11 +21,14 @@ import {
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
 import { normalizeString } from '../../../system/account/identity/account-profile-identity.js';
+import {
+  createFeedPost,
+  listFeedPosts
+} from '../../../system/feed/feed-store.js';
 
 /* =============================================================================
    03) STATE
 ============================================================================= */
-const STORAGE_PREFIX = 'neuroartan_profile_posts_v1';
 const DEFAULT_POLICY = Object.freeze({
   visibility: [
     { key: 'private', label: 'Private draft', summary: 'Owner-only profile post.' },
@@ -40,8 +43,7 @@ const DEFAULT_POLICY = Object.freeze({
 const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   initialized: false,
   policy: null,
-  posts: [],
-  storageKey: ''
+  posts: []
 });
 
 /* =============================================================================
@@ -54,13 +56,6 @@ function assetPath(path) {
 
   const normalized = normalizeString(path);
   return normalized.startsWith('/') ? normalized.slice(1) : normalized;
-}
-
-function buildStorageKey(state = getProfileRuntimeState()) {
-  const userId = normalizeString(state?.user?.id || state?.user?.uid || '');
-  const username = normalizeString(state?.username?.normalized || state?.profile?.username || '');
-  const email = normalizeString(state?.email || state?.profile?.email || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  return `${STORAGE_PREFIX}:${userId || username || email || 'guest'}`;
 }
 
 async function loadPolicy() {
@@ -89,40 +84,18 @@ async function loadPolicy() {
   return STORE.policy;
 }
 
-function readPosts(storageKey) {
-  try {
-    const raw = window.localStorage?.getItem(storageKey);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed)
-      ? parsed
-          .map((post) => ({
-            id: normalizeString(post?.id || '') || `post-${Date.now()}`,
-            title: normalizeString(post?.title || ''),
-            body: normalizeString(post?.body || ''),
-            visibility: normalizeString(post?.visibility || 'private'),
-            createdAt: normalizeString(post?.createdAt || new Date().toISOString())
-          }))
-          .filter((post) => post.title || post.body)
-      : [];
-  } catch (error) {
-    console.error('[profile-posts] Failed to read posts.', error);
-    return [];
-  }
-}
-
-function writePosts(storageKey, posts) {
-  try {
-    window.localStorage?.setItem(storageKey, JSON.stringify(posts));
-  } catch (error) {
-    console.error('[profile-posts] Failed to persist posts.', error);
-  }
-}
-
-function syncStoreWithRuntime(state = getProfileRuntimeState()) {
-  const storageKey = buildStorageKey(state);
-  if (storageKey === STORE.storageKey) return;
-  STORE.storageKey = storageKey;
-  STORE.posts = readPosts(storageKey);
+async function syncStoreWithRuntime() {
+  const posts = await listFeedPosts();
+  STORE.posts = posts
+    .filter((post) => post.ownedByCurrentUser)
+    .map((post) => ({
+      id: post.id,
+      title: 'Profile post',
+      body: post.content,
+      visibility: 'public',
+      createdAt: post.createdAt,
+      source: post.source
+    }));
 }
 
 /* =============================================================================
@@ -201,7 +174,12 @@ async function renderPosts() {
 
   const state = getProfileRuntimeState();
   const policy = await loadPolicy();
-  syncStoreWithRuntime(state);
+  try {
+    await syncStoreWithRuntime(state);
+  } catch (error) {
+    console.error('[profile-posts] Failed to load profile feed posts.', error);
+    STORE.posts = [];
+  }
 
   root.dataset.profileViewerState = state.viewerState;
   renderVisibilityOptions(root, policy);
@@ -223,7 +201,7 @@ function bindPostForm() {
   if (!root || root.dataset.profilePostsBound === 'true') return;
   root.dataset.profilePostsBound = 'true';
 
-  root.addEventListener('submit', (event) => {
+  root.addEventListener('submit', async (event) => {
     const form = event.target;
     if (!(form instanceof HTMLFormElement) || !form.matches('[data-profile-post-form]')) return;
 
@@ -244,18 +222,42 @@ function bindPostForm() {
       return;
     }
 
-    const id = window.crypto?.randomUUID ? window.crypto.randomUUID() : `post-${Date.now()}`;
-    STORE.posts = [{
-      id,
-      title,
-      body,
-      visibility,
-      createdAt: new Date().toISOString()
-    }, ...STORE.posts];
-    writePosts(STORE.storageKey || buildStorageKey(state), STORE.posts);
-    form.reset();
-    setStatus(root, visibility === 'public' ? 'Post staged for the public route.' : 'Private post saved.', 'success');
-    renderPostList(root);
+    if (visibility !== 'public') {
+      setStatus(root, 'Private post storage requires the Supabase profile_posts table. Nothing was saved in this browser.', 'error');
+      return;
+    }
+
+    setStatus(root, 'Publishing post to the public feed...', 'saving');
+
+    try {
+      await createFeedPost({
+        post_body: [title, body].filter(Boolean).join('\n\n'),
+        source_surface: 'profile'
+      });
+      form.reset();
+      await renderPosts();
+      setStatus(root, 'Post published to your public profile and feed.', 'success');
+      document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
+        detail: {
+          id: `profile-post-published-${Date.now()}`,
+          title: 'Profile post published',
+          body: 'Your post is now connected to the public feed.',
+          source: 'profile',
+          priority: 'normal',
+          href: '/pages/feed/index.html'
+        }
+      }));
+    } catch (error) {
+      const code = normalizeString(error?.code || error?.message || '');
+      const message = code === 'FEED_BACKEND_UNAVAILABLE'
+        ? 'Feed storage is not configured. Connect the Supabase feed_posts table before publishing.'
+        : code === 'PROFILE_REQUIRED'
+          ? 'Create and save your profile before publishing posts.'
+          : code === 'AUTH_REQUIRED'
+            ? 'Sign in before publishing posts.'
+            : 'Unable to publish this post. Check the Supabase feed_posts table and policies.';
+      setStatus(root, message, 'error');
+    }
   });
 }
 

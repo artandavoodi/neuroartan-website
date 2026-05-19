@@ -13,6 +13,45 @@
 ============================================================================= */
 const MODULE_ID = 'profile-private-hero';
 
+const PROFILE_CONTEXT_TAB_GROUPS = {
+  overview: {
+    label: 'Profile sections',
+    tabs: [
+      { key: 'posts', label: 'Posts', section: 'posts' },
+      { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
+      { key: 'models', label: 'Models', section: 'models' },
+      { key: 'organizations', label: 'Organizations', section: 'organizations' }
+    ]
+  },
+  content: {
+    label: 'Profile sections',
+    tabs: [
+      { key: 'posts', label: 'Posts', section: 'posts' },
+      { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
+      { key: 'models', label: 'Models', section: 'models' },
+      { key: 'organizations', label: 'Organizations', section: 'organizations' }
+    ]
+  },
+  dashboard: {
+    label: 'Dashboard sections',
+    tabs: [
+      { key: 'summary', label: 'Summary', section: 'dashboard', dashboardPane: 'summary' },
+      { key: 'metrics', label: 'Metrics', section: 'dashboard', dashboardPane: 'metrics' },
+      { key: 'graph', label: 'Graph', section: 'dashboard', dashboardPane: 'graph' }
+    ]
+  },
+  settings: {
+    label: 'Profile settings sections',
+    tabs: [
+      { key: 'identity', label: 'Personal Info', section: 'settings', settingsPane: 'identity' },
+      { key: 'route', label: 'Public Route', section: 'settings', settingsPane: 'route' },
+      { key: 'visibility', label: 'Visibility', section: 'settings', settingsPane: 'visibility' },
+      { key: 'media', label: 'Images', section: 'settings', settingsPane: 'media' },
+      { key: 'verification', label: 'Verification', section: 'settings', settingsPane: 'verification' }
+    ]
+  }
+};
+
 /* =============================================================================
    02) IMPORTS
 ============================================================================= */
@@ -24,6 +63,9 @@ import {
   getProfileNavigationState,
   subscribeProfileNavigation
 } from '../navigation/profile-navigation.js';
+import {
+  getProfileSocialGraphState
+} from '../../../system/profile/profile-social-graph.js';
 
 /* =============================================================================
    03) DOM HELPERS
@@ -54,40 +96,41 @@ function setImage(root, selector, src, alt = '') {
   image.alt = '';
 }
 
-function mapHeroTabToNavigation(tab) {
-  switch (String(tab || '').trim()) {
+function getTabGroupKey(navigationState = getProfileNavigationState()) {
+  switch (navigationState.section) {
     case 'posts':
-      return { section: 'posts' };
     case 'thoughts':
-      return { section: 'thoughts' };
     case 'models':
-      return { section: 'models' };
     case 'organizations':
-      return { section: 'organizations' };
-    case 'edit-profile':
-      return { section: 'settings', settingsPane: 'identity' };
+      return 'content';
+    case 'settings':
+      return 'settings';
+    case 'dashboard':
+      return 'dashboard';
+    case 'overview':
     default:
-      return { section: 'overview' };
+      return 'overview';
   }
 }
 
-function mapNavigationToHeroTab(navigationState = getProfileNavigationState()) {
+function getActiveTabKey(navigationState = getProfileNavigationState()) {
   switch (navigationState.section) {
-    case 'thoughts':
-      return 'thoughts';
-    case 'models':
-      return 'models';
-    case 'organizations':
-      return 'organizations';
-    case 'settings':
-      return 'edit-profile';
     case 'posts':
-      return 'posts';
-    case 'overview':
+    case 'thoughts':
+    case 'models':
+    case 'organizations':
+      return navigationState.section;
+    case 'settings':
+      return navigationState.settingsPane || 'identity';
     case 'dashboard':
+      return navigationState.dashboardPane || 'summary';
     default:
       return '';
   }
+}
+
+function getCurrentTabGroup(navigationState = getProfileNavigationState()) {
+  return PROFILE_CONTEXT_TAB_GROUPS[getTabGroupKey(navigationState)] || PROFILE_CONTEXT_TAB_GROUPS.overview;
 }
 
 function getHeroStickyTop(root) {
@@ -95,22 +138,6 @@ function getHeroStickyTop(root) {
 
   const value = Number.parseFloat(getComputedStyle(root).top || '0');
   return Number.isFinite(value) ? value : 0;
-}
-
-function getInitials(profile = {}) {
-  const displayName = String(profile.display_name || profile.displayName || '').trim();
-  const firstName = String(profile.first_name || profile.firstName || '').trim();
-  const lastName = String(profile.last_name || profile.lastName || '').trim();
-  const email = String(profile.email || '').trim();
-  const source = displayName || `${firstName} ${lastName}`.trim() || email || 'Neuroartan';
-
-  return source
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase();
 }
 
 /* =============================================================================
@@ -125,11 +152,10 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
   const displayName = String(profile.display_name || profile.displayName || '').trim();
   const profileComplete = profile.profile_complete === true || state.profileComplete === true;
 
-  setText(root, '[data-profile-avatar-initials]', getInitials(profile));
   setImage(root, '[data-profile-avatar-image]', state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
-  const initials = root.querySelector('[data-profile-avatar-initials]');
-  if (initials instanceof HTMLElement) {
-    initials.hidden = state.avatarHasImage === true;
+  const placeholderIcon = root.querySelector('[data-profile-avatar-placeholder-icon]');
+  if (placeholderIcon instanceof HTMLElement) {
+    placeholderIcon.hidden = state.avatarHasImage === true;
   }
 
   const cover = root.querySelector('[data-profile-cover]');
@@ -151,16 +177,60 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
       ? 'Your private profile foundation is active. Public identity, organizations, models, and workspace layers can be activated from controlled modules.'
       : 'Complete your private identity layer before activating public profile, organizations, models, or workspace access.'
   );
+  setText(root, '[data-profile-followers-count]', String(Number(profile.followers_count || profile.follower_count || 0) || 0));
+  setText(root, '[data-profile-following-count]', String(Number(profile.following_count || 0) || 0));
+
+  void renderProfilePrivateHeroSocialGraph(profile);
 
   renderProfilePrivateHeroTabs(getProfileNavigationState());
+}
+
+async function renderProfilePrivateHeroSocialGraph(profile = {}) {
+  const root = getHeroRoot();
+  const profileId = String(profile?.id || '').trim();
+  if (!root || !profileId) return;
+
+  try {
+    const graph = await getProfileSocialGraphState(profileId);
+    setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
+    setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
+    root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
+  } catch (error) {
+    console.error('[profile-private-hero] Social graph render failed.', error);
+    root.dataset.profileSocialGraphBackend = 'error';
+  }
 }
 
 function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationState()) {
   const root = getHeroRoot();
   if (!root) return;
 
-  const activeTab = mapNavigationToHeroTab(navigationState);
-  root.querySelectorAll('[data-profile-tab]').forEach((tab) => {
+  const tabsRoot = root.querySelector('[data-profile-hero-tabs]');
+  if (!(tabsRoot instanceof HTMLElement)) return;
+
+  const group = getCurrentTabGroup(navigationState);
+  const activeTab = getActiveTabKey(navigationState);
+  const nextSignature = `${getTabGroupKey(navigationState)}:${activeTab}`;
+
+  tabsRoot.setAttribute('aria-label', group.label);
+  if (tabsRoot.dataset.profileHeroTabsSignature !== nextSignature) {
+    tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
+    tabsRoot.replaceChildren();
+
+    group.tabs.forEach((tabConfig) => {
+      const button = document.createElement('button');
+      button.className = 'profile-private-hero__tab';
+      button.type = 'button';
+      button.textContent = tabConfig.label;
+      button.dataset.profileTab = tabConfig.key;
+      button.dataset.profileTabSection = tabConfig.section;
+      if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
+      if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
+      tabsRoot.appendChild(button);
+    });
+  }
+
+  tabsRoot.querySelectorAll('[data-profile-tab]').forEach((tab) => {
     const key = tab.getAttribute('data-profile-tab') || '';
     const active = key === activeTab;
     tab.setAttribute('aria-current', active ? 'page' : 'false');
@@ -183,7 +253,11 @@ function bindProfilePrivateHeroActions() {
     if (tab) {
       event.preventDefault();
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: mapHeroTabToNavigation(tab.getAttribute('data-profile-tab'))
+        detail: {
+          section: tab.getAttribute('data-profile-tab-section') || 'overview',
+          settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
+          dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined
+        }
       }));
       return;
     }
@@ -211,6 +285,7 @@ function syncProfileHeroStickyState() {
   const isStuck = rect.top <= stickyTop + 0.5;
 
   root.dataset.profileHeroStuck = isStuck ? 'true' : 'false';
+
 }
 
 function bindProfileHeroStickyState() {

@@ -17,17 +17,17 @@
 ============================================================================= */
 .ui-field{
   width:var(--size-full);
-  min-height:var(--control-height-lg);
-  padding:var(--space-4) var(--control-padding-x-md);
-  border-radius:var(--shape-control-radius);
+  min-height:var(--account-field-height);
+  padding:var(--spacing-none) var(--account-field-padding-x);
+  border-radius:var(--account-field-radius);
   border:var(--border-width-hairline) solid var(--control-border-unified);
   background:var(--control-surface);
   color:var(--control-text-unified);
   font-family:var(--font-family);
-  font-size:var(--control-font-size);
+  font-size:var(--account-field-font-size);
   font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-  letter-spacing:var(--control-tracking);
+  line-height:var(--account-field-line-height);
+  letter-spacing:var(--account-field-letter-spacing);
   box-shadow:none;
   transition:var(--interaction-transition-control);
 }

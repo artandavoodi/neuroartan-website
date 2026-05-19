@@ -1025,11 +1025,6 @@ function closeHomePlatformShell() {
   root.removeAttribute('data-home-platform-subdestination');
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   document.dispatchEvent(new CustomEvent('neuroartan:home-topbar-reset-triggers'));
-  document.dispatchEvent(new CustomEvent('neuroartan:home-stage-reset-requested', {
-    detail: {
-      source: 'home-platform-shell-close',
-    },
-  }));
   document.dispatchEvent(new CustomEvent('home:platform-shell-closed'));
 }
 

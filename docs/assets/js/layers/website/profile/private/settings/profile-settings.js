@@ -12,6 +12,10 @@
 import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
 import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
 import { getPrivateProfileSaveState, subscribePrivateProfileSaveState } from '../../../system/profile/profile-save.js';
+import {
+  getProfileVerificationState,
+  requestProfileVerification
+} from '../../../system/profile/profile-verification.js';
 
 /* =============================================================================
    02) SETTINGS HELPERS
@@ -72,6 +76,13 @@ function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
   });
 }
 
+function setVerificationStatus(root, message, state = 'idle') {
+  const node = root.querySelector('[data-profile-verification-status]');
+  if (!(node instanceof HTMLElement)) return;
+  node.textContent = message || '';
+  node.dataset.profileVerificationState = state;
+}
+
 function renderAvatar(root, state) {
   const image = root.querySelector('[data-profile-settings-avatar-image]');
   const placeholder = root.querySelector('[data-profile-settings-avatar-placeholder]');
@@ -90,7 +101,6 @@ function renderAvatar(root, state) {
 
   if (placeholder instanceof HTMLElement) {
     placeholder.hidden = state.avatarHasImage;
-    placeholder.textContent = state.avatarInitials;
   }
 }
 
@@ -180,7 +190,33 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
     renderStatus(root, 'media', saveState);
+
+    void renderVerificationState(root, state);
   });
+}
+
+async function renderVerificationState(root, state = getProfileRuntimeState()) {
+  const submit = root.querySelector('[data-profile-verification-submit]');
+  if (!submit) return;
+
+  setControlDisabled(submit, state.viewerState !== 'authenticated' || state.verification?.verified === true);
+
+  try {
+    const verificationState = await getProfileVerificationState(state.profile);
+    const latestStatus = verificationState.latestRequest?.request_status || '';
+    const message = state.verification?.verified === true
+      ? 'This profile is verified. The public badge is controlled by the backend verification state.'
+      : latestStatus
+        ? `Latest request status: ${latestStatus}.`
+        : verificationState.tableAvailable
+          ? 'No verification request has been submitted yet.'
+          : 'Verification request storage requires the Supabase profile_verification_requests table.';
+
+    setVerificationStatus(root, message, verificationState.tableAvailable ? 'ready' : 'error');
+  } catch (error) {
+    console.error('[profile-settings] Verification state failed.', error);
+    setVerificationStatus(root, 'Verification state could not be loaded.', 'error');
+  }
 }
 
 /* =============================================================================
@@ -209,6 +245,34 @@ function initProfileSettings() {
         settingsPane: pane
       }
     }));
+  });
+
+  document.addEventListener('submit', async (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement) || !form.matches('[data-profile-verification-form]')) return;
+
+    event.preventDefault();
+    const root = form.closest('[data-profile-settings-panel]');
+    if (!(root instanceof HTMLElement)) return;
+
+    const formData = new FormData(form);
+    setVerificationStatus(root, 'Submitting verification request...', 'saving');
+
+    try {
+      await requestProfileVerification({
+        request_note: formData.get('request_note') || ''
+      });
+      form.reset();
+      setVerificationStatus(root, 'Verification request submitted for review.', 'success');
+    } catch (error) {
+      const code = String(error?.code || error?.message || '').trim();
+      const message = code === 'PROFILE_VERIFICATION_BACKEND_UNAVAILABLE'
+        ? 'Verification storage is not configured. Connect Supabase first.'
+        : code === 'PROFILE_REQUIRED'
+          ? 'Create and save your profile before requesting verification.'
+          : 'Verification request could not be submitted. Check the Supabase verification table and policies.';
+      setVerificationStatus(root, message, 'error');
+    }
   });
 
   document.addEventListener('fragment:mounted', (event) => {

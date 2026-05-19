@@ -21,7 +21,8 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    ============================================================================= */
 
 const VALID_SECTIONS = new Set(['overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
-const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'visibility', 'media']);
+const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'visibility', 'media', 'verification']);
+const VALID_DASHBOARD_PANES = new Set(['summary', 'metrics', 'graph']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';
@@ -48,6 +49,11 @@ function normalizeSettingsPane(value) {
   return VALID_SETTINGS_PANES.has(normalized) ? normalized : 'identity';
 }
 
+function normalizeDashboardPane(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  return VALID_DASHBOARD_PANES.has(normalized) ? normalized : 'summary';
+}
+
 /* =============================================================================
    03) HASH HELPERS
    ============================================================================= */
@@ -55,7 +61,8 @@ function normalizeSettingsPane(value) {
 function createDefaultState() {
   return {
     section: 'overview',
-    settingsPane: 'identity'
+    settingsPane: 'identity',
+    dashboardPane: 'summary'
   };
 }
 
@@ -67,14 +74,25 @@ function parseHash() {
     const [, pane = 'identity'] = rawHash.split('/');
     return {
       section: 'settings',
-      settingsPane: normalizeSettingsPane(pane)
+      settingsPane: normalizeSettingsPane(pane),
+      dashboardPane: createDefaultState().dashboardPane
+    };
+  }
+
+  if (rawHash.startsWith('dashboard/')) {
+    const [, pane = 'summary'] = rawHash.split('/');
+    return {
+      section: 'dashboard',
+      settingsPane: createDefaultState().settingsPane,
+      dashboardPane: normalizeDashboardPane(pane)
     };
   }
 
   const section = normalizeSection(rawHash);
   return {
     section,
-    settingsPane: section === 'settings' ? 'identity' : createDefaultState().settingsPane
+    settingsPane: section === 'settings' ? 'identity' : createDefaultState().settingsPane,
+    dashboardPane: section === 'dashboard' ? 'summary' : createDefaultState().dashboardPane
   };
 }
 
@@ -83,7 +101,9 @@ function writeHash(state) {
 
   const hash = state.section === 'settings'
     ? `#settings/${state.settingsPane}`
-    : `#${state.section}`;
+    : state.section === 'dashboard'
+      ? `#dashboard/${state.dashboardPane}`
+      : `#${state.section}`;
 
   const nextUrl = `${window.location.pathname}${window.location.search}${hash}`;
   window.history.replaceState({}, '', nextUrl);
@@ -108,10 +128,14 @@ function setState(nextState, options = {}) {
   const settingsPane = section === 'settings'
     ? normalizeSettingsPane(nextState?.settingsPane || RUNTIME.state?.settingsPane || 'identity')
     : normalizeSettingsPane(RUNTIME.state?.settingsPane || nextState?.settingsPane || 'identity');
+  const dashboardPane = section === 'dashboard'
+    ? normalizeDashboardPane(nextState?.dashboardPane || RUNTIME.state?.dashboardPane || 'summary')
+    : normalizeDashboardPane(RUNTIME.state?.dashboardPane || nextState?.dashboardPane || 'summary');
 
   RUNTIME.state = {
     section,
-    settingsPane
+    settingsPane,
+    dashboardPane
   };
 
   if (options.writeHash !== false) {
@@ -167,7 +191,8 @@ function initProfileNavigation() {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
     setState({
       section: detail.section,
-      settingsPane: detail.settingsPane
+      settingsPane: detail.settingsPane,
+      dashboardPane: detail.dashboardPane
     });
   });
 }

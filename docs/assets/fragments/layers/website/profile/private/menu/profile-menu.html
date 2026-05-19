@@ -26,16 +26,19 @@
           <span class="home-dashboard-topbar__label">Home</span>
         </a>
 
-        <a
-          class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"
+        <button
+          class="home-dashboard-topbar__action home-dashboard-topbar__action--search"
           id="profile-dashboard-explore-trigger"
-          href="/index.html#search"
-          aria-label="Open explore">
+          type="button"
+          aria-label="Open platform search"
+          aria-controls="home-search-shell"
+          aria-expanded="false"
+          data-profile-search-trigger="true">
           <span class="home-dashboard-topbar__icon" aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/discovery/explore.svg" alt="">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
           </span>
-          <span class="home-dashboard-topbar__label">Explore</span>
-        </a>
+          <span class="home-dashboard-topbar__label">Search</span>
+        </button>
 
         <a
           class="home-dashboard-topbar__action home-dashboard-topbar__action--nav"

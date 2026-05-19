@@ -9,10 +9,22 @@
 ============================================================================= */
 
 .profile-workspace__layout{
+  --profile-sidebar-sticky-top:var(--profile-shell-workspace-sticky-top, var(--profile-shell-top-clearance));
   display:grid;
   grid-template-columns:var(--layout-home-platform-rail-width) minmax(var(--spacing-none), 1fr);
   gap:var(--spacing-none);
   align-items:stretch;
+}
+
+@media (max-width:820px){
+  .profile-workspace__layout{
+    grid-template-columns:var(--layout-home-platform-rail-compact-width) minmax(var(--spacing-none), 1fr);
+    gap:var(--spacing-md);
+  }
+
+  .profile-workspace__sidebar-mount{
+    align-self:start;
+  }
 }
 
 .profile-workspace__layout[data-profile-sidebar-rail="collapsed"]{
@@ -22,6 +34,7 @@
 .profile-workspace__sidebar-mount{
   align-self:stretch;
   min-width:var(--spacing-none);
+  border-right:var(--home-platform-shell-rail-border-right);
 }
 
 .profile-workspace__content-mount{
@@ -46,4 +59,3 @@
 /* =============================================================================
    03) RESPONSIVE
 ============================================================================= */
-

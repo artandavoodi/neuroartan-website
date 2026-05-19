@@ -11,6 +11,8 @@ import './profile-save.js';
 import './profile-state.js';
 import './profile-router.js';
 import './profile-image-storage.js';
+import './profile-social-graph.js';
+import './profile-verification.js';
 
 /* =============================================================================
    02) END OF FILE

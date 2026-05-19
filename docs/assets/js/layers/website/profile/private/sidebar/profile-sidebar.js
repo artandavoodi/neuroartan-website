@@ -19,9 +19,11 @@ function renderSidebar(root, state = getProfileNavigationState()){
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
-    const active =
-      section === state.section &&
-      (section !== 'settings' || pane === state.settingsPane);
+    const active = section === state.section && (
+      section !== 'settings'
+      || pane === state.settingsPane
+      || (pane === 'identity' && state.settingsPane !== 'visibility')
+    );
 
     item.classList.toggle('is-active', active);
 
@@ -128,7 +130,9 @@ function bootSidebar(){
     renderSidebar(root, getProfileNavigationState());
     setSidebarRail(
       root,
-      root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
+      window.matchMedia?.('(max-width: 820px)').matches === true
+        ? 'collapsed'
+        : root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
         ? 'collapsed'
         : 'expanded'
     );
@@ -148,5 +152,10 @@ document.addEventListener('fragment:mounted', (event) => {
   if(event?.detail?.name !== 'profile-private-sidebar') return;
   initProfileSidebar();
 });
+
+window.addEventListener('resize', () => {
+  if(window.matchMedia?.('(max-width: 820px)').matches !== true) return;
+  sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed'));
+}, { passive:true });
 
 initProfileSidebar();

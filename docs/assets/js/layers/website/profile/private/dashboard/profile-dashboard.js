@@ -13,6 +13,7 @@
 
 import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
 import { getProfileThoughtState, subscribeProfileThoughtState } from '../thoughts/profile-thought-store.js';
+import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
 
 /* =============================================================================
    02) DASHBOARD HELPERS
@@ -24,6 +25,10 @@ function getMetricsRoots() {
 
 function getGraphRoots() {
   return Array.from(document.querySelectorAll('[data-profile-dashboard-graph-panel]'));
+}
+
+function getDashboardRoots() {
+  return Array.from(document.querySelectorAll('[data-profile-dashboard-panel]'));
 }
 
 function setText(root, selector, value) {
@@ -170,9 +175,27 @@ function renderGraph(profileState = getProfileRuntimeState(), thoughtState = get
 function renderDashboard() {
   const profileState = getProfileRuntimeState();
   const thoughtState = getProfileThoughtState();
+  const navigationState = getProfileNavigationState();
 
   renderMetrics(profileState, thoughtState);
   renderGraph(profileState, thoughtState);
+  renderDashboardPaneState(navigationState);
+}
+
+function renderDashboardPaneState(navigationState = getProfileNavigationState()) {
+  const activePane = navigationState.section === 'dashboard'
+    ? String(navigationState.dashboardPane || 'summary')
+    : 'summary';
+
+  getDashboardRoots().forEach((root) => {
+    root.dataset.profileDashboardPane = activePane;
+
+    root.querySelectorAll('[data-profile-dashboard-pane]').forEach((panel) => {
+      const pane = panel.getAttribute('data-profile-dashboard-pane') || '';
+      const visible = activePane === 'summary' || pane === activePane;
+      panel.hidden = !visible;
+    });
+  });
 }
 
 /* =============================================================================
@@ -182,6 +205,7 @@ function renderDashboard() {
 function initProfileDashboard() {
   subscribeProfileRuntime(renderDashboard);
   subscribeProfileThoughtState(renderDashboard);
+  subscribeProfileNavigation(renderDashboard);
 
   document.addEventListener('fragment:mounted', (event) => {
     const name = event?.detail?.name;

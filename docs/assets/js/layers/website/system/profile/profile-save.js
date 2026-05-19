@@ -633,32 +633,36 @@ async function handleSaveRequest(form) {
   try {
     const supabase = getSupabaseClient();
 
-    if (supabase) {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) {
-        throw sessionError;
-      }
-
-      const user = sessionData?.session?.user || null;
-      if (!user?.id) {
-        const error = new Error('AUTH_REQUIRED');
-        error.code = 'AUTH_REQUIRED';
-        throw error;
-      }
-
-      const policy = await loadProfileIdentityPolicy();
-      const existingProfile = await getSupabaseProfileByAuthUserId(supabase, user.id || user.uid);
-      const values = await resolveMediaUploadValues({
-        scope,
-        values: buildScopedValues(scope, submittedFormData, existingProfile, user),
-        form:submittedFormData,
-        existingProfile,
-        user,
-        supabase
-      });
-
-      await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
+    if (!supabase) {
+      const error = new Error('PROFILE_STORE_UNAVAILABLE');
+      error.code = 'PROFILE_STORE_UNAVAILABLE';
+      throw error;
     }
+
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) {
+      throw sessionError;
+    }
+
+    const user = sessionData?.session?.user || null;
+    if (!user?.id) {
+      const error = new Error('AUTH_REQUIRED');
+      error.code = 'AUTH_REQUIRED';
+      throw error;
+    }
+
+    const policy = await loadProfileIdentityPolicy();
+    const existingProfile = await getSupabaseProfileByAuthUserId(supabase, user.id || user.uid);
+    const values = await resolveMediaUploadValues({
+      scope,
+      values: buildScopedValues(scope, submittedFormData, existingProfile, user),
+      form:submittedFormData,
+      existingProfile,
+      user,
+      supabase
+    });
+
+    await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
 
     setScopeState(scope, {
       status: 'success',

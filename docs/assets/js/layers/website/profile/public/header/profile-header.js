@@ -87,7 +87,6 @@ function renderAvatar(root, state) {
   }
 
   if (placeholder instanceof HTMLElement) {
-    placeholder.textContent = state.avatarInitials;
     placeholder.hidden = state.avatarHasImage;
   }
 }

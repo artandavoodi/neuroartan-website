@@ -251,14 +251,16 @@ function renderHomeInteractionActiveModel() {
   const nodes = getHomeInteractionPanelNodes();
   const activeModelState = getActiveModelState();
   const activeModel = activeModelState.activeModel;
-  const modelLabel = activeModel?.display_name || activeModel?.search_title || 'Neuroartan Institution';
+  const activeEngineLabel = activeModel?.engine?.label || activeModel?.display_name || activeModel?.search_title || 'Neuroartan Institution';
+  const promptLabel = `Interact with ${activeEngineLabel}`;
 
   if (nodes.activeModel) {
-    nodes.activeModel.textContent = modelLabel;
+    nodes.activeModel.textContent = activeEngineLabel;
   }
 
   if (nodes.input instanceof HTMLTextAreaElement) {
-    nodes.input.placeholder = 'Ask anything';
+    nodes.input.placeholder = promptLabel;
+    nodes.input.setAttribute('aria-label', promptLabel);
   }
 }
 
@@ -808,4 +810,3 @@ document.addEventListener('drop', (event) => {
     );
   }
 });
-

@@ -52,20 +52,20 @@
   position:relative;
   align-items:center;
   justify-content:center;
-  gap:0.42rem;
+  gap:var(--home-stage-developer-operations-icon-gap);
   min-width:0;
-  height:1rem;
-  min-height:1rem;
+  height:var(--home-stage-developer-operations-icon-size);
+  min-height:var(--home-stage-developer-operations-icon-size);
   padding:0;
   color:var(--text-secondary-color);
   background:transparent;
   border:0;
   border-radius:0;
   font:inherit;
-  font-size:0.8rem;
+  font-size:var(--home-stage-developer-operations-label-font-size);
   font-weight:400;
   letter-spacing:0.008em;
-  line-height:1rem;
+  line-height:var(--home-stage-developer-operations-icon-size);
   white-space:nowrap;
   text-align:left;
   text-decoration:none;
@@ -79,10 +79,10 @@
    03) TAB ICONS
 ============================================================================= */
 .home-stage-developer-operations-panel__tab-icon{
-  width:1rem;
-  height:1rem;
+  width:var(--home-stage-developer-operations-icon-size);
+  height:var(--home-stage-developer-operations-icon-size);
   flex:0 0 1rem;
-  line-height:1rem;
+  line-height:var(--home-stage-developer-operations-icon-size);
 }
 
 /* =============================================================================
@@ -91,13 +91,13 @@
 .home-stage-developer-operations-panel__tab-label{
   display:inline-flex;
   align-items:center;
-  height:1rem;
+  height:var(--home-stage-developer-operations-icon-size);
   min-width:0;
   color:inherit;
-  font-size:0.8rem;
+  font-size:var(--home-stage-developer-operations-label-font-size);
   font-weight:400;
   letter-spacing:0.008em;
-  line-height:1rem;
+  line-height:var(--home-stage-developer-operations-icon-size);
 }
 
 /* =============================================================================

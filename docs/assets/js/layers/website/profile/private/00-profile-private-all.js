@@ -29,6 +29,7 @@ import './hero/profile-private-hero.js';
 import './identity/profile-private-identity.js';
 import './account-status/profile-private-account-status.js';
 import './media/profile-private-media.js';
+import './media/profile-media-editor.js';
 import './organization/profile-private-organization.js';
 import './models/profile-private-models.js';
 import './posts/profile-posts.js';

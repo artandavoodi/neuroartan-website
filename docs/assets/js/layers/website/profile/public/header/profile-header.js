@@ -75,9 +75,10 @@ function renderAvatar(root, state) {
   const placeholder = root.querySelector('[data-profile-avatar-placeholder]');
 
   if (image instanceof HTMLImageElement) {
-    if (state.avatarHasImage && state.avatarUrl) {
+    const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
+    if (avatarUrl) {
       image.hidden = false;
-      image.src = state.avatarUrl;
+      image.src = avatarUrl;
       image.alt = `${state.displayName} avatar`;
     } else {
       image.hidden = true;
@@ -87,7 +88,7 @@ function renderAvatar(root, state) {
   }
 
   if (placeholder instanceof HTMLElement) {
-    placeholder.hidden = state.avatarHasImage;
+    placeholder.hidden = true;
   }
 }
 

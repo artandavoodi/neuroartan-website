@@ -46,6 +46,8 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_RUNTIME__ ||= {
 /* =============================================================================
    03) CONSTANTS
    ============================================================================= */
+const DEFAULT_PROFILE_AVATAR_URL = '/assets/images/layers/website/sections/home/hero/Fallback%20Profile%20Image.jpeg';
+const DEFAULT_PROFILE_COVER_URL = '/assets/images/layers/website/sections/home/hero/Salim%20Sky.jpg';
 
 /* =============================================================================
    04) ASSET HELPERS
@@ -320,7 +322,11 @@ function buildPrivateProfileState(user = null, profile = null) {
     publicViewAvailable,
     profileRecordState: profile ? 'Canonical record active' : 'Canonical record pending',
     avatarUrl: avatarHasImage ? avatarUrl : '',
+    avatarDisplayUrl: avatarHasImage ? avatarUrl : DEFAULT_PROFILE_AVATAR_URL,
+    defaultAvatarUrl: DEFAULT_PROFILE_AVATAR_URL,
     coverUrl,
+    coverDisplayUrl: coverUrl || DEFAULT_PROFILE_COVER_URL,
+    defaultCoverUrl: DEFAULT_PROFILE_COVER_URL,
     avatarHasImage,
     avatarState: normalizeString(profile?.avatar_state || '') || (avatarHasImage ? 'active' : 'empty'),
     avatarInitials: buildInitials(displayName || normalizeString(profile?.first_name || ''), email),
@@ -485,6 +491,8 @@ function buildPublicProfileState(detail = {}) {
     publicRouteDisplay,
     publicViewAvailable: outcome === 'found_renderable',
     avatarUrl: avatarHasImage ? avatarUrl : '',
+    avatarDisplayUrl: avatarHasImage ? avatarUrl : DEFAULT_PROFILE_AVATAR_URL,
+    defaultAvatarUrl: DEFAULT_PROFILE_AVATAR_URL,
     avatarHasImage,
     avatarInitials: buildInitials(displayName || normalizedUsername || 'Neuroartan'),
     stateBadgeLabel: buildPublicStateBadge(outcome),
@@ -637,6 +645,23 @@ function requestPrivateNavigation(section, settingsPane = 'identity') {
   }));
 }
 
+function openProfileMediaEditor(kind = 'avatar') {
+  const state = getProfileRuntimeState();
+
+  if (state.viewerState !== 'authenticated') {
+    openAccountDrawer();
+    return;
+  }
+
+  document.dispatchEvent(new CustomEvent('profile:media-editor-open-request', {
+    detail: {
+      source: 'profile-runtime',
+      kind: normalizeString(kind) === 'cover' ? 'cover' : 'avatar',
+      state
+    }
+  }));
+}
+
 function resolveCompletionSettingsPane(state) {
   const missingFields = Array.isArray(state?.completion?.missingFields)
     ? state.completion.missingFields
@@ -737,10 +762,10 @@ export function requestProfileAction(action, detail = {}) {
       requestPrivateNavigation('overview');
       return;
     case 'edit-avatar':
-      requestPrivateNavigation('settings', 'media');
+      openProfileMediaEditor('avatar');
       return;
     case 'edit-cover':
-      requestPrivateNavigation('settings', 'media');
+      openProfileMediaEditor('cover');
       return;
     case 'view-public':
       if (state.publicViewAvailable && state.publicRoutePath) {

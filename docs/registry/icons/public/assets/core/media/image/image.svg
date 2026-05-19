@@ -1,7 +1,83 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M4.5 5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H14.5C15.0523 4.5 15.5 4.94772 15.5 5.5V14.5C15.5 15.0523 15.0523 15.5 14.5 15.5H5.5C4.94772 15.5 4.5 15.0523 4.5 14.5V5.5Z" stroke="currentColor" stroke-width="1.25"/>
-  <path d="M7 11L8.75 9.25C9.16421 8.83579 9.83579 8.83579 10.25 9.25L12.5 11.5L13 11C13.4142 10.5858 14.0858 10.5858 14.5 11L15.5 12" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M8 7.5C8.41421 7.5 8.75 7.16421 8.75 6.75C8.75 6.33579 8.41421 6 8 6C7.58579 6 7.25 6.33579 7.25 6.75C7.25 7.16421 7.58579 7.5 8 7.5Z" fill="currentColor"/>
-  <path d="M15.5 4.5V7.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-  <path d="M14 6H17" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="20"
+   height="20"
+   viewBox="0 0 20 20"
+   fill="none"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="image.svg"
+   xml:space="preserve"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs5"><inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect7"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" /><inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect6"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" /></defs><sodipodi:namedview
+     id="namedview5"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="10.255362"
+     inkscape:cx="11.55493"
+     inkscape:cy="6.3381475"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5" /><path
+     id="rect5"
+     style="stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 30.401374,-3.6133742 h 13.897637 a 2,2 45 0 1 2,2 V 12.284264 a 2,2 135 0 1 -2,2 H 30.401374 a 2,2 45 0 1 -2,-2 l 0,-13.8976382 a 2,2 135 0 1 2,-2 z"
+     inkscape:path-effect="#path-effect7"
+     inkscape:original-d="M 28.401374,-3.6133742 H 46.299011 V 14.284264 H 28.401374 Z"
+     transform="translate(-27.350192,4.6645551)" /><path
+     style="fill:none;stroke:#000000;stroke-width:0.999996;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 21.571084,-15.603435 5.2163,-6.445349 a 1.5540834,1.5540834 1.134974 0 1 2.453832,0.04861 l 2.681047,3.595103 a 0.96176747,0.96176747 7.1697916 0 0 1.375548,0.173035 l 0.141305,-0.114209 a 2.3524044,2.3524044 1.424294 0 1 3.046524,0.07575 l 2.983436,2.667058"
+     id="path6"
+     sodipodi:nodetypes="ccccc"
+     inkscape:path-effect="#path-effect6"
+     inkscape:original-d="m 21.571084,-15.603435 6.474498,-8 4.474498,6 2.474498,-2 4.474498,4"
+     transform="translate(-20.52008,30.772728)" /><circle
+     style="fill:#000000;stroke:none;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     id="path7"
+     cx="13.779526"
+     cy="6.2204723"
+     r="1.8897638" /></svg>

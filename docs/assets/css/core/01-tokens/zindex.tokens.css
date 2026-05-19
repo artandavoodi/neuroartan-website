@@ -38,6 +38,7 @@
 :root{
   --z-menu: 100000;
   --z-header-controls: 100001;
+  --profile-topbar-z-index: var(--z-header-controls);
   --z-country-overlay: 100100;
   --z-language-dropdown: 200001;
 }

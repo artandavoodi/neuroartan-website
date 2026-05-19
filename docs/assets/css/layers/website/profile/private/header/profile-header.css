@@ -101,21 +101,7 @@
   color:inherit;
 }
 
-.profile-header__avatar-placeholder{
-  display:grid;
-  place-items:center;
-  width:100%;
-  height:100%;
-  line-height:var(--line-height-ui);
-}
 
-.profile-header__avatar-placeholder img{
-  display:block;
-  width:var(--profile-header-avatar-placeholder-icon-size);
-  height:var(--profile-header-avatar-placeholder-icon-size);
-  object-fit:contain;
-  opacity:var(--state-opacity-muted);
-}
 
 .profile-header__creator-line,
 .profile-header__meta-item{
@@ -205,35 +191,29 @@
 
 .profile-header__avatar-shell{
   position:relative;
-  width:min-content;
+  z-index:999;
 }
 
 .profile-header__avatar-surface{
   width:7rem;
   height:7rem;
   border-radius:var(--control-radius-pill);
-  display:grid;
-  place-items:center;
+  display:block;
+  position:relative;
   overflow:hidden;
-  background:var(--profile-header-avatar-bg);
+  background:transparent;
   isolation:isolate;
+  z-index:999;
 }
 
 .profile-header__avatar-image{
   width:100%;
   height:100%;
-  object-fit:cover;
   display:block;
+  object-fit:cover;
+  object-position:center center;
 }
 
-.profile-header__avatar-placeholder{
-  display:grid;
-  place-items:center;
-  width:100%;
-  height:100%;
-  line-height:var(--line-height-ui);
-  color:var(--text-color);
-}
 
 .profile-header__avatar-action{
   position:absolute;
@@ -327,6 +307,9 @@
   .profile-header__avatar-surface{
     width:5.5rem;
     height:5.5rem;
+      z-index:10;
+    background:transparent;
+    position:relative;
   }
 
   .profile-header__metrics{

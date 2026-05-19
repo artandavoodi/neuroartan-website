@@ -57,17 +57,16 @@ function renderProfilePrivateMedia(state = getProfileRuntimeState()) {
   const root = getMediaRoot();
   if (!root) return;
 
-  const profile = state.profile || {};
-  const avatarUrl = String(profile.avatar_url || profile.photo_url || '').trim();
-  const coverUrl = String(state.coverUrl || profile.cover_url || '').trim();
+  const avatarUrl = String(state.avatarDisplayUrl || state.avatarUrl || '').trim();
+  const coverUrl = String(state.coverDisplayUrl || state.coverUrl || '').trim();
 
   setImage(root, '[data-profile-avatar-preview-image]', avatarUrl, `${state.displayName || 'Profile'} avatar`);
   setImage(root, '[data-profile-cover-preview-image]', coverUrl, `${state.displayName || 'Profile'} cover`);
-  setText(root, '[data-profile-avatar-status]', avatarUrl ? 'Uploaded' : 'Not uploaded');
-  setText(root, '[data-profile-cover-status]', coverUrl ? 'Uploaded' : 'Not uploaded');
+  setText(root, '[data-profile-avatar-status]', state.avatarHasImage ? 'Uploaded' : 'Default image');
+  setText(root, '[data-profile-cover-status]', state.coverUrl ? 'Uploaded' : 'Default image');
   const placeholder = root.querySelector('[data-profile-avatar-preview-placeholder]');
   if (placeholder instanceof HTMLElement) {
-    placeholder.hidden = Boolean(avatarUrl);
+    placeholder.hidden = true;
   }
   const coverLabel = root.querySelector('[data-profile-cover-preview-label]');
   if (coverLabel instanceof HTMLElement) {
@@ -76,9 +75,9 @@ function renderProfilePrivateMedia(state = getProfileRuntimeState()) {
   setText(
     root,
     '[data-profile-media-status]',
-    avatarUrl || coverUrl
+    state.avatarHasImage || state.coverUrl
       ? 'Media layer has active profile assets.'
-      : 'Media controls are prepared for the next profile stage.'
+      : 'Media layer is using default profile assets.'
   );
 }
 

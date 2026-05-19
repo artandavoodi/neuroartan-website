@@ -29,6 +29,7 @@
 @import url('./identity/profile-private-identity.css');
 @import url('./account-status/profile-private-account-status.css');
 @import url('./media/profile-private-media.css');
+@import url('./media/profile-media-editor.css');
 @import url('./organization/profile-private-organization.css');
 @import url('./models/profile-private-models.css');
 @import url('./posts/profile-posts.css');

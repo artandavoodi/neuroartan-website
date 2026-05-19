@@ -230,23 +230,6 @@ function initProfileSettings() {
   subscribeProfileNavigation(render);
   subscribePrivateProfileSaveState(renderSaveStatuses);
 
-  document.addEventListener('click', (event) => {
-    const trigger = event.target instanceof Element
-      ? event.target.closest('[data-profile-settings-pane-target]')
-      : null;
-
-    if (!trigger) return;
-
-    const pane = trigger.getAttribute('data-profile-settings-pane-target') || 'identity';
-
-    document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-      detail: {
-        section: 'settings',
-        settingsPane: pane
-      }
-    }));
-  });
-
   document.addEventListener('submit', async (event) => {
     const form = event.target;
     if (!(form instanceof HTMLFormElement) || !form.matches('[data-profile-verification-form]')) return;

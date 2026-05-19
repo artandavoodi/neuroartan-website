@@ -1,0 +1,56 @@
+<!-- =============================================================================
+     01) PROFILE MEDIA EDITOR
+     02) EDITOR SHELL
+     03) EDITOR CONTROLS
+============================================================================= -->
+<section
+  class="profile-media-editor"
+  data-profile-media-editor
+  data-profile-media-editor-open="false"
+  aria-hidden="true"
+  aria-label="Profile image editor"
+  hidden
+>
+  <div class="profile-media-editor__backdrop" aria-hidden="true"></div>
+
+  <article class="profile-media-editor__dialog ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="profile-media-editor-title">
+    <header class="profile-media-editor__header">
+      <div>
+        <p class="profile-media-editor__eyebrow" data-profile-media-editor-kind>Profile image</p>
+        <h2 class="profile-media-editor__title" id="profile-media-editor-title">Edit Image</h2>
+      </div>
+
+      <button class="profile-media-editor__close global-close-button" type="button" data-profile-media-editor-close="true" aria-label="Close image editor">
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <div class="profile-media-editor__stage" data-profile-media-editor-stage="avatar">
+      <div class="profile-media-editor__preview" data-profile-media-editor-preview>
+        <img class="profile-media-editor__image" data-profile-media-editor-image src="/assets/images/layers/website/sections/home/hero/Fallback%20Profile%20Image.jpeg" alt="">
+      </div>
+    </div>
+
+    <div class="profile-media-editor__controls">
+      <label class="profile-media-editor__field">
+        <span class="profile-media-editor__label">Upload image</span>
+        <input class="ui-field" type="file" accept="image/*" data-profile-media-editor-file>
+      </label>
+
+      <label class="profile-media-editor__field">
+        <span class="profile-media-editor__label">Crop zoom</span>
+        <input class="profile-media-editor__range" type="range" min="1" max="2.4" step="0.05" value="1" data-profile-media-editor-zoom>
+      </label>
+    </div>
+
+    <p class="profile-media-editor__status" data-profile-media-editor-status aria-live="polite"></p>
+
+    <footer class="profile-media-editor__actions">
+      <button class="ui-button ui-button--secondary" type="button" data-profile-media-editor-save>
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/transfer/upload.svg" alt="" aria-hidden="true">
+        <span>Save Image</span>
+      </button>
+    </footer>
+  </article>
+</section>

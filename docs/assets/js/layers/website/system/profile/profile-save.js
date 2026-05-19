@@ -713,9 +713,15 @@ export async function savePrivateProfileScope({
   }
 
   const resolvedPolicy = policy || await loadProfileIdentityPolicy();
+  const scopedValues = normalizedScope === 'media'
+    ? {
+        ...getExistingProfileSeed(existingProfile, user),
+        ...values
+      }
+    : values;
   const resolvedValues = await resolveMediaUploadValues({
     scope: normalizedScope,
-    values,
+    values: scopedValues,
     user,
     supabase
   });

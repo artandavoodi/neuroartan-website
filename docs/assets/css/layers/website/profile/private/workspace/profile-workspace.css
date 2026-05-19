@@ -8,18 +8,26 @@
    01) PROFILE WORKSPACE LAYOUT
 ============================================================================= */
 
+.profile-workspace{
+  height:100%;
+}
+
 .profile-workspace__layout{
   --profile-sidebar-sticky-top:var(--profile-shell-workspace-sticky-top, var(--profile-shell-top-clearance));
+  --profile-workspace-sidebar-expanded-width:max-content;
+  --profile-workspace-sidebar-compact-width:var(--layout-home-platform-rail-compact-width);
+  --profile-workspace-sidebar-edge-padding:var(--spacing-md);
+  --profile-workspace-content-inset:var(--spacing-lg);
   display:grid;
-  grid-template-columns:var(--layout-home-platform-rail-width) minmax(var(--spacing-none), 1fr);
+  grid-template-columns:var(--profile-workspace-sidebar-expanded-width) minmax(var(--spacing-none), 1fr);
   gap:var(--spacing-none);
   align-items:stretch;
 }
 
 @media (max-width:820px){
   .profile-workspace__layout{
-    grid-template-columns:var(--layout-home-platform-rail-compact-width) minmax(var(--spacing-none), 1fr);
-    gap:var(--spacing-md);
+    grid-template-columns:var(--profile-workspace-sidebar-compact-width) minmax(var(--spacing-none), 1fr);
+    gap:var(--spacing-none);
   }
 
   .profile-workspace__sidebar-mount{
@@ -28,17 +36,19 @@
 }
 
 .profile-workspace__layout[data-profile-sidebar-rail="collapsed"]{
-  grid-template-columns:var(--layout-home-platform-rail-compact-width) minmax(var(--spacing-none), 1fr);
+  grid-template-columns:var(--profile-workspace-sidebar-compact-width) minmax(var(--spacing-none), 1fr);
 }
 
 .profile-workspace__sidebar-mount{
   align-self:stretch;
   min-width:var(--spacing-none);
-  border-right:var(--home-platform-shell-rail-border-right);
+  padding-inline-end:var(--profile-workspace-sidebar-edge-padding);
+  border-right:var(--border-width-hairline) solid var(--border-color);
 }
 
 .profile-workspace__content-mount{
   min-width:var(--spacing-none);
+  padding-inline-start:var(--profile-workspace-content-inset);
 }
 
 .profile-workspace__content{
@@ -59,3 +69,10 @@
 /* =============================================================================
    03) RESPONSIVE
 ============================================================================= */
+
+@media (max-width:820px){
+  .profile-workspace__layout{
+    --profile-workspace-sidebar-edge-padding:var(--spacing-sm);
+    --profile-workspace-content-inset:var(--spacing-md);
+  }
+}

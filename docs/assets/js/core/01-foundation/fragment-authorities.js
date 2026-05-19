@@ -83,6 +83,7 @@ function getFragmentPaths() {
     'profile-private-identity': assetPath('/assets/fragments/layers/website/profile/private/identity/profile-private-identity.html'),
     'profile-private-account-status': assetPath('/assets/fragments/layers/website/profile/private/account-status/profile-private-account-status.html'),
     'profile-private-media': assetPath('/assets/fragments/layers/website/profile/private/media/profile-private-media.html'),
+    'profile-private-media-editor': assetPath('/assets/fragments/layers/website/profile/private/media/profile-media-editor.html'),
     'profile-private-organization': assetPath('/assets/fragments/layers/website/profile/private/organization/profile-private-organization.html'),
     'profile-private-models': assetPath('/assets/fragments/layers/website/profile/private/models/profile-private-models.html'),
     'profile-private-settings': assetPath('/assets/fragments/layers/website/profile/private/settings/profile-private-settings.html'),

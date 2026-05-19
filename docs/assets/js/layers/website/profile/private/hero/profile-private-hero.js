@@ -17,6 +17,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   overview: {
     label: 'Profile sections',
     tabs: [
+      { key: 'overview', label: 'Overview', section: 'overview' },
       { key: 'posts', label: 'Posts', section: 'posts' },
       { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
       { key: 'models', label: 'Models', section: 'models' },
@@ -26,6 +27,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   content: {
     label: 'Profile sections',
     tabs: [
+      { key: 'overview', label: 'Overview', section: 'overview' },
       { key: 'posts', label: 'Posts', section: 'posts' },
       { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
       { key: 'models', label: 'Models', section: 'models' },
@@ -57,6 +59,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
 ============================================================================= */
 import {
   getProfileRuntimeState,
+  requestProfileAction,
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
 import {
@@ -124,8 +127,10 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
       return navigationState.settingsPane || 'identity';
     case 'dashboard':
       return navigationState.dashboardPane || 'summary';
+    case 'overview':
+      return 'overview';
     default:
-      return '';
+      return 'overview';
   }
 }
 
@@ -152,7 +157,7 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
   const displayName = String(profile.display_name || profile.displayName || '').trim();
   const profileComplete = profile.profile_complete === true || state.profileComplete === true;
 
-  setImage(root, '[data-profile-avatar-image]', state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
+  setImage(root, '[data-profile-avatar-image]', state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
   const placeholderIcon = root.querySelector('[data-profile-avatar-placeholder-icon]');
   if (placeholderIcon instanceof HTMLElement) {
     placeholderIcon.hidden = state.avatarHasImage === true;
@@ -160,9 +165,10 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
 
   const cover = root.querySelector('[data-profile-cover]');
   if (cover instanceof HTMLElement) {
-    if (state.coverUrl) {
-      cover.style.backgroundImage = `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)), url("${state.coverUrl}")`;
-      cover.dataset.profileCoverImage = 'true';
+    const coverUrl = state.coverDisplayUrl || state.coverUrl || '';
+    if (coverUrl) {
+      cover.style.backgroundImage = `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)), url("${coverUrl}")`;
+      cover.dataset.profileCoverImage = state.coverUrl ? 'true' : 'default';
     } else {
       cover.style.removeProperty('background-image');
       cover.dataset.profileCoverImage = 'false';
@@ -264,12 +270,12 @@ function bindProfilePrivateHeroActions() {
 
     if (!trigger) return;
 
-    document.dispatchEvent(new CustomEvent('profile:action-request', {
-      detail: {
-        source: MODULE_ID,
-        action: trigger.dataset.profileAction || ''
-      }
-    }));
+    event.preventDefault();
+    event.stopPropagation();
+    requestProfileAction(trigger.dataset.profileAction || '', {
+      source: MODULE_ID,
+      mediaKind: trigger.dataset.profileAction === 'edit-cover' ? 'cover' : 'avatar'
+    });
   });
 }
 

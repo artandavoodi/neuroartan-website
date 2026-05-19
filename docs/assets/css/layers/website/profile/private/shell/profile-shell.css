@@ -15,10 +15,11 @@
    ============================================================================= */
 :root{
   --profile-shell-rail-width:var(--site-rail-width);
-  --profile-shell-group-gap:var(--spacing-xl);
+  --profile-shell-group-gap:var(--spacing-md);
   --profile-shell-mount-gap:var(--spacing-lg);
   --profile-shell-disabled-opacity:var(--disabled-opacity, 0.48);
   --profile-shell-top-clearance:calc(env(safe-area-inset-top, 0px) + 3.55rem);
+  --home-shell-panel-top:var(--profile-shell-top-clearance);
   --profile-shell-top-clearance-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem);
   --profile-shell-hero-sticky-top:calc(env(safe-area-inset-top, 0px) + 3.55rem - 11rem);
   --profile-shell-hero-sticky-top-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem - 8rem);
@@ -78,6 +79,7 @@
   gap:var(--profile-shell-group-gap);
   align-items:start;
   overflow:visible;
+  min-height:100%;
 }
 
 /* =============================================================================
@@ -110,6 +112,10 @@
   align-self:start;
 }
 
+.profile-shell__overlay-mount{
+  display:contents;
+}
+
 
 /* =============================================================================
    07) PROFILE SHELL CONTROL STATES
@@ -126,7 +132,7 @@
 
 @media (max-width:820px){
   :root{
-    --profile-shell-group-gap:var(--spacing-lg);
+    --profile-shell-group-gap:var(--spacing-md);
     --profile-shell-mount-gap:var(--spacing-md);
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);
     --profile-shell-hero-sticky-top:var(--profile-shell-hero-sticky-top-mobile);

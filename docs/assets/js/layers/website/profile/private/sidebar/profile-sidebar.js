@@ -1,103 +1,120 @@
 /* =============================================================================
-   01) MODULE IMPORTS
-   02) SIDEBAR HELPERS
-   03) SIDEBAR RENDER
-   04) SIDEBAR INIT
-   ============================================================================= */
+   PROFILE PRIVATE SIDEBAR
+============================================================================= */
 
-/* =============================================================================
-   01) MODULE IMPORTS
-   ============================================================================= */
+import {
+  getProfileNavigationState,
+  subscribeProfileNavigation
+} from '../navigation/profile-navigation.js';
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
-import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
-
-/* =============================================================================
-   02) SIDEBAR HELPERS
-   ============================================================================= */
-
-function getSidebarRoots() {
-  return Array.from(document.querySelectorAll('[data-profile-sidebar]'));
+function sidebarRoots(){
+  return Array.from(document.querySelectorAll('[data-profile-private-sidebar]'));
 }
 
-function setText(root, selector, value) {
-  const node = root.querySelector(selector);
-  if (!node) return;
-  node.textContent = value;
+function sidebarItems(root){
+  return Array.from(root.querySelectorAll('[data-profile-nav-section]'));
 }
 
-function setControlDisabled(control, disabled) {
-  if (!(control instanceof HTMLElement)) return;
+function renderSidebar(root, state = getProfileNavigationState()){
+  sidebarItems(root).forEach((item) => {
+    const section = item.dataset.profileNavSection || '';
+    const pane = item.dataset.profileNavPane || '';
+    const active =
+      section === state.section &&
+      (section !== 'settings' || pane === state.settingsPane);
 
-  if (control instanceof HTMLButtonElement) {
-    control.disabled = disabled;
+    item.classList.toggle('is-active', active);
+
+    if(active){
+      item.setAttribute('aria-current', 'page');
+      item.setAttribute('aria-pressed', 'true');
+    }else{
+      item.removeAttribute('aria-current');
+      item.setAttribute('aria-pressed', 'false');
+    }
+  });
+}
+
+function setSidebarRail(root, state){
+  const normalized = state === 'collapsed' ? 'collapsed' : 'expanded';
+  const toggle = root.querySelector('[data-profile-sidebar-rail-toggle]');
+  const icon = root.querySelector('img[data-profile-sidebar-rail-toggle-icon]');
+  const layout = root.closest('.profile-workspace__layout');
+
+  root.setAttribute('data-profile-sidebar-rail', normalized);
+  layout?.setAttribute('data-profile-sidebar-rail', normalized);
+
+  if(toggle){
+    const collapsed = normalized === 'collapsed';
+    toggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+    toggle.setAttribute(
+      'aria-label',
+      collapsed ? 'Expand profile sidebar' : 'Collapse profile sidebar'
+    );
   }
 
-  control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  if(icon){
+    const expandedIcon = icon.dataset.profileSidebarRailToggleExpanded || '';
+    const collapsedIcon = icon.dataset.profileSidebarRailToggleCollapsed || '';
+    icon.setAttribute('src', normalized === 'collapsed' ? collapsedIcon : expandedIcon);
+  }
 }
 
-/* =============================================================================
-   03) SIDEBAR RENDER
-   ============================================================================= */
+function bindSidebar(){
+  if(document.documentElement.dataset.profileSidebarBound === 'true') return;
+  document.documentElement.dataset.profileSidebarBound = 'true';
 
-function renderSidebar(state = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
-  getSidebarRoots().forEach((root) => {
-    root.dataset.profileViewerState = state.viewerState;
-    root.dataset.profileStateKey = state.stateKey;
+  document.addEventListener('click', (event) => {
+    const toggle = event.target.closest('[data-profile-sidebar-rail-toggle]');
+    if(toggle){
+      const root = toggle.closest('[data-profile-private-sidebar]');
+      if(!root) return;
 
-    setText(
-      root,
-      '[data-profile-sidebar-summary]',
-      state.viewerState === 'authenticated'
-        ? 'Owner environment for identity, thoughts, route state, and profile settings.'
-        : 'Authenticate to activate the private profile workspace.'
-    );
+      setSidebarRail(
+        root,
+        root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
+          ? 'expanded'
+          : 'collapsed'
+      );
+      return;
+    }
 
-    setText(
-      root,
-      '[data-profile-sidebar-route-line]',
-      state.publicViewAvailable
-        ? `Public route live · ${state.publicRouteDisplay}`
-        : state.username.normalized
-          ? `Public route reserved · ${state.publicRouteDisplay}`
-          : 'Public route pending'
-    );
+    const item = event.target.closest('[data-profile-private-sidebar] [data-profile-nav-section]');
+    if(!item) return;
 
-    setText(
-      root,
-      '[data-profile-sidebar-public-label]',
-      state.publicViewAvailable ? 'View Public Route' : 'Public Route Pending'
-    );
-
-    root.querySelectorAll('[data-profile-nav-section]').forEach((button) => {
-      const section = button.getAttribute('data-profile-nav-section') || '';
-      const pane = button.getAttribute('data-profile-nav-pane') || '';
-      const active = section === navigationState.section
-        && (!pane || pane === navigationState.settingsPane);
-      button.dataset.profileNavActive = active ? 'true' : 'false';
-    });
-
-    const publicButton = root.querySelector('[data-profile-action="view-public"]');
-    setControlDisabled(publicButton, !state.publicViewAvailable);
+    document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+      detail: {
+        section: item.dataset.profileNavSection || 'overview',
+        settingsPane: item.dataset.profileNavPane || 'identity'
+      }
+    }));
   });
 }
 
-/* =============================================================================
-   04) SIDEBAR INIT
-   ============================================================================= */
-
-function initProfileSidebar() {
-  const render = () => renderSidebar();
-
-  subscribeProfileRuntime(render);
-  subscribeProfileNavigation(render);
-
-  document.addEventListener('fragment:mounted', (event) => {
-    if (event?.detail?.name !== 'profile-private-sidebar') return;
-    render();
+function bootSidebar(){
+  sidebarRoots().forEach((root) => {
+    renderSidebar(root, getProfileNavigationState());
+    setSidebarRail(
+      root,
+      root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
+        ? 'collapsed'
+        : 'expanded'
+    );
   });
-
-  render();
 }
+
+export function initProfileSidebar(){
+  bindSidebar();
+  bootSidebar();
+}
+
+subscribeProfileNavigation((state) => {
+  sidebarRoots().forEach((root) => renderSidebar(root, state));
+});
+
+document.addEventListener('fragment:mounted', (event) => {
+  if(event?.detail?.name !== 'profile-private-sidebar') return;
+  initProfileSidebar();
+});
 
 initProfileSidebar();

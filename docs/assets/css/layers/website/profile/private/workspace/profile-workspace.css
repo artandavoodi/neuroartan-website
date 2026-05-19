@@ -1,23 +1,31 @@
 /* =============================================================================
-   01) PROFILE WORKSPACE FOUNDATION
-   02) PROFILE SIDEBAR
-   03) PROFILE SIDEBAR NAVIGATION
-   04) PROFILE WORKSPACE CONTENT
-   ============================================================================= */
+   01) PROFILE WORKSPACE LAYOUT
+   02) PROFILE WORKSPACE CONTENT
+   03) RESPONSIVE
+============================================================================= */
 
 /* =============================================================================
-   01) PROFILE WORKSPACE FOUNDATION
-   ============================================================================= */
-
-.profile-workspace{
-  width:100%;
-}
+   01) PROFILE WORKSPACE LAYOUT
+============================================================================= */
 
 .profile-workspace__layout{
   display:grid;
-  grid-template-columns:minmax(14rem, 17rem) minmax(0, 1fr);
-  gap:var(--spacing-lg);
-  align-items:start;
+  grid-template-columns:var(--home-platform-shell-rail-width) minmax(var(--spacing-none), 1fr);
+  gap:var(--spacing-none);
+  align-items:stretch;
+}
+
+.profile-workspace__layout[data-profile-sidebar-rail="collapsed"]{
+  grid-template-columns:var(--home-platform-shell-rail-compact-width) minmax(var(--spacing-none), 1fr);
+}
+
+.profile-workspace__sidebar-mount{
+  align-self:stretch;
+  min-width:var(--spacing-none);
+}
+
+.profile-workspace__content-mount{
+  min-width:var(--spacing-none);
 }
 
 .profile-workspace__content{
@@ -30,190 +38,18 @@
 }
 
 /* =============================================================================
-   02) PROFILE SIDEBAR
-   ============================================================================= */
+   02) PROFILE WORKSPACE CONTENT
+============================================================================= */
 
-.profile-sidebar{
-  width:100%;
-}
-
-.profile-sidebar__surface{
-  position:sticky;
-  top:calc(var(--spacing-xl) + var(--spacing-md));
-  display:grid;
-  gap:var(--spacing-md);
-  padding:0 0 var(--spacing-md);
-  border-top:var(--border-width-hairline) solid var(--border-color);
-  border-bottom:var(--border-width-hairline) solid var(--border-color);
-  background:transparent;
-}
-
-.profile-sidebar__header{
-  display:grid;
-  gap:var(--spacing-sm);
-  padding-top:var(--spacing-md);
-}
-
-.profile-sidebar__eyebrow,
-.profile-sidebar__summary,
-.profile-sidebar__footer-line{
-  margin:0;
-}
-
-.profile-sidebar__eyebrow{
-  font-size:var(--body-3-size);
-  font-weight:var(--body-3-weight);
-  line-height:1;
-  letter-spacing:var(--tracking-ui);
-  text-transform:uppercase;
-  color:var(--text-secondary-color);
-}
-
-.profile-sidebar__summary,
-.profile-sidebar__footer-line{
-  font-size:var(--body-3-size);
-  font-weight:var(--body-3-weight);
-  line-height:var(--body-3-line-height);
-  letter-spacing:var(--body-3-tracking);
-  color:var(--text-secondary-color);
-}
-
+/* Content panels remain owned by their section files. */
 
 /* =============================================================================
-   02A) PROFILE SIDEBAR COLLAPSE SYSTEM
-   ============================================================================= */
-
-.profile-sidebar__collapse-toggle{
-  width:var(--layout-home-platform-shell-rail-toggle-size);
-  height:var(--layout-home-platform-shell-rail-toggle-size);
-  display:grid;
-  place-items:center;
-  margin:0 0 var(--spacing-sm);
-  padding:0;
-  border:0;
-  border-radius:var(--control-radius);
-  background:transparent;
-  color:var(--text-color);
-  transition:var(--interaction-transition-control);
-}
-
-.profile-sidebar__collapse-toggle:hover,
-.profile-sidebar__collapse-toggle:focus-visible{
-  color:var(--primary-hover-text-color);
-  outline:none;
-}
-
-.profile-sidebar__collapse-toggle-icon{
-  width:var(--layout-home-platform-shell-rail-toggle-icon-size);
-  height:var(--layout-home-platform-shell-rail-toggle-icon-size);
-  display:block;
-}
-
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__surface{
-  gap:var(--spacing-sm);
-}
-
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__summary,
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-copy,
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__footer{
-  display:none;
-}
-
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__header{
-  gap:0;
-}
-
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-item{
-  padding:0.8rem 0;
-}
-
-.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-title{
-  font-size:var(--body-3-size);
-  line-height:var(--body-3-line-height);
-}
-
-.profile-workspace__layout[data-profile-sidebar-collapsed="true"]{
-  grid-template-columns:minmax(9rem, 11rem) minmax(0, 1fr);
-}
-
-/* =============================================================================
-   03) PROFILE SIDEBAR NAVIGATION
-   ============================================================================= */
-
-.profile-sidebar__nav{
-  display:grid;
-  gap:0;
-}
-
-.profile-sidebar__nav-item{
-  width:100%;
-  display:grid;
-  gap:0.2rem;
-  padding:0.95rem 0;
-  border:0;
-  border-bottom:var(--border-width-hairline) solid color-mix(in srgb, var(--text-color) 10%, transparent);
-  border-radius:0;
-  background:transparent;
-  color:var(--text-color);
-  text-align:left;
-  transition:var(--interaction-transition-control);
-}
-
-.profile-sidebar__nav-item:last-child{
-  border-bottom:0;
-}
-
-.profile-sidebar__nav-item:hover,
-.profile-sidebar__nav-item:focus-visible,
-.profile-sidebar__nav-item[data-profile-nav-active="true"]{
-  background:transparent;
-  border-color:color-mix(in srgb, var(--text-color) 20%, transparent);
-  outline:none;
-}
-
-.profile-sidebar__nav-title{
-  font-size:var(--body-2-size);
-  font-weight:500;
-  line-height:var(--body-2-line-height);
-  letter-spacing:var(--body-2-tracking);
-}
-
-.profile-sidebar__nav-copy{
-  font-size:var(--body-3-size);
-  font-weight:var(--body-3-weight);
-  line-height:var(--body-3-line-height);
-  letter-spacing:var(--body-3-tracking);
-  color:var(--text-secondary-color);
-}
-
-.profile-sidebar__footer{
-  display:grid;
-  gap:var(--spacing-sm);
-  padding-top:var(--spacing-sm);
-}
-
-.profile-sidebar__footer-action{
-  justify-content:flex-start;
-}
-
-/* =============================================================================
-   04) PROFILE WORKSPACE CONTENT
-   ============================================================================= */
-
-@media (max-width:1024px){
-  .profile-workspace__layout{
-    grid-template-columns:minmax(0, 1fr);
-  }
-
-  .profile-sidebar__surface{
-    position:relative;
-    top:auto;
-  }
-}
+   03) RESPONSIVE
+============================================================================= */
 
 @media (max-width:820px){
-  .profile-sidebar__surface{
-    padding:0 0 var(--spacing-md);
-    gap:var(--spacing-md);
+  .profile-workspace__layout,
+  .profile-workspace__layout[data-profile-sidebar-rail="collapsed"]{
+    grid-template-columns:minmax(var(--spacing-none), 1fr);
   }
 }

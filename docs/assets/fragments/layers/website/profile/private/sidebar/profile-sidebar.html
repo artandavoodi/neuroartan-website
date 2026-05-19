@@ -1,60 +1,65 @@
-<!-- =============================================================================
-     01) PRIVATE PROFILE SIDEBAR
-     02) PRIVATE PROFILE SIDEBAR SURFACE
-     03) PRIVATE PROFILE PRIMARY NAVIGATION
-============================================================================= -->
-<aside class="profile-sidebar" data-profile-sidebar-collapsed="false" data-profile-sidebar data-profile-surface="private" aria-label="Private profile workspace navigation">
+<aside
+  class="profile-sidebar"
+  data-profile-sidebar
+  data-profile-private-sidebar
+  data-profile-sidebar-rail="expanded"
+>
   <div class="profile-sidebar__surface">
-    <div class="profile-sidebar__header">
-      <button
-        class="profile-sidebar__collapse-toggle"
-        type="button"
-        data-profile-sidebar-toggle
-        aria-label="Collapse profile sidebar"
-        aria-pressed="false"
-      >
-        <img
-          class="profile-sidebar__collapse-toggle-icon"
-          src="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
-          alt=""
-          aria-hidden="true"
-          data-profile-sidebar-toggle-icon
-          data-profile-sidebar-toggle-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
-          data-profile-sidebar-toggle-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg"
+    <div class="profile-sidebar__rail-inner">
+      <div class="profile-sidebar__header">
+        <button
+          class="profile-sidebar__rail-toggle"
+          type="button"
+          data-profile-sidebar-rail-toggle
+          aria-label="Collapse profile sidebar"
+          aria-pressed="false"
         >
-      </button>
+          <span
+            class="profile-sidebar__rail-toggle-icon inline-stroke-icon"
+            data-inline-stroke-icon
+            aria-hidden="true"
+          >
+            <img
+              class="ui-icon-theme-aware"
+              src="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+              alt=""
+              data-profile-sidebar-rail-toggle-icon
+              data-profile-sidebar-rail-toggle-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+              data-profile-sidebar-rail-toggle-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg"
+            >
+          </span>
+        </button>
+      </div>
 
-      <p class="profile-sidebar__eyebrow">Workspace</p>
-      <p class="profile-sidebar__summary" data-profile-sidebar-summary>Owner environment for identity, thoughts, route state, and profile settings.</p>
-    </div>
+      <nav class="profile-sidebar__nav" aria-label="Private profile workspace">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="overview" data-profile-nav-pane="">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/overview/overview.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Overview</span>
+        </button>
 
-    <nav class="profile-sidebar__nav" aria-label="Private profile controls">
-      <button class="profile-sidebar__nav-item" type="button" data-profile-action="open-overview" data-profile-nav-section="overview">
-        <span class="profile-sidebar__nav-title">Overview</span>
-        <span class="profile-sidebar__nav-copy" data-profile-nav-copy="overview">Identity, account state, route readiness</span>
-      </button>
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="dashboard" data-profile-nav-pane="">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Dashboard</span>
+        </button>
 
-      <button class="profile-sidebar__nav-item" type="button" data-profile-action="open-dashboard" data-profile-nav-section="dashboard">
-        <span class="profile-sidebar__nav-title">Dashboard</span>
-        <span class="profile-sidebar__nav-copy" data-profile-nav-copy="dashboard">Continuity and route intelligence</span>
-      </button>
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="settings" data-profile-nav-pane="identity">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Edit Profile</span>
+        </button>
 
-      <button class="profile-sidebar__nav-item" type="button" data-profile-action="open-settings" data-profile-settings-pane="identity" data-profile-nav-section="settings" data-profile-nav-pane="identity">
-        <span class="profile-sidebar__nav-title">Edit Profile</span>
-        <span class="profile-sidebar__nav-copy" data-profile-nav-copy="settings">Personal info, public route, profile images</span>
-      </button>
-
-      <button class="profile-sidebar__nav-item" type="button" data-profile-action="open-settings" data-profile-settings-pane="visibility" data-profile-nav-section="settings" data-profile-nav-pane="visibility">
-        <span class="profile-sidebar__nav-title">Privacy Settings</span>
-        <span class="profile-sidebar__nav-copy">Public visibility, discovery, profile exposure</span>
-      </button>
-    </nav>
-
-    <div class="profile-sidebar__footer">
-      <p class="profile-sidebar__footer-line" data-profile-sidebar-route-line>Public route pending</p>
-      <button class="ui-button ui-button--ghost profile-sidebar__footer-action" type="button" data-profile-action="view-public" aria-disabled="true">
-        <span data-profile-sidebar-public-label>View Public Route</span>
-      </button>
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="settings" data-profile-nav-pane="visibility">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Privacy Settings</span>
+        </button>
+      </nav>
     </div>
   </div>
 </aside>

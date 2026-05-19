@@ -13,7 +13,25 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs2" />
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
   <sodipodi:namedview
      id="namedview2"
      pagecolor="#505050"
@@ -23,9 +41,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="14.186575"
-     inkscape:cx="12.44134"
-     inkscape:cy="4.0531277"
+     inkscape:zoom="14.83796"
+     inkscape:cx="11.288614"
+     inkscape:cy="4.8861164"
      inkscape:window-width="1472"
      inkscape:window-height="896"
      inkscape:window-x="0"
@@ -33,13 +51,16 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <path
-     d="M 7.5659186,5.5000001 3.0659188,10 7.5659186,14.5"
+     d="m 7.5659186,5.5000001 -3.792893,3.7928931 a 1,1 90 0 0 0,1.4142138 L 7.5659186,14.5"
      stroke="currentColor"
      stroke-width="1.25"
      stroke-linecap="round"
      stroke-linejoin="round"
      id="path1"
-     style="stroke-width:1;stroke-dasharray:none" />
+     style="stroke-width:1;stroke-dasharray:none"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 7.5659186,5.5000001 3.0659188,10 7.5659186,14.5"
+     sodipodi:nodetypes="ccc" />
   <path
      d="M 4.1065681,10 H 16.934055"
      stroke="currentColor"

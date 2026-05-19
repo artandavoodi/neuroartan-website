@@ -45,7 +45,7 @@
   --catalog-filter-note-line-height:var(--layout-catalog-filter-note-line-height);
   --catalog-search-row-min-height:var(--layout-catalog-search-row-min-height);
   --catalog-search-row-padding-x:var(--layout-catalog-search-row-padding-x);
-  --catalog-search-row-radius:var(--layout-catalog-search-row-radius);
+  --catalog-search-row-radius:var(--search-field-radius);
   --catalog-grid-gap:var(--layout-catalog-grid-gap);
   --catalog-grid-compact-gap:var(--layout-catalog-grid-compact-gap);
   --catalog-card-radius:var(--layout-catalog-card-radius);
@@ -114,7 +114,8 @@ body.profiles-page,
 body.careers-page,
 body.leadership-page,
 body.continuity-history-page,
-body.sitemap-page{
+body.sitemap-page,
+body.models-page{
   min-height:100vh;
 }
 
@@ -193,6 +194,24 @@ body.sitemap-page{
   line-height:var(--catalog-chip-line-height);
 }
 
+.catalog-verified-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--catalog-chip-gap);
+  min-height:var(--catalog-chip-min-height);
+  color:var(--text-secondary-color);
+  font-size:var(--catalog-chip-size);
+  line-height:var(--catalog-chip-line-height);
+}
+
+.catalog-verified-badge img{
+  display:block;
+  width:var(--layout-home-search-result-badge-icon-size);
+  height:var(--layout-home-search-result-badge-icon-size);
+  filter:var(--icon-image-filter, none);
+}
+
+
 /* =============================================================================
    04) TOOLBAR / SEARCH
 ============================================================================= */
@@ -217,25 +236,81 @@ body.sitemap-page{
 .catalog-search__input-row{
   display:flex;
   align-items:center;
+  gap:var(--catalog-chip-gap);
   min-height:var(--catalog-search-row-min-height);
   padding:0 var(--catalog-search-row-padding-x);
-  border:1px solid var(--field-border);
+  border:var(--search-field-border-width) solid var(--search-field-border);
   border-radius:var(--catalog-search-row-radius);
-  background:var(--field-bg);
+  background:var(--search-field-surface);
 }
 
 .catalog-search__input{
   width:100%;
+  min-width:0;
   border:0;
   outline:0;
   background:transparent;
-  color:var(--text-primary-color);
+  color:var(--search-field-text);
+  caret-color:var(--search-field-caret);
   font:inherit;
 }
 
 .catalog-search__input::placeholder{
-  color:var(--text-secondary-color);
+  color:var(--search-field-placeholder);
 }
+
+.catalog-search__input::-webkit-search-cancel-button,
+.catalog-search__input::-webkit-search-decoration{
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.catalog-search__clear-button{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:var(--layout-home-search-icon-size);
+  height:var(--layout-home-search-icon-size);
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--text-secondary-color);
+  opacity:var(--layout-home-search-icon-opacity);
+  transform:none;
+  transition:
+    color var(--layout-home-search-voice-motion) var(--interaction-ease-standard),
+    opacity var(--layout-home-search-voice-motion) var(--interaction-ease-standard);
+}
+
+.catalog-search__clear-button[hidden]{
+  display:none;
+}
+
+.catalog-search__clear-button:hover,
+.catalog-search__clear-button:focus-visible{
+  color:var(--text-primary-color);
+  opacity:var(--opacity-full, 1);
+  outline:none;
+}
+
+.catalog-search__clear-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:100%;
+}
+
+.catalog-search__clear-icon img{
+  display:block;
+  width:100%;
+  height:100%;
+  filter:var(--icon-image-filter, none);
+}
+
 
 /* =============================================================================
    05) GRID / CARD SYSTEM

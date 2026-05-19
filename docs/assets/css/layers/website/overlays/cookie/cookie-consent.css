@@ -414,7 +414,7 @@ body.cookie-consent-closing .cookie-consent-backdrop{
   gap:var(--spacing-none);
   flex-direction:column;
   overflow:hidden;
-  padding:var(--cookie-consent-panel-padding-y) var(--cookie-consent-panel-padding-x) var(--spacing-none) var(--cookie-consent-panel-padding-x);
+  padding:var(--spacing-none) var(--cookie-consent-panel-padding-x) var(--spacing-none) var(--cookie-consent-panel-padding-x);
   border:var(--border-width-hairline) solid var(--cookie-consent-border);
   border-radius:var(--cookie-consent-radius);
   background:var(--cookie-consent-surface);
@@ -443,51 +443,16 @@ body.cookie-consent-closing .cookie-consent-panel{
   flex-direction: column;
   align-items: center;
   gap:var(--cookie-consent-header-gap);
-  padding:var(--spacing-none) var(--spacing-none) var(--cookie-consent-header-padding-bottom) var(--spacing-none);
+  padding:var(--cookie-consent-body-padding-top) var(--spacing-none) var(--cookie-consent-header-padding-bottom) var(--spacing-none);
   text-align: center;
-}
-
-.cookie-consent-header::after{
-  content: "";
-  position: absolute;
-  left: var(--cookie-consent-body-edge-inset);
-  right: var(--cookie-consent-body-edge-inset);
-  bottom: var(--spacing-none);
-  height: var(--border-width-hairline);
-  background: var(--cookie-consent-header-divider);
-  pointer-events: none;
 }
 
 /* =============================================================================
    09) CLOSE CONTROL
 ============================================================================= */
-.cookie-consent-bottom-stack::before{
-  content: "";
-  position: absolute;
-  left: var(--cookie-consent-body-edge-inset);
-  right: var(--cookie-consent-body-edge-inset);
-  top: var(--spacing-none);
-  height: var(--border-width-hairline);
-  background: var(--cookie-consent-header-divider);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.cookie-consent-bottom-stack::after{
-  content: "";
-  position: absolute;
-  left: var(--spacing-none);
-  right: var(--spacing-none);
-  top: var(--spacing-none);
-  bottom: var(--spacing-none);
-  background: var(--cookie-consent-surface);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .cookie-consent-close{
   position:absolute;
-  top:var(--spacing-none);
+  top:var(--cookie-consent-body-padding-top);
   right:var(--spacing-none);
   color:var(--cookie-consent-close-button-color);
 }
@@ -517,7 +482,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   overflow-x:hidden;
   scrollbar-width:none;
   -ms-overflow-style:none;
-  padding-top:var(--cookie-consent-body-padding-top);
+  padding-top:var(--spacing-none);
   padding-left:var(--cookie-consent-body-padding-inline);
   padding-right:var(--cookie-consent-body-padding-inline);
   display:flex;
@@ -761,8 +726,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   flex-direction: column;
   border: var(--border-width-hairline) solid var(--cookie-consent-row-border);
   border-radius: var(--cookie-consent-card-radius);
-  background: var(--cookie-consent-row-surface);
-  box-shadow: var(--cookie-consent-row-shadow);
   overflow: hidden;
 }
 
@@ -1232,8 +1195,6 @@ body.cookie-consent-closing .cookie-consent-panel{
   margin-top: var(--spacing-none);
   padding-top:var(--cookie-consent-sticky-actions-padding-top);
   padding-bottom:var(--cookie-consent-sticky-actions-padding-bottom);
-  padding-left: var(--cookie-consent-body-edge-inset);
-  padding-right: var(--cookie-consent-body-edge-inset);
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
@@ -1416,19 +1377,14 @@ body.cookie-consent-closing .cookie-consent-panel{
 
   .cookie-consent-panel{
     max-height:var(--cookie-consent-max-height);
-    padding:var(--cookie-consent-mobile-panel-padding-y) var(--cookie-consent-mobile-panel-padding-x) 0 var(--cookie-consent-mobile-panel-padding-x);
+    padding:var(--spacing-none) var(--cookie-consent-mobile-panel-padding-x) 0 var(--cookie-consent-mobile-panel-padding-x);
     border-radius:var(--cookie-consent-radius);
   }
 
   .cookie-consent-header{
-    padding:var(--spacing-none) var(--spacing-none) var(--cookie-consent-mobile-header-padding-bottom) var(--spacing-none);
+    padding:var(--cookie-consent-mobile-body-padding-top) var(--spacing-none) var(--cookie-consent-mobile-header-padding-bottom) var(--spacing-none);
     gap:var(--cookie-consent-mobile-header-gap);
     text-align:center;
-  }
-
-  .cookie-consent-header::after{
-    left: var(--cookie-consent-body-edge-inset);
-    right: var(--cookie-consent-body-edge-inset);
   }
 
   .cookie-consent-eyebrow{
@@ -1438,7 +1394,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   }
 
   .cookie-consent-body{
-    padding-top:var(--cookie-consent-mobile-body-padding-top);
+    padding-top:var(--spacing-none);
     padding-left:var(--cookie-consent-mobile-body-padding-inline);
     padding-right:var(--cookie-consent-mobile-body-padding-inline);
     padding-bottom: var(--spacing-none);

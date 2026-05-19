@@ -42,7 +42,7 @@
   --cookie-language-overlay-search-to-list-gap:var(--layout-cookie-language-overlay-search-to-list-gap);
   --cookie-language-overlay-list-padding-top:var(--layout-cookie-language-overlay-list-padding-top);
   --cookie-language-overlay-list-padding-bottom:var(--layout-cookie-language-overlay-list-padding-bottom);
-  --cookie-language-overlay-search-border:var(--control-border-unified);
+  --cookie-language-overlay-search-border:var(--search-field-border);
   --cookie-language-overlay-status-surface: color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --cookie-language-overlay-country-surface: color-mix(in srgb, var(--text-primary-color) 2%, transparent);
   --cookie-language-overlay-country-border:var(--control-border-unified);
@@ -172,10 +172,11 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-height: var(--layout-cookie-language-overlay-search-min-height);
   padding: var(--layout-cookie-language-overlay-search-padding-y) var(--layout-cookie-language-overlay-search-padding-x);
-  border: var(--border-width-hairline) solid var(--cookie-language-overlay-search-border);
-  border-radius: var(--layout-cookie-language-overlay-search-radius);
-  background: var(--cookie-language-overlay-soft);
-  color: var(--text-primary-color);
+  border: var(--search-field-border-width) solid var(--cookie-language-overlay-search-border);
+  border-radius: var(--search-field-radius);
+  background: var(--search-field-surface);
+  color: var(--search-field-text);
+  caret-color: var(--search-field-caret);
   font-size: var(--layout-cookie-language-overlay-search-size);
   font-weight: var(--layout-cookie-language-overlay-search-weight);
   letter-spacing: var(--layout-cookie-language-overlay-search-tracking);
@@ -184,7 +185,7 @@ html[data-theme-effective="dark"]{
 }
 
 .cookie-language-overlay-search::placeholder{
-  color: var(--cookie-language-overlay-muted);
+  color: var(--search-field-placeholder);
 }
 
 .cookie-language-overlay-search:focus-visible{
@@ -216,7 +217,7 @@ html[data-theme-effective="dark"]{
   min-height: var(--spacing-none);
   height: auto;
   margin: var(--spacing-none);
-  padding-top: var(--cookie-language-overlay-list-padding-top);
+  padding-top: var(--spacing-none);
   padding-right: var(--spacing-none);
   padding-bottom: var(--cookie-language-overlay-list-padding-bottom);
   padding-left: var(--spacing-none);
@@ -274,12 +275,13 @@ html[data-theme-effective="dark"]{
   flex: 0 0 auto;
   margin: var(--spacing-none);
   padding: var(--layout-cookie-language-overlay-country-padding-y) var(--layout-cookie-language-overlay-country-padding-x);
-  border: var(--border-width-hairline) solid var(--cookie-language-overlay-country-border);
-  border-radius: var(--layout-cookie-language-overlay-country-radius);
-  background: var(--cookie-language-overlay-country-surface);
+  border: var(--border-width-hairline) solid transparent;
+  border-radius: var(--radius-none);
+  background: transparent;
   color: var(--text-primary-color);
   text-align: left;
   box-sizing: border-box;
+  opacity: var(--nav-menu-control-opacity);
   transition:var(--interaction-transition-control);
 }
 
@@ -319,15 +321,17 @@ html[data-theme-effective="dark"]{
 .cookie-language-overlay-country:hover,
 .cookie-language-overlay-country:focus-visible,
 .cookie-language-overlay-country:active{
-  background:var(--cookie-language-overlay-country-hover);
-  border-color:var(--cookie-language-overlay-country-hover-border);
+  background: transparent;
+  border-color: transparent;
+  opacity: var(--overlay-opacity-open);
   outline:none;
 }
 
 .cookie-language-overlay-country.is-selected{
-  background:var(--cookie-language-overlay-country-selected);
-  border-color:var(--cookie-language-overlay-country-selected-border);
-  box-shadow:var(--cookie-language-overlay-country-selected-shadow);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  opacity: var(--nav-menu-control-active-opacity);
 }
 
 
@@ -367,12 +371,12 @@ html[data-theme-effective="dark"]{
 
   .cookie-language-overlay-regions{
     min-height: var(--layout-cookie-language-overlay-region-min-height-mobile);
-    padding-top: var(--cookie-language-overlay-list-padding-top);
+    padding-top: var(--spacing-none);
     padding-bottom: var(--spacing-none);
   }
 
   .cookie-language-overlay-toolbar{
-    padding-top: calc(var(--cookie-language-overlay-toolbar-padding-top) - var(--layout-cookie-language-overlay-toolbar-mobile-offset));
+    padding-top: var(--cookie-language-overlay-toolbar-padding-top);
     padding-bottom: var(--cookie-language-overlay-toolbar-padding-bottom);
   }
 

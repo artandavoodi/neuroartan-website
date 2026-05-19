@@ -13,7 +13,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs3" />
+     id="defs3">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,4,0,1 @ F,0,0,1,0,4,0,1 @ F,0,0,1,0,4,0,1 @ F,0,0,1,0,4,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,1,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,4,0,1 @ F,0,0,1,0,4,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
   <sodipodi:namedview
      id="namedview3"
      pagecolor="#505050"
@@ -23,37 +58,26 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="2.4023424"
-     inkscape:cx="-55.154502"
-     inkscape:cy="20.396759"
+     inkscape:zoom="7.6267363"
+     inkscape:cx="11.013885"
+     inkscape:cy="19.339858"
      inkscape:window-width="1472"
-     inkscape:window-height="923"
+     inkscape:window-height="812"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg3" />
-  <rect
-     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round"
+  <path
      id="rect1-7"
-     width="17.898001"
-     height="17.89764"
-     x="1.0509996"
-     y="1.0511799"
-     ry="4" />
-  <g
-     id="g4"
-     transform="translate(96.603796,-10.083922)">
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.999992;stroke-linecap:round;stroke-linejoin:round"
-       id="rect1-6-7"
-       width="12.228351"
-       height="9.4640474"
-       x="-92.717972"
-       y="16.734051"
-       ry="2.9628594" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.999992;stroke-linecap:round;stroke-linejoin:round"
-       d="m -91.96207,13.969746 h 6.759134"
-       id="path4" />
-  </g>
+     style="stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round"
+     d="M 5.0509996,1.0511799 H 14.949 a 4,4 45 0 1 4,4 V 14.94882 a 4,4 135 0 1 -4,4 H 5.0509996 a 4,4 45 0 1 -4,-4 V 5.0511799 a 4,4 135 0 1 4,-4 z"
+     inkscape:path-effect="#path-effect2"
+     inkscape:original-d="M 1.0509996,1.0511799 H 18.949 V 18.94882 H 1.0509996 Z" />
+  <path
+     id="rect1-6-7"
+     style="stroke:#000000;stroke-width:0.999992;stroke-linecap:round;stroke-linejoin:round"
+     d="m 4.8858242,6.6501288 10.2283508,0 a 1,1 45 0 1 1,1 v 4.4640472 a 4,4 135 0 1 -4,4 H 7.8858242 a 4,4 45 0 1 -4,-4 V 7.6501288 a 1,1 135 0 1 1,-1 z"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 3.8858242,6.6501288 H 16.114175 V 16.114176 H 3.8858242 Z"
+     sodipodi:nodetypes="ccccc" />
 </svg>

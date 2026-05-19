@@ -503,6 +503,9 @@
   --cc-home-search-empty-text-size:var(--layout-home-search-empty-text-size);
   --cc-home-search-empty-title-size:var(--layout-home-search-empty-title-size);
   --cc-home-search-empty-title-weight:var(--layout-home-search-empty-title-weight);
+  --cc-home-search-filter-panel-width:var(--layout-home-search-filter-panel-width);
+  --cc-home-search-filter-panel-max-height:var(--layout-home-search-filter-panel-max-height);
+  --cc-home-search-filter-panel-padding:var(--layout-home-search-filter-panel-padding);
   --cc-home-search-eyebrow-margin-bottom:var(--layout-home-search-eyebrow-margin-bottom);
   --cc-home-search-eyebrow-size:var(--layout-home-search-eyebrow-size);
   --cc-home-search-eyebrow-tracking:var(--layout-home-search-eyebrow-tracking);
@@ -1118,6 +1121,9 @@
   --cc-search-shell-empty-text-line-height:var(--layout-home-search-empty-text-line-height);
   --cc-search-shell-empty-text-size:var(--layout-home-search-empty-text-size);
   --cc-search-shell-empty-title-size:var(--layout-home-search-empty-title-size);
+  --cc-search-shell-filter-panel-width:var(--layout-home-search-filter-panel-width);
+  --cc-search-shell-filter-panel-max-height:var(--layout-home-search-filter-panel-max-height);
+  --cc-search-shell-filter-panel-padding:var(--layout-home-search-filter-panel-padding);
   --cc-search-shell-eyebrow-margin-bottom:var(--layout-home-search-eyebrow-margin-bottom);
   --cc-search-shell-eyebrow-size:var(--layout-home-search-eyebrow-size);
   --cc-search-shell-eyebrow-tracking:var(--layout-home-search-eyebrow-tracking);

@@ -19,7 +19,6 @@ import {
   fetchJson,
   normalizeString,
   readQueryParam,
-  renderChipMarkup,
   renderMetricMarkup,
   setQueryParam
 } from './catalog-runtime.js';
@@ -45,7 +44,8 @@ const MODELS_PAGE_STATE = {
   config: null,
   root: null,
   isBound: false,
-  activeModelId: ''
+  activeModelId: '',
+  searchRenderTimer: null
 };
 
 /* =============================================================================
@@ -267,6 +267,48 @@ function getFilteredModels() {
   );
 }
 
+function syncModelsSearchClearButton(input) {
+  const clearButton = MODELS_PAGE_STATE.root?.querySelector('[data-models-search-clear]');
+  if (!(clearButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  clearButton.hidden = !normalizeString(input?.value || '');
+}
+
+function renderModelsDirectoryAfterTyping(input) {
+  if (!(input instanceof HTMLInputElement)) {
+    renderModelsDirectory();
+    return;
+  }
+
+  const value = input.value;
+  const selectionStart = input.selectionStart ?? value.length;
+  const selectionEnd = input.selectionEnd ?? value.length;
+
+  if (MODELS_PAGE_STATE.searchRenderTimer) {
+    window.clearTimeout(MODELS_PAGE_STATE.searchRenderTimer);
+  }
+
+  MODELS_PAGE_STATE.searchRenderTimer = window.setTimeout(() => {
+    MODELS_PAGE_STATE.searchRenderTimer = null;
+    renderModelsDirectory();
+
+    window.requestAnimationFrame(() => {
+      const nextInput = document.querySelector('#models-search-input');
+      if (!(nextInput instanceof HTMLInputElement)) {
+        return;
+      }
+
+      nextInput.focus();
+      nextInput.setSelectionRange(
+        Math.min(selectionStart, value.length),
+        Math.min(selectionEnd, value.length)
+      );
+    });
+  }, 160);
+}
+
 /* =============================================================================
    06) RENDER HELPERS
 ============================================================================= */
@@ -285,17 +327,58 @@ function renderPrimaryFilters() {
   `).join('');
 }
 
-function renderSecondaryFilterGroups() {
-  const groups = MODELS_PAGE_STATE.config?.filters?.secondary || [];
+function renderSortControls() {
+  const activeSort = getModelsSort();
+  const options = MODELS_PAGE_STATE.config?.sort_options || [];
 
-  return groups.map((group) => `
-    <div class="models-directory-filter-group">
-      <p class="models-directory-filter-group__label">${escapeHtml(group.label)}</p>
-      <div class="catalog-chip-list">
-        ${renderChipMarkup(group.options || [])}
+  return `
+    <div class="models-directory-filter-group models-directory-sort" role="group" aria-label="Sort models">
+      <p class="models-directory-filter-group__label">Sort</p>
+      <div class="models-directory-filter-options">
+        ${options.map((option) => `
+          <button
+            class="models-directory-filter-chip"
+            type="button"
+            data-models-sort="${escapeHtml(option.id)}"
+            aria-pressed="${option.id === activeSort ? 'true' : 'false'}">
+            ${escapeHtml(option.label)}
+          </button>
+        `).join('')}
       </div>
     </div>
-  `).join('');
+  `;
+}
+
+function renderModelsDashboard(activeEngine = '') {
+  const allModels = getDirectoryModels();
+  const publicCount = allModels.filter((model) => resolveModelState(model) === 'Public').length;
+  const verifiedCount = allModels.filter(isVerifiedModel).length;
+  const interactiveCount = allModels.filter((model) => normalizeString(resolveInteractionMode(model))).length;
+  const latestJoinedYear = allModels
+    .map((model) => normalizeString(model.joined_year))
+    .filter(Boolean)
+    .sort()
+    .at(-1) || 'Pending';
+
+  const metrics = [
+    { label: 'Directory', value: `${allModels.length} public surfaces` },
+    { label: 'Verified', value: `${verifiedCount} governed` },
+    { label: 'Available', value: `${publicCount} public` },
+    { label: 'Interaction', value: `${interactiveCount} routed` },
+    { label: 'Latest year', value: latestJoinedYear },
+    { label: 'Active engine', value: activeEngine }
+  ];
+
+  return `
+    <div class="models-directory-dashboard" aria-label="Models dashboard">
+      ${metrics.map((metric) => `
+        <article class="models-directory-dashboard__item">
+          <p class="models-directory-dashboard__label">${escapeHtml(metric.label)}</p>
+          <p class="models-directory-dashboard__value">${escapeHtml(metric.value)}</p>
+        </article>
+      `).join('')}
+    </div>
+  `;
 }
 
 function renderModelCard(model = {}) {
@@ -307,7 +390,7 @@ function renderModelCard(model = {}) {
   const verificationLabel = resolveVerificationLabel(model);
   const verificationMarkup = isVerifiedModel(model)
     ? `
-      <span class="models-directory-card__verification" aria-label="${escapeHtml(verificationLabel)} model">
+      <span class="catalog-verified-badge models-directory-card__verification" aria-label="${escapeHtml(verificationLabel)} model">
         <img
           class="models-directory-card__verification-icon ui-icon-theme-aware"
           src="/registry/icons/public/assets/core/identity/trust/verified.svg"
@@ -344,12 +427,12 @@ function renderModelCard(model = {}) {
           <span class="catalog-chip">${escapeHtml(trustLabel)}</span>
         </div>
 
-        <div class="models-directory-card__meta">
-          <p class="models-directory-card__meta-row"><strong>Type</strong><span>${escapeHtml(modelTypeLabel)}</span></p>
-          <p class="models-directory-card__meta-row"><strong>Training</strong><span>${escapeHtml(model.training_state || model.model_maturity || 'Pending')}</span></p>
-          <p class="models-directory-card__meta-row"><strong>Joined</strong><span>${escapeHtml(model.joined_year || 'Pending')}</span></p>
-          <p class="models-directory-card__meta-row"><strong>Availability</strong><span>${escapeHtml(model.availability || 'Pending')}</span></p>
-          <p class="models-directory-card__meta-row"><strong>Interaction</strong><span>${escapeHtml(model.interaction_entry || interactionMode)}</span></p>
+        <div class="catalog-chip-list models-directory-card__facts" aria-label="Model state">
+          <span class="catalog-chip">${escapeHtml(`Type: ${modelTypeLabel}`)}</span>
+          <span class="catalog-chip">${escapeHtml(`Training: ${model.training_state || model.model_maturity || 'Pending'}`)}</span>
+          <span class="catalog-chip">${escapeHtml(`Joined: ${model.joined_year || 'Pending'}`)}</span>
+          <span class="catalog-chip">${escapeHtml(`Availability: ${model.availability || 'Pending'}`)}</span>
+          <span class="catalog-chip">${escapeHtml(`Interaction: ${model.interaction_entry || interactionMode}`)}</span>
         </div>
 
         <div class="models-directory-card__actions">
@@ -385,6 +468,7 @@ function renderModelsDirectory() {
           `Active engine: ${activeEngine}`
         ])}
       </div>
+      ${renderModelsDashboard(activeEngine)}
     </section>
 
     <section class="catalog-section">
@@ -401,26 +485,26 @@ function renderModelsDirectory() {
                 value="${escapeHtml(query)}"
                 placeholder="Search continuity models"
                 autocomplete="off">
+              <button
+                class="catalog-search__clear-button"
+                type="button"
+                data-models-search-clear
+                aria-label="Clear model search"
+                ${query ? '' : 'hidden'}>
+                <span class="catalog-search__clear-icon" aria-hidden="true">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
+                </span>
+              </button>
             </span>
           </label>
 
-          <label class="models-directory-sort" for="models-sort-select">
-            <span class="models-directory-sort__label">Sort</span>
-            <select class="models-directory-sort__select" id="models-sort-select" name="sort">
-              ${(MODELS_PAGE_STATE.config.sort_options || []).map((option) => `
-                <option value="${escapeHtml(option.id)}"${option.id === sortId ? ' selected' : ''}>${escapeHtml(option.label)}</option>
-              `).join('')}
-            </select>
-          </label>
+          ${renderSortControls()}
         </div>
 
         <div class="models-directory-filter-row" role="group" aria-label="Primary model filters">
           ${renderPrimaryFilters()}
         </div>
 
-        <div class="models-directory-filter-groups" aria-label="Secondary model filters">
-          ${renderSecondaryFilterGroups()}
-        </div>
       </div>
     </section>
 
@@ -457,22 +541,29 @@ function bindModelsEvents() {
     }
 
     setQueryParam('q', input.value);
-    renderModelsDirectory();
-  });
-
-  document.addEventListener('change', (event) => {
-    if (!MODELS_PAGE_STATE.root) return;
-    const select = event.target.closest('#models-sort-select');
-    if (!(select instanceof HTMLSelectElement) || !MODELS_PAGE_STATE.root.contains(select)) {
-      return;
-    }
-
-    setQueryParam('sort', select.value);
-    renderModelsDirectory();
+    syncModelsSearchClearButton(input);
+    renderModelsDirectoryAfterTyping(input);
   });
 
   document.addEventListener('click', async (event) => {
     if (!MODELS_PAGE_STATE.root) return;
+
+    const clearSearchButton = event.target.closest('[data-models-search-clear]');
+    if (clearSearchButton instanceof HTMLButtonElement && MODELS_PAGE_STATE.root.contains(clearSearchButton)) {
+      setQueryParam('q', '');
+      renderModelsDirectory();
+      window.requestAnimationFrame(() => {
+        document.querySelector('#models-search-input')?.focus();
+      });
+      return;
+    }
+
+    const sortButton = event.target.closest('[data-models-sort]');
+    if (sortButton instanceof HTMLButtonElement && MODELS_PAGE_STATE.root.contains(sortButton)) {
+      setQueryParam('sort', sortButton.getAttribute('data-models-sort') || 'trust');
+      renderModelsDirectory();
+      return;
+    }
 
     const filterButton = event.target.closest('[data-models-primary-filter]');
     if (filterButton instanceof HTMLButtonElement && MODELS_PAGE_STATE.root.contains(filterButton)) {

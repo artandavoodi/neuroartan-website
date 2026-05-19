@@ -11,11 +11,73 @@
 /* =============================================================================
    01) GLOBAL CUSTOM CURSOR MODE
 ============================================================================= */
-html[data-cursor-custom="true"][data-cursor-viewport-active="true"],
-html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *,
-html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *::before,
-html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *::after{
-  cursor:none;
+/* Native browser cursors remain active.
+   The custom cursor layer is visual only and must not suppress pointer states. */
+a[href],
+button,
+summary,
+label[for],
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"],
+[role="button"],
+[role="link"],
+[role="menuitem"],
+[role="menuitemcheckbox"],
+[role="menuitemradio"],
+[role="option"],
+[role="switch"],
+[role="tab"],
+[role="checkbox"],
+[tabindex]:not([tabindex="-1"]):not(input):not(textarea):not(select),
+[onclick],
+[data-cursor-interactive],
+[data-account-route],
+[data-account-drawer-close],
+[data-account-provider-apple-submit],
+[data-account-provider-google-submit],
+[data-home-topbar-route],
+[data-home-platform-route],
+[data-home-platform-menu-open],
+[data-home-platform-menu-close],
+[data-home-platform-collapse-toggle],
+[data-home-interaction-settings-action],
+[data-home-interaction-toggle-control],
+[data-cookie-consent-action],
+[data-cookie-consent-route],
+[data-profile-action],
+[data-profile-nav],
+[data-profile-route],
+[data-core-back-button],
+[data-scroll-to-top]{
+  cursor:var(--interactive-cursor);
+}
+
+input:not([type]),
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="url"],
+textarea,
+[contenteditable=""],
+[contenteditable="true"]{
+  cursor:var(--text-input-cursor);
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled,
+[aria-disabled="true"],
+[disabled]{
+  cursor:var(--disabled-cursor);
 }
 
 /* =============================================================================
@@ -50,13 +112,6 @@ html[data-cursor-custom="true"][data-cursor-viewport-active="true"] *::after{
 /* =============================================================================
    03) DISABLED CURSOR MODE
 ============================================================================= */
-html[data-cursor-custom="false"],
-html[data-cursor-custom="false"] *,
-html[data-cursor-custom="false"] *::before,
-html[data-cursor-custom="false"] *::after{
-  cursor:auto;
-}
-
 html[data-cursor-custom="false"] .custom-cursor{
   opacity:0;
   visibility:hidden;

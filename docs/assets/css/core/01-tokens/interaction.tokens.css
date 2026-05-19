@@ -76,6 +76,22 @@
   --control-surface-active:var(--active-bg-medium);
   --control-border-unified:var(--control-border-color, var(--border-color));
   --control-border-hover-unified:var(--hover-border-medium);
+  --overlay-popover-surface:color-mix(in srgb, var(--surface-color, var(--bg-color)) 96%, var(--bg-color));
+  --overlay-popover-border:var(--control-border-unified);
+
+  /* ----------------------------------------------------------------
+  GLOBAL SEARCH INPUT SYSTEM
+  ---------------------------------------------------------------- */
+  --search-field-border-width:var(--border-width-hairline);
+  --search-field-border:var(--control-border-unified);
+  --search-field-border-focus:var(--control-border-hover-unified);
+  --search-field-radius:var(--control-radius-composer);
+  --search-field-surface:var(--field-bg);
+  --search-field-surface-clear:transparent;
+  --search-field-text:var(--text-primary-color);
+  --search-field-placeholder:var(--text-secondary-color);
+  --search-field-placeholder-opacity:0.72;
+  --search-field-caret:var(--text-primary-color);
   --control-text-unified:var(--text-color);
   --control-text-hover-unified:var(--hover-text-color);
 
@@ -225,6 +241,8 @@
 ============================================================================= */
 :root{
   /* Disabled state for non-interactive controls and pending unavailable actions. */
+  --interactive-cursor:pointer;
+  --text-input-cursor:text;
   --disabled-opacity:var(--state-opacity-disabled);
   --disabled-cursor:not-allowed;
   --disabled-filter:saturate(0.4);
@@ -328,8 +346,8 @@
   --dialog-consent-header-gap-mobile:0.72rem;
   --dialog-consent-header-padding-bottom:1.14rem;
   --dialog-consent-header-padding-bottom-mobile:0.97rem;
-  --dialog-consent-body-padding-top:0.64rem;
-  --dialog-consent-body-padding-top-mobile:0.51rem;
+  --dialog-consent-body-padding-top:1.92rem;
+  --dialog-consent-body-padding-top-mobile:1.53rem;
   --dialog-consent-body-padding-inline:0.52rem;
   --dialog-consent-body-padding-inline-mobile:0.36rem;
   --dialog-consent-content-gutter:1.42rem;
@@ -447,8 +465,8 @@
   --dialog-consent-subitem-state-weight:400;
   --dialog-consent-subitem-state-line-height:1.2;
   --dialog-consent-subitem-state-tracking:-0.01em;
-  --dialog-consent-sticky-actions-padding-top:0.72rem;
-  --dialog-consent-sticky-actions-padding-top-mobile:0.62rem;
+  --dialog-consent-sticky-actions-padding-top:0.48rem;
+  --dialog-consent-sticky-actions-padding-top-mobile:0.42rem;
   --dialog-consent-sticky-actions-padding-bottom:1.12rem;
   --dialog-consent-sticky-actions-padding-bottom-mobile:1rem;
   --dialog-consent-footer-gap:1rem;

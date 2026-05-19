@@ -27,6 +27,9 @@ import {
   getPublicModels,
   loadPublicModelRegistry
 } from '../../system/model/public-model-registry.js';
+import {
+  buildPublicProfilePath
+} from '../../system/account/identity/account-profile-identity.js';
 
 /* =========================================================
    02. MODULE STATE
@@ -38,11 +41,257 @@ const HOME_SEARCH_SHELL_STATE = {
   root: null,
   query: '',
   mode: 'search',
+  scope: 'all',
+  filtersOpen: false,
+  filters: {
+    type: 'all',
+    area: 'all',
+    action: 'all',
+    trust: 'all',
+    year: 'all',
+  },
   dataReady: false,
   loadingPromise: null,
   indexedEntries: [],
   speechController: null,
 };
+
+const HOME_SEARCH_DEFAULT_FILTERS = Object.freeze({
+  type: 'all',
+  area: 'all',
+  action: 'all',
+  trust: 'all',
+  year: 'all',
+});
+
+const HOME_SEARCH_SHELL_SCOPES = Object.freeze([
+  { id: 'all', label: 'All' },
+  { id: 'profiles', label: 'Profiles' },
+  { id: 'models', label: 'Models' },
+  { id: 'content', label: 'Content' },
+  { id: 'company', label: 'Company' },
+]);
+
+function normalizeHomeSearchScope(value = 'all') {
+  const normalized = normalizeHomeSearchQuery(value).toLowerCase();
+  return HOME_SEARCH_SHELL_SCOPES.some((scope) => scope.id === normalized) ? normalized : 'all';
+}
+
+function getHomeSearchScopeLabel(scope = 'all') {
+  return HOME_SEARCH_SHELL_SCOPES.find((entry) => entry.id === normalizeHomeSearchScope(scope))?.label || 'All';
+}
+
+function resolveHomeSearchEntryScope(entry = {}) {
+  const source = normalizeHomeSearchQuery([
+    entry.kind,
+    entry.type,
+    entry.eyebrow,
+    entry.title,
+    entry.summary,
+    entry.href,
+    entry.scope,
+    entry.routeScope,
+    entry.searchScope,
+  ].filter(Boolean).join(' ')).toLowerCase();
+
+  if (source.includes('model')) {
+    return 'models';
+  }
+
+  if (entry.kind === 'profile') {
+    return 'profiles';
+  }
+
+  if (
+    source.includes('company') ||
+    source.includes('about') ||
+    source.includes('career') ||
+    source.includes('platform') ||
+    source.includes('contact') ||
+    source.includes('institutional') ||
+    source.includes('route')
+  ) {
+    return 'company';
+  }
+
+  return 'content';
+}
+
+function filterHomeSearchEntriesByScope(entries = [], scope = 'all') {
+  const normalizedScope = normalizeHomeSearchScope(scope);
+  if (normalizedScope === 'all') {
+    return entries;
+  }
+
+  return entries.filter((entry) => resolveHomeSearchEntryScope(entry) === normalizedScope);
+}
+
+function normalizeHomeSearchFilterValue(value = '', fallback = 'all') {
+  const normalized = normalizeHomeSearchQuery(value).toLowerCase();
+  return normalized || fallback;
+}
+
+function resolveHomeSearchYear(value = '') {
+  const normalized = normalizeHomeSearchQuery(String(value || ''));
+  const match = normalized.match(/\b(20\d{2}|19\d{2})\b/);
+  return match ? match[1] : '';
+}
+
+function resolveHomeSearchFilterType(entry = {}) {
+  const explicitType = normalizeHomeSearchFilterValue(entry.filterType || '');
+  if (explicitType !== 'all') {
+    return explicitType;
+  }
+
+  if (entry.kind === 'profile') {
+    return 'profile';
+  }
+
+  if (entry.kind === 'model') {
+    return 'model';
+  }
+
+  return 'page';
+}
+
+function resolveHomeSearchFilterAction(entry = {}) {
+  if (normalizeHomeSearchQuery(entry.activateModelId)) {
+    return 'interact';
+  }
+
+  if (normalizeHomeSearchQuery(entry.publicRoute)) {
+    return 'profile';
+  }
+
+  if (normalizeHomeSearchQuery(entry.href)) {
+    return 'open';
+  }
+
+  return 'open';
+}
+
+function matchesHomeSearchFilters(entry = {}) {
+  const filters = HOME_SEARCH_SHELL_STATE.filters || {};
+  const typeFilter = normalizeHomeSearchFilterValue(filters.type);
+  const areaFilter = normalizeHomeSearchFilterValue(filters.area);
+  const actionFilter = normalizeHomeSearchFilterValue(filters.action);
+  const trustFilter = normalizeHomeSearchFilterValue(filters.trust);
+  const yearFilter = normalizeHomeSearchFilterValue(filters.year);
+
+  if (typeFilter !== 'all' && resolveHomeSearchFilterType(entry) !== typeFilter) {
+    return false;
+  }
+
+  if (areaFilter !== 'all' && resolveHomeSearchEntryScope(entry) !== areaFilter) {
+    return false;
+  }
+
+  if (actionFilter !== 'all') {
+    const entryAction = resolveHomeSearchFilterAction(entry);
+    const actionMatched = actionFilter === entryAction || (actionFilter === 'open' && normalizeHomeSearchQuery(entry.href));
+    if (!actionMatched) {
+      return false;
+    }
+  }
+
+  if (trustFilter === 'verified' && !entry.verified) {
+    return false;
+  }
+
+  if (yearFilter !== 'all' && resolveHomeSearchYear(entry.year) !== yearFilter) {
+    return false;
+  }
+
+  return true;
+}
+
+function applyHomeSearchFilters(entries = []) {
+  return entries.filter((entry) => matchesHomeSearchFilters(entry));
+}
+
+function syncHomeSearchScopeChrome() {
+  const root = getLiveSearchShellRoot();
+  if (!root) return;
+
+  const scope = normalizeHomeSearchScope(HOME_SEARCH_SHELL_STATE.scope);
+  const input = root.querySelector('#home-search-shell-input');
+  const tabs = root.querySelectorAll('[data-home-search-scope]');
+
+  if (input instanceof HTMLInputElement) {
+    input.placeholder = scope === 'all'
+      ? 'Explore'
+      : `Explore ${getHomeSearchScopeLabel(scope)}`;
+  }
+
+  tabs.forEach((tab) => {
+    const active = normalizeHomeSearchScope(tab.getAttribute('data-home-search-scope') || 'all') === scope;
+    tab.classList.toggle('home-search-shell__scope-tab--active', active);
+    tab.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  syncHomeSearchClearButton();
+  syncHomeSearchFilterChrome();
+}
+
+function syncHomeSearchClearButton() {
+  const root = getLiveSearchShellRoot();
+  if (!root) return;
+
+  const clearButton = root.querySelector('[data-home-search-clear]');
+  if (!(clearButton instanceof HTMLButtonElement)) return;
+
+  clearButton.hidden = !normalizeHomeSearchQuery(HOME_SEARCH_SHELL_STATE.query);
+}
+
+function syncHomeSearchFilterChrome() {
+  const root = getLiveSearchShellRoot();
+  if (!root) return;
+
+  const filterButton = root.querySelector('[data-home-search-filter]');
+  const filterPanel = root.querySelector('[data-home-search-filter-panel]');
+  const filterChips = root.querySelectorAll('[data-home-search-filter-option]');
+
+  if (filterButton instanceof HTMLButtonElement) {
+    filterButton.setAttribute('aria-pressed', HOME_SEARCH_SHELL_STATE.filtersOpen ? 'true' : 'false');
+  }
+
+  if (filterPanel instanceof HTMLElement) {
+    filterPanel.hidden = !HOME_SEARCH_SHELL_STATE.filtersOpen;
+  }
+
+  filterChips.forEach((chip) => {
+    const key = normalizeHomeSearchFilterValue(chip.getAttribute('data-home-search-filter-option') || '');
+    const value = normalizeHomeSearchFilterValue(chip.getAttribute('data-home-search-filter-value') || '');
+    const active = normalizeHomeSearchFilterValue(HOME_SEARCH_SHELL_STATE.filters?.[key]) === value;
+    chip.classList.toggle('home-search-shell__filter-chip--active', active);
+    chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+function resetHomeSearchFilters() {
+  HOME_SEARCH_SHELL_STATE.filters = { ...HOME_SEARCH_DEFAULT_FILTERS };
+  renderHomeSearchShell();
+}
+
+function syncHomeSearchRailAskAction(isVisible = false) {
+  const root = getLiveSearchShellRoot();
+  if (!root) return;
+
+  const askButton = root.querySelector('[data-home-search-rail-ask]');
+  if (!(askButton instanceof HTMLButtonElement)) return;
+
+  askButton.hidden = !isVisible;
+  if (!isVisible) return;
+
+  const activeModelLabel = getActiveModelLabel();
+  askButton.textContent = `Ask ${activeModelLabel}`;
+}
+
+function handleHomeSearchScopeSelection(scope = 'all') {
+  HOME_SEARCH_SHELL_STATE.scope = normalizeHomeSearchScope(scope);
+  renderHomeSearchShell();
+  getHomeSearchShellNodes().input?.focus();
+}
 
 const HOME_SEARCH_SHELL_INDEX_SOURCES = Object.freeze({
   routeIndex: '/assets/data/search/route-index.json',
@@ -61,8 +310,11 @@ function getHomeSearchShellNodes() {
     form: document.querySelector('#home-search-shell-form'),
     close: document.querySelector('#home-search-shell-close'),
     voiceButton: document.querySelector('#home-search-shell-voice-button'),
+    clearButton: document.querySelector('[data-home-search-clear]'),
+    filterButton: document.querySelector('[data-home-search-filter]'),
+    filterPanel: document.querySelector('[data-home-search-filter-panel]'),
     results: document.querySelector('#home-search-shell-results'),
-    chips: Array.from(document.querySelectorAll('[data-home-search-chip]')),
+    chips: Array.from(document.querySelectorAll('[data-home-search-scope]')),
   };
 }
 
@@ -179,9 +431,20 @@ function buildIndexedEntry(entry = {}, {
   keywords = []
 } = {}) {
   const normalizedTitle = normalizeHomeSearchQuery(title || entry.title || entry.label || entry.name || '');
-  const normalizedHref = normalizeHomeSearchQuery(href || entry.path || entry.href || '');
+  const normalizedUsername = normalizeHomeSearchQuery(entry.username || entry.handle || entry.slug || '');
+  const canonicalProfileHref = kind === 'profile' && normalizedUsername
+    ? buildPublicProfilePath(normalizedUsername)
+    : '';
+  const normalizedHref = normalizeHomeSearchQuery(href || entry.path || entry.href || canonicalProfileHref || '');
   const normalizedSummary = normalizeHomeSearchQuery(summary || entry.description || entry.summary || entry.excerpt || '');
   const normalizedScope = normalizeHomeSearchQuery(scope || entry.scope || entry.type || '');
+  const normalizedYear = resolveHomeSearchYear(entry.year || entry.joined_year || entry.joinedYear || entry.date || entry.created_at || entry.updated_at || '');
+  const verified = Boolean(entry.verified || /verified|governed|self-authored/i.test([
+    entry.trust,
+    entry.trust_classification,
+    entry.status,
+    ...(Array.isArray(entry.reliability_signals) ? entry.reliability_signals : [])
+  ].join(' ')));
   const normalizedKeywords = uniqueHomeSearchStrings([
     ...(Array.isArray(entry.keywords) ? entry.keywords : []),
     ...(Array.isArray(keywords) ? keywords : [])
@@ -201,12 +464,19 @@ function buildIndexedEntry(entry = {}, {
     publicRoute: '',
     activateModelId: '',
     queryLabel: '',
+    filterType: kind === 'profile' ? 'profile' : 'page',
+    year: normalizedYear,
+    verified,
+    verificationLabel: verified ? 'Verified' : '',
+    avatarUrl: normalizeHomeSearchQuery(entry.photo_url || entry.public_avatar_url || entry.avatar_url || ''),
+    username: normalizedUsername,
     keywords: normalizedKeywords,
     scoreTokens: uniqueHomeSearchStrings([
       normalizedTitle,
       normalizedHref,
       normalizedSummary,
       normalizedScope,
+      normalizedYear,
       ...normalizedKeywords
     ]).join(' ').toLowerCase()
   };
@@ -224,6 +494,9 @@ function buildCuratedSurfaceEntries() {
       publicRoute: '',
       activateModelId: '',
       queryLabel: '',
+      filterType: 'page',
+      year: '',
+      verified: false,
       keywords: ['profiles', 'continuity models', 'public routes', 'model search'],
       scoreTokens: 'continuity models profiles public routes model search'
     },
@@ -237,6 +510,9 @@ function buildCuratedSurfaceEntries() {
       publicRoute: '',
       activateModelId: '',
       queryLabel: '',
+      filterType: 'page',
+      year: '',
+      verified: false,
       keywords: ['leadership', 'founder', 'artan', 'company'],
       scoreTokens: 'leadership founder artan company'
     },
@@ -250,6 +526,9 @@ function buildCuratedSurfaceEntries() {
       publicRoute: '',
       activateModelId: '',
       queryLabel: '',
+      filterType: 'page',
+      year: '',
+      verified: false,
       keywords: ['careers', 'jobs', 'roles', 'hiring'],
       scoreTokens: 'careers jobs roles hiring'
     },
@@ -263,6 +542,9 @@ function buildCuratedSurfaceEntries() {
       publicRoute: '',
       activateModelId: '',
       queryLabel: '',
+      filterType: 'page',
+      year: '',
+      verified: false,
       keywords: ['continuity history', 'history', 'archive', 'timeline'],
       scoreTokens: 'continuity history history archive timeline'
     },
@@ -276,6 +558,9 @@ function buildCuratedSurfaceEntries() {
       publicRoute: '',
       activateModelId: '',
       queryLabel: '',
+      filterType: 'page',
+      year: '',
+      verified: false,
       keywords: ['sitemap', 'route map', 'navigation'],
       scoreTokens: 'sitemap route map navigation'
     }
@@ -293,6 +578,9 @@ function buildModelSearchEntries() {
     publicRoute: normalizeHomeSearchQuery(model.public_profile?.public_route_path || ''),
     activateModelId: normalizeHomeSearchQuery(model.id),
     queryLabel: normalizeHomeSearchQuery(model.engine?.label || model.display_name || model.search_title || ''),
+    filterType: 'model',
+    year: resolveHomeSearchYear(model.joined_year || ''),
+    avatarUrl: normalizeHomeSearchQuery(model.public_profile?.public_avatar_url || ''),
     verified: isVerifiedHomeSearchModel(model),
     verificationLabel: isVerifiedHomeSearchModel(model) ? 'Verified' : '',
     keywords: uniqueHomeSearchStrings([
@@ -391,7 +679,8 @@ async function ensureHomeSearchData() {
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'content', kind: 'content' }))
             .filter(Boolean),
           ...normalizeHomeSearchArray(entityIndex, 'entities')
-            .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'entity', kind: 'entity' }))
+            .filter((entry) => entry?.kind === 'profile' || entry?.type === 'profile' || entry?.scope === 'profiles')
+            .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'profile', kind: 'profile', scope: 'profiles' }))
             .filter(Boolean)
         ];
         HOME_SEARCH_SHELL_STATE.dataReady = true;
@@ -414,15 +703,30 @@ async function ensureHomeSearchData() {
    05. SEARCH RENDER HELPERS
    ========================================================= */
 
+function renderHomeSearchResultAvatar(entry = {}) {
+  if (!['profile', 'model'].includes(entry.kind)) {
+    return '';
+  }
+
+  const avatarMarkup = entry.avatarUrl
+    ? `<img class="home-search-shell__result-avatar-image" src="${escapeHomeSearchHtml(entry.avatarUrl)}" alt="">`
+    : `<img class="home-search-shell__result-avatar-fallback ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="">`;
+
+  return `
+    <span class="home-search-shell__result-avatar" aria-hidden="true">
+      ${avatarMarkup}
+    </span>
+  `;
+}
+
 function renderVerificationBadge(entry = {}) {
   if (!entry?.verified) {
     return '';
   }
 
   return `
-    <span class="home-search-shell__result-badge" aria-label="${escapeHomeSearchHtml(entry.verificationLabel || 'Verified')}">
+    <span class="catalog-verified-badge home-search-shell__result-badge" aria-label="${escapeHomeSearchHtml(entry.verificationLabel || 'Verified')}">
       <img src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
-      <span>${escapeHomeSearchHtml(entry.verificationLabel || 'Verified')}</span>
     </span>
   `;
 }
@@ -441,7 +745,7 @@ function renderResultChips(keywords = []) {
 }
 
 function renderDefaultHomeModelResults() {
-  const models = getDefaultModelSearchEntries();
+  const models = applyHomeSearchFilters(getDefaultModelSearchEntries());
 
   if (!models.length) {
     return `
@@ -456,20 +760,28 @@ function renderDefaultHomeModelResults() {
     <div class="home-search-shell__result-list">
       ${models.map((entry) => `
         <article class="home-search-shell__result-card">
-          <div class="home-search-shell__result-meta">
-            <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
-            ${entry.queryLabel ? `<span class="home-search-shell__result-query">${escapeHomeSearchHtml(entry.queryLabel)}</span>` : ''}
-          </div>
-          <div class="home-search-shell__result-title-row">
-            <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>
-            ${renderVerificationBadge(entry)}
-          </div>
-          <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
-          ${renderResultChips(entry.keywords)}
-          <div class="home-search-shell__result-actions">
-            ${entry.href ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">Open model</a>` : ''}
-            ${entry.publicRoute ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.publicRoute)}">Open public route</a>` : ''}
-            ${entry.activateModelId ? `<button class="home-search-shell__result-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button">${entry.activateModelId === getActiveModelState().activeModelId ? 'Active on Homepage' : 'Activate on Homepage'}</button>` : ''}
+          <div class="home-search-shell__model-result-layout">
+            <div class="home-search-shell__model-result-content">
+              <div class="home-search-shell__result-meta">
+                <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
+                ${entry.queryLabel ? `<span class="home-search-shell__result-query">${escapeHomeSearchHtml(entry.queryLabel)}</span>` : ''}
+              </div>
+              <div class="home-search-shell__result-title-row">
+                ${renderHomeSearchResultAvatar(entry)}
+                ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
+                ${renderVerificationBadge(entry)}
+              </div>
+              <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
+              ${renderResultChips(entry.keywords)}
+            </div>
+            <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
+              ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}" title="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
+              </button>` : ''}
+              ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" aria-label="View profile" title="View profile">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
+              </a>` : ''}
+            </div>
           </div>
         </article>
       `).join('')}
@@ -483,7 +795,7 @@ function renderDefaultHomeSearchResults() {
   const activeModelDescription = normalizeHomeSearchQuery(
     activeModel?.description || 'Search public models, select the active interaction engine, or move directly into a published public surface.'
   );
-  const quickLinks = buildHomeSearchEntries().filter((entry) => entry.kind === 'surface').slice(0, 4);
+  const quickLinks = applyHomeSearchFilters(filterHomeSearchEntriesByScope(buildHomeSearchEntries(), HOME_SEARCH_SHELL_STATE.scope)).filter((entry) => entry.kind === 'surface').slice(0, 4);
 
   return `
     <div class="home-search-shell__result-list">
@@ -499,23 +811,17 @@ function renderDefaultHomeSearchResults() {
           activeModel?.availability || '',
           activeModel?.engine?.preferred_route?.replaceAll('-', ' ') || ''
         ])}
-        <div class="home-search-shell__result-actions">
-          <a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(activeModel?.page_route || '/pages/profiles/index.html')}">Open model</a>
-          ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(activeModel.public_profile.public_route_path)}">Open public route</a>` : ''}
-          <button class="home-search-shell__result-action" data-home-search-result-action="ask-home" type="button">Ask ${escapeHomeSearchHtml(activeModelLabel)}</button>
+        <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
+          ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(activeModel.public_profile.public_route_path)}" aria-label="View profile" title="View profile">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
+          </a>` : ''}
         </div>
       </article>
 
       ${quickLinks.map((entry) => `
         <article class="home-search-shell__result-card">
-          <div class="home-search-shell__result-meta">
-            <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
-          </div>
-          <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>
+          ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
           <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary)}</p>
-          <div class="home-search-shell__result-actions">
-            <a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">Open surface</a>
-          </div>
         </article>
       `).join('')}
     </div>
@@ -523,7 +829,7 @@ function renderDefaultHomeSearchResults() {
 }
 
 function renderQueryHomeSearchResults(query) {
-  const matches = buildHomeSearchEntries()
+  const matches = applyHomeSearchFilters(filterHomeSearchEntriesByScope(buildHomeSearchEntries(), HOME_SEARCH_SHELL_STATE.scope))
     .map((entry) => ({
       ...entry,
       score: scoreHomeSearchMatch(query, entry)
@@ -539,9 +845,6 @@ function renderQueryHomeSearchResults(query) {
         <p class="home-search-shell__empty-text">
           Search public models, published routes, institutional sections, and platform surfaces. If you want interpretation rather than navigation, ask ${escapeHomeSearchHtml(getActiveModelLabel())} directly.
         </p>
-        <div class="home-search-shell__result-actions">
-          <button class="home-search-shell__result-action" data-home-search-result-action="ask-home" type="button">Ask ${escapeHomeSearchHtml(getActiveModelLabel())}</button>
-        </div>
       </div>
     `;
   }
@@ -550,31 +853,55 @@ function renderQueryHomeSearchResults(query) {
     <div class="home-search-shell__result-list">
       ${matches.map((entry) => `
         <article class="home-search-shell__result-card">
-          <div class="home-search-shell__result-meta">
-            <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
-            ${entry.kind === 'model' && entry.queryLabel ? `<span class="home-search-shell__result-query">${escapeHomeSearchHtml(entry.queryLabel)}</span>` : ''}
-          </div>
-          <div class="home-search-shell__result-title-row">
-            <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>
-            ${renderVerificationBadge(entry)}
-          </div>
-          <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Published Neuroartan surface.')}</p>
-          ${renderResultChips(entry.keywords)}
-          <div class="home-search-shell__result-actions">
-            ${entry.href ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">${entry.kind === 'model' ? 'Open model' : 'Open surface'}</a>` : ''}
-            ${entry.publicRoute ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.publicRoute)}">Open public route</a>` : ''}
-            ${entry.activateModelId ? `<button class="home-search-shell__result-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button">${entry.activateModelId === getActiveModelState().activeModelId ? 'Active on Homepage' : 'Activate on Homepage'}</button>` : ''}
-          </div>
+          ${['profile', 'model'].includes(entry.kind) ? `
+            <div class="home-search-shell__identity-result">
+              ${renderHomeSearchResultAvatar(entry)}
+              <div class="home-search-shell__identity-result-copy">
+                <div class="home-search-shell__result-title-row">
+                  ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
+                  ${renderVerificationBadge(entry)}
+                </div>
+                ${entry.username ? `<p class="home-search-shell__identity-result-handle">@${escapeHomeSearchHtml(entry.username.replace(/^@/, ''))}</p>` : entry.queryLabel ? `<p class="home-search-shell__identity-result-handle">${escapeHomeSearchHtml(entry.queryLabel)}</p>` : ''}
+              </div>
+            </div>
+            ${entry.kind === 'model' ? `
+              <div class="home-search-shell__model-result-layout">
+                <div class="home-search-shell__model-result-content">
+                  <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
+                  ${renderResultChips(entry.keywords)}
+                </div>
+                <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
+                  ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}" title="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}">
+                    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
+                  </button>` : ''}
+                  ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" aria-label="View profile" title="View profile">
+                    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
+                  </a>` : ''}
+                </div>
+              </div>
+            ` : ''}
+          ` : `
+            <div class="home-search-shell__result-title-row">
+              ${renderHomeSearchResultAvatar(entry)}
+              ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
+              ${renderVerificationBadge(entry)}
+            </div>
+            <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Published Neuroartan surface.')}</p>
+            ${renderResultChips(entry.keywords)}
+            <div class="home-search-shell__result-actions">
+              ${entry.kind === 'model' && entry.href ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">Open model</a>` : ''}
+              ${entry.publicRoute ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.publicRoute)}">Open public route</a>` : ''}
+              ${entry.activateModelId ? `<button class="home-search-shell__result-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button">${entry.activateModelId === getActiveModelState().activeModelId ? 'Active on Homepage' : 'Activate on Homepage'}</button>` : ''}
+            </div>
+          `}
         </article>
       `).join('')}
-      <div class="home-search-shell__result-footer">
-        <button class="home-search-shell__result-action" data-home-search-result-action="ask-home" type="button">Ask ${escapeHomeSearchHtml(getActiveModelLabel())}</button>
-      </div>
     </div>
   `;
 }
 
 function renderHomeSearchShell() {
+  syncHomeSearchScopeChrome();
   const nodes = getHomeSearchShellNodes();
   if (!nodes.results) {
     return;
@@ -584,6 +911,7 @@ function renderHomeSearchShell() {
   HOME_SEARCH_SHELL_STATE.query = query;
 
   if (!query) {
+    syncHomeSearchRailAskAction(false);
     nodes.results.innerHTML = HOME_SEARCH_SHELL_STATE.mode === 'models'
       ? renderDefaultHomeModelResults()
       : renderDefaultHomeSearchResults();
@@ -591,6 +919,7 @@ function renderHomeSearchShell() {
   }
 
   if (!HOME_SEARCH_SHELL_STATE.dataReady && HOME_SEARCH_SHELL_STATE.loadingPromise) {
+    syncHomeSearchRailAskAction(false);
     nodes.results.innerHTML = `
       <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
         <p class="home-search-shell__empty-title">Loading search surfaces</p>
@@ -602,6 +931,7 @@ function renderHomeSearchShell() {
     return;
   }
 
+  syncHomeSearchRailAskAction(true);
   nodes.results.innerHTML = renderQueryHomeSearchResults(query);
 }
 
@@ -616,6 +946,7 @@ function setHomeSearchValue(value) {
   const query = normalizeHomeSearchQuery(value);
   nodes.input.value = query;
   HOME_SEARCH_SHELL_STATE.query = query;
+  syncHomeSearchClearButton();
 }
 
 function syncHomeSearchVoiceState(isListening) {
@@ -665,14 +996,6 @@ function submitHomeSearchQuery(query, source = 'home-search-shell') {
   });
 }
 
-function handleHomeSearchChipSelection(chipValue) {
-  const query = normalizeHomeSearchQuery(chipValue);
-  if (!query) return;
-
-  setHomeSearchValue(query);
-  renderHomeSearchShell();
-}
-
 function openHomeSearchShell(options = {}) {
   const nodes = getHomeSearchShellNodes();
   if (!nodes.shell) {
@@ -680,6 +1003,7 @@ function openHomeSearchShell(options = {}) {
   }
 
   HOME_SEARCH_SHELL_STATE.isOpen = true;
+  HOME_SEARCH_SHELL_STATE.scope = normalizeHomeSearchScope(options.scope || 'all');
   HOME_SEARCH_SHELL_STATE.mode = options.mode === 'models' || options.focus === 'models' ? 'models' : 'search';
 
   dispatchHomeSearchEvent('neuroartan:cookie-consent-close-requested', {
@@ -714,6 +1038,7 @@ function closeHomeSearchShell() {
 
   HOME_SEARCH_SHELL_STATE.isOpen = false;
   HOME_SEARCH_SHELL_STATE.mode = 'search';
+  HOME_SEARCH_SHELL_STATE.filtersOpen = false;
   nodes.shell.hidden = true;
   document.documentElement.classList.remove('home-search-shell-open');
   document.body.classList.remove('home-search-shell-open');
@@ -738,7 +1063,7 @@ function bindHomeSearchShell() {
   });
 
   document.addEventListener('neuroartan:home-model-selector-open-requested', () => {
-    openHomeSearchShell({ mode: 'models', focus: 'models' });
+    openHomeSearchShell({ mode: 'models', focus: 'models', scope: 'models' });
   });
 
   document.addEventListener('neuroartan:home-search-shell-close-requested', () => {
@@ -752,8 +1077,12 @@ function bindHomeSearchShell() {
     const target = event.target.closest(
       '#home-search-shell-close, ' +
       '#home-search-shell-voice-button, ' +
+      '#home-search-shell [data-home-search-clear], ' +
+      '#home-search-shell [data-home-search-filter], ' +
+      '#home-search-shell [data-home-search-filter-reset], ' +
+      '#home-search-shell [data-home-search-filter-option], ' +
       '#home-search-shell [data-home-search-close="true"], ' +
-      '#home-search-shell [data-home-search-chip], ' +
+      '#home-search-shell [data-home-search-scope], ' +
       '#home-search-shell [data-home-search-result-action], ' +
       '#home-search-shell a[href]'
     );
@@ -764,6 +1093,40 @@ function bindHomeSearchShell() {
 
     if (target.matches('#home-search-shell-close, [data-home-search-close="true"]')) {
       closeHomeSearchShell();
+      return;
+    }
+
+    if (target.matches('[data-home-search-clear]')) {
+      event.preventDefault();
+      setHomeSearchValue('');
+      renderHomeSearchShell();
+      getHomeSearchShellNodes().input?.focus();
+      return;
+    }
+
+    if (target.matches('[data-home-search-filter]')) {
+      event.preventDefault();
+      HOME_SEARCH_SHELL_STATE.filtersOpen = !HOME_SEARCH_SHELL_STATE.filtersOpen;
+      syncHomeSearchFilterChrome();
+      return;
+    }
+
+    if (target.matches('[data-home-search-filter-reset]')) {
+      event.preventDefault();
+      resetHomeSearchFilters();
+      getHomeSearchShellNodes().input?.focus();
+      return;
+    }
+
+    if (target.matches('[data-home-search-filter-option]')) {
+      event.preventDefault();
+      const key = normalizeHomeSearchFilterValue(target.getAttribute('data-home-search-filter-option') || '');
+      const value = normalizeHomeSearchFilterValue(target.getAttribute('data-home-search-filter-value') || '');
+
+      if (Object.prototype.hasOwnProperty.call(HOME_SEARCH_SHELL_STATE.filters, key)) {
+        HOME_SEARCH_SHELL_STATE.filters[key] = value;
+        renderHomeSearchShell();
+      }
       return;
     }
 
@@ -811,8 +1174,8 @@ function bindHomeSearchShell() {
       return;
     }
 
-    if (target.matches('[data-home-search-chip]')) {
-      handleHomeSearchChipSelection(target.getAttribute('data-home-search-chip') || '');
+    if (target.matches('[data-home-search-scope]')) {
+      handleHomeSearchScopeSelection(target.getAttribute('data-home-search-scope') || '');
     }
   });
 
@@ -826,6 +1189,7 @@ function bindHomeSearchShell() {
     }
 
     HOME_SEARCH_SHELL_STATE.query = normalizeHomeSearchQuery(input.value);
+    syncHomeSearchClearButton();
     renderHomeSearchShell();
   });
 
@@ -853,6 +1217,12 @@ function bindHomeSearchShell() {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && HOME_SEARCH_SHELL_STATE.isOpen) {
+      if (HOME_SEARCH_SHELL_STATE.filtersOpen) {
+        HOME_SEARCH_SHELL_STATE.filtersOpen = false;
+        syncHomeSearchFilterChrome();
+        return;
+      }
+
       closeHomeSearchShell();
     }
   });

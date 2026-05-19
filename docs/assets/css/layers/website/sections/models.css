@@ -90,28 +90,21 @@
   gap:var(--models-sort-gap);
 }
 
-.models-directory-sort__label{
+.models-directory-sort__label,
+.models-directory-filter-group__label{
   margin:var(--spacing-none);
   color:var(--text-secondary-color);
   font-size:var(--models-sort-label-size);
   line-height:var(--models-sort-label-line-height);
 }
 
-.models-directory-sort__select{
-  min-height:var(--models-select-min-height);
-  padding:var(--spacing-none) var(--models-select-padding-x);
-  border:1px solid var(--field-border);
-  border-radius:var(--models-select-radius);
-  background:var(--field-bg);
-  color:var(--text-primary-color);
-  font:inherit;
-}
-
 /* =============================================================================
    03) FILTERS
 ============================================================================= */
-.models-directory-filter-row{
+.models-directory-filter-row,
+.models-directory-filter-options{
   display:flex;
+  align-items:center;
   flex-wrap:wrap;
   gap:var(--models-filter-row-gap);
 }
@@ -122,23 +115,26 @@
   justify-content:center;
   min-height:var(--models-filter-chip-min-height);
   padding:var(--spacing-none) var(--models-filter-chip-padding-x);
-  border:1px solid var(--control-border);
-  border-radius:var(--models-filter-chip-radius);
-  background:transparent;
-  color:var(--text-secondary-color);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--shape-control-radius);
+  background:var(--control-surface);
+  color:var(--control-text-unified);
   font:inherit;
+  line-height:var(--control-line-height);
+  transform:none;
   transition:
-    color var(--models-motion) ease,
-    background-color var(--models-motion) ease,
-    border-color var(--models-motion) ease;
+    color var(--models-motion) var(--interaction-ease-standard),
+    background-color var(--models-motion) var(--interaction-ease-standard),
+    border-color var(--models-motion) var(--interaction-ease-standard),
+    opacity var(--models-motion) var(--interaction-ease-standard);
 }
 
 .models-directory-filter-chip:hover,
 .models-directory-filter-chip:focus-visible,
 .models-directory-filter-chip[aria-pressed="true"]{
-  color:var(--text-primary-color);
-  background:var(--control-bg);
-  border-color:var(--control-border-strong);
+  color:var(--control-text-hover-unified);
+  background:var(--control-surface-hover);
+  border-color:var(--control-border-hover-unified);
   outline:none;
 }
 
@@ -160,6 +156,41 @@
   font-weight:var(--models-filter-label-weight);
   letter-spacing:var(--models-filter-label-tracking);
   text-transform:uppercase;
+}
+
+.models-directory-dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(var(--catalog-media-card-min), 1fr));
+  gap:var(--catalog-grid-compact-gap);
+  margin-top:var(--catalog-section-margin-top);
+}
+
+.models-directory-dashboard__item{
+  display:grid;
+  gap:var(--catalog-row-gap);
+  padding:var(--catalog-panel-padding);
+  border:var(--border-width-hairline) solid var(--control-border);
+  border-radius:var(--catalog-panel-radius);
+  background:var(--control-bg);
+}
+
+.models-directory-dashboard__label,
+.models-directory-dashboard__value{
+  margin:var(--spacing-none);
+}
+
+.models-directory-dashboard__label{
+  color:var(--text-secondary-color);
+  font-size:var(--catalog-row-label-size);
+  letter-spacing:var(--catalog-row-label-tracking);
+  text-transform:uppercase;
+}
+
+.models-directory-dashboard__value{
+  color:var(--text-primary-color);
+  font-size:var(--catalog-panel-title-size);
+  font-weight:var(--catalog-panel-title-weight);
+  line-height:var(--catalog-row-value-line-height);
 }
 
 /* =============================================================================
@@ -254,6 +285,10 @@
 .models-directory-card__meta{
   display:grid;
   gap:var(--models-meta-gap);
+}
+
+.models-directory-card__facts{
+  align-items:flex-start;
 }
 
 .models-directory-card__meta-row{

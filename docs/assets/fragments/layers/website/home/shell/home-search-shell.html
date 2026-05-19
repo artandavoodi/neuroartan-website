@@ -8,12 +8,8 @@
 ============================================================================= -->
 
 <section class="home-search-shell" id="home-search-shell" aria-label="Home search shell" hidden>
-  <div class="home-search-shell__dialog" role="dialog" aria-modal="true" aria-labelledby="home-search-shell-title">
+  <div class="home-search-shell__dialog" role="dialog" aria-modal="true" aria-label="Search">
     <div class="home-search-shell__header">
-      <div class="home-search-shell__heading-group">
-        <h2 class="home-search-shell__title" id="home-search-shell-title">Explore</h2>
-      </div>
-
       <button
         class="home-search-shell__close global-close-button"
         id="home-search-shell-close"
@@ -26,9 +22,8 @@
 
     <div class="home-search-shell__body">
       <form class="home-search-shell__form" id="home-search-shell-form" role="search" novalidate>
-        <label class="home-search-shell__label" for="home-search-shell-input">Search query</label>
         <div class="home-search-shell__input-row">
-          <span class="home-search-shell__input-icon" aria-hidden="true">
+        <span class="home-search-shell__input-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
           </span>
           <input
@@ -38,8 +33,19 @@
             type="search"
             inputmode="search"
             autocomplete="off"
-            placeholder="Search profiles, models, and content"
+            placeholder="Explore"
             aria-describedby="home-search-shell-hint" />
+          <button
+            class="home-search-shell__clear-button"
+            id="home-search-shell-clear-button"
+            type="button"
+            data-home-search-clear="true"
+            aria-label="Clear search"
+            hidden>
+            <span class="home-search-shell__clear-icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
+            </span>
+          </button>
           <button
             class="home-search-shell__voice-button"
             id="home-search-shell-voice-button"
@@ -51,18 +57,72 @@
             </span>
           </button>
         </div>
-        <p class="home-search-shell__hint" id="home-search-shell-hint">
-          Search profiles, models, content, and canonical public routes from one governed surface.
-        </p>
       </form>
+      <nav class="home-search-shell__scope-nav" aria-label="Search scope" data-home-search-scope-nav>
+        <button class="home-search-shell__scope-tab home-search-shell__scope-tab--active" type="button" data-home-search-scope="all" aria-pressed="true">All</button>
+        <button class="home-search-shell__scope-tab" type="button" data-home-search-scope="profiles" aria-pressed="false">Profiles</button>
+        <button class="home-search-shell__scope-tab" type="button" data-home-search-scope="models" aria-pressed="false">Models</button>
+        <button class="home-search-shell__scope-tab" type="button" data-home-search-scope="content" aria-pressed="false">Content</button>
+        <button class="home-search-shell__scope-tab" type="button" data-home-search-scope="company" aria-pressed="false">Company</button>
+        <button class="home-search-shell__scope-ask-button" type="button" data-home-search-result-action="ask-home" data-home-search-rail-ask hidden>Ask Neuroartan</button>
+        <button class="home-search-shell__scope-filter-button" type="button" data-home-search-filter aria-label="Filter search results">
+          <span class="home-search-shell__scope-filter-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/filter/filter.svg" alt="">
+          </span>
+        </button>
+      </nav>
 
-      <div class="home-search-shell__quick-actions" aria-label="Quick search suggestions">
-        <button class="home-search-shell__chip" type="button" data-home-search-chip="Artan">Artan</button>
-        <button class="home-search-shell__chip" type="button" data-home-search-chip="Continuity Models">Continuity Models</button>
-        <button class="home-search-shell__chip" type="button" data-home-search-chip="Leadership">Leadership</button>
-        <button class="home-search-shell__chip" type="button" data-home-search-chip="Careers">Careers</button>
-        <button class="home-search-shell__chip" type="button" data-home-search-chip="Continuity History">Continuity History</button>
-      </div>
+      <section class="home-search-shell__filter-panel" data-home-search-filter-panel hidden aria-label="Search filters">
+        <div class="home-search-shell__filter-header">
+          <div class="home-search-shell__filter-heading">
+            <p class="home-search-shell__filter-title">Filters</p>
+            <p class="home-search-shell__filter-copy">Refine discovery across people, models, pages, trust, and available actions.</p>
+          </div>
+          <button class="home-search-shell__filter-reset" type="button" data-home-search-filter-reset>Reset</button>
+        </div>
+        <div class="home-search-shell__filter-group" data-home-search-filter-group="type">
+          <p class="home-search-shell__filter-label">Type</p>
+          <div class="home-search-shell__filter-options">
+            <button class="home-search-shell__filter-chip is-active" type="button" data-home-search-filter-option="type" data-home-search-filter-value="all" aria-pressed="true">All</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="type" data-home-search-filter-value="profile" aria-pressed="false">Profiles</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="type" data-home-search-filter-value="model" aria-pressed="false">Models</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="type" data-home-search-filter-value="page" aria-pressed="false">Pages</button>
+          </div>
+        </div>
+        <div class="home-search-shell__filter-group" data-home-search-filter-group="area">
+          <p class="home-search-shell__filter-label">Area</p>
+          <div class="home-search-shell__filter-options">
+            <button class="home-search-shell__filter-chip is-active" type="button" data-home-search-filter-option="area" data-home-search-filter-value="all" aria-pressed="true">All</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="area" data-home-search-filter-value="company" aria-pressed="false">Company</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="area" data-home-search-filter-value="content" aria-pressed="false">Content</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="area" data-home-search-filter-value="profiles" aria-pressed="false">Profiles</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="area" data-home-search-filter-value="models" aria-pressed="false">Models</button>
+          </div>
+        </div>
+        <div class="home-search-shell__filter-group" data-home-search-filter-group="action">
+          <p class="home-search-shell__filter-label">Action</p>
+          <div class="home-search-shell__filter-options">
+            <button class="home-search-shell__filter-chip is-active" type="button" data-home-search-filter-option="action" data-home-search-filter-value="all" aria-pressed="true">All</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="action" data-home-search-filter-value="open" aria-pressed="false">Openable</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="action" data-home-search-filter-value="interact" aria-pressed="false">Interactable</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="action" data-home-search-filter-value="profile" aria-pressed="false">Public profile</button>
+          </div>
+        </div>
+        <div class="home-search-shell__filter-group" data-home-search-filter-group="trust">
+          <p class="home-search-shell__filter-label">Trust</p>
+          <div class="home-search-shell__filter-options">
+            <button class="home-search-shell__filter-chip is-active" type="button" data-home-search-filter-option="trust" data-home-search-filter-value="all" aria-pressed="true">All</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="trust" data-home-search-filter-value="verified" aria-pressed="false">Verified</button>
+          </div>
+        </div>
+        <div class="home-search-shell__filter-group" data-home-search-filter-group="year">
+          <p class="home-search-shell__filter-label">Year</p>
+          <div class="home-search-shell__filter-options">
+            <button class="home-search-shell__filter-chip is-active" type="button" data-home-search-filter-option="year" data-home-search-filter-value="all" aria-pressed="true">Any</button>
+            <button class="home-search-shell__filter-chip" type="button" data-home-search-filter-option="year" data-home-search-filter-value="2026" aria-pressed="false">2026</button>
+          </div>
+        </div>
+      </section>
 
       <div class="home-search-shell__results" id="home-search-shell-results" aria-live="polite">
         <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">

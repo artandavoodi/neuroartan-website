@@ -102,17 +102,45 @@ const CURSOR_SELECTOR = '.custom-cursor';
 const INTERACTIVE_SELECTOR = [
   'a',
   'button',
-  'input',
   'select',
-  'textarea',
+  'input[type="button"]',
+  'input[type="submit"]',
+  'input[type="reset"]',
+  'input[type="checkbox"]',
+  'input[type="radio"]',
+  'input[type="file"]',
   'label[for]',
   'summary',
   '[role="button"]',
   '[role="link"]',
+  '[role="menuitem"]',
+  '[role="menuitemcheckbox"]',
+  '[role="menuitemradio"]',
+  '[role="option"]',
+  '[role="switch"]',
+  '[role="tab"]',
+  '[role="checkbox"]',
   '[tabindex]',
+  '[onclick]',
   '[data-cursor-interactive]',
+  '[data-account-route]',
+  '[data-account-drawer-close]',
+  '[data-account-provider-apple-submit]',
+  '[data-account-provider-google-submit]',
   '[data-profile-action]',
+  '[data-profile-nav]',
+  '[data-profile-route]',
   '[data-home-topbar-route]',
+  '[data-home-platform-route]',
+  '[data-home-platform-menu-open]',
+  '[data-home-platform-menu-close]',
+  '[data-home-platform-collapse-toggle]',
+  '[data-home-interaction-settings-action]',
+  '[data-home-interaction-toggle-control]',
+  '[data-cookie-consent-action]',
+  '[data-cookie-consent-route]',
+  '[data-core-back-button]',
+  '[data-scroll-to-top]',
   '.country-option',
   '#country-overlay-close',
   '#country-selector',
@@ -147,7 +175,7 @@ function normalizeCursorMode(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === CURSOR_MODE_NATIVE) return CURSOR_MODE_NATIVE;
   if (normalized === CURSOR_MODE_CUSTOM) return CURSOR_MODE_CUSTOM;
-  return CURSOR_MODE_CUSTOM;
+  return CURSOR_MODE_NATIVE;
 }
 
 function normalizeCursorColor(value) {
@@ -178,7 +206,12 @@ function writeStoredCursorState() {
 
 function syncCursorRootAttributes() {
   const root = document.documentElement;
-  const viewportActive = Boolean(state.enabled && state.pointerActive && !state.isHidden);
+  const viewportActive = Boolean(
+    state.enabled
+    && state.mode === CURSOR_MODE_CUSTOM
+    && state.pointerActive
+    && !state.isHidden
+  );
 
   root.dataset.cursorMode = state.mode;
   root.dataset.cursorCustom = viewportActive ? 'true' : 'false';
@@ -442,7 +475,11 @@ function handleWindowBlur() {
 function handlePointerMediaChange(event) {
   state.enabled = event.matches && state.mode === CURSOR_MODE_CUSTOM;
 
-  const shouldActivateCustomCursor = state.enabled && state.pointerActive;
+  const shouldActivateCustomCursor = Boolean(
+    state.enabled
+    && state.mode === CURSOR_MODE_CUSTOM
+    && state.pointerActive
+  );
 
   state.isHidden = !shouldActivateCustomCursor;
   syncCursorRootAttributes();
@@ -528,7 +565,11 @@ function setCursorState(nextState = {}) {
   syncCursorRootAttributes();
   writeStoredCursorState();
 
-  const shouldActivateCustomCursor = state.enabled && state.pointerActive;
+  const shouldActivateCustomCursor = Boolean(
+    state.enabled
+    && state.mode === CURSOR_MODE_CUSTOM
+    && state.pointerActive
+  );
 
   if (shouldActivateCustomCursor) {
     ensureCursorNode();
@@ -554,7 +595,7 @@ function setCursorState(nextState = {}) {
 
 function resetCursorToCompanyDefault() {
   setCursorState({
-    mode: CURSOR_MODE_CUSTOM,
+    mode: CURSOR_MODE_NATIVE,
     color: DEFAULT_CURSOR_COLOR
   });
 }
@@ -606,7 +647,10 @@ function initCursorPrimitive() {
 
   ensureStylesheetOnce(CUSTOM_CURSOR_CSS_URL);
 
-  if (!state.enabled) {
+  if (!state.enabled || state.mode !== CURSOR_MODE_CUSTOM) {
+    state.isHidden = true;
+    syncCursorRootAttributes();
+    stopLoop();
     applyVisualState();
     return;
   }

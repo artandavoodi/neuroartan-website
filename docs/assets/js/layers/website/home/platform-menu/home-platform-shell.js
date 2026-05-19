@@ -29,6 +29,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   fragmentCache: new Map(),
   moduleCache: new Map(),
   renderToken: 0,
+  shellSession: 0,
 };
 
 /* =============================================================================
@@ -274,7 +275,8 @@ function dispatchHomePlatformLoadingStart(reason) {
   document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
     detail: {
       reason,
-      source: 'home-platform-shell'
+      source: 'home-platform-shell',
+      blocking: false
     }
   }));
 }
@@ -283,7 +285,8 @@ function dispatchHomePlatformLoadingStop(reason) {
   document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
     detail: {
       reason,
-      source: 'home-platform-shell'
+      source: 'home-platform-shell',
+      blocking: false
     }
   }));
 }
@@ -981,6 +984,8 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
+  const shellSession = HOME_PLATFORM_SHELL_STATE.shellSession + 1;
+  HOME_PLATFORM_SHELL_STATE.shellSession = shellSession;
   closeConflictingHomeChrome();
   closeBlockingGlobalOverlays();
   root.hidden = false;
@@ -994,6 +999,10 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
 
   void setHomePlatformDestination(destination).then(() => {
+    if (HOME_PLATFORM_SHELL_STATE.shellSession !== shellSession || root.hidden) {
+      return;
+    }
+
     document.dispatchEvent(new CustomEvent('home:platform-shell-opened', {
       detail: {
         destination: HOME_PLATFORM_SHELL_STATE.activeDestination,
@@ -1007,13 +1016,20 @@ function closeHomePlatformShell() {
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
+  HOME_PLATFORM_SHELL_STATE.shellSession += 1;
   root.hidden = true;
   root.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('home-platform-shell-open');
+  document.documentElement.classList.remove('home-platform-shell-open');
   root.removeAttribute('data-home-platform-destination');
   root.removeAttribute('data-home-platform-subdestination');
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   document.dispatchEvent(new CustomEvent('neuroartan:home-topbar-reset-triggers'));
+  document.dispatchEvent(new CustomEvent('neuroartan:home-stage-reset-requested', {
+    detail: {
+      source: 'home-platform-shell-close',
+    },
+  }));
   document.dispatchEvent(new CustomEvent('home:platform-shell-closed'));
 }
 

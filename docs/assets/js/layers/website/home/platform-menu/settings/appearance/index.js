@@ -317,7 +317,7 @@ function getCurrentCursorState() {
   }
 
   return {
-    mode: document.documentElement.dataset.cursorMode || 'custom',
+    mode: document.documentElement.dataset.cursorMode || 'native',
     color: getComputedStyle(document.documentElement).getPropertyValue('--cursor-accent-color').trim() || '#917c6f',
     enabled: document.documentElement.dataset.cursorCustom === 'true'
   };

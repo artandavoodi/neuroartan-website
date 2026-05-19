@@ -328,7 +328,7 @@
   --layout-home-search-header-gap:1rem;
   --layout-home-search-header-padding-y:1.45rem;
   --layout-home-search-header-padding-x-fallback:2.8rem;
-  --layout-home-search-header-padding-bottom:1.05rem;
+  --layout-home-search-header-padding-bottom:0.2rem;
   --layout-home-search-eyebrow-margin-bottom:0.35rem;
   --layout-home-search-eyebrow-size:0.72rem;
   --layout-home-search-eyebrow-weight:500;
@@ -394,13 +394,13 @@
   --layout-home-search-result-badge-size:0.7rem;
   --layout-home-search-result-badge-weight:600;
   --layout-home-search-result-badge-tracking:0.08em;
-  --layout-home-search-result-badge-icon-size:0.82rem;
+  --layout-home-search-result-badge-icon-size:1.5rem;
   --layout-home-search-result-tags-gap:0.45rem;
   --layout-home-search-result-tag-min-height:1.85rem;
   --layout-home-search-result-tag-padding-x:0.7rem;
   --layout-home-search-result-tag-size:0.72rem;
   --layout-home-search-result-tag-tracking:0.04em;
-  --layout-home-search-result-actions-gap:0.55rem;
+  --layout-home-search-result-actions-gap:0.8rem;
   --layout-home-search-result-action-min-height:2.4rem;
   --layout-home-search-result-action-min-width:10.5rem;
   --layout-home-search-result-action-padding-x:0.95rem;
@@ -408,6 +408,9 @@
   --layout-home-search-result-action-weight:500;
   --layout-home-search-result-action-tracking:0.08em;
   --layout-home-search-result-action-line-height:1;
+  --layout-home-search-filter-panel-width:34rem;
+  --layout-home-search-filter-panel-max-height:28rem;
+  --layout-home-search-filter-panel-padding:1rem;
   --layout-home-search-light-border:rgba(0, 0, 0, 0.12);
   --layout-home-search-dark-border:rgba(255, 255, 255, 0.16);
   --layout-home-search-mobile-padding-x-fallback:1rem;
@@ -1079,7 +1082,7 @@
   --layout-cookie-language-overlay-min-height:24rem;
   --layout-cookie-language-overlay-region-min-height-mobile:12rem;
   --layout-cookie-language-overlay-radius:1.9rem;
-  --layout-cookie-language-overlay-toolbar-padding-top:1.02rem;
+  --layout-cookie-language-overlay-toolbar-padding-top:3.06rem;
   --layout-cookie-language-overlay-toolbar-gap:0.44rem;
   --layout-cookie-language-overlay-toolbar-mobile-offset:0.2rem;
   --layout-cookie-language-overlay-search-to-list-gap:0.68rem;

@@ -795,6 +795,59 @@ html[data-theme-effective="light"]{
   gap:var(--home-platform-shell-embedded-stack-gap);
 }
 
+.home-platform-shell :is(
+  .home-platform-destination-card__item,
+  .home-platform-notifications__action,
+  .home-platform-messaging__action,
+  .home-platform-more__action,
+  .home-platform-settings-category__option,
+  .home-platform-settings-category__field
+){
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--control-radius-composer);
+  background:var(--control-surface);
+  color:var(--control-text-unified);
+  font-size:var(--body-2-size);
+  font-weight:var(--type-body-regular-weight);
+  line-height:var(--body-2-line-height);
+  letter-spacing:var(--body-2-tracking);
+  transform:none;
+}
+
+.home-platform-shell :is(
+  .home-platform-destination-card__item,
+  .home-platform-notifications__action,
+  .home-platform-messaging__action,
+  .home-platform-more__action,
+  .home-platform-settings-category__option
+):hover,
+.home-platform-shell :is(
+  .home-platform-destination-card__item,
+  .home-platform-notifications__action,
+  .home-platform-messaging__action,
+  .home-platform-more__action,
+  .home-platform-settings-category__option
+):focus-visible{
+  border-color:var(--control-border-hover-unified);
+  background:var(--control-surface-hover);
+  color:var(--control-text-hover-unified);
+  outline:none;
+  transform:none;
+}
+
+.home-platform-shell :is(
+  .home-platform-destination-card__eyebrow,
+  .home-platform-settings-category__eyebrow,
+  .home-platform-settings-category__section-eyebrow
+){
+  color:var(--home-platform-shell-muted-label-color);
+  font-size:var(--home-platform-shell-label-size);
+  font-weight:var(--home-platform-shell-label-weight);
+  letter-spacing:var(--home-platform-shell-label-tracking);
+  line-height:var(--control-line-height);
+  text-transform:uppercase;
+}
+
 /* =============================================================================
 12) PLATFORM SCROLL GOVERNANCE
 ============================================================================= */

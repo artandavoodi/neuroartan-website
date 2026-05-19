@@ -78,6 +78,64 @@
   color:var(--text-secondary-color);
 }
 
+
+/* =============================================================================
+   02A) PROFILE SIDEBAR COLLAPSE SYSTEM
+   ============================================================================= */
+
+.profile-sidebar__collapse-toggle{
+  width:var(--layout-home-platform-shell-rail-toggle-size);
+  height:var(--layout-home-platform-shell-rail-toggle-size);
+  display:grid;
+  place-items:center;
+  margin:0 0 var(--spacing-sm);
+  padding:0;
+  border:0;
+  border-radius:var(--control-radius);
+  background:transparent;
+  color:var(--text-color);
+  transition:var(--interaction-transition-control);
+}
+
+.profile-sidebar__collapse-toggle:hover,
+.profile-sidebar__collapse-toggle:focus-visible{
+  color:var(--primary-hover-text-color);
+  outline:none;
+}
+
+.profile-sidebar__collapse-toggle-icon{
+  width:var(--layout-home-platform-shell-rail-toggle-icon-size);
+  height:var(--layout-home-platform-shell-rail-toggle-icon-size);
+  display:block;
+}
+
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__surface{
+  gap:var(--spacing-sm);
+}
+
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__summary,
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-copy,
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__footer{
+  display:none;
+}
+
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__header{
+  gap:0;
+}
+
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-item{
+  padding:0.8rem 0;
+}
+
+.profile-sidebar[data-profile-sidebar-collapsed="true"] .profile-sidebar__nav-title{
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.profile-workspace__layout[data-profile-sidebar-collapsed="true"]{
+  grid-template-columns:minmax(9rem, 11rem) minmax(0, 1fr);
+}
+
 /* =============================================================================
    03) PROFILE SIDEBAR NAVIGATION
    ============================================================================= */

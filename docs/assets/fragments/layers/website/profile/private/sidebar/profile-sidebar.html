@@ -3,9 +3,27 @@
      02) PRIVATE PROFILE SIDEBAR SURFACE
      03) PRIVATE PROFILE PRIMARY NAVIGATION
 ============================================================================= -->
-<aside class="profile-sidebar" data-profile-sidebar data-profile-surface="private" aria-label="Private profile workspace navigation">
+<aside class="profile-sidebar" data-profile-sidebar-collapsed="false" data-profile-sidebar data-profile-surface="private" aria-label="Private profile workspace navigation">
   <div class="profile-sidebar__surface">
     <div class="profile-sidebar__header">
+      <button
+        class="profile-sidebar__collapse-toggle"
+        type="button"
+        data-profile-sidebar-toggle
+        aria-label="Collapse profile sidebar"
+        aria-pressed="false"
+      >
+        <img
+          class="profile-sidebar__collapse-toggle-icon"
+          src="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+          alt=""
+          aria-hidden="true"
+          data-profile-sidebar-toggle-icon
+          data-profile-sidebar-toggle-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+          data-profile-sidebar-toggle-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg"
+        >
+      </button>
+
       <p class="profile-sidebar__eyebrow">Workspace</p>
       <p class="profile-sidebar__summary" data-profile-sidebar-summary>Owner environment for identity, thoughts, route state, and profile settings.</p>
     </div>

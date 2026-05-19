@@ -38,25 +38,57 @@ function renderSidebar(root, state = getProfileNavigationState()){
 function setSidebarRail(root, state){
   const normalized = state === 'collapsed' ? 'collapsed' : 'expanded';
   const toggle = root.querySelector('[data-profile-sidebar-rail-toggle]');
-  const icon = root.querySelector('img[data-profile-sidebar-rail-toggle-icon]');
+  const toggleIconHost = root.querySelector('[data-profile-sidebar-rail-toggle-icon-host]');
+  const toggleIcon = root.querySelector('[data-profile-sidebar-rail-toggle-icon]');
   const layout = root.closest('.profile-workspace__layout');
 
   root.setAttribute('data-profile-sidebar-rail', normalized);
   layout?.setAttribute('data-profile-sidebar-rail', normalized);
 
   if(toggle){
-    const collapsed = normalized === 'collapsed';
-    toggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+    const isExpanded = normalized === 'expanded';
+    toggle.setAttribute('aria-pressed', isExpanded ? 'true' : 'false');
     toggle.setAttribute(
       'aria-label',
-      collapsed ? 'Expand profile sidebar' : 'Collapse profile sidebar'
+      isExpanded ? 'Collapse profile sidebar' : 'Expand profile sidebar'
     );
   }
 
-  if(icon){
-    const expandedIcon = icon.dataset.profileSidebarRailToggleExpanded || '';
-    const collapsedIcon = icon.dataset.profileSidebarRailToggleCollapsed || '';
-    icon.setAttribute('src', normalized === 'collapsed' ? collapsedIcon : expandedIcon);
+  const expandedIcon = (
+    toggleIconHost?.getAttribute('data-profile-sidebar-rail-icon-expanded')
+    || toggleIcon?.getAttribute('data-profile-sidebar-rail-icon-expanded')
+    || ''
+  ).trim();
+
+  const collapsedIcon = (
+    toggleIconHost?.getAttribute('data-profile-sidebar-rail-icon-collapsed')
+    || toggleIcon?.getAttribute('data-profile-sidebar-rail-icon-collapsed')
+    || ''
+  ).trim();
+
+  const nextIcon = normalized === 'expanded' ? expandedIcon : collapsedIcon;
+
+  if(toggleIconHost && expandedIcon && collapsedIcon){
+    toggleIconHost.setAttribute('data-profile-sidebar-rail-icon-expanded', expandedIcon);
+    toggleIconHost.setAttribute('data-profile-sidebar-rail-icon-collapsed', collapsedIcon);
+  }
+
+  if(toggleIconHost && nextIcon){
+    const currentIcon = (
+      toggleIconHost.getAttribute('data-profile-sidebar-rail-current-icon') || ''
+    ).trim();
+
+    if(currentIcon !== nextIcon){
+      toggleIconHost.setAttribute('data-profile-sidebar-rail-current-icon', nextIcon);
+      toggleIconHost.innerHTML = `<img class="ui-icon-theme-aware" src="${nextIcon}" alt="" data-profile-sidebar-rail-toggle-icon data-profile-sidebar-rail-icon-expanded="${expandedIcon}" data-profile-sidebar-rail-icon-collapsed="${collapsedIcon}">`;
+
+      window.dispatchEvent(new CustomEvent('fragment:mounted', {
+        detail: {
+          name: 'profile-sidebar-rail-toggle-icon',
+          root: toggleIconHost,
+        },
+      }));
+    }
   }
 }
 

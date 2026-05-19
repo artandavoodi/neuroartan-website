@@ -90,15 +90,15 @@
 .profile-header__verified{
   display:inline-flex;
   align-items:center;
-  gap:0.45rem;
-  padding:0.34rem 0.72rem;
-  border:1px solid var(--profile-header-verified-border);
-  border-radius:var(--control-radius-pill);
-  background:var(--profile-header-verified-bg);
-  color:var(--profile-header-verified-color);
+  justify-content:center;
+  flex:0 0 auto;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:inherit;
 }
 
-.profile-header__verified-label,
 .profile-header__creator-line,
 .profile-header__meta-item{
   font-size:var(--body-3-size);

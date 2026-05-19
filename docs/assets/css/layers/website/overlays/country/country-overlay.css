@@ -183,11 +183,9 @@
 #country-overlay.closing .country-overlay-inner,
 .country-overlay.closing .country-overlay-inner{
   opacity: var(--overlay-opacity-closed);
-  transform: translateY(var(--country-overlay-inner-close-y)) scale(var(--country-overlay-inner-close-scale));
-
-  transition:
-    transform var(--country-motion-close-transform) var(--country-motion-ease),
-    opacity var(--country-motion-close-opacity) var(--country-motion-ease);
+  pointer-events: none;
+  transform: translateY(var(--spacing-none)) scale(var(--overlay-opacity-open));
+  transition: none;
 }
 
 /* =============================================================================
@@ -212,11 +210,9 @@ body.country-active .stage-circle{
 #country-overlay.closing .country-overlay-inner,
 .country-overlay.closing .country-overlay-inner{
   opacity: var(--overlay-opacity-closed);
-  transform: translateY(var(--country-overlay-inner-close-y)) scale(var(--country-overlay-inner-close-scale));
-
-  transition:
-    transform var(--country-motion-close-transform) var(--country-motion-ease),
-    opacity var(--country-motion-close-opacity) var(--country-motion-ease);
+  pointer-events: none;
+  transform: translateY(var(--spacing-none)) scale(var(--overlay-opacity-open));
+  transition: none;
 }
 
 /* =============================================================================

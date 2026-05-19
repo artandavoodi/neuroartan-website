@@ -31,6 +31,7 @@
   let bootBound = false;
   let mountEventsBound = false;
   const activeReasons = new Set();
+  const reasonTimers = new Map();
   let showTimer = null;
   let visible = false;
   let visibleSince = 0;
@@ -38,9 +39,12 @@
   let initialLoadBound = false;
   let introObserver = null;
 
-  const SHOW_DELAY_MS = 90;
-  const MIN_VISIBLE_MS = 320;
-  const FINAL_PAINT_SETTLE_MS = 120;
+  const SHOW_DELAY_MS = 180;
+  const MIN_VISIBLE_MS = 180;
+  const FINAL_PAINT_SETTLE_MS = 80;
+  const DEFAULT_REASON_TIMEOUT_MS = 4500;
+  const INITIAL_LOAD_TIMEOUT_MS = 6000;
+  const INITIAL_LOAD_SETTLE_TIMEOUT_MS = 4500;
   const INITIAL_LOAD_REASON = 'initial-page-load';
   const BLOCKING_LOADING_REASONS = new Set([
     INITIAL_LOAD_REASON,
@@ -106,6 +110,48 @@
     if (!hideTimer) return;
     window.clearTimeout(hideTimer);
     hideTimer = null;
+  };
+
+  const clearReasonTimer = (reason) => {
+    const normalizedReason = normalizeReason(reason);
+    const timer = reasonTimers.get(normalizedReason);
+    if (!timer) return;
+
+    window.clearTimeout(timer);
+    reasonTimers.delete(normalizedReason);
+  };
+
+  const clearReasonTimers = () => {
+    reasonTimers.forEach((timer) => window.clearTimeout(timer));
+    reasonTimers.clear();
+  };
+
+  const getReasonTimeout = (reason) => {
+    if (reason === INITIAL_LOAD_REASON) {
+      return INITIAL_LOAD_TIMEOUT_MS;
+    }
+
+    return DEFAULT_REASON_TIMEOUT_MS;
+  };
+
+  const armReasonTimer = (reason) => {
+    const normalizedReason = normalizeReason(reason);
+
+    clearReasonTimer(normalizedReason);
+    reasonTimers.set(normalizedReason, window.setTimeout(() => {
+      reasonTimers.delete(normalizedReason);
+
+      if (!activeReasons.has(normalizedReason)) return;
+
+      activeReasons.delete(normalizedReason);
+      updateVisibility();
+      document.dispatchEvent(new CustomEvent('neuroartan:loading-stale-reason-cleared', {
+        detail: {
+          reason: normalizedReason,
+          source: 'core/03-runtime/loading-overlay.js'
+        }
+      }));
+    }, getReasonTimeout(normalizedReason)));
   };
 
   /* =============================================================================
@@ -190,17 +236,22 @@
   };
 
   const start = (reason = 'generic') => {
-    activeReasons.add(normalizeReason(reason));
+    const normalizedReason = normalizeReason(reason);
+    activeReasons.add(normalizedReason);
+    armReasonTimer(normalizedReason);
     updateVisibility();
   };
 
   const stop = (reason = 'generic') => {
-    activeReasons.delete(normalizeReason(reason));
+    const normalizedReason = normalizeReason(reason);
+    clearReasonTimer(normalizedReason);
+    activeReasons.delete(normalizedReason);
     updateVisibility();
   };
 
   const clear = () => {
     activeReasons.clear();
+    clearReasonTimers();
     clearShowTimer();
     clearHideTimer();
 
@@ -257,6 +308,7 @@
     if (document.readyState !== 'complete') {
       start(INITIAL_LOAD_REASON);
       window.addEventListener('load', completeInitialLoad, { once: true });
+      window.setTimeout(completeInitialLoad, INITIAL_LOAD_SETTLE_TIMEOUT_MS);
       return;
     }
 

@@ -6,31 +6,74 @@ function getNotificationsSurface(root) {
   return root.querySelector('[data-home-platform-destination-surface]') || root;
 }
 
+function escapeHtml(value = '') {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function getNotificationSnapshot(snapshot = {}) {
+  return window.NEUROARTAN_NOTIFICATION_CENTER?.getSnapshot?.()
+    || snapshot?.communication?.notifications
+    || {};
+}
+
+function renderNotificationList(notifications = []) {
+  if (!notifications.length) {
+    return `
+      <div class="home-platform-notifications__empty">
+        <p class="home-platform-notifications__state">No notifications are stored in this browser.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <ul class="home-platform-notifications__feed" aria-label="Notification list">
+      ${notifications.map((item) => `
+        <li class="home-platform-notifications__entry" data-notification-read-state="${item.readAt ? 'read' : 'unread'}">
+          <div class="home-platform-notifications__entry-copy">
+            <strong>${escapeHtml(item.title || 'Notification')}</strong>
+            ${item.body ? `<span>${escapeHtml(item.body)}</span>` : ''}
+          </div>
+          <button class="home-platform-notifications__entry-action" type="button" data-notification-mark-read="${escapeHtml(item.id || '')}" ${item.readAt ? 'disabled' : ''}>
+            ${item.readAt ? 'Read' : 'Mark read'}
+          </button>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
 function renderNotificationsMarkup(snapshot = {}) {
   const signedIn = !!snapshot?.account?.signedIn;
-  const unreadCount = Number(snapshot?.communication?.notifications?.unreadCount || 0);
+  const notificationSnapshot = getNotificationSnapshot(snapshot);
+  const unreadCount = Number(notificationSnapshot?.unreadCount || 0);
+  const notifications = Array.isArray(notificationSnapshot?.notifications)
+    ? notificationSnapshot.notifications
+    : [];
+  const permission = notificationSnapshot?.permission || 'default';
   const hasUnread = unreadCount > 0;
 
   return `
     <div class="home-platform-notifications__grid">
       <article class="home-platform-notifications__card">
         <p class="home-platform-notifications__eyebrow">Notifications Overview</p>
-        <h3 class="home-platform-notifications__title">${signedIn ? 'Trust-sensitive updates stay visible here' : 'Notifications will appear after account entry'}</h3>
-        <p class="home-platform-notifications__state">${signedIn ? (hasUnread ? `${Math.min(unreadCount, 99)} unread notifications are currently marked for review.` : 'No unread notifications are currently staged in this shell runtime.') : 'Verification, profile, and runtime alerts remain private until the owner runtime is active.'}</p>
+        <h3 class="home-platform-notifications__title">${signedIn ? 'Trust-sensitive updates stay visible here' : 'Local notification center is active'}</h3>
+        <p class="home-platform-notifications__state">${hasUnread ? `${Math.min(unreadCount, 99)} unread notifications are stored for review.` : 'No unread notifications are currently stored.'}</p>
         <div class="home-platform-notifications__actions">
-          <a class="home-platform-notifications__action" href="/pages/models/index.html">Open Models</a>
-          <a class="home-platform-notifications__action" href="/pages/dashboard/index.html">Open Dashboard</a>
+          <button class="home-platform-notifications__action" type="button" data-notification-request-permission>Browser Permission: ${escapeHtml(permission)}</button>
+          <button class="home-platform-notifications__action" type="button" data-notification-mark-all-read ${hasUnread ? '' : 'disabled'}>Mark all read</button>
         </div>
       </article>
 
       <article class="home-platform-notifications__card">
-        <p class="home-platform-notifications__eyebrow">Notification Policy</p>
-        <h3 class="home-platform-notifications__title">Priority, verification, and system state</h3>
-        <ul class="home-platform-notifications__list">
-          <li class="home-platform-notifications__item">Verification changes, public-route shifts, and trust-state alerts stay distinct from social noise.</li>
-          <li class="home-platform-notifications__item">Unread and high-volume icon states are now scaffolded at the shell navigation level.</li>
-          <li class="home-platform-notifications__item">Future account, model, and system notifications can graduate into sovereign runtime storage without changing this shell contract.</li>
-        </ul>
+        <p class="home-platform-notifications__eyebrow">Notification Log</p>
+        <h3 class="home-platform-notifications__title">Account, privacy, and runtime events</h3>
+        ${renderNotificationList(notifications)}
       </article>
     </div>
   `;
@@ -43,4 +86,24 @@ export function mountHomePlatformDestination(root, { snapshot = {} } = {}) {
   }
 
   surface.innerHTML = renderNotificationsMarkup(snapshot);
+
+  surface.querySelector('[data-notification-request-permission]')?.addEventListener('click', async () => {
+    await window.NEUROARTAN_NOTIFICATION_CENTER?.requestPermission?.();
+    surface.innerHTML = renderNotificationsMarkup(snapshot);
+    mountHomePlatformDestination(root, { snapshot });
+  });
+
+  surface.querySelector('[data-notification-mark-all-read]')?.addEventListener('click', () => {
+    window.NEUROARTAN_NOTIFICATION_CENTER?.markAllRead?.();
+    surface.innerHTML = renderNotificationsMarkup(snapshot);
+    mountHomePlatformDestination(root, { snapshot });
+  });
+
+  surface.querySelectorAll('[data-notification-mark-read]').forEach((button) => {
+    button.addEventListener('click', () => {
+      window.NEUROARTAN_NOTIFICATION_CENTER?.markRead?.(button.getAttribute('data-notification-mark-read') || '');
+      surface.innerHTML = renderNotificationsMarkup(snapshot);
+      mountHomePlatformDestination(root, { snapshot });
+    });
+  });
 }

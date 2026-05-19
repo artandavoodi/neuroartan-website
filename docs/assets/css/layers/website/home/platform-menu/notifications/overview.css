@@ -59,13 +59,54 @@
   list-style:none;
 }
 
+.home-platform-notifications__feed{
+  display:grid;
+  gap:var(--layout-home-platform-destination-list-gap);
+  padding:var(--spacing-none);
+  margin:var(--spacing-none);
+  list-style:none;
+}
+
+.home-platform-notifications__entry{
+  display:grid;
+  grid-template-columns:minmax(var(--spacing-none), 1fr) auto;
+  gap:var(--layout-home-platform-destination-list-gap);
+  align-items:center;
+  padding:var(--layout-home-platform-destination-card-padding-y) var(--layout-home-platform-destination-card-padding-x);
+  border:var(--border-width-hairline) solid var(--home-panel-card-border);
+  background:var(--home-panel-card-surface);
+}
+
+.home-platform-notifications__entry[data-notification-read-state="read"]{
+  opacity:var(--state-opacity-muted);
+}
+
+.home-platform-notifications__entry-copy{
+  display:grid;
+  gap:var(--spacing-2xs);
+}
+
+.home-platform-notifications__entry-copy strong,
+.home-platform-notifications__entry-copy span,
+.home-platform-notifications__empty{
+  color:var(--text-primary-color);
+  font-size:var(--layout-home-platform-destination-copy-size);
+  line-height:var(--layout-home-platform-destination-copy-line-height);
+}
+
+.home-platform-notifications__entry-copy span,
+.home-platform-notifications__empty{
+  color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
+}
+
 .home-platform-notifications__actions{
   display:flex;
   flex-wrap:wrap;
   gap:var(--layout-home-platform-destination-action-gap);
 }
 
-.home-platform-notifications__action{
+.home-platform-notifications__action,
+.home-platform-notifications__entry-action{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -84,11 +125,19 @@
 }
 
 .home-platform-notifications__action:hover,
-.home-platform-notifications__action:focus-visible{
+.home-platform-notifications__action:focus-visible,
+.home-platform-notifications__entry-action:hover,
+.home-platform-notifications__entry-action:focus-visible{
   color:var(--text-primary-color);
   border-color:var(--control-border-strong);
   background:var(--control-bg);
   outline:none;
+}
+
+.home-platform-notifications__action:disabled,
+.home-platform-notifications__entry-action:disabled{
+  opacity:var(--state-opacity-disabled);
+  pointer-events:none;
 }
 
 @media (max-width: 980px){

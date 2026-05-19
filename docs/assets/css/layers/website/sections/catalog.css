@@ -208,7 +208,6 @@ body.models-page{
   display:block;
   width:var(--layout-home-search-result-badge-icon-size);
   height:var(--layout-home-search-result-badge-icon-size);
-  filter:var(--icon-image-filter, none);
 }
 
 

@@ -304,12 +304,11 @@
 }
 
 .feed-post__badge{
-  gap:var(--feed-badge-gap);
-  border:1px solid color-mix(in srgb, var(--feed-badge-blue) var(--feed-badge-border-mix), transparent);
-  background:color-mix(in srgb, var(--feed-badge-blue) var(--feed-badge-bg-mix), transparent);
-  color:var(--feed-badge-blue);
-  font-weight:var(--feed-badge-weight);
-  text-transform:uppercase;
+  min-height:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
 }
 
 .feed-post__badge-icon{

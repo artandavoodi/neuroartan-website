@@ -558,14 +558,19 @@
     if (!o || o.classList.contains('closing')) return;
 
     const items = getCountryItems();
-    staggerCountryOut(items);
+    items.forEach((el) => {
+      el.style.transitionDelay = '0ms';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(0)';
+    });
 
     o.classList.add('closing');
     o.setAttribute('aria-hidden', 'true');
+    o.classList.remove('active');
+    document.body.classList.remove('country-active');
 
     runAfterCountryOverlayClose(() => {
-      o.classList.remove('active', 'closing');
-      document.body.classList.remove('country-active');
+      o.classList.remove('closing');
       items.forEach((el) => {
         el.style.transitionDelay = '';
         el.style.opacity = '';

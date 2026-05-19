@@ -287,6 +287,7 @@ body.account-drawer-closing .account-drawer-backdrop{
   backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   box-shadow: var(--account-drawer-primary-shadow), var(--account-drawer-shell-inner-shadow);
+  opacity: var(--overlay-opacity-closed);
   transform: var(--account-drawer-panel-transform-closed);
   transition:var(--interaction-transition-control);
   display: flex;
@@ -299,12 +300,15 @@ body.account-drawer-closing .account-drawer-backdrop{
 }
 
 body.account-drawer-open .account-drawer-shell{
+  opacity: var(--overlay-opacity-open);
   transform: var(--account-drawer-panel-transform-open);
 }
 
 body.account-drawer-closing .account-drawer-shell{
-  transition:var(--interaction-transition-control);
-  transform: var(--account-drawer-panel-transform-closed);
+  opacity: var(--overlay-opacity-closed);
+  pointer-events: none;
+  transform: var(--account-drawer-panel-transform-open);
+  transition: none;
 }
 
 /* =============================================================================

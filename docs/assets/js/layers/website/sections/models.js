@@ -392,11 +392,10 @@ function renderModelCard(model = {}) {
     ? `
       <span class="catalog-verified-badge models-directory-card__verification" aria-label="${escapeHtml(verificationLabel)} model">
         <img
-          class="models-directory-card__verification-icon ui-icon-theme-aware"
+          class="models-directory-card__verification-icon"
           src="/registry/icons/public/assets/core/identity/trust/verified.svg"
           alt=""
           aria-hidden="true">
-        <span>${escapeHtml(verificationLabel)}</span>
       </span>
     `
     : '';

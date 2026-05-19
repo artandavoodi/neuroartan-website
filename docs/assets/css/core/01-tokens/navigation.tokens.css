@@ -274,6 +274,11 @@
   --nav-institutional-panel-closing-y:-0.95rem;
   --nav-institutional-panel-closing-scale:0.988;
   --nav-institutional-panel-closing-opacity:0.001;
+  --nav-institutional-panel-content-y:0.36rem;
+  --nav-institutional-panel-content-motion:420ms;
+  --nav-institutional-panel-content-exit-motion:180ms;
+  --nav-institutional-panel-content-delay:70ms;
+  --nav-institutional-panel-content-stagger:34ms;
   --nav-institutional-panel-padding-y:5.15rem;
   --nav-institutional-panel-padding-x-fallback:3.2rem;
   --nav-institutional-panel-padding-bottom:3.9rem;

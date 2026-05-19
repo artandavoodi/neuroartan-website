@@ -255,17 +255,14 @@
 .models-directory-card__verification{
   display:inline-flex;
   align-items:center;
-  gap:var(--models-verification-gap);
-  min-height:var(--models-verification-min-height);
-  padding:var(--spacing-none) var(--models-verification-padding-x);
-  border:1px solid color-mix(in srgb, var(--models-verification-blue) var(--models-verification-border-mix), transparent);
-  border-radius:var(--models-filter-chip-radius);
-  background:color-mix(in srgb, var(--models-verification-blue) var(--models-verification-bg-mix), transparent);
-  color:var(--models-verification-blue);
-  font-size:var(--models-verification-size);
-  font-weight:var(--models-verification-weight);
-  letter-spacing:var(--models-verification-tracking);
-  text-transform:uppercase;
+  justify-content:center;
+  flex:0 0 auto;
+  min-height:auto;
+  padding:var(--spacing-none);
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:inherit;
 }
 
 .models-directory-card__verification-icon{

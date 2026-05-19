@@ -53,6 +53,18 @@ const HOME_SURFACE_STATE = {
     stageEffects: 'subtle',
     stageText: 'minimal',
   },
+  communication: {
+    messaging: {
+      unreadCount: 0,
+      state: 'idle',
+    },
+    notifications: {
+      unreadCount: 0,
+      state: 'idle',
+      permission: 'default',
+      notifications: [],
+    },
+  },
   subscribers: new Set(),
 };
 
@@ -234,6 +246,17 @@ function cloneHomeSurfaceState() {
     interaction: {
       ...HOME_SURFACE_STATE.interaction,
     },
+    communication: {
+      messaging: {
+        ...HOME_SURFACE_STATE.communication.messaging,
+      },
+      notifications: {
+        ...HOME_SURFACE_STATE.communication.notifications,
+        notifications: Array.isArray(HOME_SURFACE_STATE.communication.notifications.notifications)
+          ? HOME_SURFACE_STATE.communication.notifications.notifications.map((entry) => ({ ...entry }))
+          : [],
+      },
+    },
   };
 }
 
@@ -361,6 +384,27 @@ function syncInteractionSettings(detail = {}) {
   };
 }
 
+function syncCommunicationState(detail = {}) {
+  const notifications = detail?.communication?.notifications
+    || detail?.notifications
+    || window.NEUROARTAN_NOTIFICATION_CENTER?.getSnapshot?.()
+    || HOME_SURFACE_STATE.communication.notifications;
+
+  HOME_SURFACE_STATE.communication = {
+    messaging: {
+      ...HOME_SURFACE_STATE.communication.messaging,
+    },
+    notifications: {
+      unreadCount: Number(notifications.unreadCount || 0),
+      state: normalizeString(notifications.state || '') || 'idle',
+      permission: normalizeString(notifications.permission || '') || 'default',
+      notifications: Array.isArray(notifications.notifications)
+        ? notifications.notifications.map((entry) => ({ ...entry }))
+        : [],
+    },
+  };
+}
+
 /* =========================================================
    06. EVENT BINDING
    ========================================================= */
@@ -427,6 +471,11 @@ function bindHomeSurfaceStateEvents() {
     emitHomeSurfaceState();
   });
 
+  document.addEventListener('neuroartan:notifications-updated', (event) => {
+    syncCommunicationState(event?.detail || {});
+    emitHomeSurfaceState();
+  });
+
 }
 
 /* =========================================================
@@ -437,6 +486,7 @@ function bootHomeSurfaceState() {
   syncThemeState();
   syncLocaleState();
   syncSignedInAccountState();
+  syncCommunicationState();
   bindHomeSurfaceStateEvents();
   emitHomeSurfaceState();
 }

@@ -421,16 +421,21 @@ body.cookie-consent-closing .cookie-consent-backdrop{
   box-shadow:var(--cookie-consent-shadow);
   backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
   -webkit-backdrop-filter:blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  opacity:var(--cookie-consent-overlay-opacity-closed);
   transform:var(--cookie-consent-panel-transform-closed);
   transition:transform var(--cookie-consent-motion-panel-transform) var(--cookie-consent-motion-ease), opacity var(--cookie-consent-motion-panel-opacity) var(--interaction-ease-standard);
 }
 
 body.cookie-consent-open .cookie-consent-panel{
+  opacity:var(--cookie-consent-overlay-opacity-open);
   transform:var(--cookie-consent-panel-transform-open);
 }
 
 body.cookie-consent-closing .cookie-consent-panel{
-  transform:var(--cookie-consent-panel-transform-closed);
+  opacity:var(--cookie-consent-overlay-opacity-closed);
+  pointer-events:none;
+  transform:var(--cookie-consent-panel-transform-open);
+  transition:none;
 }
 
 /* =============================================================================

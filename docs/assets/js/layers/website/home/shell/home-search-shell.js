@@ -415,7 +415,7 @@ function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
   const publicEnabled = profile.public_profile_enabled === true;
   const searchVisible = profile.profile_search_visible !== false;
 
-  if (!ownProfile && (!publicEnabled || !searchVisible)) {
+  if (!username || (!ownProfile && !searchVisible)) {
     return null;
   }
 
@@ -443,7 +443,10 @@ function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
       profile.email,
       profile.first_name,
       profile.last_name,
-      profile.public_identity_label
+      profile.public_identity_label,
+      username,
+      `@${username}`,
+      buildPublicProfilePath(username)
     ].filter(Boolean)
   }, {
     keyPrefix:'supabase-profile',
@@ -636,6 +639,8 @@ function buildIndexedEntry(entry = {}, {
     keywords: normalizedKeywords,
     scoreTokens: uniqueHomeSearchStrings([
       normalizedTitle,
+      normalizedUsername,
+      normalizedUsername ? `@${normalizedUsername}` : '',
       normalizedHref,
       normalizedSummary,
       normalizedScope,

@@ -106,7 +106,7 @@
 
   .profile-workspace__layout[data-profile-sidebar-rail="collapsed"] .profile-workspace__sidebar-mount{
     position:fixed;
-    top:calc(var(--profile-shell-top-clearance-mobile) + var(--nav-glass-surface-height) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl));
+    top:var(--profile-mobile-sidebar-toggle-top, calc(var(--profile-shell-top-clearance-mobile) + var(--nav-glass-surface-height) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl) + var(--spacing-2xl)));
     left:var(--profile-workspace-mobile-rail-overlay-left);
     width:var(--profile-workspace-mobile-rail-overlay-width);
     height:auto;

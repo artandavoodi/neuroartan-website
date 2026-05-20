@@ -60,6 +60,23 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   }
 };
 
+const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
+  overview: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview.svg',
+  posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
+  thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
+  models: '/registry/icons/public/assets/layers/website/profile/actions/models.svg',
+  organizations: '/registry/icons/public/assets/layers/website/profile/actions/organizations.svg',
+  summary: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview-panel.svg',
+  metrics: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-metrics-panel.svg',
+  graph: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-panel.svg',
+  identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg',
+  route: '/registry/icons/public/assets/core/navigation/route/route.svg',
+  verification: '/registry/icons/public/assets/core/identity/trust/verified.svg',
+  visibility: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
+  discovery: '/registry/icons/public/assets/layers/website/settings/overview/overview.svg',
+  sharing: '/registry/icons/public/assets/layers/icos/publishing/visibility.svg'
+});
+
 /* =============================================================================
    02) IMPORTS
 ============================================================================= */
@@ -254,11 +271,23 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
       const button = document.createElement('button');
       button.className = 'profile-private-hero__tab';
       button.type = 'button';
-      button.textContent = tabConfig.label;
       button.dataset.profileTab = tabConfig.key;
       button.dataset.profileTabSection = tabConfig.section;
       if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
       if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
+      const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
+      if (iconPath) {
+        const icon = document.createElement('img');
+        icon.className = 'profile-private-hero__tab-icon ui-icon-theme-aware';
+        icon.src = iconPath;
+        icon.alt = '';
+        icon.setAttribute('aria-hidden', 'true');
+        button.appendChild(icon);
+      }
+      const label = document.createElement('span');
+      label.className = 'profile-private-hero__tab-label';
+      label.textContent = tabConfig.label;
+      button.appendChild(label);
       tabsRoot.appendChild(button);
     });
   }

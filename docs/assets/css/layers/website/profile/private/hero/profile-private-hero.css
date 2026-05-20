@@ -76,6 +76,7 @@
   --profile-private-hero-tab-hover-color:var(--local-nav-hover-text-color);
   --profile-private-hero-tab-active-underline-bg:var(--local-nav-active-indicator-color);
   --profile-private-hero-tab-active-opacity:var(--local-nav-hover-opacity);
+  --profile-private-hero-tab-icon-size:var(--home-platform-shell-nav-icon-size);
 }
 
 /* =============================================================================
@@ -567,6 +568,7 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
+  gap:var(--spacing-2xs);
   min-height:auto;
   color:var(--profile-private-hero-tab-color);
   text-decoration:none;
@@ -577,6 +579,24 @@
   white-space:nowrap;
   transform:none !important;
   transition:color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), opacity var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), transform var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease);
+}
+
+.profile-private-hero__tab-icon{
+  width:var(--profile-private-hero-tab-icon-size);
+  height:var(--profile-private-hero-tab-icon-size);
+  display:block;
+  flex:0 0 var(--profile-private-hero-tab-icon-size);
+  object-fit:contain;
+  object-position:center;
+  opacity:var(--nav-institutional-icon-opacity);
+  transition:opacity var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease);
+}
+
+.profile-private-hero__tab:hover .profile-private-hero__tab-icon,
+.profile-private-hero__tab:focus-visible .profile-private-hero__tab-icon,
+.profile-private-hero__tab:active .profile-private-hero__tab-icon,
+.profile-private-hero__tab[aria-current="page"] .profile-private-hero__tab-icon{
+  opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
 .profile-private-hero__tab::after{
@@ -629,9 +649,10 @@
   }
 
   .profile-private-hero__identity-row{
-    grid-template-columns:auto minmax(0, 1fr) auto;
+    grid-template-columns:auto minmax(0, 1fr);
     grid-template-areas:
-      "avatar copy actions";
+      "avatar actions"
+      "copy copy";
     padding-inline:0;
     align-items:start;
   }
@@ -643,8 +664,8 @@
 
   .profile-private-hero__copy{
     grid-area:copy;
-    padding-inline:var(--spacing-none);
-    padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
+    padding-inline:var(--spacing-md);
+    padding-top:var(--spacing-sm);
   }
 
   .profile-private-hero__actions{

@@ -375,7 +375,9 @@
       const scrollY = window.scrollY || window.pageYOffset || 0;
       let threshold = Number.POSITIVE_INFINITY;
 
-      if (isHomePage()) {
+      if (document.body?.classList.contains('profile-page')) {
+        threshold = Number.POSITIVE_INFINITY;
+      } else if (isHomePage()) {
         if (stage) {
           threshold = getPageTop(stage) + getOuterHeight(stage) + 220;
         } else {

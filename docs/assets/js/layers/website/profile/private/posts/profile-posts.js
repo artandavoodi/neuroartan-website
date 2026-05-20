@@ -179,7 +179,13 @@ function renderPostList(root) {
     item.querySelector('.profile-posts__item-body').textContent = post.body || '';
     const image = item.querySelector('.profile-posts__item-image');
     if (image instanceof HTMLImageElement) {
+      image.loading = 'lazy';
+      image.decoding = 'async';
       image.src = post.imageUrl;
+
+      image.addEventListener('error', () => {
+        image.hidden = true;
+      }, { once: true });
     }
     item.querySelector('.profile-posts__item-meta').textContent = formatDate(post.createdAt);
     list.appendChild(item);
@@ -300,7 +306,10 @@ function bindPostForm() {
         imageUpload = await uploadProfileImage({
           file: STORE.selectedImageFile,
           user: state.profile,
-          kind: 'post'
+          kind: 'post',
+          bucket: 'profile-images',
+          targetBucket: 'profile-images',
+          storageBucket: 'profile-images'
         });
       }
 

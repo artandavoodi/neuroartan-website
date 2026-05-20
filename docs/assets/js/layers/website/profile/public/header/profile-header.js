@@ -112,6 +112,38 @@ function renderAvatar(root, state) {
   }
 }
 
+function renderCover(root, state) {
+  const cover = root.querySelector('[data-profile-public-cover]');
+  if (!(cover instanceof HTMLElement)) return;
+
+  const coverUrl = state.coverDisplayUrl || state.coverUrl || state.defaultCoverUrl || '';
+  if (coverUrl) {
+    cover.style.backgroundImage = `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 12%, transparent), color-mix(in srgb, var(--bg-color) 48%, transparent)), url("${coverUrl}")`;
+    cover.dataset.profilePublicCoverState = state.coverUrl ? 'custom' : 'default';
+    return;
+  }
+
+  cover.style.removeProperty('background-image');
+  cover.dataset.profilePublicCoverState = 'empty';
+}
+
+function isProtectedPublicState(state) {
+  return !['found_renderable', 'loading'].includes(state.routeOutcome || '');
+}
+
+function renderProtectedNotice(root, state) {
+  const notice = root.querySelector('[data-profile-protected-notice]');
+  if (!(notice instanceof HTMLElement)) return;
+
+  const protectedState = isProtectedPublicState(state);
+  notice.hidden = !protectedState;
+
+  if (!protectedState) return;
+
+  setText(root, '[data-profile-protected-title]', state.stateBadgeLabel || 'Protected profile');
+  setText(root, '[data-profile-protected-copy]', state.stateLine || 'This profile is not publicly available.');
+}
+
 /* =============================================================================
    03) PUBLIC PROFILE HEADER RENDER
    ============================================================================= */
@@ -150,6 +182,8 @@ function renderPublicHeader(state = getProfileRuntimeState()) {
     setHidden(root, '[data-profile-creator-line]', !state.creatorLine);
 
     renderAvatar(root, state);
+    renderCover(root, state);
+    renderProtectedNotice(root, state);
 
     const copyAction = root.querySelector('[data-profile-action="copy-link"]');
     setControlDisabled(copyAction, !state.publicRouteUrl);

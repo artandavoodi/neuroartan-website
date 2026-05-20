@@ -38,6 +38,8 @@ import {
   getCurrentFeedAuthor,
   listFeedPosts
 } from '../system/feed/feed-store.js';
+import { rankFeedPosts } from '../system/feed/feed-ranker.js';
+import { listFollowedProfileIds } from '../system/profile/profile-social-graph.js';
 
 /* =============================================================================
    02) CONSTANTS
@@ -52,6 +54,7 @@ const FEED_PAGE_STATE = {
   root: null,
   isBound: false,
   runtimePosts: [],
+  followedProfileIds: [],
   feedAuthor: null,
   composerState: {
     status: 'idle',
@@ -149,10 +152,12 @@ async function loadFeedRuntime() {
 
     FEED_PAGE_STATE.feedAuthor = feedAuthor;
     FEED_PAGE_STATE.runtimePosts = Array.isArray(runtimePosts) ? runtimePosts : [];
+    FEED_PAGE_STATE.followedProfileIds = await listFollowedProfileIds();
     setComposerState('idle', '');
   } catch (error) {
     FEED_PAGE_STATE.feedAuthor = null;
     FEED_PAGE_STATE.runtimePosts = [];
+    FEED_PAGE_STATE.followedProfileIds = [];
     setComposerState('error', 'Feed publishing is not available right now.');
     console.error('[feed] Runtime load failed.', error);
   }
@@ -248,18 +253,14 @@ function buildDerivedFeedPosts() {
 
 function getRenderableFeedPosts() {
   const activeTab = getFeedTab();
+  const sort = getFeedSort();
   const runtimePosts = Array.isArray(FEED_PAGE_STATE.runtimePosts) ? FEED_PAGE_STATE.runtimePosts : [];
 
-  if (activeTab === 'my-posts') {
-    return runtimePosts.filter((post) => post.ownedByCurrentUser);
-  }
-
-  const configuredPosts = getFeedPosts();
-  if (configuredPosts.length) {
-    return [...runtimePosts, ...configuredPosts];
-  }
-
-  return [...runtimePosts, ...buildDerivedFeedPosts()];
+  return rankFeedPosts(runtimePosts, {
+    tab:activeTab,
+    sort,
+    followedProfileIds:FEED_PAGE_STATE.followedProfileIds
+  });
 }
 
 /* =============================================================================
@@ -364,8 +365,8 @@ function renderFeedPage() {
       <p class="catalog-page-description">${escapeHtml(FEED_PAGE_STATE.config.description || '')}</p>
       <div class="catalog-meta">
         ${renderMetricMarkup([
-          `${getPublicModels().length} public models available for discovery`,
-          `${verifiedEntities.length} verified or governed entities surfaced`,
+          `${FEED_PAGE_STATE.runtimePosts.length} profile posts loaded`,
+          `${FEED_PAGE_STATE.followedProfileIds.length} followed profiles in graph`,
           `Current tab: ${(FEED_PAGE_STATE.config.tabs || []).find((tab) => tab.id === activeTab)?.label || 'For You'}`
         ])}
       </div>
@@ -375,10 +376,9 @@ function renderFeedPage() {
       <div class="feed-layout">
         <div class="feed-main">
           <article class="catalog-panel feed-composer">
-            <h2 class="catalog-panel__title">${escapeHtml(FEED_PAGE_STATE.config.composer?.title || 'Feed Composer')}</h2>
-            <p class="catalog-panel__copy">${escapeHtml(FEED_PAGE_STATE.config.composer?.description || '')}</p>
+            <h2 class="catalog-panel__title">${escapeHtml(FEED_PAGE_STATE.config.composer?.title || 'Post')}</h2>
             <label class="catalog-search" for="feed-composer-input">
-              <span class="catalog-search__label">Compose from a governed profile or continuity model surface</span>
+              <span class="catalog-search__label">Publish from your profile</span>
               <span class="catalog-search__input-row">
                 <textarea class="feed-composer__input" id="feed-composer-input" placeholder="${escapeHtml(FEED_PAGE_STATE.config.composer?.placeholder || '')}" ${currentUser ? '' : 'readonly'}></textarea>
               </span>
@@ -391,7 +391,7 @@ function renderFeedPage() {
             ${FEED_PAGE_STATE.composerState.message ? `<p class="catalog-panel__copy" data-feed-composer-status="${escapeHtml(FEED_PAGE_STATE.composerState.status)}">${escapeHtml(FEED_PAGE_STATE.composerState.message)}</p>` : ''}
           </article>
 
-          <div class="catalog-panel feed-stream-panel">
+          <div class="catalog-panel feed-stream-panel" data-feed-ranking="candidate-rank-filter">
             <div class="feed-stream-panel__header">
               <div class="feed-tab-row" role="group" aria-label="Feed tabs">
                 ${renderFeedTabs()}

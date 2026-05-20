@@ -183,6 +183,31 @@ export async function getProfileSubscriptionState(profileOrId = {}) {
   }
 }
 
+export async function listFollowedProfileIds() {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    const { profile } = await getCurrentUserAndProfile(supabase);
+    const viewerProfileId = normalizeProfileId(profile);
+    if (!viewerProfileId) return [];
+
+    const { data, error } = await supabase
+      .from(PROFILE_FOLLOWS_TABLE)
+      .select('following_profile_id')
+      .eq('follower_profile_id', viewerProfileId);
+
+    if (error) throw error;
+
+    return Array.isArray(data)
+      ? data.map((row) => normalizeString(row.following_profile_id)).filter(Boolean)
+      : [];
+  } catch (error) {
+    if (getRelationMissingState(error)) return [];
+    throw error;
+  }
+}
+
 /* =============================================================================
    06) SOCIAL GRAPH WRITES
 ============================================================================= */
@@ -312,6 +337,7 @@ export async function unsubscribeProfile(profileOrId = {}) {
 window.NEUROARTAN_PROFILE_SOCIAL_GRAPH = {
   getProfileSocialGraphState,
   getProfileSubscriptionState,
+  listFollowedProfileIds,
   followProfile,
   unfollowProfile,
   subscribeProfile,

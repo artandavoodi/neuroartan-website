@@ -19,6 +19,21 @@
   --profile-topbar-z-index:1501;
 }
 
+body.profile-page.menu-ribbon-active{
+  background:var(--bg-color);
+}
+
+body.profile-page.menu-ribbon-active::before,
+body.profile-page.menu-ribbon-active::after{
+  content:none;
+  display:none;
+}
+
+body.profile-page.menu-ribbon-active .institutional-menu::before{
+  opacity:var(--overlay-opacity-closed);
+  transform:translateY(var(--institutional-menu-closed-y));
+}
+
 /* =============================================================================
    01) PROFILE TOPBAR FIXED MOUNT
 ============================================================================= */

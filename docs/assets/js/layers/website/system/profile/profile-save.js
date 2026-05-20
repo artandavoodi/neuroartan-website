@@ -76,9 +76,15 @@ function isSupabaseRelationMissingError(error) {
 }
 
 function getMissingSupabaseColumnName(error) {
-  const message = normalizeString(error?.message || '');
-  const match = message.match(/'([^']+)' column of 'profiles'/i);
-  return match?.[1] || '';
+  const message = normalizeString(error?.message || error?.details || '');
+  const quotedColumn = message.match(/'([^']+)' column of 'profiles'/i);
+  if (quotedColumn?.[1]) return quotedColumn[1];
+
+  const qualifiedColumn = message.match(/column\s+profiles\.([a-z0-9_]+)\s+does not exist/i);
+  if (qualifiedColumn?.[1]) return qualifiedColumn[1];
+
+  const genericColumn = message.match(/column\s+\"?([a-z0-9_]+)\"?\s+does not exist/i);
+  return genericColumn?.[1] || '';
 }
 
 function pruneMissingSupabaseColumn(payload, error) {
@@ -300,6 +306,9 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     profile_thoughts_visible: existingProfile?.profile_thoughts_visible !== false,
     avatar_url: normalizeString(existingProfile?.avatar_url || existingProfile?.photo_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture || ''),
     cover_url: normalizeString(coverFlag?.value || coverFlag?.url || ''),
+    avatar_storage_path: normalizeString(existingProfile?.avatar_storage_path || ''),
+    cover_storage_path: normalizeString(existingProfile?.cover_storage_path || ''),
+    profile_image_storage_bucket: normalizeString(existingProfile?.profile_image_storage_bucket || ''),
     public_feature_flags: publicFeatureFlags
   };
 }
@@ -458,6 +467,7 @@ async function resolveMediaUploadValues({
 
     nextValues.cover_url = upload.publicUrl;
     nextValues.cover_storage_path = upload.storagePath;
+    nextValues.profile_image_storage_bucket = upload.bucket;
     nextValues.public_feature_flags = upsertProfileMediaFlag(
       upsertProfileMediaFlag(nextValues.public_feature_flags, 'profile_cover_url', upload.publicUrl),
       'profile_cover_storage_path',
@@ -601,9 +611,15 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     public_modules: payload.public_modules || [],
     public_feature_flags: payload.public_feature_flags || [],
     photo_url: payload.photo_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
-    avatar_storage_path: values.avatar_storage_path || payload.avatar_storage_path || currentProfile?.avatar_storage_path || '',
-    cover_storage_path: values.cover_storage_path || payload.cover_storage_path || currentProfile?.cover_storage_path || '',
-    profile_image_storage_bucket: values.profile_image_storage_bucket || payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || '',
+    avatar_storage_path: Object.prototype.hasOwnProperty.call(values, 'avatar_storage_path')
+      ? values.avatar_storage_path
+      : (payload.avatar_storage_path || currentProfile?.avatar_storage_path || ''),
+    cover_storage_path: Object.prototype.hasOwnProperty.call(values, 'cover_storage_path')
+      ? values.cover_storage_path
+      : (payload.cover_storage_path || currentProfile?.cover_storage_path || ''),
+    profile_image_storage_bucket: Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket')
+      ? values.profile_image_storage_bucket
+      : (payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
     email: payload.email || normalizeEmail(user.email || ''),
     first_name: payload.first_name || '',
     last_name: payload.last_name || '',

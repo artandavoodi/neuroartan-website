@@ -91,21 +91,27 @@ function getResetMediaValues(kind = RUNTIME.kind, profile = {}) {
     const currentFlags = Array.isArray(profile.public_feature_flags)
       ? profile.public_feature_flags
       : [];
+    const fallbackCoverUrl = getProfileRuntimeState().defaultCoverUrl || '';
     return {
-      cover_url:'',
+      cover_url:fallbackCoverUrl,
       cover_storage_path:'',
+      profile_image_storage_bucket:'',
       public_feature_flags:currentFlags.filter((entry) => {
         const key = String(entry?.key || entry?.name || '').trim();
         return key !== 'profile_cover_url' && key !== 'profile_cover_storage_path';
-      })
+      }).concat(fallbackCoverUrl
+        ? [{ key:'profile_cover_url', value:fallbackCoverUrl, scope:'profile_media' }]
+        : [])
     };
   }
 
+  const fallbackAvatarUrl = getProfileRuntimeState().defaultAvatarUrl || '';
   return {
-    avatar_url:'',
-    photo_url:'',
-    public_avatar_url:'',
-    avatar_storage_path:''
+    avatar_url:fallbackAvatarUrl,
+    photo_url:fallbackAvatarUrl,
+    public_avatar_url:fallbackAvatarUrl,
+    avatar_storage_path:'',
+    profile_image_storage_bucket:''
   };
 }
 

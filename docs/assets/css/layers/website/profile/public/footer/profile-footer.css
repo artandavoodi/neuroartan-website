@@ -1,0 +1,69 @@
+/* =============================================================================
+   01) PUBLIC PROFILE FOOTER
+   02) RESPONSIVE
+============================================================================= */
+
+.profile-footer[data-profile-surface="public"]{
+  width:100%;
+  padding-block:var(--spacing-xl);
+  border-top:var(--border-width-hairline) solid var(--border-color);
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__rail{
+  width:var(--site-rail-width);
+  max-width:calc(100% - (var(--site-gutter) * 2));
+  margin-inline:auto;
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__surface{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-md);
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__brand{
+  display:inline-flex;
+  align-items:center;
+  color:var(--text-secondary-color);
+  opacity:var(--nav-institutional-icon-opacity);
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__brand:hover,
+.profile-footer[data-profile-surface="public"] .profile-footer__brand:focus-visible{
+  opacity:var(--nav-institutional-icon-hover-opacity);
+  outline:none;
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__brand-mark{
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  display:block;
+  filter:var(--icon-image-filter);
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__meta{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  color:var(--text-secondary-color);
+}
+
+.profile-footer[data-profile-surface="public"] .profile-footer__meta-item,
+.profile-footer[data-profile-surface="public"] .profile-footer__meta-separator{
+  margin:0;
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+@media (max-width:720px){
+  .profile-footer[data-profile-surface="public"] .profile-footer__surface,
+  .profile-footer[data-profile-surface="public"] .profile-footer__meta{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .profile-footer[data-profile-surface="public"] .profile-footer__meta-separator{
+    display:none;
+  }
+}

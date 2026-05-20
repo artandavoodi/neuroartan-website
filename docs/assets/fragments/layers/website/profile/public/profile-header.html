@@ -6,6 +6,8 @@
 ============================================================================= -->
 <section class="profile-header" data-profile-header data-profile-surface="public" aria-label="Public profile header">
   <div class="profile-header__surface">
+    <div class="profile-header__cover" data-profile-public-cover aria-hidden="true"></div>
+
     <div class="profile-header__identity-block">
       <div class="profile-header__avatar-shell">
         <div class="profile-header__avatar-surface">
@@ -81,6 +83,18 @@
         </div>
       </div>
     </div>
+
+    <article class="profile-header__protected" data-profile-protected-notice hidden>
+      <div class="profile-header__protected-icon" aria-hidden="true">
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt="">
+      </div>
+      <div class="profile-header__protected-copy">
+        <h2 class="profile-header__protected-title" data-profile-protected-title>Protected profile</h2>
+        <p class="profile-header__protected-text" data-profile-protected-copy>
+          This profile exists, but its owner has limited public visibility.
+        </p>
+      </div>
+    </article>
 
     <div class="profile-header__metrics">
       <article class="profile-header__metric ui-card">

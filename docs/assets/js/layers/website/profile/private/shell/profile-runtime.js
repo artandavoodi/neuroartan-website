@@ -32,6 +32,9 @@ import {
   unsubscribeProfile,
   unfollowProfile
 } from '../../../system/profile/profile-social-graph.js';
+import {
+  resolveProfileImageDisplayUrl
+} from '../../../system/profile/profile-image-storage.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -41,8 +44,10 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_RUNTIME__ ||= {
   initialized: false,
   actionBound: false,
   stateBound: false,
+  mediaBound: false,
   state: null,
-  subscribers: new Set()
+  subscribers: new Set(),
+  mediaDisplayCache: Object.create(null)
 });
 
 /* =============================================================================
@@ -447,6 +452,7 @@ function buildPublicProfileState(detail = {}) {
   const publicRouteDisplay = normalizeString(detail.publicRouteDisplay || buildPublicProfileDisplay(normalizedUsername));
   const displayName = normalizeString(publicProfile?.public_display_name || '');
   const avatarUrl = normalizeString(publicProfile?.public_avatar_url || '');
+  const coverUrl = normalizeString(publicProfile?.cover_url || publicProfile?.header_image_url || getStructuredProfileFlag(publicProfile, 'profile_cover_url'));
   const avatarHasImage = Boolean(avatarUrl);
   const publicLinks = Array.isArray(publicProfile?.public_links) ? publicProfile.public_links : [];
   const trustClassification = normalizeString(model?.trust_classification || '');
@@ -497,6 +503,9 @@ function buildPublicProfileState(detail = {}) {
     avatarUrl: avatarHasImage ? avatarUrl : '',
     avatarDisplayUrl: avatarHasImage ? avatarUrl : DEFAULT_PROFILE_AVATAR_URL,
     defaultAvatarUrl: DEFAULT_PROFILE_AVATAR_URL,
+    coverUrl,
+    coverDisplayUrl: coverUrl || DEFAULT_PROFILE_COVER_URL,
+    defaultCoverUrl: DEFAULT_PROFILE_COVER_URL,
     avatarHasImage,
     avatarInitials: buildInitials(displayName || normalizedUsername || 'Neuroartan'),
     stateBadgeLabel: buildPublicStateBadge(outcome),
@@ -604,6 +613,15 @@ function notifySubscribers() {
 
 function setRuntimeState(nextState) {
   RUNTIME.state = nextState;
+  notifySubscribers();
+}
+
+function patchRuntimeMediaDisplay(patch = {}) {
+  if (!RUNTIME.state || typeof patch !== 'object') return;
+  RUNTIME.state = {
+    ...RUNTIME.state,
+    ...patch
+  };
   notifySubscribers();
 }
 
@@ -861,6 +879,61 @@ function bindProfileStateEvents() {
   });
 }
 
+function bindProfileMediaDisplayResolver() {
+  if (RUNTIME.mediaBound) return;
+  RUNTIME.mediaBound = true;
+
+  subscribeProfileRuntime((state) => {
+    const profile = state?.profile || state?.publicProfile || null;
+    if (!profile) return;
+
+    const avatarStoragePath = normalizeString(profile.avatar_storage_path || '');
+    const coverStoragePath = normalizeString(profile.cover_storage_path || '');
+    if (!avatarStoragePath && !coverStoragePath) return;
+
+    const avatarCacheKey = avatarStoragePath ? `avatar:${avatarStoragePath}` : '';
+    const coverCacheKey = coverStoragePath ? `cover:${coverStoragePath}` : '';
+    const cachedAvatar = avatarCacheKey ? RUNTIME.mediaDisplayCache[avatarCacheKey] : '';
+    const cachedCover = coverCacheKey ? RUNTIME.mediaDisplayCache[coverCacheKey] : '';
+
+    if (
+      (!avatarStoragePath || (cachedAvatar && cachedAvatar === state.avatarDisplayUrl))
+      && (!coverStoragePath || (cachedCover && cachedCover === state.coverDisplayUrl))
+    ) {
+      return;
+    }
+
+    void Promise.all([
+      resolveProfileImageDisplayUrl({
+        storagePath: avatarStoragePath,
+        publicUrl: cachedAvatar || state.avatarUrl || state.avatarDisplayUrl || ''
+      }),
+      resolveProfileImageDisplayUrl({
+        storagePath: coverStoragePath,
+        publicUrl: cachedCover || state.coverUrl || state.coverDisplayUrl || ''
+      })
+    ]).then(([avatarDisplayUrl, coverDisplayUrl]) => {
+      const patch = {};
+      if (avatarDisplayUrl && avatarDisplayUrl !== state.avatarDisplayUrl) {
+        if (avatarCacheKey) RUNTIME.mediaDisplayCache[avatarCacheKey] = avatarDisplayUrl;
+        patch.avatarUrl = avatarDisplayUrl;
+        patch.avatarDisplayUrl = avatarDisplayUrl;
+        patch.avatarHasImage = true;
+      }
+      if (coverDisplayUrl && coverDisplayUrl !== state.coverDisplayUrl) {
+        if (coverCacheKey) RUNTIME.mediaDisplayCache[coverCacheKey] = coverDisplayUrl;
+        patch.coverUrl = coverDisplayUrl;
+        patch.coverDisplayUrl = coverDisplayUrl;
+      }
+      if (Object.keys(patch).length) {
+        patchRuntimeMediaDisplay(patch);
+      }
+    }).catch((error) => {
+      console.error('[profile-runtime] Media display URL resolution failed.', error);
+    });
+  });
+}
+
 /* =============================================================================
    11) INITIALIZATION
    ============================================================================= */
@@ -872,6 +945,7 @@ function initProfileRuntime() {
   setRuntimeState(getDefaultState());
   bindActionDelegation();
   bindProfileStateEvents();
+  bindProfileMediaDisplayResolver();
 
   void loadProfileIdentityPolicy().then(() => {
     const state = getProfileRuntimeState();

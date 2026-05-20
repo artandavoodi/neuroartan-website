@@ -104,6 +104,35 @@ export function getProfileImageStorageState() {
   };
 }
 
+export async function resolveProfileImageDisplayUrl({
+  storagePath = '',
+  publicUrl = '',
+  expiresIn = 3600,
+  supabase = getSupabaseClient()
+} = {}) {
+  const normalizedStoragePath = normalizeString(storagePath);
+  const normalizedPublicUrl = normalizeString(publicUrl);
+
+  if (!supabase || !normalizedStoragePath) {
+    return normalizedPublicUrl;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .storage
+      .from(PROFILE_IMAGES_BUCKET)
+      .createSignedUrl(normalizedStoragePath, expiresIn);
+
+    if (error) {
+      return normalizedPublicUrl;
+    }
+
+    return normalizeString(data?.signedUrl || normalizedPublicUrl);
+  } catch (_) {
+    return normalizedPublicUrl;
+  }
+}
+
 /* =============================================================================
    06) UPLOAD API
 ============================================================================= */

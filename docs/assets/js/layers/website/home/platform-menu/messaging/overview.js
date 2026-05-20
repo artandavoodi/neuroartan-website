@@ -18,7 +18,7 @@ function renderMessagingMarkup(snapshot = {}) {
         <h3 class="home-platform-messaging__title">${signedIn ? 'Continuity-linked inbox ready' : 'Sign in to unlock private messaging'}</h3>
         <p class="home-platform-messaging__state">${signedIn ? (hasUnread ? `${Math.min(unreadCount, 99)} unread conversation updates detected.` : 'No unread messages are currently staged in this shell runtime.') : 'Messaging stays private and account-bound. Public website surfaces do not expose private conversations.'}</p>
         <div class="home-platform-messaging__actions">
-          <a class="home-platform-messaging__action" href="/pages/feed/index.html">Open Feed</a>
+          <a class="home-platform-messaging__action" href="/feed/">Open Feed</a>
           <a class="home-platform-messaging__action" href="/pages/dashboard/index.html">Open Dashboard</a>
         </div>
       </article>

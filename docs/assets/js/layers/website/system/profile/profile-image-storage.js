@@ -12,7 +12,7 @@
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
-/* /website/docs/assets/js/layers/website/system/profile-image-storage.js */
+/* /website/docs/assets/js/layers/website/system/profile/profile-image-storage.js */
 
 /* =============================================================================
    02) IMPORTS
@@ -25,19 +25,52 @@ import {
 /* =============================================================================
    03) CONSTANTS
 ============================================================================= */
-const PROFILE_MEDIA_BUCKET = 'profile-media';
-const STORAGE_MODE = 'supabase_storage_pending_bucket_policy';
+const PROFILE_IMAGES_BUCKET = 'profile-media';
+const STORAGE_MODE = 'supabase_storage_profile_media';
 
 /* =============================================================================
    04) VALUE HELPERS
 ============================================================================= */
 function normalizeStorageKind(kind = 'avatar') {
   const normalizedKind = normalizeString(kind || 'avatar').toLowerCase();
-  return normalizedKind === 'cover' ? 'cover' : 'avatar';
+  if (normalizedKind === 'cover') return 'cover';
+  if (normalizedKind === 'post') return 'post';
+  return 'avatar';
 }
 
 function getUserId(user = {}) {
-  return normalizeString(user.id || user.uid || '');
+  return String(
+    user.auth_user_id ||
+    user.authUserId ||
+    user.user_id ||
+    user.userId ||
+    user.profile?.auth_user_id ||
+    user.profile?.authUserId ||
+    user.profile?.user_id ||
+    user.profile?.userId ||
+    user.profile?.id ||
+    user.id ||
+    user.uid ||
+    user.sub ||
+    user.session?.user?.id ||
+    user.session?.user?.user_metadata?.auth_user_id ||
+    ''
+  ).trim();
+}
+
+async function resolveAuthenticatedUserId({ user = null, supabase = null } = {}) {
+  const directUserId = getUserId(user || {});
+  if (directUserId) return directUserId;
+
+  if (!supabase) return '';
+
+  try {
+    const authUserResult = await supabase.auth.getUser();
+    const authUser = authUserResult?.data?.user || authUserResult?.user || null;
+    return getUserId(authUser || {});
+  } catch (error) {
+    return '';
+  }
 }
 
 function isUploadableFile(file) {
@@ -54,7 +87,7 @@ function createSafeFileName(file) {
 }
 
 function createStoragePath({ file, user, kind }) {
-  const userId = getUserId(user);
+  const userId = String(user || '').trim();
   const storageKind = normalizeStorageKind(kind);
   const timestamp = new Date().toISOString().replace(/[^0-9]/g, '');
   return `${userId}/profile/${storageKind}/${timestamp}-${createSafeFileName(file)}`;
@@ -65,7 +98,7 @@ function createStoragePath({ file, user, kind }) {
 ============================================================================= */
 export function getProfileImageStorageState() {
   return {
-    bucket: PROFILE_MEDIA_BUCKET,
+    bucket: PROFILE_IMAGES_BUCKET,
     mode: STORAGE_MODE,
     supabaseConfigured: Boolean(getSupabaseClient())
   };
@@ -86,7 +119,9 @@ export async function uploadProfileImage({
     throw error;
   }
 
-  if (!getUserId(user)) {
+  const resolvedUserId = await resolveAuthenticatedUserId({ user, supabase });
+
+  if (!resolvedUserId) {
     const error = new Error('AUTH_REQUIRED');
     error.code = 'AUTH_REQUIRED';
     throw error;
@@ -99,10 +134,10 @@ export async function uploadProfileImage({
   }
 
   const storageKind = normalizeStorageKind(kind);
-  const storagePath = createStoragePath({ file, user, kind: storageKind });
+  const storagePath = createStoragePath({ file, user: resolvedUserId, kind: storageKind });
   const { data, error } = await supabase
     .storage
-    .from(PROFILE_MEDIA_BUCKET)
+    .from(PROFILE_IMAGES_BUCKET)
     .upload(storagePath, file, {
       cacheControl: '3600',
       upsert: true,
@@ -118,11 +153,11 @@ export async function uploadProfileImage({
 
   const publicUrlResult = supabase
     .storage
-    .from(PROFILE_MEDIA_BUCKET)
+    .from(PROFILE_IMAGES_BUCKET)
     .getPublicUrl(data?.path || storagePath);
 
   return {
-    bucket: PROFILE_MEDIA_BUCKET,
+    bucket: PROFILE_IMAGES_BUCKET,
     kind: storageKind,
     storagePath: data?.path || storagePath,
     publicUrl: publicUrlResult?.data?.publicUrl || '',

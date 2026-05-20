@@ -27,7 +27,7 @@
 .profile-thought-bank__overlay{
   position:fixed;
   inset:0;
-  z-index:var(--z-overlay-control);
+  z-index:var(--z-language-dropdown);
   display:grid;
   place-items:center;
   padding:var(--site-gutter);

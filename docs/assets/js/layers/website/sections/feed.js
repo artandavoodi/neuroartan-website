@@ -320,6 +320,10 @@ function renderFeedPost(post = {}) {
 
       <p class="feed-post__copy">${escapeHtml(post.content || '')}</p>
 
+      ${post.imageUrl ? `
+        <img class="feed-post__image" src="${escapeHtml(post.imageUrl)}" alt="">
+      ` : ''}
+
       <div class="feed-post__metadata">
         ${(Array.isArray(post.metadata) ? post.metadata : []).map((item) => `<span class="feed-post__meta-chip">${escapeHtml(item)}</span>`).join('')}
         ${(Array.isArray(post.tags) ? post.tags : []).map((item) => `<span class="feed-post__meta-chip">${escapeHtml(item)}</span>`).join('')}

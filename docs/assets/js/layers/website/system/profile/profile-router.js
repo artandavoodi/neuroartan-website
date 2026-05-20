@@ -200,7 +200,7 @@ function resolvePublicRoute(pathname, policy) {
   const routeCandidate = decodePathSegment(segments[0]);
   const routeCandidateLower = normalizeString(routeCandidate).toLowerCase();
   const isProtectedExact = routeConfig.protectedExact.has(routeCandidateLower);
-  const looksLikeStaticAsset = routeCandidateLower.includes('.') || routeCandidateLower.startsWith('_');
+  const looksLikeStaticAsset = routeCandidateLower.startsWith('_');
 
   if (isProtectedExact || looksLikeStaticAsset) {
     return {

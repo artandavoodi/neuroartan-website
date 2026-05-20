@@ -1,23 +1,16 @@
 /* =============================================================================
    01) MODULE IMPORTS
-   02) MODULE STATE
-   03) DOM HELPERS
-   04) EDITOR STATE
-   05) SAVE FLOW
-   06) EVENT BINDING
-   07) INITIALIZATION
-============================================================================= */
-
-/* =============================================================================
-   01) MODULE IMPORTS
 ============================================================================= */
 import {
   getProfileRuntimeState,
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
-import {
-  savePrivateProfileScope
-} from '../../../system/profile/profile-save.js';
+import * as profileSave from '../../../system/profile/profile-save.js';
+
+const saveProfileScope =
+  profileSave.savePublicProfileScope ||
+  profileSave.saveProfileScope ||
+  profileSave.savePrivateProfileScope;
 
 /* =============================================================================
    02) MODULE STATE
@@ -41,6 +34,29 @@ const CROP_OUTPUT = Object.freeze({
     height:900
   }
 });
+
+function createLoadingReason(action = 'save') {
+  return `profile-media:${action}:${Date.now()}`;
+}
+
+function startLoading(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
+    detail:{
+      reason,
+      critical:true,
+      source:'profile-media-editor'
+    }
+  }));
+}
+
+function stopLoading(reason) {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
+    detail:{
+      reason,
+      source:'profile-media-editor'
+    }
+  }));
+}
 
 /* =============================================================================
    03) DOM HELPERS
@@ -68,6 +84,29 @@ function revokePreviewUrl() {
   if (!RUNTIME.previewUrl) return;
   URL.revokeObjectURL(RUNTIME.previewUrl);
   RUNTIME.previewUrl = '';
+}
+
+function getResetMediaValues(kind = RUNTIME.kind, profile = {}) {
+  if (kind === 'cover') {
+    const currentFlags = Array.isArray(profile.public_feature_flags)
+      ? profile.public_feature_flags
+      : [];
+    return {
+      cover_url:'',
+      cover_storage_path:'',
+      public_feature_flags:currentFlags.filter((entry) => {
+        const key = String(entry?.key || entry?.name || '').trim();
+        return key !== 'profile_cover_url' && key !== 'profile_cover_storage_path';
+      })
+    };
+  }
+
+  return {
+    avatar_url:'',
+    photo_url:'',
+    public_avatar_url:'',
+    avatar_storage_path:''
+  };
 }
 
 /* =============================================================================
@@ -243,12 +282,14 @@ async function saveEditorImage() {
     return;
   }
 
+  const loadingReason = createLoadingReason('save');
   setStatus(root, 'Saving image...', 'saving');
+  startLoading(loadingReason);
 
   try {
     const croppedFile = await createCroppedFile(RUNTIME.file, RUNTIME.kind, RUNTIME.zoom);
 
-    await savePrivateProfileScope({
+    await saveProfileScope({
       scope:'media',
       values:RUNTIME.kind === 'cover'
         ? { cover_file:croppedFile }
@@ -269,6 +310,46 @@ async function saveEditorImage() {
   } catch (error) {
     console.error('[profile-media-editor] Save failed.', error);
     setStatus(root, 'Image could not be saved. Check profile media storage.', 'error');
+  } finally {
+    stopLoading(loadingReason);
+  }
+}
+
+async function resetEditorImage() {
+  const root = getEditorRoot();
+  const state = getProfileRuntimeState();
+
+  if (state.viewerState !== 'authenticated' || !state.user) {
+    setStatus(root, 'Sign in before resetting profile images.', 'error');
+    return;
+  }
+
+  const loadingReason = createLoadingReason('reset');
+  setStatus(root, 'Resetting image...', 'saving');
+  startLoading(loadingReason);
+
+  try {
+    await saveProfileScope({
+      scope:'media',
+      values:getResetMediaValues(RUNTIME.kind, state.profile || {}),
+      existingProfile:state.profile,
+      user:state.user
+    });
+
+    setStatus(root, 'Image reset.', 'success');
+    document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
+      detail:{
+        source:'profile-media-editor',
+        scope:'media',
+        kind:RUNTIME.kind
+      }
+    }));
+    closeEditor();
+  } catch (error) {
+    console.error('[profile-media-editor] Reset failed.', error);
+    setStatus(root, 'Image could not be reset. Check profile media storage.', 'error');
+  } finally {
+    stopLoading(loadingReason);
   }
 }
 
@@ -297,6 +378,12 @@ function bindProfileMediaEditor() {
     if (target.closest('[data-profile-media-editor-save]')) {
       event.preventDefault();
       void saveEditorImage();
+      return;
+    }
+
+    if (target.closest('[data-profile-media-editor-reset]')) {
+      event.preventDefault();
+      void resetEditorImage();
     }
   });
 

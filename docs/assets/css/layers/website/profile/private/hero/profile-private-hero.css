@@ -630,19 +630,35 @@
 
   .profile-private-hero__identity-row{
     grid-template-columns:auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "avatar copy actions";
     padding-inline:0;
+    align-items:start;
   }
 
   .profile-private-hero__avatar-wrap{
+    grid-area:avatar;
     margin-inline:var(--spacing-md);
   }
+
   .profile-private-hero__copy{
-    padding-inline:var(--spacing-md);
+    grid-area:copy;
+    padding-inline:var(--spacing-none);
+    padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
   }
 
   .profile-private-hero__actions{
-    padding-top:var(--spacing-none);
+    grid-area:actions;
+    align-self:start;
+    padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
     padding-inline-end:var(--spacing-md);
+  }
+
+  .profile-private-hero__title,
+  .profile-private-hero__meta{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
 
   .profile-private-hero__social-row{
@@ -658,7 +674,10 @@
     bottom:var(--profile-private-hero-tab-indicator-bottom-mobile);
   }
 
-  .profile-private-hero__copy{
-    padding-top:0;
+  .profile-private-hero__bio{
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
   }
 }

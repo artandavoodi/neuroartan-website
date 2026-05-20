@@ -25,6 +25,7 @@ import {
   createFeedPost,
   listFeedPosts
 } from '../../../system/feed/feed-store.js';
+import { uploadProfileImage } from '../../../system/profile/profile-image-storage.js';
 
 /* =============================================================================
    03) STATE
@@ -43,7 +44,8 @@ const DEFAULT_POLICY = Object.freeze({
 const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   initialized: false,
   policy: null,
-  posts: []
+  posts: [],
+  selectedImageFile: null
 });
 
 /* =============================================================================
@@ -94,7 +96,8 @@ async function syncStoreWithRuntime() {
       body: post.content,
       visibility: 'public',
       createdAt: post.createdAt,
-      source: post.source
+      source: post.source,
+      imageUrl: post.imageUrl || ''
     }));
 }
 
@@ -120,15 +123,25 @@ function formatDate(value) {
 }
 
 function renderVisibilityOptions(root, policy) {
-  const select = root.querySelector('[data-profile-post-visibility]');
-  if (!(select instanceof HTMLSelectElement)) return;
+  const input = root.querySelector('[data-profile-post-visibility]');
+  const optionsRoot = root.querySelector('[data-profile-post-visibility-options]');
+  if (!(input instanceof HTMLInputElement) || !(optionsRoot instanceof HTMLElement)) return;
 
-  select.innerHTML = '';
+  optionsRoot.innerHTML = '';
   policy.visibility.forEach((entry) => {
-    const option = document.createElement('option');
-    option.value = normalizeString(entry.key || 'private');
-    option.textContent = normalizeString(entry.label || entry.key || 'Private');
-    select.appendChild(option);
+    const key = normalizeString(entry.key || 'private');
+    const button = document.createElement('button');
+    button.className = 'profile-posts__visibility-option';
+    button.type = 'button';
+    button.dataset.profilePostVisibilityOption = key;
+    button.setAttribute('aria-pressed', input.value === key ? 'true' : 'false');
+    button.innerHTML = `
+      <span class="profile-posts__visibility-label"></span>
+      <span class="profile-posts__visibility-summary"></span>
+    `;
+    button.querySelector('.profile-posts__visibility-label').textContent = normalizeString(entry.label || key || 'Private');
+    button.querySelector('.profile-posts__visibility-summary').textContent = normalizeString(entry.summary || '');
+    optionsRoot.appendChild(button);
   });
 }
 
@@ -158,11 +171,16 @@ function renderPostList(root) {
         <span class="ui-badge ui-badge--outline"></span>
       </div>
       <p class="profile-posts__item-body"></p>
+      ${post.imageUrl ? '<img class="profile-posts__item-image" alt="Post image">' : ''}
       <p class="profile-posts__item-meta"></p>
     `;
     item.querySelector('.profile-posts__item-title').textContent = post.title || 'Untitled post';
     item.querySelector('.ui-badge').textContent = post.visibility === 'public' ? 'Public route' : 'Private draft';
     item.querySelector('.profile-posts__item-body').textContent = post.body || '';
+    const image = item.querySelector('.profile-posts__item-image');
+    if (image instanceof HTMLImageElement) {
+      image.src = post.imageUrl;
+    }
     item.querySelector('.profile-posts__item-meta').textContent = formatDate(post.createdAt);
     list.appendChild(item);
   });
@@ -203,6 +221,45 @@ function setPostOverlayOpen(root, open) {
   document.body?.classList.toggle('profile-posts-overlay-open', open);
 }
 
+function resetPostImage(root) {
+  STORE.selectedImageFile = null;
+  const input = root.querySelector('[data-profile-post-image-input]');
+  if (input instanceof HTMLInputElement) input.value = '';
+  const preview = root.querySelector('[data-profile-post-image-preview]');
+  const image = root.querySelector('[data-profile-post-image-preview-image]');
+  const name = root.querySelector('[data-profile-post-image-name]');
+  if (image instanceof HTMLImageElement) {
+    image.removeAttribute('src');
+  }
+  if (name instanceof HTMLElement) {
+    name.textContent = '';
+  }
+  if (preview instanceof HTMLElement) {
+    preview.hidden = true;
+  }
+}
+
+function previewPostImage(root, file) {
+  if (!(file instanceof File)) {
+    resetPostImage(root);
+    return;
+  }
+
+  STORE.selectedImageFile = file;
+  const preview = root.querySelector('[data-profile-post-image-preview]');
+  const image = root.querySelector('[data-profile-post-image-preview-image]');
+  const name = root.querySelector('[data-profile-post-image-name]');
+  if (image instanceof HTMLImageElement) {
+    image.src = URL.createObjectURL(file);
+  }
+  if (name instanceof HTMLElement) {
+    name.textContent = file.name || 'Image selected';
+  }
+  if (preview instanceof HTMLElement) {
+    preview.hidden = false;
+  }
+}
+
 function bindPostForm() {
   const root = getRoot();
   if (!root || root.dataset.profilePostsBound === 'true') return;
@@ -237,11 +294,25 @@ function bindPostForm() {
     setStatus(root, 'Publishing post to the public feed...', 'saving');
 
     try {
+      let imageUpload = null;
+      if (STORE.selectedImageFile instanceof File) {
+        setStatus(root, 'Uploading image to profile media...', 'saving');
+        imageUpload = await uploadProfileImage({
+          file: STORE.selectedImageFile,
+          user: state.profile,
+          kind: 'post'
+        });
+      }
+
       await createFeedPost({
         post_body: [title, body].filter(Boolean).join('\n\n'),
-        source_surface: 'profile'
+        source_surface: 'profile',
+        post_image_url: imageUpload?.publicUrl || '',
+        post_image_storage_path: imageUpload?.storagePath || '',
+        post_media_type: imageUpload?.kind === 'post' ? 'image' : ''
       });
       form.reset();
+      resetPostImage(root);
       await renderPosts();
       setPostOverlayOpen(root, false);
       setStatus(root, 'Post published to your public profile and feed.', 'success');
@@ -252,7 +323,7 @@ function bindPostForm() {
           body: 'Your post is now connected to the public feed.',
           source: 'profile',
           priority: 'normal',
-          href: '/pages/feed/index.html'
+          href: '/feed/'
         }
       }));
     } catch (error) {
@@ -261,9 +332,11 @@ function bindPostForm() {
         ? 'Feed storage is not configured. Connect the Supabase feed_posts table before publishing.'
         : code === 'PROFILE_REQUIRED'
           ? 'Create and save your profile before publishing posts.'
-          : code === 'AUTH_REQUIRED'
+        : code === 'AUTH_REQUIRED'
             ? 'Sign in before publishing posts.'
-            : 'Unable to publish this post. Check the Supabase feed_posts table and policies.';
+            : code === 'FEED_POST_MEDIA_COLUMNS_REQUIRED'
+              ? 'Image posts require media columns on feed_posts. Add them in Supabase before publishing image posts.'
+              : 'Unable to publish this post. Check the Supabase feed_posts table and policies.';
       setStatus(root, message, 'error');
     }
   });
@@ -271,6 +344,34 @@ function bindPostForm() {
   root.addEventListener('click', (event) => {
     const openTrigger = event.target.closest('[data-profile-post-overlay-open]');
     const closeTrigger = event.target.closest('[data-profile-post-overlay-close]');
+    const visibilityTrigger = event.target.closest('[data-profile-post-visibility-option]');
+    const imageTrigger = event.target.closest('[data-profile-post-image-trigger]');
+    const imageRemove = event.target.closest('[data-profile-post-image-remove]');
+
+    if (visibilityTrigger) {
+      event.preventDefault();
+      const value = normalizeString(visibilityTrigger.getAttribute('data-profile-post-visibility-option') || 'public');
+      const input = root.querySelector('[data-profile-post-visibility]');
+      if (input instanceof HTMLInputElement) {
+        input.value = value;
+      }
+      root.querySelectorAll('[data-profile-post-visibility-option]').forEach((button) => {
+        button.setAttribute('aria-pressed', button === visibilityTrigger ? 'true' : 'false');
+      });
+      return;
+    }
+
+    if (imageTrigger) {
+      event.preventDefault();
+      root.querySelector('[data-profile-post-image-input]')?.click();
+      return;
+    }
+
+    if (imageRemove) {
+      event.preventDefault();
+      resetPostImage(root);
+      return;
+    }
 
     if (openTrigger) {
       event.preventDefault();
@@ -283,6 +384,12 @@ function bindPostForm() {
       event.preventDefault();
       setPostOverlayOpen(root, false);
     }
+  });
+
+  root.addEventListener('change', (event) => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || !input.matches('[data-profile-post-image-input]')) return;
+    previewPostImage(root, input.files?.[0] || null);
   });
 
   document.addEventListener('keydown', (event) => {

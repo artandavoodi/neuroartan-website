@@ -83,45 +83,81 @@ function formatVisibilityCopy(state) {
   return 'Public route not yet enabled';
 }
 
-function resolvePublicBadgeTone(state) {
-  switch (state.routeOutcome) {
-    case 'found_renderable':
-      return 'success';
-    case 'invalid_username':
-    case 'restricted_username':
-    case 'not_found':
-    case 'error':
-      return 'danger';
-    case 'reserved_but_hidden':
-    case 'reserved_but_not_ready':
-    case 'reserved_but_disabled':
-    case 'loading':
-      return 'warning';
-    default:
-      return '';
+function getDefaultAvatarFallback() {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" rx="128" fill="#e5e7eb"/><circle cx="128" cy="102" r="42" fill="#9ca3af"/><path d="M52 214c17-32 46-50 76-50s59 18 76 50" fill="#9ca3af"/></svg>'
+  )}`;
+}
+
+function getDefaultHeaderFallback() {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 480"><rect width="1600" height="480" fill="#d1d5db"/><rect y="316" width="1600" height="164" fill="#cbd5e1"/><circle cx="1320" cy="136" r="72" fill="#9ca3af"/><rect x="120" y="96" width="520" height="32" rx="16" fill="#9ca3af"/><rect x="120" y="148" width="360" height="20" rx="10" fill="#a3a3a3"/></svg>'
+  )}`;
+}
+
+function setProfileImageSource(image, primarySrc, fallbackSrc, altText) {
+  if (!(image instanceof HTMLImageElement)) return;
+
+  const resolvedSrc = primarySrc || fallbackSrc;
+
+  if (image.dataset.profileFallbackBound !== 'true') {
+    image.addEventListener('error', () => {
+      if (image.dataset.profileUsingFallback === 'true') return;
+      image.dataset.profileUsingFallback = 'true';
+      image.src = fallbackSrc;
+    });
+    image.dataset.profileFallbackBound = 'true';
   }
+
+  image.hidden = false;
+  image.alt = altText;
+  image.dataset.profileUsingFallback = primarySrc ? 'false' : 'true';
+  image.src = resolvedSrc;
+}
+
+function setProfileBackgroundSource(node, primarySrc, fallbackSrc) {
+  if (!(node instanceof HTMLElement)) return;
+
+  const resolvedSrc = primarySrc || fallbackSrc;
+  node.hidden = false;
+  node.style.backgroundImage = `url("${resolvedSrc}")`;
+  node.style.backgroundSize = 'cover';
+  node.style.backgroundPosition = 'center';
+  node.style.backgroundRepeat = 'no-repeat';
 }
 
 function renderAvatar(root, state) {
   const image = root.querySelector('[data-profile-avatar-image]');
   const placeholder = root.querySelector('[data-profile-avatar-placeholder]');
+  const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
 
   if (image instanceof HTMLImageElement) {
-    const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
-    if (avatarUrl) {
-      image.hidden = false;
-      image.src = avatarUrl;
-      image.alt = `${state.displayName} avatar`;
-    } else {
-      image.hidden = true;
-      image.removeAttribute('src');
-      image.alt = '';
-    }
+    setProfileImageSource(image, avatarUrl, getDefaultAvatarFallback(), `${state.displayName} avatar`);
   }
 
   if (placeholder instanceof HTMLElement) {
     placeholder.hidden = true;
   }
+}
+
+function renderHeaderImage(root, state) {
+  const mediaUrl = state.coverDisplayUrl || state.coverUrl || state.headerImageUrl || state.bannerUrl || '';
+  const targets = Array.from(
+    root.querySelectorAll(
+      '[data-profile-header-image], [data-profile-cover-image], [data-profile-banner-image], [data-profile-cover], [data-profile-header-visual]'
+    )
+  );
+
+  targets.forEach((node) => {
+    if (node instanceof HTMLImageElement) {
+      setProfileImageSource(node, mediaUrl, getDefaultHeaderFallback(), `${state.displayName} header image`);
+      return;
+    }
+
+    if (!(node instanceof HTMLElement)) return;
+
+    setProfileBackgroundSource(node, mediaUrl, getDefaultHeaderFallback());
+  });
 }
 
 function renderPrivateHeader(root, state) {
@@ -159,6 +195,7 @@ function renderPrivateHeader(root, state) {
   setText(root, '[data-profile-visibility-state]', capitalizeWords(state.visibility.profileVisibility || 'private'));
   setText(root, '[data-profile-visibility-copy]', formatVisibilityCopy(state));
 
+  renderHeaderImage(root, state);
   renderAvatar(root, state);
 
   const avatarAction = root.querySelector('[data-profile-action="change-avatar"]');
@@ -185,44 +222,6 @@ function renderPrivateHeader(root, state) {
   setControlDisabled(publicAction, !state.publicViewAvailable);
 }
 
-function renderPublicHeader(root, state) {
-  root.dataset.profileViewerState = 'public';
-  root.dataset.profileStateKey = state.stateKey;
-
-  const badge = root.querySelector('[data-profile-header-state-badge]');
-  if (badge) {
-    badge.textContent = state.stateBadgeLabel;
-    applyBadgeTone(badge, resolvePublicBadgeTone(state));
-  }
-
-  setText(root, '[data-profile-header-state-line]', state.stateLine);
-  setText(root, '[data-profile-display-name]', state.displayName);
-  setText(root, '[data-profile-username]', state.username.normalized ? `@${state.username.normalized}` : '@username');
-  setText(root, '[data-profile-route-display]', state.publicRouteDisplay || 'neuroartan.com/username');
-  setText(root, '[data-profile-summary]', state.summary);
-  setText(root, '[data-profile-primary-action-label]', state.primaryActionLabel);
-  setText(root, '[data-profile-verified-label]', state.verificationLabel);
-  setText(root, '[data-profile-creator-line]', state.creatorLine);
-  setText(root, '[data-profile-joined-year]', state.joinedYearLabel);
-  setText(root, '[data-profile-interaction-mode]', state.interactionModeLabel);
-  setText(root, '[data-profile-availability-state]', state.availabilityLabel);
-  setText(root, '[data-profile-legacy-state]', state.legacyStateLabel);
-  setText(root, '[data-profile-trust-value]', state.trustValue);
-  setText(root, '[data-profile-trust-copy]', state.trustCopy);
-  setText(root, '[data-profile-availability-value]', state.availabilityValue);
-  setText(root, '[data-profile-availability-copy]', state.availabilityCopy);
-  setText(root, '[data-profile-route-metric-value]', state.routeOutcomeValue);
-  setText(root, '[data-profile-route-metric-copy]', state.visibilityCopy || state.routeOutcomeCopy);
-
-  setHidden(root, '[data-profile-verified-block]', !state.verificationVisible);
-  setHidden(root, '[data-profile-creator-line]', !state.creatorLine);
-
-  renderAvatar(root, state);
-
-  const copyAction = root.querySelector('[data-profile-action="copy-link"]');
-  setControlDisabled(copyAction, !state.publicRouteUrl);
-}
-
 /* =============================================================================
    03) PROFILE HEADER RENDER
    ============================================================================= */
@@ -231,8 +230,7 @@ function renderProfileHeader(state = getProfileRuntimeState()) {
   getProfileHeaderRoots().forEach((root) => {
     const surface = root.getAttribute('data-profile-surface');
 
-    if (surface === 'public') {
-      renderPublicHeader(root, state);
+    if (surface !== 'private') {
       return;
     }
 

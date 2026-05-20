@@ -28,7 +28,10 @@ import {
   loadPublicModelRegistry
 } from '../../system/model/public-model-registry.js';
 import {
-  buildPublicProfilePath
+  buildPublicProfilePath,
+  getSupabaseClient,
+  getSupabaseProfileByAuthUserId,
+  normalizeUsername
 } from '../../system/account/identity/account-profile-identity.js';
 
 /* =========================================================
@@ -299,6 +302,41 @@ const HOME_SEARCH_SHELL_INDEX_SOURCES = Object.freeze({
   entityIndex: '/assets/data/search/entity-index.json',
 });
 
+const HOME_SEARCH_PROFILE_SELECT_FIELDS = [
+  'id',
+  'auth_user_id',
+  'username',
+  'username_lower',
+  'username_normalized',
+  'public_username',
+  'display_name',
+  'public_display_name',
+  'first_name',
+  'last_name',
+  'email',
+  'bio',
+  'public_bio',
+  'public_summary',
+  'avatar_url',
+  'photo_url',
+  'public_avatar_url',
+  'public_profile_enabled',
+  'public_profile_discoverable',
+  'public_route_status',
+  'profile_search_visible',
+  'profile_verified',
+  'verification_status',
+  'public_verification_status',
+  'created_at',
+  'updated_at'
+].join(', ');
+
+const HOME_SEARCH_PROFILE_FALLBACK_SELECT_FIELDS = HOME_SEARCH_PROFILE_SELECT_FIELDS
+  .split(',')
+  .map((field) => field.trim())
+  .filter((field) => field !== 'profile_search_visible' && field !== 'bio')
+  .join(', ');
+
 /* =========================================================
    03. DOM HELPERS
    ========================================================= */
@@ -337,6 +375,131 @@ function fetchHomeSearchJson(path) {
 
     return response.json();
   });
+}
+
+function isHomeSearchSupabaseRelationMissing(error) {
+  const code = normalizeHomeSearchQuery(error?.code || '').toUpperCase();
+  const message = normalizeHomeSearchQuery(error?.message || '').toLowerCase();
+  return code === '42P01' || message.includes('does not exist');
+}
+
+async function fetchCurrentHomeSearchProfile(supabase) {
+  if (!supabase) return null;
+
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    const authUserId = normalizeHomeSearchQuery(data?.session?.user?.id || '');
+    if (!authUserId) return null;
+    return getSupabaseProfileByAuthUserId({
+      supabase,
+      authUserId
+    });
+  } catch (error) {
+    console.error('[home-search-shell] Current profile search lookup failed.', error);
+    return null;
+  }
+}
+
+function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
+  if (!profile || typeof profile !== 'object') return null;
+
+  const username = normalizeUsername(
+    profile.username
+    || profile.username_normalized
+    || profile.username_lower
+    || profile.public_username
+    || ''
+  );
+  const ownProfile = currentAuthUserId && normalizeHomeSearchQuery(profile.auth_user_id || '') === currentAuthUserId;
+  const publicEnabled = profile.public_profile_enabled === true;
+  const searchVisible = profile.profile_search_visible !== false;
+
+  if (!ownProfile && (!publicEnabled || !searchVisible)) {
+    return null;
+  }
+
+  const displayName = normalizeHomeSearchQuery(
+    profile.public_display_name
+    || profile.display_name
+    || [profile.first_name, profile.last_name].filter(Boolean).join(' ')
+    || username
+    || 'Profile'
+  );
+  const summary = normalizeHomeSearchQuery(profile.public_summary || profile.public_bio || profile.bio || '');
+  const verified = profile.profile_verified === true
+    || normalizeHomeSearchQuery(profile.public_verification_status || profile.verification_status || '').toLowerCase() === 'verified';
+
+  return buildIndexedEntry({
+    id: profile.id || profile.auth_user_id || username,
+    title: displayName,
+    username,
+    summary,
+    public_avatar_url: profile.public_avatar_url || profile.avatar_url || profile.photo_url || '',
+    verified,
+    created_at: profile.created_at,
+    updated_at: profile.updated_at,
+    keywords: [
+      profile.email,
+      profile.first_name,
+      profile.last_name,
+      profile.public_identity_label
+    ].filter(Boolean)
+  }, {
+    keyPrefix:'supabase-profile',
+    kind:'profile',
+    scope:'profiles'
+  });
+}
+
+async function fetchSupabaseProfileSearchEntries() {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    const { data:sessionData } = await supabase.auth.getSession();
+    const currentAuthUserId = normalizeHomeSearchQuery(sessionData?.session?.user?.id || '');
+    let queryResult = await supabase
+      .from('profiles')
+      .select(HOME_SEARCH_PROFILE_SELECT_FIELDS)
+      .order('updated_at', { ascending:false })
+      .limit(100);
+
+    const profileSearchErrorMessage = normalizeHomeSearchQuery(queryResult.error?.message || '').toLowerCase();
+    if (
+      queryResult.error
+      && (
+        profileSearchErrorMessage.includes('profile_search_visible')
+        || profileSearchErrorMessage.includes('bio')
+      )
+    ) {
+      queryResult = await supabase
+        .from('profiles')
+        .select(HOME_SEARCH_PROFILE_FALLBACK_SELECT_FIELDS)
+        .order('updated_at', { ascending:false })
+        .limit(100);
+    }
+
+    if (queryResult.error) {
+      if (isHomeSearchSupabaseRelationMissing(queryResult.error)) return [];
+      throw queryResult.error;
+    }
+
+    const rows = Array.isArray(queryResult.data) ? queryResult.data : [];
+    const currentProfile = currentAuthUserId
+      ? await fetchCurrentHomeSearchProfile(supabase)
+      : null;
+    const mergedRows = currentProfile
+      ? [currentProfile, ...rows.filter((row) => normalizeHomeSearchQuery(row.id || '') !== normalizeHomeSearchQuery(currentProfile.id || ''))]
+      : rows;
+
+    return mergedRows
+      .map((profile) => mapSupabaseProfileSearchEntry(profile, currentAuthUserId))
+      .filter(Boolean);
+  } catch (error) {
+    console.error('[home-search-shell] Supabase profile indexing failed.', error);
+    return [];
+  }
 }
 
 /* =========================================================
@@ -461,7 +624,7 @@ function buildIndexedEntry(entry = {}, {
     eyebrow: getSearchScopeLabel(normalizedScope),
     summary: normalizedSummary,
     href: normalizedHref,
-    publicRoute: '',
+    publicRoute: kind === 'profile' ? canonicalProfileHref : '',
     activateModelId: '',
     queryLabel: '',
     filterType: kind === 'profile' ? 'profile' : 'page',
@@ -668,9 +831,10 @@ async function ensureHomeSearchData() {
       loadPublicModelRegistry(),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.routeIndex).catch(() => ({ routes: [] })),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.contentIndex).catch(() => ({ entries: [] })),
-      fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.entityIndex).catch(() => ({ entities: [] }))
+      fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.entityIndex).catch(() => ({ entities: [] })),
+      fetchSupabaseProfileSearchEntries()
     ])
-      .then(([, routeIndex, contentIndex, entityIndex]) => {
+      .then(([, routeIndex, contentIndex, entityIndex, supabaseProfiles]) => {
         HOME_SEARCH_SHELL_STATE.indexedEntries = [
           ...normalizeHomeSearchArray(routeIndex, 'routes')
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'route', kind: 'route' }))
@@ -681,7 +845,8 @@ async function ensureHomeSearchData() {
           ...normalizeHomeSearchArray(entityIndex, 'entities')
             .filter((entry) => entry?.kind === 'profile' || entry?.type === 'profile' || entry?.scope === 'profiles')
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'profile', kind: 'profile', scope: 'profiles' }))
-            .filter(Boolean)
+            .filter(Boolean),
+          ...(Array.isArray(supabaseProfiles) ? supabaseProfiles : [])
         ];
         HOME_SEARCH_SHELL_STATE.dataReady = true;
         return HOME_SEARCH_SHELL_STATE.indexedEntries;
@@ -698,6 +863,16 @@ async function ensureHomeSearchData() {
 
   return HOME_SEARCH_SHELL_STATE.loadingPromise;
 }
+
+document.addEventListener('account:profile-state-changed', () => {
+  HOME_SEARCH_SHELL_STATE.dataReady = false;
+  HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+});
+
+document.addEventListener('account:profile-refresh-request', () => {
+  HOME_SEARCH_SHELL_STATE.dataReady = false;
+  HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+});
 
 /* =========================================================
    05. SEARCH RENDER HELPERS

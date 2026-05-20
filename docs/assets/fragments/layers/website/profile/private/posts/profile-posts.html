@@ -40,15 +40,29 @@
             <input class="ui-field" type="text" name="title" maxlength="120" placeholder="Post title">
           </label>
 
-          <label class="profile-posts__field">
-            <span class="profile-posts__label">Visibility</span>
-            <select class="ui-field" name="visibility" data-profile-post-visibility></select>
-          </label>
+          <fieldset class="profile-posts__field profile-posts__field--full profile-posts__visibility">
+            <legend class="profile-posts__label">Visibility</legend>
+            <input type="hidden" name="visibility" value="public" data-profile-post-visibility>
+            <div class="profile-posts__visibility-options" data-profile-post-visibility-options></div>
+          </fieldset>
 
           <label class="profile-posts__field profile-posts__field--full">
             <span class="profile-posts__label">Post</span>
             <textarea class="ui-field profile-posts__textarea" rows="7" name="body" maxlength="4000" placeholder="Write a post."></textarea>
           </label>
+
+          <div class="profile-posts__attachment profile-posts__field--full" data-profile-post-attachment>
+            <input class="sr-only" type="file" name="post_image" accept="image/*" data-profile-post-image-input>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-image-trigger>
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/image-add/image-add.svg" alt="" aria-hidden="true">
+              <span>Image</span>
+            </button>
+            <figure class="profile-posts__attachment-preview" data-profile-post-image-preview hidden>
+              <img src="" alt="" data-profile-post-image-preview-image>
+              <figcaption data-profile-post-image-name></figcaption>
+              <button class="profile-posts__attachment-remove" type="button" data-profile-post-image-remove>Remove</button>
+            </figure>
+          </div>
         </div>
 
         <div class="profile-posts__footer">

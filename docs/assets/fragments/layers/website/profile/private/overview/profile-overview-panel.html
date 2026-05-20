@@ -1,64 +1,14 @@
 <!-- =============================================================================
      01) PRIVATE PROFILE OVERVIEW PANEL
-     02) PRIVATE PROFILE PANEL GRID
+     02) IDENTITY SUMMARY
+     03) PUBLIC ROUTE SUMMARY
 ============================================================================= -->
 <div class="profile-sections__grid" data-profile-overview-panel data-profile-surface="private">
   <article class="profile-panel ui-card ui-surface--glass">
     <div class="profile-panel__inner">
       <div class="profile-panel__header">
         <div>
-          <h2 class="profile-panel__title">Profile Overview</h2>
-          <p class="profile-panel__intro" data-profile-overview-copy>Private continuity surface awaiting account access.</p>
-        </div>
-        <span class="ui-badge ui-badge--outline" data-profile-overview-badge>Private</span>
-      </div>
-
-      <div class="profile-panel__meta">
-        <p class="profile-panel__meta-label">Missing required fields</p>
-        <div class="profile-panel__badge-list" data-profile-missing-fields-list>
-          <span class="ui-badge ui-badge--outline">Username</span>
-          <span class="ui-badge ui-badge--outline">Display name</span>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <article class="profile-panel ui-card ui-surface--glass">
-    <div class="profile-panel__inner">
-      <div class="profile-panel__header">
-        <div>
-          <h2 class="profile-panel__title">Account State</h2>
-          <p class="profile-panel__intro">Binding between authentication and the private profile surface.</p>
-        </div>
-      </div>
-
-      <dl class="profile-panel__rows">
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Email</dt>
-          <dd class="profile-panel__value" data-profile-account-email>Not connected</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Primary provider</dt>
-          <dd class="profile-panel__value" data-profile-account-provider>Account</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Email verification</dt>
-          <dd class="profile-panel__value" data-profile-account-email-verified>Pending</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Profile record</dt>
-          <dd class="profile-panel__value" data-profile-account-record-state>Canonical record pending</dd>
-        </div>
-      </dl>
-    </div>
-  </article>
-
-  <article class="profile-panel ui-card ui-surface--glass">
-    <div class="profile-panel__inner">
-      <div class="profile-panel__header">
-        <div>
           <h2 class="profile-panel__title">Identity</h2>
-          <p class="profile-panel__intro">Owner-facing identity values consumed by the private profile surface.</p>
         </div>
 
         <button class="ui-button ui-button--ghost profile-panel__action" type="button" data-profile-action="edit-profile">
@@ -74,24 +24,16 @@
 
       <dl class="profile-panel__rows">
         <div class="profile-panel__row">
-          <dt class="profile-panel__label">First name</dt>
-          <dd class="profile-panel__value" data-profile-identity-first-name>Pending</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Last name</dt>
-          <dd class="profile-panel__value" data-profile-identity-last-name>Pending</dd>
-        </div>
-        <div class="profile-panel__row">
           <dt class="profile-panel__label">Display name</dt>
           <dd class="profile-panel__value" data-profile-identity-display-name>Pending</dd>
         </div>
         <div class="profile-panel__row">
-          <dt class="profile-panel__label">Date of birth</dt>
-          <dd class="profile-panel__value" data-profile-identity-birth-date>Pending</dd>
+          <dt class="profile-panel__label">Username</dt>
+          <dd class="profile-panel__value" data-profile-username-raw>Pending</dd>
         </div>
         <div class="profile-panel__row">
-          <dt class="profile-panel__label">Gender</dt>
-          <dd class="profile-panel__value" data-profile-identity-gender>Private by default</dd>
+          <dt class="profile-panel__label">Bio</dt>
+          <dd class="profile-panel__value" data-profile-identity-bio>Pending</dd>
         </div>
       </dl>
     </div>
@@ -101,8 +43,7 @@
     <div class="profile-panel__inner">
       <div class="profile-panel__header">
         <div>
-          <h2 class="profile-panel__title">Username &amp; Route Status</h2>
-          <p class="profile-panel__intro">Canonical username ownership and future company-domain route readiness.</p>
+          <h2 class="profile-panel__title">Public Route</h2>
         </div>
 
         <button class="ui-button ui-button--ghost profile-panel__action" type="button" data-profile-action="edit-username">
@@ -118,124 +59,18 @@
 
       <dl class="profile-panel__rows">
         <div class="profile-panel__row">
-          <dt class="profile-panel__label">Username</dt>
-          <dd class="profile-panel__value" data-profile-username-raw>Pending</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Normalized</dt>
-          <dd class="profile-panel__value" data-profile-username-normalized>Not assigned</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Reservation</dt>
-          <dd class="profile-panel__value" data-profile-username-status>Missing</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Public route</dt>
+          <dt class="profile-panel__label">Route</dt>
           <dd class="profile-panel__value" data-profile-route-path>neuroartan.com/username</dd>
         </div>
         <div class="profile-panel__row">
-          <dt class="profile-panel__label">Route status</dt>
+          <dt class="profile-panel__label">Status</dt>
           <dd class="profile-panel__value" data-profile-route-status>Pending</dd>
-        </div>
-      </dl>
-    </div>
-  </article>
-
-  <article class="profile-panel ui-card ui-surface--glass">
-    <div class="profile-panel__inner">
-      <div class="profile-panel__header">
-        <div>
-          <h2 class="profile-panel__title">Privacy &amp; Visibility</h2>
-          <p class="profile-panel__intro">Private/public distinctions for the current website profile boundary.</p>
-        </div>
-
-        <button class="ui-button ui-button--ghost profile-panel__action" type="button" data-profile-action="manage-visibility">
-          <img
-            class="ui-icon-theme-aware ui-icon-sm"
-            src="/registry/icons/public/assets/layers/website/profile/private/overview/manage-visibility.svg"
-            alt=""
-            aria-hidden="true"
-          >
-          <span>Manage</span>
-        </button>
-      </div>
-
-      <dl class="profile-panel__rows">
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Profile visibility</dt>
-          <dd class="profile-panel__value" data-profile-visibility-status>Private</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Public profile</dt>
-          <dd class="profile-panel__value" data-profile-public-enabled>Disabled</dd>
         </div>
         <div class="profile-panel__row">
           <dt class="profile-panel__label">Discoverable</dt>
           <dd class="profile-panel__value" data-profile-public-discoverable>No</dd>
         </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Route mode</dt>
-          <dd class="profile-panel__value" data-profile-public-route-mode>Private owner environment</dd>
-        </div>
       </dl>
-    </div>
-  </article>
-
-  <article class="profile-panel ui-card ui-surface--glass">
-    <div class="profile-panel__inner">
-      <div class="profile-panel__header">
-        <div>
-          <h2 class="profile-panel__title">Media &amp; Avatar</h2>
-          <p class="profile-panel__intro">Avatar state, image ownership, and future upload/crop continuity hooks.</p>
-        </div>
-
-        <button class="ui-button ui-button--ghost profile-panel__action" type="button" data-profile-action="change-avatar">
-          <img
-            class="ui-icon-theme-aware ui-icon-sm"
-            src="/registry/icons/public/assets/core/media/image/image.svg"
-            alt=""
-            aria-hidden="true"
-          >
-          <span>Change</span>
-        </button>
-      </div>
-
-      <dl class="profile-panel__rows">
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Avatar state</dt>
-          <dd class="profile-panel__value" data-profile-avatar-state>Empty</dd>
-        </div>
-        <div class="profile-panel__row">
-          <dt class="profile-panel__label">Image source</dt>
-          <dd class="profile-panel__value" data-profile-avatar-source>Profile image not yet connected</dd>
-        </div>
-      </dl>
-    </div>
-  </article>
-
-  <article class="profile-panel profile-panel--wide ui-card ui-surface--glass">
-    <div class="profile-panel__inner">
-      <div class="profile-panel__header">
-        <div>
-          <h2 class="profile-panel__title">Continuity Surface</h2>
-          <p class="profile-panel__intro">This private profile is the owner-facing boundary for identity, route governance, and future continuity systems.</p>
-        </div>
-
-        <span class="ui-badge ui-badge--outline" data-profile-continuity-badge>In Progress</span>
-      </div>
-
-      <div class="profile-panel__continuity">
-        <p class="profile-panel__continuity-copy" data-profile-continuity-copy>
-          This private profile surface governs identity state, public-route readiness, and the continuity posture that will extend into ICOS.
-        </p>
-
-        <div class="profile-panel__badge-list">
-          <span class="ui-badge ui-badge--outline">Identity anchor</span>
-          <span class="ui-badge ui-badge--outline">Route readiness</span>
-          <span class="ui-badge ui-badge--outline">Private owner state</span>
-          <span class="ui-badge ui-badge--outline">Future ICOS continuity</span>
-        </div>
-      </div>
     </div>
   </article>
 </div>

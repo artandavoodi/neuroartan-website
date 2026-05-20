@@ -196,6 +196,13 @@ function setStatus(root, message, state = 'idle') {
   node.dataset.profilePostStatus = state;
 }
 
+function setPostOverlayOpen(root, open) {
+  const overlay = root.querySelector('[data-profile-post-overlay]');
+  if (!(overlay instanceof HTMLElement)) return;
+  overlay.hidden = !open;
+  document.body?.classList.toggle('profile-posts-overlay-open', open);
+}
+
 function bindPostForm() {
   const root = getRoot();
   if (!root || root.dataset.profilePostsBound === 'true') return;
@@ -236,6 +243,7 @@ function bindPostForm() {
       });
       form.reset();
       await renderPosts();
+      setPostOverlayOpen(root, false);
       setStatus(root, 'Post published to your public profile and feed.', 'success');
       document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
         detail: {
@@ -258,6 +266,28 @@ function bindPostForm() {
             : 'Unable to publish this post. Check the Supabase feed_posts table and policies.';
       setStatus(root, message, 'error');
     }
+  });
+
+  root.addEventListener('click', (event) => {
+    const openTrigger = event.target.closest('[data-profile-post-overlay-open]');
+    const closeTrigger = event.target.closest('[data-profile-post-overlay-close]');
+
+    if (openTrigger) {
+      event.preventDefault();
+      setPostOverlayOpen(root, true);
+      root.querySelector('[data-profile-post-form] textarea')?.focus();
+      return;
+    }
+
+    if (closeTrigger) {
+      event.preventDefault();
+      setPostOverlayOpen(root, false);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    setPostOverlayOpen(root, false);
   });
 }
 

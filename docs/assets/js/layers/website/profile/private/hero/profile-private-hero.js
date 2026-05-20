@@ -47,9 +47,15 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
     tabs: [
       { key: 'identity', label: 'Personal Info', section: 'settings', settingsPane: 'identity' },
       { key: 'route', label: 'Public Route', section: 'settings', settingsPane: 'route' },
-      { key: 'visibility', label: 'Visibility', section: 'settings', settingsPane: 'visibility' },
-      { key: 'media', label: 'Images', section: 'settings', settingsPane: 'media' },
       { key: 'verification', label: 'Verification', section: 'settings', settingsPane: 'verification' }
+    ]
+  },
+  privacy: {
+    label: 'Privacy settings sections',
+    tabs: [
+      { key: 'visibility', label: 'Visibility', section: 'settings', settingsPane: 'visibility' },
+      { key: 'discovery', label: 'Discovery', section: 'settings', settingsPane: 'discovery' },
+      { key: 'sharing', label: 'Sharing', section: 'settings', settingsPane: 'sharing' }
     ]
   }
 };
@@ -107,6 +113,13 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
     case 'organizations':
       return 'content';
     case 'settings':
+      if (
+        navigationState.settingsPane === 'visibility'
+        || navigationState.settingsPane === 'discovery'
+        || navigationState.settingsPane === 'sharing'
+      ) {
+        return 'privacy';
+      }
       return 'settings';
     case 'dashboard':
       return 'dashboard';
@@ -176,6 +189,20 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
   }
   setText(root, '[data-profile-display-name]', displayName || (profileComplete ? 'Private profile' : 'Profile not completed'));
   setText(root, '[data-profile-username]', username ? `@${username}` : '@username pending');
+  const bio = String(
+    state.bio
+    || profile.bio
+    || profile.public_bio
+    || profile.public_summary
+    || ''
+  ).trim();
+  const bioNode = root.querySelector('[data-profile-bio]');
+  if (bioNode instanceof HTMLElement) {
+    bioNode.textContent = bio;
+    bioNode.hidden = !bio;
+  }
+  setText(root, '[data-profile-location]', String(profile.location || profile.public_location || '').trim() || 'Not set');
+  setText(root, '[data-profile-role]', String(profile.role || profile.public_identity_label || '').trim() || 'Not set');
   setText(
     root,
     '[data-profile-hero-description]',
@@ -255,6 +282,18 @@ function bindProfilePrivateHeroActions() {
   root.addEventListener('click', (event) => {
     const trigger = event.target.closest('[data-profile-action]');
     const tab = event.target.closest('[data-profile-tab]');
+    const infoToggle = event.target.closest('[data-profile-hero-info-toggle]');
+
+    if (infoToggle) {
+      event.preventDefault();
+      const popover = root.querySelector('[data-profile-hero-info-popover]');
+      const isOpen = infoToggle.getAttribute('aria-expanded') === 'true';
+      infoToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      if (popover instanceof HTMLElement) {
+        popover.hidden = isOpen;
+      }
+      return;
+    }
 
     if (tab) {
       event.preventDefault();
@@ -277,6 +316,32 @@ function bindProfilePrivateHeroActions() {
       mediaKind: trigger.dataset.profileAction === 'edit-cover' ? 'cover' : 'avatar'
     });
   });
+
+  document.addEventListener('click', (event) => {
+    if (!root.contains(event.target)) {
+      closeProfileHeroInfo(root);
+      return;
+    }
+
+    if (event.target.closest('[data-profile-hero-info-toggle]')) return;
+    if (event.target.closest('[data-profile-hero-info-popover]')) return;
+    closeProfileHeroInfo(root);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    closeProfileHeroInfo(root);
+  });
+}
+
+function closeProfileHeroInfo(root = getHeroRoot()) {
+  if (!root) return;
+  const toggle = root.querySelector('[data-profile-hero-info-toggle]');
+  const popover = root.querySelector('[data-profile-hero-info-popover]');
+  toggle?.setAttribute('aria-expanded', 'false');
+  if (popover instanceof HTMLElement) {
+    popover.hidden = true;
+  }
 }
 
 /* =============================================================================

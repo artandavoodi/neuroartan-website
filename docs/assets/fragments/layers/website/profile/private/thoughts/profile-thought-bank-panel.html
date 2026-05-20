@@ -4,6 +4,16 @@
      03) THOUGHT BANK STREAM MOUNT
 ============================================================================= -->
 <div class="profile-thought-bank" data-profile-thought-bank-panel data-profile-surface="private">
-  <div data-include="profile-private-thought-composer-panel"></div>
   <div data-include="profile-private-thought-stream-panel"></div>
+
+  <button class="profile-thought-bank__fab" type="button" data-profile-thought-overlay-open aria-label="Create thought">
+    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
+  </button>
+
+  <div class="profile-thought-bank__overlay" data-profile-thought-overlay hidden>
+    <div class="profile-thought-bank__overlay-backdrop" aria-hidden="true"></div>
+    <div class="profile-thought-bank__overlay-dialog">
+      <div data-include="profile-private-thought-composer-panel"></div>
+    </div>
+  </div>
 </div>

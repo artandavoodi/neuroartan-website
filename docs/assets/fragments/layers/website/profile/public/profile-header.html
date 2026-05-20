@@ -20,21 +20,41 @@
         </div>
 
         <div class="profile-header__identity">
-          <div class="profile-header__display-row">
-            <h1 class="profile-header__display-name" data-profile-display-name>Public Profile</h1>
-            <span class="profile-header__verified" data-profile-verified-block hidden>
-              <img
-                src="/registry/icons/public/assets/core/identity/trust/verified.svg"
-                alt=""
-                class="profile-header__verified-icon ui-icon-sm"
-                aria-hidden="true">
-            </span>
-          </div>
+          <div class="profile-header__identity-heading">
+            <div class="profile-header__name-block">
+              <div class="profile-header__display-row">
+                <h1 class="profile-header__display-name" data-profile-display-name>Public Profile</h1>
+                <span class="profile-header__verified" data-profile-verified-block hidden>
+                  <img
+                    src="/registry/icons/public/assets/core/identity/trust/verified.svg"
+                    alt=""
+                    class="profile-header__verified-icon ui-icon-sm"
+                    aria-hidden="true">
+                </span>
+              </div>
 
-          <div class="profile-header__identity-line">
-            <p class="profile-header__username" data-profile-username>@username</p>
-            <span class="profile-header__identity-separator" aria-hidden="true">•</span>
-            <p class="profile-header__route" data-profile-route-display>neuroartan.com/username</p>
+              <div class="profile-header__identity-line">
+                <p class="profile-header__username" data-profile-username>@username</p>
+                <span class="profile-header__identity-separator" aria-hidden="true">•</span>
+                <p class="profile-header__route" data-profile-route-display>neuroartan.com/username</p>
+              </div>
+            </div>
+
+            <div class="profile-header__follow-control" data-profile-follow-control hidden>
+              <button class="ui-button ui-button--secondary profile-header__follow-button" type="button" data-profile-action="follow-profile" data-profile-follow-primary>
+                <span data-profile-follow-label>Follow</span>
+              </button>
+
+              <button class="ui-icon-button profile-header__follow-menu-button" type="button" aria-label="Open profile actions" aria-expanded="false" data-profile-follow-menu-toggle>
+                <img class="ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/core/interface/navigation/drop-down.svg" alt="" aria-hidden="true">
+              </button>
+
+              <div class="profile-header__follow-menu" data-profile-follow-menu hidden>
+                <button class="profile-header__follow-menu-item" type="button" data-profile-action="subscribe-profile" data-profile-subscribe-action>Subscribe</button>
+                <button class="profile-header__follow-menu-item" type="button" data-profile-action="view-profile-models">View models</button>
+                <button class="profile-header__follow-menu-item" type="button" data-profile-action="copy-link">Copy profile link</button>
+              </div>
+            </div>
           </div>
         </div>
 

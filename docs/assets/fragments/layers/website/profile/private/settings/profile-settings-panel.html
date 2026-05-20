@@ -8,10 +8,7 @@
   <article class="profile-settings__shell ui-card ui-surface--glass">
     <div class="profile-settings__header">
       <div>
-        <h2 class="profile-settings__title">Profile Settings</h2>
-        <p class="profile-settings__intro" data-profile-settings-copy>
-          Edit the owner-facing profile record, govern the public route, and prepare the profile surface for continuity and public presence.
-        </p>
+        <h2 class="profile-settings__title" data-profile-settings-title>Profile Settings</h2>
       </div>
     </div>
 
@@ -22,7 +19,6 @@
       <div class="profile-settings__pane-header">
         <div>
           <h3 class="profile-settings__pane-title">Identity Details</h3>
-          <p class="profile-settings__pane-copy">These values feed the canonical private profile record and the mature private profile surface.</p>
         </div>
       </div>
 
@@ -56,12 +52,17 @@
               <option value="man">Man</option>
             </select>
           </label>
+
+          <label class="profile-settings__field profile-settings__field--full">
+            <span class="profile-settings__label">Bio</span>
+            <textarea class="ui-field profile-settings__textarea" rows="4" maxlength="180" name="public_summary" placeholder="A short bio for your profile."></textarea>
+          </label>
         </div>
 
         <div class="profile-settings__status" data-profile-save-status="identity" aria-live="polite"></div>
 
         <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="identity">Save Identity</button>
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="identity">Save</button>
         </div>
       </form>
     </section>
@@ -70,7 +71,6 @@
       <div class="profile-settings__pane-header">
         <div>
           <h3 class="profile-settings__pane-title">Username &amp; Public Route</h3>
-          <p class="profile-settings__pane-copy">This section governs the public identity handle that resolves to `neuroartan.com/{username}`.</p>
         </div>
       </div>
 
@@ -99,16 +99,12 @@
             <input class="ui-field" type="url" name="public_primary_link" placeholder="https://">
           </label>
 
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Public summary</span>
-            <textarea class="ui-field profile-settings__textarea" rows="5" name="public_summary" placeholder="Short public-safe summary for the company-domain profile surface."></textarea>
-          </label>
         </div>
 
         <div class="profile-settings__status" data-profile-save-status="route" aria-live="polite"></div>
 
         <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="route">Save Route Settings</button>
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="route">Save</button>
         </div>
       </form>
     </section>
@@ -117,7 +113,6 @@
       <div class="profile-settings__pane-header">
         <div>
           <h3 class="profile-settings__pane-title">Visibility &amp; Public Presence</h3>
-          <p class="profile-settings__pane-copy">Control whether the reserved username is publicly renderable and discoverable.</p>
         </div>
       </div>
 
@@ -126,16 +121,16 @@
           <label class="profile-settings__toggle">
             <input type="checkbox" name="public_profile_enabled">
             <span class="profile-settings__toggle-copy">
-              <strong>Enable public profile route</strong>
-              <span>Allow the canonical public route to render when username, visibility, and readiness conditions are satisfied.</span>
+              <strong>Public profile</strong>
+              <span>Make your public route visible.</span>
             </span>
           </label>
 
           <label class="profile-settings__toggle">
             <input type="checkbox" name="public_profile_discoverable">
             <span class="profile-settings__toggle-copy">
-              <strong>Allow discovery</strong>
-              <span>Permit public-safe discovery once the route is live.</span>
+              <strong>Discovery</strong>
+              <span>Allow search and profile discovery.</span>
             </span>
           </label>
         </div>
@@ -143,73 +138,91 @@
         <div class="profile-settings__status" data-profile-save-status="visibility" aria-live="polite"></div>
 
         <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="visibility">Save Visibility</button>
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="visibility">Save</button>
         </div>
       </form>
     </section>
 
-    <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="media" hidden>
+    <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="discovery" hidden>
       <div class="profile-settings__pane-header">
         <div>
-          <h3 class="profile-settings__pane-title">Media &amp; Avatar</h3>
-          <p class="profile-settings__pane-copy">Profile image sources are saved to the canonical private profile record. Header image is stored as a structured profile media flag.</p>
+          <h3 class="profile-settings__pane-title">Discovery</h3>
         </div>
       </div>
 
-      <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="media" novalidate>
-        <div class="profile-settings__field-grid">
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Upload profile image</span>
-            <input class="ui-field" type="file" name="avatar_file" accept="image/*">
-            <span class="profile-settings__hint">Uploads to the canonical profile media storage path when account media storage is available.</span>
+      <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="visibility" novalidate>
+        <div class="profile-settings__toggle-list">
+          <label class="profile-settings__toggle">
+            <input type="checkbox" name="profile_search_visible">
+            <span class="profile-settings__toggle-copy">
+              <strong>Search visibility</strong>
+              <span>Allow this profile to appear in search.</span>
+            </span>
           </label>
 
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Profile image URL fallback</span>
-            <input class="ui-field" type="url" name="avatar_url" placeholder="https://">
-          </label>
-
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Upload header image</span>
-            <input class="ui-field" type="file" name="cover_file" accept="image/*">
-            <span class="profile-settings__hint">Stores the header asset as structured profile media and keeps public/private profile rendering separated.</span>
-          </label>
-
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Header image URL fallback</span>
-            <input class="ui-field" type="url" name="cover_url" placeholder="https://">
+          <label class="profile-settings__toggle">
+            <input type="checkbox" name="profile_models_visible">
+            <span class="profile-settings__toggle-copy">
+              <strong>Models visibility</strong>
+              <span>Show public model associations.</span>
+            </span>
           </label>
         </div>
 
-        <div class="profile-settings__status" data-profile-save-status="media" aria-live="polite"></div>
+        <div class="profile-settings__status" data-profile-save-status="visibility" aria-live="polite"></div>
 
         <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="media">Save Images</button>
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="visibility">Save</button>
         </div>
       </form>
+    </section>
 
-      <div class="profile-settings__media">
-        <div class="profile-settings__media-preview">
-          <div class="profile-settings__media-avatar ui-surface">
-            <img class="profile-settings__media-avatar-image" data-profile-settings-avatar-image src="/assets/images/layers/website/sections/home/hero/Salim%20Sky.jpg" alt="" aria-hidden="true">
-          </div>
+    <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="sharing" hidden>
+      <div class="profile-settings__pane-header">
+        <div>
+          <h3 class="profile-settings__pane-title">Sharing</h3>
+        </div>
+      </div>
 
-          <div class="profile-settings__media-copy">
-            <p class="profile-settings__media-label" data-profile-settings-avatar-state>Avatar pending</p>
-            <p class="profile-settings__media-note" data-profile-settings-avatar-note>
-              Use the managed image flow to update the canonical avatar source for the private and public profile surfaces.
-            </p>
-          </div>
+      <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="visibility" novalidate>
+        <div class="profile-settings__toggle-list">
+          <label class="profile-settings__toggle">
+            <input type="checkbox" name="profile_followers_visible">
+            <span class="profile-settings__toggle-copy">
+              <strong>Follower counts</strong>
+              <span>Show follower and following counts.</span>
+            </span>
+          </label>
+
+          <label class="profile-settings__toggle">
+            <input type="checkbox" name="profile_posts_visible">
+            <span class="profile-settings__toggle-copy">
+              <strong>Posts visibility</strong>
+              <span>Show public posts on your profile.</span>
+            </span>
+          </label>
+
+          <label class="profile-settings__toggle">
+            <input type="checkbox" name="profile_thoughts_visible">
+            <span class="profile-settings__toggle-copy">
+              <strong>Thoughts visibility</strong>
+              <span>Show public thoughts on your profile.</span>
+            </span>
+          </label>
         </div>
 
-      </div>
+        <div class="profile-settings__status" data-profile-save-status="visibility" aria-live="polite"></div>
+
+        <div class="profile-settings__actions">
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="visibility">Save</button>
+        </div>
+      </form>
     </section>
 
     <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="verification" hidden>
       <div class="profile-settings__pane-header">
         <div>
           <h3 class="profile-settings__pane-title">Verification</h3>
-          <p class="profile-settings__pane-copy">Request profile verification through the canonical Supabase review table. The public badge appears only after a verified backend state exists.</p>
         </div>
       </div>
 

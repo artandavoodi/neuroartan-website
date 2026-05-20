@@ -507,7 +507,6 @@ html[data-theme-effective="light"]{
   object-position:center;
   opacity:var(--nav-institutional-icon-opacity);
   filter:var(--icon-image-filter);
-  transition:opacity var(--home-platform-shell-motion-fast) var(--interaction-ease-standard);
 }
 
 .home-platform-shell__nav-item:hover .home-platform-shell__nav-icon img,
@@ -530,7 +529,7 @@ html[data-theme-effective="light"]{
   width:var(--size-full);
   height:var(--size-full);
   color:currentColor;
-  transform:var(--interactive-icon-transform);
+  transform:none !important;
   transition:none;
   overflow:visible;
 }

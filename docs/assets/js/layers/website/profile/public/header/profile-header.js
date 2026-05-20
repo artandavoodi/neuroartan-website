@@ -9,7 +9,14 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
-import { getProfileRuntimeState, subscribeProfileRuntime } from '../../private/shell/profile-runtime.js';
+import {
+  getProfileRuntimeState,
+  subscribeProfileRuntime
+} from '../../private/shell/profile-runtime.js';
+import {
+  getProfileSubscriptionState,
+  getProfileSocialGraphState
+} from '../../../system/profile/profile-social-graph.js';
 
 /* =============================================================================
    02) PUBLIC PROFILE HEADER HELPERS
@@ -39,6 +46,19 @@ function setControlDisabled(control, disabled) {
   }
 
   control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+}
+
+function setFollowMenuOpen(root, open) {
+  const menu = root.querySelector('[data-profile-follow-menu]');
+  const toggle = root.querySelector('[data-profile-follow-menu-toggle]');
+
+  if (menu instanceof HTMLElement) {
+    menu.hidden = !open;
+  }
+
+  if (toggle instanceof HTMLElement) {
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
 }
 
 function applyBadgeTone(badge, tone) {
@@ -133,7 +153,79 @@ function renderPublicHeader(state = getProfileRuntimeState()) {
 
     const copyAction = root.querySelector('[data-profile-action="copy-link"]');
     setControlDisabled(copyAction, !state.publicRouteUrl);
+
+    renderPublicFollowControl(root, state);
+    renderPublicSubscribeControl(root, state);
   });
+}
+
+async function renderPublicFollowControl(root, state = getProfileRuntimeState()) {
+  const control = root.querySelector('[data-profile-follow-control]');
+  const button = root.querySelector('[data-profile-follow-primary]');
+  const label = root.querySelector('[data-profile-follow-label]');
+  const profileId = String(state.profileId || '').trim();
+  const available = state.routeOutcome === 'found_renderable' && Boolean(profileId);
+
+  if (!(control instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) return;
+
+  control.hidden = !available;
+  button.disabled = !available;
+  button.setAttribute('aria-disabled', available ? 'false' : 'true');
+
+  if (!available) {
+    setFollowMenuOpen(root, false);
+    return;
+  }
+
+  try {
+    const graph = await getProfileSocialGraphState(profileId);
+    root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
+    button.dataset.profileAction = graph.viewerFollowing ? 'unfollow-profile' : 'follow-profile';
+
+    if (label) {
+      label.textContent = graph.viewerFollowing ? 'Following' : 'Follow';
+    }
+  } catch (error) {
+    console.error('[profile-public-header] Follow control render failed.', error);
+    root.dataset.profileSocialGraphBackend = 'error';
+    button.disabled = true;
+    button.setAttribute('aria-disabled', 'true');
+
+    if (label) {
+      label.textContent = 'Follow unavailable';
+    }
+  }
+}
+
+async function renderPublicSubscribeControl(root, state = getProfileRuntimeState()) {
+  const button = root.querySelector('[data-profile-subscribe-action]');
+  const profileId = String(state.profileId || '').trim();
+  const available = state.routeOutcome === 'found_renderable' && Boolean(profileId);
+
+  if (!(button instanceof HTMLButtonElement)) return;
+
+  button.disabled = !available;
+  button.setAttribute('aria-disabled', available ? 'false' : 'true');
+
+  if (!available) {
+    button.textContent = 'Subscribe';
+    return;
+  }
+
+  try {
+    const subscription = await getProfileSubscriptionState(profileId);
+    root.dataset.profileSubscriptionBackend = subscription.tableAvailable ? 'ready' : 'pending';
+    button.disabled = !subscription.tableAvailable;
+    button.setAttribute('aria-disabled', subscription.tableAvailable ? 'false' : 'true');
+    button.dataset.profileAction = subscription.viewerSubscribed ? 'unsubscribe-profile' : 'subscribe-profile';
+    button.textContent = subscription.viewerSubscribed ? 'Subscribed' : 'Subscribe';
+  } catch (error) {
+    console.error('[profile-public-header] Subscribe control render failed.', error);
+    root.dataset.profileSubscriptionBackend = 'error';
+    button.disabled = true;
+    button.setAttribute('aria-disabled', 'true');
+    button.textContent = 'Subscribe unavailable';
+  }
 }
 
 /* =============================================================================
@@ -142,6 +234,45 @@ function renderPublicHeader(state = getProfileRuntimeState()) {
 
 function initPublicProfileHeader() {
   subscribeProfileRuntime(renderPublicHeader);
+
+  document.addEventListener('click', (event) => {
+    const toggle = event.target instanceof Element
+      ? event.target.closest('[data-profile-follow-menu-toggle]')
+      : null;
+
+    if (toggle) {
+      const root = toggle.closest('[data-profile-header][data-profile-surface="public"]');
+      if (!root) return;
+
+      event.preventDefault();
+      const menu = root.querySelector('[data-profile-follow-menu]');
+      setFollowMenuOpen(root, menu?.hidden !== false);
+      return;
+    }
+
+    document.querySelectorAll('[data-profile-header][data-profile-surface="public"]').forEach((root) => {
+      if (event.target instanceof Node && root.contains(event.target)) return;
+      setFollowMenuOpen(root, false);
+    });
+  });
+
+  document.addEventListener('profile:social-graph-changed', () => {
+    renderPublicHeader();
+  });
+
+  document.addEventListener('profile:action-request', (event) => {
+    const action = event instanceof CustomEvent ? event.detail?.action : '';
+    if (action !== 'view-profile-models') return;
+
+    const state = getProfileRuntimeState();
+    window.location.href = state.username?.normalized
+      ? `/pages/models/index.html?profile=${encodeURIComponent(state.username.normalized)}`
+      : '/pages/models/index.html';
+  });
+
+  document.addEventListener('profile:subscription-changed', () => {
+    renderPublicHeader();
+  });
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-public-header') return;

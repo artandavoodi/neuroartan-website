@@ -28,6 +28,8 @@ import {
 } from '../../../system/account/identity/account-profile-identity.js';
 import {
   followProfile,
+  subscribeProfile,
+  unsubscribeProfile,
   unfollowProfile
 } from '../../../system/profile/profile-social-graph.js';
 
@@ -261,6 +263,7 @@ function buildPrivateProfileState(user = null, profile = null) {
   const publicRouteUrl = normalizeString(profile?.public_profile_url || profile?.public_route_url || buildPublicProfileUrl(username.normalized));
   const publicRouteDisplay = buildPublicProfileDisplay(username.normalized);
   const publicViewAvailable = visibility.publicEnabled === true && visibility.routeStatus === 'ready' && Boolean(username.normalized);
+  const bio = normalizeString(profile?.bio || profile?.public_bio || profile?.public_summary || '');
   const avatarUrl = normalizeString(
     profile?.avatar_url
     || profile?.photo_url
@@ -311,6 +314,7 @@ function buildPrivateProfileState(user = null, profile = null) {
     birthDate: normalizeString(profile?.birth_date || profile?.date_of_birth || ''),
     formattedBirthDate: formatDate(profile?.birth_date || profile?.date_of_birth || ''),
     gender: normalizeGenderValue(profile?.gender || ''),
+    bio,
     email,
     emailVerified: user?.emailVerified === true || profile?.auth_email_verified === true,
     providerId,
@@ -728,7 +732,7 @@ export function requestProfileAction(action, detail = {}) {
         openAccountDrawer();
         return;
       }
-      requestPrivateNavigation('settings', 'media');
+      openProfileMediaEditor('avatar');
       return;
     case 'manage-visibility':
       if (state.viewerState !== 'authenticated') {
@@ -783,6 +787,16 @@ export function requestProfileAction(action, detail = {}) {
     case 'unfollow-profile':
       if (state.profileId) {
         void unfollowProfile(state.profileId);
+      }
+      return;
+    case 'subscribe-profile':
+      if (state.profileId) {
+        void subscribeProfile(state.profileId);
+      }
+      return;
+    case 'unsubscribe-profile':
+      if (state.profileId) {
+        void unsubscribeProfile(state.profileId);
       }
       return;
     case 'sign-out':

@@ -13,7 +13,7 @@
     ========================================================================= -->
     <div class="profile-private-hero__cover" data-profile-cover>
       <button class="profile-private-hero__media-action profile-private-hero__media-action--cover" type="button" data-profile-action="edit-cover" aria-label="Edit cover image">
-        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/camera/camera.svg" alt="" aria-hidden="true">
       </button>
     </div>
 
@@ -28,7 +28,6 @@
         <div class="profile-private-hero__avatar" data-profile-avatar aria-hidden="true">
           <img class="profile-private-hero__avatar-image" data-profile-avatar-image src="/assets/images/layers/website/sections/home/hero/Salim%20Sky.jpg" alt="" aria-hidden="true">
         </div>
-
         <button class="profile-private-hero__media-action profile-private-hero__media-action--avatar" type="button" data-profile-action="edit-avatar" aria-label="Edit profile image">
           <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/camera/camera.svg" alt="" aria-hidden="true">
         </button>
@@ -40,14 +39,25 @@
       <div class="profile-private-hero__copy">
         <h1 class="profile-private-hero__title" id="profile-private-hero-title" data-profile-display-name>Profile not completed</h1>
         <p class="profile-private-hero__meta" data-profile-username>@username pending</p>
+        <p class="profile-private-hero__bio" data-profile-bio hidden></p>
+      </div>
 
-        <div class="profile-private-hero__details" aria-label="Profile details">
-          <span class="profile-private-hero__detail" data-profile-location-wrap>
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/location/location.svg" alt="" aria-hidden="true">
-            <span data-profile-location>Location pending</span>
+      <div class="profile-private-hero__actions" aria-label="Profile actions">
+        <span class="profile-private-hero__info">
+          <button class="profile-private-hero__info-button" type="button" data-profile-hero-info-toggle aria-expanded="false" aria-label="Profile information">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/for-more-information-about/for-more-information-about.svg" alt="" aria-hidden="true">
+          </button>
+          <span class="profile-private-hero__info-popover" data-profile-hero-info-popover hidden>
+            <span class="profile-private-hero__info-row">
+              <span class="profile-private-hero__info-label">Location</span>
+              <span class="profile-private-hero__info-value" data-profile-location>Not set</span>
+            </span>
+            <span class="profile-private-hero__info-row">
+              <span class="profile-private-hero__info-label">Role</span>
+              <span class="profile-private-hero__info-value" data-profile-role>Not set</span>
+            </span>
           </span>
-          <span class="profile-private-hero__detail" data-profile-role>Role pending</span>
-        </div>
+        </span>
       </div>
     </div>
 

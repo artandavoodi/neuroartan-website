@@ -59,12 +59,12 @@ function setControlDisabled(control, disabled) {
 }
 
 function renderStatus(root, scope, saveState) {
-  const node = root.querySelector(`[data-profile-save-status="${scope}"]`);
-  if (!(node instanceof HTMLElement)) return;
-
   const state = saveState?.[scope] || { status: 'idle', message: '' };
-  node.dataset.profileSaveState = state.status || 'idle';
-  node.textContent = state.message || '';
+  root.querySelectorAll(`[data-profile-save-status="${scope}"]`).forEach((node) => {
+    if (!(node instanceof HTMLElement)) return;
+    node.dataset.profileSaveState = state.status || 'idle';
+    node.textContent = state.message || '';
+  });
 }
 
 function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
@@ -72,7 +72,6 @@ function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
-    renderStatus(root, 'media', saveState);
   });
 }
 
@@ -81,27 +80,6 @@ function setVerificationStatus(root, message, state = 'idle') {
   if (!(node instanceof HTMLElement)) return;
   node.textContent = message || '';
   node.dataset.profileVerificationState = state;
-}
-
-function renderAvatar(root, state) {
-  const image = root.querySelector('[data-profile-settings-avatar-image]');
-  const placeholder = root.querySelector('[data-profile-settings-avatar-placeholder]');
-
-  if (image instanceof HTMLImageElement) {
-    if (state.avatarHasImage && state.avatarUrl) {
-      image.hidden = false;
-      image.src = state.avatarUrl;
-      image.alt = `${state.displayName} avatar`;
-    } else {
-      image.hidden = true;
-      image.removeAttribute('src');
-      image.alt = '';
-    }
-  }
-
-  if (placeholder instanceof HTMLElement) {
-    placeholder.hidden = state.avatarHasImage;
-  }
 }
 
 function renderPaneState(root, navigationState) {
@@ -130,29 +108,28 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
 
     renderPaneState(root, navigationState);
 
-    setText(
-      root,
-      '[data-profile-settings-copy]',
-      authenticated
-        ? 'Edit the owner-facing profile record, govern the public route, and prepare the profile surface for continuity and public presence.'
-        : 'Authenticate to edit identity, route, visibility, and media settings from the private profile surface.'
-    );
+    setText(root, '[data-profile-settings-title]', navigationState.settingsPane === 'visibility' || navigationState.settingsPane === 'discovery' || navigationState.settingsPane === 'sharing'
+      ? 'Privacy Settings'
+      : 'Edit Profile');
 
     setValue(root, 'first_name', state.firstName);
     setValue(root, 'last_name', state.lastName);
     setValue(root, 'display_name', state.displayName);
     setValue(root, 'date_of_birth', state.birthDate);
     setValue(root, 'gender', state.gender);
+    setValue(root, 'public_summary', state.bio || state.profile?.public_summary || state.profile?.public_bio || '');
 
     setValue(root, 'username', state.username.raw || state.username.normalized);
     setValue(root, 'public_display_name', state.profile?.public_display_name || state.displayName);
     setValue(root, 'public_identity_label', state.profile?.public_identity_label || '');
-    setValue(root, 'public_summary', state.profile?.public_summary || '');
     setValue(root, 'public_primary_link', state.profile?.public_primary_link || '');
     setValue(root, 'public_profile_enabled', state.visibility.publicEnabled);
     setValue(root, 'public_profile_discoverable', state.visibility.discoverable);
-    setValue(root, 'avatar_url', state.avatarUrl || state.profile?.avatar_url || state.profile?.photo_url || '');
-    setValue(root, 'cover_url', state.coverUrl || '');
+    setValue(root, 'profile_search_visible', state.profile?.profile_search_visible !== false);
+    setValue(root, 'profile_models_visible', state.profile?.profile_models_visible !== false);
+    setValue(root, 'profile_followers_visible', state.profile?.profile_followers_visible !== false);
+    setValue(root, 'profile_posts_visible', state.profile?.profile_posts_visible !== false);
+    setValue(root, 'profile_thoughts_visible', state.profile?.profile_thoughts_visible !== false);
 
     setText(
       root,
@@ -161,16 +138,6 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
         ? 'This username is already reserved. Canonical policy currently locks handle changes after reservation.'
         : 'Choose a canonical username before enabling the public route.'
     );
-
-    setText(root, '[data-profile-settings-avatar-state]', state.avatarHasImage ? 'Canonical avatar active' : 'Avatar pending');
-    setText(
-      root,
-      '[data-profile-settings-avatar-note]',
-      state.avatarHasImage
-        ? 'Current avatar source is active. Use the managed image flow to replace it.'
-        : 'No canonical avatar image is connected yet. Use the managed image flow to establish one.'
-    );
-    renderAvatar(root, state);
 
     root.querySelectorAll('input, select, textarea, button[type="submit"]').forEach((control) => {
       setControlDisabled(control, !authenticated);
@@ -189,7 +156,6 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
-    renderStatus(root, 'media', saveState);
 
     void renderVerificationState(root, state);
   });

@@ -24,12 +24,12 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="19.94079"
-     inkscape:cx="9.377763"
-     inkscape:cy="10.180138"
+     inkscape:cx="9.4279113"
+     inkscape:cy="10.155064"
      inkscape:window-width="1472"
-     inkscape:window-height="923"
+     inkscape:window-height="844"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
   <rect
@@ -39,25 +39,21 @@
      height="37.795277"
      x="100.78434"
      y="17.513866" />
-  <g
-     id="g3"
-     transform="translate(-33.357143,-9.5256519)">
-    <circle
-       style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-       id="path1"
-       cx="45.357143"
-       cy="21.525652"
-       r="8.9488192" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
-       d="m 45.357142,18.464042 v 8.094827"
-       id="path2" />
-    <ellipse
-       style="fill:#000000;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
-       id="path3"
-       cx="45.357143"
-       cy="16.552193"
-       rx="0.55172151"
-       ry="0.54175556" />
-  </g>
+  <circle
+     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path1"
+     cx="12"
+     cy="12"
+     r="8.9488192" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 11.999999,8.9383901 V 17.033217"
+     id="path2" />
+  <ellipse
+     style="fill:#000000;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path3"
+     cx="12"
+     cy="7.0265408"
+     rx="0.55172151"
+     ry="0.54175556" />
 </svg>

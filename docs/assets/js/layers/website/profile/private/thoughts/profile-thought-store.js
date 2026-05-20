@@ -350,7 +350,7 @@ export function submitProfileThought() {
       submitStatus: 'error',
       submitMessage: 'Authenticate to activate the thought composer.'
     });
-    return;
+    return false;
   }
 
   if (!text) {
@@ -359,7 +359,7 @@ export function submitProfileThought() {
       submitStatus: 'error',
       submitMessage: 'Write a thought before saving it to your profile surface.'
     });
-    return;
+    return false;
   }
 
   const nextEntry = {
@@ -384,6 +384,8 @@ export function submitProfileThought() {
           : 'Thought staged for your public route. Complete route readiness to publish it outward.')
       : 'Thought saved to your private bank.'
   });
+
+  return true;
 }
 
 /* =============================================================================

@@ -27,6 +27,7 @@ import {
    03) CONSTANTS
 ============================================================================= */
 const PROFILE_FOLLOWS_TABLE = 'profile_follows';
+const PROFILE_SUBSCRIPTIONS_TABLE = 'profile_subscriptions';
 
 /* =============================================================================
    04) BACKEND HELPERS
@@ -134,6 +135,54 @@ export async function getProfileSocialGraphState(profileOrId = {}) {
   }
 }
 
+export async function getProfileSubscriptionState(profileOrId = {}) {
+  const supabase = getSupabaseClient();
+  const profileId = normalizeProfileId(profileOrId);
+
+  if (!supabase || !profileId) {
+    return {
+      backendConfigured: Boolean(supabase),
+      tableAvailable: false,
+      viewerSubscribed: false
+    };
+  }
+
+  try {
+    const { profile: viewerProfile } = await getCurrentUserAndProfile(supabase);
+    const viewerProfileId = normalizeProfileId(viewerProfile);
+
+    let viewerSubscribed = false;
+    if (viewerProfileId && viewerProfileId !== profileId) {
+      const { data, error } = await supabase
+        .from(PROFILE_SUBSCRIPTIONS_TABLE)
+        .select('id')
+        .eq('subscriber_profile_id', viewerProfileId)
+        .eq('subscribed_profile_id', profileId)
+        .maybeSingle();
+
+      if (error) throw error;
+      viewerSubscribed = Boolean(data?.id);
+    }
+
+    return {
+      backendConfigured: true,
+      tableAvailable: true,
+      viewerSubscribed
+    };
+  } catch (error) {
+    if (getRelationMissingState(error)) {
+      return {
+        backendConfigured: true,
+        tableAvailable: false,
+        viewerSubscribed: false,
+        errorCode: 'PROFILE_SUBSCRIPTIONS_TABLE_MISSING'
+      };
+    }
+
+    throw error;
+  }
+}
+
 /* =============================================================================
    06) SOCIAL GRAPH WRITES
 ============================================================================= */
@@ -197,13 +246,76 @@ export async function unfollowProfile(profileOrId = {}) {
   return getProfileSocialGraphState(targetProfileId);
 }
 
+export async function subscribeProfile(profileOrId = {}) {
+  const supabase = getSupabaseClient();
+  const targetProfileId = normalizeProfileId(profileOrId);
+
+  if (!supabase) throw Object.assign(new Error('PROFILE_SUBSCRIPTION_BACKEND_UNAVAILABLE'), { code: 'PROFILE_SUBSCRIPTION_BACKEND_UNAVAILABLE' });
+  if (!targetProfileId) throw Object.assign(new Error('PROFILE_TARGET_REQUIRED'), { code: 'PROFILE_TARGET_REQUIRED' });
+
+  const { user, profile } = await getCurrentUserAndProfile(supabase);
+  const subscriberProfileId = normalizeProfileId(profile);
+  const subscriberAuthUserId = normalizeString(user?.id || user?.uid || '');
+
+  if (!subscriberAuthUserId || !subscriberProfileId) throw Object.assign(new Error('AUTH_REQUIRED'), { code: 'AUTH_REQUIRED' });
+  if (subscriberProfileId === targetProfileId) throw Object.assign(new Error('SELF_SUBSCRIPTION_NOT_ALLOWED'), { code: 'SELF_SUBSCRIPTION_NOT_ALLOWED' });
+
+  const payload = {
+    subscriber_profile_id: subscriberProfileId,
+    subscribed_profile_id: targetProfileId,
+    subscriber_auth_user_id: subscriberAuthUserId,
+    created_at: new Date().toISOString()
+  };
+
+  const { error } = await supabase
+    .from(PROFILE_SUBSCRIPTIONS_TABLE)
+    .upsert(payload, { onConflict: 'subscriber_profile_id,subscribed_profile_id' });
+
+  if (error) throw error;
+
+  document.dispatchEvent(new CustomEvent('profile:subscription-changed', {
+    detail: { profileId: targetProfileId, action: 'subscribe' }
+  }));
+
+  return getProfileSubscriptionState(targetProfileId);
+}
+
+export async function unsubscribeProfile(profileOrId = {}) {
+  const supabase = getSupabaseClient();
+  const targetProfileId = normalizeProfileId(profileOrId);
+
+  if (!supabase) throw Object.assign(new Error('PROFILE_SUBSCRIPTION_BACKEND_UNAVAILABLE'), { code: 'PROFILE_SUBSCRIPTION_BACKEND_UNAVAILABLE' });
+  if (!targetProfileId) throw Object.assign(new Error('PROFILE_TARGET_REQUIRED'), { code: 'PROFILE_TARGET_REQUIRED' });
+
+  const { profile } = await getCurrentUserAndProfile(supabase);
+  const subscriberProfileId = normalizeProfileId(profile);
+  if (!subscriberProfileId) throw Object.assign(new Error('AUTH_REQUIRED'), { code: 'AUTH_REQUIRED' });
+
+  const { error } = await supabase
+    .from(PROFILE_SUBSCRIPTIONS_TABLE)
+    .delete()
+    .eq('subscriber_profile_id', subscriberProfileId)
+    .eq('subscribed_profile_id', targetProfileId);
+
+  if (error) throw error;
+
+  document.dispatchEvent(new CustomEvent('profile:subscription-changed', {
+    detail: { profileId: targetProfileId, action: 'unsubscribe' }
+  }));
+
+  return getProfileSubscriptionState(targetProfileId);
+}
+
 /* =============================================================================
    07) PUBLIC API
 ============================================================================= */
 window.NEUROARTAN_PROFILE_SOCIAL_GRAPH = {
   getProfileSocialGraphState,
+  getProfileSubscriptionState,
   followProfile,
-  unfollowProfile
+  unfollowProfile,
+  subscribeProfile,
+  unsubscribeProfile
 };
 
 /* =============================================================================

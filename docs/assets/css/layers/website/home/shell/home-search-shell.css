@@ -130,6 +130,7 @@
   --home-search-shell-filter-panel-max-height:var(--layout-home-search-filter-panel-max-height);
   --home-search-shell-filter-panel-padding:var(--layout-home-search-filter-panel-padding);
   --home-search-shell-filter-panel-top:calc(var(--home-search-shell-body-padding-y) + var(--home-search-shell-input-row-min-height) + var(--products-local-nav-height, 3.55rem) + var(--home-search-shell-form-gap));
+  --home-search-shell-dialog-surface:color-mix(in srgb, var(--bg-color) 58%, transparent);
 }
 
 /* =============================================================================
@@ -165,7 +166,7 @@
   flex-direction:column;
   overflow:hidden;
   border-top:var(--home-search-shell-border-width) solid var(--home-panel-border);
-  background:var(--home-panel-surface);
+  background:var(--home-search-shell-dialog-surface);
   box-shadow:var(--home-panel-shadow);
   backdrop-filter:blur(var(--home-search-shell-dialog-blur)) saturate(var(--home-search-shell-dialog-saturate));
   -webkit-backdrop-filter:blur(var(--home-search-shell-dialog-blur)) saturate(var(--home-search-shell-dialog-saturate));

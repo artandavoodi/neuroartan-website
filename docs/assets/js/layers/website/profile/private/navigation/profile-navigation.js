@@ -21,7 +21,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    ============================================================================= */
 
 const VALID_SECTIONS = new Set(['overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
-const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'visibility', 'media', 'verification']);
+const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'verification', 'visibility', 'discovery', 'sharing']);
 const VALID_DASHBOARD_PANES = new Set(['summary', 'metrics', 'graph']);
 
 function isPrivateProfileSurface() {

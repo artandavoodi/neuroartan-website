@@ -293,6 +293,11 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     public_primary_link: normalizeString(existingProfile?.public_primary_link || ''),
     public_profile_enabled: existingProfile?.public_profile_enabled === true,
     public_profile_discoverable: existingProfile?.public_profile_discoverable === true,
+    profile_search_visible: existingProfile?.profile_search_visible !== false,
+    profile_models_visible: existingProfile?.profile_models_visible !== false,
+    profile_followers_visible: existingProfile?.profile_followers_visible !== false,
+    profile_posts_visible: existingProfile?.profile_posts_visible !== false,
+    profile_thoughts_visible: existingProfile?.profile_thoughts_visible !== false,
     avatar_url: normalizeString(existingProfile?.avatar_url || existingProfile?.photo_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture || ''),
     cover_url: normalizeString(coverFlag?.value || coverFlag?.url || ''),
     public_feature_flags: publicFeatureFlags
@@ -325,6 +330,10 @@ function readCheckboxValue(formData, name) {
   return formData.get(name) === 'on';
 }
 
+function readOptionalCheckboxValue(formData, name, fallback = false) {
+  return formData.has(name) ? formData.get(name) === 'on' : fallback === true;
+}
+
 function readUploadableFile(source, name) {
   const file = source?.get?.(name) || source?.[name] || null;
   return typeof File !== 'undefined' && file instanceof File && file.size > 0 ? file : null;
@@ -354,7 +363,9 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         last_name: normalizeString(formData.get('last_name') || ''),
         display_name: normalizeString(formData.get('display_name') || ''),
         date_of_birth: normalizeString(formData.get('date_of_birth') || ''),
-        gender: normalizeString(formData.get('gender') || '')
+        gender: normalizeString(formData.get('gender') || ''),
+        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
+        public_bio: normalizeString(formData.get('public_summary') || seed.public_summary || seed.public_bio || '')
       };
     case 'route':
       return {
@@ -368,8 +379,13 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
     case 'visibility':
       return {
         ...seed,
-        public_profile_enabled: readCheckboxValue(formData, 'public_profile_enabled'),
-        public_profile_discoverable: readCheckboxValue(formData, 'public_profile_discoverable')
+        public_profile_enabled: readOptionalCheckboxValue(formData, 'public_profile_enabled', seed.public_profile_enabled),
+        public_profile_discoverable: readOptionalCheckboxValue(formData, 'public_profile_discoverable', seed.public_profile_discoverable),
+        profile_search_visible: readOptionalCheckboxValue(formData, 'profile_search_visible', seed.profile_search_visible),
+        profile_models_visible: readOptionalCheckboxValue(formData, 'profile_models_visible', seed.profile_models_visible),
+        profile_followers_visible: readOptionalCheckboxValue(formData, 'profile_followers_visible', seed.profile_followers_visible),
+        profile_posts_visible: readOptionalCheckboxValue(formData, 'profile_posts_visible', seed.profile_posts_visible),
+        profile_thoughts_visible: readOptionalCheckboxValue(formData, 'profile_thoughts_visible', seed.profile_thoughts_visible)
       };
     case 'media': {
       const avatarUrl = normalizeString(formData.get('avatar_url') || seed.avatar_url || '');
@@ -564,6 +580,11 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
     public_profile_enabled: payload.public_profile_enabled === true,
     public_profile_discoverable: payload.public_profile_discoverable === true,
+    profile_search_visible: values.profile_search_visible !== false,
+    profile_models_visible: values.profile_models_visible !== false,
+    profile_followers_visible: values.profile_followers_visible !== false,
+    profile_posts_visible: values.profile_posts_visible !== false,
+    profile_thoughts_visible: values.profile_thoughts_visible !== false,
     public_profile_visibility: payload.public_profile_visibility || (payload.public_profile_enabled ? 'public' : 'private'),
     public_route_path: payload.public_route_path || '',
     public_route_url: payload.public_route_url || '',

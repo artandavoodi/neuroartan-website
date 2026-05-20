@@ -16,13 +16,15 @@ function sidebarItems(root){
 }
 
 function renderSidebar(root, state = getProfileNavigationState()){
+  const privacyPanes = new Set(['visibility', 'discovery', 'sharing']);
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
     const active = section === state.section && (
       section !== 'settings'
       || pane === state.settingsPane
-      || (pane === 'identity' && state.settingsPane !== 'visibility')
+      || (pane === 'identity' && !privacyPanes.has(state.settingsPane))
+      || (pane === 'visibility' && privacyPanes.has(state.settingsPane))
     );
 
     item.classList.toggle('is-active', active);

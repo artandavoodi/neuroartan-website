@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="150"
+   height="150"
+   viewBox="0 0 150 150"
+   sodipodi:docname="Fallback Profile Image.jpeg.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   inkscape:export-filename="Fallback Profile Image.jpeg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="1.6087966"
+     inkscape:cx="74.279121"
+     inkscape:cy="63.090634"
+     inkscape:window-width="1472"
+     inkscape:window-height="868"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3">
+      <circle
+         style="fill:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;stroke-dasharray:none;paint-order:markers fill stroke"
+         id="circle3"
+         cx="75"
+         cy="75"
+         r="75" />
+    </clipPath>
+  </defs>
+  <g
+     id="g3"
+     clip-path="url(#clipPath3)">
+    <g
+       id="g1"
+       transform="scale(0.25)"
+       style="stroke-width:4">
+      <rect
+         style="fill:#ffffff;stroke:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+         id="rect1"
+         width="600"
+         height="600"
+         x="0"
+         y="0" />
+    </g>
+    <g
+       id="g2">
+      <path
+         id="path1"
+         style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+         d="m 25.500005,123.06395 c 2.718461,-6.43988 6.65214,-12.23938 11.513001,-17.10986 4.860861,-4.87048 10.648905,-8.811944 17.076076,-11.535786 6.427181,-2.723848 13.4935,-4.230078 20.910923,-4.230078 7.417417,0 14.483736,1.50623 20.910912,4.230078 6.427183,2.723842 12.215213,6.665306 17.076073,11.535786 4.86086,4.87048 8.79454,10.66998 11.51302,17.10986"
+         sodipodi:nodetypes="csssssc" />
+      <ellipse
+         style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+         id="path1-2"
+         cx="75.000008"
+         cy="51.943722"
+         rx="24.958282"
+         ry="25.007669" />
+    </g>
+  </g>
+</svg>

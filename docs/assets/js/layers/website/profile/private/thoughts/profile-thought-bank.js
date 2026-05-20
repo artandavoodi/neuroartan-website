@@ -243,6 +243,18 @@ function renderThoughtBank(state = getProfileThoughtState()) {
   renderStream(state);
 }
 
+function getThoughtBankRoot() {
+  return document.querySelector('[data-profile-thought-bank-panel]');
+}
+
+function setThoughtOverlayOpen(open) {
+  const root = getThoughtBankRoot();
+  const overlay = root?.querySelector('[data-profile-thought-overlay]');
+  if (!(overlay instanceof HTMLElement)) return;
+  overlay.hidden = !open;
+  document.body?.classList.toggle('profile-thought-overlay-open', open);
+}
+
 /* =============================================================================
    06) EVENT BINDING
    ============================================================================= */
@@ -252,9 +264,28 @@ function bindThoughtComposerEvents() {
   document.documentElement.dataset.profileThoughtComposerBound = 'true';
 
   document.addEventListener('click', (event) => {
+    const openTrigger = event.target instanceof Element
+      ? event.target.closest('[data-profile-thought-overlay-open]')
+      : null;
+    const closeTrigger = event.target instanceof Element
+      ? event.target.closest('[data-profile-thought-overlay-close]')
+      : null;
     const audienceToggle = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-audience-toggle]')
       : null;
+
+    if (openTrigger) {
+      event.preventDefault();
+      setThoughtOverlayOpen(true);
+      document.querySelector('[data-profile-thought-textarea="true"]')?.focus();
+      return;
+    }
+
+    if (closeTrigger) {
+      event.preventDefault();
+      setThoughtOverlayOpen(false);
+      return;
+    }
 
     if (!audienceToggle) return;
 
@@ -299,7 +330,14 @@ function bindThoughtComposerEvents() {
     if (!(form instanceof HTMLFormElement)) return;
 
     event.preventDefault();
-    submitProfileThought();
+    if (submitProfileThought()) {
+      setThoughtOverlayOpen(false);
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    setThoughtOverlayOpen(false);
   });
 }
 

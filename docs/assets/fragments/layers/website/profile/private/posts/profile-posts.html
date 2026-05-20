@@ -4,46 +4,10 @@
      03) POST STREAM
 ============================================================================= -->
 <section class="profile-posts" data-profile-posts aria-labelledby="profile-posts-title">
-  <article class="profile-posts__composer ui-card ui-surface--glass">
-    <header class="profile-posts__header">
-      <div>
-        <h2 class="profile-posts__title" id="profile-posts-title">Posts</h2>
-        <p class="profile-posts__copy" data-profile-posts-policy-copy>
-          Create profile posts as structured records. Public publishing stays governed by route readiness.
-        </p>
-      </div>
-    </header>
-
-    <form class="profile-posts__form" data-profile-post-form novalidate>
-      <div class="profile-posts__field-grid">
-        <label class="profile-posts__field profile-posts__field--full">
-          <span class="profile-posts__label">Post title</span>
-          <input class="ui-field" type="text" name="title" maxlength="120" placeholder="Post title">
-        </label>
-
-        <label class="profile-posts__field">
-          <span class="profile-posts__label">Visibility</span>
-          <select class="ui-field" name="visibility" data-profile-post-visibility></select>
-        </label>
-
-        <label class="profile-posts__field profile-posts__field--full">
-          <span class="profile-posts__label">Post body</span>
-          <textarea class="ui-field profile-posts__textarea" rows="7" name="body" maxlength="4000" placeholder="Write a profile post."></textarea>
-        </label>
-      </div>
-
-      <div class="profile-posts__footer">
-        <p class="profile-posts__status" data-profile-post-status aria-live="polite"></p>
-        <button class="ui-button ui-button--secondary" type="submit">Save Post</button>
-      </div>
-    </form>
-  </article>
-
   <article class="profile-posts__stream ui-card ui-surface--glass">
     <header class="profile-posts__stream-header">
       <div>
-        <h3 class="profile-posts__stream-title">User posts</h3>
-        <p class="profile-posts__copy">Private and public-ready post records attached to this profile.</p>
+        <h2 class="profile-posts__title" id="profile-posts-title">Posts</h2>
       </div>
       <span class="ui-badge ui-badge--outline" data-profile-post-count>0 posts</span>
     </header>
@@ -51,4 +15,47 @@
     <div class="profile-posts__list" data-profile-post-list></div>
     <p class="profile-posts__empty" data-profile-post-empty>No posts have been created yet.</p>
   </article>
+
+  <button class="profile-posts__fab" type="button" data-profile-post-overlay-open aria-label="Create post">
+    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
+  </button>
+
+  <div class="profile-posts__overlay" data-profile-post-overlay hidden>
+    <div class="profile-posts__overlay-backdrop" aria-hidden="true"></div>
+    <article class="profile-posts__composer ui-card ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="profile-post-composer-title">
+      <header class="profile-posts__header">
+        <div>
+          <h2 class="profile-posts__title" id="profile-post-composer-title">Create Post</h2>
+        </div>
+        <button class="profile-posts__close global-close-button" type="button" data-profile-post-overlay-close aria-label="Close post composer">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <form class="profile-posts__form" data-profile-post-form novalidate>
+        <div class="profile-posts__field-grid">
+          <label class="profile-posts__field profile-posts__field--full">
+            <span class="profile-posts__label">Title</span>
+            <input class="ui-field" type="text" name="title" maxlength="120" placeholder="Post title">
+          </label>
+
+          <label class="profile-posts__field">
+            <span class="profile-posts__label">Visibility</span>
+            <select class="ui-field" name="visibility" data-profile-post-visibility></select>
+          </label>
+
+          <label class="profile-posts__field profile-posts__field--full">
+            <span class="profile-posts__label">Post</span>
+            <textarea class="ui-field profile-posts__textarea" rows="7" name="body" maxlength="4000" placeholder="Write a post."></textarea>
+          </label>
+        </div>
+
+        <div class="profile-posts__footer">
+          <p class="profile-posts__status" data-profile-post-status aria-live="polite"></p>
+          <button class="ui-button ui-button--secondary" type="submit">Post</button>
+        </div>
+      </form>
+    </article>
+  </div>
 </section>

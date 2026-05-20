@@ -6,14 +6,12 @@
 <article class="profile-thought-composer ui-card ui-surface--glass" data-profile-thought-composer>
   <div class="profile-thought-composer__header">
     <div>
-      <h2 class="profile-thought-composer__title">Thought Bank</h2>
-      <p class="profile-thought-composer__intro" data-profile-thought-bank-copy>
-        Use this surface to capture private reflections or stage public writing for your company-domain route.
-      </p>
+      <h2 class="profile-thought-composer__title">Create Thought</h2>
     </div>
 
-    <button class="ui-button ui-button--ghost" type="button" data-profile-action="open-dashboard">
-      Open Dashboard
+    <button class="profile-thought-composer__close global-close-button" type="button" data-profile-thought-overlay-close aria-label="Close thought composer">
+      <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+      <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
     </button>
   </div>
 
@@ -46,9 +44,7 @@
 
     <div class="profile-thought-composer__footer">
       <div class="profile-thought-composer__meta">
-        <p class="profile-thought-composer__status" data-profile-thought-bank-status>
-          Thought capture is active inside the private profile surface.
-        </p>
+        <p class="profile-thought-composer__status" data-profile-thought-bank-status></p>
         <p class="profile-thought-composer__submit-status" data-profile-thought-submit-status="idle"></p>
       </div>
 

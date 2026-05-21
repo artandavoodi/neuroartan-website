@@ -68,6 +68,8 @@ function getFragmentPaths() {
     'profile-private-header': assetPath('/assets/fragments/layers/website/profile/private/header/profile-header.html'),
     'profile-private-sections': assetPath('/assets/fragments/layers/website/profile/private/sections/profile-sections.html'),
     'profile-private-sidebar': assetPath('/assets/fragments/layers/website/profile/private/sidebar/profile-sidebar.html'),
+    'profile-private-right-toolbar': assetPath('/assets/fragments/layers/website/profile/private/right-toolbar/profile-right-toolbar.html'),
+    'profile-private-filter-overlay': assetPath('/assets/fragments/layers/website/profile/private/filter/profile-filter-overlay.html'),
     'profile-private-workspace': assetPath('/assets/fragments/layers/website/profile/private/workspace/profile-workspace.html'),
     'profile-private-overview-panel': assetPath('/assets/fragments/layers/website/profile/private/overview/profile-overview-panel.html'),
     'profile-private-posts': assetPath('/assets/fragments/layers/website/profile/private/posts/profile-posts.html'),

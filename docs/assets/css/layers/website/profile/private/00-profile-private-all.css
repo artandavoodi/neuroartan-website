@@ -45,7 +45,9 @@
 @import url('./dashboard/profile-dashboard-panel.css');
 @import url('./dashboard/profile-dashboard-graph-panel.css');
 @import url('./dashboard/profile-dashboard-metrics-panel.css');
+@import url('./filter/profile-filter-overlay.css');
 @import url('./sidebar/profile-sidebar.css');
+@import url('./right-toolbar/profile-right-toolbar.css');
 @import url('./thoughts/profile-thought-bank.css');
 @import url('./thoughts/profile-thought-bank-panel.css');
 @import url('./thoughts/profile-thought-composer-panel.css');

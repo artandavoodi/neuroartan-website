@@ -1,0 +1,170 @@
+/* =============================================================================
+   PROFILE RIGHT TOOLBAR — DESKTOP TOOL RAIL
+============================================================================= */
+
+.profile-right-toolbar{
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:var(--size-full);
+}
+
+.profile-right-toolbar__surface{
+  position:sticky;
+  top:calc(var(--profile-shell-top-clearance) + var(--home-platform-shell-nav-gap) + var(--spacing-md));
+  align-self:start;
+  width:var(--layout-home-platform-rail-compact-width);
+  min-width:var(--spacing-none);
+  max-height:calc(100dvh - var(--profile-shell-top-clearance) - var(--home-platform-shell-nav-gap) - var(--spacing-md));
+  overflow-y:auto;
+  background:transparent;
+  padding:0;
+  scrollbar-width:none;
+}
+
+.profile-right-toolbar__surface::-webkit-scrollbar{
+  display:none;
+}
+
+.profile-right-toolbar__rail-inner{
+  min-height:var(--size-full);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:var(--home-platform-shell-rail-gap);
+  padding:
+    0
+    var(--home-platform-shell-rail-compact-padding-inline)
+    0;
+}
+
+.profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__rail-inner{
+  padding-inline:
+    var(--home-platform-shell-rail-compact-padding-inline);
+}
+
+.profile-right-toolbar__header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--size-full);
+  padding-top:var(--home-platform-shell-rail-padding-top);
+}
+
+.profile-right-toolbar__rail-toggle{
+  width:var(--home-platform-shell-rail-toggle-size);
+  height:var(--home-platform-shell-rail-toggle-size);
+  min-width:var(--home-platform-shell-rail-toggle-size);
+  min-height:var(--home-platform-shell-rail-toggle-size);
+  display:inline-grid;
+  place-items:center;
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-platform-shell-nav-item-radius);
+  background:transparent;
+  color:var(--home-platform-shell-nav-item-color);
+  opacity:var(--home-platform-shell-nav-base-opacity);
+  cursor:pointer;
+  transition:var(--interaction-transition-control);
+}
+
+.profile-right-toolbar__nav-item{
+  width:var(--size-full);
+  min-height:var(--home-platform-shell-nav-item-min-height);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--home-platform-shell-nav-item-gap);
+  padding:var(--home-platform-shell-nav-item-padding);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-platform-shell-nav-item-radius);
+  background:transparent;
+  color:var(--home-platform-shell-nav-item-color);
+  opacity:var(--home-platform-shell-nav-base-opacity);
+  cursor:pointer;
+  transition:var(--interaction-transition-control);
+}
+
+.profile-right-toolbar__rail-toggle:hover,
+.profile-right-toolbar__rail-toggle:focus-visible,
+.profile-right-toolbar__rail-toggle[aria-pressed="true"],
+.profile-right-toolbar__nav-item:hover,
+.profile-right-toolbar__nav-item:focus-visible,
+.profile-right-toolbar__nav-item:active{
+  border-color:var(--home-platform-shell-nav-item-border-hover);
+  background:var(--home-platform-shell-nav-item-bg-hover);
+  color:var(--home-platform-shell-nav-item-color-hover);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+  transform:none;
+}
+
+.profile-right-toolbar__rail-toggle-icon,
+.profile-right-toolbar__nav-icon{
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  display:block;
+  color:currentColor;
+  transform:none;
+}
+
+.profile-right-toolbar__rail-toggle-icon{
+  width:var(--home-platform-shell-rail-toggle-icon-size);
+  height:var(--home-platform-shell-rail-toggle-icon-size);
+}
+
+.profile-right-toolbar__rail-toggle-icon img,
+.profile-right-toolbar__rail-toggle-icon svg,
+.profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-icon svg{
+  width:var(--size-full);
+  height:var(--size-full);
+  display:block;
+  opacity:var(--nav-institutional-icon-opacity);
+  transform:none;
+}
+
+.profile-right-toolbar__rail-toggle:hover .profile-right-toolbar__rail-toggle-icon img,
+.profile-right-toolbar__rail-toggle:hover .profile-right-toolbar__rail-toggle-icon svg,
+.profile-right-toolbar__rail-toggle:focus-visible .profile-right-toolbar__rail-toggle-icon img,
+.profile-right-toolbar__rail-toggle:focus-visible .profile-right-toolbar__rail-toggle-icon svg,
+.profile-right-toolbar__rail-toggle[aria-pressed="true"] .profile-right-toolbar__rail-toggle-icon img,
+.profile-right-toolbar__rail-toggle[aria-pressed="true"] .profile-right-toolbar__rail-toggle-icon svg,
+.profile-right-toolbar__nav-item:hover .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item:hover .profile-right-toolbar__nav-icon svg,
+.profile-right-toolbar__nav-item:focus-visible .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item:focus-visible .profile-right-toolbar__nav-icon svg,
+.profile-right-toolbar__nav-item:active .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item:active .profile-right-toolbar__nav-icon svg{
+  opacity:var(--nav-institutional-icon-hover-opacity);
+}
+
+.profile-right-toolbar__nav{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:var(--home-platform-shell-nav-gap);
+  margin-top:var(--spacing-sm);
+  padding-top:var(--home-platform-shell-rail-padding-top);
+  padding-bottom:var(--home-platform-shell-rail-padding-bottom);
+  overflow:hidden;
+  opacity:1;
+  max-height:calc((var(--home-platform-shell-nav-item-min-height) * var(--profile-right-toolbar-action-count, 1)) + (var(--home-platform-shell-nav-gap) * var(--profile-right-toolbar-gap-count, 0)) + var(--home-platform-shell-rail-padding-top) + var(--home-platform-shell-rail-padding-bottom));
+  transform:translateY(var(--spacing-none));
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    max-height var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__nav{
+  opacity:0;
+  max-height:var(--spacing-none);
+  pointer-events:none;
+  transform:translateY(calc(var(--spacing-sm) * -1));
+}
+
+@media (max-width:980px){
+  .profile-right-toolbar{
+    display:none;
+  }
+}

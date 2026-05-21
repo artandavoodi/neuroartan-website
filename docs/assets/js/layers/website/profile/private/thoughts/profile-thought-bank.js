@@ -12,6 +12,10 @@
    01) MODULE IMPORTS
    ============================================================================= */
 
+import {
+  getProfileFilterState,
+  subscribeProfileFilters
+} from '../filter/profile-filter-overlay.js';
 import { getProfileThoughtState, subscribeProfileThoughtState, submitProfileThought, updateProfileThoughtComposer } from './profile-thought-store.js';
 
 /* =============================================================================
@@ -119,6 +123,25 @@ function createThoughtEntry(entry, taxonomy) {
   return article;
 }
 
+function filterThoughtEntries(entries = [], audience = '') {
+  const filters = getProfileFilterState('thoughts').filters;
+  return entries
+    .filter((entry) => {
+      if (filters.audience !== 'all' && filters.audience !== audience) return false;
+      if (filters.category !== 'all' && entry.category !== filters.category) return false;
+      if (filters.year !== 'all') {
+        const year = new Date(entry.createdAt).getFullYear();
+        if (String(year) !== String(filters.year)) return false;
+      }
+      return true;
+    })
+    .slice()
+    .sort((left, right) => {
+      const direction = filters.sort === 'oldest' ? 1 : -1;
+      return String(left.createdAt).localeCompare(String(right.createdAt)) * direction;
+    });
+}
+
 /* =============================================================================
    03) COMPOSER RENDER
    ============================================================================= */
@@ -196,17 +219,18 @@ function renderComposer(state = getProfileThoughtState()) {
 function renderLane(root, audience, entries, state) {
   const list = root.querySelector(`[data-profile-thought-stream-list="${audience}"]`);
   const empty = root.querySelector(`[data-profile-thought-stream-empty="${audience}"]`);
+  const filteredEntries = filterThoughtEntries(entries, audience);
 
   setText(
     root,
     `[data-profile-thought-stream-count="${audience}"]`,
-    `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`
+    `${filteredEntries.length} ${filteredEntries.length === 1 ? 'entry' : 'entries'}`
   );
 
   if (!(list instanceof HTMLElement)) return;
   clearNode(list);
 
-  if (!entries.length) {
+  if (!filteredEntries.length) {
     if (empty instanceof HTMLElement) {
       empty.hidden = false;
       empty.textContent = audience === 'public' && !state.runtimeState.publicViewAvailable
@@ -222,7 +246,7 @@ function renderLane(root, audience, entries, state) {
     empty.hidden = true;
   }
 
-  entries.forEach((entry) => {
+  filteredEntries.forEach((entry) => {
     list.appendChild(createThoughtEntry(entry, state.taxonomy));
   });
 }
@@ -339,6 +363,11 @@ function bindThoughtComposerEvents() {
     if (event.key !== 'Escape') return;
     setThoughtOverlayOpen(false);
   });
+
+  document.addEventListener('profile:thought-compose-open-request', () => {
+    setThoughtOverlayOpen(true);
+    document.querySelector('[data-profile-thought-textarea="true"]')?.focus();
+  });
 }
 
 /* =============================================================================
@@ -347,6 +376,10 @@ function bindThoughtComposerEvents() {
 
 function initProfileThoughtBank() {
   subscribeProfileThoughtState(renderThoughtBank);
+  subscribeProfileFilters((state) => {
+    if (state.context !== 'thoughts') return;
+    renderStream();
+  });
   bindThoughtComposerEvents();
 
   document.addEventListener('fragment:mounted', (event) => {

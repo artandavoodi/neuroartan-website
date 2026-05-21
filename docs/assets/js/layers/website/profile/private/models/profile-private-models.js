@@ -11,6 +11,10 @@ import {
   listOwnedModels
 } from '../../../system/model/model-store.js';
 import {
+  getProfileFilterState,
+  subscribeProfileFilters
+} from '../filter/profile-filter-overlay.js';
+import {
   getProfileRuntimeState,
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
@@ -46,13 +50,35 @@ async function renderModels() {
     console.error('[profile-private-models] Failed to list owned models.', error);
   }
 
-  const trainedModels = models.filter((model) => model.training_state === 'trained' || model.readiness_state === 'ready');
-  const sourceCount = models.reduce((total, model) => total + (Number(model.source_count) || 0), 0);
+  const filters = getProfileFilterState('models').filters;
+  const filteredModels = models.filter((model) => {
+    if (filters.state !== 'all') {
+      const stateKeys = [
+        model.training_state,
+        model.readiness_state,
+        model.lifecycle_state,
+        model.status
+      ].map((value) => String(value || '').trim().toLowerCase());
+      if (!stateKeys.includes(filters.state)) return false;
+    }
+
+    if (filters.scope === 'owned' && model.owner_scope === 'saved') return false;
+    if (filters.scope === 'saved' && model.owner_scope !== 'saved') return false;
+
+    if (filters.year !== 'all') {
+      const year = new Date(model.created_at || model.createdAt || model.updated_at || model.updatedAt).getFullYear();
+      if (String(year) !== String(filters.year)) return false;
+    }
+
+    return true;
+  });
+  const trainedModels = filteredModels.filter((model) => model.training_state === 'trained' || model.readiness_state === 'ready');
+  const sourceCount = filteredModels.reduce((total, model) => total + (Number(model.source_count) || 0), 0);
   const authenticated = state.viewerState === 'authenticated';
   const profileComplete = state.completion?.complete === true;
   const canCreateModel = authenticated;
 
-  setText(root, '[data-profile-saved-models-count]', String(models.length));
+  setText(root, '[data-profile-saved-models-count]', String(filteredModels.length));
   setText(root, '[data-profile-owned-models-count]', String(trainedModels.length));
   setText(root, '[data-profile-training-sources-count]', String(sourceCount));
   setText(
@@ -91,6 +117,10 @@ function initProfilePrivateModels() {
   bindModelActions();
   void renderModels();
   subscribeProfileRuntime(() => {
+    void renderModels();
+  });
+  subscribeProfileFilters((state) => {
+    if (state.context !== 'models') return;
     void renderModels();
   });
 

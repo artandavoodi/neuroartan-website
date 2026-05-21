@@ -92,6 +92,12 @@ body.profile-thought-overlay-open{
   opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
+@media (min-width:981px){
+  .profile-thought-bank__fab{
+    display:none;
+  }
+}
+
 .profile-thought-composer__title,
 .profile-thought-composer__intro,
 .profile-thought-composer__label,

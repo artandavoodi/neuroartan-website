@@ -7,8 +7,48 @@ import {
   subscribeProfileNavigation
 } from '../navigation/profile-navigation.js';
 
+const PROFILE_SIDEBAR_RAIL_STORAGE_KEY = 'neuroartan.profile.sidebar.rail';
+const PROFILE_SIDEBAR_RAIL_COOKIE_KEY = 'neuroartan_profile_sidebar_rail';
+
 function sidebarRoots(){
   return Array.from(document.querySelectorAll('[data-profile-private-sidebar]'));
+}
+
+function storageAvailable(){
+  return typeof window !== 'undefined' && 'localStorage' in window;
+}
+
+function readStoredSidebarRail(){
+  if(storageAvailable()){
+    try{
+      const value = window.localStorage.getItem(PROFILE_SIDEBAR_RAIL_STORAGE_KEY);
+      if(value === 'collapsed' || value === 'expanded') return value;
+    }catch(_){
+      // Fall through to cookie storage.
+    }
+  }
+
+  const cookie = document.cookie
+    .split(';')
+    .map((entry) => entry.trim())
+    .find((entry) => entry.startsWith(`${PROFILE_SIDEBAR_RAIL_COOKIE_KEY}=`));
+  const value = decodeURIComponent(cookie?.split('=').slice(1).join('=') || '');
+  return value === 'collapsed' || value === 'expanded' ? value : '';
+}
+
+function writeStoredSidebarRail(state){
+  if(state !== 'collapsed' && state !== 'expanded') return;
+
+  if(storageAvailable()){
+    try{
+      window.localStorage.setItem(PROFILE_SIDEBAR_RAIL_STORAGE_KEY, state);
+      return;
+    }catch(_){
+      // Fall through to cookie storage.
+    }
+  }
+
+  document.cookie = `${PROFILE_SIDEBAR_RAIL_COOKIE_KEY}=${encodeURIComponent(state)}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
 function sidebarItems(root){
@@ -46,7 +86,7 @@ function renderSidebar(root, state = getProfileNavigationState()){
   });
 }
 
-function setSidebarRail(root, state){
+function setSidebarRail(root, state, options = {}){
   const normalized = state === 'collapsed' ? 'collapsed' : 'expanded';
   const toggle = root.querySelector('[data-profile-sidebar-rail-toggle]');
   const toggleIconHost = root.querySelector('[data-profile-sidebar-rail-toggle-icon-host]');
@@ -105,6 +145,10 @@ function setSidebarRail(root, state){
   document.dispatchEvent(new CustomEvent('profile:sidebar-rail-change', {
     detail: { state: normalized }
   }));
+
+  if(options.persist !== false){
+    writeStoredSidebarRail(normalized);
+  }
 }
 
 function bindSidebar(){
@@ -154,13 +198,18 @@ function bindSidebar(){
 function bootSidebar(){
   sidebarRoots().forEach((root) => {
     renderSidebar(root, getProfileNavigationState());
+    const storedState = readStoredSidebarRail();
     setSidebarRail(
       root,
       window.matchMedia?.('(max-width: 820px)').matches === true
         ? 'collapsed'
-        : root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
-        ? 'collapsed'
-        : 'expanded'
+        : storedState
+          || (root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
+            ? 'collapsed'
+            : 'expanded'),
+      {
+        persist: window.matchMedia?.('(max-width: 820px)').matches !== true
+      }
     );
   });
 }
@@ -181,7 +230,7 @@ document.addEventListener('fragment:mounted', (event) => {
 
 window.addEventListener('resize', () => {
   if(window.matchMedia?.('(max-width: 820px)').matches !== true) return;
-  sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed'));
+  sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed', { persist:false }));
 }, { passive:true });
 
 initProfileSidebar();

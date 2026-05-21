@@ -100,6 +100,12 @@ body.profile-posts-overlay-open{
   opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
+@media (min-width:981px){
+  .profile-posts__fab{
+    display:none;
+  }
+}
+
 .profile-posts__header,
 .profile-posts__stream-header,
 .profile-posts__footer,

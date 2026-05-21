@@ -21,6 +21,10 @@ import {
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
 import {
+  getProfileFilterState,
+  subscribeProfileFilters
+} from '../filter/profile-filter-overlay.js';
+import {
   createSpeechInputController,
   hasSpeechInputSupport
 } from '../../../../../core/02-systems/speech-input.js';
@@ -260,7 +264,28 @@ function renderPostList(root) {
 
   list.innerHTML = '';
 
-  const posts = STORE.posts.slice().sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)));
+  const filters = getProfileFilterState('posts').filters;
+  const posts = STORE.posts
+    .filter((post) => {
+      if (filters.visibility !== 'all' && post.visibility !== filters.visibility) return false;
+
+      const mediaType = normalizeString(post.mediaType || '').toLowerCase();
+      const mediaFilter = normalizeString(filters.media || 'all').toLowerCase();
+      if (mediaFilter === 'text' && post.mediaUrl) return false;
+      if (mediaFilter !== 'all' && mediaFilter !== 'text' && mediaType !== mediaFilter) return false;
+
+      if (filters.year !== 'all') {
+        const year = new Date(post.createdAt).getFullYear();
+        if (String(year) !== String(filters.year)) return false;
+      }
+
+      return true;
+    })
+    .slice()
+    .sort((left, right) => {
+      const direction = filters.sort === 'oldest' ? 1 : -1;
+      return String(left.createdAt).localeCompare(String(right.createdAt)) * direction;
+    });
   if (count) {
     count.textContent = `${posts.length} post${posts.length === 1 ? '' : 's'}`;
   }
@@ -353,6 +378,17 @@ function setPostOverlayOpen(root, open) {
   if (!(overlay instanceof HTMLElement)) return;
   overlay.hidden = !open;
   document.body?.classList.toggle('profile-posts-overlay-open', open);
+}
+
+function openPostComposer(root) {
+  STORE.editingPostId = '';
+  const form = root.querySelector('[data-profile-post-form]');
+  if (form instanceof HTMLFormElement) form.reset();
+  resetPostMedia(root);
+  syncPostCounter(root);
+  syncSubmitLabel(root);
+  setPostOverlayOpen(root, true);
+  root.querySelector('[data-profile-post-form] textarea')?.focus();
 }
 
 function resetPostMedia(root) {
@@ -632,14 +668,7 @@ function bindPostForm() {
 
     if (openTrigger) {
       event.preventDefault();
-      STORE.editingPostId = '';
-      const form = root.querySelector('[data-profile-post-form]');
-      if (form instanceof HTMLFormElement) form.reset();
-      resetPostMedia(root);
-      syncPostCounter(root);
-      syncSubmitLabel(root);
-      setPostOverlayOpen(root, true);
-      root.querySelector('[data-profile-post-form] textarea')?.focus();
+      openPostComposer(root);
       return;
     }
 
@@ -667,6 +696,10 @@ function bindPostForm() {
     if (event.key !== 'Escape') return;
     setPostOverlayOpen(root, false);
   });
+
+  document.addEventListener('profile:post-compose-open-request', () => {
+    openPostComposer(root);
+  });
 }
 
 /* =============================================================================
@@ -680,6 +713,11 @@ function initProfilePosts() {
   void renderPosts();
   subscribeProfileRuntime(() => {
     void renderPosts();
+  });
+  subscribeProfileFilters((state) => {
+    if (state.context !== 'posts') return;
+    const root = getRoot();
+    if (root) renderPostList(root);
   });
 
   document.addEventListener('fragment:mounted', (event) => {

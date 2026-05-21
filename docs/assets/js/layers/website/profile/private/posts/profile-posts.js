@@ -31,6 +31,12 @@ import {
   listFeedPosts,
   updateFeedPost
 } from '../../../system/feed/feed-store.js';
+import {
+  createProfilePost,
+  deleteProfilePost as deletePrivateProfilePost,
+  listProfilePosts,
+  updateProfilePost
+} from '../../../system/profile/profile-post-store.js';
 import { uploadProfileImage } from '../../../system/profile/profile-image-storage.js';
 
 /* =============================================================================
@@ -96,19 +102,34 @@ async function loadPolicy() {
 }
 
 async function syncStoreWithRuntime() {
-  const posts = await listFeedPosts();
-  STORE.posts = posts
-    .filter((post) => post.ownedByCurrentUser)
-    .map((post) => ({
-      id: post.id,
-      title: 'Profile post',
-      body: post.content,
-      visibility: 'public',
-      createdAt: post.createdAt,
-      source: post.source,
-      mediaUrl: post.mediaUrl || post.imageUrl || '',
-      mediaType: post.mediaType || ''
-    }));
+  const feedPosts = await listFeedPosts();
+  const privatePosts = await listProfilePosts().catch(() => []);
+  const allPosts = [
+    ...feedPosts
+      .filter((post) => post.ownedByCurrentUser)
+      .map((post) => ({
+        id: post.id,
+        title: 'Profile post',
+        body: post.content,
+        visibility: 'public',
+        createdAt: post.createdAt,
+        source: post.source,
+        mediaUrl: post.mediaUrl || post.imageUrl || '',
+        mediaType: post.mediaType || ''
+      })),
+    ...privatePosts
+      .map((post) => ({
+        id: post.id,
+        title: post.title || 'Untitled post',
+        body: post.body,
+        visibility: post.visibility || 'private',
+        createdAt: post.createdAt,
+        source: 'profile',
+        mediaUrl: '',
+        mediaType: ''
+      }))
+  ];
+  STORE.posts = allPosts;
 }
 
 /* =============================================================================
@@ -431,39 +452,49 @@ function bindPostForm() {
       return;
     }
 
-    if (visibility !== 'public') {
-      setStatus(root, 'Private post storage requires the Supabase profile_posts table. Nothing was saved in this browser.', 'error');
-      return;
-    }
-
-    setStatus(root, editingPostId ? 'Saving post update...' : 'Publishing post to the public feed...', 'saving');
+    setStatus(root, editingPostId ? 'Saving post update...' : (visibility === 'public' ? 'Publishing post to the public feed...' : 'Saving private draft...'), 'saving');
 
     try {
-      let imageUpload = null;
-      if (STORE.selectedMediaFile instanceof File) {
-        setStatus(root, 'Uploading media to profile storage...', 'saving');
-        imageUpload = await uploadProfileImage({
-          file: STORE.selectedMediaFile,
-          user: state.profile,
-          kind: 'post',
-          bucket: 'profile-images',
-          targetBucket: 'profile-images',
-          storageBucket: 'profile-images'
-        });
-      }
+      if (visibility === 'public') {
+        let imageUpload = null;
+        if (STORE.selectedMediaFile instanceof File) {
+          setStatus(root, 'Uploading media to profile storage...', 'saving');
+          imageUpload = await uploadProfileImage({
+            file: STORE.selectedMediaFile,
+            user: state.profile,
+            kind: 'post',
+            bucket: 'profile-images',
+            targetBucket: 'profile-images',
+            storageBucket: 'profile-images'
+          });
+        }
 
-      const payload = {
-        post_body: body,
-        source_surface: 'profile',
-        post_image_url: imageUpload?.publicUrl || '',
-        post_image_storage_path: imageUpload?.storagePath || '',
-        post_media_type: STORE.selectedMediaKind || ''
-      };
+        const payload = {
+          post_body: body,
+          source_surface: 'profile',
+          post_image_url: imageUpload?.publicUrl || '',
+          post_image_storage_path: imageUpload?.storagePath || '',
+          post_media_type: STORE.selectedMediaKind || ''
+        };
 
-      if (editingPostId) {
-        await updateFeedPost(editingPostId, payload);
+        if (editingPostId) {
+          await updateFeedPost(editingPostId, payload);
+        } else {
+          await createFeedPost(payload);
+        }
       } else {
-        await createFeedPost(payload);
+        const payload = {
+          body: body,
+          visibility: visibility,
+          postState: 'draft',
+          profileId: state.profile?.id || null
+        };
+
+        if (editingPostId) {
+          await updateProfilePost(editingPostId, { ...payload, profileId: state.profile?.id || null });
+        } else {
+          await createProfilePost(payload);
+        }
       }
 
       form.reset();
@@ -473,9 +504,9 @@ function bindPostForm() {
       syncSubmitLabel(root);
       await renderPosts();
       setPostOverlayOpen(root, false);
-      setStatus(root, editingPostId ? 'Post updated.' : 'Post published to your public profile and feed.', 'success');
+      setStatus(root, editingPostId ? 'Post updated.' : (visibility === 'public' ? 'Post published to your public profile and feed.' : 'Private draft saved.'), 'success');
 
-      if (!editingPostId) {
+      if (!editingPostId && visibility === 'public') {
         document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
           detail: {
             id: `profile-post-published-${Date.now()}`,
@@ -491,13 +522,17 @@ function bindPostForm() {
       const code = normalizeString(error?.code || error?.message || '');
       const message = code === 'FEED_BACKEND_UNAVAILABLE'
         ? 'Feed storage is not configured. Connect the Supabase feed_posts table before publishing.'
+        : code === 'PROFILE_POSTS_BACKEND_UNAVAILABLE'
+          ? 'Private post storage is not configured. Connect the Supabase profile_posts table before saving drafts.'
+        : code === 'PROFILE_POSTS_TABLE_MISSING'
+          ? 'Private post storage table is missing. Create the profile_posts table in Supabase before saving drafts.'
         : code === 'PROFILE_REQUIRED'
           ? 'Create and save your profile before publishing posts.'
         : code === 'AUTH_REQUIRED'
             ? 'Sign in before publishing posts.'
             : code === 'FEED_POST_MEDIA_COLUMNS_REQUIRED'
               ? 'Image posts require media columns on feed_posts. Add them in Supabase before publishing image posts.'
-              : 'Unable to publish this post. Check the Supabase feed_posts table and policies.';
+              : 'Unable to save this post. Check Supabase configuration and policies.';
       setStatus(root, message, 'error');
     }
   });
@@ -579,15 +614,18 @@ function bindPostForm() {
       event.preventDefault();
       const postId = normalizeString(deleteTrigger.getAttribute('data-profile-post-delete') || '');
       if (!postId) return;
+      const post = STORE.posts.find((entry) => entry.id === postId);
+      if (!post) return;
       setStatus(root, 'Deleting post...', 'saving');
-      void deleteFeedPost(postId)
+      const deleteFunction = post.visibility === 'private' ? deletePrivateProfilePost : deleteFeedPost;
+      void deleteFunction(postId)
         .then(async () => {
           await renderPosts();
           setStatus(root, 'Post deleted.', 'success');
         })
         .catch((error) => {
           console.error('[profile-posts] Delete failed.', error);
-          setStatus(root, 'Unable to delete this post. Check Supabase feed_posts policies.', 'error');
+          setStatus(root, 'Unable to delete this post. Check Supabase policies.', 'error');
         });
       return;
     }

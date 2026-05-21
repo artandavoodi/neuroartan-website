@@ -25,6 +25,11 @@ body.profile-posts-overlay-open{
   border-radius:var(--radius-xl);
 }
 
+.profile-posts__stream{
+  border:none;
+  padding:0;
+}
+
 .profile-posts__overlay[hidden]{
   display:none;
 }

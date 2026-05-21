@@ -17,15 +17,22 @@ function sidebarItems(root){
 
 function renderSidebar(root, state = getProfileNavigationState()){
   const privacyPanes = new Set(['visibility', 'discovery', 'sharing']);
+  const homeSections = new Set(['posts', 'thoughts', 'models', 'organizations']);
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
-    const active = section === state.section && (
-      section !== 'settings'
-      || pane === state.settingsPane
-      || (pane === 'identity' && !privacyPanes.has(state.settingsPane))
-      || (pane === 'visibility' && privacyPanes.has(state.settingsPane))
-    );
+    
+    let active;
+    if (section === 'home') {
+      active = homeSections.has(state.section) || state.section === 'home';
+    } else {
+      active = section === state.section && (
+        section !== 'settings'
+        || pane === state.settingsPane
+        || (pane === 'identity' && !privacyPanes.has(state.settingsPane))
+        || (pane === 'visibility' && privacyPanes.has(state.settingsPane))
+      );
+    }
 
     item.classList.toggle('is-active', active);
 
@@ -137,7 +144,7 @@ function bindSidebar(){
 
     document.dispatchEvent(new CustomEvent('profile:navigate-request', {
       detail: {
-        section: item.dataset.profileNavSection || 'overview',
+        section: item.dataset.profileNavSection || 'home',
         settingsPane: item.dataset.profileNavPane || 'identity'
       }
     }));

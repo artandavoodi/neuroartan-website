@@ -12,9 +12,9 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    02) CONSTANTS
    ============================================================================= */
 
-const VALID_SECTIONS = new Set(['overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
+const VALID_SECTIONS = new Set(['home', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'verification', 'visibility', 'discovery', 'sharing']);
-const VALID_DASHBOARD_PANES = new Set(['summary', 'metrics', 'graph']);
+const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';
@@ -24,6 +24,8 @@ function normalizeSection(value) {
   const normalized = String(value || '').trim().toLowerCase();
 
   switch (normalized) {
+    case 'home':
+      return 'home';
     case 'posts':
       return 'posts';
     case 'thoughts':
@@ -32,7 +34,7 @@ function normalizeSection(value) {
     case 'edit-profile':
       return 'settings';
     default:
-      return VALID_SECTIONS.has(normalized) ? normalized : 'overview';
+      return VALID_SECTIONS.has(normalized) ? normalized : 'home';
   }
 }
 
@@ -43,14 +45,14 @@ function normalizeSettingsPane(value) {
 
 function normalizeDashboardPane(value) {
   const normalized = String(value || '').trim().toLowerCase();
-  return VALID_DASHBOARD_PANES.has(normalized) ? normalized : 'summary';
+  return VALID_DASHBOARD_PANES.has(normalized) ? normalized : 'overview';
 }
 
 /* =============================================================================
    02A) ROUTE RESOLUTION
    ============================================================================= */
 
-function buildNavigationState(section = 'overview', settingsPane = 'identity', dashboardPane = 'summary') {
+function buildNavigationState(section = 'overview', settingsPane = 'identity', dashboardPane = 'overview') {
   return {
     section: normalizeSection(section),
     settingsPane: normalizeSettingsPane(settingsPane),
@@ -76,9 +78,9 @@ function buildHashRoute(state = createDefaultState()) {
 
 function createDefaultState() {
   return buildNavigationState(
-    'overview',
+    'home',
     'identity',
-    'summary'
+    'overview'
   );
 }
 
@@ -96,7 +98,7 @@ function parseHash() {
   }
 
   if (rawHash.startsWith('dashboard/')) {
-    const [, pane = 'summary'] = rawHash.split('/');
+    const [, pane = 'overview'] = rawHash.split('/');
     return buildNavigationState(
       'dashboard',
       createDefaultState().settingsPane,
@@ -108,7 +110,7 @@ function parseHash() {
   return buildNavigationState(
     section,
     section === 'settings' ? 'identity' : createDefaultState().settingsPane,
-    section === 'dashboard' ? 'summary' : createDefaultState().dashboardPane
+    section === 'dashboard' ? 'overview' : createDefaultState().dashboardPane
   );
 }
 
@@ -136,13 +138,13 @@ function notifySubscribers() {
 }
 
 function setState(nextState, options = {}) {
-  const section = normalizeSection(nextState?.section || RUNTIME.state?.section || 'overview');
+  const section = normalizeSection(nextState?.section || RUNTIME.state?.section || 'home');
   const settingsPane = section === 'settings'
     ? normalizeSettingsPane(nextState?.settingsPane || RUNTIME.state?.settingsPane || 'identity')
     : normalizeSettingsPane(RUNTIME.state?.settingsPane || nextState?.settingsPane || 'identity');
   const dashboardPane = section === 'dashboard'
-    ? normalizeDashboardPane(nextState?.dashboardPane || RUNTIME.state?.dashboardPane || 'summary')
-    : normalizeDashboardPane(RUNTIME.state?.dashboardPane || nextState?.dashboardPane || 'summary');
+    ? normalizeDashboardPane(nextState?.dashboardPane || RUNTIME.state?.dashboardPane || 'overview')
+    : normalizeDashboardPane(RUNTIME.state?.dashboardPane || nextState?.dashboardPane || 'overview');
 
   RUNTIME.state = buildNavigationState(
     section,

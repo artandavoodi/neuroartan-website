@@ -10,11 +10,12 @@
 }
 
 .profile-sidebar__surface{
-  position:relative;
+  position:sticky;
+  top:calc(var(--profile-shell-top-clearance) + var(--home-platform-shell-nav-gap) + var(--spacing-md));
   align-self:start;
   width:max-content;
   min-width:var(--spacing-none);
-  max-height:calc(100dvh - var(--profile-sidebar-top-offset));
+  max-height:calc(100dvh - var(--profile-shell-top-clearance) - var(--home-platform-shell-nav-gap) - var(--spacing-md));
   overflow-y:auto;
   background:transparent;
   padding:0;

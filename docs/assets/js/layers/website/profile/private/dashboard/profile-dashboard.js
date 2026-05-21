@@ -184,15 +184,15 @@ function renderDashboard() {
 
 function renderDashboardPaneState(navigationState = getProfileNavigationState()) {
   const activePane = navigationState.section === 'dashboard'
-    ? String(navigationState.dashboardPane || 'summary')
-    : 'summary';
+    ? String(navigationState.dashboardPane || 'overview')
+    : 'overview';
 
   getDashboardRoots().forEach((root) => {
     root.dataset.profileDashboardPane = activePane;
 
     root.querySelectorAll('[data-profile-dashboard-pane]').forEach((panel) => {
       const pane = panel.getAttribute('data-profile-dashboard-pane') || '';
-      const visible = activePane === 'summary' || pane === activePane;
+      const visible = pane === activePane;
       panel.hidden = !visible;
     });
   });
@@ -211,6 +211,7 @@ function initProfileDashboard() {
     const name = event?.detail?.name;
     if (
       name !== 'profile-private-dashboard-panel'
+      && name !== 'profile-private-dashboard-summary-panel'
       && name !== 'profile-private-dashboard-metrics-panel'
       && name !== 'profile-private-dashboard-graph-panel'
     ) {

@@ -36,11 +36,18 @@
       </div>
 
       <nav class="profile-sidebar__nav" aria-label="Private profile workspace">
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="home" data-profile-nav-pane="">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/primary/home.svg" alt="">
           </span>
           <span class="profile-sidebar__nav-text">Home</span>
+        </button>
+
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/stage/stage.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Stage</span>
         </button>
 
         <button class="profile-sidebar__nav-item" type="button" id="profile-dashboard-explore-trigger" aria-controls="home-search-shell" aria-expanded="false" data-profile-search-trigger="true">
@@ -50,13 +57,6 @@
           <span class="profile-sidebar__nav-text">Explore</span>
         </button>
 
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/pages/knowledge-research/index.html">
-          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/library/library.svg" alt="">
-          </span>
-          <span class="profile-sidebar__nav-text">Library</span>
-        </button>
-
         <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/feed/">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/feed/feed.svg" alt="">
@@ -64,11 +64,11 @@
           <span class="profile-sidebar__nav-text">Feed</span>
         </button>
 
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="overview" data-profile-nav-pane="">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/pages/knowledge-research/index.html">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/overview/overview.svg" alt="">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/library/library.svg" alt="">
           </span>
-          <span class="profile-sidebar__nav-text">Overview</span>
+          <span class="profile-sidebar__nav-text">Library</span>
         </button>
 
         <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="dashboard" data-profile-nav-pane="">

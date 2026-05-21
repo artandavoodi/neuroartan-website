@@ -75,6 +75,7 @@ function getFragmentPaths() {
     'profile-private-thought-composer-panel': assetPath('/assets/fragments/layers/website/profile/private/thoughts/profile-thought-composer-panel.html'),
     'profile-private-thought-stream-panel': assetPath('/assets/fragments/layers/website/profile/private/thoughts/profile-thought-stream-panel.html'),
     'profile-private-dashboard-panel': assetPath('/assets/fragments/layers/website/profile/private/dashboard/profile-dashboard-panel.html'),
+    'profile-private-dashboard-summary-panel': assetPath('/assets/fragments/layers/website/profile/private/dashboard/profile-dashboard-summary-panel.html'),
     'profile-private-dashboard-metrics-panel': assetPath('/assets/fragments/layers/website/profile/private/dashboard/profile-dashboard-metrics-panel.html'),
     'profile-private-dashboard-graph-panel': assetPath('/assets/fragments/layers/website/profile/private/dashboard/profile-dashboard-graph-panel.html'),
     'profile-private-settings-panel': assetPath('/assets/fragments/layers/website/profile/private/settings/profile-settings-panel.html'),

@@ -1,11 +1,15 @@
 <!-- =============================================================================
      01) PRIVATE DASHBOARD PANEL
-     02) DASHBOARD METRICS MOUNT
-     03) DASHBOARD GRAPH MOUNT
+     02) DASHBOARD OVERVIEW MOUNT
+     03) DASHBOARD SUMMARY MOUNT
+     04) DASHBOARD METRICS MOUNT
+     05) DASHBOARD GRAPH MOUNT
 ============================================================================= -->
 <div class="profile-dashboard" data-profile-dashboard-panel data-profile-surface="private">
+  <div data-profile-dashboard-pane="overview" data-include="profile-private-overview-panel"></div>
   <div class="profile-dashboard__grid">
-    <div data-include="profile-private-dashboard-metrics-panel"></div>
-    <div data-include="profile-private-dashboard-graph-panel"></div>
+    <div data-profile-dashboard-pane="summary" data-include="profile-private-dashboard-summary-panel"></div>
+    <div data-profile-dashboard-pane="metrics" data-include="profile-private-dashboard-metrics-panel"></div>
+    <div data-profile-dashboard-pane="graph" data-include="profile-private-dashboard-graph-panel"></div>
   </div>
 </div>

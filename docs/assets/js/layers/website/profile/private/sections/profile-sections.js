@@ -69,9 +69,11 @@ function renderPrivateSections(root, state, navigationState) {
   root.dataset.profileViewerState = state.viewerState;
   root.dataset.profileStateKey = state.stateKey;
 
+  const effectiveSection = navigationState.section === 'home' ? 'posts' : navigationState.section;
+
   root.querySelectorAll('[data-profile-section-panel]').forEach((panel) => {
     const panelKey = panel.getAttribute('data-profile-section-panel') || '';
-    panel.hidden = panelKey !== navigationState.section;
+    panel.hidden = panelKey !== effectiveSection;
   });
 }
 

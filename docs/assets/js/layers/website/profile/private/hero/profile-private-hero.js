@@ -17,7 +17,6 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   overview: {
     label: 'Profile sections',
     tabs: [
-      { key: 'overview', label: 'Overview', section: 'overview' },
       { key: 'posts', label: 'Posts', section: 'posts' },
       { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
       { key: 'models', label: 'Models', section: 'models' },
@@ -27,7 +26,6 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   content: {
     label: 'Profile sections',
     tabs: [
-      { key: 'overview', label: 'Overview', section: 'overview' },
       { key: 'posts', label: 'Posts', section: 'posts' },
       { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
       { key: 'models', label: 'Models', section: 'models' },
@@ -37,6 +35,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   dashboard: {
     label: 'Dashboard sections',
     tabs: [
+      { key: 'overview', label: 'Overview', section: 'dashboard', dashboardPane: 'overview' },
       { key: 'summary', label: 'Summary', section: 'dashboard', dashboardPane: 'summary' },
       { key: 'metrics', label: 'Metrics', section: 'dashboard', dashboardPane: 'metrics' },
       { key: 'graph', label: 'Graph', section: 'dashboard', dashboardPane: 'graph' }
@@ -140,6 +139,8 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
       return 'settings';
     case 'dashboard':
       return 'dashboard';
+    case 'home':
+      return 'overview';
     case 'overview':
     default:
       return 'overview';
@@ -156,11 +157,13 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
     case 'settings':
       return navigationState.settingsPane || 'identity';
     case 'dashboard':
-      return navigationState.dashboardPane || 'summary';
+      return navigationState.dashboardPane || 'overview';
+    case 'home':
+      return 'posts';
     case 'overview':
-      return 'overview';
+      return 'posts';
     default:
-      return 'overview';
+      return 'posts';
   }
 }
 

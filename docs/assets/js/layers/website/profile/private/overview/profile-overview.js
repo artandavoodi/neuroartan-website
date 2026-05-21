@@ -1,6 +1,7 @@
 /* =============================================================================
    01) MODULE IMPORTS
    02) OVERVIEW HELPERS
+   02A) OVERVIEW RESOLUTION
    03) OVERVIEW RENDER
    04) OVERVIEW INIT
    ============================================================================= */
@@ -63,6 +64,38 @@ function capitalizeWords(value) {
 }
 
 /* =============================================================================
+   02A) OVERVIEW RESOLUTION
+   ============================================================================= */
+
+function resolvePublicRouteMode(state = {}) {
+  if (state.publicViewAvailable) {
+    return 'Renderable company-domain route';
+  }
+
+  if (state.username?.normalized) {
+    return 'Reserved route awaiting public activation';
+  }
+
+  return 'Private owner environment';
+}
+
+function resolveAvatarSourceCopy(state = {}) {
+  if (state.avatarHasImage) {
+    return `${state.providerLabel} identity image`;
+  }
+
+  return 'Profile image not yet connected';
+}
+
+function resolveContinuityCopy(state = {}) {
+  if (state.completion?.complete) {
+    return 'This private profile surface is ready to become the continuity anchor for future ICOS and cross-layer identity modules.';
+  }
+
+  return 'Once identity completion and username governance are stable, this surface becomes the continuity anchor for future Neuroartan layers.';
+}
+
+/* =============================================================================
    03) OVERVIEW RENDER
    ============================================================================= */
 
@@ -99,29 +132,21 @@ function renderOverview(state = getProfileRuntimeState()) {
     setText(
       root,
       '[data-profile-public-route-mode]',
-      state.publicViewAvailable
-        ? 'Renderable company-domain route'
-        : state.username.normalized
-          ? 'Reserved route awaiting public activation'
-          : 'Private owner environment'
+      resolvePublicRouteMode(state)
     );
 
     setText(root, '[data-profile-avatar-state]', capitalizeWords(state.avatarState || 'empty'));
     setText(
       root,
       '[data-profile-avatar-source]',
-      state.avatarHasImage
-        ? `${state.providerLabel} identity image`
-        : 'Profile image not yet connected'
+      resolveAvatarSourceCopy(state)
     );
 
     setText(root, '[data-profile-continuity-badge]', state.completion.complete ? 'Ready' : 'In Progress');
     setText(
       root,
       '[data-profile-continuity-copy]',
-      state.completion.complete
-        ? 'This private profile surface is ready to become the continuity anchor for future ICOS and cross-layer identity modules.'
-        : 'Once identity completion and username governance are stable, this surface becomes the continuity anchor for future Neuroartan layers.'
+      resolveContinuityCopy(state)
     );
 
     root.querySelectorAll('[data-profile-action]').forEach((control) => {

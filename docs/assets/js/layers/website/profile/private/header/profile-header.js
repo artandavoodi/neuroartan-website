@@ -129,7 +129,7 @@ function setProfileBackgroundSource(node, primarySrc, fallbackSrc) {
 function renderAvatar(root, state) {
   const image = root.querySelector('[data-profile-avatar-image]');
   const placeholder = root.querySelector('[data-profile-avatar-placeholder]');
-  const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
+  const avatarUrl = resolveAvatarUrl(state);
 
   if (image instanceof HTMLImageElement) {
     setProfileImageSource(image, avatarUrl, getDefaultAvatarFallback(), `${state.displayName} avatar`);
@@ -141,7 +141,7 @@ function renderAvatar(root, state) {
 }
 
 function renderHeaderImage(root, state) {
-  const mediaUrl = state.coverDisplayUrl || state.coverUrl || state.headerImageUrl || state.bannerUrl || '';
+  const mediaUrl = resolveHeaderMediaUrl(state);
   const targets = Array.from(
     root.querySelectorAll(
       '[data-profile-header-image], [data-profile-cover-image], [data-profile-banner-image], [data-profile-cover], [data-profile-header-visual]'
@@ -158,6 +158,32 @@ function renderHeaderImage(root, state) {
 
     setProfileBackgroundSource(node, mediaUrl, getDefaultHeaderFallback());
   });
+}
+
+/* =============================================================================
+   02A) MEDIA RESOLUTION
+   ============================================================================= */
+
+function resolveAvatarUrl(state = {}) {
+  return state.avatarDisplayUrl || state.avatarUrl || '';
+}
+
+function resolveHeaderMediaUrl(state = {}) {
+  return (
+    state.coverDisplayUrl
+    || state.coverUrl
+    || state.headerImageUrl
+    || state.bannerUrl
+    || ''
+  );
+}
+
+function resolveCompletionCopy(state) {
+  if (state.completion.complete) {
+    return 'Profile surface ready';
+  }
+
+  return `Missing ${state.completion.missingFields.length} required field${state.completion.missingFields.length === 1 ? '' : 's'}`;
 }
 
 function renderPrivateHeader(root, state) {
@@ -179,16 +205,14 @@ function renderPrivateHeader(root, state) {
 
   setText(root, '[data-profile-header-state-line]', state.stateLine);
   setText(root, '[data-profile-display-name]', state.displayName);
-  setText(root, '[data-profile-username]', state.username.normalized ? `@${state.username.normalized}` : '@username');
+  setText(root, '[data-profile-username]', state.username.normalized ? `@${state.username.normalized}` : '');
   setText(root, '[data-profile-route-display]', state.publicRouteDisplay);
   setText(root, '[data-profile-summary]', state.summary);
   setText(root, '[data-profile-completion-percent]', `${state.completion.percent}%`);
   setText(
     root,
     '[data-profile-completion-copy]',
-    state.completion.complete
-      ? 'Profile surface ready'
-      : `Missing ${state.completion.missingFields.length} required field${state.completion.missingFields.length === 1 ? '' : 's'}`
+    resolveCompletionCopy(state)
   );
   setText(root, '[data-profile-username-state]', capitalizeWords(state.username.status || 'missing'));
   setText(root, '[data-profile-username-copy]', formatUsernameCopy(state));

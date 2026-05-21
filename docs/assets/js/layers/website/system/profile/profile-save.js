@@ -526,6 +526,42 @@ function messageForProfileSaveError(code) {
 }
 
 /* =============================================================================
+   08A) SUPABASE PAYLOAD NORMALIZATION
+============================================================================= */
+
+function buildProfileVisibilityPayload(payload = {}, values = {}) {
+  return {
+    visibility_state: payload.public_profile_enabled ? 'public' : 'private',
+    public_profile_enabled: payload.public_profile_enabled === true,
+    public_profile_discoverable: payload.public_profile_discoverable === true,
+    profile_search_visible: values.profile_search_visible !== false,
+    profile_models_visible: values.profile_models_visible !== false,
+    profile_followers_visible: values.profile_followers_visible !== false,
+    profile_posts_visible: values.profile_posts_visible !== false,
+    profile_thoughts_visible: values.profile_thoughts_visible !== false,
+    public_profile_visibility: payload.public_profile_visibility || (payload.public_profile_enabled ? 'public' : 'private')
+  };
+}
+
+function buildProfileRoutePayload(payload = {}, normalizedUsername = '', user = {}) {
+  return {
+    public_username: payload.public_username || payload.username || normalizedUsername || '',
+    username: payload.username || normalizedUsername || '',
+    username_status: payload.username_status || 'reserved',
+    username_route_ready: payload.username_route_ready === true,
+    username_reserved_at: payload.username_reserved_at || null,
+    public_route_path: payload.public_route_path || '',
+    public_route_url: payload.public_route_url || '',
+    public_route_canonical_url: payload.public_route_canonical_url || '',
+    public_route_status: payload.public_route_status || '',
+    public_display_name: payload.public_display_name || '',
+    public_identity_label: payload.public_identity_label || '',
+    public_primary_link: payload.public_primary_link || '',
+    public_avatar_url: payload.public_avatar_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
+  };
+}
+
+/* =============================================================================
    09) SAVE EXECUTION
 ============================================================================= */
 export async function persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase = getSupabaseClient()) {
@@ -577,32 +613,12 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
 
   const supabasePayload = {
     auth_user_id: user.id || user.uid,
-    public_username: payload.public_username || payload.username || normalizedUsername || '',
-    username: payload.username || normalizedUsername || currentProfile?.username || '',
-    // --- username additions
-    username_status: payload.username_status || 'reserved',
-    username_route_ready: payload.username_route_ready === true,
-    username_reserved_at: payload.username_reserved_at || null,
     display_name: payload.display_name || '',
     avatar_url: payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
     bio: payload.public_summary || currentProfile?.bio || '',
-    visibility_state: payload.public_profile_enabled ? 'public' : 'private',
     profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
-    public_profile_enabled: payload.public_profile_enabled === true,
-    public_profile_discoverable: payload.public_profile_discoverable === true,
-    profile_search_visible: values.profile_search_visible !== false,
-    profile_models_visible: values.profile_models_visible !== false,
-    profile_followers_visible: values.profile_followers_visible !== false,
-    profile_posts_visible: values.profile_posts_visible !== false,
-    profile_thoughts_visible: values.profile_thoughts_visible !== false,
-    public_profile_visibility: payload.public_profile_visibility || (payload.public_profile_enabled ? 'public' : 'private'),
-    public_route_path: payload.public_route_path || '',
-    public_route_url: payload.public_route_url || '',
-    public_route_canonical_url: payload.public_route_canonical_url || '',
-    public_route_status: payload.public_route_status || '',
-    public_display_name: payload.public_display_name || '',
-    public_identity_label: payload.public_identity_label || '',
-    public_avatar_url: payload.public_avatar_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+    ...buildProfileVisibilityPayload(payload, values),
+    ...buildProfileRoutePayload(payload, normalizedUsername, user),
     public_summary: payload.public_summary || '',
     public_primary_link: payload.public_primary_link || '',
     public_bio: payload.public_bio || payload.public_summary || '',

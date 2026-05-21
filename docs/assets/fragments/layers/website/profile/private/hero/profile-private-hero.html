@@ -37,9 +37,18 @@
            05) HERO COPY
       ======================================================================= -->
       <div class="profile-private-hero__copy">
-        <h1 class="profile-private-hero__title" id="profile-private-hero-title" data-profile-display-name>Profile not completed</h1>
-        <p class="profile-private-hero__meta" data-profile-username>@username pending</p>
+        <div class="profile-private-hero__title-row">
+          <h1 class="profile-private-hero__title" id="profile-private-hero-title" data-profile-display-name></h1>
+          <span class="profile-private-hero__verified" data-profile-verified-block hidden>
+            <img src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
+          </span>
+        </div>
+        <p class="profile-private-hero__meta" data-profile-username></p>
         <p class="profile-private-hero__bio" data-profile-bio hidden></p>
+        <div class="profile-private-hero__stats" aria-label="Profile social statistics">
+          <span class="profile-private-hero__stat"><strong data-profile-followers-count>0</strong> Followers</span>
+          <span class="profile-private-hero__stat"><strong data-profile-following-count>0</strong> Following</span>
+        </div>
       </div>
 
       <div class="profile-private-hero__actions" aria-label="Profile actions">
@@ -65,11 +74,6 @@
          06) HERO SOCIAL ROW
     ========================================================================= -->
     <div class="profile-private-hero__social-row">
-      <div class="profile-private-hero__stats" aria-label="Profile social statistics">
-        <span class="profile-private-hero__stat"><strong data-profile-followers-count>0</strong> Followers</span>
-        <span class="profile-private-hero__stat"><strong data-profile-following-count>0</strong> Following</span>
-      </div>
-
       <nav class="profile-private-hero__tabs" aria-label="Profile contextual sections" data-profile-hero-tabs></nav>
     </div>
   </div>

@@ -36,38 +36,52 @@
       <form class="profile-posts__form" data-profile-post-form novalidate>
         <div class="profile-posts__field-grid">
           <label class="profile-posts__field profile-posts__field--full">
-            <span class="profile-posts__label">Title</span>
-            <input class="ui-field" type="text" name="title" maxlength="120" placeholder="Post title">
+            <span class="profile-posts__label">Post</span>
+            <textarea class="ui-field profile-posts__textarea" rows="4" name="body" maxlength="280" placeholder="What is happening?"></textarea>
           </label>
 
           <fieldset class="profile-posts__field profile-posts__field--full profile-posts__visibility">
-            <legend class="profile-posts__label">Visibility</legend>
+            <legend class="profile-posts__label">Audience</legend>
             <input type="hidden" name="visibility" value="public" data-profile-post-visibility>
             <div class="profile-posts__visibility-options" data-profile-post-visibility-options></div>
           </fieldset>
 
-          <label class="profile-posts__field profile-posts__field--full">
-            <span class="profile-posts__label">Post</span>
-            <textarea class="ui-field profile-posts__textarea" rows="7" name="body" maxlength="4000" placeholder="Write a post."></textarea>
-          </label>
-
           <div class="profile-posts__attachment profile-posts__field--full" data-profile-post-attachment>
-            <input class="sr-only" type="file" name="post_image" accept="image/*" data-profile-post-image-input>
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-image-trigger>
+            <input class="sr-only" type="file" name="post_media" accept="image/*,video/*,audio/*" data-profile-post-media-input>
+            <div class="profile-posts__toolbar" aria-label="Post tools">
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="image" aria-label="Attach image">
               <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/image-add/image-add.svg" alt="" aria-hidden="true">
               <span>Image</span>
             </button>
-            <figure class="profile-posts__attachment-preview" data-profile-post-image-preview hidden>
-              <img src="" alt="" data-profile-post-image-preview-image>
-              <figcaption data-profile-post-image-name></figcaption>
-              <button class="profile-posts__attachment-remove" type="button" data-profile-post-image-remove>Remove</button>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="video" aria-label="Attach video">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/capture/video.svg" alt="" aria-hidden="true">
+              <span>Video</span>
+            </button>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="audio" aria-label="Attach audio">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/audio.svg" alt="" aria-hidden="true">
+              <span>Audio</span>
+            </button>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-voice-trigger aria-label="Dictate post">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/mic.svg" alt="" aria-hidden="true">
+              <span>Voice</span>
+            </button>
+            </div>
+            <figure class="profile-posts__attachment-preview" data-profile-post-media-preview hidden>
+              <img src="" alt="" data-profile-post-media-preview-image hidden>
+              <video controls data-profile-post-media-preview-video hidden></video>
+              <audio controls data-profile-post-media-preview-audio hidden></audio>
+              <figcaption data-profile-post-media-name></figcaption>
+              <button class="profile-posts__attachment-remove" type="button" data-profile-post-media-remove>Remove</button>
             </figure>
           </div>
         </div>
 
         <div class="profile-posts__footer">
-          <p class="profile-posts__status" data-profile-post-status aria-live="polite"></p>
-          <button class="ui-button ui-button--secondary" type="submit">Post</button>
+          <div class="profile-posts__meta">
+            <p class="profile-posts__status" data-profile-post-status aria-live="polite"></p>
+            <p class="profile-posts__counter" data-profile-post-character-count>0 / 280</p>
+          </div>
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-post-submit>Post</button>
         </div>
       </form>
     </article>

@@ -16,13 +16,30 @@
 :root{
   --profile-shell-rail-width:var(--site-rail-width);
   --profile-shell-group-gap:var(--spacing-md);
-  --profile-shell-mount-gap:var(--spacing-lg);
+  --profile-shell-mount-gap:var(--spacing-none);
   --profile-shell-disabled-opacity:var(--disabled-opacity, 0.48);
   --profile-shell-top-clearance:calc(env(safe-area-inset-top, 0px) + 3.55rem);
   --home-shell-panel-top:var(--profile-shell-top-clearance);
   --profile-shell-top-clearance-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem);
-  --profile-shell-hero-sticky-top:calc(env(safe-area-inset-top, 0px) + 3.55rem - 11rem);
-  --profile-shell-hero-sticky-top-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem - 8rem);
+  --profile-shell-hero-sticky-travel:calc(
+    var(--profile-private-hero-cover-offset-top, var(--spacing-md))
+    + var(--profile-private-hero-cover-height, 13.5rem)
+    + var(--spacing-lg)
+    + (var(--profile-private-hero-avatar-size, 7.25rem) / 2)
+    + var(--spacing-xl)
+  );
+  --profile-shell-hero-sticky-travel-mobile:calc(
+    var(--profile-private-hero-cover-offset-top, var(--spacing-md))
+    + var(--profile-private-hero-cover-height-mobile, 10.5rem)
+    + var(--spacing-lg)
+    + var(--profile-private-hero-avatar-size, 6rem)
+    + var(--spacing-lg)
+    + calc(var(--body-2-size) * var(--body-2-line-height))
+    + calc(var(--body-2-size) * var(--body-2-line-height))
+    + var(--spacing-xl)
+  );
+  --profile-shell-hero-sticky-top:calc(var(--profile-shell-top-clearance) - var(--profile-shell-hero-sticky-travel));
+  --profile-shell-hero-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) - var(--profile-shell-hero-sticky-travel-mobile));
   --profile-shell-hero-sticky-z-index:1200;
   --profile-shell-workspace-sticky-top:calc(var(--profile-shell-top-clearance) + var(--profile-private-hero-cover-height, 13.5rem) + var(--spacing-xl));
   --profile-shell-workspace-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) + var(--profile-private-hero-cover-height-mobile) + var(--spacing-lg));
@@ -133,7 +150,7 @@
 @media (max-width:820px){
   :root{
     --profile-shell-group-gap:var(--spacing-md);
-    --profile-shell-mount-gap:var(--spacing-md);
+    --profile-shell-mount-gap:var(--spacing-none);
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);
     --profile-shell-hero-sticky-top:var(--profile-shell-hero-sticky-top-mobile);
     --profile-shell-workspace-sticky-top:var(--profile-shell-workspace-sticky-top-mobile);

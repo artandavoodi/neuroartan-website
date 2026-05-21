@@ -168,11 +168,23 @@ function getCurrentTabGroup(navigationState = getProfileNavigationState()) {
   return PROFILE_CONTEXT_TAB_GROUPS[getTabGroupKey(navigationState)] || PROFILE_CONTEXT_TAB_GROUPS.overview;
 }
 
-function getHeroStickyTop(root) {
-  if (!(root instanceof HTMLElement)) return 0;
+function readRootLengthToken(name, fallback = 0) {
+  const rawValue = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const parsedValue = Number.parseFloat(rawValue);
+  return Number.isFinite(parsedValue) ? parsedValue : fallback;
+}
 
-  const value = Number.parseFloat(getComputedStyle(root).top || '0');
-  return Number.isFinite(value) ? value : 0;
+function syncProfileMobileSidebarTop(root = getHeroRoot()) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const tabsRoot = root.querySelector('[data-profile-hero-tabs]');
+  if (!(tabsRoot instanceof HTMLElement)) return;
+
+  const tabsRect = tabsRoot.getBoundingClientRect();
+  const clearance = readRootLengthToken('--spacing-sm', 8);
+  const nextTop = Math.max(0, tabsRect.bottom + clearance);
+
+  document.documentElement.style.setProperty('--profile-mobile-sidebar-toggle-top', `${nextTop}px`);
 }
 
 /* =============================================================================
@@ -204,8 +216,12 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
       cover.dataset.profileCoverImage = 'false';
     }
   }
-  setText(root, '[data-profile-display-name]', displayName || (profileComplete ? 'Private profile' : 'Profile not completed'));
-  setText(root, '[data-profile-username]', username ? `@${username}` : '@username pending');
+  setText(root, '[data-profile-display-name]', displayName || '');
+  setText(root, '[data-profile-username]', username ? `@${username}` : '');
+  const verifiedBlock = root.querySelector('[data-profile-verified-block]');
+  if (verifiedBlock instanceof HTMLElement) {
+    verifiedBlock.hidden = state.verification?.badgeVisible !== true;
+  }
   const bio = String(
     state.bio
     || profile.bio
@@ -278,7 +294,9 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
       const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
       if (iconPath) {
         const icon = document.createElement('img');
-        icon.className = 'profile-private-hero__tab-icon ui-icon-theme-aware';
+        icon.className = tabConfig.key === 'verification'
+          ? 'profile-private-hero__tab-icon'
+          : 'profile-private-hero__tab-icon ui-icon-theme-aware';
         icon.src = iconPath;
         icon.alt = '';
         icon.setAttribute('aria-hidden', 'true');
@@ -298,6 +316,8 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
     tab.setAttribute('aria-current', active ? 'page' : 'false');
     tab.dataset.profileTabActive = active ? 'true' : 'false';
   });
+
+  syncProfileMobileSidebarTop(root);
 }
 
 /* =============================================================================
@@ -374,49 +394,10 @@ function closeProfileHeroInfo(root = getHeroRoot()) {
 }
 
 /* =============================================================================
-   06) HERO STICKY STATE
-============================================================================= */
-function syncProfileHeroStickyState() {
-  const root = getHeroRoot();
-  if (!(root instanceof HTMLElement)) return;
-
-  const stickyTop = getHeroStickyTop(root);
-  const rect = root.getBoundingClientRect();
-  const isStuck = rect.top <= stickyTop + 0.5;
-
-  root.dataset.profileHeroStuck = isStuck ? 'true' : 'false';
-
-}
-
-function bindProfileHeroStickyState() {
-  const root = getHeroRoot();
-  if (!root || root.dataset.profileHeroStickyBound === 'true') return;
-
-  root.dataset.profileHeroStickyBound = 'true';
-
-  let ticking = false;
-
-  const requestSync = () => {
-    if (ticking) return;
-    ticking = true;
-
-    window.requestAnimationFrame(() => {
-      ticking = false;
-      syncProfileHeroStickyState();
-    });
-  };
-
-  window.addEventListener('scroll', requestSync, { passive:true });
-  window.addEventListener('resize', requestSync, { passive:true });
-  syncProfileHeroStickyState();
-}
-
-/* =============================================================================
    07) INITIALIZATION
 ============================================================================= */
 function initProfilePrivateHero() {
   bindProfilePrivateHeroActions();
-  bindProfileHeroStickyState();
   renderProfilePrivateHero();
   subscribeProfileRuntime(renderProfilePrivateHero);
   subscribeProfileNavigation(renderProfilePrivateHeroTabs);
@@ -424,9 +405,12 @@ function initProfilePrivateHero() {
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-private-hero') return;
     bindProfilePrivateHeroActions();
-    bindProfileHeroStickyState();
     renderProfilePrivateHero();
-    syncProfileHeroStickyState();
+    syncProfileMobileSidebarTop();
+  });
+
+  document.addEventListener('profile:sidebar-rail-change', () => {
+    window.requestAnimationFrame(() => syncProfileMobileSidebarTop());
   });
 }
 

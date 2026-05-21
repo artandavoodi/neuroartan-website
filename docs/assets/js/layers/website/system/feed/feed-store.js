@@ -98,7 +98,14 @@ function getUserId(user) {
 
 function mapFeedPost(row = {}, currentUserId = '') {
   if (!row || typeof row !== 'object') return null;
+  return buildRenderableFeedPost(row, currentUserId);
+}
 
+/* =============================================================================
+   04A) PAYLOAD NORMALIZATION
+============================================================================= */
+
+function buildRenderableFeedPost(row = {}, currentUserId = '') {
   const ownerAuthUserId = normalizeString(row.owner_auth_user_id || '');
   const displayName = normalizeString(row.author_display_name || row.author_username || 'Neuroartan profile');
   const username = normalizeUsername(row.author_username || '');
@@ -132,6 +139,33 @@ function mapFeedPost(row = {}, currentUserId = '') {
     source: 'supabase-feed-post',
     createdAt: row.created_at || '',
   };
+}
+
+function buildFeedInsertPayload(profile = {}, user = {}, values = {}) {
+  const postBody = normalizeString(values.post_body || values.body || '');
+  const postImageUrl = normalizeString(values.post_image_url || values.image_url || '');
+  const postImageStoragePath = normalizeString(values.post_image_storage_path || values.image_storage_path || '');
+  const postMediaType = normalizeString(values.post_media_type || values.media_type || '');
+
+  const payload = {
+    profile_id: profile.id,
+    owner_auth_user_id: normalizeString(user.id || user.uid || ''),
+    author_username: normalizeUsername(profile.username || profile.username_lower || profile.public_username || ''),
+    author_display_name: normalizeString(profile.public_display_name || profile.display_name || user.user_metadata?.name || 'Neuroartan profile'),
+    author_avatar_url: normalizeString(profile.public_avatar_url || profile.avatar_url || profile.photo_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    post_body: postBody,
+    post_state: 'published',
+    visibility_state: 'public',
+    source_surface: normalizeString(values.source_surface || 'feed'),
+  };
+
+  if (postImageUrl) {
+    payload.post_image_url = postImageUrl;
+    payload.post_image_storage_path = postImageStoragePath;
+    payload.post_media_type = postMediaType || 'image';
+  }
+
+  return payload;
 }
 
 /* =============================================================================
@@ -271,26 +305,13 @@ export async function createFeedPost(values = {}) {
     throw error;
   }
 
-  const payload = {
-    profile_id: profile.id,
-    owner_auth_user_id: ownerAuthUserId,
-    author_username: normalizeUsername(profile.username || profile.username_lower || profile.public_username || ''),
-    author_display_name: normalizeString(profile.public_display_name || profile.display_name || user.user_metadata?.name || 'Neuroartan profile'),
-    author_avatar_url: normalizeString(profile.public_avatar_url || profile.avatar_url || profile.photo_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
-    post_body: postBody,
-    post_state: 'published',
-    visibility_state: 'public',
-    source_surface: normalizeString(values.source_surface || 'feed'),
-  };
+  const payload = buildFeedInsertPayload(
+    profile,
+    user,
+    values
+  );
 
-  const postImageUrl = normalizeString(values.post_image_url || values.image_url || '');
-  const postImageStoragePath = normalizeString(values.post_image_storage_path || values.image_storage_path || '');
-  const postMediaType = normalizeString(values.post_media_type || values.media_type || '');
-  if (postImageUrl) {
-    payload.post_image_url = postImageUrl;
-    payload.post_image_storage_path = postImageStoragePath;
-    payload.post_media_type = postMediaType || 'image';
-  }
+  const postImageUrl = normalizeString(payload.post_image_url || '');
 
   const { data, error } = await supabase
     .from(FEED_POSTS_TABLE)
@@ -343,6 +364,74 @@ export async function deleteFeedPost(feedPostId) {
 
   if (error) throw error;
   return true;
+}
+
+export async function updateFeedPost(feedPostId, values = {}) {
+  const supabase = getSupabaseClient();
+  const normalizedId = normalizeString(feedPostId);
+  if (!supabase || !normalizedId) {
+    const error = new Error('FEED_BACKEND_UNAVAILABLE');
+    error.code = 'FEED_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+
+  const user = await getCurrentSupabaseUser();
+  const currentUserId = getUserId(user);
+  if (!currentUserId) {
+    const error = new Error('AUTH_REQUIRED');
+    error.code = 'AUTH_REQUIRED';
+    throw error;
+  }
+
+  const existingPost = await getFeedPostById(normalizedId);
+  if (!existingPost) {
+    const error = new Error('POST_NOT_FOUND');
+    error.code = 'POST_NOT_FOUND';
+    throw error;
+  }
+
+  if (!existingPost.ownedByCurrentUser) {
+    const error = new Error('POST_UPDATE_FORBIDDEN');
+    error.code = 'POST_UPDATE_FORBIDDEN';
+    throw error;
+  }
+
+  const postBody = normalizeString(values.post_body || values.body || '');
+  if (!postBody) {
+    const error = new Error('POST_BODY_REQUIRED');
+    error.code = 'POST_BODY_REQUIRED';
+    throw error;
+  }
+
+  const payload = {
+    post_body: postBody,
+    updated_at: new Date().toISOString()
+  };
+
+  const postImageUrl = normalizeString(values.post_image_url || values.image_url || '');
+  if (postImageUrl) {
+    payload.post_image_url = postImageUrl;
+    payload.post_image_storage_path = normalizeString(values.post_image_storage_path || values.image_storage_path || '');
+    payload.post_media_type = normalizeString(values.post_media_type || values.media_type || '');
+  }
+
+  let queryResult = await supabase
+    .from(FEED_POSTS_TABLE)
+    .update(payload)
+    .eq('id', normalizedId)
+    .eq('owner_auth_user_id', currentUserId)
+    .select(postImageUrl ? FEED_POST_SELECT_FIELDS : FEED_POST_FALLBACK_SELECT_FIELDS)
+    .single();
+
+  if (queryResult.error && postImageUrl && isFeedMediaColumnMissingError(queryResult.error)) {
+    const mediaError = new Error('FEED_POST_MEDIA_COLUMNS_REQUIRED');
+    mediaError.code = 'FEED_POST_MEDIA_COLUMNS_REQUIRED';
+    mediaError.cause = queryResult.error;
+    throw mediaError;
+  }
+
+  if (queryResult.error) throw queryResult.error;
+  return mapFeedPost(queryResult.data, currentUserId);
 }
 
 /* =============================================================================

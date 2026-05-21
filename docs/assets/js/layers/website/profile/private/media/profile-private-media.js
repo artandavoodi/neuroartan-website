@@ -1,14 +1,5 @@
 /* =============================================================================
    01) MODULE IDENTITY
-   02) IMPORTS
-   03) DOM HELPERS
-   04) MEDIA STATE RENDERING
-   05) MEDIA ACTIONS
-   06) INITIALIZATION
-============================================================================= */
-
-/* =============================================================================
-   01) MODULE IDENTITY
 ============================================================================= */
 const MODULE_ID = 'profile-private-media';
 
@@ -51,14 +42,34 @@ function setImage(root, selector, src, alt = '') {
 }
 
 /* =============================================================================
+   03A) MEDIA RESOLUTION
+============================================================================= */
+
+function resolveAvatarPreviewUrl(state = {}) {
+  return String(state.avatarDisplayUrl || state.avatarUrl || '').trim();
+}
+
+function resolveCoverPreviewUrl(state = {}) {
+  return String(state.coverDisplayUrl || state.coverUrl || '').trim();
+}
+
+function resolveMediaStatusCopy(state = {}) {
+  if (state.avatarHasImage || state.coverUrl) {
+    return 'Media layer has active profile assets.';
+  }
+
+  return 'Media layer is using default profile assets.';
+}
+
+/* =============================================================================
    04) MEDIA STATE RENDERING
 ============================================================================= */
 function renderProfilePrivateMedia(state = getProfileRuntimeState()) {
   const root = getMediaRoot();
   if (!root) return;
 
-  const avatarUrl = String(state.avatarDisplayUrl || state.avatarUrl || '').trim();
-  const coverUrl = String(state.coverDisplayUrl || state.coverUrl || '').trim();
+  const avatarUrl = resolveAvatarPreviewUrl(state);
+  const coverUrl = resolveCoverPreviewUrl(state);
 
   setImage(root, '[data-profile-avatar-preview-image]', avatarUrl, `${state.displayName || 'Profile'} avatar`);
   setImage(root, '[data-profile-cover-preview-image]', coverUrl, `${state.displayName || 'Profile'} cover`);
@@ -75,15 +86,22 @@ function renderProfilePrivateMedia(state = getProfileRuntimeState()) {
   setText(
     root,
     '[data-profile-media-status]',
-    state.avatarHasImage || state.coverUrl
-      ? 'Media layer has active profile assets.'
-      : 'Media layer is using default profile assets.'
+    resolveMediaStatusCopy(state)
   );
 }
 
 /* =============================================================================
    05) MEDIA ACTIONS
 ============================================================================= */
+
+function resolveFilePreviewUrl(file = null) {
+  if (!file || typeof URL === 'undefined') {
+    return '';
+  }
+
+  return URL.createObjectURL(file);
+}
+
 function updateSelectedFileStatus(root, fileInput) {
   const mediaType = fileInput?.dataset?.profileMediaFile || '';
   const file = fileInput?.files?.[0] || null;
@@ -95,7 +113,7 @@ function updateSelectedFileStatus(root, fileInput) {
 
   if (!file || typeof URL === 'undefined') return;
 
-  const previewUrl = URL.createObjectURL(file);
+  const previewUrl = resolveFilePreviewUrl(file);
   if (mediaType === 'cover') {
     setImage(root, '[data-profile-cover-preview-image]', previewUrl, fileName);
     const coverLabel = root.querySelector('[data-profile-cover-preview-label]');

@@ -94,6 +94,10 @@ function setSidebarRail(root, state){
       }));
     }
   }
+
+  document.dispatchEvent(new CustomEvent('profile:sidebar-rail-change', {
+    detail: { state: normalized }
+  }));
 }
 
 function bindSidebar(){

@@ -2,17 +2,17 @@
   "visibility": [
     {
       "key": "private",
-      "label": "Private draft",
-      "summary": "Owner-only post records stored in the private profile surface."
+      "label": "Only me",
+      "summary": "Private draft storage requires the private profile_posts table."
     },
     {
       "key": "public",
-      "label": "Public route",
-      "summary": "Posts staged for publication after public route readiness is complete."
+      "label": "Everyone",
+      "summary": "Publish to your public profile and the feed."
     }
   ],
   "limits": {
     "titleMaxLength": 120,
-    "bodyMaxLength": 4000
+    "bodyMaxLength": 280
   }
 }

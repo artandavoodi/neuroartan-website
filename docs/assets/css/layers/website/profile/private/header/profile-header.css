@@ -208,7 +208,6 @@
 
 .profile-header__avatar-shell{
   position:relative;
-  z-index:999;
 }
 
 .profile-header__avatar-surface{
@@ -217,10 +216,7 @@
   border-radius:var(--control-radius-pill);
   display:block;
   position:relative;
-  overflow:hidden;
   background:transparent;
-  isolation:isolate;
-  z-index:999;
 }
 
 .profile-header__avatar-image{
@@ -324,7 +320,6 @@
   .profile-header__avatar-surface{
     width:5.5rem;
     height:5.5rem;
-    z-index:10;
     background:transparent;
     position:relative;
   }

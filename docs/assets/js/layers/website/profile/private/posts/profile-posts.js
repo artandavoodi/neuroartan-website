@@ -20,10 +20,16 @@ import {
   getProfileRuntimeState,
   subscribeProfileRuntime
 } from '../shell/profile-runtime.js';
+import {
+  createSpeechInputController,
+  hasSpeechInputSupport
+} from '../../../../../core/02-systems/speech-input.js';
 import { normalizeString } from '../../../system/account/identity/account-profile-identity.js';
 import {
   createFeedPost,
-  listFeedPosts
+  deleteFeedPost,
+  listFeedPosts,
+  updateFeedPost
 } from '../../../system/feed/feed-store.js';
 import { uploadProfileImage } from '../../../system/profile/profile-image-storage.js';
 
@@ -32,12 +38,12 @@ import { uploadProfileImage } from '../../../system/profile/profile-image-storag
 ============================================================================= */
 const DEFAULT_POLICY = Object.freeze({
   visibility: [
-    { key: 'private', label: 'Private draft', summary: 'Owner-only profile post.' },
-    { key: 'public', label: 'Public route', summary: 'Post staged for public route readiness.' }
+    { key: 'private', label: 'Only me', summary: 'Owner-only storage requires the private profile_posts table.' },
+    { key: 'public', label: 'Everyone', summary: 'Publish to your public profile and feed.' }
   ],
   limits: {
     titleMaxLength: 120,
-    bodyMaxLength: 4000
+    bodyMaxLength: 280
   }
 });
 
@@ -45,7 +51,10 @@ const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   initialized: false,
   policy: null,
   posts: [],
-  selectedImageFile: null
+  selectedMediaFile: null,
+  selectedMediaKind: '',
+  editingPostId: '',
+  speechController: null
 });
 
 /* =============================================================================
@@ -97,7 +106,8 @@ async function syncStoreWithRuntime() {
       visibility: 'public',
       createdAt: post.createdAt,
       source: post.source,
-      imageUrl: post.imageUrl || ''
+      mediaUrl: post.mediaUrl || post.imageUrl || '',
+      mediaType: post.mediaType || ''
     }));
 }
 
@@ -145,6 +155,82 @@ function renderVisibilityOptions(root, policy) {
   });
 }
 
+function getPostBodyLimit(policy = STORE.policy || DEFAULT_POLICY) {
+  const limit = Number(policy?.limits?.bodyMaxLength || DEFAULT_POLICY.limits.bodyMaxLength);
+  return Number.isFinite(limit) && limit > 0 ? limit : DEFAULT_POLICY.limits.bodyMaxLength;
+}
+
+function syncPostCounter(root, policy = STORE.policy || DEFAULT_POLICY) {
+  const textarea = root.querySelector('textarea[name="body"]');
+  const counter = root.querySelector('[data-profile-post-character-count]');
+  if (!(textarea instanceof HTMLTextAreaElement) || !(counter instanceof HTMLElement)) return;
+
+  const limit = getPostBodyLimit(policy);
+  const count = textarea.value.length;
+  textarea.maxLength = limit;
+  counter.textContent = `${count} / ${limit}`;
+  counter.dataset.profilePostCharacterState = count > limit ? 'over' : 'ready';
+}
+
+function syncSubmitLabel(root) {
+  const submitButton = root.querySelector('[data-profile-post-submit]');
+  if (!(submitButton instanceof HTMLButtonElement)) return;
+  submitButton.textContent = STORE.editingPostId ? 'Save' : 'Post';
+}
+
+function mediaKindFromFile(file) {
+  const type = normalizeString(file?.type || '').toLowerCase();
+  if (type.startsWith('video/')) return 'video';
+  if (type.startsWith('audio/')) return 'audio';
+  return 'image';
+}
+
+function getMediaAccept(kind = '') {
+  switch (kind) {
+    case 'video':
+      return 'video/*';
+    case 'audio':
+      return 'audio/*';
+    case 'image':
+      return 'image/*';
+    default:
+      return 'image/*,video/*,audio/*';
+  }
+}
+
+function syncVoiceButton(root) {
+  const voiceButton = root.querySelector('[data-profile-post-voice-trigger]');
+  if (!(voiceButton instanceof HTMLButtonElement)) return;
+
+  if (!hasSpeechInputSupport()) {
+    voiceButton.hidden = true;
+    return;
+  }
+
+  voiceButton.hidden = false;
+  voiceButton.setAttribute('aria-pressed', STORE.speechController?.isListening?.() ? 'true' : 'false');
+}
+
+function ensurePostSpeechController(root) {
+  if (STORE.speechController) return STORE.speechController;
+
+  STORE.speechController = createSpeechInputController({
+    onStart: () => syncVoiceButton(root),
+    onResult: ({ transcript }) => {
+      const textarea = root.querySelector('textarea[name="body"]');
+      if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+      const prefix = textarea.value.trim();
+      textarea.value = [prefix, normalizeString(transcript)].filter(Boolean).join(prefix ? ' ' : '');
+      syncPostCounter(root);
+    },
+    onEnd: () => syncVoiceButton(root),
+    onError: () => syncVoiceButton(root)
+  });
+
+  return STORE.speechController;
+}
+
 function renderPostList(root) {
   const list = root.querySelector('[data-profile-post-list]');
   const empty = root.querySelector('[data-profile-post-empty]');
@@ -171,17 +257,36 @@ function renderPostList(root) {
         <span class="ui-badge ui-badge--outline"></span>
       </div>
       <p class="profile-posts__item-body"></p>
-      ${post.imageUrl ? '<img class="profile-posts__item-image" alt="Post image">' : ''}
+      ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
+      ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
+      ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<img class="profile-posts__item-image" alt="Post image">' : ''}
       <p class="profile-posts__item-meta"></p>
+      <div class="profile-posts__item-actions">
+        <button class="profile-posts__item-action" type="button" data-profile-post-edit="${post.id}">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
+          <span>Edit</span>
+        </button>
+        <button class="profile-posts__item-action profile-posts__item-action--danger" type="button" data-profile-post-delete="${post.id}">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
+          <span>Delete</span>
+        </button>
+      </div>
     `;
     item.querySelector('.profile-posts__item-title').textContent = post.title || 'Untitled post';
     item.querySelector('.ui-badge').textContent = post.visibility === 'public' ? 'Public route' : 'Private draft';
     item.querySelector('.profile-posts__item-body').textContent = post.body || '';
+    const media = item.querySelector('.profile-posts__item-media');
+    if (media instanceof HTMLMediaElement) {
+      media.src = post.mediaUrl;
+      media.addEventListener('error', () => {
+        media.hidden = true;
+      }, { once: true });
+    }
     const image = item.querySelector('.profile-posts__item-image');
     if (image instanceof HTMLImageElement) {
       image.loading = 'lazy';
       image.decoding = 'async';
-      image.src = post.imageUrl;
+      image.src = post.mediaUrl;
 
       image.addEventListener('error', () => {
         image.hidden = true;
@@ -207,6 +312,8 @@ async function renderPosts() {
 
   root.dataset.profileViewerState = state.viewerState;
   renderVisibilityOptions(root, policy);
+  syncPostCounter(root, policy);
+  syncVoiceButton(root);
   renderPostList(root);
 }
 
@@ -227,15 +334,27 @@ function setPostOverlayOpen(root, open) {
   document.body?.classList.toggle('profile-posts-overlay-open', open);
 }
 
-function resetPostImage(root) {
-  STORE.selectedImageFile = null;
-  const input = root.querySelector('[data-profile-post-image-input]');
+function resetPostMedia(root) {
+  STORE.selectedMediaFile = null;
+  STORE.selectedMediaKind = '';
+  const input = root.querySelector('[data-profile-post-media-input]');
   if (input instanceof HTMLInputElement) input.value = '';
-  const preview = root.querySelector('[data-profile-post-image-preview]');
-  const image = root.querySelector('[data-profile-post-image-preview-image]');
-  const name = root.querySelector('[data-profile-post-image-name]');
+  const preview = root.querySelector('[data-profile-post-media-preview]');
+  const image = root.querySelector('[data-profile-post-media-preview-image]');
+  const video = root.querySelector('[data-profile-post-media-preview-video]');
+  const audio = root.querySelector('[data-profile-post-media-preview-audio]');
+  const name = root.querySelector('[data-profile-post-media-name]');
   if (image instanceof HTMLImageElement) {
     image.removeAttribute('src');
+    image.hidden = true;
+  }
+  if (video instanceof HTMLVideoElement) {
+    video.removeAttribute('src');
+    video.hidden = true;
+  }
+  if (audio instanceof HTMLAudioElement) {
+    audio.removeAttribute('src');
+    audio.hidden = true;
   }
   if (name instanceof HTMLElement) {
     name.textContent = '';
@@ -245,21 +364,34 @@ function resetPostImage(root) {
   }
 }
 
-function previewPostImage(root, file) {
+function previewPostMedia(root, file) {
   if (!(file instanceof File)) {
-    resetPostImage(root);
+    resetPostMedia(root);
     return;
   }
 
-  STORE.selectedImageFile = file;
-  const preview = root.querySelector('[data-profile-post-image-preview]');
-  const image = root.querySelector('[data-profile-post-image-preview-image]');
-  const name = root.querySelector('[data-profile-post-image-name]');
+  STORE.selectedMediaFile = file;
+  STORE.selectedMediaKind = mediaKindFromFile(file);
+  const preview = root.querySelector('[data-profile-post-media-preview]');
+  const image = root.querySelector('[data-profile-post-media-preview-image]');
+  const video = root.querySelector('[data-profile-post-media-preview-video]');
+  const audio = root.querySelector('[data-profile-post-media-preview-audio]');
+  const name = root.querySelector('[data-profile-post-media-name]');
+  const objectUrl = URL.createObjectURL(file);
   if (image instanceof HTMLImageElement) {
-    image.src = URL.createObjectURL(file);
+    image.src = objectUrl;
+    image.hidden = STORE.selectedMediaKind !== 'image';
+  }
+  if (video instanceof HTMLVideoElement) {
+    video.src = objectUrl;
+    video.hidden = STORE.selectedMediaKind !== 'video';
+  }
+  if (audio instanceof HTMLAudioElement) {
+    audio.src = objectUrl;
+    audio.hidden = STORE.selectedMediaKind !== 'audio';
   }
   if (name instanceof HTMLElement) {
-    name.textContent = file.name || 'Image selected';
+    name.textContent = file.name || 'Media selected';
   }
   if (preview instanceof HTMLElement) {
     preview.hidden = false;
@@ -283,12 +415,19 @@ function bindPostForm() {
     }
 
     const formData = new FormData(form);
-    const title = normalizeString(formData.get('title') || '');
     const body = normalizeString(formData.get('body') || '');
     const visibility = normalizeString(formData.get('visibility') || 'private') || 'private';
+    const policy = await loadPolicy();
+    const limit = getPostBodyLimit(policy);
+    const editingPostId = normalizeString(STORE.editingPostId || '');
 
-    if (!title && !body) {
-      setStatus(root, 'Write a title or body before saving the post.', 'error');
+    if (!body) {
+      setStatus(root, 'Write a post before publishing.', 'error');
+      return;
+    }
+
+    if (body.length > limit) {
+      setStatus(root, `Posts can be up to ${limit} characters. Shorten this post before publishing.`, 'error');
       return;
     }
 
@@ -297,14 +436,14 @@ function bindPostForm() {
       return;
     }
 
-    setStatus(root, 'Publishing post to the public feed...', 'saving');
+    setStatus(root, editingPostId ? 'Saving post update...' : 'Publishing post to the public feed...', 'saving');
 
     try {
       let imageUpload = null;
-      if (STORE.selectedImageFile instanceof File) {
-        setStatus(root, 'Uploading image to profile media...', 'saving');
+      if (STORE.selectedMediaFile instanceof File) {
+        setStatus(root, 'Uploading media to profile storage...', 'saving');
         imageUpload = await uploadProfileImage({
-          file: STORE.selectedImageFile,
+          file: STORE.selectedMediaFile,
           user: state.profile,
           kind: 'post',
           bucket: 'profile-images',
@@ -313,28 +452,41 @@ function bindPostForm() {
         });
       }
 
-      await createFeedPost({
-        post_body: [title, body].filter(Boolean).join('\n\n'),
+      const payload = {
+        post_body: body,
         source_surface: 'profile',
         post_image_url: imageUpload?.publicUrl || '',
         post_image_storage_path: imageUpload?.storagePath || '',
-        post_media_type: imageUpload?.kind === 'post' ? 'image' : ''
-      });
+        post_media_type: STORE.selectedMediaKind || ''
+      };
+
+      if (editingPostId) {
+        await updateFeedPost(editingPostId, payload);
+      } else {
+        await createFeedPost(payload);
+      }
+
       form.reset();
-      resetPostImage(root);
+      STORE.editingPostId = '';
+      resetPostMedia(root);
+      syncPostCounter(root, policy);
+      syncSubmitLabel(root);
       await renderPosts();
       setPostOverlayOpen(root, false);
-      setStatus(root, 'Post published to your public profile and feed.', 'success');
-      document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
-        detail: {
-          id: `profile-post-published-${Date.now()}`,
-          title: 'Profile post published',
-          body: 'Your post is now connected to the public feed.',
-          source: 'profile',
-          priority: 'normal',
-          href: '/feed/'
-        }
-      }));
+      setStatus(root, editingPostId ? 'Post updated.' : 'Post published to your public profile and feed.', 'success');
+
+      if (!editingPostId) {
+        document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
+          detail: {
+            id: `profile-post-published-${Date.now()}`,
+            title: 'Profile post published',
+            body: 'Your post is now connected to the public feed.',
+            source: 'profile',
+            priority: 'normal',
+            href: '/feed/'
+          }
+        }));
+      }
     } catch (error) {
       const code = normalizeString(error?.code || error?.message || '');
       const message = code === 'FEED_BACKEND_UNAVAILABLE'
@@ -354,8 +506,11 @@ function bindPostForm() {
     const openTrigger = event.target.closest('[data-profile-post-overlay-open]');
     const closeTrigger = event.target.closest('[data-profile-post-overlay-close]');
     const visibilityTrigger = event.target.closest('[data-profile-post-visibility-option]');
-    const imageTrigger = event.target.closest('[data-profile-post-image-trigger]');
-    const imageRemove = event.target.closest('[data-profile-post-image-remove]');
+    const mediaTrigger = event.target.closest('[data-profile-post-media-trigger]');
+    const voiceTrigger = event.target.closest('[data-profile-post-voice-trigger]');
+    const mediaRemove = event.target.closest('[data-profile-post-media-remove]');
+    const deleteTrigger = event.target.closest('[data-profile-post-delete]');
+    const editTrigger = event.target.closest('[data-profile-post-edit]');
 
     if (visibilityTrigger) {
       event.preventDefault();
@@ -370,20 +525,81 @@ function bindPostForm() {
       return;
     }
 
-    if (imageTrigger) {
+    if (mediaTrigger) {
       event.preventDefault();
-      root.querySelector('[data-profile-post-image-input]')?.click();
+      const input = root.querySelector('[data-profile-post-media-input]');
+      if (input instanceof HTMLInputElement) {
+        input.accept = getMediaAccept(mediaTrigger.getAttribute('data-profile-post-media-kind') || '');
+        input.click();
+      }
       return;
     }
 
-    if (imageRemove) {
+    if (voiceTrigger) {
       event.preventDefault();
-      resetPostImage(root);
+      const controller = ensurePostSpeechController(root);
+      if (!controller.supported) {
+        setStatus(root, 'Voice dictation requires browser speech recognition support.', 'error');
+        return;
+      }
+      if (controller.isListening()) {
+        controller.stop();
+        return;
+      }
+      controller.start({ lang: document.documentElement.lang || 'en' });
+      return;
+    }
+
+    if (mediaRemove) {
+      event.preventDefault();
+      resetPostMedia(root);
+      return;
+    }
+
+    if (editTrigger) {
+      event.preventDefault();
+      const postId = normalizeString(editTrigger.getAttribute('data-profile-post-edit') || '');
+      const post = STORE.posts.find((entry) => entry.id === postId);
+      if (!post) return;
+      const textarea = root.querySelector('textarea[name="body"]');
+      if (textarea instanceof HTMLTextAreaElement) {
+        textarea.value = post.body || '';
+        syncPostCounter(root);
+      }
+      STORE.editingPostId = postId;
+      resetPostMedia(root);
+      syncSubmitLabel(root);
+      setPostOverlayOpen(root, true);
+      textarea?.focus();
+      setStatus(root, 'Editing post.', 'idle');
+      return;
+    }
+
+    if (deleteTrigger) {
+      event.preventDefault();
+      const postId = normalizeString(deleteTrigger.getAttribute('data-profile-post-delete') || '');
+      if (!postId) return;
+      setStatus(root, 'Deleting post...', 'saving');
+      void deleteFeedPost(postId)
+        .then(async () => {
+          await renderPosts();
+          setStatus(root, 'Post deleted.', 'success');
+        })
+        .catch((error) => {
+          console.error('[profile-posts] Delete failed.', error);
+          setStatus(root, 'Unable to delete this post. Check Supabase feed_posts policies.', 'error');
+        });
       return;
     }
 
     if (openTrigger) {
       event.preventDefault();
+      STORE.editingPostId = '';
+      const form = root.querySelector('[data-profile-post-form]');
+      if (form instanceof HTMLFormElement) form.reset();
+      resetPostMedia(root);
+      syncPostCounter(root);
+      syncSubmitLabel(root);
       setPostOverlayOpen(root, true);
       root.querySelector('[data-profile-post-form] textarea')?.focus();
       return;
@@ -391,14 +607,22 @@ function bindPostForm() {
 
     if (closeTrigger) {
       event.preventDefault();
+      STORE.editingPostId = '';
+      syncSubmitLabel(root);
       setPostOverlayOpen(root, false);
     }
   });
 
   root.addEventListener('change', (event) => {
     const input = event.target;
-    if (!(input instanceof HTMLInputElement) || !input.matches('[data-profile-post-image-input]')) return;
-    previewPostImage(root, input.files?.[0] || null);
+    if (!(input instanceof HTMLInputElement) || !input.matches('[data-profile-post-media-input]')) return;
+    previewPostMedia(root, input.files?.[0] || null);
+  });
+
+  root.addEventListener('input', (event) => {
+    const textarea = event.target;
+    if (!(textarea instanceof HTMLTextAreaElement) || !textarea.matches('textarea[name="body"]')) return;
+    syncPostCounter(root);
   });
 
   document.addEventListener('keydown', (event) => {

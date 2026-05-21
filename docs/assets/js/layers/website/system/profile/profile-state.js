@@ -209,6 +209,30 @@ async function buildRegistryResolutionState(route) {
 }
 
 /* =============================================================================
+   05A) RESOLUTION NORMALIZATION
+============================================================================= */
+
+function buildRenderableState(baseState, resolution, model = null, creator = null) {
+  return {
+    ...baseState,
+    ...resolution,
+    loading: false,
+    model,
+    creator
+  };
+}
+
+function buildResolutionState(baseState, resolution) {
+  return {
+    ...baseState,
+    ...resolution,
+    loading: false,
+    model: null,
+    creator: null
+  };
+}
+
+/* =============================================================================
    06) STATE STORE
 ============================================================================= */
 function notifySubscribers() {
@@ -290,14 +314,15 @@ async function resolveStateForRoute(route) {
     if (requestId !== RUNTIME.requestId) return;
 
     if (supabaseResolution?.outcome === 'found_renderable') {
-      setState({
-        ...baseState,
-        ...supabaseResolution,
-        loading: false,
-        route,
-        model: registryModel || null,
-        creator: registryCreator
-      });
+      setState(buildRenderableState(
+        {
+          ...baseState,
+          route
+        },
+        supabaseResolution,
+        registryModel || null,
+        registryCreator
+      ));
       return;
     }
 
@@ -306,14 +331,13 @@ async function resolveStateForRoute(route) {
       && supabaseResolution.outcome !== 'not_found'
       && supabaseResolution.outcome !== 'error'
     ) {
-      setState({
-        ...baseState,
-        ...supabaseResolution,
-        loading: false,
-        route,
-        model: null,
-        creator: null
-      });
+      setState(buildResolutionState(
+        {
+          ...baseState,
+          route
+        },
+        supabaseResolution
+      ));
       return;
     }
 

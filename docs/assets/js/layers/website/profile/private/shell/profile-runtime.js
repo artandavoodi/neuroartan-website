@@ -313,7 +313,7 @@ function buildPrivateProfileState(user = null, profile = null) {
     completion,
     username,
     visibility,
-    displayName: displayName || (user ? 'Neuroartan User' : 'Private Profile'),
+    displayName: profile ? displayName : '',
     firstName: normalizeString(profile?.first_name || ''),
     lastName: normalizeString(profile?.last_name || ''),
     birthDate: normalizeString(profile?.birth_date || profile?.date_of_birth || ''),
@@ -327,7 +327,7 @@ function buildPrivateProfileState(user = null, profile = null) {
     authContextLine: user ? `${formatProviderLabel(providerId)} account connected` : 'Authentication required',
     publicRoutePath,
     publicRouteUrl,
-    publicRouteDisplay,
+    publicRouteDisplay: username.normalized ? publicRouteDisplay : '',
     publicViewAvailable,
     profileRecordState: profile ? 'Canonical record active' : 'Canonical record pending',
     avatarUrl: avatarHasImage ? avatarUrl : '',
@@ -598,6 +598,25 @@ function getDefaultState() {
 }
 
 /* =============================================================================
+   07A) RUNTIME STATE RESOLUTION
+   ============================================================================= */
+
+function resolveRuntimeState(detail = {}) {
+  if (shouldApplyPublicState(detail)) {
+    return buildPublicProfileState(detail);
+  }
+
+  return buildPrivateProfileState(
+    detail.user || null,
+    detail.profile || null
+  );
+}
+
+function refreshRuntimeState(detail = {}) {
+  setRuntimeState(resolveRuntimeState(detail));
+}
+
+/* =============================================================================
    08) RUNTIME STORE
    ============================================================================= */
 
@@ -864,18 +883,18 @@ function bindProfileStateEvents() {
   document.addEventListener('account:profile-state-changed', (event) => {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
     if (!shouldApplyPrivateState()) return;
-    setRuntimeState(buildPrivateProfileState(detail.user || null, detail.profile || null));
+    refreshRuntimeState(detail);
   });
 
   document.addEventListener('account:profile-signed-out', () => {
     if (!shouldApplyPrivateState()) return;
-    setRuntimeState(buildPrivateProfileState(null, null));
+    refreshRuntimeState({});
   });
 
   document.addEventListener('profile:public-state-changed', (event) => {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
     if (!shouldApplyPublicState(detail)) return;
-    setRuntimeState(buildPublicProfileState(detail));
+    refreshRuntimeState(detail);
   });
 }
 
@@ -948,14 +967,7 @@ function initProfileRuntime() {
   bindProfileMediaDisplayResolver();
 
   void loadProfileIdentityPolicy().then(() => {
-    const state = getProfileRuntimeState();
-
-    if (state.surface === 'public') {
-      setRuntimeState(buildPublicProfileState(state));
-      return;
-    }
-
-    setRuntimeState(buildPrivateProfileState(state.user || null, state.profile || null));
+    refreshRuntimeState(getProfileRuntimeState());
   });
 
   window.NeuroartanProfileRuntime = Object.freeze({

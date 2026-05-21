@@ -146,12 +146,25 @@
   align-items:stretch;
   justify-content:flex-start;
   padding:var(--home-search-shell-none);
-  z-index:1900;
+  z-index:var(--z-language-dropdown);
   pointer-events:none;
+  overscroll-behavior:contain;
+  touch-action:auto;
+}
+
+body.profile-page .home-search-shell{
+  top:var(--spacing-none);
 }
 
 .home-search-shell[hidden]{
   display:none !important;
+}
+
+html.home-search-shell-open,
+body.home-search-shell-open{
+  height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
 }
 
 /* =============================================================================
@@ -164,6 +177,7 @@
   max-height:none;
   display:flex;
   flex-direction:column;
+  min-height:var(--spacing-none);
   overflow:hidden;
   border-top:var(--home-search-shell-border-width) solid var(--home-panel-border);
   background:var(--home-search-shell-dialog-surface);
@@ -172,6 +186,7 @@
   -webkit-backdrop-filter:blur(var(--home-search-shell-dialog-blur)) saturate(var(--home-search-shell-dialog-saturate));
   z-index:1;
   pointer-events:auto;
+  overscroll-behavior:contain;
 }
 
 /* =============================================================================
@@ -216,6 +231,7 @@
   flex:1 1 auto;
   gap:0;
   min-height:0;
+  overflow:hidden;
   padding:var(--home-search-shell-body-padding-y) max(var(--site-gutter), var(--home-search-shell-body-padding-x-fallback)) 0;
   box-sizing:border-box;
 }
@@ -342,7 +358,11 @@
 .home-search-shell__results{
   min-height:0;
   flex:1 1 auto;
+  max-height:100%;
   overflow:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
   width:min(var(--home-search-shell-full), var(--home-search-shell-width));
   padding:calc(var(--products-local-nav-link-indicator-offset, 0.62rem) * 0.8) 0 calc(var(--products-local-nav-link-indicator-offset, 0.62rem) * 1.6);
   scrollbar-width:none;
@@ -353,6 +373,27 @@
   display:none;
   width:0;
   height:0;
+}
+
+@media (max-width:720px){
+  .home-search-shell__dialog{
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+  }
+
+  .home-search-shell__body{
+    overflow:visible;
+    min-height:auto;
+  }
+
+  .home-search-shell__results{
+    flex:0 0 auto;
+    max-height:none;
+    overflow:visible;
+    touch-action:pan-y;
+  }
 }
 
 .home-search-shell__empty-state{

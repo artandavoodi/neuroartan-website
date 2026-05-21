@@ -376,7 +376,8 @@
       let threshold = Number.POSITIVE_INFINITY;
 
       if (document.body?.classList.contains('profile-page')) {
-        threshold = Number.POSITIVE_INFINITY;
+        body.classList.remove('menu-ribbon-active');
+        return;
       } else if (isHomePage()) {
         if (stage) {
           threshold = getPageTop(stage) + getOuterHeight(stage) + 220;

@@ -16,7 +16,8 @@
    00A) PROFILE TOPBAR TOKENS
 ============================================================================= */
 :root{
-  --profile-topbar-z-index:1501;
+  --profile-topbar-z-index:5000;
+  --profile-topbar-surface-bg:var(--bg-color);
 }
 
 body.profile-page.menu-ribbon-active{
@@ -31,7 +32,6 @@ body.profile-page.menu-ribbon-active::after{
 
 body.profile-page.menu-ribbon-active .institutional-menu::before{
   opacity:var(--overlay-opacity-closed);
-  transform:translateY(var(--institutional-menu-closed-y));
 }
 
 /* =============================================================================
@@ -49,6 +49,9 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
 
 #profile-menu-mount .home-dashboard-topbar{
   pointer-events:auto;
+  isolation:auto;
+  transform:none !important;
+  will-change:auto;
 }
 
 /* =============================================================================
@@ -58,7 +61,6 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   position:relative;
   width:100%;
   pointer-events:auto;
-  isolation:isolate;
   --home-topbar-menu-gap:var(--nav-global-topbar-menu-gap);
 }
 
@@ -70,10 +72,10 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   position:absolute;
   inset:env(safe-area-inset-top, 0) 0 auto 0;
   height:var(--nav-glass-surface-height);
-  background:var(--nav-glass-surface-bg);
+  background:var(--profile-topbar-surface-bg);
   border-bottom:var(--border-width-hairline) solid var(--nav-glass-surface-border);
-  backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
-  -webkit-backdrop-filter:blur(var(--nav-glass-surface-blur)) saturate(var(--nav-glass-surface-saturate));
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
   pointer-events:none;
   z-index:0;
   transition:var(--interaction-transition-control);
@@ -87,14 +89,13 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   max-width:calc(100% - (var(--site-gutter) * 2));
   margin:0 auto;
   padding:0;
-  min-height:3.55rem;
+  min-height:var(--nav-glass-surface-height);
   display:flex;
   align-items:center;
   justify-content:flex-start;
   gap:1.6rem;
   position:relative;
-  z-index:3;
-  direction:ltr;
+  z-index:2;
 }
 
 /* =============================================================================
@@ -185,7 +186,6 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   line-height:1rem;
   white-space:nowrap;
   font-variation-settings:"wght" 400;
-  transform:none !important;
   transition:color var(--interaction-motion-medium) var(--interaction-ease-standard), opacity var(--interaction-motion-medium) var(--interaction-ease-standard), transform var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
 
@@ -317,7 +317,7 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   }
 
   #profile-menu-mount .home-dashboard-topbar__inner{
-    min-height:3.3rem;
+    min-height:var(--nav-glass-surface-height-tablet);
     gap:0.85rem;
   }
 

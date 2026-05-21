@@ -18,15 +18,16 @@
   --profile-shell-group-gap:var(--spacing-md);
   --profile-shell-mount-gap:var(--spacing-none);
   --profile-shell-disabled-opacity:var(--disabled-opacity, 0.48);
-  --profile-shell-top-clearance:calc(env(safe-area-inset-top, 0px) + 3.55rem);
+  --profile-shell-top-clearance:calc(env(safe-area-inset-top, 0px) + 1rem);
   --home-shell-panel-top:var(--profile-shell-top-clearance);
-  --profile-shell-top-clearance-mobile:calc(env(safe-area-inset-top, 0px) + 3.3rem);
+  --profile-shell-top-clearance-mobile:calc(env(safe-area-inset-top, 0px) + 0.75rem);
   --profile-shell-hero-sticky-travel:calc(
     var(--profile-private-hero-cover-offset-top, var(--spacing-md))
     + var(--profile-private-hero-cover-height, 13.5rem)
     + var(--spacing-lg)
     + (var(--profile-private-hero-avatar-size, 7.25rem) / 2)
     + var(--spacing-xl)
+    + 3rem
   );
   --profile-shell-hero-sticky-travel-mobile:calc(
     var(--profile-private-hero-cover-offset-top, var(--spacing-md))
@@ -37,6 +38,7 @@
     + calc(var(--body-2-size) * var(--body-2-line-height))
     + calc(var(--body-2-size) * var(--body-2-line-height))
     + var(--spacing-xl)
+    + 0.5rem
   );
   --profile-shell-hero-sticky-top:calc(var(--profile-shell-top-clearance) - var(--profile-shell-hero-sticky-travel));
   --profile-shell-hero-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) - var(--profile-shell-hero-sticky-travel-mobile));

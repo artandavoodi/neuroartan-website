@@ -63,8 +63,8 @@ body.profile-posts-overlay-open{
   right:var(--site-gutter);
   bottom:var(--profile-posts-fab-bottom);
   z-index:var(--z-overlay-surface);
-  width:var(--home-platform-shell-rail-toggle-size);
-  height:var(--home-platform-shell-rail-toggle-size);
+  width:calc(var(--home-platform-shell-rail-toggle-size) * 2);
+  height:calc(var(--home-platform-shell-rail-toggle-size) * 2);
   display:inline-grid;
   place-items:center;
   padding:var(--spacing-none);
@@ -84,8 +84,8 @@ body.profile-posts-overlay-open{
 }
 
 .profile-posts__fab img{
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
+  height:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
   opacity:var(--nav-institutional-icon-opacity);
   filter:var(--icon-image-filter);
 }

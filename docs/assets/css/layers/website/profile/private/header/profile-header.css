@@ -7,6 +7,8 @@
   --profile-header-verified-bg:color-mix(in srgb, var(--profile-header-verified-color) 10%, transparent);
   --profile-header-avatar-placeholder-icon-size:var(--profile-private-hero-media-action-size);
   --profile-header-avatar-bg:var(--bg-color);
+  --profile-header-border-color:color-mix(in srgb, var(--text-color) 12%, transparent);
+  --profile-header-border:var(--border-width-hairline) solid var(--profile-header-border-color);
 }
 
 /* =============================================================================
@@ -29,6 +31,9 @@
 .profile-header__surface{
   display:grid;
   gap:var(--spacing-xl);
+  padding:var(--spacing-lg);
+  border:var(--profile-header-border);
+  border-radius:var(--radius-xl);
 }
 
 .profile-header__identity-block{
@@ -216,7 +221,9 @@
   border-radius:var(--control-radius-pill);
   display:block;
   position:relative;
-  background:transparent;
+  border:var(--profile-header-border);
+  background:var(--profile-header-avatar-bg);
+  overflow:hidden;
 }
 
 .profile-header__avatar-image{

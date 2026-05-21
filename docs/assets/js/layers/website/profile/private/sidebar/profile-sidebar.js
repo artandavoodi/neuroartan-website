@@ -119,8 +119,21 @@ function bindSidebar(){
       return;
     }
 
-    const item = event.target.closest('[data-profile-private-sidebar] [data-profile-nav-section]');
+    const item = event.target.closest('[data-profile-private-sidebar] [data-profile-nav-section], [data-profile-private-sidebar] [data-profile-nav-link], [data-profile-private-sidebar] [data-profile-search-trigger]');
     if(!item) return;
+
+    if(item.dataset.profileSearchTrigger){
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('neuroartan:home-search-shell-open-requested', {
+        detail: { source: 'sidebar' }
+      }));
+      return;
+    }
+
+    if(item.dataset.profileNavLink){
+      window.location.href = item.dataset.profileNavLink;
+      return;
+    }
 
     document.dispatchEvent(new CustomEvent('profile:navigate-request', {
       detail: {

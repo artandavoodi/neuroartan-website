@@ -390,22 +390,22 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:var(--profile-private-hero-media-action-size);
-  height:var(--profile-private-hero-media-action-size);
   padding:var(--spacing-none);
-  border:1px solid var(--profile-private-hero-control-border);
-  border-radius:var(--control-radius-pill);
-  background:var(--profile-private-hero-control-bg);
+  border:0;
+  border-radius:0;
+  background:transparent;
   color:var(--text-primary-color);
   cursor:pointer;
-  transition:var(--interaction-transition-control);
+  line-height:0;
+  pointer-events:auto;
+  transition:opacity var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease);
 }
 
 .profile-private-hero__info-button:hover,
 .profile-private-hero__info-button:focus-visible,
 .profile-private-hero__info-button[aria-expanded="true"]{
-  border-color:var(--profile-private-hero-control-border-hover);
-  background:var(--profile-private-hero-control-bg-hover);
+  background:transparent;
+  border:0;
   color:var(--text-primary-color);
   outline:none;
 }
@@ -590,6 +590,12 @@
 /* =============================================================================
    13) PRIVATE PROFILE HERO RESPONSIVE STATES
 ============================================================================= */
+@media (min-width:721px){
+  :root{
+    --profile-private-hero-tab-band-height:3rem;
+  }
+}
+
 @media (max-width:980px){
   .profile-private-hero__identity-row{
     grid-template-columns:auto minmax(0, 1fr) auto;

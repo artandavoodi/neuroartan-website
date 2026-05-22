@@ -922,6 +922,7 @@
   function writeStoredConsent(payload) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      document.dispatchEvent(new CustomEvent('cookie-consent:state-changed', { detail: payload }));
     } catch {
     }
 

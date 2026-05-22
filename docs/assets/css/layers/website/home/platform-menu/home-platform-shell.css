@@ -678,10 +678,7 @@ html[data-theme-effective="light"]{
 }
 
 .home-platform-shell__content-header{
-  display:grid;
-  gap:var(--home-platform-shell-content-header-gap);
-  padding:var(--home-platform-shell-content-header-padding-top) var(--home-platform-shell-content-header-padding-right) var(--home-platform-shell-content-header-padding-bottom) var(--home-platform-shell-content-header-padding-left);
-  border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  display:none;
 }
 
 .home-platform-shell__content-eyebrow{

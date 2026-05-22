@@ -1,26 +1,94 @@
 <section class="home-platform-destination home-platform-destination--settings-connectors" data-home-platform-destination-root aria-label="Connectors settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" aria-labelledby="settings-connectors-providers">
+    <section class="home-platform-theme__section" aria-labelledby="settings-connectors-services">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Providers</p>
-        <h2 class="home-platform-theme__section-title" id="settings-connectors-providers">Model connectors</h2>
+        <p class="home-platform-theme__section-eyebrow">Integrations</p>
+        <h2 class="home-platform-theme__section-title" id="settings-connectors-services">Connected services</h2>
       </div>
-      <div class="home-platform-theme__mode-grid">
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:configuration">
-          <span class="home-platform-theme__mode-label">Cloud Providers</span>
-          <span class="home-platform-theme__mode-caption">Configure OpenAI-compatible, Gemini, or future cloud providers.</span>
+      <div class="home-platform-theme__connector-list">
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="github">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">GitHub</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="scan-local-models">
-          <span class="home-platform-theme__mode-label">Local LLM</span>
-          <span class="home-platform-theme__mode-caption">Scan LM Studio at http://localhost:1234/v1/models.</span>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="x">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">X</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:configuration">
-          <span class="home-platform-theme__mode-label">API Keys</span>
-          <span class="home-platform-theme__mode-caption">Open Configuration for provider credential input.</span>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="slack">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">Slack</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="scan-local-models">
-          <span class="home-platform-theme__mode-label">Health</span>
-          <span class="home-platform-theme__mode-caption">Check local model server availability.</span>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="notion">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">Notion</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
+        </button>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="gmail">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">Gmail</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
+        </button>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="calendar">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">Calendar</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
+        </button>
+        <button class="home-platform-theme__connector-item" type="button" data-home-platform-connector-service="contacts">
+          <span class="home-platform-theme__connector-icon">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="24" height="24">
+          </span>
+          <span class="home-platform-theme__connector-info">
+            <span class="home-platform-theme__connector-name">Contacts</span>
+            <span class="home-platform-theme__connector-status">Not connected</span>
+          </span>
+          <span class="home-platform-theme__connector-action">
+            <img class="ui-icon-theme-aware home-platform-theme__connector-chevron" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
+          </span>
         </button>
       </div>
     </section>

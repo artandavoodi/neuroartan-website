@@ -1,3 +1,89 @@
 @import url('../appearance/index.css');
 
 .home-platform-destination--settings-connectors{width:var(--size-full);}
+
+.home-platform-theme__connector-list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-none);
+}
+
+.home-platform-theme__connector-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-sm);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  padding:var(--spacing-sm) var(--spacing-none);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--control-radius-composer);
+  background:transparent;
+  color:var(--text-color);
+  text-align:left;
+  transition:var(--interaction-transition-control);
+}
+
+.home-platform-theme__connector-item:hover,
+.home-platform-theme__connector-item:focus-visible{
+  outline:none;
+}
+
+.home-platform-theme__connector-icon{
+  flex:0 0 auto;
+  width:24px;
+  height:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.home-platform-theme__connector-icon img{
+  width:24px;
+  height:24px;
+}
+
+.home-platform-theme__connector-info{
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  gap:var(--spacing-none);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-theme__connector-name{
+  margin:var(--spacing-none);
+  font-size:var(--control-font-size);
+  font-weight:var(--control-font-weight);
+  line-height:var(--control-line-height);
+  color:var(--text-color);
+}
+
+.home-platform-theme__connector-status{
+  margin:var(--spacing-none);
+  font-size:var(--caption-size);
+  font-weight:var(--caption-weight);
+  line-height:var(--caption-line-height);
+  color:var(--text-color);
+  opacity:0.6;
+}
+
+.home-platform-theme__connector-action{
+  flex:0 0 auto;
+}
+
+.home-platform-theme__connector-chevron{
+  width:16px;
+  height:16px;
+  opacity:0.5;
+}
+
+.home-platform-theme__connector-item:hover .home-platform-theme__connector-chevron,
+.home-platform-theme__connector-item:focus-visible .home-platform-theme__connector-chevron{
+  opacity:1;
+}
+
+.home-platform-theme__connector-item[data-connector-connected="true"] .home-platform-theme__connector-status{
+  color:var(--color-success-500);
+  opacity:1;
+}

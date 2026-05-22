@@ -1,48 +1,307 @@
 <section class="home-platform-destination home-platform-destination--settings-personalization" data-home-platform-destination-root aria-label="Personalization settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-profile">
+    
+    <!-- Identity & Profile Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-identity">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Profile</p>
-        <h2 class="home-platform-theme__section-title" id="settings-personalization-profile">Identity and route</h2>
+        <p class="home-platform-theme__section-eyebrow">Identity</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-identity">Profile & identity</h2>
       </div>
-      <div class="home-platform-theme__mode-grid">
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="account-entry">
-          <span class="home-platform-theme__mode-label">Profile</span>
-        </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="public-profile">
-          <span class="home-platform-theme__mode-label">Identity</span>
-        </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:appearance">
-          <span class="home-platform-theme__mode-label">Style</span>
-        </button>
+      <div class="home-platform-theme__profile-section">
+        <div class="home-platform-theme__profile-avatar">
+          <div class="home-platform-theme__avatar-placeholder">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="48" height="48">
+          </div>
+          <button class="home-platform-theme__action-button" type="button" data-home-platform-action="change-avatar">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/edit/edit.svg" alt="" width="16" height="16">
+              Change avatar
+            </span>
+          </button>
+        </div>
+        <div class="home-platform-theme__profile-fields">
+          <div class="home-platform-theme__field-group">
+            <label class="home-platform-theme__field-label" for="profile-display-name">Display name</label>
+            <input class="home-platform-theme__field-input" type="text" id="profile-display-name" data-home-platform-field="display-name" placeholder="Your display name">
+          </div>
+          <div class="home-platform-theme__field-group">
+            <label class="home-platform-theme__field-label" for="profile-username">Username</label>
+            <input class="home-platform-theme__field-input" type="text" id="profile-username" data-home-platform-field="username" placeholder="@username">
+          </div>
+          <div class="home-platform-theme__field-group">
+            <label class="home-platform-theme__field-label" for="profile-description">Profile description</label>
+            <textarea class="home-platform-theme__field-textarea" id="profile-description" data-home-platform-field="description" placeholder="Brief description about yourself"></textarea>
+          </div>
+          <div class="home-platform-theme__toggle-row">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Public profile</p>
+              <p class="home-platform-theme__toggle-caption">Make your profile discoverable in public search</p>
+            </div>
+            <button class="home-platform-theme__toggle" type="button" data-home-platform-toggle="public-profile" aria-pressed="false">
+              <span class="home-platform-theme__toggle-track"></span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-cognition">
+    <!-- Voice Training Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-voice">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Cognition</p>
-        <h2 class="home-platform-theme__section-title" id="settings-personalization-cognition">Memory and tone</h2>
+        <p class="home-platform-theme__section-eyebrow">Voice</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-voice">Voice training</h2>
       </div>
-      <div class="home-platform-theme__toggle-list">
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Memory</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Memory controls require a signed-in continuity model runtime.</span>
+      <div class="home-platform-theme__voice-section">
+        <div class="home-platform-theme__voice-status">
+          <div class="home-platform-theme__status-indicator" data-home-platform-voice-status="not-trained"></div>
+          <p class="home-platform-theme__status-text">Voice training not started</p>
         </div>
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Tone</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Tone is governed by the selected model and future UVS layer.</span>
+        <div class="home-platform-theme__voice-controls">
+          <button class="home-platform-theme__primary-button" type="button" data-home-platform-action="start-voice-training">
+            <span class="home-platform-theme__button-label">Start voice training</span>
+          </button>
         </div>
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Social Graph</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Social graph controls stay private until account connectors are active.</span>
+        <div class="home-platform-theme__voice-info">
+          <p class="home-platform-theme__info-text">Voice training allows ICOS to learn your vocal characteristics for more natural interaction. Requires backend runtime.</p>
         </div>
       </div>
     </section>
+
+    <!-- Thought Patterns Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-thought">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Cognition</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-thought">Thought patterns</h2>
+      </div>
+      <div class="home-platform-theme__thought-section">
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="language-style">Language style</label>
+          <select class="home-platform-theme__field-select" id="language-style" data-home-platform-field="language-style">
+            <option value="balanced">Balanced</option>
+            <option value="formal">Formal</option>
+            <option value="casual">Casual</option>
+            <option value="professional">Professional</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="directness-level">Directness level</label>
+          <select class="home-platform-theme__field-select" id="directness-level" data-home-platform-field="directness-level">
+            <option value="nuanced">Nuanced</option>
+            <option value="direct">Direct</option>
+            <option value="diplomatic">Diplomatic</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="emotional-tone">Emotional tone preference</label>
+          <select class="home-platform-theme__field-select" id="emotional-tone" data-home-platform-field="emotional-tone">
+            <option value="neutral">Neutral</option>
+            <option value="empathetic">Empathetic</option>
+            <option value="analytical">Analytical</option>
+            <option value="encouraging">Encouraging</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Response Style Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-response">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Response</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-response">Response style</h2>
+      </div>
+      <div class="home-platform-theme__response-section">
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="response-length">Response length</label>
+          <select class="home-platform-theme__field-select" id="response-length" data-home-platform-field="response-length">
+            <option value="concise">Concise</option>
+            <option value="balanced">Balanced</option>
+            <option value="detailed">Detailed</option>
+            <option value="comprehensive">Comprehensive</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="explanation-depth">Explanation depth</label>
+          <select class="home-platform-theme__field-select" id="explanation-depth" data-home-platform-field="explanation-depth">
+            <option value="minimal">Minimal</option>
+            <option value="standard">Standard</option>
+            <option value="thorough">Thorough</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Step-by-step explanations</p>
+            <p class="home-platform-theme__toggle-caption">Break down complex topics into steps</p>
+          </div>
+          <button class="home-platform-theme__toggle" type="button" data-home-platform-toggle="step-by-step" aria-pressed="false">
+            <span class="home-platform-theme__toggle-track"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Memory & Continuity Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-memory">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Memory</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-memory">Memory & continuity</h2>
+      </div>
+      <div class="home-platform-theme__memory-section">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Enable memory</p>
+            <p class="home-platform-theme__toggle-caption">Allow ICOS to remember context across sessions</p>
+          </div>
+          <button class="home-platform-theme__toggle" type="button" data-home-platform-toggle="enable-memory" aria-pressed="false">
+            <span class="home-platform-theme__toggle-track"></span>
+          </button>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="memory-retention">Memory retention period</label>
+          <select class="home-platform-theme__field-select" id="memory-retention" data-home-platform-field="memory-retention">
+            <option value="session">Session only</option>
+            <option value="week">1 week</option>
+            <option value="month">1 month</option>
+            <option value="indefinite">Indefinite</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="continuity-depth">Continuity depth</label>
+          <select class="home-platform-theme__field-select" id="continuity-depth" data-home-platform-field="continuity-depth">
+            <option value="shallow">Shallow</option>
+            <option value="moderate">Moderate</option>
+            <option value="deep">Deep</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Behavioral Learning Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-behavioral">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Learning</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-behavioral">Behavioral learning</h2>
+      </div>
+      <div class="home-platform-theme__behavioral-section">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Workflow pattern learning</p>
+            <p class="home-platform-theme__toggle-caption">Learn from your work patterns</p>
+          </div>
+          <button class="home-platform-theme__toggle" type="button" data-home-platform-toggle="workflow-learning" aria-pressed="false">
+            <span class="home-platform-theme__toggle-track"></span>
+          </button>
+        </div>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Communication style learning</p>
+            <p class="home-platform-theme__toggle-caption">Adapt to your communication preferences</p>
+          </div>
+          <button class="home-platform-theme__toggle" type="button" data-home-platform-toggle="communication-learning" aria-pressed="false">
+            <span class="home-platform-theme__toggle-track"></span>
+          </button>
+        </div>
+        <div class="home-platform-theme__info-text">
+          <p>Behavioral learning requires backend runtime and active connectors.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emotional Context Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-emotional">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Emotion</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-emotional">Emotional context</h2>
+      </div>
+      <div class="home-platform-theme__emotional-section">
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="emotional-weighting">Emotional weighting</label>
+          <select class="home-platform-theme__field-select" id="emotional-weighting" data-home-platform-field="emotional-weighting">
+            <option value="minimal">Minimal</option>
+            <option value="balanced">Balanced</option>
+            <option value="sensitive">Sensitive</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="empathy-level">Empathy level</label>
+          <select class="home-platform-theme__field-select" id="empathy-level" data-home-platform-field="empathy-level">
+            <option value="low">Low</option>
+            <option value="moderate">Moderate</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reflection Loop Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-reflection">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Reflection</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-reflection">Reflection loop</h2>
+      </div>
+      <div class="home-platform-theme__reflection-section">
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="reflection-frequency">Reflection frequency</label>
+          <select class="home-platform-theme__field-select" id="reflection-frequency" data-home-platform-field="reflection-frequency">
+            <option value="never">Never</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="home-platform-theme__field-group">
+          <label class="home-platform-theme__field-label" for="reflection-depth">Reflection depth</label>
+          <select class="home-platform-theme__field-select" id="reflection-depth" data-home-platform-field="reflection-depth">
+            <option value="surface">Surface</option>
+            <option value="moderate">Moderate</option>
+            <option value="deep">Deep</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Digital Twin Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-digital-twin">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Digital Twin</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-digital-twin">Digital twin status</h2>
+      </div>
+      <div class="home-platform-theme__digital-twin-section">
+        <div class="home-platform-theme__digital-twin-status">
+          <div class="home-platform-theme__status-indicator" data-home-platform-digital-twin-status="not-constructed"></div>
+          <p class="home-platform-theme__status-text">Digital twin not constructed</p>
+        </div>
+        <div class="home-platform-theme__digital-twin-metrics">
+          <div class="home-platform-theme__metric">
+            <p class="home-platform-theme__metric-label">Training completeness</p>
+            <p class="home-platform-theme__metric-value">0%</p>
+          </div>
+          <div class="home-platform-theme__metric">
+            <p class="home-platform-theme__metric-label">Source coverage</p>
+            <p class="home-platform-theme__metric-value">0 sources</p>
+          </div>
+          <div class="home-platform-theme__metric">
+            <p class="home-platform-theme__metric-label">Reliability score</p>
+            <p class="home-platform-theme__metric-value">N/A</p>
+          </div>
+        </div>
+        <div class="home-platform-theme__info-text">
+          <p>Digital twin construction requires backend runtime and training data.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Integration Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-personalization-social">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Social</p>
+        <h2 class="home-platform-theme__section-title" id="settings-personalization-social">Social integration</h2>
+      </div>
+      <div class="home-platform-theme__social-section">
+        <div class="home-platform-theme__social-status">
+          <p class="home-platform-theme__info-text">Social integration requires active connectors. Configure connectors in the Connectors settings.</p>
+        </div>
+      </div>
+    </section>
+
   </div>
 </section>

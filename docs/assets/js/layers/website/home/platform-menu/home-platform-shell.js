@@ -315,6 +315,7 @@ function normalizeHomePlatformSubdestinations(value) {
         fragment: normalizeString(item?.fragment || ''),
         stylesheet: normalizeString(item?.stylesheet || ''),
         module: normalizeString(item?.module || ''),
+        icon: normalizeString(item?.icon || ''),
       };
     })
     .filter(Boolean);
@@ -720,27 +721,40 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
   }
 
   items.forEach((item) => {
-    const button = document.createElement('a');
+    const button = document.createElement('button');
     const isActive = item.id === subdestination;
-    button.href = buildHomePlatformSubdestinationHash(destination, item.id);
+    button.type = 'button';
     button.className = 'home-platform-shell__subnav-item';
-    button.textContent = item.label;
     button.setAttribute('data-home-platform-destination', destination);
     button.setAttribute('data-home-platform-subdestination', item.id);
     if (isActive) {
-      button.setAttribute('aria-current', 'page');
+      button.setAttribute('aria-pressed', 'true');
     }
     button.classList.toggle('is-active', isActive);
+
+    if (item.icon) {
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'home-platform-shell__nav-icon inline-stroke-icon';
+      iconSpan.setAttribute('data-inline-stroke-icon', '');
+      iconSpan.setAttribute('aria-hidden', 'true');
+      const iconImg = document.createElement('img');
+      iconImg.className = 'ui-icon-theme-aware';
+      iconImg.src = item.icon;
+      iconImg.alt = '';
+      iconSpan.appendChild(iconImg);
+      button.appendChild(iconSpan);
+    }
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'home-platform-shell__nav-text';
+    textSpan.textContent = item.label;
+    button.appendChild(textSpan);
+
     const routeSubdestination = (event) => {
       event.preventDefault();
-      event.stopPropagation();
       getHomePlatformShellRoot()?.setAttribute('data-home-platform-last-subnav-intent', item.id);
       void routeHomePlatformSubdestination(destination, item.id);
     };
-    button.addEventListener('focus', routeSubdestination);
-    button.addEventListener('pointerdown', routeSubdestination);
-    button.addEventListener('mousedown', routeSubdestination);
-    button.addEventListener('pointerup', routeSubdestination);
     button.addEventListener('click', routeSubdestination);
     subnavRoot.append(button);
   });

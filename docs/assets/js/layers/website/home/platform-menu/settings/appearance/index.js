@@ -209,8 +209,6 @@ function bindModeOptions(root) {
     option.dataset.homePlatformThemeModeBound = 'true';
 
     option.addEventListener('click', (event) => {
-      event.preventDefault();
-
       const requestedTheme = normalizeTheme(option.getAttribute('data-theme-option'));
       const nextState = createThemeStatePatch({ theme: requestedTheme });
 
@@ -230,8 +228,6 @@ function bindModeOptions(root) {
     option.dataset.homePlatformThemeContrastBound = 'true';
 
     option.addEventListener('click', (event) => {
-      event.preventDefault();
-
       const requestedContrast = normalizeContrast(option.getAttribute('data-theme-contrast-option'));
       const nextState = createThemeStatePatch({ contrast: requestedContrast });
 

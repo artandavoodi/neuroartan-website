@@ -212,6 +212,17 @@
   color:var(--text-color);
 }
 
+.home-platform-theme__dropdown-container[data-toggle-availability="locked"],
+.home-platform-theme__dropdown-label[data-toggle-availability="locked"]{
+  opacity:0.5;
+  pointer-events:none;
+}
+
+.home-platform-theme__dropdown-select[disabled]{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
 .home-platform-theme__dropdown-icon-wrapper{
   position:relative;
   display:inline-flex;

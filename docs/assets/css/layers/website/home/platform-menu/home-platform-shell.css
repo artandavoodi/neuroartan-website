@@ -380,6 +380,7 @@ html[data-theme-effective="light"]{
 
 .home-platform-shell__subrail{
   border-right:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  width:auto;
 }
 
 .home-platform-shell__rail-inner,
@@ -395,10 +396,6 @@ html[data-theme-effective="light"]{
   scrollbar-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent) transparent;
   -ms-overflow-style:none;
   padding:var(--home-platform-shell-rail-padding-top) var(--home-platform-shell-rail-padding-right) var(--home-platform-shell-rail-padding-bottom) var(--home-platform-shell-rail-padding-left);
-}
-
-.home-platform-shell__subrail-inner{
-  padding-left:var(--home-platform-shell-subrail-padding-left);
 }
 
 .home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__rail-inner{
@@ -461,7 +458,30 @@ html[data-theme-effective="light"]{
 /* =============================================================================
 08) PRIMARY NAVIGATION ITEMS
 ============================================================================= */
-.home-platform-shell__nav-item,
+.home-platform-shell__nav-item{
+  -webkit-appearance:none;
+  appearance:none;
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--home-platform-shell-nav-item-gap);
+  width:var(--size-full);
+  min-height:var(--home-platform-shell-nav-item-min-height);
+  padding:var(--home-platform-shell-nav-item-padding);
+  padding-left:var(--spacing-none);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--home-platform-shell-nav-item-radius);
+  background:var(--home-platform-shell-nav-item-bg);
+  color:var(--home-platform-shell-nav-color);
+  opacity:var(--home-platform-shell-nav-opacity);
+  text-align:left;
+  text-decoration:none;
+  transform:none;
+  transition:none;
+}
+
 .home-platform-shell__subnav-item{
   -webkit-appearance:none;
   appearance:none;
@@ -591,13 +611,6 @@ html[data-theme-effective="light"]{
   transform:none;
 }
 
-.home-platform-shell__subnav-item{
-  z-index:2;
-}
-
-.home-platform-shell__subnav-item.is-active{
-  z-index:1;
-}
 
 .home-platform-shell__group + .home-platform-shell__group{
   margin-top:var(--home-platform-shell-group-margin-top);
@@ -621,7 +634,8 @@ html[data-theme-effective="light"]{
   padding-left:var(--spacing-none);
 }
 
-.home-platform-shell__nav-text{
+.home-platform-shell__nav-text,
+.home-platform-shell__subnav-text{
   display:inline-flex;
   align-items:center;
   min-width:var(--spacing-none);
@@ -632,13 +646,6 @@ html[data-theme-effective="light"]{
   letter-spacing:var(--home-platform-shell-nav-text-tracking);
 }
 
-.home-platform-shell__subnav-item{
-  padding-right:var(--home-platform-shell-subnav-padding-x);
-  padding-left:var(--home-platform-shell-subnav-padding-x);
-  min-height:var(--home-platform-shell-subnav-min-height);
-  font-size:var(--home-platform-shell-subnav-size);
-  line-height:var(--home-platform-shell-subnav-line-height);
-}
 
 /* =============================================================================
 09) MIDDLE NAVIGATION LAYER

@@ -1,0 +1,77 @@
+/* =============================================================================
+   NEUROARTAN — DROPDOWN PRIMITIVE
+   Layer: Core / Primitives
+   Purpose: Reusable native select dropdown controls.
+============================================================================= */
+
+/* =============================================================================
+   00) FILE INDEX
+   01) DROPDOWN TOKENS
+   02) DROPDOWN ROOT
+   03) DROPDOWN STATES
+   04) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) DROPDOWN TOKENS
+============================================================================= */
+:root{
+  --ui-dropdown-min-height:var(--control-height-md);
+  --ui-dropdown-padding-x:var(--control-padding-x-md);
+  --ui-dropdown-padding-y:var(--control-padding-y-sm);
+  --ui-dropdown-radius:var(--control-radius);
+  --ui-dropdown-border:transparent;
+  --ui-dropdown-border-hover:transparent;
+  --ui-dropdown-bg:transparent;
+  --ui-dropdown-bg-hover:transparent;
+  --ui-dropdown-color:var(--text-color);
+  --ui-dropdown-color-hover:var(--text-color);
+  --ui-dropdown-font-size:var(--control-font-size);
+  --ui-dropdown-font-weight:var(--control-font-weight);
+  --ui-dropdown-line-height:var(--control-line-height);
+  --ui-dropdown-icon-size:16px;
+  --ui-dropdown-icon-gap:var(--spacing-sm);
+  --ui-dropdown-transition:var(--interaction-transition-control);
+  --ui-dropdown-icon-filter:var(--icon-image-filter);
+}
+
+/* =============================================================================
+   02) DROPDOWN ROOT
+============================================================================= */
+.ui-dropdown{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  min-height:var(--ui-dropdown-min-height);
+  padding:var(--ui-dropdown-padding-y) var(--ui-dropdown-padding-x);
+  border:var(--border-width-hairline) solid var(--ui-dropdown-border);
+  border-radius:var(--ui-dropdown-radius);
+  background:var(--ui-dropdown-bg);
+  color:var(--ui-dropdown-color);
+  font-size:var(--ui-dropdown-font-size);
+  font-weight:var(--ui-dropdown-font-weight);
+  line-height:var(--ui-dropdown-line-height);
+  cursor:var(--interactive-cursor);
+  transition:var(--ui-dropdown-transition);
+  position:relative;
+}
+
+/* =============================================================================
+   03) DROPDOWN STATES
+============================================================================= */
+.ui-dropdown:hover,
+.ui-dropdown:focus-visible{
+  border-color:var(--ui-dropdown-border-hover);
+  background-color:var(--ui-dropdown-bg-hover);
+  color:var(--ui-dropdown-color-hover);
+  outline:none;
+}
+
+.ui-dropdown:focus-visible{
+  box-shadow:none;
+}
+
+/* =============================================================================
+   04) END OF FILE
+============================================================================= */

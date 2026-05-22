@@ -24,6 +24,8 @@ const DESTINATION_SELECTOR = '[data-home-platform-destination-root]';
 const MODE_OPTION_SELECTOR = '[data-home-platform-theme-mode-option]';
 const CONTRAST_OPTION_SELECTOR = '[data-home-platform-theme-contrast-option]';
 const PALETTE_OPTION_SELECTOR = '[data-home-platform-theme-palette-option]';
+const PALETTE_SELECT_SELECTOR = '[data-home-platform-theme-palette-select]';
+const DROPDOWN_TRIGGER_SELECTOR = '[data-home-platform-theme-dropdown-trigger]';
 const TOKEN_INPUT_SELECTOR = '[data-theme-token]';
 const CURSOR_MODE_OPTION_SELECTOR = '[data-home-platform-cursor-mode-option]';
 const CURSOR_COLOR_INPUT_SELECTOR = '[data-home-platform-cursor-color]';
@@ -255,6 +257,22 @@ function bindModeOptions(root) {
     });
   });
 
+  const paletteSelect = root.querySelector(PALETTE_SELECT_SELECTOR);
+  const paletteLabel = root.querySelector('.home-platform-theme__dropdown-label');
+
+  if (paletteSelect instanceof HTMLSelectElement && paletteLabel instanceof HTMLElement) {
+    if (paletteSelect.dataset.homePlatformPaletteSelectBound !== 'true') {
+      paletteSelect.dataset.homePlatformPaletteSelectBound = 'true';
+
+      paletteSelect.addEventListener('change', () => {
+        const selectedOption = paletteSelect.options[paletteSelect.selectedIndex];
+        if (selectedOption) {
+          paletteLabel.textContent = selectedOption.text;
+        }
+      });
+    }
+  }
+
   tokenInputs.forEach((input) => {
     if (!(input instanceof HTMLInputElement)) return;
     if (input.dataset.homePlatformThemeTokenBound === 'true') return;
@@ -309,6 +327,31 @@ function bindModeOptions(root) {
 /* =============================================================================
    06) CURSOR CONTROL BINDING
 ============================================================================= */
+function bindDropdownTrigger(root) {
+  const trigger = root.querySelector(DROPDOWN_TRIGGER_SELECTOR);
+  const select = root.querySelector(PALETTE_SELECT_SELECTOR);
+  const label = root.querySelector('.home-platform-theme__dropdown-label');
+
+  if (!(trigger instanceof HTMLElement) || !(select instanceof HTMLSelectElement)) return;
+  if (trigger.dataset.homePlatformDropdownTriggerBound === 'true') return;
+
+  trigger.dataset.homePlatformDropdownTriggerBound = 'true';
+
+  trigger.addEventListener('click', () => {
+    if (typeof select.showPicker === 'function') {
+      select.showPicker();
+    } else {
+      select.click();
+    }
+  });
+
+  if (select instanceof HTMLSelectElement && label instanceof HTMLElement) {
+    select.addEventListener('change', () => {
+      label.textContent = select.options[select.selectedIndex]?.text || 'Neuroartan';
+    });
+  }
+}
+
 function getCurrentCursorState() {
   const cursorApi = window.NeuroartanCursor;
 
@@ -399,6 +442,9 @@ function syncToggleAvailability(root, theme) {
   const customThemeActive = getThemeDetail(theme).cinematicAllowed;
   const toggles = Array.from(root.querySelectorAll(TOGGLE_SELECTOR));
   const rows = Array.from(root.querySelectorAll('[data-home-platform-theme-toggle-row]'));
+  const paletteSelect = root.querySelector(PALETTE_SELECT_SELECTOR);
+  const paletteContainer = root.querySelector('.home-platform-theme__dropdown-container');
+  const paletteLabel = root.querySelector('.home-platform-theme__dropdown-label');
 
   if (!customThemeActive) {
     setAllHomepageVisualToggles(root, false);
@@ -416,6 +462,20 @@ function syncToggleAvailability(root, theme) {
     if (!(row instanceof HTMLElement)) return;
     row.dataset.toggleAvailability = customThemeActive ? 'active' : 'locked';
   });
+
+  if (paletteSelect instanceof HTMLSelectElement) {
+    paletteSelect.setAttribute('aria-disabled', customThemeActive ? 'false' : 'true');
+    paletteSelect.disabled = !customThemeActive;
+    paletteSelect.dataset.toggleAvailability = customThemeActive ? 'active' : 'locked';
+  }
+
+  if (paletteContainer instanceof HTMLElement) {
+    paletteContainer.dataset.toggleAvailability = customThemeActive ? 'active' : 'locked';
+  }
+
+  if (paletteLabel instanceof HTMLElement) {
+    paletteLabel.dataset.toggleAvailability = customThemeActive ? 'active' : 'locked';
+  }
 }
 
 /* =============================================================================
@@ -610,6 +670,7 @@ export function mountHomePlatformDestination(root) {
   if (!(destinationRoot instanceof HTMLElement)) return;
 
   bindModeOptions(destinationRoot);
+  bindDropdownTrigger(destinationRoot);
   bindCursorControls(destinationRoot);
   bindThemeSync(destinationRoot);
   syncDestinationState(destinationRoot, getCurrentThemeState());

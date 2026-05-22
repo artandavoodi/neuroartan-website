@@ -1,60 +1,59 @@
 <section class="home-platform-destination home-platform-destination--settings-configuration" data-home-platform-destination-root aria-label="Configuration settings destination">
-  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="configuration">
-    <header class="home-platform-settings-category__header">
-      <p class="home-platform-settings-category__eyebrow">Settings</p>
-      <h1 class="home-platform-settings-category__title">Configuration</h1>
-      <p class="home-platform-settings-category__summary">Runtime, environment, worktree, browser use, chat management, and events.</p>
-    </header>
-
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-configuration-runtime">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Runtime</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-configuration-runtime">Provider routing</h2>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="settings-configuration-runtime">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Runtime</p>
+        <h2 class="home-platform-theme__section-title" id="settings-configuration-runtime">Provider routing</h2>
       </div>
-      <form class="home-platform-settings-category__grid" autocomplete="off">
-        <label class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Provider</span>
-          <select class="home-platform-settings-category__select" data-home-platform-runtime-provider>
+      <form class="home-platform-theme__token-grid" autocomplete="off">
+        <label class="home-platform-theme__token-field">
+          <span class="home-platform-theme__token-label">Provider</span>
+          <select class="home-platform-theme__token-input" data-home-platform-runtime-provider>
             <option value="gemini">Google Gemini</option>
             <option value="openai">OpenAI</option>
             <option value="local">Local Runtime</option>
           </select>
         </label>
-        <label class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Model</span>
-          <input class="home-platform-settings-category__input" type="text" autocomplete="off" data-home-platform-runtime-model placeholder="Active model ID">
+        <label class="home-platform-theme__token-field">
+          <span class="home-platform-theme__token-label">Model</span>
+          <input class="home-platform-theme__token-input" type="text" autocomplete="off" data-home-platform-runtime-model placeholder="Active model ID">
         </label>
-        <label class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">API key</span>
-          <input class="home-platform-settings-category__input" type="password" autocomplete="off" data-home-platform-runtime-api-key placeholder="Provider credential">
+        <label class="home-platform-theme__token-field">
+          <span class="home-platform-theme__token-label">API key</span>
+          <input class="home-platform-theme__token-input" type="password" autocomplete="off" data-home-platform-runtime-api-key placeholder="Provider credential">
         </label>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="save-runtime">
-          <span class="home-platform-settings-category__label">Save runtime</span>
-          <span class="home-platform-settings-category__caption">Persist the selected provider and model in the active runtime.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="save-runtime">
+          <span class="home-platform-theme__mode-label">Save runtime</span>
+          <span class="home-platform-theme__mode-caption">Persist the selected provider and model in the active runtime.</span>
         </button>
       </form>
     </section>
 
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-configuration-environment">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Environment</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-configuration-environment">Web runtime boundaries</h2>
+    <section class="home-platform-theme__section" aria-labelledby="settings-configuration-environment">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Environment</p>
+        <h2 class="home-platform-theme__section-title" id="settings-configuration-environment">Web runtime boundaries</h2>
       </div>
-      <div class="home-platform-settings-category__grid">
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Browser Use</span>
-          <span class="home-platform-settings-category__caption">Browser actions route through mounted website services only.</span>
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Browser Use</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Browser actions route through mounted website services only.</span>
         </div>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Worktree</span>
-          <span class="home-platform-settings-category__caption">Repository worktree access belongs to ICOS native Developer Console.</span>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Worktree</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Repository worktree access belongs to ICOS native Developer Console.</span>
         </div>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Events</span>
-          <span class="home-platform-settings-category__caption">Settings controls emit Neuroartan runtime events for owned systems.</span>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Events</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Settings controls emit Neuroartan runtime events for owned systems.</span>
         </div>
       </div>
-      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Configuration settings are loaded.</p>
     </section>
   </div>
 </section>

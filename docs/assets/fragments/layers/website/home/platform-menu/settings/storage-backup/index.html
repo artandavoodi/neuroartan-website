@@ -1,35 +1,32 @@
 <section class="home-platform-destination home-platform-destination--settings-storage-backup" data-home-platform-destination-root aria-label="Storage and backup settings destination">
-  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="storage-backup">
-    <header class="home-platform-settings-category__header">
-      <p class="home-platform-settings-category__eyebrow">Settings</p>
-      <h1 class="home-platform-settings-category__title">Storage &amp; Backup</h1>
-      <p class="home-platform-settings-category__summary">Local data, backup, restore, sync, export, and archive controls.</p>
-    </header>
-
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-storage-local">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Local Data</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-storage-local">Browser storage</h2>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="settings-storage-local">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Local Data</p>
+        <h2 class="home-platform-theme__section-title" id="settings-storage-local">Browser storage</h2>
       </div>
-      <div class="home-platform-settings-category__grid">
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="export-settings">
-          <span class="home-platform-settings-category__label">Export</span>
-          <span class="home-platform-settings-category__caption">Export local Neuroartan settings from this browser.</span>
+      <div class="home-platform-theme__mode-grid">
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="export-settings">
+          <span class="home-platform-theme__mode-label">Export</span>
         </button>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="clear-local-preferences">
-          <span class="home-platform-settings-category__label">Archive / Clear local</span>
-          <span class="home-platform-settings-category__caption">Clear local preference keys after confirmation.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="clear-local-preferences">
+          <span class="home-platform-theme__mode-label">Archive / Clear local</span>
         </button>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Backup</span>
-          <span class="home-platform-settings-category__caption">Cloud backup requires a signed-in account storage owner.</span>
+      </div>
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Backup</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Cloud backup requires a signed-in account storage owner.</span>
         </div>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Restore / Sync</span>
-          <span class="home-platform-settings-category__caption">Restore and sync depend on the account-backed storage runtime.</span>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Restore / Sync</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Restore and sync depend on the account-backed storage runtime.</span>
         </div>
       </div>
-      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Storage settings operate on local browser preference data.</p>
     </section>
   </div>
 </section>

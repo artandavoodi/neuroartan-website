@@ -59,7 +59,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="6.4080901"
-     inkscape:cx="19.038434"
+     inkscape:cx="19.11646"
      inkscape:cy="18.336197"
      inkscape:window-width="1472"
      inkscape:window-height="868"
@@ -70,11 +70,9 @@
   <path
      d="m 7.5,9.7500129 3.792893,3.7928931 a 0.99999998,0.99999998 0 0 0 1.414214,0 L 16.5,9.7500129"
      stroke="currentColor"
-     stroke-width="1.25"
+     stroke-width="0.630296"
      stroke-linecap="round"
      stroke-linejoin="round"
      id="path1"
-     inkscape:path-effect="#path-effect1"
-     inkscape:original-d="M 7.5,9.7500129 12,14.250013 16.5,9.7500129"
-     transform="translate(0,0.20905682)" />
+     transform="matrix(1.9624173,0,0,2.0041912,-11.549008,-11.633255)" />
 </svg>

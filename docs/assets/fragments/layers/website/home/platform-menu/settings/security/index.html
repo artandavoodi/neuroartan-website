@@ -1,46 +1,44 @@
 <section class="home-platform-destination home-platform-destination--settings-security" data-home-platform-destination-root aria-label="Security settings destination">
-  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="security">
-    <header class="home-platform-settings-category__header">
-      <p class="home-platform-settings-category__eyebrow">Settings</p>
-      <h1 class="home-platform-settings-category__title">Security</h1>
-      <p class="home-platform-settings-category__summary">Sign in, two-factor, sessions, linked accounts, trust, and anti-impersonation controls.</p>
-    </header>
-
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-security-account">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Account</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-security-account">Access and trust</h2>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="settings-security-account">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Account</p>
+        <h2 class="home-platform-theme__section-title" id="settings-security-account">Access and trust</h2>
       </div>
-      <div class="home-platform-settings-category__grid">
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="account-entry">
-          <span class="home-platform-settings-category__label">Sign In</span>
-          <span class="home-platform-settings-category__caption">Open the account sign-in/create-account runtime.</span>
+      <div class="home-platform-theme__mode-grid">
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="account-entry">
+          <span class="home-platform-theme__mode-label">Sign In</span>
         </button>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="sign-out">
-          <span class="home-platform-settings-category__label">Sessions</span>
-          <span class="home-platform-settings-category__caption">Request sign-out from the account runtime.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="sign-out">
+          <span class="home-platform-theme__mode-label">Sessions</span>
         </button>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="public-profile">
-          <span class="home-platform-settings-category__label">Linked Accounts</span>
-          <span class="home-platform-settings-category__caption">Open the current account/profile route.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="public-profile">
+          <span class="home-platform-theme__mode-label">Linked Accounts</span>
         </button>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Two-Factor / Trust</span>
-          <span class="home-platform-settings-category__caption">Two-factor and trust controls require account backend ownership.</span>
+      </div>
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Two-Factor / Trust</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Two-factor and trust controls require account backend ownership.</span>
         </div>
       </div>
     </section>
 
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-security-integrity">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Integrity</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-security-integrity">Anti-impersonation</h2>
+    <section class="home-platform-theme__section" aria-labelledby="settings-security-integrity">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Integrity</p>
+        <h2 class="home-platform-theme__section-title" id="settings-security-integrity">Anti-impersonation</h2>
       </div>
-      <div class="home-platform-settings-category__field">
-        <span class="home-platform-settings-category__label">Anti-Impersonation</span>
-        <span class="home-platform-settings-category__caption">Identity protection state is account-bound and must be verified by the authentication runtime.</span>
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Anti-Impersonation</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Identity protection state is account-bound and must be verified by the authentication runtime.</span>
+        </div>
       </div>
-      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Security settings route through the account runtime.</p>
     </section>
   </div>
 </section>

@@ -1,52 +1,45 @@
 <section class="home-platform-destination home-platform-destination--settings-dashboard" data-home-platform-destination-root aria-label="Dashboard settings destination">
-  <div class="home-platform-destination__surface home-platform-settings-category" data-home-platform-destination-surface data-settings-category="dashboard">
-    <header class="home-platform-settings-category__header">
-      <p class="home-platform-settings-category__eyebrow">Settings</p>
-      <h1 class="home-platform-settings-category__title">Dashboard</h1>
-      <p class="home-platform-settings-category__summary">Model dashboard, activity, analytics, health, readiness, and knowledge graph surfaces.</p>
-    </header>
-
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-dashboard-runtime">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Runtime dashboard</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-dashboard-runtime">Operational state</h2>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="settings-dashboard-runtime">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Runtime dashboard</p>
+        <h2 class="home-platform-theme__section-title" id="settings-dashboard-runtime">Operational state</h2>
       </div>
-      <div class="home-platform-settings-category__grid">
-        <a class="home-platform-settings-category__option" href="/pages/models/index.html">
-          <span class="home-platform-settings-category__label">Model Dashboard</span>
-          <span class="home-platform-settings-category__caption">Open the public model surface.</span>
+      <div class="home-platform-theme__mode-grid">
+        <a class="home-platform-theme__mode-option" href="/pages/models/index.html">
+          <span class="home-platform-theme__mode-label">Model Dashboard</span>
         </a>
-        <a class="home-platform-settings-category__option" href="/pages/dashboard/index.html">
-          <span class="home-platform-settings-category__label">Analytics</span>
-          <span class="home-platform-settings-category__caption">Open the dashboard route when available.</span>
+        <a class="home-platform-theme__mode-option" href="/pages/dashboard/index.html">
+          <span class="home-platform-theme__mode-label">Analytics</span>
         </a>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="open:connectors">
-          <span class="home-platform-settings-category__label">Health</span>
-          <span class="home-platform-settings-category__caption">Open connector health checks.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:connectors">
+          <span class="home-platform-theme__mode-label">Health</span>
         </button>
-        <button class="home-platform-settings-category__option" type="button" data-home-platform-settings-action="open:configuration">
-          <span class="home-platform-settings-category__label">Readiness</span>
-          <span class="home-platform-settings-category__caption">Open runtime readiness controls.</span>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:configuration">
+          <span class="home-platform-theme__mode-label">Readiness</span>
         </button>
       </div>
     </section>
 
-    <section class="home-platform-settings-category__section" aria-labelledby="settings-dashboard-knowledge">
-      <div class="home-platform-settings-category__section-header">
-        <p class="home-platform-settings-category__section-eyebrow">Knowledge</p>
-        <h2 class="home-platform-settings-category__section-title" id="settings-dashboard-knowledge">Activity and graph</h2>
+    <section class="home-platform-theme__section" aria-labelledby="settings-dashboard-knowledge">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Knowledge</p>
+        <h2 class="home-platform-theme__section-title" id="settings-dashboard-knowledge">Activity and graph</h2>
       </div>
-      <div class="home-platform-settings-category__grid">
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Activity</span>
-          <span class="home-platform-settings-category__caption">Activity is emitted by runtime events and account-backed sessions.</span>
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Activity</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Activity is emitted by runtime events and account-backed sessions.</span>
         </div>
-        <div class="home-platform-settings-category__field">
-          <span class="home-platform-settings-category__label">Knowledge Graph</span>
-          <span class="home-platform-settings-category__caption">Knowledge graph state is model-owned and routed through the workspace layer.</span>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Knowledge Graph</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Knowledge graph state is model-owned and routed through the workspace layer.</span>
         </div>
       </div>
-      <p class="home-platform-settings-category__status" data-home-platform-settings-status>Dashboard settings are routed to existing public surfaces and runtime boundaries.</p>
     </section>
   </div>
 </section>

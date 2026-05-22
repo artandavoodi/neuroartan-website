@@ -16,17 +16,6 @@
 <section class="home-platform-destination home-platform-destination--settings-appearance" data-home-platform-destination-root aria-label="Appearance destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
     <!-- =============================================================================
-         02) APPEARANCE HEADER
-    ============================================================================= -->
-    <header class="home-platform-theme__header">
-      <p class="home-platform-theme__eyebrow">Settings</p>
-      <h1 class="home-platform-theme__title">Appearance</h1>
-      <p class="home-platform-theme__summary">
-        Set the interface mode, contrast, palette, and custom visual layers from one global system.
-      </p>
-    </header>
-
-    <!-- =============================================================================
          03) APPEARANCE MODE SECTION
     ============================================================================= -->
     <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-mode-title">
@@ -40,10 +29,10 @@
           class="home-platform-theme__mode-option"
           type="button"
           data-home-platform-theme-mode-option
+          data-home-platform-theme-reset-company
           data-theme-option="company"
           aria-pressed="true">
-          <span class="home-platform-theme__mode-label">Company Default</span>
-          <span class="home-platform-theme__mode-caption">Authored Neuroartan baseline</span>
+          <span class="home-platform-theme__mode-label">Default</span>
         </button>
 
         <button
@@ -53,17 +42,6 @@
           data-theme-option="system"
           aria-pressed="false">
           <span class="home-platform-theme__mode-label">System</span>
-          <span class="home-platform-theme__mode-caption">Follows device appearance</span>
-        </button>
-
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-theme-mode-option
-          data-theme-option="custom"
-          aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Custom</span>
-          <span class="home-platform-theme__mode-caption">Palette, contrast, and hex tokens</span>
         </button>
 
         <button
@@ -73,7 +51,6 @@
           data-theme-option="dark"
           aria-pressed="false">
           <span class="home-platform-theme__mode-label">Dark</span>
-          <span class="home-platform-theme__mode-caption">Institutional dark surface</span>
         </button>
 
         <button
@@ -83,7 +60,15 @@
           data-theme-option="light"
           aria-pressed="false">
           <span class="home-platform-theme__mode-label">Light</span>
-          <span class="home-platform-theme__mode-caption">Institutional light surface</span>
+        </button>
+
+        <button
+          class="home-platform-theme__mode-option"
+          type="button"
+          data-home-platform-theme-mode-option
+          data-theme-option="custom"
+          aria-pressed="false">
+          <span class="home-platform-theme__mode-label">Custom</span>
         </button>
       </div>
     </section>
@@ -97,35 +82,41 @@
         <h2 class="home-platform-theme__section-title" id="home-platform-theme-contrast-title">Choose contrast density</h2>
       </div>
 
-      <div class="home-platform-theme__mode-grid" role="group" aria-label="Theme contrast">
+      <div class="ui-radio-list" role="group" aria-label="Theme contrast">
         <button
-          class="home-platform-theme__mode-option"
+          class="ui-radio-list__item"
           type="button"
           data-home-platform-theme-contrast-option
           data-theme-contrast-option="low"
           aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Low</span>
-          <span class="home-platform-theme__mode-caption">Softer borders and controls</span>
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Low</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
 
         <button
-          class="home-platform-theme__mode-option"
+          class="ui-radio-list__item"
           type="button"
           data-home-platform-theme-contrast-option
           data-theme-contrast-option="standard"
           aria-pressed="true">
-          <span class="home-platform-theme__mode-label">Standard</span>
-          <span class="home-platform-theme__mode-caption">Default institutional balance</span>
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Standard</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
 
         <button
-          class="home-platform-theme__mode-option"
+          class="ui-radio-list__item"
           type="button"
           data-home-platform-theme-contrast-option
           data-theme-contrast-option="high"
           aria-pressed="false">
-          <span class="home-platform-theme__mode-label">High</span>
-          <span class="home-platform-theme__mode-caption">Sharper borders and controls</span>
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">High</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
       </div>
     </section>
@@ -139,36 +130,19 @@
         <h2 class="home-platform-theme__section-title" id="home-platform-theme-palette-title">Choose custom palette</h2>
       </div>
 
-      <div class="home-platform-theme__mode-grid" role="group" aria-label="Custom palette">
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-theme-palette-option
-          data-theme-palette-option="neuroartan"
-          aria-pressed="true">
-          <span class="home-platform-theme__mode-label">Neuroartan</span>
-          <span class="home-platform-theme__mode-caption">Default institutional palette</span>
-        </button>
-
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-theme-palette-option
-          data-theme-palette-option="mono"
-          aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Mono</span>
-          <span class="home-platform-theme__mode-caption">Minimal black and white discipline</span>
-        </button>
-
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-theme-palette-option
-          data-theme-palette-option="sovereign"
-          aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Sovereign</span>
-          <span class="home-platform-theme__mode-caption">Reserved institutional accent layer</span>
-        </button>
+      <div class="home-platform-theme__dropdown-container">
+        <span class="home-platform-theme__dropdown-label">Neuroartan</span>
+        <div class="home-platform-theme__dropdown-icon-wrapper">
+          <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+          <select
+            class="ui-dropdown ui-dropdown--icon-only"
+            data-home-platform-theme-palette-select
+            aria-label="Choose custom palette">
+            <option value="neuroartan" selected>Neuroartan</option>
+            <option value="mono">Mono</option>
+            <option value="sovereign">Sovereign</option>
+          </select>
+        </div>
       </div>
     </section>
 
@@ -304,59 +278,6 @@
           </button>
         </div>
       </div>
-    </section>
-
-    <!-- =============================================================================
-         08) CURSOR CONTROLS
-    ============================================================================= -->
-    <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-cursor-title">
-      <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Cursor</p>
-        <h2 class="home-platform-theme__section-title" id="home-platform-theme-cursor-title">Pointer style</h2>
-      </div>
-
-      <div class="home-platform-theme__mode-grid" role="group" aria-label="Cursor mode">
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-cursor-mode-option
-          data-cursor-mode-option="native"
-          aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Default</span>
-          <span class="home-platform-theme__mode-caption">Native browser cursor</span>
-        </button>
-
-        <button
-          class="home-platform-theme__mode-option"
-          type="button"
-          data-home-platform-cursor-mode-option
-          data-cursor-mode-option="custom"
-          aria-pressed="false">
-          <span class="home-platform-theme__mode-label">Circle</span>
-          <span class="home-platform-theme__mode-caption">Neuroartan cursor layer</span>
-        </button>
-      </div>
-
-      <div class="home-platform-theme__token-grid" role="group" aria-label="Cursor color">
-        <div class="home-platform-theme__token-field">
-          <span class="home-platform-theme__token-label">Cursor color</span>
-          <input class="home-platform-theme__token-input na-color-picker" type="color" data-home-platform-cursor-color value="#917c6f" aria-label="Custom cursor color">
-        </div>
-      </div>
-    </section>
-
-    <!-- =============================================================================
-         09) RESET CONTROL
-    ============================================================================= -->
-    <section class="home-platform-theme__section" aria-labelledby="home-platform-theme-reset-title">
-      <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Baseline</p>
-        <h2 class="home-platform-theme__section-title" id="home-platform-theme-reset-title">Restore company design</h2>
-      </div>
-
-      <button class="home-platform-theme__reset-button" type="button" data-home-platform-theme-reset-company>
-        Restore Company Default
-      </button>
     </section>
 
   </div>

@@ -3,15 +3,11 @@
     {
       "id": "home",
       "eyebrow": "Home",
-      "title": "Your ICOS State",
-      "description": "A continuous dashboard canvas for model readiness, continuity, memory, activity, and next-strengthening actions.",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
-          "detail_title": "Your ICOS State",
-          "detail_copy": "A unified dashboard canvas that composes all Home overview modules in one scrollable system surface.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/home/overview-canvas.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/home/00-home-all.css",
           "module": "/assets/js/layers/website/home/platform-menu/home/overview-canvas.js"
@@ -21,15 +17,11 @@
     {
       "id": "continuity",
       "eyebrow": "Continuity",
-      "title": "Continuity",
-      "description": "Continuity surfaces, history, and active route traces belong here in one stable shell destination.",
       "default_subdestination": "continuity-actions",
       "subdestinations": [
         {
           "id": "continuity-actions",
           "label": "Actions",
-          "detail_title": "Continuity Actions",
-          "detail_copy": "History traversal, active route logic, and continuity operating actions.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/continuity-actions.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/continuity-actions.css",
           "module": "/assets/js/layers/website/home/platform-menu/continuity/continuity-actions.js"
@@ -37,8 +29,6 @@
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
-          "detail_title": "Public Surfaces",
-          "detail_copy": "Published continuity, history, and knowledge routes linked from the homepage shell.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/public-surfaces.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/public-surfaces.css",
           "module": "/assets/js/layers/website/home/platform-menu/continuity/public-surfaces.js"
@@ -48,15 +38,11 @@
     {
       "id": "workspace",
       "eyebrow": "Workspace",
-      "title": "Workspace",
-      "description": "Current interaction state, workspace actions, and operating context belong here in one stable shell destination.",
       "default_subdestination": "interaction-state",
       "subdestinations": [
         {
           "id": "interaction-state",
           "label": "Current Interaction",
-          "detail_title": "Current Interaction",
-          "detail_copy": "Live voice mode, route state, and interaction continuity from the homepage surface.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/interaction-state.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/interaction-state.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/interaction-state.js"
@@ -64,8 +50,6 @@
         {
           "id": "model-overview",
           "label": "Model Overview",
-          "detail_title": "Model Overview",
-          "detail_copy": "Canonical model records, owner state, and creation workflow from the Supabase-backed model layer.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-overview.js"
@@ -73,8 +57,6 @@
         {
           "id": "model-create",
           "label": "Create Model",
-          "detail_title": "Create Model",
-          "detail_copy": "Open the canonical model-design and training control surface for profile-linked continuity models.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-create.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-create.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-create.js"
@@ -82,8 +64,6 @@
         {
           "id": "developer-mode",
           "label": "Developer Mode",
-          "detail_title": "Developer Mode",
-          "detail_copy": "Open the governed Codex Sessions layer for provider selection, repository scope, voice/text commands, review, approval, and release traceability.",
           "fragment": "/assets/fragments/layers/website/home/developer-mode/developer-mode-shell.html",
           "stylesheet": "/assets/css/layers/website/home/developer-mode/00-developer-mode-all.css",
           "module": "/assets/js/layers/website/home/developer-mode/developer-mode-shell.js"
@@ -91,8 +71,6 @@
         {
           "id": "model-sources",
           "label": "Sources",
-          "detail_title": "Source Connections",
-          "detail_copy": "Model-owned source authorization and connector readiness.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-sources.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-sources.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-sources.js"
@@ -100,8 +78,6 @@
         {
           "id": "model-training",
           "label": "Training",
-          "detail_title": "Training and Readiness",
-          "detail_copy": "Training, ingestion, provenance, and retrieval readiness states.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-training.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-training.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-training.js"
@@ -109,8 +85,6 @@
         {
           "id": "model-runtime",
           "label": "Runtime",
-          "detail_title": "Runtime and Publication",
-          "detail_copy": "Provider routing, active model state, and publication controls.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-runtime.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-runtime.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-runtime.js"
@@ -118,8 +92,6 @@
         {
           "id": "continuity-actions",
           "label": "Continuity Actions",
-          "detail_title": "Continuity Actions",
-          "detail_copy": "Continue by voice, open continuity history, or move into linked knowledge surfaces.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/continuity-actions.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/continuity-actions.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/continuity-actions.js"
@@ -127,8 +99,6 @@
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
-          "detail_title": "Public Surfaces",
-          "detail_copy": "Homepage-linked public surfaces for continuity, research, and product context.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/public-surfaces.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/public-surfaces.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/public-surfaces.js"
@@ -137,16 +107,12 @@
     },
     {
       "id": "profile",
-      "eyebrow": "Profile Avatar",
-      "title": "Profile, subscription, trust, and account control",
-      "description": "Identity, subscription, verification, and account-control surfaces belong here in one stable shell destination.",
+      "eyebrow": "Profile",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
-          "detail_title": "Profile Overview",
-          "detail_copy": "Avatar, identity, public-route readiness, plan state, and quick trust signals.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/overview.js"
@@ -154,8 +120,6 @@
         {
           "id": "account-control",
           "label": "Account Control",
-          "detail_title": "Account Control",
-          "detail_copy": "Account identity, subscription, owned models, verification, and linked accounts.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/account-control.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/account-control.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/account-control.js"
@@ -163,8 +127,6 @@
         {
           "id": "shortcuts",
           "label": "Shortcuts",
-          "detail_title": "Shortcuts",
-          "detail_copy": "Jump directly into dashboard, settings, and sign-out control from one governed surface.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/shortcuts.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/shortcuts.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/shortcuts.js"
@@ -174,15 +136,11 @@
     {
       "id": "settings",
       "eyebrow": "Settings",
-      "title": "General, appearance, voice, permissions, privacy, and runtime controls",
-      "description": "Website settings mirror the ICOS software settings taxonomy from one stable shell destination.",
       "default_subdestination": "general",
       "subdestinations": [
         {
           "id": "general",
           "label": "General",
-          "detail_title": "General",
-          "detail_copy": "Defaults, startup posture, behavior, shortcuts, and reset controls.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/general/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/general/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/general/index.js"
@@ -190,8 +148,6 @@
         {
           "id": "appearance",
           "label": "Appearance",
-          "detail_title": "Appearance",
-          "detail_copy": "Mode, palette, colors, contrast, motion, display, and shell visual controls.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/appearance/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/appearance/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/appearance/index.js"
@@ -199,8 +155,6 @@
         {
           "id": "voice",
           "label": "Voice",
-          "detail_title": "Voice",
-          "detail_copy": "Input, output, training, language, and wake/hold settings.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/voice/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/voice/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/voice/index.js"
@@ -208,8 +162,6 @@
         {
           "id": "permissions",
           "label": "Permissions",
-          "detail_title": "Permissions",
-          "detail_copy": "Files, microphone, camera, notifications, browser, contacts, and accessibility access.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/permissions/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/permissions/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/permissions/index.js"
@@ -217,8 +169,6 @@
         {
           "id": "privacy",
           "label": "Privacy",
-          "detail_title": "Privacy",
-          "detail_copy": "Retention, export/delete, public/private state, telemetry, and linked sources.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/privacy/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/privacy/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/privacy/index.js"
@@ -226,8 +176,6 @@
         {
           "id": "accessibility",
           "label": "Accessibility",
-          "detail_title": "Accessibility",
-          "detail_copy": "Text, contrast, motion, captions, keyboard, and screen reader settings.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/accessibility/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/accessibility/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/accessibility/index.js"
@@ -235,8 +183,6 @@
         {
           "id": "configuration",
           "label": "Configuration",
-          "detail_title": "Configuration",
-          "detail_copy": "Runtime, environment, worktree, browser use, chat management, and events.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/configuration/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/configuration/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/configuration/index.js"
@@ -244,8 +190,6 @@
         {
           "id": "connectors",
           "label": "Connectors",
-          "detail_title": "Connectors",
-          "detail_copy": "Cloud providers, Local LLM, API keys, models, and health.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/connectors/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/connectors/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/connectors/index.js"
@@ -253,8 +197,6 @@
         {
           "id": "personalization",
           "label": "Personalization",
-          "detail_title": "Personalization",
-          "detail_copy": "Profile, identity, memory, tone, style, and social graph settings.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/personalization/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/personalization/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/personalization/index.js"
@@ -262,8 +204,6 @@
         {
           "id": "dashboard",
           "label": "Dashboard",
-          "detail_title": "Dashboard",
-          "detail_copy": "Model dashboard, activity, analytics, health, readiness, and knowledge graph surfaces.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/dashboard/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/dashboard/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/dashboard/index.js"
@@ -271,8 +211,6 @@
         {
           "id": "storage-backup",
           "label": "Storage & Backup",
-          "detail_title": "Storage & Backup",
-          "detail_copy": "Local data, backup, restore, sync, export, and archive controls.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/storage-backup/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/storage-backup/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/storage-backup/index.js"
@@ -280,8 +218,6 @@
         {
           "id": "security",
           "label": "Security",
-          "detail_title": "Security",
-          "detail_copy": "Sign-in, sessions, linked accounts, trust, two-factor, and anti-impersonation controls.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/security/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/security/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/security/index.js"
@@ -291,15 +227,11 @@
     {
       "id": "messaging",
       "eyebrow": "Messaging",
-      "title": "Messaging",
-      "description": "Messaging and continuity-linked conversations belong in the governed communication layer.",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
-          "detail_title": "Messaging",
-          "detail_copy": "Messaging and continuity-linked conversations will land here as the platform communication layer.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/messaging/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/messaging/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/messaging/overview.js"
@@ -309,15 +241,11 @@
     {
       "id": "notifications",
       "eyebrow": "Notifications",
-      "title": "Notifications",
-      "description": "Trust-sensitive updates, account alerts, and continuity-state notifications belong here.",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
-          "detail_title": "Notifications",
-          "detail_copy": "Verification changes, activity alerts, and platform notifications will resolve here.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/notifications/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/notifications/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/notifications/overview.js"
@@ -327,15 +255,11 @@
     {
       "id": "more",
       "eyebrow": "More",
-      "title": "More",
-      "description": "Institutional and supporting surfaces remain available from the secondary linked items without duplicating the deeper shell architecture.",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
-          "detail_title": "More",
-          "detail_copy": "Institutional, legal, and support surfaces remain grouped here without overloading the primary product navigation.",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/more/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/more/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/more/overview.js"

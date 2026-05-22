@@ -154,10 +154,8 @@
 
 .home-platform-theme__mode-option{
   display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  justify-content:flex-start;
-  gap:var(--home-platform-theme-mode-option-gap);
+  align-items:center;
+  justify-content:center;
   min-height:var(--home-platform-theme-mode-option-min-height);
   width:var(--size-full);
   min-width:var(--spacing-none);
@@ -166,7 +164,7 @@
   border-radius:var(--home-platform-theme-mode-option-radius);
   background:transparent;
   color:var(--text-color);
-  text-align:left;
+  text-align:center;
   transition:var(--interaction-transition-control);
 }
 
@@ -195,6 +193,51 @@
   font-size:var(--home-platform-theme-caption-size);
   line-height:var(--home-platform-theme-caption-line-height);
   opacity:var(--home-platform-theme-caption-opacity);
+}
+
+/* =============================================================================
+   DROPDOWN CONTAINER
+============================================================================= */
+.home-platform-theme__dropdown-container{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
+.home-platform-theme__dropdown-label{
+  font-size:var(--control-font-size);
+  font-weight:var(--control-font-weight);
+  line-height:var(--control-line-height);
+  color:var(--text-color);
+}
+
+.home-platform-theme__dropdown-icon-wrapper{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+}
+
+.home-platform-theme__dropdown-icon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+}
+
+.ui-dropdown--icon-only{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+  z-index:1;
 }
 
 /* =============================================================================
@@ -240,6 +283,19 @@
 }
 
 .home-platform-theme[data-active-theme="custom"] .home-platform-theme__token-grid{
+  opacity:var(--home-platform-theme-token-grid-enabled-opacity);
+  pointer-events:auto;
+}
+
+.home-platform-theme[data-active-theme="company"] .home-platform-theme__section:nth-of-type(3) .home-platform-theme__mode-grid,
+.home-platform-theme[data-active-theme="system"] .home-platform-theme__section:nth-of-type(3) .home-platform-theme__mode-grid,
+.home-platform-theme[data-active-theme="dark"] .home-platform-theme__section:nth-of-type(3) .home-platform-theme__mode-grid,
+.home-platform-theme[data-active-theme="light"] .home-platform-theme__section:nth-of-type(3) .home-platform-theme__mode-grid{
+  opacity:var(--home-platform-theme-token-grid-disabled-opacity);
+  pointer-events:none;
+}
+
+.home-platform-theme[data-active-theme="custom"] .home-platform-theme__section:nth-of-type(3) .home-platform-theme__mode-grid{
   opacity:var(--home-platform-theme-token-grid-enabled-opacity);
   pointer-events:auto;
 }

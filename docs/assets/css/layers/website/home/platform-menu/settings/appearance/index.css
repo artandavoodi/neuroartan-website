@@ -228,8 +228,8 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:24px;
-  height:24px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
 }
 
 .home-platform-theme__dropdown-icon{

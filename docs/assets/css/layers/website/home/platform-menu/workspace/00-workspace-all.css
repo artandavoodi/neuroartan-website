@@ -1,7 +1,8 @@
 /* =============================================================================
    00) FILE INDEX
    01) WORKSPACE AUTHORITY IMPORTS
-   02) END OF FILE
+   02) WORKSPACE ICON SYSTEM
+   03) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -18,5 +19,30 @@
 @import url('./public-surfaces.css');
 
 /* =============================================================================
-   02) END OF FILE
+   02) WORKSPACE ICON SYSTEM
+============================================================================= */
+.home-platform-shell__nav-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  flex:0 0 auto;
+  transform:none;
+  transition:none;
+}
+
+.home-platform-shell__nav-icon img,
+.home-platform-shell__nav-icon svg{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+  object-fit:contain;
+  object-position:center;
+  opacity:var(--nav-institutional-icon-opacity);
+  filter:var(--icon-image-filter);
+}
+
+/* =============================================================================
+   03) END OF FILE
 ============================================================================= */

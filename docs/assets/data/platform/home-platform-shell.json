@@ -17,11 +17,13 @@
     {
       "id": "continuity",
       "eyebrow": "Continuity",
+      "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/continuity/platform-menue-continuity-.svg",
       "default_subdestination": "continuity-actions",
       "subdestinations": [
         {
           "id": "continuity-actions",
           "label": "Actions",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/continuity/platform-menue-continuity-actions.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/continuity-actions.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/continuity-actions.css",
           "module": "/assets/js/layers/website/home/platform-menu/continuity/continuity-actions.js"
@@ -29,6 +31,7 @@
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/continuity/platform-menue-continuity-public-surfaces.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/continuity/public-surfaces.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/continuity/public-surfaces.css",
           "module": "/assets/js/layers/website/home/platform-menu/continuity/public-surfaces.js"
@@ -38,11 +41,13 @@
     {
       "id": "workspace",
       "eyebrow": "Workspace",
+      "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-.svg",
       "default_subdestination": "interaction-state",
       "subdestinations": [
         {
           "id": "interaction-state",
           "label": "Current Interaction",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-current-interaction.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/interaction-state.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/interaction-state.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/interaction-state.js"
@@ -50,6 +55,7 @@
         {
           "id": "model-overview",
           "label": "Model Overview",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-model-overview.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-overview.js"
@@ -57,6 +63,7 @@
         {
           "id": "model-create",
           "label": "Create Model",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-create-model.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-create.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-create.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-create.js"
@@ -64,6 +71,7 @@
         {
           "id": "developer-mode",
           "label": "Developer Mode",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-developer-mode.svg",
           "fragment": "/assets/fragments/layers/website/home/developer-mode/developer-mode-shell.html",
           "stylesheet": "/assets/css/layers/website/home/developer-mode/00-developer-mode-all.css",
           "module": "/assets/js/layers/website/home/developer-mode/developer-mode-shell.js"
@@ -71,6 +79,7 @@
         {
           "id": "model-sources",
           "label": "Sources",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-sources.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-sources.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-sources.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-sources.js"
@@ -78,6 +87,7 @@
         {
           "id": "model-training",
           "label": "Training",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-training.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-training.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-training.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-training.js"
@@ -85,6 +95,7 @@
         {
           "id": "model-runtime",
           "label": "Runtime",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-runtime.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-runtime.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-runtime.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-runtime.js"
@@ -92,6 +103,7 @@
         {
           "id": "continuity-actions",
           "label": "Continuity Actions",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-continuity-actions.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/continuity-actions.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/continuity-actions.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/continuity-actions.js"
@@ -99,6 +111,7 @@
         {
           "id": "public-surfaces",
           "label": "Public Surfaces",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/workspace/platform-menue-workspace-public-surfaces.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/public-surfaces.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/public-surfaces.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/public-surfaces.js"
@@ -108,11 +121,13 @@
     {
       "id": "profile",
       "eyebrow": "Profile",
+      "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-.svg",
       "default_subdestination": "overview",
       "subdestinations": [
         {
           "id": "overview",
           "label": "Overview",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-overview.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/overview.js"
@@ -120,6 +135,7 @@
         {
           "id": "account-control",
           "label": "Account Control",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-account-control.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/account-control.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/account-control.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/account-control.js"
@@ -127,6 +143,7 @@
         {
           "id": "shortcuts",
           "label": "Shortcuts",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-shortcuts.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/shortcuts.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/shortcuts.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/shortcuts.js"
@@ -136,12 +153,13 @@
     {
       "id": "settings",
       "eyebrow": "Settings",
+      "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menu-settings.svg",
       "default_subdestination": "general",
       "subdestinations": [
         {
           "id": "general",
           "label": "General",
-          "icon": "/registry/icons/public/assets/core/system/settings/settings.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-general.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/general/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/general/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/general/index.js"
@@ -149,7 +167,7 @@
         {
           "id": "appearance",
           "label": "Appearance",
-          "icon": "/registry/icons/public/assets/core/system/theme/theme.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-appearance.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/appearance/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/appearance/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/appearance/index.js"
@@ -157,7 +175,7 @@
         {
           "id": "voice",
           "label": "Voice",
-          "icon": "/registry/icons/public/assets/core/actions/start-voice-dictation/start-voice-dictation.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-voice.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/voice/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/voice/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/voice/index.js"
@@ -165,7 +183,7 @@
         {
           "id": "permissions",
           "label": "Permissions",
-          "icon": "/registry/icons/public/assets/core/actions/visibility/public-unlocked.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-permissions.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/permissions/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/permissions/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/permissions/index.js"
@@ -173,7 +191,7 @@
         {
           "id": "privacy",
           "label": "Privacy",
-          "icon": "/registry/icons/public/assets/core/legal/privacy/privacy.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-privacy.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/privacy/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/privacy/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/privacy/index.js"
@@ -181,7 +199,7 @@
         {
           "id": "accessibility",
           "label": "Accessibility",
-          "icon": "/registry/icons/public/assets/core/actions/visibility/public-unlocked.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-accessibility.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/accessibility/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/accessibility/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/accessibility/index.js"
@@ -189,7 +207,7 @@
         {
           "id": "configuration",
           "label": "Configuration",
-          "icon": "/registry/icons/public/assets/core/system/settings/settings.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-configuration.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/configuration/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/configuration/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/configuration/index.js"
@@ -197,7 +215,7 @@
         {
           "id": "connectors",
           "label": "Connectors",
-          "icon": "/registry/icons/public/assets/core/actions/link/link.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-connectors.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/connectors/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/connectors/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/connectors/index.js"
@@ -205,7 +223,7 @@
         {
           "id": "personalization",
           "label": "Personalization",
-          "icon": "/registry/icons/public/assets/core/system/personalization/personalization.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-personalization.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/personalization/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/personalization/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/personalization/index.js"
@@ -213,7 +231,7 @@
         {
           "id": "dashboard",
           "label": "Dashboard",
-          "icon": "/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-dashboard.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/dashboard/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/dashboard/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/dashboard/index.js"
@@ -221,7 +239,7 @@
         {
           "id": "storage-backup",
           "label": "Storage & Backup",
-          "icon": "/registry/icons/public/assets/core/actions/archive/archive.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-storage-backup.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/storage-backup/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/storage-backup/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/storage-backup/index.js"
@@ -229,7 +247,7 @@
         {
           "id": "security",
           "label": "Security",
-          "icon": "/registry/icons/public/assets/core/identity/lock/lock.svg",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-security.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/security/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/security/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/security/index.js"

@@ -305,7 +305,7 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     profile_posts_visible: existingProfile?.profile_posts_visible !== false,
     profile_thoughts_visible: existingProfile?.profile_thoughts_visible !== false,
     avatar_url: normalizeString(existingProfile?.avatar_url || existingProfile?.photo_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture || ''),
-    cover_url: normalizeString(coverFlag?.value || coverFlag?.url || ''),
+    cover_url: normalizeString(existingProfile?.cover_url || coverFlag?.value || coverFlag?.url || ''),
     avatar_storage_path: normalizeString(existingProfile?.avatar_storage_path || ''),
     cover_storage_path: normalizeString(existingProfile?.cover_storage_path || ''),
     profile_image_storage_bucket: normalizeString(existingProfile?.profile_image_storage_bucket || ''),
@@ -431,8 +431,6 @@ async function resolveMediaUploadValues({
   const avatarFile = readUploadableFile(formData, 'avatar_file') || readUploadableFile(values, 'avatar_file');
   const coverFile = readUploadableFile(formData, 'cover_file') || readUploadableFile(values, 'cover_file');
 
-  console.log('[profile-save] Media upload check:', { avatarFile: !!avatarFile, coverFile: !!coverFile });
-
   if (!avatarFile && !coverFile) {
     return values;
   }
@@ -458,11 +456,9 @@ async function resolveMediaUploadValues({
     nextValues.public_avatar_url = upload.publicUrl;
     nextValues.avatar_storage_path = upload.storagePath;
     nextValues.profile_image_storage_bucket = upload.bucket;
-    console.log('[profile-save] Avatar uploaded:', upload.publicUrl);
   }
 
   if (coverFile) {
-    console.log('[profile-save] Uploading cover file...');
     const upload = await uploadProfileImage({
       file: coverFile,
       user,
@@ -478,7 +474,6 @@ async function resolveMediaUploadValues({
       'profile_cover_storage_path',
       upload.storagePath
     );
-    console.log('[profile-save] Cover uploaded:', upload.publicUrl);
   }
 
   return nextValues;
@@ -571,9 +566,10 @@ function buildProfileRoutePayload(payload = {}, normalizedUsername = '', user = 
    09) SAVE EXECUTION
 ============================================================================= */
 export async function persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase = getSupabaseClient()) {
+  const normalizedScope = normalizeString(scope || 'identity') || 'identity';
   const normalizedUsername = await ensureSupabaseUsernameAvailability(values, existingProfile, user, supabase);
 
-  if (scope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
+  if (normalizedScope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
     const error = new Error('USERNAME_REQUIRED');
     error.code = 'USERNAME_REQUIRED';
     throw error;
@@ -620,12 +616,19 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
   const supabasePayload = {
     auth_user_id: user.id || user.uid,
     display_name: payload.display_name || '',
-    avatar_url: payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
-    cover_url: payload.cover_url || currentProfile?.cover_url || '',
+    avatar_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'avatar_url') && values.avatar_url === ''
+      ? ''
+      : (payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    cover_url: normalizedScope === 'media' && values.cover_url === ''
+      ? ''
+      : (payload.cover_url || currentProfile?.cover_url || ''),
     bio: payload.public_summary || currentProfile?.bio || '',
     profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
     ...buildProfileVisibilityPayload(payload, values),
     ...buildProfileRoutePayload(payload, normalizedUsername, user),
+    public_avatar_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'public_avatar_url') && values.public_avatar_url === ''
+      ? ''
+      : (payload.public_avatar_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
     public_summary: payload.public_summary || '',
     public_primary_link: payload.public_primary_link || '',
     public_bio: payload.public_bio || payload.public_summary || '',
@@ -633,16 +636,18 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     public_links: payload.public_links || [],
     public_modules: payload.public_modules || [],
     public_feature_flags: payload.public_feature_flags || [],
-    photo_url: payload.photo_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
-    avatar_storage_path: Object.prototype.hasOwnProperty.call(values, 'avatar_storage_path')
+    photo_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'photo_url') && values.photo_url === ''
+      ? ''
+      : (payload.photo_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    avatar_storage_path: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'avatar_storage_path'))
       ? values.avatar_storage_path
-      : (payload.avatar_storage_path || currentProfile?.avatar_storage_path || ''),
-    cover_storage_path: Object.prototype.hasOwnProperty.call(values, 'cover_storage_path')
+      : (values.avatar_storage_path || payload.avatar_storage_path || currentProfile?.avatar_storage_path || ''),
+    cover_storage_path: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'cover_storage_path'))
       ? values.cover_storage_path
-      : (payload.cover_storage_path || currentProfile?.cover_storage_path || ''),
-    profile_image_storage_bucket: Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket')
+      : (values.cover_storage_path || payload.cover_storage_path || currentProfile?.cover_storage_path || ''),
+    profile_image_storage_bucket: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket'))
       ? values.profile_image_storage_bucket
-      : (payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
+      : (values.profile_image_storage_bucket || payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
     email: payload.email || normalizeEmail(user.email || ''),
     first_name: payload.first_name || '',
     last_name: payload.last_name || '',
@@ -773,12 +778,10 @@ export async function savePrivateProfileScope({
   }
 
   const resolvedPolicy = policy || await loadProfileIdentityPolicy();
-  const scopedValues = normalizedScope === 'media'
-    ? {
-        ...getExistingProfileSeed(existingProfile, user),
-        ...values
-      }
-    : values;
+  const scopedValues = {
+    ...getExistingProfileSeed(existingProfile, user),
+    ...values
+  };
   const resolvedValues = await resolveMediaUploadValues({
     scope: normalizedScope,
     values: scopedValues,

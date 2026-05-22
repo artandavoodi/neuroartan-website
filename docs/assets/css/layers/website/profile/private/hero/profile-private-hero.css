@@ -137,6 +137,10 @@
   pointer-events:none;
 }
 
+.profile-private-hero__cover[data-profile-cover-image="true"]::before{
+  opacity:0;
+}
+
 .profile-private-hero__cover::after{
   content:"";
   position:absolute;

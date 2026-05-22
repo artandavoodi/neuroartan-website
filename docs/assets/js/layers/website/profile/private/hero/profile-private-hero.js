@@ -210,10 +210,13 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
 
   const cover = root.querySelector('[data-profile-cover]');
   if (cover instanceof HTMLElement) {
-    const coverUrl = state.coverDisplayUrl || state.coverUrl || '';
+    const selectedCoverUrl = state.coverUrl || '';
+    const coverUrl = state.coverDisplayUrl || selectedCoverUrl || '';
     if (coverUrl) {
-      cover.style.backgroundImage = `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)), url("${coverUrl}")`;
-      cover.dataset.profileCoverImage = state.coverUrl ? 'true' : 'default';
+      cover.style.backgroundImage = selectedCoverUrl
+        ? `url("${coverUrl}")`
+        : `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)), url("${coverUrl}")`;
+      cover.dataset.profileCoverImage = selectedCoverUrl ? 'true' : 'default';
     } else {
       cover.style.removeProperty('background-image');
       cover.dataset.profileCoverImage = 'false';

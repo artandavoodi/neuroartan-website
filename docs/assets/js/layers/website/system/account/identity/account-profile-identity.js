@@ -575,9 +575,15 @@ export async function reserveSupabaseUsernameProfile({
     email: payload.email,
     avatar_url: payload.avatar_url,
     photo_url: payload.photo_url,
-    avatar_storage_path: values.avatar_storage_path || existingProfile?.avatar_storage_path || '',
-    cover_storage_path: values.cover_storage_path || existingProfile?.cover_storage_path || '',
-    profile_image_storage_bucket: values.profile_image_storage_bucket || existingProfile?.profile_image_storage_bucket || '',
+    avatar_storage_path: Object.prototype.hasOwnProperty.call(values, 'avatar_storage_path')
+      ? values.avatar_storage_path
+      : (existingProfile?.avatar_storage_path || ''),
+    cover_storage_path: Object.prototype.hasOwnProperty.call(values, 'cover_storage_path')
+      ? values.cover_storage_path
+      : (existingProfile?.cover_storage_path || ''),
+    profile_image_storage_bucket: Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket')
+      ? values.profile_image_storage_bucket
+      : (existingProfile?.profile_image_storage_bucket || ''),
     date_of_birth: payload.date_of_birth || null,
     birth_date: payload.birth_date || null,
     gender: payload.gender,
@@ -1576,17 +1582,26 @@ export function buildProfilePayload({
   );
   const authProviderPrimary = normalizeString(values.auth_provider || existingProfile?.auth_provider_primary || '');
   const authProviderLinks = resolveAuthProviderLinks(user, existingProfile, authProviderPrimary);
-  const avatarUrl = normalizeString(
-    values.avatar_url
-    || values.photo_url
-    || values.public_avatar_url
-    || user?.photoURL
-    || userMetadata.avatar_url
-    || userMetadata.picture
-    || existingProfile?.avatar_url
-    || existingProfile?.photo_url
-    || ''
-  );
+  const avatarResetRequested =
+    Object.prototype.hasOwnProperty.call(values, 'avatar_url')
+    && Object.prototype.hasOwnProperty.call(values, 'photo_url')
+    && Object.prototype.hasOwnProperty.call(values, 'public_avatar_url')
+    && !normalizeString(values.avatar_url)
+    && !normalizeString(values.photo_url)
+    && !normalizeString(values.public_avatar_url);
+  const avatarUrl = avatarResetRequested
+    ? ''
+    : normalizeString(
+      values.avatar_url
+      || values.photo_url
+      || values.public_avatar_url
+      || user?.photoURL
+      || userMetadata.avatar_url
+      || userMetadata.picture
+      || existingProfile?.avatar_url
+      || existingProfile?.photo_url
+      || ''
+    );
   const coverUrl = normalizeString(
     values.cover_url
     || existingProfile?.cover_url
@@ -1696,7 +1711,9 @@ export function buildProfilePayload({
     date_of_birth: values.date_of_birth,
     gender: normalizeGenderValue(values.gender || existingProfile?.gender || ''),
     auth_provider: authProviderPrimary,
-    avatar_state: normalizeString(values.avatar_state || existingProfile?.avatar_state || (avatarUrl ? 'active' : 'empty')),
+    avatar_state: avatarResetRequested
+      ? 'empty'
+      : normalizeString(values.avatar_state || existingProfile?.avatar_state || (avatarUrl ? 'active' : 'empty')),
     avatar_url: avatarUrl,
     photo_url: avatarUrl,
     cover_url: coverUrl,

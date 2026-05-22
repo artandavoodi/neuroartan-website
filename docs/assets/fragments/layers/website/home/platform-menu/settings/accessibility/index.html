@@ -1,19 +1,101 @@
 <section class="home-platform-destination home-platform-destination--settings-accessibility" data-home-platform-destination-root aria-label="Accessibility settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" aria-labelledby="settings-accessibility-readability">
+    <section class="home-platform-theme__section" aria-labelledby="settings-accessibility-typography">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Readability</p>
-        <h2 class="home-platform-theme__section-title" id="settings-accessibility-readability">Contrast and text</h2>
+        <p class="home-platform-theme__section-eyebrow">Text</p>
+        <h2 class="home-platform-theme__section-title" id="settings-accessibility-typography">Typography</h2>
       </div>
-      <div class="home-platform-theme__mode-grid">
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="contrast-high">
-          <span class="home-platform-theme__mode-label">High contrast</span>
+      <div class="ui-radio-list" role="group" aria-label="Typography size">
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-typography-option
+          data-typography-option="small"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Small</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="contrast-standard">
-          <span class="home-platform-theme__mode-label">Standard contrast</span>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-typography-option
+          data-typography-option="medium"
+          aria-pressed="true">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Medium</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="open:appearance">
-          <span class="home-platform-theme__mode-label">Typography and density</span>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-typography-option
+          data-typography-option="large"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Large</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
+        </button>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-typography-option
+          data-typography-option="extra-large"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Extra large</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="settings-accessibility-density">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Spacing</p>
+        <h2 class="home-platform-theme__section-title" id="settings-accessibility-density">Density</h2>
+      </div>
+      <div class="ui-radio-list" role="group" aria-label="Interface density">
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-density-option
+          data-density-option="compact"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Compact</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
+        </button>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-density-option
+          data-density-option="standard"
+          aria-pressed="true">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Standard</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
+        </button>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-density-option
+          data-density-option="comfortable"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Comfortable</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
       </div>
     </section>
@@ -23,21 +105,71 @@
         <p class="home-platform-theme__section-eyebrow">Motion</p>
         <h2 class="home-platform-theme__section-title" id="settings-accessibility-motion">Interface motion</h2>
       </div>
-      <div class="home-platform-theme__mode-grid">
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="motion-reduced">
-          <span class="home-platform-theme__mode-label">Reduce motion</span>
+      <div class="ui-radio-list" role="group" aria-label="Motion preference">
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-motion-option
+          data-motion-option="reduced"
+          aria-pressed="false">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Reduced motion</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="motion-enabled">
-          <span class="home-platform-theme__mode-label">Enable motion</span>
+
+        <button
+          class="ui-radio-list__item"
+          type="button"
+          data-accessibility-motion-option
+          data-motion-option="enabled"
+          aria-pressed="true">
+          <span class="ui-radio-list__content">
+            <span class="ui-radio-list__label">Enabled motion</span>
+          </span>
+          <span class="ui-radio-list__indicator"></span>
         </button>
       </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="settings-accessibility-screen-reader">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Assistive</p>
+        <h2 class="home-platform-theme__section-title" id="settings-accessibility-screen-reader">Screen reader</h2>
+      </div>
       <div class="home-platform-theme__toggle-list">
-        <div class="home-platform-theme__toggle-row">
+        <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Captions / Screen reader</p>
+            <p class="home-platform-theme__toggle-title">Enhanced ARIA announcements</p>
+            <p class="home-platform-theme__toggle-caption">Provide additional context for screen reader users during interactions.</p>
           </div>
-          <span class="home-platform-theme__mode-caption">Semantic HTML labels are preserved; media captions require source media ownership.</span>
+          <button
+            class="na-toggle"
+            type="button"
+            role="switch"
+            aria-checked="false"
+            data-accessibility-aria-toggle
+            data-na-toggle>
+            <span class="na-toggle__track" aria-hidden="true">
+              <span class="na-toggle__thumb"></span>
+            </span>
+          </button>
         </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="settings-accessibility-reset">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Reset</p>
+        <h2 class="home-platform-theme__section-title" id="settings-accessibility-reset">Restore defaults</h2>
+      </div>
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-accessibility-reset>
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/restore/restore.svg" alt="" width="16" height="16">
+            Restore to default settings
+          </span>
+        </button>
       </div>
     </section>
   </div>

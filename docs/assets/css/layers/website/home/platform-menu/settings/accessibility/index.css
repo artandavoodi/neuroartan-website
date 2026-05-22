@@ -1,3 +1,75 @@
 @import url('../appearance/index.css');
 
 .home-platform-destination--settings-accessibility{width:var(--size-full);}
+
+.home-platform-theme__action-button {
+  width: auto;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--text-color);
+  font-size: var(--body-1-size);
+  font-weight: var(--body-1-weight);
+  cursor: pointer;
+  text-align: left;
+}
+
+.home-platform-theme__action-button-label {
+  display: block;
+}
+
+html[data-accessibility-typography="small"] {
+  font-size: 14px;
+}
+
+html[data-accessibility-typography="medium"] {
+  font-size: 16px;
+}
+
+html[data-accessibility-typography="large"] {
+  font-size: 18px;
+}
+
+html[data-accessibility-typography="extra-large"] {
+  font-size: 20px;
+}
+
+html[data-accessibility-density="compact"] {
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+  --spacing-3xl: 2.5rem;
+  --spacing-4xl: 3rem;
+}
+
+html[data-accessibility-density="standard"] {
+  --spacing-xs: 0.35rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1.1rem;
+  --spacing-lg: 1.6rem;
+  --spacing-xl: 2.4rem;
+  --spacing-2xl: 3.6rem;
+  --spacing-3xl: 4.5rem;
+  --spacing-4xl: 6rem;
+}
+
+html[data-accessibility-density="comfortable"] {
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  --spacing-2xl: 4.5rem;
+  --spacing-3xl: 5.5rem;
+  --spacing-4xl: 7rem;
+}
+
+html[data-accessibility-motion="reduced"] * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}

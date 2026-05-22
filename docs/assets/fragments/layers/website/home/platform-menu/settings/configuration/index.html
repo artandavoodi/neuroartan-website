@@ -3,56 +3,66 @@
     <section class="home-platform-theme__section" aria-labelledby="settings-configuration-runtime">
       <div class="home-platform-theme__section-header">
         <p class="home-platform-theme__section-eyebrow">Runtime</p>
-        <h2 class="home-platform-theme__section-title" id="settings-configuration-runtime">Provider routing</h2>
+        <h2 class="home-platform-theme__section-title" id="settings-configuration-runtime">Provider configuration</h2>
       </div>
-      <form class="home-platform-theme__token-grid" autocomplete="off">
-        <label class="home-platform-theme__token-field">
-          <span class="home-platform-theme__token-label">Provider</span>
-          <select class="home-platform-theme__token-input" data-home-platform-runtime-provider>
-            <option value="gemini">Google Gemini</option>
-            <option value="openai">OpenAI</option>
-            <option value="local">Local Runtime</option>
-          </select>
-        </label>
-        <label class="home-platform-theme__token-field">
-          <span class="home-platform-theme__token-label">Model</span>
-          <input class="home-platform-theme__token-input" type="text" autocomplete="off" data-home-platform-runtime-model placeholder="Active model ID">
-        </label>
+      <div class="home-platform-theme__dropdown-container">
+        <span class="home-platform-theme__dropdown-static-label">Provider</span>
+        <div class="home-platform-theme__dropdown-right">
+          <span class="home-platform-theme__dropdown-label" data-home-platform-provider-label>Provider</span>
+          <div class="home-platform-theme__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select
+              class="ui-dropdown ui-dropdown--icon-only"
+              data-home-platform-runtime-provider
+              aria-label="Select provider">
+              <option value="gemini" selected>Google Gemini</option>
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="local">Local Runtime</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="home-platform-theme__dropdown-container" data-home-platform-model-container>
+        <span class="home-platform-theme__dropdown-static-label">Model</span>
+        <div class="home-platform-theme__dropdown-right">
+          <span class="home-platform-theme__dropdown-label" data-home-platform-model-label>Model</span>
+          <div class="home-platform-theme__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select
+              class="ui-dropdown ui-dropdown--icon-only"
+              data-home-platform-runtime-model
+              aria-label="Select model">
+              <option value="" disabled selected>Select a model</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="home-platform-theme__token-grid home-platform-theme__token-grid--hidden" data-home-platform-cloud-fields>
         <label class="home-platform-theme__token-field">
           <span class="home-platform-theme__token-label">API key</span>
-          <input class="home-platform-theme__token-input" type="password" autocomplete="off" data-home-platform-runtime-api-key placeholder="Provider credential">
+          <input class="home-platform-theme__token-input" type="text" autocomplete="off" data-home-platform-runtime-api-key placeholder="Provider credential">
         </label>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="save-runtime">
-          <span class="home-platform-theme__mode-label">Save runtime</span>
-          <span class="home-platform-theme__mode-caption">Persist the selected provider and model in the active runtime.</span>
-        </button>
-      </form>
-    </section>
-
-    <section class="home-platform-theme__section" aria-labelledby="settings-configuration-environment">
-      <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Environment</p>
-        <h2 class="home-platform-theme__section-title" id="settings-configuration-environment">Web runtime boundaries</h2>
+      </div>
+      <div class="home-platform-theme__token-grid home-platform-theme__token-grid--hidden" data-home-platform-local-fields>
+        <label class="home-platform-theme__token-field">
+          <span class="home-platform-theme__token-label">Server URL</span>
+          <input class="home-platform-theme__token-input" type="text" autocomplete="off" data-home-platform-runtime-server-url placeholder="http://localhost:1234/v1">
+        </label>
       </div>
       <div class="home-platform-theme__toggle-list">
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Browser Use</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Browser actions route through mounted website services only.</span>
-        </div>
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Worktree</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Repository worktree access belongs to ICOS native Developer Console.</span>
-        </div>
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Events</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Settings controls emit Neuroartan runtime events for owned systems.</span>
-        </div>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="scan-local-models" data-home-platform-local-only hidden>
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/scan/scan.svg" alt="" width="16" height="16">
+            Scan local models
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="save-runtime">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="" width="16" height="16">
+            Save runtime configuration
+          </span>
+        </button>
       </div>
     </section>
   </div>

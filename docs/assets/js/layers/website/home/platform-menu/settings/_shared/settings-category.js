@@ -12,6 +12,7 @@ const SETTINGS_STATUS_SELECTOR = '[data-home-platform-settings-status]';
 const RUNTIME_PROVIDER_SELECTOR = '[data-home-platform-runtime-provider]';
 const RUNTIME_MODEL_SELECTOR = '[data-home-platform-runtime-model]';
 const RUNTIME_API_KEY_SELECTOR = '[data-home-platform-runtime-api-key]';
+const RUNTIME_SERVER_URL_SELECTOR = '[data-home-platform-runtime-server-url]';
 
 function emit(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
@@ -146,18 +147,23 @@ function syncRuntimeProviderFields(root) {
   const providerInput = root.querySelector(RUNTIME_PROVIDER_SELECTOR);
   const modelInput = root.querySelector(RUNTIME_MODEL_SELECTOR);
   const apiKeyInput = root.querySelector(RUNTIME_API_KEY_SELECTOR);
+  const serverUrlInput = root.querySelector(RUNTIME_SERVER_URL_SELECTOR);
   const state = getRuntimeProviderState();
 
   if (providerInput instanceof HTMLSelectElement) {
     providerInput.value = state.activeProvider || 'gemini';
   }
 
-  if (modelInput instanceof HTMLInputElement) {
+  if (modelInput instanceof HTMLSelectElement || modelInput instanceof HTMLInputElement) {
     modelInput.value = state.activeModel || '';
   }
 
   if (apiKeyInput instanceof HTMLInputElement) {
     apiKeyInput.value = window.localStorage.getItem(`neuroartan-provider-${state.activeProvider || 'gemini'}-key`) || '';
+  }
+
+  if (serverUrlInput instanceof HTMLInputElement) {
+    serverUrlInput.value = state.serverUrl || 'http://localhost:1234/v1';
   }
 }
 
@@ -165,6 +171,7 @@ function bindRuntimeProviderFields(root) {
   const providerInput = root.querySelector(RUNTIME_PROVIDER_SELECTOR);
   const modelInput = root.querySelector(RUNTIME_MODEL_SELECTOR);
   const apiKeyInput = root.querySelector(RUNTIME_API_KEY_SELECTOR);
+  const serverUrlInput = root.querySelector(RUNTIME_SERVER_URL_SELECTOR);
 
   if (providerInput instanceof HTMLSelectElement && providerInput.dataset.settingsRuntimeBound !== 'true') {
     providerInput.dataset.settingsRuntimeBound = 'true';
@@ -175,7 +182,7 @@ function bindRuntimeProviderFields(root) {
     });
   }
 
-  if (modelInput instanceof HTMLInputElement && modelInput.dataset.settingsRuntimeBound !== 'true') {
+  if (modelInput instanceof HTMLSelectElement && modelInput.dataset.settingsRuntimeBound !== 'true') {
     modelInput.dataset.settingsRuntimeBound = 'true';
     modelInput.addEventListener('change', () => {
       setRuntimeProviderState({ activeModel: modelInput.value.trim() });
@@ -189,6 +196,14 @@ function bindRuntimeProviderFields(root) {
       const provider = providerInput instanceof HTMLSelectElement ? providerInput.value : getRuntimeProviderState().activeProvider || 'gemini';
       window.localStorage.setItem(`neuroartan-provider-${provider}-key`, apiKeyInput.value.trim());
       setStatus(root, `${provider} credential saved in local browser storage.`, 'ok');
+    });
+  }
+
+  if (serverUrlInput instanceof HTMLInputElement && serverUrlInput.dataset.settingsRuntimeBound !== 'true') {
+    serverUrlInput.dataset.settingsRuntimeBound = 'true';
+    serverUrlInput.addEventListener('change', () => {
+      setRuntimeProviderState({ serverUrl: serverUrlInput.value.trim() });
+      setStatus(root, `Server URL saved: ${serverUrlInput.value.trim() || 'not set'}.`, 'ok');
     });
   }
 }

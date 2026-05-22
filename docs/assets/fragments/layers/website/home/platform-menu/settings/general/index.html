@@ -2,8 +2,8 @@
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
     <section class="home-platform-theme__section" aria-labelledby="settings-general-defaults">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Defaults</p>
-        <h2 class="home-platform-theme__section-title" id="settings-general-defaults">Runtime summary</h2>
+        <p class="home-platform-theme__section-eyebrow">Navigation</p>
+        <h2 class="home-platform-theme__section-title" id="settings-general-defaults">Settings shortcuts</h2>
       </div>
       <div class="home-platform-theme__shortcut-list">
         <button class="home-platform-theme__shortcut-item" type="button" data-home-platform-settings-action="open:appearance">
@@ -27,26 +27,22 @@
 
     <section class="home-platform-theme__section" aria-labelledby="settings-general-behavior">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Shell controls</p>
+        <p class="home-platform-theme__section-eyebrow">Runtime</p>
         <h2 class="home-platform-theme__section-title" id="settings-general-behavior">Runtime controls</h2>
       </div>
-      <div class="home-platform-theme__action-list">
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Reset menu rail</p>
-          </div>
-          <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="reset-rail">
-            <span class="home-platform-theme__action-label">Restore</span>
-          </button>
-        </div>
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Reload runtime</p>
-          </div>
-          <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="reload-page">
-            <span class="home-platform-theme__action-label">Reload</span>
-          </button>
-        </div>
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="reset-rail">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/reset/reset.svg" alt="" width="16" height="16">
+            Reset menu rail
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="reload-page">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/refresh/refresh.svg" alt="" width="16" height="16">
+            Reload runtime
+          </span>
+        </button>
       </div>
     </section>
   </div>

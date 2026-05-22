@@ -211,8 +211,42 @@ import {
       return '';
     }
 
+    const supabase = getSupabaseClient();
+
+    if (supabase?.rpc) {
+      const rpcNames = [
+        'resolve_login_email',
+        'resolve_profile_login_email',
+        'resolve_username_login_email'
+      ];
+
+      for (const rpcName of rpcNames) {
+        try {
+          const { data, error } = await supabase.rpc(rpcName, {
+            login_identity: normalizedIdentity
+          });
+
+          if (error) {
+            if (isSupabaseRelationMissingError(error)) continue;
+            throw error;
+          }
+
+          const email = normalizeEmail(
+            typeof data === 'string'
+              ? data
+              : data?.email || data?.login_email || data?.resolved_email || ''
+          );
+
+          if (email) return email;
+        } catch (error) {
+          if (isSupabaseRelationMissingError(error)) continue;
+          throw error;
+        }
+      }
+    }
+
     const profile = await getSupabaseProfileByUsername({
-      supabase: getSupabaseClient(),
+      supabase,
       username: normalizedIdentity
     });
 
@@ -222,8 +256,15 @@ import {
   function isSupabaseRelationMissingError(error) {
     const code = normalizeString(error?.code || '').toUpperCase();
     const message = normalizeString(error?.message || '').toLowerCase();
+    const details = normalizeString(error?.details || '').toLowerCase();
 
-    return code === '42P01' || message.includes('does not exist');
+    return (
+      code === '42P01'
+      || code === 'PGRST202'
+      || message.includes('does not exist')
+      || message.includes('could not find the function')
+      || details.includes('could not find the function')
+    );
   }
 
   async function assertSupabaseUsernameAvailable(values, existingProfile, user) {
@@ -407,7 +448,9 @@ import {
       ? 'data-account-phone-auth-submit-status'
       : selector.includes('email-auth')
         ? 'data-account-email-auth-status'
-        : 'data-account-sign-in-submit-status';
+        : selector.includes('forgot-password')
+          ? 'data-account-forgot-password-submit-status'
+          : 'data-account-sign-in-submit-status';
 
     node.setAttribute(statusAttribute, state || 'idle');
   }
@@ -426,6 +469,14 @@ import {
 
   function emitEmailAuthStatus(state, message) {
     setInlineStatus('[data-account-email-auth-status]', state, message);
+  }
+
+  function clearForgotPasswordStatus() {
+    setInlineStatus('[data-account-forgot-password-submit-status]', 'idle', '');
+  }
+
+  function emitForgotPasswordStatus(state, message) {
+    setInlineStatus('[data-account-forgot-password-submit-status]', state, message);
   }
 
   function clearPhoneAuthStatus() {
@@ -787,12 +838,6 @@ import {
 
   function getMissingProfileFields(profile) {
     if (!profile) return REQUIRED_PROFILE_FIELDS.slice();
-
-    if (Array.isArray(profile.missing_required_fields)) {
-      return profile.missing_required_fields
-        .map((field) => normalizeString(field))
-        .filter(Boolean);
-    }
 
     return REQUIRED_PROFILE_FIELDS.filter((field) => {
       switch (field) {
@@ -1411,25 +1456,36 @@ import {
 
   async function handleForgotPasswordSubmit(detail = {}) {
     const form = document.querySelector('[data-account-forgot-password-form="true"]');
-    const emailField = form instanceof HTMLFormElement
+    const identityField = form instanceof HTMLFormElement
       ? getFieldFromForm(form, '#account-forgot-password-email')
       : null;
-    const email = normalizeEmail(detail.email || emailField?.value || '');
+    const identity = normalizeString(detail.identity || detail.email || identityField?.value || '');
 
     if (!(form instanceof HTMLFormElement)) return;
 
     clearFormErrors(form);
+    clearForgotPasswordStatus();
 
-    if (!email) {
-      setFieldError(emailField, 'Enter the email address for your account.');
+    if (!identity) {
+      emitForgotPasswordStatus('error', 'Enter your email or username.');
+      setFieldError(identityField, 'Enter your email or username.');
       return;
     }
 
     setFormBusy(form, true);
+    emitForgotPasswordStatus('saving', 'Preparing reset link...');
 
     try {
       const supabase = await waitForSupabaseClient();
       if (supabase) {
+        const email = await resolveEmailIdentity(identity);
+
+        if (!email) {
+          emitForgotPasswordStatus('error', 'Use your email address or an existing username.');
+          setFieldError(identityField, 'Use your email address or an existing username.');
+          return;
+        }
+
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password.html`
         });
@@ -1439,6 +1495,7 @@ import {
         }
 
         form.reset();
+        emitForgotPasswordStatus('success', 'Reset link sent. Open your email to update your password.');
         return;
       }
 
@@ -1446,7 +1503,8 @@ import {
     } catch (error) {
       const message = mapAuthError(error, 'Unable to send a reset link right now.');
       if (message) {
-        setFieldError(emailField, message);
+        emitForgotPasswordStatus('error', message);
+        setFieldError(identityField, message);
       }
       console.error('Forgot password error:', error);
     } finally {

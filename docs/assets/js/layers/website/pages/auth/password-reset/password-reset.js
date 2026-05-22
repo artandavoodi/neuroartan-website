@@ -62,6 +62,35 @@ function clearHashTokens() {
   window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}`);
 }
 
+function getRecoveryHashTokens() {
+  const hash = window.location.hash.startsWith('#')
+    ? window.location.hash.slice(1)
+    : window.location.hash;
+  const params = new URLSearchParams(hash);
+  const accessToken = normalizeString(params.get('access_token') || '');
+  const refreshToken = normalizeString(params.get('refresh_token') || '');
+
+  if (!accessToken || !refreshToken) return null;
+
+  return {
+    accessToken,
+    refreshToken
+  };
+}
+
+function getRecoveryCode() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeString(params.get('code') || '');
+}
+
+function clearRecoveryUrlTokens() {
+  const params = new URLSearchParams(window.location.search);
+  params.delete('code');
+  params.delete('type');
+  const nextSearch = params.toString();
+  window.history.replaceState({}, '', `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}`);
+}
+
 /* =============================================================================
    03) SUPABASE SESSION HELPERS
 ============================================================================= */
@@ -83,6 +112,39 @@ function waitForSupabaseReady() {
 async function resolveRecoverySession() {
   const supabase = await waitForSupabaseReady();
   if (!supabase?.auth) return null;
+
+  const recoveryCode = getRecoveryCode();
+  if (recoveryCode) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(recoveryCode);
+    if (error) throw error;
+
+    const session = data?.session || null;
+    if (session?.user) {
+      try {
+        window.sessionStorage?.setItem(RECOVERY_STORAGE_KEY, 'true');
+      } catch (_) {}
+      clearRecoveryUrlTokens();
+      return session;
+    }
+  }
+
+  const recoveryHashTokens = getRecoveryHashTokens();
+  if (recoveryHashTokens) {
+    const { data, error } = await supabase.auth.setSession({
+      access_token: recoveryHashTokens.accessToken,
+      refresh_token: recoveryHashTokens.refreshToken
+    });
+    if (error) throw error;
+
+    const session = data?.session || null;
+    if (session?.user) {
+      try {
+        window.sessionStorage?.setItem(RECOVERY_STORAGE_KEY, 'true');
+      } catch (_) {}
+      clearHashTokens();
+      return session;
+    }
+  }
 
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
@@ -150,7 +212,7 @@ async function handlePasswordResetSubmit(event) {
     } catch (_) {}
 
     form.reset();
-    clearHashTokens();
+    clearRecoveryUrlTokens();
     setStatus('Password updated. You can now sign in with the new password.', 'success');
   } catch (error) {
     const message = normalizeString(error?.message || '').toLowerCase().includes('expired')
@@ -173,7 +235,6 @@ async function boot() {
 
   try {
     const session = await resolveRecoverySession();
-    clearHashTokens();
     setStatus(
       session?.user
         ? 'Enter a new password for your account.'

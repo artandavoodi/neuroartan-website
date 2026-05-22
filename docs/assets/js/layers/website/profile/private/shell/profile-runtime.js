@@ -193,22 +193,16 @@ function buildCompletionState(profile = null) {
     };
   }
 
-  const canonicalMissing = Array.isArray(profile.missing_required_fields)
-    ? profile.missing_required_fields.map((field) => normalizeString(field)).filter(Boolean)
-    : null;
-
-  const missingFields = canonicalMissing && canonicalMissing.length
-    ? canonicalMissing
-    : REQUIRED_PROFILE_FIELDS.filter((field) => {
-        switch (field) {
-          case 'username':
-            return !normalizeString(profile.username || profile.username_normalized || profile.username_lower);
-          case 'date_of_birth':
-            return !normalizeString(profile.date_of_birth || profile.birth_date);
-          default:
-            return !normalizeString(profile[field]);
-        }
-      });
+  const missingFields = REQUIRED_PROFILE_FIELDS.filter((field) => {
+    switch (field) {
+      case 'username':
+        return !normalizeString(profile.username || profile.username_normalized || profile.username_lower);
+      case 'date_of_birth':
+        return !normalizeString(profile.date_of_birth || profile.birth_date);
+      default:
+        return !normalizeString(profile[field]);
+    }
+  });
 
   const explicitPercent = Number.isFinite(profile?.profile_completion_percent)
     ? Number(profile.profile_completion_percent)

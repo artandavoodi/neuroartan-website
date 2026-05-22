@@ -191,7 +191,7 @@
       document.dispatchEvent(new CustomEvent('account:forgot-password-submit', {
         detail: {
           source: MODULE_ID,
-          email: getInput()?.value?.trim() || ''
+          identity: getInput()?.value?.trim() || ''
         }
       }));
     });

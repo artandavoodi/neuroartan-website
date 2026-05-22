@@ -656,6 +656,7 @@ html[data-theme-effective="light"]{
   min-width:var(--spacing-none);
   min-height:var(--spacing-none);
   max-width:var(--size-full);
+  width:auto;
   overflow:hidden;
   background:var(--home-platform-shell-inner-surface);
   display:flex;
@@ -695,6 +696,7 @@ html[data-theme-effective="light"]{
 
 .home-platform-shell__content-inner{
   flex:1 1 auto;
+  height:var(--size-full);
   min-height:var(--spacing-none);
   overflow-x:hidden;
   overflow-y:auto;
@@ -703,7 +705,7 @@ html[data-theme-effective="light"]{
   scrollbar-width:none;
   scrollbar-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent) transparent;
   -ms-overflow-style:none;
-  padding:var(--home-platform-shell-content-inner-padding-top) var(--spacing-none) calc(var(--home-shell-footer-separator-offset) + var(--home-platform-shell-content-inner-footer-gap)) var(--home-platform-shell-content-inner-padding-left);
+  padding:var(--home-platform-shell-rail-padding-top) var(--home-platform-shell-rail-padding-right) var(--home-platform-shell-rail-padding-bottom) var(--home-platform-shell-rail-padding-left);
 }
 
 .home-platform-shell__content-inner::-webkit-scrollbar{

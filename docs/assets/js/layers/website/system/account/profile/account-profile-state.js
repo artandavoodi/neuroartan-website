@@ -37,12 +37,6 @@ const REQUIRED_PROFILE_FIELDS = Object.freeze(['username', 'first_name', 'last_n
 function getProfileMissingFields(profile = null) {
   if (!profile) return REQUIRED_PROFILE_FIELDS.slice();
 
-  if (Array.isArray(profile.missing_required_fields)) {
-    return profile.missing_required_fields
-      .map((field) => normalizeString(field))
-      .filter(Boolean);
-  }
-
   return REQUIRED_PROFILE_FIELDS.filter((field) => {
     if (field === 'username') {
       return !normalizeString(profile?.username || profile?.username_lower || profile?.username_normalized || '');

@@ -337,6 +337,39 @@ const HOME_SEARCH_PROFILE_FALLBACK_SELECT_FIELDS = HOME_SEARCH_PROFILE_SELECT_FI
   .filter((field) => field !== 'profile_search_visible' && field !== 'bio')
   .join(', ');
 
+const HOME_SEARCH_PROFILE_MINIMAL_SELECT_FIELDS = [
+  'id',
+  'auth_user_id',
+  'username',
+  'username_lower',
+  'public_username',
+  'display_name',
+  'public_display_name',
+  'email',
+  'avatar_url',
+  'photo_url',
+  'public_avatar_url',
+  'public_profile_enabled',
+  'public_profile_discoverable',
+  'public_route_status',
+  'created_at',
+  'updated_at'
+].join(', ');
+
+function isHomeSearchSupabaseMissingColumn(error) {
+  const code = normalizeHomeSearchQuery(error?.code || '').toUpperCase();
+  const message = normalizeHomeSearchQuery(error?.message || '').toLowerCase();
+  const details = normalizeHomeSearchQuery(error?.details || '').toLowerCase();
+
+  return (
+    code === '42703'
+    || message.includes('column')
+    || message.includes('could not find')
+    || details.includes('column')
+    || details.includes('could not find')
+  );
+}
+
 /* =========================================================
    03. DOM HELPERS
    ========================================================= */
@@ -468,17 +501,18 @@ async function fetchSupabaseProfileSearchEntries() {
       .order('updated_at', { ascending:false })
       .limit(100);
 
-    const profileSearchErrorMessage = normalizeHomeSearchQuery(queryResult.error?.message || '').toLowerCase();
-    if (
-      queryResult.error
-      && (
-        profileSearchErrorMessage.includes('profile_search_visible')
-        || profileSearchErrorMessage.includes('bio')
-      )
-    ) {
+    if (queryResult.error && isHomeSearchSupabaseMissingColumn(queryResult.error)) {
       queryResult = await supabase
         .from('profiles')
         .select(HOME_SEARCH_PROFILE_FALLBACK_SELECT_FIELDS)
+        .order('updated_at', { ascending:false })
+        .limit(100);
+    }
+
+    if (queryResult.error && isHomeSearchSupabaseMissingColumn(queryResult.error)) {
+      queryResult = await supabase
+        .from('profiles')
+        .select(HOME_SEARCH_PROFILE_MINIMAL_SELECT_FIELDS)
         .order('updated_at', { ascending:false })
         .limit(100);
     }

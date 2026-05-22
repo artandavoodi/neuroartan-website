@@ -95,7 +95,7 @@
 .profile-workspace__content{
   display:grid;
   gap:var(--spacing-lg);
-  padding-inline:var(--profile-workspace-content-inset);
+  padding-inline:var(--spacing-none);
 }
 
 .profile-workspace__panel[hidden]{

@@ -27,7 +27,7 @@
     + var(--spacing-lg)
     + (var(--profile-private-hero-avatar-size, 7.25rem) / 2)
     + var(--spacing-xl)
-    + 3rem
+    + 2rem
   );
   --profile-shell-hero-sticky-travel-mobile:calc(
     var(--profile-private-hero-cover-offset-top, var(--spacing-md))
@@ -38,7 +38,7 @@
     + calc(var(--body-2-size) * var(--body-2-line-height))
     + calc(var(--body-2-size) * var(--body-2-line-height))
     + var(--spacing-xl)
-    + 0.5rem
+    + -0.5rem
   );
   --profile-shell-hero-sticky-top:calc(var(--profile-shell-top-clearance) - var(--profile-shell-hero-sticky-travel));
   --profile-shell-hero-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) - var(--profile-shell-hero-sticky-travel-mobile));
@@ -56,7 +56,7 @@
   width:100%;
   color:var(--text-primary);
   background:transparent;
-  padding-top:var(--profile-shell-top-clearance);
+  padding-top:0;
   overflow:visible;
 }
 

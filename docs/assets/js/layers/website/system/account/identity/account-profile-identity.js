@@ -1587,6 +1587,11 @@ export function buildProfilePayload({
     || existingProfile?.photo_url
     || ''
   );
+  const coverUrl = normalizeString(
+    values.cover_url
+    || existingProfile?.cover_url
+    || ''
+  );
   const completionState = buildProfileCompletionState(values, existingProfile);
   const usernameRouteReady = typeof values.username_route_ready === 'boolean'
     ? values.username_route_ready
@@ -1694,6 +1699,7 @@ export function buildProfilePayload({
     avatar_state: normalizeString(values.avatar_state || existingProfile?.avatar_state || (avatarUrl ? 'active' : 'empty')),
     avatar_url: avatarUrl,
     photo_url: avatarUrl,
+    cover_url: coverUrl,
     profile_exists: true,
     profile_completion_status: normalizeString(
       values.profile_completion_status

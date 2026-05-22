@@ -12,6 +12,7 @@
    01) MODULE IDENTITY
 ============================================================================= */
 const MODULE_ID = 'profile-posts';
+const VISIBILITY_STORAGE_KEY = 'neuroartan-profile-post-visibility';
 
 /* =============================================================================
    02) IMPORTS
@@ -53,7 +54,7 @@ const DEFAULT_POLICY = Object.freeze({
   ],
   limits: {
     titleMaxLength: 120,
-    bodyMaxLength: 280
+    bodyMaxLength: 500
   }
 });
 
@@ -64,7 +65,8 @@ const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   selectedMediaFile: null,
   selectedMediaKind: '',
   editingPostId: '',
-  speechController: null
+  speechController: null,
+  moreOverlayPostId: ''
 });
 
 /* =============================================================================
@@ -143,41 +145,48 @@ function getRoot() {
   return document.querySelector('[data-profile-posts]');
 }
 
+function getStoredVisibility() {
+  try {
+    return window.localStorage.getItem(VISIBILITY_STORAGE_KEY) || 'public';
+  } catch (_) {
+    return 'public';
+  }
+}
+
+function setStoredVisibility(visibility) {
+  try {
+    window.localStorage.setItem(VISIBILITY_STORAGE_KEY, visibility);
+  } catch (_) {}
+}
+
 function formatDate(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'Just now';
 
   try {
     return new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
+      month: 'short',
+      day: 'numeric'
     }).format(date);
   } catch (_) {
     return date.toISOString();
   }
 }
 
-function renderVisibilityOptions(root, policy) {
-  const input = root.querySelector('[data-profile-post-visibility]');
-  const optionsRoot = root.querySelector('[data-profile-post-visibility-options]');
-  if (!(input instanceof HTMLInputElement) || !(optionsRoot instanceof HTMLElement)) return;
-
-  optionsRoot.innerHTML = '';
-  policy.visibility.forEach((entry) => {
-    const key = normalizeString(entry.key || 'private');
-    const button = document.createElement('button');
-    button.className = 'profile-posts__visibility-option';
-    button.type = 'button';
-    button.dataset.profilePostVisibilityOption = key;
-    button.setAttribute('aria-pressed', input.value === key ? 'true' : 'false');
-    button.innerHTML = `
-      <span class="profile-posts__visibility-label"></span>
-      <span class="profile-posts__visibility-summary"></span>
-    `;
-    button.querySelector('.profile-posts__visibility-label').textContent = normalizeString(entry.label || key || 'Private');
-    button.querySelector('.profile-posts__visibility-summary').textContent = normalizeString(entry.summary || '');
-    optionsRoot.appendChild(button);
-  });
+function updateVisibilityTrigger(root, visibility) {
+  const trigger = root.querySelector('[data-profile-post-visibility-trigger]');
+  const icon = trigger?.querySelector('.profile-posts__visibility-icon');
+  const label = trigger?.querySelector('.profile-posts__visibility-label');
+  
+  if (!trigger || !icon || !label) return;
+  
+  const iconSrc = visibility === 'public'
+    ? '/registry/icons/public/assets/core/actions/visibility/public-route.svg'
+    : '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
+  const labelText = visibility === 'public' ? 'Everyone' : 'Only me';
+  
+  icon.src = iconSrc;
+  label.textContent = labelText;
 }
 
 function getPostBodyLimit(policy = STORE.policy || DEFAULT_POLICY) {
@@ -193,14 +202,27 @@ function syncPostCounter(root, policy = STORE.policy || DEFAULT_POLICY) {
   const limit = getPostBodyLimit(policy);
   const count = textarea.value.length;
   textarea.maxLength = limit;
-  counter.textContent = `${count} / ${limit}`;
-  counter.dataset.profilePostCharacterState = count > limit ? 'over' : 'ready';
+
+  const progressCircle = counter.querySelector('.profile-posts__counter-circle-progress');
+  if (!(progressCircle instanceof SVGCircleElement)) return;
+
+  const percentage = Math.min((count / limit) * 100, 100);
+  const offset = 100 - percentage;
+  progressCircle.style.strokeDashoffset = `${offset}`;
+
+  if (count > limit) {
+    counter.dataset.profilePostCharacterState = 'over';
+  } else if (count >= limit * 0.8) {
+    counter.dataset.profilePostCharacterState = 'warning';
+  } else {
+    counter.dataset.profilePostCharacterState = 'ready';
+  }
 }
 
 function syncSubmitLabel(root) {
   const submitButton = root.querySelector('[data-profile-post-submit]');
   if (!(submitButton instanceof HTMLButtonElement)) return;
-  submitButton.textContent = STORE.editingPostId ? 'Save' : 'Post';
+  // Button is now icon-only, no text label needed
 }
 
 function mediaKindFromFile(file) {
@@ -218,6 +240,8 @@ function getMediaAccept(kind = '') {
       return 'audio/*';
     case 'image':
       return 'image/*';
+    case 'gif':
+      return 'image/gif';
     default:
       return 'image/*,video/*,audio/*';
   }
@@ -241,9 +265,11 @@ function ensurePostSpeechController(root) {
 
   STORE.speechController = createSpeechInputController({
     onStart: () => syncVoiceButton(root),
-    onResult: ({ transcript }) => {
+    onResult: ({ transcript, isFinal }) => {
       const textarea = root.querySelector('textarea[name="body"]');
       if (!(textarea instanceof HTMLTextAreaElement)) return;
+
+      if (!isFinal) return;
 
       const prefix = textarea.value.trim();
       textarea.value = [prefix, normalizeString(transcript)].filter(Boolean).join(prefix ? ' ' : '');
@@ -299,27 +325,34 @@ function renderPostList(root) {
     item.className = 'profile-posts__item';
     item.innerHTML = `
       <div class="profile-posts__item-header">
-        <h4 class="profile-posts__item-title"></h4>
         <span class="ui-badge ui-badge--outline"></span>
+        <span class="profile-posts__item-meta"></span>
+        <button class="profile-posts__item-more" type="button" data-profile-post-more="${post.id}" aria-label="More options">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
+        </button>
+        <div class="profile-posts__more-dropdown ui-card ui-surface--glass" data-profile-post-more-dropdown hidden aria-label="Post options">
+          <button class="profile-posts__more-dropdown-item" type="button" data-profile-post-more-dropdown-edit>
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
+            <span>Edit</span>
+          </button>
+          <button class="profile-posts__more-dropdown-item profile-posts__more-dropdown-item--danger" type="button" data-profile-post-more-dropdown-delete>
+            <img class="profile-posts__more-dropdown-item-icon" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
+            <span>Delete</span>
+          </button>
+        </div>
       </div>
       <p class="profile-posts__item-body"></p>
       ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
       ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
       ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<img class="profile-posts__item-image" alt="Post image">' : ''}
-      <p class="profile-posts__item-meta"></p>
-      <div class="profile-posts__item-actions">
-        <button class="profile-posts__item-action" type="button" data-profile-post-edit="${post.id}">
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
-          <span>Edit</span>
-        </button>
-        <button class="profile-posts__item-action profile-posts__item-action--danger" type="button" data-profile-post-delete="${post.id}">
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
-          <span>Delete</span>
-        </button>
-      </div>
     `;
-    item.querySelector('.profile-posts__item-title').textContent = post.title || 'Untitled post';
-    item.querySelector('.ui-badge').textContent = post.visibility === 'public' ? 'Public route' : 'Private draft';
+    const badge = item.querySelector('.ui-badge');
+    if (badge instanceof HTMLElement) {
+      const iconSrc = post.visibility === 'public'
+        ? '/registry/icons/public/assets/core/actions/visibility/public-route.svg'
+        : '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
+      badge.innerHTML = `<img class="ui-icon-theme-aware" src="${iconSrc}" alt="${post.visibility === 'public' ? 'Public route' : 'Private draft'}" width="16" height="16">`;
+    }
     item.querySelector('.profile-posts__item-body').textContent = post.body || '';
     const media = item.querySelector('.profile-posts__item-media');
     if (media instanceof HTMLMediaElement) {
@@ -357,7 +390,6 @@ async function renderPosts() {
   }
 
   root.dataset.profileViewerState = state.viewerState;
-  renderVisibilityOptions(root, policy);
   syncPostCounter(root, policy);
   syncVoiceButton(root);
   renderPostList(root);
@@ -380,11 +412,32 @@ function setPostOverlayOpen(root, open) {
   document.body?.classList.toggle('profile-posts-overlay-open', open);
 }
 
+function setMoreDropdownOpen(button, open, postId = '') {
+  const header = button?.closest('.profile-posts__item-header');
+  const dropdown = header?.querySelector('[data-profile-post-more-dropdown]');
+  if (!(dropdown instanceof HTMLElement) || !(button instanceof HTMLElement)) return;
+  dropdown.hidden = !open;
+  STORE.moreOverlayPostId = postId;
+  
+  if (open) {
+    const buttonRect = button.getBoundingClientRect();
+    const headerRect = header.getBoundingClientRect();
+    dropdown.style.top = `${buttonRect.bottom - headerRect.top}px`;
+    dropdown.style.right = '0';
+  }
+}
+
 function openPostComposer(root) {
   STORE.editingPostId = '';
   const form = root.querySelector('[data-profile-post-form]');
   if (form instanceof HTMLFormElement) form.reset();
   resetPostMedia(root);
+  const visibilityInput = root.querySelector('[data-profile-post-visibility]');
+  if (visibilityInput instanceof HTMLInputElement) {
+    const storedVisibility = getStoredVisibility();
+    visibilityInput.value = storedVisibility;
+    updateVisibilityTrigger(root, storedVisibility);
+  }
   syncPostCounter(root);
   syncSubmitLabel(root);
   setPostOverlayOpen(root, true);
@@ -576,22 +629,67 @@ function bindPostForm() {
   root.addEventListener('click', (event) => {
     const openTrigger = event.target.closest('[data-profile-post-overlay-open]');
     const closeTrigger = event.target.closest('[data-profile-post-overlay-close]');
+    const visibilityDropdownTrigger = event.target.closest('[data-profile-post-visibility-trigger]');
     const visibilityTrigger = event.target.closest('[data-profile-post-visibility-option]');
     const mediaTrigger = event.target.closest('[data-profile-post-media-trigger]');
     const voiceTrigger = event.target.closest('[data-profile-post-voice-trigger]');
     const mediaRemove = event.target.closest('[data-profile-post-media-remove]');
-    const deleteTrigger = event.target.closest('[data-profile-post-delete]');
-    const editTrigger = event.target.closest('[data-profile-post-edit]');
+    const moreTrigger = event.target.closest('[data-profile-post-more]');
+    const moreDropdownEdit = event.target.closest('[data-profile-post-more-dropdown-edit]');
+    const moreDropdownDelete = event.target.closest('[data-profile-post-more-dropdown-delete]');
+
+    const visibilityDropdown = root.querySelector('[data-profile-post-visibility-dropdown]');
+    const visibilityDropdownTriggerElement = root.querySelector('[data-profile-post-visibility-trigger]');
+    
+    if (visibilityDropdown && visibilityDropdownTriggerElement && 
+        !visibilityDropdownTrigger && !visibilityTrigger &&
+        !event.target.closest('.profile-posts__visibility')) {
+      visibilityDropdown.setAttribute('hidden', '');
+      visibilityDropdownTriggerElement.setAttribute('aria-expanded', 'false');
+    }
+
+    if (visibilityDropdownTrigger) {
+      event.preventDefault();
+      const dropdown = root.querySelector('[data-profile-post-visibility-dropdown]');
+      if (dropdown instanceof HTMLElement) {
+        const isHidden = dropdown.hasAttribute('hidden');
+        if (isHidden) {
+          dropdown.removeAttribute('hidden');
+          visibilityDropdownTrigger.setAttribute('aria-expanded', 'true');
+        } else {
+          dropdown.setAttribute('hidden', '');
+          visibilityDropdownTrigger.setAttribute('aria-expanded', 'false');
+        }
+      }
+      return;
+    }
 
     if (visibilityTrigger) {
       event.preventDefault();
       const value = normalizeString(visibilityTrigger.getAttribute('data-profile-post-visibility-option') || 'public');
       const input = root.querySelector('[data-profile-post-visibility]');
+      const dropdown = root.querySelector('[data-profile-post-visibility-dropdown]');
+      const dropdownTrigger = root.querySelector('[data-profile-post-visibility-trigger]');
+      
       if (input instanceof HTMLInputElement) {
         input.value = value;
       }
+      
+      setStoredVisibility(value);
+      updateVisibilityTrigger(root, value);
+      
+      if (dropdown instanceof HTMLElement) {
+        dropdown.setAttribute('hidden', '');
+      }
+      
+      if (dropdownTrigger instanceof HTMLElement) {
+        dropdownTrigger.setAttribute('aria-expanded', 'false');
+      }
+      
       root.querySelectorAll('[data-profile-post-visibility-option]').forEach((button) => {
-        button.setAttribute('aria-pressed', button === visibilityTrigger ? 'true' : 'false');
+        const isSelected = button === visibilityTrigger;
+        button.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        button.classList.toggle('profile-posts__visibility-option--active', isSelected);
       });
       return;
     }
@@ -600,7 +698,12 @@ function bindPostForm() {
       event.preventDefault();
       const input = root.querySelector('[data-profile-post-media-input]');
       if (input instanceof HTMLInputElement) {
-        input.accept = getMediaAccept(mediaTrigger.getAttribute('data-profile-post-media-kind') || '');
+        const kind = mediaTrigger.getAttribute('data-profile-post-media-kind');
+        if (kind) {
+          input.accept = getMediaAccept(kind);
+        } else {
+          input.accept = 'image/*,video/*,audio/*';
+        }
         input.click();
       }
       return;
@@ -627,45 +730,6 @@ function bindPostForm() {
       return;
     }
 
-    if (editTrigger) {
-      event.preventDefault();
-      const postId = normalizeString(editTrigger.getAttribute('data-profile-post-edit') || '');
-      const post = STORE.posts.find((entry) => entry.id === postId);
-      if (!post) return;
-      const textarea = root.querySelector('textarea[name="body"]');
-      if (textarea instanceof HTMLTextAreaElement) {
-        textarea.value = post.body || '';
-        syncPostCounter(root);
-      }
-      STORE.editingPostId = postId;
-      resetPostMedia(root);
-      syncSubmitLabel(root);
-      setPostOverlayOpen(root, true);
-      textarea?.focus();
-      setStatus(root, 'Editing post.', 'idle');
-      return;
-    }
-
-    if (deleteTrigger) {
-      event.preventDefault();
-      const postId = normalizeString(deleteTrigger.getAttribute('data-profile-post-delete') || '');
-      if (!postId) return;
-      const post = STORE.posts.find((entry) => entry.id === postId);
-      if (!post) return;
-      setStatus(root, 'Deleting post...', 'saving');
-      const deleteFunction = post.visibility === 'private' ? deletePrivateProfilePost : deleteFeedPost;
-      void deleteFunction(postId)
-        .then(async () => {
-          await renderPosts();
-          setStatus(root, 'Post deleted.', 'success');
-        })
-        .catch((error) => {
-          console.error('[profile-posts] Delete failed.', error);
-          setStatus(root, 'Unable to delete this post. Check Supabase policies.', 'error');
-        });
-      return;
-    }
-
     if (openTrigger) {
       event.preventDefault();
       openPostComposer(root);
@@ -677,6 +741,82 @@ function bindPostForm() {
       STORE.editingPostId = '';
       syncSubmitLabel(root);
       setPostOverlayOpen(root, false);
+    }
+
+    if (moreTrigger) {
+      event.preventDefault();
+      const postId = normalizeString(moreTrigger.getAttribute('data-profile-post-more') || '');
+      const header = moreTrigger.closest('.profile-posts__item-header');
+      const dropdown = header?.querySelector('[data-profile-post-more-dropdown]');
+      const isOpen = !(dropdown instanceof HTMLElement) || !dropdown.hidden;
+      setMoreDropdownOpen(moreTrigger, !isOpen, postId);
+      return;
+    }
+
+    if (moreDropdownEdit) {
+      event.preventDefault();
+      const postId = normalizeString(STORE.moreOverlayPostId || '');
+      if (postId) {
+        const activeDropdown = root.querySelector('[data-profile-post-more-dropdown]:not([hidden])');
+        const activeButton = activeDropdown?.previousElementSibling;
+        setMoreDropdownOpen(activeButton, false);
+        const post = STORE.posts.find((entry) => entry.id === postId);
+        if (post) {
+          STORE.editingPostId = postId;
+          const form = root.querySelector('[data-profile-post-form]');
+          if (form instanceof HTMLFormElement) {
+            form.reset();
+            const textarea = form.querySelector('textarea[name="body"]');
+            if (textarea instanceof HTMLTextAreaElement) {
+              textarea.value = post.body || '';
+            }
+            const visibilityInput = form.querySelector('[data-profile-post-visibility]');
+            if (visibilityInput instanceof HTMLInputElement) {
+              visibilityInput.value = post.visibility || 'private';
+              updateVisibilityTrigger(root, visibilityInput.value);
+            }
+            syncSubmitLabel(root);
+            setPostOverlayOpen(root, true);
+            textarea?.focus();
+            setStatus(root, 'Editing post.', 'idle');
+          }
+        }
+      }
+      return;
+    }
+
+    if (moreDropdownDelete) {
+      event.preventDefault();
+      const postId = normalizeString(STORE.moreOverlayPostId || '');
+      if (postId) {
+        const activeDropdown = root.querySelector('[data-profile-post-more-dropdown]:not([hidden])');
+        const activeButton = activeDropdown?.previousElementSibling;
+        setMoreDropdownOpen(activeButton, false);
+        const post = STORE.posts.find((entry) => entry.id === postId);
+        if (post) {
+          setStatus(root, 'Deleting post...', 'saving');
+          const deleteFunction = post.visibility === 'private' ? deletePrivateProfilePost : deleteFeedPost;
+          void deleteFunction(postId)
+            .then(async () => {
+              await renderPosts();
+              setStatus(root, 'Post deleted.', 'success');
+            })
+            .catch((error) => {
+              console.error('[profile-posts] Delete failed.', error);
+              setStatus(root, 'Unable to delete this post. Check Supabase policies.', 'error');
+            });
+        }
+      }
+      return;
+    }
+
+  });
+
+  document.addEventListener('click', (event) => {
+    const activeDropdown = root.querySelector('[data-profile-post-more-dropdown]:not([hidden])');
+    if (activeDropdown instanceof HTMLElement && !event.target.closest('[data-profile-post-more]') && !event.target.closest('[data-profile-post-more-dropdown]')) {
+      const activeButton = activeDropdown.previousElementSibling;
+      setMoreDropdownOpen(activeButton, false);
     }
   });
 
@@ -695,6 +835,9 @@ function bindPostForm() {
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
     setPostOverlayOpen(root, false);
+    const activeDropdown = root.querySelector('[data-profile-post-more-dropdown]:not([hidden])');
+    const activeButton = activeDropdown?.previousElementSibling;
+    setMoreDropdownOpen(activeButton, false);
   });
 
   document.addEventListener('profile:post-compose-open-request', () => {

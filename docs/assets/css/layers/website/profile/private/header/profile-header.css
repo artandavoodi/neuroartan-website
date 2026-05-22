@@ -218,7 +218,7 @@
 .profile-header__avatar-surface{
   width:7rem;
   height:7rem;
-  border-radius:var(--control-radius-pill);
+  border-radius:0 0 var(--control-radius-pill) var(--control-radius-pill);
   display:block;
   position:relative;
   border:var(--profile-header-border);

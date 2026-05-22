@@ -405,6 +405,7 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         avatar_url: avatarUrl,
         photo_url: avatarUrl,
         public_avatar_url: avatarUrl,
+        cover_url: coverUrl,
         public_feature_flags: upsertProfileMediaFlag(seed.public_feature_flags, 'profile_cover_url', coverUrl)
       };
     }
@@ -429,6 +430,8 @@ async function resolveMediaUploadValues({
       : null;
   const avatarFile = readUploadableFile(formData, 'avatar_file') || readUploadableFile(values, 'avatar_file');
   const coverFile = readUploadableFile(formData, 'cover_file') || readUploadableFile(values, 'cover_file');
+
+  console.log('[profile-save] Media upload check:', { avatarFile: !!avatarFile, coverFile: !!coverFile });
 
   if (!avatarFile && !coverFile) {
     return values;
@@ -455,9 +458,11 @@ async function resolveMediaUploadValues({
     nextValues.public_avatar_url = upload.publicUrl;
     nextValues.avatar_storage_path = upload.storagePath;
     nextValues.profile_image_storage_bucket = upload.bucket;
+    console.log('[profile-save] Avatar uploaded:', upload.publicUrl);
   }
 
   if (coverFile) {
+    console.log('[profile-save] Uploading cover file...');
     const upload = await uploadProfileImage({
       file: coverFile,
       user,
@@ -473,6 +478,7 @@ async function resolveMediaUploadValues({
       'profile_cover_storage_path',
       upload.storagePath
     );
+    console.log('[profile-save] Cover uploaded:', upload.publicUrl);
   }
 
   return nextValues;
@@ -615,6 +621,7 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     auth_user_id: user.id || user.uid,
     display_name: payload.display_name || '',
     avatar_url: payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || '',
+    cover_url: payload.cover_url || currentProfile?.cover_url || '',
     bio: payload.public_summary || currentProfile?.bio || '',
     profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
     ...buildProfileVisibilityPayload(payload, values),

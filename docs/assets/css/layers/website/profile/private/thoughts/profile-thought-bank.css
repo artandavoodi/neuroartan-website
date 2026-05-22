@@ -24,6 +24,15 @@ body.profile-thought-overlay-open{
 .profile-thought-stream__lane{
   padding:var(--spacing-lg);
   border-radius:var(--radius-xl);
+  border:none;
+}
+
+.profile-thought-composer{
+  padding:var(--spacing-lg);
+}
+
+.profile-thought-stream__lane{
+  padding:0;
 }
 
 .profile-thought-bank__overlay[hidden]{
@@ -255,15 +264,19 @@ body.profile-thought-overlay-open{
 .profile-thought-stream__list{
   display:grid;
   gap:var(--spacing-sm);
+  padding:0;
 }
 
 .profile-thought-stream__entry{
   display:grid;
   gap:var(--spacing-sm);
-  padding:var(--spacing-md);
-  border:var(--border-width-hairline) solid var(--data-surface-border);
-  border-radius:var(--shape-card-radius);
-  background:var(--control-surface);
+  padding:var(--spacing-md) var(--spacing-lg);
+  border-top:var(--border-width-hairline) solid var(--data-surface-border);
+  background:transparent;
+}
+
+.profile-thought-stream__entry:first-child{
+  border-top:none;
 }
 
 .profile-thought-stream__entry-meta{

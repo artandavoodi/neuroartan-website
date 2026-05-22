@@ -11,8 +11,26 @@
       "summary": "Publish to your public profile and the feed."
     }
   ],
+  "tiers": {
+    "free": {
+      "key": "free",
+      "label": "Free",
+      "limits": {
+        "titleMaxLength": 120,
+        "bodyMaxLength": 500
+      }
+    },
+    "premium": {
+      "key": "premium",
+      "label": "Premium",
+      "limits": {
+        "titleMaxLength": 120,
+        "bodyMaxLength": 2000
+      }
+    }
+  },
   "limits": {
     "titleMaxLength": 120,
-    "bodyMaxLength": 280
+    "bodyMaxLength": 500
   }
 }

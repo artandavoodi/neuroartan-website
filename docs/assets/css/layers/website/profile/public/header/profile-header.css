@@ -20,7 +20,7 @@
 .profile-header[data-profile-surface="public"] .profile-header__cover{
   min-height:var(--profile-private-hero-cover-height);
   border:var(--border-width-hairline) solid var(--border-color);
-  border-radius:var(--profile-private-hero-cover-radius);
+  border-radius:0 0 var(--profile-private-hero-cover-radius) var(--profile-private-hero-cover-radius);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 12%, transparent), color-mix(in srgb, var(--bg-color) 48%, transparent)),
     var(--profile-private-hero-cover-default-image);
@@ -34,7 +34,7 @@
   align-items:start;
   gap:var(--spacing-lg);
   padding-inline:var(--spacing-md);
-  margin-top:calc((var(--profile-private-hero-avatar-size) / -2) - var(--spacing-sm));
+  margin-top:0;
   position:relative;
 }
 

@@ -37,33 +37,40 @@
         <div class="profile-posts__field-grid">
           <label class="profile-posts__field profile-posts__field--full">
             <span class="profile-posts__label">Post</span>
-            <textarea class="ui-field profile-posts__textarea" rows="4" name="body" maxlength="280" placeholder="What is happening?"></textarea>
+            <textarea class="ui-field profile-posts__textarea" rows="4" name="body" maxlength="500" placeholder="What is in your mind?"></textarea>
           </label>
 
-          <fieldset class="profile-posts__field profile-posts__field--full profile-posts__visibility">
-            <legend class="profile-posts__label">Audience</legend>
+          <div class="profile-posts__field profile-posts__field--full profile-posts__visibility">
+            <button class="profile-posts__visibility-trigger" type="button" data-profile-post-visibility-trigger aria-expanded="false" aria-haspopup="listbox">
+              <img class="ui-icon-theme-aware profile-posts__visibility-icon" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
+              <span class="profile-posts__visibility-label">Everyone</span>
+            </button>
+            <div class="profile-posts__visibility-dropdown" data-profile-post-visibility-dropdown hidden role="listbox">
+              <button class="profile-posts__visibility-option profile-posts__visibility-option--active" type="button" data-profile-post-visibility-option="public" role="option" aria-selected="true">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
+                <span>Everyone</span>
+              </button>
+              <button class="profile-posts__visibility-option" type="button" data-profile-post-visibility-option="private" role="option" aria-selected="false">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
+                <span>Only me</span>
+              </button>
+            </div>
             <input type="hidden" name="visibility" value="public" data-profile-post-visibility>
-            <div class="profile-posts__visibility-options" data-profile-post-visibility-options></div>
-          </fieldset>
+          </div>
 
           <div class="profile-posts__attachment profile-posts__field--full" data-profile-post-attachment>
-            <input class="sr-only" type="file" name="post_media" accept="image/*,video/*,audio/*" data-profile-post-media-input>
+            <input class="sr-only" type="file" name="post_media" accept="image/*,video/*,audio/*,image/gif" data-profile-post-media-input>
             <div class="profile-posts__toolbar" aria-label="Post tools">
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="image" aria-label="Attach image">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/image-add/image-add.svg" alt="" aria-hidden="true">
-              <span>Image</span>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger aria-label="Attach media">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/media.svg" alt="" aria-hidden="true">
+              <span>Media</span>
             </button>
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="video" aria-label="Attach video">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/capture/video.svg" alt="" aria-hidden="true">
-              <span>Video</span>
-            </button>
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="audio" aria-label="Attach audio">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/audio.svg" alt="" aria-hidden="true">
-              <span>Audio</span>
+            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="gif" aria-label="Attach GIF">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/gif.svg" alt="" aria-hidden="true">
+              <span>GIF</span>
             </button>
             <button class="profile-posts__attachment-button" type="button" data-profile-post-voice-trigger aria-label="Dictate post">
               <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/mic.svg" alt="" aria-hidden="true">
-              <span>Voice</span>
             </button>
             </div>
             <figure class="profile-posts__attachment-preview" data-profile-post-media-preview hidden>
@@ -79,9 +86,16 @@
         <div class="profile-posts__footer">
           <div class="profile-posts__meta">
             <p class="profile-posts__status" data-profile-post-status aria-live="polite"></p>
-            <p class="profile-posts__counter" data-profile-post-character-count>0 / 280</p>
+            <div class="profile-posts__counter" data-profile-post-character-count>
+              <svg class="profile-posts__counter-circle" viewBox="0 0 36 36" aria-hidden="true">
+                <circle class="profile-posts__counter-circle-bg" cx="18" cy="18" r="16" fill="none" stroke-width="2"></circle>
+                <circle class="profile-posts__counter-circle-progress" cx="18" cy="18" r="16" fill="none" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100"></circle>
+              </svg>
+            </div>
           </div>
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-post-submit>Post</button>
+          <button class="profile-posts__attachment-button" type="submit" data-profile-post-submit aria-label="Post">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
+          </button>
         </div>
       </form>
     </article>

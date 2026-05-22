@@ -79,6 +79,7 @@
 ============================================================================= */
 .profile-private-hero{
   width:100%;
+  margin-top:0;
 }
 
 /* =============================================================================
@@ -91,6 +92,7 @@
   position:relative;
   isolation:isolate;
   border-radius:var(--profile-private-hero-cover-radius);
+  padding-top:0;
 }
 
 .profile-private-hero__surface::before{
@@ -114,10 +116,10 @@
 .profile-private-hero__cover{
   position:relative;
   width:100%;
-  margin-top:var(--profile-private-hero-cover-offset-top);
+  margin-top:0;
   min-height:var(--profile-private-hero-cover-height);
   border:var(--border-width-hairline) solid var(--profile-private-hero-cover-border);
-  border-radius:var(--profile-private-hero-cover-radius);
+  border-radius:0 0 var(--profile-private-hero-cover-radius) var(--profile-private-hero-cover-radius);
   background:var(--profile-private-hero-cover-bg);
   background-image:
     linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)),

@@ -4,22 +4,41 @@
    height="24"
    viewBox="0 0 24 24"
    fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
    version="1.1"
-   id="svg3"
-   sodipodi:docname="feed.svg"
+   id="svg2"
+   sodipodi:docname="public-route.svg"
+   xml:space="preserve"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs3">
-    <inkscape:path-effect
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs2"><inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" /><inkscape:path-effect
        effect="fillet_chamfer"
        id="path-effect2"
        is_visible="true"
        lpeversion="1"
-       nodesatellites_param="F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1"
+       nodesatellites_param="F,0,0,1,0,6.5,0,1 @ F,0,0,1,0,6.5,0,1 @ F,0,0,1,0,6.5,0,1 @ F,0,0,1,0,6.5,0,1"
        radius="0"
        unit="px"
        method="auto"
@@ -30,27 +49,8 @@
        apply_no_radius="true"
        apply_with_radius="true"
        only_selected="false"
-       hide_knots="false" />
-    <inkscape:path-effect
-       effect="fillet_chamfer"
-       id="path-effect1"
-       is_visible="true"
-       lpeversion="1"
-       nodesatellites_param="F,0,0,1,0,3,0,1 @ F,0,0,1,0,3,0,1 @ F,0,0,1,0,3,0,1 @ F,0,0,1,0,3,0,1"
-       radius="0"
-       unit="px"
-       method="auto"
-       mode="F"
-       chamfer_steps="1"
-       flexible="false"
-       use_knot_distance="true"
-       apply_no_radius="true"
-       apply_with_radius="true"
-       only_selected="false"
-       hide_knots="false" />
-  </defs>
-  <sodipodi:namedview
-     id="namedview3"
+       hide_knots="false" /></defs><sodipodi:namedview
+     id="namedview2"
      pagecolor="#505050"
      bordercolor="#eeeeee"
      borderopacity="1"
@@ -58,28 +58,26 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="11.056749"
-     inkscape:cx="11.621861"
-     inkscape:cy="9.7225688"
+     inkscape:zoom="15.76614"
+     inkscape:cx="11.068023"
+     inkscape:cy="13.478251"
      inkscape:window-width="1472"
-     inkscape:window-height="896"
+     inkscape:window-height="868"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg3" />
-  <path
-     id="rect1-7"
-     style="stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round"
-     d="M 7.0509996,1.0511799 H 12.949 a 6,6 45 0 1 6,6 V 12.94882 a 6,6 135 0 1 -6,6 H 7.0509996 a 6,6 45 0 1 -6,-6 V 7.0511799 a 6,6 135 0 1 6,-6 z"
-     inkscape:path-effect="#path-effect2"
-     inkscape:original-d="M 1.0509996,1.0511799 H 18.949 V 18.94882 H 1.0509996 Z"
-     transform="translate(2.0000002,2)" />
-  <path
+     inkscape:current-layer="svg2" /><circle
      style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;stroke-dasharray:none;paint-order:markers fill stroke"
-     d="M 4.9409441,15.279529 H 19.059056"
-     id="path1" />
-  <path
-     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;stroke-dasharray:none;paint-order:markers fill stroke"
-     d="M 4.9409442,8.7204711 H 19.059056"
-     id="path1-7" />
-</svg>
+     id="path1"
+     cx="12"
+     cy="12"
+     r="8.9488192" /><ellipse
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;stroke-dasharray:none;paint-order:markers fill stroke"
+     id="path1-0"
+     cx="12"
+     cy="12"
+     rx="2.9015749"
+     ry="8.7181988" /><path
+     style="fill:none;stroke:#000000;stroke-width:0.999994;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;stroke-dasharray:none;paint-order:markers fill stroke"
+     d="M 3.051107,12 H 20.948893"
+     id="path2" /></svg>

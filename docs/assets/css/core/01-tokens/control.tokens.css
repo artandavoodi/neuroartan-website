@@ -90,6 +90,22 @@
 }
 
 /* =============================================================================
+   04A) MINIMAL FIELD TOKENS
+============================================================================= */
+:root{
+  --input-minimal-font-size:var(--body-2-size);
+  --input-minimal-line-height:var(--body-2-line-height);
+  --input-minimal-letter-spacing:var(--body-2-tracking);
+  --input-minimal-border:none;
+  --input-minimal-border-focus:none;
+  --input-minimal-background:transparent;
+  --input-minimal-padding:0;
+  --input-minimal-radius:0;
+  --input-minimal-outline:none;
+  --input-minimal-box-shadow:none;
+}
+
+/* =============================================================================
    05) TOGGLE TOKENS
 ============================================================================= */
 :root{

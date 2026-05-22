@@ -38,6 +38,13 @@ body{
 body.site-body{
   min-height:var(--section-min-height);
   overflow-x:hidden;
+  margin:0;
+  padding:0;
+}
+
+body.site-body main{
+  margin:0;
+  padding:0;
 }
 
 /* =============================================================================

@@ -23,9 +23,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="19.94079"
-     inkscape:cx="9.4279113"
-     inkscape:cy="10.155064"
+     inkscape:zoom="20.631271"
+     inkscape:cx="11.754002"
+     inkscape:cy="10.396839"
      inkscape:window-width="1472"
      inkscape:window-height="844"
      inkscape:window-x="0"
@@ -42,13 +42,21 @@
   <circle
      style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
      id="path1"
-     cx="12"
-     cy="12"
+     cx="11.999999"
+     cy="12.009001"
      r="8.9488192" />
   <path
      style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
      d="M 11.999999,8.9383901 V 17.033217"
      id="path2" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 12,8.9383896 H 11.486879"
+     id="path2-5" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 12.538486,17.033217 H 11.461513"
+     id="path2-5-8" />
   <ellipse
      style="fill:#000000;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
      id="path3"

@@ -715,8 +715,8 @@ import {
       provider: normalizeString(detail.provider || detail.method || RUNTIME.onboardingContext.provider || ''),
       email: normalizeEmail(detail.email || RUNTIME.onboardingContext.email || ''),
       phone: normalizeString(detail.phone || RUNTIME.onboardingContext.phone || ''),
-      password: normalizeString(detail.password || RUNTIME.onboardingContext.password || ''),
-      password_confirm: normalizeString(detail.password_confirm || detail.password || RUNTIME.onboardingContext.password_confirm || ''),
+      password: String(detail.password || RUNTIME.onboardingContext.password || ''),
+      password_confirm: String(detail.password_confirm || detail.password || RUNTIME.onboardingContext.password_confirm || ''),
       first_name: normalizeString(detail.first_name || splitName.first_name || RUNTIME.onboardingContext.first_name || ''),
       last_name: normalizeString(detail.last_name || splitName.last_name || RUNTIME.onboardingContext.last_name || ''),
       display_name: normalizeString(detail.display_name || detail.name || detail.full_name || RUNTIME.onboardingContext.display_name || ''),
@@ -777,14 +777,31 @@ import {
   function isProfileComplete(profile) {
     if (!profile) return false;
 
-    return REQUIRED_PROFILE_FIELDS.every((field) => {
+    const completionStatus = normalizeString(profile.profile_completion_status || '');
+    if (profile.profile_complete === true || completionStatus === 'complete') {
+      return true;
+    }
+
+    return getMissingProfileFields(profile).length === 0;
+  }
+
+  function getMissingProfileFields(profile) {
+    if (!profile) return REQUIRED_PROFILE_FIELDS.slice();
+
+    if (Array.isArray(profile.missing_required_fields)) {
+      return profile.missing_required_fields
+        .map((field) => normalizeString(field))
+        .filter(Boolean);
+    }
+
+    return REQUIRED_PROFILE_FIELDS.filter((field) => {
       switch (field) {
         case 'username':
-          return normalizeString(profile.username || profile.username_normalized || profile.username_lower);
+          return !normalizeString(profile.username || profile.username_normalized || profile.username_lower);
         case 'date_of_birth':
-          return normalizeString(profile.date_of_birth || profile.birth_date);
+          return !normalizeString(profile.date_of_birth || profile.birth_date);
         default:
-          return normalizeString(profile[field]);
+          return !normalizeString(profile[field]);
       }
     });
   }
@@ -1162,7 +1179,7 @@ import {
     const identityField = getFieldFromForm(form, '#account-sign-in-identity');
     const passwordField = getFieldFromForm(form, '#account-sign-in-password');
     const identity = normalizeString(identityField?.value || '');
-    const password = normalizeString(passwordField?.value || '');
+    const password = String(passwordField?.value || '');
 
     clearFormErrors(form);
     clearSignInStatus();
@@ -1414,7 +1431,7 @@ import {
       const supabase = await waitForSupabaseClient();
       if (supabase) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}${PROFILE_ROUTE}`
+          redirectTo: `${window.location.origin}/reset-password.html`
         });
 
         if (error) {
@@ -1493,8 +1510,8 @@ import {
         first_name: firstName,
         last_name: lastName
       }),
-      password: normalizeString(detail.password || context.password || ''),
-      password_confirm: normalizeString(detail.password_confirm || context.password_confirm || detail.password || context.password || ''),
+      password: String(detail.password || context.password || ''),
+      password_confirm: String(detail.password_confirm || context.password_confirm || detail.password || context.password || ''),
       date_of_birth: normalizeString(detail.date_of_birth || context.date_of_birth || ''),
       gender: normalizeGenderValue(detail.gender || context.gender || '')
     };
@@ -1632,6 +1649,16 @@ import {
 
         await assertSupabaseUsernameAvailable(values, existingProfile, user);
 
+        if (method === 'email' && values.password) {
+          const { error: passwordUpdateError } = await supabase.auth.updateUser({
+            password: values.password
+          });
+
+          if (passwordUpdateError) {
+            throw passwordUpdateError;
+          }
+        }
+
         const profile = await createPrivateBaselineProfile({
           values:{
             ...values,
@@ -1751,6 +1778,8 @@ import {
         emitProfileState(user, profile);
         await maybeRedirectAfterCompleteProfile(user);
         clearOnboardingContext();
+        clearPendingProfileState();
+        clearFlowState();
         return;
       }
 
@@ -1799,10 +1828,26 @@ import {
           handleSignedOutState();
         });
 
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange((event, session) => {
         const user = session?.user || null;
 
         if (user) {
+          if (event === 'PASSWORD_RECOVERY') {
+            try {
+              window.sessionStorage?.setItem('neuroartan_password_recovery', 'true');
+            } catch (_) {}
+
+            if (isProfileRoute()) {
+              window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}#settings/password`);
+              document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+                detail: {
+                  section: 'settings',
+                  settingsPane: 'password'
+                }
+              }));
+            }
+          }
+
           void handleSignedInState(user);
           return;
         }
@@ -1945,15 +1990,15 @@ import {
       if (form.matches('[data-account-sign-up-form="true"]')) {
         const nameField = getFieldFromForm(form, '#account-sign-up-name');
         const emailField = getFieldFromForm(form, '#account-sign-up-email');
-        const passwordField = getFieldFromForm(form, '#account-sign-up-password');
+      const passwordField = getFieldFromForm(form, '#account-sign-up-password');
 
         patchOnboardingContext({
           method: 'email',
           provider: 'email',
           name: normalizeString(nameField?.value || ''),
           email: normalizeEmail(emailField?.value || ''),
-          password: normalizeString(passwordField?.value || ''),
-          password_confirm: normalizeString(passwordField?.value || '')
+          password: String(passwordField?.value || ''),
+          password_confirm: String(passwordField?.value || '')
         });
       }
 
@@ -1975,7 +2020,8 @@ import {
   ============================================================================= */
   function boot() {
     const returnParams = new URLSearchParams(window.location.search);
-    if (returnParams.get('account_return') === 'profile_setup') {
+    const accountReturn = returnParams.get('account_return');
+    if (accountReturn === 'profile_setup') {
       setFlowState({
         resolveProfile: true,
         redirectToProfile: false
@@ -1984,6 +2030,18 @@ import {
       returnParams.delete('account_return');
       const nextSearch = returnParams.toString();
       const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`;
+      window.history.replaceState({}, '', nextUrl);
+    } else if (accountReturn === 'password_reset') {
+      clearFlowState();
+      clearOnboardingContext();
+
+      try {
+        window.sessionStorage?.setItem('neuroartan_password_recovery', 'true');
+      } catch (_) {}
+
+      returnParams.delete('account_return');
+      const nextSearch = returnParams.toString();
+      const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}#settings/password`;
       window.history.replaceState({}, '', nextUrl);
     }
 

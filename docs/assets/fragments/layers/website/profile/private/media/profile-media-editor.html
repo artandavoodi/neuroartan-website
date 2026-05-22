@@ -15,10 +15,7 @@
 
   <article class="profile-media-editor__dialog ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="profile-media-editor-title">
     <header class="profile-media-editor__header">
-      <div>
-        <p class="profile-media-editor__eyebrow" data-profile-media-editor-kind>Profile image</p>
-        <h2 class="profile-media-editor__title" id="profile-media-editor-title">Edit Image</h2>
-      </div>
+      <h2 class="profile-media-editor__title" id="profile-media-editor-title">Edit Profile Image</h2>
 
       <button class="profile-media-editor__close global-close-button" type="button" data-profile-media-editor-close="true" aria-label="Close image editor">
         <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
@@ -27,31 +24,56 @@
     </header>
 
     <div class="profile-media-editor__stage" data-profile-media-editor-stage="avatar">
-      <div class="profile-media-editor__preview" data-profile-media-editor-preview>
+      <div class="profile-media-editor__preview" data-profile-media-editor-preview tabindex="0" role="application" aria-label="Drag image to reposition the crop">
         <img class="profile-media-editor__image" data-profile-media-editor-image src="/assets/images/layers/website/sections/home/hero/Fallback%20Profile%20Image.jpeg" alt="">
+        <div class="profile-media-editor__guide" data-profile-media-editor-guide aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </div>
 
     <div class="profile-media-editor__controls">
-      <label class="profile-media-editor__field">
-        <span class="profile-media-editor__label">Upload image</span>
-        <input class="ui-field" type="file" accept="image/*" data-profile-media-editor-file>
-      </label>
+      <div class="profile-media-editor__tool-row">
+        <label class="profile-media-editor__upload">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/image-add/image-add.svg" alt="" aria-hidden="true">
+          <span>Choose image</span>
+          <input class="sr-only" type="file" accept="image/*" data-profile-media-editor-file>
+        </label>
+
+        <button class="profile-media-editor__tool-button" type="button" data-profile-media-editor-recenter>
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/move/move.svg" alt="" aria-hidden="true">
+          <span>Center</span>
+        </button>
+      </div>
 
       <label class="profile-media-editor__field">
-        <span class="profile-media-editor__label">Crop zoom</span>
+        <span class="profile-media-editor__label">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/crop/crop.svg" alt="" aria-hidden="true">
+          <span>Crop zoom</span>
+        </span>
         <input class="profile-media-editor__range" type="range" min="1" max="2.4" step="0.05" value="1" data-profile-media-editor-zoom>
       </label>
+
+      <div class="profile-media-editor__field">
+        <span class="profile-media-editor__label">
+          <span>Filter</span>
+        </span>
+        <select class="profile-media-editor__select" data-profile-media-editor-filter-select aria-label="Image filter"></select>
+      </div>
     </div>
 
     <p class="profile-media-editor__status" data-profile-media-editor-status aria-live="polite"></p>
 
     <footer class="profile-media-editor__actions">
       <button class="ui-button ui-button--ghost" type="button" data-profile-media-editor-reset>
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/reset/reset.svg" alt="" aria-hidden="true">
         <span>Reset</span>
       </button>
       <button class="ui-button ui-button--secondary" type="button" data-profile-media-editor-save>
-        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/transfer/upload.svg" alt="" aria-hidden="true">
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="" aria-hidden="true">
         <span>Save</span>
       </button>
     </footer>

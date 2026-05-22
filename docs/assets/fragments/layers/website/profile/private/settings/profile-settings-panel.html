@@ -219,6 +219,39 @@
       </form>
     </section>
 
+    <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="password" hidden>
+      <div class="profile-settings__pane-header">
+        <div>
+          <h3 class="profile-settings__pane-title">Password</h3>
+        </div>
+      </div>
+
+      <form class="profile-settings__form" data-profile-password-form novalidate>
+        <div class="profile-settings__field-grid">
+          <label class="profile-settings__field profile-settings__field--full">
+            <span class="profile-settings__label">Current password</span>
+            <input class="ui-field" type="password" name="current_password" autocomplete="current-password">
+          </label>
+
+          <label class="profile-settings__field">
+            <span class="profile-settings__label">New password</span>
+            <input class="ui-field" type="password" name="new_password" autocomplete="new-password">
+          </label>
+
+          <label class="profile-settings__field">
+            <span class="profile-settings__label">Confirm password</span>
+            <input class="ui-field" type="password" name="new_password_confirm" autocomplete="new-password">
+          </label>
+        </div>
+
+        <div class="profile-settings__status" data-profile-password-status aria-live="polite"></div>
+
+        <div class="profile-settings__actions">
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-password-submit>Update password</button>
+        </div>
+      </form>
+    </section>
+
     <section class="profile-settings__pane ui-card ui-surface--glass" data-profile-settings-pane="verification" hidden>
       <div class="profile-settings__pane-header">
         <div>

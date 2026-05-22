@@ -222,13 +222,34 @@ export async function getSupabaseProfileByUsername({
   const normalizedUsername = normalizeUsername(username);
   if (!supabase || !normalizedUsername) return null;
 
-  return maybeSingleSupabaseProfile((activeSelectFields) => (
-    supabase
-      .from(SUPABASE_PROFILES_TABLE)
-      .select(activeSelectFields)
-      .eq('username_lower', normalizedUsername)
-      .maybeSingle()
-  ), selectFields);
+  const lookupColumns = [
+    'username_lower',
+    'username_normalized',
+    'username',
+    'public_username'
+  ];
+
+  for (const column of lookupColumns) {
+    try {
+      const profile = await maybeSingleSupabaseProfile((activeSelectFields) => (
+        supabase
+          .from(SUPABASE_PROFILES_TABLE)
+          .select(activeSelectFields)
+          .eq(column, normalizedUsername)
+          .maybeSingle()
+      ), selectFields);
+
+      if (profile) return profile;
+    } catch (error) {
+      if (isSupabaseColumnMissingError(error)) {
+        continue;
+      }
+
+      throw error;
+    }
+  }
+
+  return null;
 }
 
 export async function getSupabaseUsernameReservation({

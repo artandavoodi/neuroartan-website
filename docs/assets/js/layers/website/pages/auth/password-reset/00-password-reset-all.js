@@ -1,15 +1,13 @@
 /* =============================================================================
    00) FILE INDEX
-   01) PAGE MODULE IMPORTS
+   01) PASSWORD RESET PAGE MODULE IMPORTS
    02) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
-   01) PAGE MODULE IMPORTS
+   01) PASSWORD RESET PAGE MODULE IMPORTS
 ============================================================================= */
-import '../404/00-404-all.js';
-import '../about/00-about-all.js';
-import '../auth/password-reset/00-password-reset-all.js';
+import './password-reset.js';
 
 /* =============================================================================
    02) END OF FILE

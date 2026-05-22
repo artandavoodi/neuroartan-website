@@ -46,6 +46,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
     tabs: [
       { key: 'identity', label: 'Personal Info', section: 'settings', settingsPane: 'identity' },
       { key: 'route', label: 'Public Route', section: 'settings', settingsPane: 'route' },
+      { key: 'password', label: 'Password', section: 'settings', settingsPane: 'password' },
       { key: 'verification', label: 'Verification', section: 'settings', settingsPane: 'verification' }
     ]
   },
@@ -70,6 +71,7 @@ const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   graph: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-panel.svg',
   identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg',
   route: '/registry/icons/public/assets/core/navigation/route/route.svg',
+  password: '/registry/icons/public/assets/core/identity/password/password.svg',
   verification: '/registry/icons/public/assets/core/identity/trust/verified.svg',
   visibility: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
   discovery: '/registry/icons/public/assets/layers/website/settings/overview/overview.svg',
@@ -213,9 +215,7 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
     const selectedCoverUrl = state.coverUrl || '';
     const coverUrl = state.coverDisplayUrl || selectedCoverUrl || '';
     if (coverUrl) {
-      cover.style.backgroundImage = selectedCoverUrl
-        ? `url("${coverUrl}")`
-        : `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)), url("${coverUrl}")`;
+      cover.style.backgroundImage = `url("${coverUrl}")`;
       cover.dataset.profileCoverImage = selectedCoverUrl ? 'true' : 'default';
     } else {
       cover.style.removeProperty('background-image');

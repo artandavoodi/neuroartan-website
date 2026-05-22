@@ -121,9 +121,7 @@
   border:var(--border-width-hairline) solid var(--profile-private-hero-cover-border);
   border-radius:0 0 var(--profile-private-hero-cover-radius) var(--profile-private-hero-cover-radius);
   background:var(--profile-private-hero-cover-bg);
-  background-image:
-    linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 16%, transparent), color-mix(in srgb, var(--bg-color) 46%, transparent)),
-    var(--profile-private-hero-cover-default-image);
+  background-image:var(--profile-private-hero-cover-default-image);
   background-size:cover;
   background-position:center;
   overflow:hidden;
@@ -133,7 +131,7 @@
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--text-primary-color) 5%, transparent) 100%);
+  background:transparent;
   pointer-events:none;
 }
 

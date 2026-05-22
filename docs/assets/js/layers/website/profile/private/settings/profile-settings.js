@@ -16,6 +16,16 @@ import {
   getProfileVerificationState,
   requestProfileVerification
 } from '../../../system/profile/profile-verification.js';
+import {
+  getSupabaseClient,
+  normalizeString
+} from '../../../system/account/identity/account-profile-identity.js';
+import {
+  evaluateAccountPassword,
+  loadAccountPasswordPolicy
+} from '../../../system/account/identity/account-password-policy.js';
+
+const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
 
 /* =============================================================================
    02) SETTINGS HELPERS
@@ -73,6 +83,27 @@ function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
   });
+}
+
+function isPasswordRecoveryActive() {
+  try {
+    return window.sessionStorage?.getItem(PASSWORD_RECOVERY_STORAGE_KEY) === 'true';
+  } catch (_) {
+    return false;
+  }
+}
+
+function clearPasswordRecoveryState() {
+  try {
+    window.sessionStorage?.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
+  } catch (_) {}
+}
+
+function setPasswordStatus(root, message, state = 'idle') {
+  const node = root.querySelector('[data-profile-password-status]');
+  if (!(node instanceof HTMLElement)) return;
+  node.textContent = message || '';
+  node.dataset.profilePasswordState = state;
 }
 
 function setVerificationStatus(root, message, state = 'idle') {
@@ -153,12 +184,102 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
       setControlDisabled(control, !authenticated || !state.username.normalized);
     });
 
+    const currentPasswordField = root.querySelector('[name="current_password"]');
+    if (currentPasswordField instanceof HTMLInputElement) {
+      currentPasswordField.required = !isPasswordRecoveryActive();
+      currentPasswordField.placeholder = isPasswordRecoveryActive()
+        ? 'Not required for reset link'
+        : '';
+    }
+
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
 
     void renderVerificationState(root, state);
   });
+}
+
+async function handlePasswordChangeSubmit(form) {
+  const root = form.closest('[data-profile-settings-panel]');
+  if (!(root instanceof HTMLElement)) return;
+
+  const formData = new FormData(form);
+  const currentPassword = String(formData.get('current_password') || '');
+  const newPassword = String(formData.get('new_password') || '');
+  const confirmPassword = String(formData.get('new_password_confirm') || '');
+  const recoveryActive = isPasswordRecoveryActive();
+
+  setPasswordStatus(root, '', 'idle');
+
+  if (!currentPassword && !recoveryActive) {
+    setPasswordStatus(root, 'Enter your current password.', 'error');
+    return;
+  }
+
+  if (!newPassword) {
+    setPasswordStatus(root, 'Enter a new password.', 'error');
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    setPasswordStatus(root, 'Passwords do not match.', 'error');
+    return;
+  }
+
+  const policy = await loadAccountPasswordPolicy();
+  const evaluation = evaluateAccountPassword(newPassword, policy);
+  if (!evaluation.ok) {
+    setPasswordStatus(root, evaluation.message, 'error');
+    return;
+  }
+
+  setPasswordStatus(root, 'Updating password...', 'saving');
+
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase?.auth) {
+      throw new Error('SUPABASE_CLIENT_UNAVAILABLE');
+    }
+
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+
+    const user = sessionData?.session?.user || null;
+    const email = normalizeString(user?.email || user?.user_metadata?.email || '');
+    if (!user?.id || !email) {
+      throw new Error('AUTH_REQUIRED');
+    }
+
+    if (!recoveryActive) {
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword
+      });
+
+      if (reauthError) {
+        throw reauthError;
+      }
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    clearPasswordRecoveryState();
+    form.reset();
+    setPasswordStatus(root, 'Password updated.', 'success');
+  } catch (error) {
+    const message = normalizeString(error?.message || '').toLowerCase().includes('invalid login')
+      ? 'Current password is not correct.'
+      : 'Password could not be updated. Verify the account session and try again.';
+    setPasswordStatus(root, message, 'error');
+    console.error('[profile-settings] Password update failed.', error);
+  }
 }
 
 async function renderVerificationState(root, state = getProfileRuntimeState()) {
@@ -222,6 +343,14 @@ function initProfileSettings() {
           : 'Verification request could not be submitted. Check the Supabase verification table and policies.';
       setVerificationStatus(root, message, 'error');
     }
+  });
+
+  document.addEventListener('submit', async (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement) || !form.matches('[data-profile-password-form]')) return;
+
+    event.preventDefault();
+    await handlePasswordChangeSubmit(form);
   });
 
   document.addEventListener('fragment:mounted', (event) => {

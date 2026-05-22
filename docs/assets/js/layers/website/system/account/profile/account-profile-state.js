@@ -32,6 +32,39 @@ export {
 /* =============================================================================
    03) SESSION PROFILE RESOLUTION
 ============================================================================= */
+const REQUIRED_PROFILE_FIELDS = Object.freeze(['username', 'first_name', 'last_name', 'display_name', 'date_of_birth']);
+
+function getProfileMissingFields(profile = null) {
+  if (!profile) return REQUIRED_PROFILE_FIELDS.slice();
+
+  if (Array.isArray(profile.missing_required_fields)) {
+    return profile.missing_required_fields
+      .map((field) => normalizeString(field))
+      .filter(Boolean);
+  }
+
+  return REQUIRED_PROFILE_FIELDS.filter((field) => {
+    if (field === 'username') {
+      return !normalizeString(profile?.username || profile?.username_lower || profile?.username_normalized || '');
+    }
+
+    if (field === 'date_of_birth') {
+      return !normalizeString(profile?.date_of_birth || profile?.birth_date || '');
+    }
+
+    return !normalizeString(profile?.[field] || '');
+  });
+}
+
+function isResolvedProfileComplete(profile = null) {
+  if (!profile) return false;
+
+  const completionStatus = normalizeString(profile.profile_completion_status || '');
+  return profile.profile_complete === true
+    || completionStatus === 'complete'
+    || getProfileMissingFields(profile).length === 0;
+}
+
 export async function resolveAccountProfileState({
   supabase = getSupabaseClient()
 } = {}) {
@@ -76,24 +109,13 @@ export async function resolveAccountProfileState({
     authUserId
   });
 
-  const requiredFields = ['username', 'first_name', 'last_name', 'display_name', 'date_of_birth'];
-  const missingFields = requiredFields.filter((field) => {
-    if (field === 'username') {
-      return !normalizeString(profile?.username || profile?.username_lower || profile?.username_normalized || '');
-    }
-
-    if (field === 'date_of_birth') {
-      return !normalizeString(profile?.date_of_birth || profile?.birth_date || '');
-    }
-
-    return !normalizeString(profile?.[field] || '');
-  });
+  const missingFields = getProfileMissingFields(profile);
 
   return {
     authenticated:true,
     user,
     profile:profile || null,
-    profileComplete:Boolean(profile) && (profile.profile_complete === true || missingFields.length === 0),
+    profileComplete:isResolvedProfileComplete(profile),
     backend:'supabase',
     reason:profile ? '' : 'PROFILE_RECORD_MISSING',
     missingFields

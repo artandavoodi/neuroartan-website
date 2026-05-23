@@ -146,13 +146,17 @@
   align-items:stretch;
   justify-content:flex-start;
   padding:var(--home-search-shell-none);
-  z-index:var(--z-language-dropdown);
+  z-index:200000;
   pointer-events:none;
   overscroll-behavior:contain;
   touch-action:auto;
 }
 
 body.profile-page .home-search-shell{
+  top:var(--spacing-none);
+}
+
+body.home-search-shell-open .home-search-shell{
   top:var(--spacing-none);
 }
 

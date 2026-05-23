@@ -6,7 +6,7 @@
    fill="none"
    version="1.1"
    id="svg2"
-   sodipodi:docname="settings.svg"
+   sodipodi:docname="platform-menue-settings-personalization.svg"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -41,20 +41,52 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="12.033361"
-     inkscape:cx="10.429339"
-     inkscape:cy="5.5263031"
+     inkscape:zoom="11.091001"
+     inkscape:cx="12.126949"
+     inkscape:cy="4.0122619"
      inkscape:window-width="1472"
-     inkscape:window-height="868"
+     inkscape:window-height="840"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     d="m 18.971102,3.0511814 v 3.4493642 5.4994554 2.678483 m 0,3.890996 v 2.379339"
+     id="path1-1"
+     sodipodi:nodetypes="cccccc" />
   <ellipse
-     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
-     id="path1"
-     cx="12"
-     cy="12"
-     rx="8.9488192"
-     ry="8.9488211" />
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path2"
+     cx="16.646303"
+     cy="-18.971102"
+     transform="rotate(90)"
+     rx="1.7082461"
+     ry="1.7088879" />
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     d="m 5.0288987,3.0511814 v 6.9546836 m 0,3.793722 v 7.149232"
+     id="path1-11"
+     sodipodi:nodetypes="cccc" />
+  <ellipse
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path2-5"
+     cx="12.000649"
+     cy="-5.0288982"
+     transform="rotate(90)"
+     rx="1.7082461"
+     ry="1.7088879" />
+  <path
+     style="fill:#000000;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     d="m 12.000001,3.0511814 v 2.4766145 m 0,3.5991721 v 2.873033 5.499455 3.449363"
+     id="path1-1-7"
+     sodipodi:nodetypes="cccccc" />
+  <ellipse
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     id="path2-5-3"
+     cx="7.3549967"
+     cy="-12"
+     transform="rotate(90)"
+     rx="1.7082461"
+     ry="1.7088879" />
 </svg>

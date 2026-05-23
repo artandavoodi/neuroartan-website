@@ -13,6 +13,14 @@
   font-weight: var(--body-1-weight);
   cursor: pointer;
   text-align: left;
+  opacity: var(--home-platform-shell-nav-opacity);
+  transition: var(--interaction-transition-control);
+}
+
+.home-platform-theme__action-button:hover,
+.home-platform-theme__action-button:focus-visible {
+  outline: none;
+  opacity: var(--home-platform-shell-nav-hover-opacity);
 }
 
 .home-platform-theme__action-button-label {

@@ -1,1 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="restore.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="6.3371114"
+     inkscape:cx="14.202054"
+     inkscape:cy="6.4698247"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <path
+     d="m 8.6119278,5.1647704 -3.792893,3.7928931 a 1,1 89.999999 0 0 0,1.4142135 l 3.792893,3.792893"
+     stroke="currentColor"
+     stroke-width="1.25"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path1"
+     style="stroke:#000000;stroke-width:2.37843;stroke-dasharray:none"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 8.6119278,5.1647704 4.111928,9.6647703 8.6119278,14.16477"
+     sodipodi:nodetypes="ccc"
+     transform="matrix(-0.30252145,0.30252145,0.29216741,0.29216741,5.3589353,1.6488524)" />
+  <path
+     id="path3"
+     style="stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="M 6.3253659,6.3253661 C 5.5423979,7.1083342 4.9552806,8.0130294 4.5639928,8.9786216 4.1727051,9.9442138 3.9772473,10.970702 3.9775976,11.997258 c 3.509e-4,1.026556 0.196511,2.053179 0.5884584,3.019039 0.3919486,0.965859 0.9796844,1.870956 1.7631879,2.654459 0.7835035,0.783504 1.6886002,1.371239 2.6544602,1.763187 0.9658593,0.391949 1.9924819,0.588108 3.0190379,0.588459 1.026556,3.51e-4 2.053044,-0.195107 3.018637,-0.586395 0.965592,-0.391288 1.870287,-0.978405 2.653255,-1.761373 0.782968,-0.782968 1.370085,-1.687663 1.761373,-2.653255 0.391288,-0.965592 0.586747,-1.992081 0.586395,-3.018637 C 20.022051,10.976186 19.825892,9.9495636 19.433944,8.9837036 19.041996,8.0178437 18.45426,7.112747 17.670756,6.3292435 16.887253,5.54574 15.982156,4.9580041 15.016296,4.5660562 14.050437,4.1741075 13.023814,3.9779487 11.997258,3.9775971"
+     sodipodi:nodetypes="csssssssssssssc" />
+</svg>

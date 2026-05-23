@@ -100,12 +100,13 @@
   line-height:var(--control-line-height);
   transition:var(--interaction-transition-control);
   text-align:left;
+  opacity:var(--home-platform-shell-nav-opacity);
 }
 
 .home-platform-theme__action-button:hover,
 .home-platform-theme__action-button:focus-visible{
   outline:none;
-  opacity:0.7;
+  opacity:var(--home-platform-shell-nav-hover-opacity);
 }
 
 .home-platform-theme__action-label{

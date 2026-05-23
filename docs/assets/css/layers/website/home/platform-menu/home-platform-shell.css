@@ -246,6 +246,7 @@ html[data-theme-effective="light"]{
 
 .home-platform-shell__close{
   flex:0 0 auto;
+  margin-inline-end:-0.485rem;
 }
 
 .home-platform-shell__close.global-close-button{

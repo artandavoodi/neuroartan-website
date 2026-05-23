@@ -6,7 +6,7 @@
    fill="none"
    version="1.1"
    id="svg2"
-   sodipodi:docname="settings.svg"
+   sodipodi:docname="platform-menue-settings-dashboard.svg"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -42,19 +42,24 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="12.033361"
-     inkscape:cx="10.429339"
+     inkscape:cx="10.512441"
      inkscape:cy="5.5263031"
      inkscape:window-width="1472"
-     inkscape:window-height="868"
+     inkscape:window-height="840"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
-  <ellipse
-     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
-     id="path1"
-     cx="12"
-     cy="12"
-     rx="8.9488192"
-     ry="8.9488211" />
+  <path
+     id="rect1-9"
+     style="stroke:#000000;stroke-linecap:round;stroke-linejoin:round"
+     d="m 7.915372,3.0512065 h 8.169257 c 2.694711,0 4.864099,2.1693881 4.864099,4.864099 v 8.1693885 c 0,2.694711 -2.169388,4.864099 -4.864099,4.864099 H 7.915372 c -2.6947111,0 -4.8640993,-2.169387 -4.8640993,-4.864099 V 7.9153055 c 0,-2.6947109 2.1693882,-4.864099 4.8640993,-4.864099 z" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999996;stroke-linecap:round;stroke-linejoin:round"
+     d="M 3.051178,9.9184768 H 20.948822"
+     id="path8" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+     d="M 9.91896,3.0512065 V 9.9184768"
+     id="path8-5" />
 </svg>

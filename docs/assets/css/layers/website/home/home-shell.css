@@ -76,6 +76,12 @@ body.home-page.site-entered.home-search-shell-open .home-shell__footer-separator
   pointer-events:none !important;
 }
 
+body.home-search-shell-open .home-platform-shell{
+  opacity:0 !important;
+  visibility:hidden;
+  pointer-events:none !important;
+}
+
 /* =============================================================================
    03) TOPBAR AND FOOTER CHROME
 ============================================================================= */

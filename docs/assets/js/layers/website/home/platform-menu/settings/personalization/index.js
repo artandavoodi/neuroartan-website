@@ -3,11 +3,10 @@ import { mountSettingsCategory } from '../_shared/settings-category.js';
 const STORAGE_KEY = 'neuroartan.personalization-settings';
 
 const DEFAULT_SETTINGS = {
-  // Identity & Profile
-  displayName: '',
-  username: '',
-  description: '',
-  publicProfile: false,
+  // ICOS Assistant Identity
+  assistantName: '',
+  assistantDescription: '',
+  assistantAvatar: '',
   
   // Thought Patterns
   languageStyle: 'balanced',
@@ -34,14 +33,75 @@ const DEFAULT_SETTINGS = {
   
   // Reflection Loop
   reflectionFrequency: 'never',
-  reflectionDepth: 'moderate'
+  reflectionDepth: 'moderate',
+  
+  // Digital Twin Personality - Phase 1
+  senseOfHumor: 50,
+  efficiencyPreference: 50,
+  creativityLevel: 50,
+  riskTolerance: 50
 };
 
-function loadSettings() {
+async function loadSettings() {
   try {
+    // Try to load from Supabase first
+    if (window.neuroartanSupabase) {
+      const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await window.neuroartanSupabase
+          .from('profiles')
+          .select('assistant_name, assistant_description, assistant_avatar_url, assistant_avatar_storage_path, sense_of_humor, efficiency_preference, creativity_level, risk_tolerance')
+          .eq('auth_user_id', user.id)
+          .single();
+        
+        if (profile) {
+          const supabaseSettings = {
+            ...DEFAULT_SETTINGS,
+            assistantName: profile.assistant_name || '',
+            assistantDescription: profile.assistant_description || '',
+            assistantAvatar: profile.assistant_avatar_url || '',
+            assistantAvatarStoragePath: profile.assistant_avatar_storage_path || '',
+            senseOfHumor: profile.sense_of_humor || 50,
+            efficiencyPreference: profile.efficiency_preference || 50,
+            creativityLevel: profile.creativity_level || 50,
+            riskTolerance: profile.risk_tolerance || 50
+          };
+          
+          // Load other settings from localStorage
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            return { ...supabaseSettings, ...parsed };
+          }
+          
+          return supabaseSettings;
+        }
+      }
+    }
+    
+    // Fallback to localStorage
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+      const parsed = JSON.parse(stored);
+      
+      // Migration: map old field names to new field names
+      const migrated = {
+        ...DEFAULT_SETTINGS,
+        ...parsed,
+        // Migrate machineName -> assistantName
+        assistantName: parsed.assistantName || parsed.machineName || '',
+        // Migrate machineDescription -> assistantDescription
+        assistantDescription: parsed.assistantDescription || parsed.machineDescription || ''
+      };
+      
+      // Clean up old field names
+      delete migrated.machineName;
+      delete migrated.machineDescription;
+      
+      // Save migrated data back to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+      
+      return migrated;
     }
   } catch (error) {
     console.error('Failed to load personalization settings:', error);
@@ -49,26 +109,62 @@ function loadSettings() {
   return { ...DEFAULT_SETTINGS };
 }
 
-function saveSettings(settings) {
+async function saveSettings(settings) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    // Save to localStorage for non-identity settings
+    const localStorageSettings = { ...settings };
+    delete localStorageSettings.assistantName;
+    delete localStorageSettings.assistantDescription;
+    delete localStorageSettings.assistantAvatar;
+    delete localStorageSettings.assistantAvatarStoragePath;
+    delete localStorageSettings.senseOfHumor;
+    delete localStorageSettings.efficiencyPreference;
+    delete localStorageSettings.creativityLevel;
+    delete localStorageSettings.riskTolerance;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(localStorageSettings));
+    
+    // Save assistant identity and personality to Supabase
+    if (window.neuroartanSupabase) {
+      const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
+      if (user) {
+        await window.neuroartanSupabase
+          .from('profiles')
+          .update({
+            assistant_name: settings.assistantName,
+            assistant_description: settings.assistantDescription,
+            assistant_avatar_url: settings.assistantAvatar,
+            assistant_avatar_storage_path: settings.assistantAvatarStoragePath,
+            sense_of_humor: settings.senseOfHumor,
+            efficiency_preference: settings.efficiencyPreference,
+            creativity_level: settings.creativityLevel,
+            risk_tolerance: settings.riskTolerance
+          })
+          .eq('auth_user_id', user.id);
+      }
+    }
   } catch (error) {
     console.error('Failed to save personalization settings:', error);
   }
 }
 
 function initializeForm(settings) {
-  // Identity & Profile fields
-  const displayNameInput = document.querySelector('[data-home-platform-field="display-name"]');
-  const usernameInput = document.querySelector('[data-home-platform-field="username"]');
-  const descriptionTextarea = document.querySelector('[data-home-platform-field="description"]');
-  const publicProfileToggle = document.querySelector('[data-home-platform-toggle="public-profile"]');
+  // ICOS Assistant Identity fields
+  const assistantNameInput = document.querySelector('[data-home-platform-field="assistant-name"]');
+  const assistantDescriptionTextarea = document.querySelector('[data-home-platform-field="assistant-description"]');
+  const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
+  const avatarPlaceholder = document.querySelector('[data-home-platform-avatar-placeholder]');
   
-  if (displayNameInput) displayNameInput.value = settings.displayName || '';
-  if (usernameInput) usernameInput.value = settings.username || '';
-  if (descriptionTextarea) descriptionTextarea.value = settings.description || '';
-  if (publicProfileToggle) {
-    publicProfileToggle.setAttribute('aria-pressed', settings.publicProfile.toString());
+  if (assistantNameInput) assistantNameInput.value = settings.assistantName || '';
+  if (assistantDescriptionTextarea) assistantDescriptionTextarea.value = settings.assistantDescription || '';
+  
+  // Update character counter for description
+  updateCharacterCounter(assistantDescriptionTextarea);
+  
+  // Initialize avatar display
+  if (settings.assistantAvatar && avatarImage && avatarPlaceholder) {
+    avatarImage.src = settings.assistantAvatar;
+    avatarImage.hidden = false;
+    avatarPlaceholder.hidden = true;
   }
   
   // Thought Pattern fields
@@ -88,7 +184,7 @@ function initializeForm(settings) {
   if (responseLengthSelect) responseLengthSelect.value = settings.responseLength;
   if (explanationDepthSelect) explanationDepthSelect.value = settings.explanationDepth;
   if (stepByStepToggle) {
-    stepByStepToggle.setAttribute('aria-pressed', settings.stepByStep.toString());
+    stepByStepToggle.setAttribute('aria-checked', settings.stepByStep.toString());
   }
   
   // Memory & Continuity fields
@@ -97,7 +193,7 @@ function initializeForm(settings) {
   const continuityDepthSelect = document.querySelector('[data-home-platform-field="continuity-depth"]');
   
   if (enableMemoryToggle) {
-    enableMemoryToggle.setAttribute('aria-pressed', settings.enableMemory.toString());
+    enableMemoryToggle.setAttribute('aria-checked', settings.enableMemory.toString());
   }
   if (memoryRetentionSelect) memoryRetentionSelect.value = settings.memoryRetention;
   if (continuityDepthSelect) continuityDepthSelect.value = settings.continuityDepth;
@@ -107,10 +203,10 @@ function initializeForm(settings) {
   const communicationLearningToggle = document.querySelector('[data-home-platform-toggle="communication-learning"]');
   
   if (workflowLearningToggle) {
-    workflowLearningToggle.setAttribute('aria-pressed', settings.workflowLearning.toString());
+    workflowLearningToggle.setAttribute('aria-checked', settings.workflowLearning.toString());
   }
   if (communicationLearningToggle) {
-    communicationLearningToggle.setAttribute('aria-pressed', settings.communicationLearning.toString());
+    communicationLearningToggle.setAttribute('aria-checked', settings.communicationLearning.toString());
   }
   
   // Emotional Context fields
@@ -126,42 +222,87 @@ function initializeForm(settings) {
   
   if (reflectionFrequencySelect) reflectionFrequencySelect.value = settings.reflectionFrequency;
   if (reflectionDepthSelect) reflectionDepthSelect.value = settings.reflectionDepth;
+  
+  // Digital Twin Personality sliders
+  const senseOfHumorSlider = document.querySelector('[data-home-platform-field="sense-of-humor"]');
+  const efficiencyPreferenceSlider = document.querySelector('[data-home-platform-field="efficiency-preference"]');
+  const creativityLevelSlider = document.querySelector('[data-home-platform-field="creativity-level"]');
+  const riskToleranceSlider = document.querySelector('[data-home-platform-field="risk-tolerance"]');
+  
+  if (senseOfHumorSlider) {
+    senseOfHumorSlider.value = settings.senseOfHumor || 50;
+    updateSliderValue('sense-of-humor', settings.senseOfHumor || 50);
+  }
+  if (efficiencyPreferenceSlider) {
+    efficiencyPreferenceSlider.value = settings.efficiencyPreference || 50;
+    updateSliderValue('efficiency-preference', settings.efficiencyPreference || 50);
+  }
+  if (creativityLevelSlider) {
+    creativityLevelSlider.value = settings.creativityLevel || 50;
+    updateSliderValue('creativity-level', settings.creativityLevel || 50);
+  }
+  if (riskToleranceSlider) {
+    riskToleranceSlider.value = settings.riskTolerance || 50;
+    updateSliderValue('risk-tolerance', settings.riskTolerance || 50);
+  }
+}
+
+function updateCharacterCounter(textarea) {
+  if (!textarea) return;
+  
+  const maxLength = parseInt(textarea.getAttribute('maxlength')) || 180;
+  const currentLength = textarea.value.length;
+  const counterText = document.querySelector('[data-home-platform-counter-text]');
+  const counterProgress = document.querySelector('.home-platform-theme__counter-circle-progress');
+  const counterContainer = document.querySelector('[data-home-platform-character-counter]');
+  
+  if (counterText) {
+    counterText.textContent = `${currentLength}/${maxLength}`;
+  }
+  
+  if (counterProgress) {
+    const circumference = 2 * Math.PI * 16; // r=16
+    const progress = (currentLength / maxLength) * circumference;
+    const offset = circumference - progress;
+    counterProgress.style.strokeDashoffset = offset;
+    
+    // Update state based on character count
+    if (counterContainer) {
+      if (currentLength >= maxLength) {
+        counterContainer.setAttribute('data-home-platform-character-state', 'over');
+      } else if (currentLength >= maxLength * 0.9) {
+        counterContainer.setAttribute('data-home-platform-character-state', 'warning');
+      } else {
+        counterContainer.setAttribute('data-home-platform-character-state', 'normal');
+      }
+    }
+  }
+}
+
+function updateSliderValue(sliderId, value) {
+  const valueDisplay = document.querySelector(`[data-home-platform-slider-value="${sliderId}"]`);
+  if (valueDisplay) {
+    valueDisplay.textContent = `${value}%`;
+  }
 }
 
 function setupEventListeners(settings) {
-  // Identity & Profile fields
-  const displayNameInput = document.querySelector('[data-home-platform-field="display-name"]');
-  const usernameInput = document.querySelector('[data-home-platform-field="username"]');
-  const descriptionTextarea = document.querySelector('[data-home-platform-field="description"]');
-  const publicProfileToggle = document.querySelector('[data-home-platform-toggle="public-profile"]');
+  // ICOS Assistant Identity fields
+  const assistantNameInput = document.querySelector('[data-home-platform-field="assistant-name"]');
+  const assistantDescriptionTextarea = document.querySelector('[data-home-platform-field="assistant-description"]');
   
-  if (displayNameInput) {
-    displayNameInput.addEventListener('input', (e) => {
-      settings.displayName = e.target.value;
+  if (assistantNameInput) {
+    assistantNameInput.addEventListener('input', (e) => {
+      settings.assistantName = e.target.value;
       saveSettings(settings);
     });
   }
   
-  if (usernameInput) {
-    usernameInput.addEventListener('input', (e) => {
-      settings.username = e.target.value;
+  if (assistantDescriptionTextarea) {
+    assistantDescriptionTextarea.addEventListener('input', (e) => {
+      settings.assistantDescription = e.target.value;
       saveSettings(settings);
-    });
-  }
-  
-  if (descriptionTextarea) {
-    descriptionTextarea.addEventListener('input', (e) => {
-      settings.description = e.target.value;
-      saveSettings(settings);
-    });
-  }
-  
-  if (publicProfileToggle) {
-    publicProfileToggle.addEventListener('click', () => {
-      const currentState = publicProfileToggle.getAttribute('aria-pressed') === 'true';
-      settings.publicProfile = !currentState;
-      publicProfileToggle.setAttribute('aria-pressed', settings.publicProfile.toString());
-      saveSettings(settings);
+      updateCharacterCounter(assistantDescriptionTextarea);
     });
   }
   
@@ -212,9 +353,9 @@ function setupEventListeners(settings) {
   
   if (stepByStepToggle) {
     stepByStepToggle.addEventListener('click', () => {
-      const currentState = stepByStepToggle.getAttribute('aria-pressed') === 'true';
+      const currentState = stepByStepToggle.getAttribute('aria-checked') === 'true';
       settings.stepByStep = !currentState;
-      stepByStepToggle.setAttribute('aria-pressed', settings.stepByStep.toString());
+      stepByStepToggle.setAttribute('aria-checked', settings.stepByStep.toString());
       saveSettings(settings);
     });
   }
@@ -226,9 +367,9 @@ function setupEventListeners(settings) {
   
   if (enableMemoryToggle) {
     enableMemoryToggle.addEventListener('click', () => {
-      const currentState = enableMemoryToggle.getAttribute('aria-pressed') === 'true';
+      const currentState = enableMemoryToggle.getAttribute('aria-checked') === 'true';
       settings.enableMemory = !currentState;
-      enableMemoryToggle.setAttribute('aria-pressed', settings.enableMemory.toString());
+      enableMemoryToggle.setAttribute('aria-checked', settings.enableMemory.toString());
       saveSettings(settings);
     });
   }
@@ -253,18 +394,18 @@ function setupEventListeners(settings) {
   
   if (workflowLearningToggle) {
     workflowLearningToggle.addEventListener('click', () => {
-      const currentState = workflowLearningToggle.getAttribute('aria-pressed') === 'true';
+      const currentState = workflowLearningToggle.getAttribute('aria-checked') === 'true';
       settings.workflowLearning = !currentState;
-      workflowLearningToggle.setAttribute('aria-pressed', settings.workflowLearning.toString());
+      workflowLearningToggle.setAttribute('aria-checked', settings.workflowLearning.toString());
       saveSettings(settings);
     });
   }
   
   if (communicationLearningToggle) {
     communicationLearningToggle.addEventListener('click', () => {
-      const currentState = communicationLearningToggle.getAttribute('aria-pressed') === 'true';
+      const currentState = communicationLearningToggle.getAttribute('aria-checked') === 'true';
       settings.communicationLearning = !currentState;
-      communicationLearningToggle.setAttribute('aria-pressed', settings.communicationLearning.toString());
+      communicationLearningToggle.setAttribute('aria-checked', settings.communicationLearning.toString());
       saveSettings(settings);
     });
   }
@@ -305,6 +446,44 @@ function setupEventListeners(settings) {
     });
   }
   
+  // Digital Twin Personality sliders
+  const senseOfHumorSlider = document.querySelector('[data-home-platform-field="sense-of-humor"]');
+  const efficiencyPreferenceSlider = document.querySelector('[data-home-platform-field="efficiency-preference"]');
+  const creativityLevelSlider = document.querySelector('[data-home-platform-field="creativity-level"]');
+  const riskToleranceSlider = document.querySelector('[data-home-platform-field="risk-tolerance"]');
+  
+  if (senseOfHumorSlider) {
+    senseOfHumorSlider.addEventListener('input', (e) => {
+      settings.senseOfHumor = parseInt(e.target.value);
+      updateSliderValue('sense-of-humor', settings.senseOfHumor);
+      saveSettings(settings);
+    });
+  }
+  
+  if (efficiencyPreferenceSlider) {
+    efficiencyPreferenceSlider.addEventListener('input', (e) => {
+      settings.efficiencyPreference = parseInt(e.target.value);
+      updateSliderValue('efficiency-preference', settings.efficiencyPreference);
+      saveSettings(settings);
+    });
+  }
+  
+  if (creativityLevelSlider) {
+    creativityLevelSlider.addEventListener('input', (e) => {
+      settings.creativityLevel = parseInt(e.target.value);
+      updateSliderValue('creativity-level', settings.creativityLevel);
+      saveSettings(settings);
+    });
+  }
+  
+  if (riskToleranceSlider) {
+    riskToleranceSlider.addEventListener('input', (e) => {
+      settings.riskTolerance = parseInt(e.target.value);
+      updateSliderValue('risk-tolerance', settings.riskTolerance);
+      saveSettings(settings);
+    });
+  }
+  
   // Voice training button (placeholder for future backend integration)
   const startVoiceTrainingButton = document.querySelector('[data-home-platform-action="start-voice-training"]');
   if (startVoiceTrainingButton) {
@@ -314,20 +493,89 @@ function setupEventListeners(settings) {
     });
   }
   
-  // Change avatar button (placeholder for future backend integration)
+  // Change assistant avatar button
   const changeAvatarButton = document.querySelector('[data-home-platform-action="change-avatar"]');
-  if (changeAvatarButton) {
+  const avatarInput = document.querySelector('[data-home-platform-avatar-input]');
+  const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
+  const avatarPlaceholder = document.querySelector('[data-home-platform-avatar-placeholder]');
+  
+  if (changeAvatarButton && avatarInput) {
     changeAvatarButton.addEventListener('click', () => {
-      // Placeholder: Avatar upload requires backend runtime
-      console.log('Avatar upload requires backend runtime');
+      avatarInput.click();
+    });
+  }
+  
+  if (avatarInput) {
+    avatarInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        try {
+          // Upload to Supabase storage
+          if (window.neuroartanSupabase) {
+            const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
+            if (user) {
+              const fileExt = file.name.split('.').pop();
+              const fileName = `${user.id}/assistant-avatar-${Date.now()}.${fileExt}`;
+              
+              const { data: uploadData, error: uploadError } = await window.neuroartanSupabase
+                .storage
+                .from('profile-media')
+                .upload(fileName, file, {
+                  cacheControl: '3600',
+                  upsert: false
+                });
+              
+              if (uploadError) {
+                console.error('Avatar upload error:', uploadError);
+                return;
+              }
+              
+              // Get public URL
+              const { data: { publicUrl } } = window.neuroartanSupabase
+                .storage
+                .from('profile-media')
+                .getPublicUrl(fileName);
+              
+              settings.assistantAvatar = publicUrl;
+              settings.assistantAvatarStoragePath = fileName;
+              await saveSettings(settings);
+              
+              // Update avatar display
+              if (avatarImage && avatarPlaceholder) {
+                avatarImage.src = publicUrl;
+                avatarImage.hidden = false;
+                avatarPlaceholder.hidden = true;
+              }
+            }
+          } else {
+            // Fallback to base64 for localStorage
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const imageDataUrl = event.target.result;
+              settings.assistantAvatar = imageDataUrl;
+              saveSettings(settings);
+              
+              // Update avatar display
+              if (avatarImage && avatarPlaceholder) {
+                avatarImage.src = imageDataUrl;
+                avatarImage.hidden = false;
+                avatarPlaceholder.hidden = true;
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        } catch (error) {
+          console.error('Avatar upload failed:', error);
+        }
+      }
     });
   }
 }
 
-export function mountHomePlatformDestination(root, options = {}) {
+export async function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   
-  const settings = loadSettings();
+  const settings = await loadSettings();
   initializeForm(settings);
   setupEventListeners(settings);
 }

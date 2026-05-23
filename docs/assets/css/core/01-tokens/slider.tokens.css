@@ -1,0 +1,20 @@
+/* =============================================================================
+   SLIDER TOKENS
+   Global slider component tokens for unified design system
+============================================================================= */
+
+:root {
+  /* Slider Track */
+  --slider-track-height: 6px;
+  --slider-track-radius: 3px;
+  --slider-track-bg: var(--border-color);
+  
+  /* Slider Fill (progress portion) */
+  --slider-fill-bg: var(--color-primary1);
+  
+  /* Slider Thumb */
+  --slider-thumb-size: 20px;
+  --slider-thumb-radius: 50%;
+  --slider-thumb-bg: var(--color-primary1);
+  --slider-thumb-border: none;
+}

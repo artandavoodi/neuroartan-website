@@ -31,11 +31,6 @@
   --profile-media-editor-control-border-hover:var(--control-border-hover-unified);
   --profile-media-editor-control-active-bg:color-mix(in srgb, var(--color-primary1) 16%, var(--control-surface));
   --profile-media-editor-control-active-border:color-mix(in srgb, var(--color-primary1) 58%, var(--control-border-unified));
-  --profile-media-editor-range-track-bg:var(--control-surface);
-  --profile-media-editor-range-fill-bg:var(--color-primary1);
-  --profile-media-editor-range-thumb-bg:var(--color-primary1);
-  --profile-media-editor-range-height:var(--spacing-2xs);
-  --profile-media-editor-range-thumb-size:var(--spacing-md);
   --profile-media-editor-guide-color:color-mix(in srgb, var(--text-primary-color) 42%, transparent);
   --profile-media-editor-guide-center-color:color-mix(in srgb, var(--color-primary1) 54%, transparent);
 }
@@ -302,46 +297,61 @@ body.profile-media-editor-open{
   gap:var(--spacing-xs);
 }
 
-.profile-media-editor__range{
+.profile-media-editor__dialog .profile-media-editor__range{
   width:100%;
-  appearance:none;
-  -webkit-appearance:none;
-  height:var(--profile-media-editor-range-thumb-size);
+  height: var(--slider-track-height);
   border:0;
-  border-radius:var(--control-radius-pill);
-  background:
-    linear-gradient(
-      90deg,
-      var(--profile-media-editor-range-fill-bg) 0%,
-      var(--profile-media-editor-range-fill-bg) var(--profile-media-editor-range-progress, 0%),
-      var(--profile-media-editor-range-track-bg) var(--profile-media-editor-range-progress, 0%),
-      var(--profile-media-editor-range-track-bg) 100%
-    )
-    center / 100% var(--profile-media-editor-range-height) no-repeat;
+  border-radius:var(--slider-track-radius);
+  background: transparent;
   outline:none;
   box-shadow:none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.profile-media-editor__range::-webkit-slider-thumb{
+.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-runnable-track {
+  height: var(--slider-track-height);
+  background: var(--slider-track-bg);
+  border-radius: var(--slider-track-radius);
+}
+
+.profile-media-editor__dialog .profile-media-editor__range::-moz-range-track {
+  height: var(--slider-track-height);
+  background: var(--slider-track-bg);
+  border-radius: var(--slider-track-radius);
+}
+
+.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-thumb{
   appearance:none;
   -webkit-appearance:none;
-  width:var(--profile-media-editor-range-thumb-size);
-  height:var(--profile-media-editor-range-thumb-size);
-  border:var(--border-width-hairline) solid color-mix(in srgb, var(--color-primary1) 42%, var(--border-color));
-  border-radius:var(--control-radius-pill);
-  background:var(--profile-media-editor-range-thumb-bg);
+  width:var(--slider-thumb-size);
+  height:var(--slider-thumb-size);
+  border:var(--slider-thumb-border);
+  border-radius:var(--slider-thumb-radius);
+  background:var(--slider-thumb-bg);
   cursor:pointer;
   box-shadow:none;
+  transition:none;
+  margin-top: calc((var(--slider-thumb-size) - var(--slider-track-height)) / -2);
 }
 
-.profile-media-editor__range::-moz-range-thumb{
-  width:var(--profile-media-editor-range-thumb-size);
-  height:var(--profile-media-editor-range-thumb-size);
-  border:var(--border-width-hairline) solid color-mix(in srgb, var(--color-primary1) 42%, var(--border-color));
-  border-radius:var(--control-radius-pill);
-  background:var(--profile-media-editor-range-thumb-bg);
+.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-thumb:hover{
+  background:var(--slider-thumb-bg);
+}
+
+.profile-media-editor__dialog .profile-media-editor__range::-moz-range-thumb{
+  width:var(--slider-thumb-size);
+  height:var(--slider-thumb-size);
+  border:var(--slider-thumb-border);
+  border-radius:var(--slider-thumb-radius);
+  background:var(--slider-thumb-bg);
   cursor:pointer;
   box-shadow:none;
+  transition:none;
+}
+
+.profile-media-editor__dialog .profile-media-editor__range::-moz-range-thumb:hover{
+  background:var(--slider-thumb-bg);
 }
 
 .profile-media-editor__select{

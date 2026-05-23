@@ -38,6 +38,44 @@ const HOME_OVERVIEW_MODULES = [
   },
 ];
 
+// Get dashboard configuration
+function getDashboardConfig() {
+  const stored = localStorage.getItem('neuroartan-dashboard-config');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Failed to parse dashboard config:', e);
+    }
+  }
+  return null;
+}
+
+// Get ordered modules based on priority configuration
+function getOrderedModules() {
+  const config = getDashboardConfig();
+  if (!config || !config.priority) {
+    return HOME_OVERVIEW_MODULES;
+  }
+  
+  // Sort modules by priority
+  return [...HOME_OVERVIEW_MODULES].sort((a, b) => {
+    const priorityA = config.priority[a.id] || 999;
+    const priorityB = config.priority[b.id] || 999;
+    return priorityA - priorityB;
+  });
+}
+
+// Get visible modules based on visibility configuration
+function getVisibleModules(modules) {
+  const config = getDashboardConfig();
+  if (!config || !config.visibility) {
+    return modules;
+  }
+  
+  return modules.filter(module => config.visibility[module.id] !== false);
+}
+
 async function loadHomeOverviewFragment(fragmentPath) {
   const response = await fetch(fragmentPath, { cache: "no-store" });
   if (!response.ok) {
@@ -57,10 +95,58 @@ async function mountHomeOverviewModule(root, descriptor) {
   descriptor.mount?.(mountedRoot);
 }
 
+// Reorder modules in the DOM based on priority
+function reorderModules(root, orderedModules) {
+  const stack = root.querySelector('[data-home-overview-stack]');
+  if (!(stack instanceof Element)) return;
+  
+  orderedModules.forEach(module => {
+    const slot = root.querySelector(`[data-home-overview-slot="${module.id}"]`);
+    if (slot instanceof Element) {
+      stack.appendChild(slot);
+    }
+  });
+}
+
+// Listen for priority changes
+function listenForPriorityChanges(root) {
+  document.addEventListener('neuroartan:dashboard:priority:changed', () => {
+    const orderedModules = getOrderedModules();
+    const visibleModules = getVisibleModules(orderedModules);
+    reorderModules(root, visibleModules);
+  });
+}
+
+// Listen for visibility changes
+function listenForVisibilityChanges(root) {
+  document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
+    const orderedModules = getOrderedModules();
+    const visibleModules = getVisibleModules(orderedModules);
+    
+    // Toggle visibility of the specific module
+    const slot = root.querySelector(`[data-home-overview-slot="${e.detail.moduleId}"]`);
+    if (slot instanceof Element) {
+      slot.style.display = e.detail.visible ? '' : 'none';
+    }
+  });
+}
+
 export async function mountHomePlatformDestination(root) {
   if (!(root instanceof Element)) return;
 
+  // Get ordered and visible modules
+  const orderedModules = getOrderedModules();
+  const visibleModules = getVisibleModules(orderedModules);
+  
+  // Mount all modules
   await Promise.all(
-    HOME_OVERVIEW_MODULES.map((descriptor) => mountHomeOverviewModule(root, descriptor))
+    visibleModules.map((descriptor) => mountHomeOverviewModule(root, descriptor))
   );
+  
+  // Reorder modules based on priority
+  reorderModules(root, visibleModules);
+  
+  // Set up listeners for configuration changes
+  listenForPriorityChanges(root);
+  listenForVisibilityChanges(root);
 }

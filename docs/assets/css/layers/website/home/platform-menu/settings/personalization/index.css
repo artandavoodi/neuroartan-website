@@ -57,8 +57,8 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
+  background: var(--profile-private-hero-control-bg);
+  border: 1px solid var(--profile-private-hero-control-border);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -66,16 +66,18 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background var(--transition-fast) ease;
+  transition: background var(--transition-fast) ease, border-color var(--transition-fast) ease;
 }
 
 .home-platform-theme__media-action:hover {
-  background: white;
+  background: var(--profile-private-hero-control-bg-hover);
+  border-color: var(--profile-private-hero-control-border-hover);
 }
 
 .home-platform-theme__media-action img {
   width: 16px;
   height: 16px;
+  filter: var(--icon-image-filter);
 }
 
 .home-platform-theme__profile-fields {

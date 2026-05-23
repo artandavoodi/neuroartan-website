@@ -1,0 +1,37 @@
+{
+  "version": "2026-05-23",
+  "canonicalStatus": "dashboard_configuration_schema",
+  "visibility": {
+    "system-overview": true,
+    "continuity-memory": true,
+    "knowledge-graph": true,
+    "model-readiness": true,
+    "system-guidance": true,
+    "usage-interaction": true
+  },
+  "priority": {
+    "system-overview": 1,
+    "continuity-memory": 2,
+    "knowledge-graph": 3,
+    "model-readiness": 4,
+    "system-guidance": 5,
+    "usage-interaction": 6
+  },
+  "analytics": {
+    "enableTracking": false,
+    "retention": "7days",
+    "frequency": "realtime"
+  },
+  "health": {
+    "enableMonitoring": false,
+    "enableAlerts": false
+  },
+  "readiness": {
+    "enableTracking": false,
+    "enableMilestoneNotifications": false
+  },
+  "model": {
+    "enableDashboard": false,
+    "defaultView": "overview"
+  }
+}

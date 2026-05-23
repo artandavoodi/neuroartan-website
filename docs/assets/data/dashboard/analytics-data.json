@@ -1,0 +1,27 @@
+{
+  "version": "2026-05-23",
+  "canonicalStatus": "analytics_metrics_schema",
+  "metrics": {
+    "sessions": {
+      "total": 0,
+      "active": 0,
+      "averageDuration": 0
+    },
+    "conversations": {
+      "total": 0,
+      "messages": 0,
+      "averageLength": 0
+    },
+    "reflection": {
+      "total": 0,
+      "completed": 0,
+      "averageDepth": 0
+    }
+  },
+  "timeline": [],
+  "aggregations": {
+    "daily": {},
+    "weekly": {},
+    "monthly": {}
+  }
+}

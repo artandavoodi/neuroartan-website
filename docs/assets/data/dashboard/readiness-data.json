@@ -1,0 +1,32 @@
+{
+  "version": "2026-05-23",
+  "canonicalStatus": "readiness_states_schema",
+  "model": {
+    "training": {
+      "status": "not-started",
+      "progress": 0,
+      "startedAt": null,
+      "estimatedCompletion": null
+    },
+    "voice": {
+      "status": "not-started",
+      "progress": 0,
+      "startedAt": null,
+      "estimatedCompletion": null
+    },
+    "verification": {
+      "status": "not-started",
+      "progress": 0,
+      "startedAt": null,
+      "estimatedCompletion": null
+    },
+    "publication": {
+      "status": "not-started",
+      "progress": 0,
+      "startedAt": null,
+      "estimatedCompletion": null
+    }
+  },
+  "milestones": [],
+  "overallProgress": 0
+}

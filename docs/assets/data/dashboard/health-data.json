@@ -1,0 +1,31 @@
+{
+  "version": "2026-05-23",
+  "canonicalStatus": "health_metrics_schema",
+  "system": {
+    "status": "unknown",
+    "lastCheck": null,
+    "uptime": 0,
+    "responseTime": 0
+  },
+  "components": {
+    "runtime": {
+      "status": "unknown",
+      "version": null,
+      "lastUpdate": null
+    },
+    "memory": {
+      "status": "unknown",
+      "usage": 0,
+      "capacity": 0,
+      "lastUpdate": null
+    },
+    "storage": {
+      "status": "unknown",
+      "usage": 0,
+      "capacity": 0,
+      "lastUpdate": null
+    }
+  },
+  "alerts": [],
+  "history": []
+}

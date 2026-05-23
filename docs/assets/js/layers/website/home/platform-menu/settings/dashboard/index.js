@@ -262,100 +262,73 @@ function initDropdownControls(root) {
 function initGlobalToggles(root) {
   const config = getDashboardConfig();
   
-  // Initialize visibility toggles
+  // Sync dashboard config with global toggle system
+  document.addEventListener('neuroartan:toggle-changed', (event) => {
+    const { scope, key, checked } = event.detail;
+    
+    if (scope === 'dashboard-visibility' && key in config.visibility) {
+      config.visibility[key] = checked;
+      saveDashboardConfig(config);
+      dispatchDashboardEvent('visibility:changed', { moduleId: key, visible: checked });
+    }
+    
+    if (scope === 'dashboard-analytics' && key === 'enableTracking') {
+      config.analytics.enableTracking = checked;
+      saveDashboardConfig(config);
+      dispatchDashboardEvent('analytics:changed', { enableTracking: checked });
+    }
+    
+    if (scope === 'dashboard-health' && key in config.health) {
+      config.health[key] = checked;
+      saveDashboardConfig(config);
+      dispatchDashboardEvent('health:changed', { [key]: checked });
+    }
+    
+    if (scope === 'dashboard-readiness' && key in config.readiness) {
+      config.readiness[key] = checked;
+      saveDashboardConfig(config);
+      dispatchDashboardEvent('readiness:changed', { [key]: checked });
+    }
+    
+    if (scope === 'dashboard-model' && key === 'enableDashboard') {
+      config.model.enableDashboard = checked;
+      saveDashboardConfig(config);
+      dispatchDashboardEvent('model:changed', { enableDashboard: checked });
+    }
+  });
+  
+  // Initialize toggle states from dashboard config
   const visibilityToggles = root.querySelectorAll('[data-toggle-scope="dashboard-visibility"]');
   visibilityToggles.forEach(toggle => {
     const toggleKey = toggle.dataset.toggleKey;
     const isChecked = config.visibility[toggleKey] !== false;
-    
     toggle.setAttribute('aria-checked', isChecked);
-    
-    toggle.addEventListener('click', () => {
-      const currentState = toggle.getAttribute('aria-checked') === 'true';
-      const newState = !currentState;
-      
-      toggle.setAttribute('aria-checked', newState);
-      config.visibility[toggleKey] = newState;
-      saveDashboardConfig(config);
-      
-      dispatchDashboardEvent('visibility:changed', { moduleId: toggleKey, visible: newState });
-    });
   });
   
-  // Initialize analytics toggle
   const analyticsToggle = root.querySelector('[data-toggle-scope="dashboard-analytics"]');
   if (analyticsToggle) {
     const isChecked = config.analytics.enableTracking;
     analyticsToggle.setAttribute('aria-checked', isChecked);
-    
-    analyticsToggle.addEventListener('click', () => {
-      const currentState = analyticsToggle.getAttribute('aria-checked') === 'true';
-      const newState = !currentState;
-      
-      analyticsToggle.setAttribute('aria-checked', newState);
-      config.analytics.enableTracking = newState;
-      saveDashboardConfig(config);
-      
-      dispatchDashboardEvent('analytics:changed', { enableTracking: newState });
-    });
   }
   
-  // Initialize health toggles
   const healthToggles = root.querySelectorAll('[data-toggle-scope="dashboard-health"]');
   healthToggles.forEach(toggle => {
     const toggleKey = toggle.dataset.toggleKey;
     const isChecked = config.health[toggleKey] !== false;
-    
     toggle.setAttribute('aria-checked', isChecked);
-    
-    toggle.addEventListener('click', () => {
-      const currentState = toggle.getAttribute('aria-checked') === 'true';
-      const newState = !currentState;
-      
-      toggle.setAttribute('aria-checked', newState);
-      config.health[toggleKey] = newState;
-      saveDashboardConfig(config);
-      
-      dispatchDashboardEvent('health:changed', { [toggleKey]: newState });
-    });
   });
   
-  // Initialize readiness toggles
   const readinessToggles = root.querySelectorAll('[data-toggle-scope="dashboard-readiness"]');
   readinessToggles.forEach(toggle => {
     const toggleKey = toggle.dataset.toggleKey;
     const isChecked = config.readiness[toggleKey] !== false;
-    
     toggle.setAttribute('aria-checked', isChecked);
-    
-    toggle.addEventListener('click', () => {
-      const currentState = toggle.getAttribute('aria-checked') === 'true';
-      const newState = !currentState;
-      
-      toggle.setAttribute('aria-checked', newState);
-      config.readiness[toggleKey] = newState;
-      saveDashboardConfig(config);
-      
-      dispatchDashboardEvent('readiness:changed', { [toggleKey]: newState });
-    });
   });
   
-  // Initialize model toggle
   const modelToggle = root.querySelector('[data-toggle-scope="dashboard-model"]');
   if (modelToggle) {
     const isChecked = config.model.enableDashboard;
     modelToggle.setAttribute('aria-checked', isChecked);
-    
-    modelToggle.addEventListener('click', () => {
-      const currentState = modelToggle.getAttribute('aria-checked') === 'true';
-      const newState = !currentState;
-      
-      modelToggle.setAttribute('aria-checked', newState);
-      config.model.enableDashboard = newState;
-      saveDashboardConfig(config);
-      
-      dispatchDashboardEvent('model:changed', { enableDashboard: newState });
-    });
   }
 }
 

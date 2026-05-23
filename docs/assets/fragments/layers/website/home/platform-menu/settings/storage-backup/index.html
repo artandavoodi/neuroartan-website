@@ -5,27 +5,106 @@
         <p class="home-platform-theme__section-eyebrow">Local Data</p>
         <h2 class="home-platform-theme__section-title" id="settings-storage-local">Browser storage</h2>
       </div>
-      <div class="home-platform-theme__mode-grid">
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="export-settings">
-          <span class="home-platform-theme__mode-label">Export</span>
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="export-settings">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/export-settings/export-settings.svg" alt="" width="16" height="16">
+            Export settings
+          </span>
         </button>
-        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="clear-local-preferences">
-          <span class="home-platform-theme__mode-label">Archive / Clear local</span>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="archive-clear-local">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/archive-clear-local/archive-clear-local.svg" alt="" width="16" height="16">
+            Archive & clear local
+          </span>
         </button>
       </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="settings-storage-cloud">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Cloud Backup</p>
+        <h2 class="home-platform-theme__section-title" id="settings-storage-cloud">Backup & sync</h2>
+      </div>
       <div class="home-platform-theme__toggle-list">
-        <div class="home-platform-theme__toggle-row">
+        <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="storage-auto-backup">
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Backup</p>
+            <p class="home-platform-theme__toggle-title">Automatic backup</p>
           </div>
-          <span class="home-platform-theme__mode-caption">Cloud backup requires a signed-in account storage owner.</span>
+          <button
+            class="na-toggle"
+            type="button"
+            role="switch"
+            aria-checked="false"
+            data-na-toggle
+            data-toggle-key="storage-auto-backup"
+            data-toggle-scope="storage"
+            data-toggle-default="off"
+            data-toggle-mode="custom-only">
+            <span class="na-toggle__track" aria-hidden="true">
+              <span class="na-toggle__thumb"></span>
+            </span>
+          </button>
         </div>
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Restore / Sync</p>
-          </div>
-          <span class="home-platform-theme__mode-caption">Restore and sync depend on the account-backed storage runtime.</span>
+      </div>
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="create-backup">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/create-backup/create-backup.svg" alt="" width="16" height="16">
+            Create backup now
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="restore-backup">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/restore-backup/restore-backup.svg" alt="" width="16" height="16">
+            Restore from backup
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="settings-storage-management">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Data Management</p>
+        <h2 class="home-platform-theme__section-title" id="settings-storage-management">Storage usage</h2>
+      </div>
+      <div class="home-platform-theme__storage-breakdown">
+        <div class="home-platform-theme__storage-breakdown-row">
+          <span class="home-platform-theme__storage-breakdown-label">Preferences</span>
+          <span class="home-platform-theme__storage-breakdown-value" data-home-platform-storage-preferences>0 KB</span>
         </div>
+        <div class="home-platform-theme__storage-breakdown-row">
+          <span class="home-platform-theme__storage-breakdown-label">Chat history</span>
+          <span class="home-platform-theme__storage-breakdown-value" data-home-platform-storage-chat>0 KB</span>
+        </div>
+        <div class="home-platform-theme__storage-breakdown-row">
+          <span class="home-platform-theme__storage-breakdown-label">Model state</span>
+          <span class="home-platform-theme__storage-breakdown-value" data-home-platform-storage-model>0 KB</span>
+        </div>
+        <div class="home-platform-theme__storage-breakdown-row home-platform-theme__storage-breakdown-row--total">
+          <span class="home-platform-theme__storage-breakdown-label">Total</span>
+          <span class="home-platform-theme__storage-breakdown-value" data-home-platform-storage-total>0 KB</span>
+        </div>
+      </div>
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="clear-preferences">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/clear-preferences/clear-preferences.svg" alt="" width="16" height="16">
+            Clear preferences
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="clear-chat">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/clear-chat/clear-chat.svg" alt="" width="16" height="16">
+            Clear chat history
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="clear-model">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/clear-model/clear-model.svg" alt="" width="16" height="16">
+            Clear model state
+          </span>
+        </button>
       </div>
     </section>
   </div>

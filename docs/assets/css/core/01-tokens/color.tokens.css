@@ -77,6 +77,10 @@
 :root{
   --overlay-backdrop-dark:rgba(0,0,0,0.48);
   --overlay-backdrop-light:rgba(255,255,255,0.28);
+  
+  --hover-overlay-bg:rgba(255,255,255,0.95);
+  --hover-overlay-text:var(--color-black);
+  --hover-overlay-shadow:rgba(0,0,0,0.12);
 }
 
 /* =============================================================================

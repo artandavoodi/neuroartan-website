@@ -179,7 +179,7 @@ function initializeForm(settings) {
   // Response Style fields
   const responseLengthSelect = document.querySelector('[data-home-platform-field="response-length"]');
   const explanationDepthSelect = document.querySelector('[data-home-platform-field="explanation-depth"]');
-  const stepByStepToggle = document.querySelector('[data-home-platform-toggle="step-by-step"]');
+  const stepByStepToggle = document.querySelector('[data-toggle-scope="personalization-response"]');
   
   if (responseLengthSelect) responseLengthSelect.value = settings.responseLength;
   if (explanationDepthSelect) explanationDepthSelect.value = settings.explanationDepth;
@@ -188,7 +188,7 @@ function initializeForm(settings) {
   }
   
   // Memory & Continuity fields
-  const enableMemoryToggle = document.querySelector('[data-home-platform-toggle="enable-memory"]');
+  const enableMemoryToggle = document.querySelector('[data-toggle-scope="personalization-memory"]');
   const memoryRetentionSelect = document.querySelector('[data-home-platform-field="memory-retention"]');
   const continuityDepthSelect = document.querySelector('[data-home-platform-field="continuity-depth"]');
   
@@ -199,8 +199,8 @@ function initializeForm(settings) {
   if (continuityDepthSelect) continuityDepthSelect.value = settings.continuityDepth;
   
   // Behavioral Learning toggles
-  const workflowLearningToggle = document.querySelector('[data-home-platform-toggle="workflow-learning"]');
-  const communicationLearningToggle = document.querySelector('[data-home-platform-toggle="communication-learning"]');
+  const workflowLearningToggle = document.querySelector('[data-toggle-scope="personalization-behavioral"][data-toggle-key="workflowLearning"]');
+  const communicationLearningToggle = document.querySelector('[data-toggle-scope="personalization-behavioral"][data-toggle-key="communicationLearning"]');
   
   if (workflowLearningToggle) {
     workflowLearningToggle.setAttribute('aria-checked', settings.workflowLearning.toString());
@@ -287,6 +287,32 @@ function updateSliderValue(sliderId, value) {
 }
 
 function setupEventListeners(settings) {
+  // Sync personalization config with global toggle system
+  document.addEventListener('neuroartan:toggle-changed', (event) => {
+    const { scope, key, checked } = event.detail;
+    
+    if (scope === 'personalization-response' && key === 'stepByStep') {
+      settings.stepByStep = checked;
+      saveSettings(settings);
+    }
+    
+    if (scope === 'personalization-memory' && key === 'enableMemory') {
+      settings.enableMemory = checked;
+      saveSettings(settings);
+    }
+    
+    if (scope === 'personalization-behavioral') {
+      if (key === 'workflowLearning') {
+        settings.workflowLearning = checked;
+        saveSettings(settings);
+      }
+      if (key === 'communicationLearning') {
+        settings.communicationLearning = checked;
+        saveSettings(settings);
+      }
+    }
+  });
+  
   // ICOS Assistant Identity fields
   const assistantNameInput = document.querySelector('[data-home-platform-field="assistant-name"]');
   const assistantDescriptionTextarea = document.querySelector('[data-home-platform-field="assistant-description"]');
@@ -335,7 +361,6 @@ function setupEventListeners(settings) {
   // Response Style fields
   const responseLengthSelect = document.querySelector('[data-home-platform-field="response-length"]');
   const explanationDepthSelect = document.querySelector('[data-home-platform-field="explanation-depth"]');
-  const stepByStepToggle = document.querySelector('[data-home-platform-toggle="step-by-step"]');
   
   if (responseLengthSelect) {
     responseLengthSelect.addEventListener('change', (e) => {
@@ -351,28 +376,9 @@ function setupEventListeners(settings) {
     });
   }
   
-  if (stepByStepToggle) {
-    stepByStepToggle.addEventListener('click', () => {
-      const currentState = stepByStepToggle.getAttribute('aria-checked') === 'true';
-      settings.stepByStep = !currentState;
-      stepByStepToggle.setAttribute('aria-checked', settings.stepByStep.toString());
-      saveSettings(settings);
-    });
-  }
-  
   // Memory & Continuity fields
-  const enableMemoryToggle = document.querySelector('[data-home-platform-toggle="enable-memory"]');
   const memoryRetentionSelect = document.querySelector('[data-home-platform-field="memory-retention"]');
   const continuityDepthSelect = document.querySelector('[data-home-platform-field="continuity-depth"]');
-  
-  if (enableMemoryToggle) {
-    enableMemoryToggle.addEventListener('click', () => {
-      const currentState = enableMemoryToggle.getAttribute('aria-checked') === 'true';
-      settings.enableMemory = !currentState;
-      enableMemoryToggle.setAttribute('aria-checked', settings.enableMemory.toString());
-      saveSettings(settings);
-    });
-  }
   
   if (memoryRetentionSelect) {
     memoryRetentionSelect.addEventListener('change', (e) => {
@@ -384,28 +390,6 @@ function setupEventListeners(settings) {
   if (continuityDepthSelect) {
     continuityDepthSelect.addEventListener('change', (e) => {
       settings.continuityDepth = e.target.value;
-      saveSettings(settings);
-    });
-  }
-  
-  // Behavioral Learning toggles
-  const workflowLearningToggle = document.querySelector('[data-home-platform-toggle="workflow-learning"]');
-  const communicationLearningToggle = document.querySelector('[data-home-platform-toggle="communication-learning"]');
-  
-  if (workflowLearningToggle) {
-    workflowLearningToggle.addEventListener('click', () => {
-      const currentState = workflowLearningToggle.getAttribute('aria-checked') === 'true';
-      settings.workflowLearning = !currentState;
-      workflowLearningToggle.setAttribute('aria-checked', settings.workflowLearning.toString());
-      saveSettings(settings);
-    });
-  }
-  
-  if (communicationLearningToggle) {
-    communicationLearningToggle.addEventListener('click', () => {
-      const currentState = communicationLearningToggle.getAttribute('aria-checked') === 'true';
-      settings.communicationLearning = !currentState;
-      communicationLearningToggle.setAttribute('aria-checked', settings.communicationLearning.toString());
       saveSettings(settings);
     });
   }

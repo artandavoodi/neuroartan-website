@@ -105,7 +105,7 @@
 .home-platform-theme__title,
 .home-platform-theme__section-title{
   margin:var(--spacing-none);
-  font-size:var(--spacing-md);
+  font-size:var(--control-font-size);
   font-weight:var(--control-font-weight);
   line-height:var(--home-platform-theme-title-line-height);
   letter-spacing:var(--home-platform-theme-title-tracking);

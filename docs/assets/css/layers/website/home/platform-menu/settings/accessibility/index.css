@@ -28,19 +28,19 @@
 }
 
 html[data-accessibility-typography="small"] {
-  font-size: 14px;
+  font-size: var(--body-1-size);
 }
 
 html[data-accessibility-typography="medium"] {
-  font-size: 16px;
+  font-size: var(--body-1-size);
 }
 
 html[data-accessibility-typography="large"] {
-  font-size: 18px;
+  font-size: var(--body-2-size);
 }
 
 html[data-accessibility-typography="extra-large"] {
-  font-size: 20px;
+  font-size: var(--body-3-size);
 }
 
 html[data-accessibility-density="compact"] {
@@ -77,7 +77,7 @@ html[data-accessibility-density="comfortable"] {
 }
 
 html[data-accessibility-motion="reduced"] * {
-  animation-duration: 0.01ms !important;
+  animation-duration: var(--interaction-motion-none) !important;
   animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+  transition-duration: var(--interaction-motion-none) !important;
 }

@@ -240,18 +240,13 @@ async function updateBackupStatus() {
       return;
     }
 
-    const lastBackupElement = document.querySelector('[data-home-platform-backup-last-time]');
-    const usageElement = document.querySelector('[data-home-platform-backup-usage]');
-
     if (backups && backups.length > 0) {
       const lastBackup = backups[0];
       const lastBackupTime = new Date(lastBackup.created_at).toLocaleString();
-      if (lastBackupElement) {
-        lastBackupElement.textContent = lastBackupTime;
-      }
-      if (usageElement && lastBackup.metadata) {
+      console.log('[Backup] Last backup:', lastBackupTime);
+      if (lastBackup.metadata) {
         const sizeInKB = (lastBackup.metadata.size / 1024).toFixed(2);
-        usageElement.textContent = `${sizeInKB} KB`;
+        console.log('[Backup] Backup size:', sizeInKB, 'KB');
       }
     }
   } catch (error) {

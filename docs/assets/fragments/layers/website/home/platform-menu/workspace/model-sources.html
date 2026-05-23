@@ -1,6 +1,126 @@
 <section class="home-platform-destination home-platform-destination--workspace-model-sources" data-home-platform-destination-root aria-label="Model source connections destination">
-  <div class="home-model-source-workspace">
-    <div class="home-model-source-workspace__summary" data-model-source-summary></div>
-    <div class="home-model-source-workspace__list" data-model-source-list></div>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="sources-summary">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Connected Sources</p>
+        <h2 class="home-platform-theme__section-title" id="sources-summary">Data Source Connections</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list" data-model-source-summary>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">GitHub</p>
+            <p class="home-platform-theme__toggle-caption">Repository access and code analysis</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Connected</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Notion</p>
+            <p class="home-platform-theme__toggle-caption">Documentation and knowledge base</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Disconnected</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Google Drive</p>
+            <p class="home-platform-theme__toggle-caption">Document storage and sync</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Disconnected</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="sources-list">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">All Sources</p>
+        <h2 class="home-platform-theme__section-title" id="sources-list">Available Data Sources</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list" data-model-source-list>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">GitHub</p>
+            <p class="home-platform-theme__toggle-caption">Last synced: 2 hours ago</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Active</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Notion</p>
+            <p class="home-platform-theme__toggle-caption">Not connected</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Inactive</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Google Drive</p>
+            <p class="home-platform-theme__toggle-caption">Not connected</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Inactive</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Slack</p>
+            <p class="home-platform-theme__toggle-caption">Not connected</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Inactive</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="add-source">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/add-source/add-source.svg" alt="" width="16" height="16">
+            Add Source
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="configure-sources">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/configure/configure.svg" alt="" width="16" height="16">
+            Configure Sources
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="sources-settings">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Source Settings</p>
+        <h2 class="home-platform-theme__section-title" id="sources-settings">Sync Configuration</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Sync Frequency</p>
+            <p class="home-platform-theme__toggle-caption">How often to sync data</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Every 2 hours</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Permissions</p>
+            <p class="home-platform-theme__toggle-caption">Access level for connected sources</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Read-only</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="refresh-sources">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/refresh/refresh.svg" alt="" width="16" height="16">
+            Refresh All Sources
+          </span>
+        </button>
+      </div>
+    </section>
   </div>
 </section>

@@ -1,3 +1,110 @@
 <section class="home-platform-destination home-platform-destination--workspace-public-surfaces" data-home-platform-destination-root aria-label="Workspace public surfaces destination">
-  <div class="home-platform-destination__surface" data-home-platform-destination-surface></div>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="public-surface-status">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Publication Status</p>
+        <h2 class="home-platform-theme__section-title" id="public-surface-status">Public Surface Configuration</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Current Visibility</p>
+            <p class="home-platform-theme__toggle-caption">Model publication status</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Private</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Public Profile</p>
+            <p class="home-platform-theme__toggle-caption">Public-facing model profile</p>
+          </div>
+          <span class="home-platform-theme__mode-caption" style="color: var(--color-error-500);">● Not Published</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Visibility Level</p>
+            <p class="home-platform-theme__toggle-caption">Access control scope</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Profile Only</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="public-surface-controls">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Publication Controls</p>
+        <h2 class="home-platform-theme__section-title" id="public-surface-controls">Visibility Management</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Make Public</p>
+            <p class="home-platform-theme__toggle-caption">Publish model to public surface</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Disabled</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Allow Forking</p>
+            <p class="home-platform-theme__toggle-caption">Enable model forking by others</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Disabled</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Show in Directory</p>
+            <p class="home-platform-theme__toggle-caption">List in public model directory</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Disabled</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="publish-model">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/publish/publish.svg" alt="" width="16" height="16">
+            Publish Model
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="unpublish-model">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/unpublish/unpublish.svg" alt="" width="16" height="16">
+            Unpublish Model
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="public-surface-history">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Publication History</p>
+        <h2 class="home-platform-theme__section-title" id="public-surface-history">Previous Publications</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">No Publications</p>
+            <p class="home-platform-theme__toggle-caption">Model has not been published yet</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">None</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="configure-visibility">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/visibility/visibility.svg" alt="" width="16" height="16">
+            Configure Visibility
+          </span>
+        </button>
+      </div>
+    </section>
+  </div>
 </section>

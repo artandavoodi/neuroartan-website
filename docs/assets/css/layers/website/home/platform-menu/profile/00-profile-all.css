@@ -8,6 +8,7 @@
 /* =============================================================================
    01) PROFILE AUTHORITY IMPORTS
 ============================================================================= */
+@import url('../settings/general/index.css');
 @import url('./overview.css');
 @import url('./shortcuts.css');
 @import url('./account-control.css');

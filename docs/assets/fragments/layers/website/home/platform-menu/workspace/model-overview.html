@@ -1,29 +1,98 @@
 <section class="home-platform-destination home-platform-destination--workspace-model-overview" data-home-platform-destination-root aria-label="Model overview destination">
-  <div class="home-model-workspace" data-model-workspace-root>
-    <div class="home-model-workspace__grid" data-model-workspace-summary></div>
-
-    <form class="home-model-workspace__form" data-model-create-form>
-      <div class="home-model-workspace__form-row">
-        <label class="home-model-workspace__field">
-          <span>Model name</span>
-          <input name="model_name" type="text" autocomplete="off" placeholder="Personal continuity model" required>
-        </label>
-        <label class="home-model-workspace__field">
-          <span>Visibility</span>
-          <select name="model_visibility">
-            <option value="private">Private</option>
-            <option value="public">Public</option>
-          </select>
-        </label>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="model-overview-summary">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Model Summary</p>
+        <h2 class="home-platform-theme__section-title" id="model-overview-summary">Your Models</h2>
       </div>
-      <label class="home-model-workspace__field">
-        <span>Description</span>
-        <textarea name="description" rows="3" placeholder="Describe what this model represents."></textarea>
-      </label>
-      <button class="home-platform-shell__content-state-action" type="submit">Create Model</button>
-      <p class="home-model-workspace__status" data-model-workspace-status aria-live="polite"></p>
-    </form>
 
-    <div class="home-model-workspace__list" data-model-workspace-list></div>
+      <div class="home-platform-theme__mode-grid" data-model-workspace-summary>
+        <div class="home-platform-theme__mode-option home-platform-theme__mode-option--active" data-model-state="active">
+          <span class="home-platform-theme__mode-label">Personal Continuity Model</span>
+          <span class="home-platform-theme__mode-caption">Active • Private</span>
+        </div>
+        <div class="home-platform-theme__mode-option" data-model-state="inactive">
+          <span class="home-platform-theme__mode-label">Research Assistant</span>
+          <span class="home-platform-theme__mode-caption">Inactive • Private</span>
+        </div>
+        <button class="home-platform-theme__mode-option" type="button" data-home-platform-settings-action="create-new-model">
+          <span class="home-platform-theme__mode-label">Create New Model</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="model-overview-create">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Create Model</p>
+        <h2 class="home-platform-theme__section-title" id="model-overview-create">New Model Configuration</h2>
+      </div>
+
+      <form class="home-platform-theme__form" data-model-create-form>
+        <div class="home-platform-theme__form-row">
+          <label class="home-platform-theme__field">
+            <span>Model name</span>
+            <input name="model_name" type="text" autocomplete="off" placeholder="Personal continuity model" required>
+          </label>
+          <label class="home-platform-theme__field">
+            <span>Visibility</span>
+            <select name="model_visibility">
+              <option value="private">Private</option>
+              <option value="public">Public</option>
+            </select>
+          </label>
+        </div>
+        <label class="home-platform-theme__field">
+          <span>Description</span>
+          <textarea name="description" rows="3" placeholder="Describe what this model represents."></textarea>
+        </label>
+        <button class="home-platform-theme__action-button" type="submit">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/create/create.svg" alt="" width="16" height="16">
+            Create Model
+          </span>
+        </button>
+        <p class="home-platform-theme__status" data-model-workspace-status aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="model-overview-list">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Model List</p>
+        <h2 class="home-platform-theme__section-title" id="model-overview-list">All Models</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list" data-model-workspace-list>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Personal Continuity Model</p>
+            <p class="home-platform-theme__toggle-caption">Created 2026-05-15 • 247 thoughts</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Active</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Research Assistant</p>
+            <p class="home-platform-theme__toggle-caption">Created 2026-05-10 • 89 thoughts</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Inactive</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="configure-model">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/configure/configure.svg" alt="" width="16" height="16">
+            Configure Model
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="view-details">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/view-details/view-details.svg" alt="" width="16" height="16">
+            View Details
+          </span>
+        </button>
+      </div>
+    </section>
   </div>
 </section>

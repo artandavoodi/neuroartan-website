@@ -51,12 +51,10 @@
 .home-overview-canvas__slot{
   min-width:0;
   padding:var(--layout-home-platform-theme-section-padding-top) var(--spacing-none) var(--spacing-none);
-  border-top:var(--border-width-hairline) solid var(--control-border);
 }
 
 .home-overview-canvas__slot:first-child{
   padding-top:var(--spacing-none);
-  border-top:var(--spacing-none);
 }
 
 .home-overview-canvas__slot:empty{

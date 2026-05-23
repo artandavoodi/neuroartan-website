@@ -1,13 +1,31 @@
 <section class="home-platform-destination home-platform-destination--continuity-actions" data-home-platform-destination-root aria-label="Continuity actions destination">
-  <div class="home-platform-destination__surface home-platform-destination__surface--continuity">
-    <section class="home-platform-destination-card">
-      <p class="home-platform-destination-card__eyebrow">Continuity</p>
-      <div class="home-platform-destination-card__stack">
-        <button class="home-platform-destination-card__item" data-home-platform-continuity-action="voice" type="button">Continue by voice</button>
-        <button class="home-platform-destination-card__item" data-home-platform-continuity-action="history" type="button">Open continuity history</button>
-        <button class="home-platform-destination-card__item" data-home-platform-continuity-action="knowledge" type="button">Open knowledge surface</button>
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="continuity-actions-overview">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Continuity</p>
+        <h2 class="home-platform-theme__section-title" id="continuity-actions-overview">Continuity Actions</h2>
       </div>
-      <p class="home-platform-destination-card__note">Continuity actions stay tied to the active homepage interaction state without leaving the unified shell.</p>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-continuity-action="voice">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/voice/voice.svg" alt="" width="16" height="16">
+            Continue by Voice
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-continuity-action="history">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/history/history.svg" alt="" width="16" height="16">
+            Open Continuity History
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-continuity-action="knowledge">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/knowledge/knowledge.svg" alt="" width="16" height="16">
+            Open Knowledge Surface
+          </span>
+        </button>
+      </div>
     </section>
   </div>
 </section>

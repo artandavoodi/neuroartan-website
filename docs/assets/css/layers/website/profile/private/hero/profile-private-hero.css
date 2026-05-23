@@ -185,7 +185,7 @@
   width:100%;
   height:100%;
   border-radius:var(--control-radius-pill);
-  border:var(--border-width-hairline) solid var(--profile-private-hero-avatar-border);
+  border:var(--border-width-hairline) solid var(--border-color);
   color:var(--text-primary-color);
   overflow:hidden;
   box-sizing:border-box;
@@ -219,24 +219,24 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  width:var(--profile-private-hero-media-action-size);
-  height:var(--profile-private-hero-media-action-size);
+  width:var(--avatar-media-action-size);
+  height:var(--avatar-media-action-size);
   padding:0;
-  border:1px solid var(--profile-private-hero-control-border);
-  border-radius:var(--control-radius-pill);
-  background:var(--profile-private-hero-control-bg);
+  border:1px solid var(--avatar-media-action-border);
+  border-radius:var(--avatar-media-action-radius);
+  background:var(--avatar-media-action-bg);
   color:var(--text-primary-color);
   line-height:var(--spacing-none);
   cursor:pointer;
-  opacity:var(--profile-private-hero-media-action-opacity);
+  opacity:var(--state-opacity-muted);
   box-sizing:border-box;
   pointer-events:auto;
   transform:none;
   transition:
-    opacity var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease),
-    color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease),
-    border-color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease),
-    background-color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease);
+    opacity var(--interaction-transition-control) var(--interaction-ease-standard),
+    color var(--interaction-transition-control) var(--interaction-ease-standard),
+    border-color var(--interaction-transition-control) var(--interaction-ease-standard),
+    background-color var(--interaction-transition-control) var(--interaction-ease-standard);
 }
 
 .profile-private-hero__media-action img{
@@ -254,10 +254,10 @@
 
 .profile-private-hero__media-action:hover,
 .profile-private-hero__media-action:focus-visible{
-  border-color:var(--profile-private-hero-control-border-hover);
-  background:var(--profile-private-hero-control-bg-hover);
+  border-color:var(--avatar-media-action-border-hover);
+  background:var(--avatar-media-action-bg-hover);
   color:var(--text-primary-color);
-  opacity:var(--profile-private-hero-media-action-hover-opacity);
+  opacity:var(--state-opacity-full);
   outline:none;
   transform:none;
 }

@@ -13,6 +13,7 @@
 /* =============================================================================
    01) HOME PROFILE CONTROL PANEL TOKENS
 ============================================================================= */
+@import url('../../platform-menu/settings/general/index.css');
 :root{
   --home-profile-control-panel-width:var(--layout-home-profile-control-panel-width);
   --home-profile-control-panel-inner-gap:var(--layout-home-profile-control-panel-inner-gap);

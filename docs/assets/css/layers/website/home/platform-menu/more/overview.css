@@ -1,75 +1,9 @@
+@import url('../../settings/general/index.css');
+
 .home-platform-destination--more-overview{
   width:var(--size-full);
 }
 
-.home-platform-more{
-  display:grid;
-  gap:var(--layout-home-platform-destination-gap);
-}
-
-.home-platform-more__grid{
-  display:grid;
-  grid-template-columns:repeat(var(--layout-home-platform-destination-grid-count), minmax(var(--spacing-none), var(--grid-column-single)));
-  gap:var(--layout-home-platform-destination-gap);
-}
-
-.home-platform-more__card{
-  display:grid;
-  gap:var(--layout-home-platform-destination-card-gap);
-  padding:var(--layout-home-platform-destination-card-padding-y) var(--layout-home-platform-destination-card-padding-x);
-  border:var(--border-width-hairline) solid var(--home-panel-card-border);
-  background:var(--home-panel-card-surface);
-}
-
-.home-platform-more__eyebrow,
-.home-platform-more__title,
-.home-platform-more__copy,
-.home-platform-more__link{
-  margin:var(--spacing-none);
-}
-
-.home-platform-more__eyebrow{
-  color:color-mix(in srgb, var(--text-secondary-color) 84%, transparent);
-  font-size:var(--layout-home-platform-destination-label-size);
-  font-weight:var(--layout-home-platform-destination-label-weight);
-  letter-spacing:var(--layout-home-platform-destination-label-tracking);
-  text-transform:uppercase;
-}
-
-.home-platform-more__title{
-  color:var(--text-primary-color);
-  font-size:var(--layout-home-platform-destination-title-size);
-  font-weight:var(--layout-home-platform-destination-title-weight);
-  line-height:var(--layout-home-platform-destination-title-line-height);
-}
-
-.home-platform-more__copy{
-  color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
-  font-size:var(--layout-home-platform-destination-copy-size);
-  line-height:var(--layout-home-platform-destination-copy-line-height);
-}
-
-.home-platform-more__links{
-  display:grid;
-  gap:var(--layout-home-platform-destination-card-inner-gap);
-}
-
-.home-platform-more__link{
-  color:var(--text-primary-color);
-  text-decoration:none;
-  font-size:var(--layout-home-platform-destination-link-size);
-  line-height:var(--layout-home-platform-destination-link-line-height);
-}
-
-.home-platform-more__link:hover,
-.home-platform-more__link:focus-visible{
-  color:var(--text-primary-color);
-  text-decoration:underline;
-  outline:none;
-}
-
-@media (max-width: 980px){
-  .home-platform-more__grid{
-    grid-template-columns:var(--grid-column-single);
-  }
+.home-platform-destination__surface.home-platform-theme {
+  padding: var(--spacing-2xl);
 }

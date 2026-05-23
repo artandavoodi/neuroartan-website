@@ -3,28 +3,105 @@
      02) CODEX SESSIONS LINKAGE
 ============================================================================= -->
 <section class="home-platform-destination home-platform-destination--workspace-developer-mode" data-home-platform-destination-root aria-label="Developer Mode destination">
-  <div class="home-developer-mode-workspace" data-home-developer-mode-workspace-root>
-    <article class="home-developer-mode-workspace__card">
-      <p class="home-developer-mode-workspace__label">Developer Mode</p>
-      <h3 class="home-developer-mode-workspace__title">Open Codex Sessions</h3>
-      <p class="home-developer-mode-workspace__copy">
-        Enter the governed coding-agent area for provider selection, repository scope, voice/text commands, scan, plan, patch, test review, approvals, and release traceability.
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="developer-mode-route">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Canonical Route</p>
+        <h2 class="home-platform-theme__section-title" id="developer-mode-route">Open Codex Sessions</h2>
+      </div>
+
+      <p class="home-platform-theme__section-copy">
+        Governed coding-agent area for provider selection, repository scope, voice/text commands, scan, plan, patch, test review, approvals, and release traceability.
       </p>
-      <div class="home-developer-mode-workspace__actions">
-        <a class="home-platform-shell__content-state-action" href="/pages/development-cockpit/index.html" data-developer-mode-route>
-          Open Developer Mode
+
+      <div class="home-platform-theme__action-list">
+        <a class="home-platform-theme__action-button" href="/pages/development-cockpit/index.html" data-developer-mode-route>
+          Open Development Cockpit
         </a>
       </div>
-    </article>
+    </section>
 
-    <article class="home-developer-mode-workspace__card">
-      <p class="home-developer-mode-workspace__label">Runtime boundary</p>
-      <ul class="home-developer-mode-workspace__list">
-        <li>Profile and developer capability gate required</li>
-        <li>Provider and GitHub credentials remain backend-only</li>
-        <li>Repository mutation is blocked until approved backend runtime exists</li>
-        <li>Patch, test, commit, and PR actions require approval</li>
-      </ul>
-    </article>
+    <section class="home-platform-theme__section" aria-labelledby="developer-mode-boundary">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Runtime Boundary</p>
+        <h2 class="home-platform-theme__section-title" id="developer-mode-boundary">System Constraints</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Profile Required</p>
+            <p class="home-platform-theme__toggle-caption">Profile and developer capability gate required</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Required</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Backend Credentials</p>
+            <p class="home-platform-theme__toggle-caption">Provider and GitHub credentials remain backend-only</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Secure</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Repository Mutation</p>
+            <p class="home-platform-theme__toggle-caption">Blocked until approved backend runtime exists</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Blocked</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Approval Required</p>
+            <p class="home-platform-theme__toggle-caption">Patch, test, commit, PR actions require approval</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">Approval</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" aria-labelledby="developer-mode-status">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Developer Status</p>
+        <h2 class="home-platform-theme__section-title" id="developer-mode-status">Current Capability</h2>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Developer Mode</p>
+            <p class="home-platform-theme__toggle-caption">Developer capability status</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Disabled</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">GitHub Access</p>
+            <p class="home-platform-theme__toggle-caption">Repository access status</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Not Connected</span>
+        </div>
+
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Provider Access</p>
+            <p class="home-platform-theme__toggle-caption">Coding provider access status</p>
+          </div>
+          <span class="home-platform-theme__mode-caption">● Not Configured</span>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="enable-developer-mode">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/enable-developer/enable-developer.svg" alt="" width="16" height="16">
+            Enable Developer Mode
+          </span>
+        </button>
+      </div>
+    </section>
   </div>
 </section>

@@ -1,17 +1,32 @@
 <section class="home-overview-module home-overview-module--continuity" data-home-overview-module="continuity-memory">
-  <div class="home-overview-module__header">
-    <p class="home-overview-module__eyebrow">Continuity</p>
-    <h3 class="home-overview-module__title">Continuity and Memory</h3>
-  </div>
+  <div class="home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" aria-labelledby="continuity-memory">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow">Continuity</p>
+        <h2 class="home-platform-theme__section-title" id="continuity-memory">Continuity and Memory</h2>
+      </div>
 
-  <div class="home-continuity-list" data-home-continuity-list>
-    <button class="home-continuity-thread is-active" type="button" data-continuity-thread="recent">Recent Carryover</button>
-    <button class="home-continuity-thread" type="button" data-continuity-thread="reflection">Reflection Threads</button>
-    <button class="home-continuity-thread" type="button" data-continuity-thread="memory">Memory Density</button>
-  </div>
+      <div class="home-platform-theme__mode-grid" data-home-continuity-list>
+        <button class="home-platform-theme__mode-option home-platform-theme__mode-option--active" type="button" data-continuity-thread="recent">
+          <span class="home-platform-theme__mode-label">Recent Carryover</span>
+        </button>
+        <button class="home-platform-theme__mode-option" type="button" data-continuity-thread="reflection">
+          <span class="home-platform-theme__mode-label">Reflection Threads</span>
+        </button>
+        <button class="home-platform-theme__mode-option" type="button" data-continuity-thread="memory">
+          <span class="home-platform-theme__mode-label">Memory Density</span>
+        </button>
+      </div>
 
-  <div class="home-continuity-preview" data-home-continuity-preview>
-    <span class="home-continuity-preview__label">Active overview</span>
-    <strong class="home-continuity-preview__value" data-home-continuity-value>Recent Carryover</strong>
+      <div class="home-platform-theme__toggle-list" data-home-continuity-preview>
+        <div class="home-platform-theme__toggle-row">
+          <div class="home-platform-theme__toggle-copy">
+            <p class="home-platform-theme__toggle-title">Active Overview</p>
+            <p class="home-platform-theme__toggle-caption">Current continuity view</p>
+          </div>
+          <span class="home-platform-theme__mode-caption" data-home-continuity-value>Recent Carryover</span>
+        </div>
+      </div>
+    </section>
   </div>
 </section>

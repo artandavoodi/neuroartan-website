@@ -193,5 +193,29 @@
 }
 
 /* =============================================================================
-   09) END OF FILE
+   09) AVATAR TOKENS
+============================================================================= */
+:root{
+  --avatar-size:var(--spacing-3xl);
+  --avatar-bg:var(--color-primary1);
+  --avatar-border:var(--border-color);
+  --avatar-border-width:var(--border-width-hairline);
+  --avatar-radius:var(--radius-pill);
+  --avatar-layer:var(--z-raised);
+}
+
+:root{
+  --avatar-media-action-size:var(--spacing-lg);
+  --avatar-media-action-bg:var(--control-surface);
+  --avatar-media-action-bg-hover:var(--panel-surface-solid-unified);
+  --avatar-media-action-border:var(--control-border-unified);
+  --avatar-media-action-border-hover:var(--control-border-hover-unified);
+  --avatar-media-action-radius:var(--radius-pill);
+  --avatar-media-action-layer:var(--z-above);
+  --avatar-media-action-position-right:0;
+  --avatar-media-action-position-bottom:0;
+}
+
+/* =============================================================================
+   10) END OF FILE
 ============================================================================= */

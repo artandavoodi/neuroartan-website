@@ -1,89 +1,18 @@
+@import url('../../../../profile/private/hero/profile-private-hero.css');
 @import url('../appearance/index.css');
 
 .home-platform-destination--settings-personalization {
   width: var(--size-full);
 }
 
-/* Profile Section */
 .home-platform-theme__profile-section {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
 }
 
-.home-platform-theme__profile-avatar {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.home-platform-theme__avatar-surface {
-  width: var(--spacing-5xl);
-  height: var(--spacing-5xl);
-  border-radius: var(--control-radius-pill);
-  overflow: visible;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  border: none;
-  box-shadow: none;
+.profile-private-hero__avatar {
   background: var(--color-primary1);
-}
-
-.home-platform-theme__avatar-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-
-.home-platform-theme__avatar-placeholder {
-  display: none;
-}
-
-.home-platform-theme__avatar-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-
-.home-platform-theme__avatar-action {
-  display: none;
-}
-
-.home-platform-theme__media-action {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  background: var(--profile-private-hero-control-bg);
-  border: 1px solid var(--profile-private-hero-control-border);
-  border-radius: 50%;
-  width: var(--spacing-2xl);
-  height: var(--spacing-2xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background var(--transition-fast) ease, border-color var(--transition-fast) ease;
-}
-
-.home-platform-theme__media-action:hover {
-  background: var(--profile-private-hero-control-bg-hover);
-  border-color: var(--profile-private-hero-control-border-hover);
-}
-
-.home-platform-theme__media-action img {
-  width: var(--spacing-md);
-  height: var(--spacing-md);
-  filter: var(--icon-image-filter);
-}
-
-.home-platform-theme__profile-fields {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
 }
 
 .home-platform-theme__field-group {

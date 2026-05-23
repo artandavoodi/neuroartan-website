@@ -1,3 +1,4 @@
+@import "../settings/general/index.css";
 @import "./overview-canvas.css";
 @import "./system-overview.css";
 @import "./model-readiness.css";

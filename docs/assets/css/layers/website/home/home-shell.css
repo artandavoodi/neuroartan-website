@@ -85,6 +85,13 @@ body.home-search-shell-open .home-platform-shell *{
   pointer-events:none !important;
 }
 
+body.home-platform-shell-open .home-dashboard-topbar,
+body.home-platform-shell-open .home-dashboard-topbar *{
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
 /* =============================================================================
    03) TOPBAR AND FOOTER CHROME
 ============================================================================= */

@@ -192,7 +192,7 @@ html[data-theme-effective="light"]{
   left:var(--spacing-none);
   right:var(--spacing-none);
   bottom:var(--spacing-none);
-  z-index:var(--z-overlay-modal);
+  z-index:200000;
   display:flex;
   flex-direction:column;
   min-height:var(--spacing-none);
@@ -207,6 +207,10 @@ html[data-theme-effective="light"]{
 
 .home-platform-shell[hidden]{
   display:none !important;
+}
+
+body.home-platform-shell-open .home-platform-shell{
+  top:var(--spacing-none);
 }
 
 /* =============================================================================

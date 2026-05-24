@@ -23,6 +23,7 @@
 @import url('../account/account-provider-google-sheet.css');
 @import url('../account/account-sign-in-drawer.css');
 @import url('../account/account-sign-up-drawer.css');
+@import url('../announcement/announcement-overlay.css');
 @import url('../cookie/cookie-consent.css');
 @import url('../cookie/cookie-language-overlay.css');
 @import url('../cookie/cookie-learning-overlay.css');

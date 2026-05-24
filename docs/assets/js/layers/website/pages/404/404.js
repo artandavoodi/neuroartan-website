@@ -293,6 +293,9 @@ import {
 
   async function init404Page() {
     if (!is404RouteEntryPage()) {
+      if (get404ShaderMount()) {
+        await mount404ShaderLayer();
+      }
       return;
     }
 

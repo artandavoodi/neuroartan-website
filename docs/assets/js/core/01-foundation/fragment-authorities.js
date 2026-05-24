@@ -57,6 +57,7 @@ function getFragmentPaths() {
     'account-phone-auth-drawer': assetPath('/assets/fragments/layers/website/account/account-phone-auth-drawer.html'),
     'account-phone-verification-sheet': assetPath('/assets/fragments/layers/website/account/account-phone-verification-sheet.html'),
     'account-profile-setup-drawer': assetPath('/assets/fragments/layers/website/account/account-profile-setup-drawer.html'),
+    'announcement-overlay': assetPath('/assets/fragments/layers/website/announcement/announcement-overlay.html'),
     'cookie-consent': assetPath('/assets/fragments/layers/website/cookie/cookie-consent.html'),
     'country-overlay': assetPath('/assets/fragments/layers/website/country/country-overlay.html'),
     'institutional-links': assetPath('/assets/fragments/layers/website/navigation/institutional-links.html'),

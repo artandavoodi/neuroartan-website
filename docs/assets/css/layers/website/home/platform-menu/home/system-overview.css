@@ -1,4 +1,4 @@
-@import url('../../settings/general/index.css');
+@import url('../settings/general/index.css');
 
 .home-overview-module{
   display:grid;

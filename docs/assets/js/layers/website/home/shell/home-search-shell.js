@@ -33,6 +33,9 @@ import {
   getSupabaseProfileByAuthUserId,
   normalizeUsername
 } from '../../system/account/identity/account-profile-identity.js';
+import {
+  resolveApprovedProfileVerification
+} from '../../system/profile/profile-verification.js';
 
 /* =========================================================
    02. MODULE STATE
@@ -325,8 +328,11 @@ const HOME_SEARCH_PROFILE_SELECT_FIELDS = [
   'public_route_status',
   'profile_search_visible',
   'profile_verified',
+  'verification_state',
   'verification_status',
   'public_verification_status',
+  'verified_at',
+  'profile_verified_at',
   'created_at',
   'updated_at'
 ].join(', ');
@@ -342,16 +348,9 @@ const HOME_SEARCH_PROFILE_MINIMAL_SELECT_FIELDS = [
   'auth_user_id',
   'username',
   'username_lower',
-  'public_username',
   'display_name',
-  'public_display_name',
   'email',
   'avatar_url',
-  'photo_url',
-  'public_avatar_url',
-  'public_profile_enabled',
-  'public_profile_discoverable',
-  'public_route_status',
   'created_at',
   'updated_at'
 ].join(', ');
@@ -460,8 +459,7 @@ function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
     || 'Profile'
   );
   const summary = normalizeHomeSearchQuery(profile.public_summary || profile.public_bio || profile.bio || '');
-  const verified = profile.profile_verified === true
-    || normalizeHomeSearchQuery(profile.public_verification_status || profile.verification_status || '').toLowerCase() === 'verified';
+  const verification = resolveApprovedProfileVerification(profile);
 
   return buildIndexedEntry({
     id: profile.id || profile.auth_user_id || username,
@@ -469,7 +467,7 @@ function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
     username,
     summary,
     public_avatar_url: profile.public_avatar_url || profile.avatar_url || profile.photo_url || '',
-    verified,
+    verified: verification.verified,
     created_at: profile.created_at,
     updated_at: profile.updated_at,
     keywords: [
@@ -497,7 +495,7 @@ async function fetchSupabaseProfileSearchEntries() {
     const currentAuthUserId = normalizeHomeSearchQuery(sessionData?.session?.user?.id || '');
     let queryResult = await supabase
       .from('profiles')
-      .select(HOME_SEARCH_PROFILE_SELECT_FIELDS)
+      .select('*')
       .order('updated_at', { ascending:false })
       .limit(100);
 

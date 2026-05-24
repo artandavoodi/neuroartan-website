@@ -1,0 +1,299 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) ROOT TOKENS
+   03) BASE OVERLAY SHELL
+   04) OPEN / CLOSE STATES
+   05) PAGE SCROLL LOCK
+   06) BACKDROP
+   07) OVERLAY PANEL
+   08) CLOSE CONTROL
+   09) BODY
+   10) CONTENT
+   11) ICON
+   12) TYPOGRAPHY
+   13) FOOTER
+   14) REDUCED MOTION
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/layers/website/overlays/announcement/announcement-overlay.css */
+
+/* =============================================================================
+   02) ROOT TOKENS
+============================================================================= */
+:root{
+  --announcement-overlay-panel-width: var(--layout-dialog-panel-width);
+  --announcement-overlay-surface: var(--glass-overlay-drawer-shell-bg);
+  --announcement-overlay-border: var(--panel-border-unified);
+  --announcement-overlay-backdrop: var(--overlay-backdrop);
+  --announcement-overlay-close-size: var(--global-close-button-size);
+  --announcement-overlay-close-color: var(--global-close-button-color);
+  --announcement-overlay-close-hover-color: var(--global-close-button-hover-color);
+  --announcement-overlay-close-duration: var(--global-close-button-duration);
+  --announcement-overlay-close-ease: var(--global-close-button-ease);
+  --announcement-overlay-dialog-radius: var(--dialog-radius-unified);
+  --announcement-overlay-dialog-max-height: calc(100dvh - var(--home-shell-topbar-height, var(--site-header-height, 4rem)) - var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  --announcement-overlay-dialog-viewport-gap: var(--dialog-overlay-viewport-gap);
+  --announcement-overlay-panel-transform-closed: var(--overlay-transform-closed);
+  --announcement-overlay-panel-transform-open: var(--overlay-transform-open);
+  --announcement-overlay-content-max-width: var(--layout-dialog-content-max-width);
+  --announcement-overlay-content-padding: var(--layout-dialog-content-padding);
+  --announcement-overlay-section-gap: var(--spacing-lg);
+  --announcement-overlay-icon-size: var(--control-height-lg);
+  --announcement-overlay-title-size: var(--headline-4-size);
+  --announcement-overlay-title-line-height: var(--headline-4-line-height);
+  --announcement-overlay-title-letter-spacing: var(--tracking-copy);
+  --announcement-overlay-message-size: var(--body-1-size);
+  --announcement-overlay-message-line-height: var(--body-1-line-height);
+  --announcement-overlay-message-letter-spacing: var(--body-1-tracking);
+  --announcement-overlay-note-size: var(--body-2-size);
+  --announcement-overlay-note-line-height: var(--body-2-line-height);
+  --announcement-overlay-note-letter-spacing: var(--body-2-tracking);
+}
+
+html[data-theme-effective="light"]{
+  --announcement-overlay-surface: var(--glass-overlay-drawer-shell-bg);
+}
+
+html[data-theme-effective="dark"]{
+  --announcement-overlay-surface: var(--glass-overlay-drawer-shell-bg);
+}
+
+/* =============================================================================
+   03) BASE OVERLAY SHELL
+============================================================================= */
+.announcement-overlay{
+  position: fixed;
+  inset: var(--spacing-none);
+  z-index: var(--z-overlay-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, var(--site-header-height, 4rem))) var(--announcement-overlay-dialog-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  pointer-events: none;
+  opacity: var(--overlay-opacity-closed);
+  visibility: hidden;
+}
+
+/* =============================================================================
+   04) OPEN / CLOSE STATES
+============================================================================= */
+body.announcement-overlay-open .announcement-overlay,
+body.announcement-overlay-closing .announcement-overlay{
+  pointer-events: auto;
+  opacity: var(--overlay-opacity-open);
+  visibility: visible;
+}
+
+/* =============================================================================
+   05) PAGE SCROLL LOCK
+============================================================================= */
+body.announcement-overlay-open,
+body.announcement-overlay-closing{
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* =============================================================================
+   06) BACKDROP
+============================================================================= */
+.announcement-overlay-backdrop{
+  position: absolute;
+  inset: var(--spacing-none);
+  z-index: var(--z-overlay-backdrop);
+  opacity: var(--overlay-opacity-closed);
+  pointer-events: auto;
+  background: var(--glass-overlay-backdrop-bg);
+  backdrop-filter: blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  transition: none;
+}
+
+body.announcement-overlay-open .announcement-overlay-backdrop{
+  opacity: var(--overlay-opacity-open);
+}
+
+body.announcement-overlay-closing .announcement-overlay-backdrop{
+  transition: opacity var(--overlay-motion-duration) var(--overlay-motion-ease);
+}
+
+body.announcement-overlay-closing .announcement-overlay-backdrop{
+  opacity: var(--overlay-opacity-closed);
+}
+
+/* =============================================================================
+   07) OVERLAY PANEL
+============================================================================= */
+.announcement-overlay-shell{
+  position: relative;
+  z-index: var(--z-overlay-surface);
+  width: var(--announcement-overlay-panel-width);
+  max-width: calc(100vw - (2 * var(--announcement-overlay-dialog-viewport-gap)));
+  height: auto;
+  max-height: var(--announcement-overlay-dialog-max-height);
+  padding: var(--layout-dialog-shell-padding-y) var(--layout-dialog-shell-padding-x);
+  background-color: var(--announcement-overlay-surface);
+  border: var(--border-width-hairline) solid var(--announcement-overlay-border);
+  border-radius: var(--announcement-overlay-dialog-radius);
+  backdrop-filter: blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
+  box-shadow: var(--panel-shadow-unified);
+  opacity: var(--overlay-opacity-closed);
+  transform: var(--announcement-overlay-panel-transform-closed);
+  transition: var(--interaction-transition-control);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  overflow: visible;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.announcement-overlay-open .announcement-overlay-shell{
+  opacity: var(--overlay-opacity-open);
+  transform: var(--announcement-overlay-panel-transform-open);
+}
+
+body.announcement-overlay-closing .announcement-overlay-shell{
+  opacity: var(--overlay-opacity-closed);
+  pointer-events: none;
+  transform: var(--announcement-overlay-panel-transform-open);
+  transition: none;
+}
+
+/* =============================================================================
+   08) CLOSE CONTROL
+============================================================================= */
+.announcement-overlay-close{
+  position: absolute;
+  top: var(--layout-dialog-close-offset);
+  right: var(--layout-dialog-close-offset);
+  left: auto;
+  width: var(--announcement-overlay-close-size);
+  min-width: var(--announcement-overlay-close-size);
+  height: var(--announcement-overlay-close-size);
+  min-height: var(--announcement-overlay-close-size);
+  color: var(--announcement-overlay-close-color);
+  z-index: var(--z-overlay-control);
+  opacity: var(--overlay-opacity-open);
+}
+
+.announcement-overlay-close:hover,
+.announcement-overlay-close:focus-visible,
+.announcement-overlay-close:active{
+  color: var(--announcement-overlay-close-hover-color);
+  outline: none;
+}
+
+body.announcement-overlay-closing .announcement-overlay-close{
+  opacity: var(--overlay-opacity-closed);
+  pointer-events: none;
+}
+
+/* =============================================================================
+   09) BODY
+============================================================================= */
+.announcement-overlay-body{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--announcement-overlay-section-gap);
+  padding-top: var(--spacing-none);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.announcement-overlay-body::-webkit-scrollbar{
+  display: none;
+}
+
+/* =============================================================================
+   10) CONTENT
+============================================================================= */
+.announcement-overlay-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--announcement-overlay-section-gap);
+  padding: var(--spacing-none);
+  max-width: var(--announcement-overlay-content-max-width);
+  margin: var(--spacing-none) auto;
+  text-align: center;
+}
+
+/* =============================================================================
+   11) ICON
+============================================================================= */
+.announcement-overlay-icon{
+  width: var(--announcement-overlay-icon-size);
+  height: var(--announcement-overlay-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-overlay-icon img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =============================================================================
+   12) TYPOGRAPHY
+============================================================================= */
+.announcement-overlay-title{
+  margin: var(--spacing-none);
+  color: var(--text-primary-color);
+  font-size: var(--announcement-overlay-title-size);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--announcement-overlay-title-letter-spacing);
+  line-height: var(--announcement-overlay-title-line-height);
+  text-align: center;
+}
+
+.announcement-overlay-message{
+  margin: var(--spacing-none);
+  color: var(--text-secondary-color);
+  font-size: var(--announcement-overlay-message-size);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--announcement-overlay-message-letter-spacing);
+  line-height: var(--announcement-overlay-message-line-height);
+  text-align: center;
+}
+
+/* =============================================================================
+   13) FOOTER
+============================================================================= */
+.announcement-overlay-footer{
+  padding-top: var(--spacing-sm);
+}
+
+.announcement-overlay-note{
+  margin: var(--spacing-none);
+  color: var(--text-muted-color);
+  font-size: var(--announcement-overlay-note-size);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--announcement-overlay-note-letter-spacing);
+  line-height: var(--announcement-overlay-note-line-height);
+  text-align: center;
+}
+
+/* =============================================================================
+   14) REDUCED MOTION
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .announcement-overlay,
+  .announcement-overlay-backdrop,
+  .announcement-overlay-shell{
+    transition: none !important;
+  }
+}

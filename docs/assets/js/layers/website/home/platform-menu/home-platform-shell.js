@@ -196,24 +196,7 @@ function requestAccountEntryFromShell() {
   document.dispatchEvent(new CustomEvent('account:entry-request', {
     detail: {
       source: 'home-platform-shell',
-    },
-  }));
-}
-
-function requestProfileSetupFromShell() {
-  document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
-    detail: {
-      source: 'home-platform-shell',
-      reason: 'profile-incomplete',
-      action: 'profile-setup',
-    },
-  }));
-
-  document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-    detail: {
-      source: 'home-platform-shell',
-      state: 'guest',
-      surface: 'profile-setup',
+      surface: 'sign-in',
     },
   }));
 }
@@ -517,12 +500,6 @@ function handleProfileShellAction(action) {
   if (normalized === 'account-identity' || normalized === 'verification' || normalized === 'linked-accounts') {
     if (!hasSignedInAccount()) {
       requestAccountEntryFromShell();
-      closeHomePlatformShell();
-      return;
-    }
-
-    if (!hasCompletedProfile()) {
-      requestProfileSetupFromShell();
       closeHomePlatformShell();
       return;
     }

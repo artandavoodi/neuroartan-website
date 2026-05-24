@@ -60,6 +60,7 @@
   text-transform: uppercase;
   text-align: center;
   opacity: var(--state-opacity-muted);
+  display: none;
 }
 
 .loading-overlay--compact .loading-overlay__spinner{

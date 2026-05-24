@@ -1,13 +1,21 @@
-import { mountClonedDestinationSection } from '../platform-destination-source.js';
+import { bindProfileMenuActions } from './profile-actions.js';
+import { subscribeHomeSurfaceState } from '../../core/home-surface-state.js';
 
-const ACCOUNT_CONTROL_SELECTORS = [
-  '#home-profile-control-panel [data-home-profile-control-section="account-control"]',
-];
+function renderAccountControl(root, snapshot = {}) {
+  const signedIn = snapshot?.account?.signedIn === true;
+  root.querySelectorAll('[data-profile-auth-visible]').forEach((node) => {
+    const mode = node.getAttribute('data-profile-auth-visible') || '';
+    node.hidden = mode === 'signed-in' ? !signedIn : signedIn;
+  });
+}
 
 export function mountHomePlatformDestination(root) {
-  mountClonedDestinationSection(root, {
-    selectors: ACCOUNT_CONTROL_SELECTORS,
-    fallbackTitle: 'Account control',
-    fallbackCopy: 'Account control is not available yet.',
+  if (!(root instanceof Element)) {
+    return;
+  }
+
+  bindProfileMenuActions(root);
+  subscribeHomeSurfaceState((snapshot) => {
+    renderAccountControl(root, snapshot);
   });
 }

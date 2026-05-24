@@ -83,20 +83,6 @@ function requestAccountEntry(source = 'home-profile-control-panel') {
   });
 }
 
-function requestProfileSetup(source = 'home-profile-control-panel') {
-  dispatchHomeProfileControlPanelEvent('account:profile-setup-open-request', {
-    source,
-    reason: 'profile-incomplete',
-    action: 'profile-setup',
-  });
-
-  dispatchHomeProfileControlPanelEvent('account-drawer:open-request', {
-    source,
-    state: 'guest',
-    surface: 'profile-setup',
-  });
-}
-
 /* =========================================================
    03. PANEL STATE HELPERS
    ========================================================= */
@@ -167,6 +153,7 @@ function closeHomeProfileControlPanel() {
 function resolveHomeProfileControlPanelName(snapshot) {
   return (
     snapshot?.account?.profile?.display_name ||
+    snapshot?.account?.profile?.public_display_name ||
     snapshot?.account?.user?.displayName ||
     snapshot?.account?.profile?.email ||
     snapshot?.account?.user?.email ||
@@ -175,7 +162,7 @@ function resolveHomeProfileControlPanelName(snapshot) {
 }
 
 function resolveHomeProfileControlPanelUsername(snapshot) {
-  const username = snapshot?.account?.profile?.username || '';
+  const username = snapshot?.account?.profile?.username || snapshot?.account?.profile?.public_username || '';
   if (username) return `@${username}`;
 
   return snapshot?.account?.signedIn ? '@username pending' : '@account required';
@@ -286,7 +273,11 @@ function renderHomeProfileControlPanel(snapshot) {
   const signedIn = !!snapshot?.account?.signedIn;
   const route = resolveHomeProfileControlPanelRoute(snapshot);
   const name = resolveHomeProfileControlPanelName(snapshot);
-  const photo = snapshot?.account?.profile?.photo_url || snapshot?.account?.user?.photoURL || '';
+  const photo = snapshot?.account?.profile?.photo_url
+    || snapshot?.account?.profile?.avatar_url
+    || snapshot?.account?.profile?.public_avatar_url
+    || snapshot?.account?.user?.photoURL
+    || '';
   const fallback = (name.charAt(0) || 'N').toUpperCase();
 
   if (nodes.name) {
@@ -364,12 +355,6 @@ function handleHomeProfileControlPanelAction(action) {
 
     if (!isHomeProfileSignedIn(snapshot)) {
       requestAccountEntry('home-profile-control-panel');
-      closeHomeProfileControlPanel();
-      return;
-    }
-
-    if (!isHomeProfileComplete(snapshot)) {
-      requestProfileSetup('home-profile-control-panel');
       closeHomeProfileControlPanel();
       return;
     }

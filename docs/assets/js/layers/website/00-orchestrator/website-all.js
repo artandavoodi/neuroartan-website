@@ -29,6 +29,7 @@ import '../navigation/00-navigation-all.js';
    03) WEBSITE LAYER AUTHORITIES · OVERLAYS
 ============================================================================= */
 import '../overlays/account/00-account-all.js';
+import '../overlays/announcement/00-announcement-all.js';
 import '../overlays/cookie/00-cookie-all.js';
 
 /* =============================================================================

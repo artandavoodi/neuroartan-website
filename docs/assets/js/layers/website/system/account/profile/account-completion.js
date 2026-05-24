@@ -1568,8 +1568,8 @@ import {
         first_name: firstName,
         last_name: lastName
       }),
-      password: String(detail.password || context.password || ''),
-      password_confirm: String(detail.password_confirm || context.password_confirm || detail.password || context.password || ''),
+      password: String(detail.password || ''),
+      password_confirm: String(detail.password_confirm || detail.password || ''),
       date_of_birth: normalizeString(detail.date_of_birth || context.date_of_birth || ''),
       gender: normalizeGenderValue(detail.gender || context.gender || '')
     };
@@ -1707,9 +1707,10 @@ import {
 
         await assertSupabaseUsernameAvailable(values, existingProfile, user);
 
-        if (method === 'email' && values.password) {
+        const passwordEnteredThisSubmit = normalizeString(detail.password || '');
+        if (method === 'email' && passwordEnteredThisSubmit && !isProfileComplete(existingProfile)) {
           const { error: passwordUpdateError } = await supabase.auth.updateUser({
-            password: values.password
+            password: passwordEnteredThisSubmit
           });
 
           if (passwordUpdateError) {
@@ -1863,6 +1864,30 @@ import {
     emitSignedOutState();
   }
 
+  async function confirmSignedOutState() {
+    const requestId = ++RUNTIME.profileRequestId;
+
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 150);
+    });
+
+    try {
+      const user = await getSupabaseSessionUser();
+      if (requestId !== RUNTIME.profileRequestId) return;
+
+      if (user) {
+        void handleSignedInState(user);
+        return;
+      }
+    } catch (error) {
+      if (requestId !== RUNTIME.profileRequestId) return;
+      console.error('Supabase session confirmation failed:', error);
+    }
+
+    if (requestId !== RUNTIME.profileRequestId) return;
+    handleSignedOutState();
+  }
+
   function bindAuthState() {
     const supabase = getSupabaseClient();
     if (supabase) {
@@ -1880,10 +1905,10 @@ import {
             return;
           }
 
-          handleSignedOutState();
+          void confirmSignedOutState();
         })
         .catch(() => {
-          handleSignedOutState();
+          void confirmSignedOutState();
         });
 
       supabase.auth.onAuthStateChange((event, session) => {
@@ -1910,7 +1935,12 @@ import {
           return;
         }
 
-        handleSignedOutState();
+        if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          handleSignedOutState();
+          return;
+        }
+
+        void confirmSignedOutState();
       });
 
       return;

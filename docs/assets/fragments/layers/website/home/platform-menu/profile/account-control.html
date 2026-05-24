@@ -6,23 +6,23 @@
         <h2 class="home-platform-theme__section-title" id="account-control">Account Control</h2>
       </div>
 
-      <div class="home-platform-theme__toggle-list">
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="sign-in">
-          <span class="home-platform-theme__action-button-label">
+      <div class="home-platform-theme__action-list">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-in" data-profile-auth-visible="signed-out">
+          <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/sign-in/sign-in.svg" alt="" width="16" height="16">
             Sign In
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="sessions">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/session-management/session-management.svg" alt="" width="16" height="16">
-            Sessions
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="change-password" data-profile-auth-visible="signed-in">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/password-security/password-security.svg" alt="" width="16" height="16">
+            Change Password
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="linked-accounts">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/linked-accounts/linked-accounts.svg" alt="" width="16" height="16">
-            Linked Accounts
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/overlays/cookie/preferences.svg" alt="" width="16" height="16">
+            Privacy Preferences
           </span>
         </button>
       </div>
@@ -34,17 +34,11 @@
         <h2 class="home-platform-theme__section-title" id="account-security">Security Settings</h2>
       </div>
 
-      <div class="home-platform-theme__toggle-list">
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="change-password">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/password-security/password-security.svg" alt="" width="16" height="16">
-            Change Password
-          </span>
-        </button>
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="two-factor">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/two-factor-auth/two-factor-auth.svg" alt="" width="16" height="16">
-            Two-Factor Authentication
+      <div class="home-platform-theme__action-list">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out" data-profile-auth-visible="signed-in">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/identity/signout/signout.svg" alt="" width="16" height="16">
+            Sign Out
           </span>
         </button>
       </div>

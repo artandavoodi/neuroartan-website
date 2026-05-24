@@ -141,15 +141,23 @@ function normalizeProfileSnapshot(profile = null) {
   return {
     username: normalizeString(profile.username || profile.username_normalized || profile.username_lower || '').toLowerCase(),
     display_name: normalizeString(profile.display_name || profile.public_display_name || ''),
+    public_display_name: normalizeString(profile.public_display_name || profile.display_name || ''),
     first_name: normalizeString(profile.first_name || ''),
     last_name: normalizeString(profile.last_name || ''),
     email: normalizeString(profile.email || ''),
+    avatar_url: normalizeString(profile.avatar_url || profile.photo_url || profile.public_avatar_url || ''),
     photo_url: normalizeString(profile.photo_url || profile.avatar_url || profile.public_avatar_url || ''),
+    public_avatar_url: normalizeString(profile.public_avatar_url || profile.avatar_url || profile.photo_url || ''),
+    public_username: normalizeString(profile.public_username || profile.username || profile.username_normalized || profile.username_lower || '').toLowerCase(),
     public_profile_enabled: profile.public_profile_enabled === true,
     public_profile_discoverable: profile.public_profile_discoverable === true,
     auth_email_verified: profile.auth_email_verified === true,
     subscription_plan: normalizeString(profile.subscription_plan || profile.plan || ''),
     verification_state: normalizeString(profile.verification_state || ''),
+    verification_status: normalizeString(profile.verification_status || ''),
+    public_verification_status: normalizeString(profile.public_verification_status || ''),
+    profile_verified: profile.profile_verified === true,
+    verified_at: normalizeString(profile.verified_at || profile.profile_verified_at || ''),
   };
 }
 

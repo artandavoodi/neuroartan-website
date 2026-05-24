@@ -41,7 +41,7 @@ let profileIdentityPolicyPromise = null;
 const PROFILE_IDENTITY_POLICY_URL = '/assets/data/accounts/profile-identity-policy.json';
 const SUPABASE_PROFILES_TABLE = 'profiles';
 const SUPABASE_USERNAME_RESERVATIONS_TABLE = 'username_reservations';
-const SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized, username_status, username_route_ready, username_reserved_at, public_username, public_display_name, public_avatar_url, public_identity_label, public_profile_enabled, public_profile_discoverable, public_profile_visibility, public_route_path, public_route_url, public_route_canonical_url, public_route_status, public_summary, public_bio, public_tagline, public_links, public_primary_link, public_modules, public_feature_flags, verification_status, public_verification_status, profile_verified, verified_at, profile_verified_at, first_name, last_name, display_name, email, avatar_url, photo_url, avatar_storage_path, cover_storage_path, profile_image_storage_bucket, birth_date, date_of_birth, gender, profile_exists, profile_completion_status, profile_completion_percent, missing_required_fields, profile_visibility_status, profile_complete, eligibility_status, eligibility_age_years, minimum_eligible_age_years, eligibility_policy_status, eligibility_checked_at, created_at, updated_at';
+const SUPABASE_PROFILE_IDENTITY_SELECT_FIELDS = '*';
 const SUPABASE_PROFILE_USERNAME_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, username_normalized';
 const SUPABASE_USERNAME_RESERVATION_CHECK_FIELDS = 'id, auth_user_id, username, username_lower, profile_id, reservation_status';
 const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
@@ -77,6 +77,8 @@ const DEFAULT_PROFILE_IDENTITY_POLICY = Object.freeze({
       'profile.html',
       'publications',
       'research',
+      'reset-password',
+      'reset-password.html',
       'robots.txt',
       'security',
       'single',
@@ -225,8 +227,7 @@ export async function getSupabaseProfileByUsername({
   const lookupColumns = [
     'username_lower',
     'username_normalized',
-    'username',
-    'public_username'
+    'username'
   ];
 
   for (const column of lookupColumns) {
@@ -726,6 +727,10 @@ export function getProfileIdentityPolicy() {
 ============================================================================= */
 export function normalizeString(value) {
   return String(value || '').trim();
+}
+
+function isApprovedProfileVerificationStatus(value = '') {
+  return ['approved', 'verified'].includes(normalizeString(value).toLowerCase());
 }
 
 export function normalizeEmail(value) {
@@ -1673,6 +1678,23 @@ export function buildProfilePayload({
     || existingProfile?.username_status
     || (normalizedUsername ? 'reserved' : 'missing')
   );
+  const verificationStatus = normalizeString(values.verification_status || existingProfile?.verification_status || 'unverified');
+  const publicVerificationStatus = normalizeString(
+    values.public_verification_status
+    || existingProfile?.public_verification_status
+    || values.verification_status
+    || existingProfile?.verification_status
+    || 'unverified'
+  );
+  const verifiedAt = normalizeString(values.verified_at || existingProfile?.verified_at || existingProfile?.profile_verified_at || '');
+  const profileVerified = isApprovedProfileVerificationStatus(values.verification_status)
+    || isApprovedProfileVerificationStatus(existingProfile?.verification_status)
+    || isApprovedProfileVerificationStatus(values.public_verification_status)
+    || isApprovedProfileVerificationStatus(existingProfile?.public_verification_status)
+    || (
+      (values.profile_verified === true || existingProfile?.profile_verified === true)
+      && Boolean(verifiedAt)
+    );
   const explicitMissingRequiredFields = Array.isArray(values.missing_required_fields)
     ? values.missing_required_fields.map((field) => normalizeString(field)).filter(Boolean)
     : null;
@@ -1721,10 +1743,10 @@ export function buildProfilePayload({
     public_feature_flags: Array.isArray(values.public_feature_flags)
       ? values.public_feature_flags
       : (Array.isArray(existingProfile?.public_feature_flags) ? existingProfile.public_feature_flags : []),
-    verification_status: normalizeString(values.verification_status || existingProfile?.verification_status || 'unverified'),
-    public_verification_status: normalizeString(values.public_verification_status || existingProfile?.public_verification_status || values.verification_status || existingProfile?.verification_status || 'unverified'),
-    profile_verified: values.profile_verified === true || existingProfile?.profile_verified === true,
-    verified_at: normalizeString(values.verified_at || existingProfile?.verified_at || existingProfile?.profile_verified_at || ''),
+    verification_status: verificationStatus,
+    public_verification_status: publicVerificationStatus,
+    profile_verified: profileVerified,
+    verified_at: verifiedAt,
     first_name: values.first_name,
     last_name: values.last_name,
     display_name: values.display_name,

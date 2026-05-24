@@ -189,6 +189,32 @@
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request'));
   }
 
+  async function confirmSignedOutState() {
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 150);
+    });
+
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      if (!hasSupabaseRuntimeConfig()) {
+        handleSignedOutState();
+      }
+      return;
+    }
+
+    try {
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user || null;
+
+      if (user) {
+        handleSignedInState(user);
+        return;
+      }
+    } catch (_) {}
+
+    handleSignedOutState();
+  }
+
   /* =============================================================================
      13) AUTH BINDING
   ============================================================================= */
@@ -207,13 +233,13 @@
             return;
           }
 
-          handleSignedOutState();
+          void confirmSignedOutState();
         })
         .catch(() => {
-          handleSignedOutState();
+          void confirmSignedOutState();
         });
 
-      supabase.auth.onAuthStateChange((_event, session) => {
+      supabase.auth.onAuthStateChange((event, session) => {
         const user = session?.user || null;
 
         if (user) {
@@ -221,13 +247,20 @@
           return;
         }
 
-        handleSignedOutState();
+        if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          handleSignedOutState();
+          return;
+        }
+
+        void confirmSignedOutState();
       });
 
       return;
     }
 
-    updateSignedOutSurface();
+    if (!hasSupabaseRuntimeConfig()) {
+      updateSignedOutSurface();
+    }
   }
 
   /* =============================================================================

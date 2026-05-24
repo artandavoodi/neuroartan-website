@@ -1,0 +1,21 @@
+@import url('../settings/general/index.css');
+
+.home-platform-destination--profile-subscription{
+  width:100%;
+}
+
+.home-platform-destination__surface.home-platform-theme{
+  padding:var(--spacing-2xl);
+}
+
+.home-platform-theme__action-list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-none);
+}
+
+.home-platform-theme__action-label{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+}

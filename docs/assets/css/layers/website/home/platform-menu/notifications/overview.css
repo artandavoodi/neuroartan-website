@@ -1,4 +1,4 @@
-@import url('../../settings/general/index.css');
+@import url('../settings/general/index.css');
 
 .home-platform-destination--notifications-overview{
   width:var(--size-full);

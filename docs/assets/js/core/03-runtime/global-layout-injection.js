@@ -44,6 +44,7 @@ const FRAGMENT_PATHS = {
   'account-phone-auth-drawer': assetPath('/assets/fragments/layers/website/account/account-phone-auth-drawer.html'),
   'account-phone-verification-sheet': assetPath('/assets/fragments/layers/website/account/account-phone-verification-sheet.html'),
   'account-profile-setup-drawer': assetPath('/assets/fragments/layers/website/account/account-profile-setup-drawer.html'),
+  'announcement-overlay': assetPath('/assets/fragments/layers/website/announcement/announcement-overlay.html'),
   'cookie-consent': assetPath('/assets/fragments/layers/website/cookie/cookie-consent.html'),
   'country-overlay': assetPath('/assets/fragments/layers/website/country/country-overlay.html'),
   'institutional-links': assetPath('/assets/fragments/layers/website/navigation/institutional-links.html'),
@@ -326,10 +327,25 @@ function dispatchCountryOverlayMount(mount) {
   NEURO_MAIN_RUNTIME.countryOverlayMountDispatched = true;
 }
 
+function dispatchAnnouncementOverlayMount(mount) {
+  const host = mount || document.getElementById('announcement-overlay-mount') || document.querySelector('[data-include="announcement-overlay"]');
+  const root = host?.querySelector?.('#announcement-overlay, [data-announcement-overlay="root"]') || host;
+  const target = host || root;
+  if (!host || !root || !target) return;
+  if (markDispatchOnce(target, 'announcementOverlayMountedDispatched')) return;
+
+  document.dispatchEvent(new CustomEvent('announcement-overlay:mounted', {
+    detail: { name: 'announcement-overlay', root, mount: host }
+  }));
+
+  NEURO_MAIN_RUNTIME.announcementOverlayMountDispatched = true;
+}
+
 function dispatchOverlayMounts() {
   dispatchAccountDrawerMount();
   dispatchCookieConsentMount();
   dispatchCountryOverlayMount();
+  dispatchAnnouncementOverlayMount();
 }
 
 /* =============================================================================

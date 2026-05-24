@@ -1,5 +1,5 @@
 @import url('../appearance/index.css');
-@import url('../../../../../../../core/03-primitives/overlays.css');
+@import url('../../../../../../core/03-primitives/overlays.css');
 
 .home-platform-destination--settings-connectors{width:var(--size-full);}
 

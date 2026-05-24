@@ -6,57 +6,91 @@
         <h2 class="home-platform-theme__section-title" id="profile-overview">Profile Overview</h2>
       </div>
 
-      <div class="home-platform-theme__toggle-list">
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Profile Name</p>
-            <p class="home-platform-theme__toggle-caption">Your display name</p>
+      <div class="home-platform-theme__action-list">
+        <div class="profile-private-hero__avatar-wrap">
+          <div class="profile-private-hero__avatar" data-profile-avatar aria-hidden="true">
+            <img class="profile-private-hero__avatar-image" data-profile-avatar-image alt="" aria-hidden="true">
           </div>
-          <span class="home-platform-theme__mode-caption">Not Set</span>
         </div>
 
-        <div class="home-platform-theme__toggle-row">
-          <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Profile Status</p>
-            <p class="home-platform-theme__toggle-caption">Current profile state</p>
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Display Name</p>
+            <p class="home-platform-theme__action-subtitle" data-profile-username>@account required</p>
           </div>
-          <span class="home-platform-theme__mode-caption">● Incomplete</span>
+          <span class="home-platform-theme__action-label" data-profile-display-name>Not Set</span>
+        </div>
+
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Profile Status</p>
+            <p class="home-platform-theme__action-subtitle" data-profile-route>Public route pending</p>
+          </div>
+          <span class="home-platform-theme__action-label" data-profile-status>Signed out</span>
+        </div>
+
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Thoughts Published</p>
+            <p class="home-platform-theme__mode-caption">Total captured thoughts</p>
+          </div>
+          <span class="home-platform-theme__action-label">0</span>
+        </div>
+
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Continuity Score</p>
+            <p class="home-platform-theme__mode-caption">Profile completeness</p>
+          </div>
+          <span class="home-platform-theme__action-label">0%</span>
         </div>
       </div>
 
-      <div class="home-platform-theme__toggle-list">
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="edit-profile">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/edit-profile/edit-profile.svg" alt="" width="16" height="16">
+      <div class="home-platform-theme__action-list">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="edit-profile">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/profile/actions/edit-identity.svg" alt="" width="16" height="16">
             Edit Profile
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="account-control">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/account-control/account-control.svg" alt="" width="16" height="16">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="account-control">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-account-control.svg" alt="" width="16" height="16">
             Account Control
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="public-route">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" width="16" height="16">
+            Public Route
           </span>
         </button>
       </div>
     </section>
 
-    <section class="home-platform-theme__section" aria-labelledby="profile-shortcuts">
+    <section class="home-platform-theme__section" aria-labelledby="profile-commercial">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Quick Actions</p>
-        <h2 class="home-platform-theme__section-title" id="profile-shortcuts">Profile Shortcuts</h2>
+        <p class="home-platform-theme__section-eyebrow">Account</p>
+        <h2 class="home-platform-theme__section-title" id="profile-commercial">Account Access</h2>
       </div>
 
-      <div class="home-platform-theme__toggle-list">
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="shortcuts">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/shortcuts/shortcuts.svg" alt="" width="16" height="16">
-            View Shortcuts
+      <div class="home-platform-theme__action-list">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="subscription">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/subscriptions/subscription.svg" alt="" width="16" height="16">
+            Subscription
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="preferences">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/preferences/preferences.svg" alt="" width="16" height="16">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/overlays/cookie/preferences.svg" alt="" width="16" height="16">
             Preferences
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/identity/signout/signout.svg" alt="" width="16" height="16">
+            Sign Out
           </span>
         </button>
       </div>

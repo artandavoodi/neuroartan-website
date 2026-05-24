@@ -32,6 +32,16 @@ export function getDeveloperRuntimeInterface(context, interfaceId) {
   return getDeveloperRuntimeInterfaces(context).find((entry) => entry.id === normalizedId) || null;
 }
 
+function shouldRequestDeveloperBackend(context, runtimeInterface) {
+  const runtimeState = context?.registries?.runtimeInterfaces?.defaultRuntimeState || {};
+  const frontendStatus = String(runtimeInterface?.frontendStatus || '').trim().toLowerCase();
+
+  return runtimeState.backendRuntimeImplemented === true
+    && !frontendStatus.includes('stubbed')
+    && !frontendStatus.includes('locked')
+    && !frontendStatus.includes('backend_required');
+}
+
 /* =============================================================================
    04) BACKEND REQUESTS
 ============================================================================= */
@@ -92,6 +102,10 @@ export function buildLockedRuntimeResponse(context, interfaceId, payload = {}) {
 
 export async function requestDeveloperRuntimeAction(context, interfaceId, payload = {}) {
   const runtimeInterface = getDeveloperRuntimeInterface(context, interfaceId);
+
+  if (!shouldRequestDeveloperBackend(context, runtimeInterface)) {
+    return buildLockedRuntimeResponse(context, interfaceId, payload);
+  }
 
   try {
     const backendResponse = await requestDeveloperBackend(runtimeInterface, payload);

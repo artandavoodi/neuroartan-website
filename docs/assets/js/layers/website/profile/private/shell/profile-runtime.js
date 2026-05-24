@@ -35,6 +35,9 @@ import {
 import {
   resolveProfileImageDisplayUrl
 } from '../../../system/profile/profile-image-storage.js';
+import {
+  resolveApprovedProfileVerification
+} from '../../../system/profile/profile-verification.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -274,8 +277,7 @@ function buildPrivateProfileState(user = null, profile = null) {
   );
   const coverUrl = normalizeString(profile?.cover_url || profile?.header_image_url || getStructuredProfileFlag(profile, 'profile_cover_url'));
   const avatarHasImage = Boolean(avatarUrl);
-  const verificationStatus = normalizeString(profile?.verification_status || profile?.public_verification_status || 'unverified');
-  const profileVerified = profile?.profile_verified === true || verificationStatus === 'verified';
+  const verification = resolveApprovedProfileVerification(profile || {});
   const stateKey = !user
     ? 'guest'
     : !profile
@@ -334,10 +336,10 @@ function buildPrivateProfileState(user = null, profile = null) {
     avatarState: normalizeString(profile?.avatar_state || '') || (avatarHasImage ? 'active' : 'empty'),
     avatarInitials: buildInitials(displayName || normalizeString(profile?.first_name || ''), email),
     verification: {
-      verified: profileVerified,
-      status: profileVerified ? 'verified' : verificationStatus,
-      verifiedAt: normalizeString(profile?.verified_at || profile?.profile_verified_at || ''),
-      badgeVisible: profileVerified
+      verified: verification.verified,
+      status: verification.status,
+      verifiedAt: verification.verifiedAt,
+      badgeVisible: verification.badgeVisible
     },
     stateBadgeLabel: !user
       ? 'Guest'
@@ -460,9 +462,8 @@ function buildPublicProfileState(detail = {}) {
   const availability = normalizeString(model?.availability || '');
   const legacyState = normalizeString(model?.legacy_state || '');
   const modelMaturity = normalizeString(model?.model_maturity || '');
-  const profileVerified = publicProfile?.profile_verified === true
-    || normalizeString(publicProfile?.public_verification_status || '') === 'verified';
-  const verificationVisible = outcome === 'found_renderable' && profileVerified;
+  const verification = resolveApprovedProfileVerification(publicProfile || {});
+  const verificationVisible = outcome === 'found_renderable' && verification.verified;
   const visibilityState = publicProfile?.public_profile_enabled === true
     ? capitalizeWords(publicProfile?.public_profile_visibility || 'Public')
     : outcome === 'reserved_but_hidden'
@@ -556,8 +557,8 @@ function buildPublicProfileState(detail = {}) {
     publicProfileEnabled: publicProfile?.public_profile_enabled === true,
     verification: {
       verified: verificationVisible,
-      status: verificationVisible ? 'verified' : normalizeString(publicProfile?.public_verification_status || 'unverified'),
-      verifiedAt: normalizeString(publicProfile?.verified_at || ''),
+      status: verificationVisible ? 'verified' : verification.status,
+      verifiedAt: verification.verifiedAt,
       badgeVisible: verificationVisible
     }
   };

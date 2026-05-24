@@ -28,6 +28,7 @@ import {
 ============================================================================= */
 const PROFILE_VERIFICATION_REQUESTS_TABLE = 'profile_verification_requests';
 const REQUEST_SELECT_FIELDS = 'id, profile_id, auth_user_id, request_status, verification_type, request_note, created_at, updated_at, reviewed_at';
+const APPROVED_VERIFICATION_STATUSES = new Set(['approved', 'verified']);
 
 /* =============================================================================
    04) BACKEND HELPERS
@@ -53,17 +54,34 @@ async function getCurrentUserAndProfile(supabase = getSupabaseClient()) {
   return { user, profile };
 }
 
-function normalizeProfileVerification(profile = {}) {
-  const verified = profile?.verification_status === 'verified'
-    || profile?.public_verification_status === 'verified'
-    || profile?.profile_verified === true;
+function isApprovedVerificationStatus(value = '') {
+  return APPROVED_VERIFICATION_STATUSES.has(normalizeString(value).toLowerCase());
+}
+
+export function resolveApprovedProfileVerification(profile = {}) {
+  const explicitStatus = normalizeString(
+    profile?.verification_state
+    || profile?.verification_status
+    || profile?.public_verification_status
+    || profile?.profile_verification_state
+    || ''
+  ).toLowerCase();
+  const verifiedAt = normalizeString(
+    profile?.verified_at
+    || profile?.profile_verified_at
+    || profile?.verification_approved_at
+    || profile?.verification_reviewed_at
+    || ''
+  );
+  const approvedByStatus = isApprovedVerificationStatus(explicitStatus);
+  const approvedByLegacyBoolean = profile?.profile_verified === true
+    && (approvedByStatus || Boolean(verifiedAt));
+  const verified = approvedByStatus || approvedByLegacyBoolean;
 
   return {
     verified,
-    status: verified
-      ? 'verified'
-      : normalizeString(profile?.verification_status || profile?.public_verification_status || 'unverified'),
-    verifiedAt: normalizeString(profile?.verified_at || profile?.profile_verified_at || ''),
+    status: verified ? 'verified' : (explicitStatus || 'unverified'),
+    verifiedAt,
     badgeVisible: verified
   };
 }
@@ -78,7 +96,7 @@ export async function getProfileVerificationState(profileOverride = null) {
     return {
       backendConfigured: false,
       tableAvailable: false,
-      verification: normalizeProfileVerification(profileOverride || {}),
+      verification: resolveApprovedProfileVerification(profileOverride || {}),
       latestRequest: null
     };
   }
@@ -92,7 +110,7 @@ export async function getProfileVerificationState(profileOverride = null) {
     return {
       backendConfigured: true,
       tableAvailable: true,
-      verification: normalizeProfileVerification(activeProfile),
+      verification: resolveApprovedProfileVerification(activeProfile),
       latestRequest: null
     };
   }
@@ -114,7 +132,7 @@ export async function getProfileVerificationState(profileOverride = null) {
     return {
       backendConfigured: true,
       tableAvailable: true,
-      verification: normalizeProfileVerification(activeProfile),
+      verification: resolveApprovedProfileVerification(activeProfile),
       latestRequest: data || null
     };
   } catch (error) {
@@ -122,7 +140,7 @@ export async function getProfileVerificationState(profileOverride = null) {
       return {
         backendConfigured: true,
         tableAvailable: false,
-        verification: normalizeProfileVerification(activeProfile),
+        verification: resolveApprovedProfileVerification(activeProfile),
         latestRequest: null,
         errorCode: 'PROFILE_VERIFICATION_REQUESTS_TABLE_MISSING'
       };

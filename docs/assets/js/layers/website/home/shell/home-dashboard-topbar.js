@@ -188,20 +188,7 @@ function openHomeProfileControlSurface() {
   if (!snapshot?.account?.signedIn) {
     dispatchHomeTopbarEvent('account:entry-request', {
       source: 'home-dashboard-topbar',
-    });
-    return;
-  }
-
-  if (snapshot?.account?.profileComplete === false) {
-    dispatchHomeTopbarEvent('account:profile-setup-open-request', {
-      source: 'home-dashboard-topbar',
-      reason: 'profile-incomplete',
-      action: 'profile-setup',
-    });
-    dispatchHomeTopbarEvent('account-drawer:open-request', {
-      source: 'home-dashboard-topbar',
-      state: 'guest',
-      surface: 'profile-setup',
+      surface: 'sign-in',
     });
     return;
   }

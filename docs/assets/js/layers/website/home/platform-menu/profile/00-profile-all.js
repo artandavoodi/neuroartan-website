@@ -9,7 +9,7 @@
    ========================================================= */
 
 import './overview.js';
-import './shortcuts.js';
+import './subscription.js';
 import './account-control.js';
 
 /* =========================================================

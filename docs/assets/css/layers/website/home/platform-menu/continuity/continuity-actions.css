@@ -1,4 +1,4 @@
-@import url('../../settings/general/index.css');
+@import url('../settings/general/index.css');
 
 .home-platform-destination--continuity-actions{
   width:var(--size-full);

@@ -1,0 +1,83 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) ANNOUNCEMENT OVERLAY
+     01A) BACKDROP
+     01B) OVERLAY SHELL
+     01C) CLOSE CONTROL
+     01D) OVERLAY BODY
+     01E) ANNOUNCEMENT CONTENT
+     01F) ANNOUNCEMENT ICON
+     01G) ANNOUNCEMENT TITLE
+     01H) ANNOUNCEMENT MESSAGE
+     01I) ANNOUNCEMENT FOOTER
+============================================================================= -->
+
+<!-- =============================================================================
+     01) ANNOUNCEMENT OVERLAY
+============================================================================= -->
+<aside id="announcement-overlay" class="announcement-overlay" aria-hidden="true" aria-label="Platform announcement" data-announcement-overlay="true">
+
+  <!-- =============================================================================
+       01A) BACKDROP
+  ============================================================================= -->
+  <div class="announcement-overlay-backdrop"></div>
+
+  <!-- =============================================================================
+       01B) OVERLAY SHELL
+  ============================================================================= -->
+  <div class="announcement-overlay-shell" role="dialog" aria-modal="true" aria-label="Platform announcement">
+
+    <!-- =============================================================================
+         01C) CLOSE CONTROL
+    ============================================================================= -->
+    <button type="button" class="announcement-overlay-close global-close-button" aria-label="Close announcement" data-announcement-overlay-close="true">
+      <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+      <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+    </button>
+
+    <!-- =============================================================================
+         01D) OVERLAY BODY
+    ============================================================================= -->
+    <div class="announcement-overlay-body">
+
+      <!-- =============================================================================
+           01E) ANNOUNCEMENT CONTENT
+      ============================================================================= -->
+      <div class="announcement-overlay-content">
+
+        <!-- =============================================================================
+             01F) ANNOUNCEMENT ICON
+        ============================================================================= -->
+        <div class="announcement-overlay-icon">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/info/info.svg" alt="" aria-hidden="true">
+        </div>
+
+        <!-- =============================================================================
+             01G) ANNOUNCEMENT TITLE
+        ============================================================================= -->
+        <h2 class="announcement-overlay-title">Platform Under Development</h2>
+
+        <!-- =============================================================================
+             01H) ANNOUNCEMENT MESSAGE
+        ============================================================================= -->
+        <p class="announcement-overlay-message">
+          Neuroartan is currently in active development. We are building a structured cognitive architecture and voice-trained cognitive operating system. This platform represents a new category of cognitive infrastructure designed for institutional-grade intelligence and continuity.
+        </p>
+
+        <!-- =============================================================================
+             01I) ANNOUNCEMENT FOOTER
+        ============================================================================= -->
+        <div class="announcement-overlay-footer">
+          <p class="announcement-overlay-note">
+            For updates and progress information, please check back periodically.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- =============================================================================
+     END OF FILE
+============================================================================= -->

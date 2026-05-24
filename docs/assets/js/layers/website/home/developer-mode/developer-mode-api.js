@@ -49,6 +49,16 @@ async function getDeveloperRuntimeInterface(interfaceId) {
   return interfaces.find((entry) => entry.id === interfaceId) || null;
 }
 
+function shouldRequestDeveloperBackend(registry, runtimeInterface) {
+  const runtimeState = registry?.defaultRuntimeState || {};
+  const frontendStatus = normalizeString(runtimeInterface?.frontendStatus || '').toLowerCase();
+
+  return runtimeState.backendRuntimeImplemented === true
+    && !frontendStatus.includes('stubbed')
+    && !frontendStatus.includes('locked')
+    && !frontendStatus.includes('backend_required');
+}
+
 /* =============================================================================
    03) BACKEND REQUESTS
 ============================================================================= */
@@ -67,13 +77,26 @@ function buildRequestUrl(route, method, payload = {}) {
 }
 
 export async function requestHomeDeveloperAction(interfaceId, payload = {}) {
-  const runtimeInterface = await getDeveloperRuntimeInterface(interfaceId);
+  const registry = await getDeveloperRuntimeInterfaceRegistry();
+  const interfaces = Array.isArray(registry.interfaces) ? registry.interfaces : [];
+  const runtimeInterface = interfaces.find((entry) => entry.id === interfaceId) || null;
   if (!runtimeInterface?.route) {
     return {
       ok:false,
       status:'developer_runtime_interface_missing',
       interfaceId,
       reason:'The requested Developer Mode backend route is not registered.'
+    };
+  }
+
+  if (!shouldRequestDeveloperBackend(registry, runtimeInterface)) {
+    return {
+      ok:false,
+      status:'developer_backend_locked',
+      interfaceId,
+      route:runtimeInterface.route,
+      method:normalizeString(runtimeInterface.method || 'GET').toUpperCase(),
+      reason:'Developer Mode backend runtime is not implemented for this deployment.'
     };
   }
 

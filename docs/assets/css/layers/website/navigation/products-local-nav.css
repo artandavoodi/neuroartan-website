@@ -47,7 +47,8 @@ html[data-theme-effective="light"]{
 /* =============================================================================
    02) LOCAL NAV MOUNT OWNER
 ============================================================================= */
-#products-local-nav-mount {
+#products-local-nav-mount,
+#leadership-local-nav-mount {
   position: sticky;
   top: 0;
   z-index: 38;
@@ -60,7 +61,8 @@ html[data-theme-effective="light"]{
     min-height var(--products-local-nav-transition);
 }
 
-.products-page.products-local-nav-active #products-local-nav-mount {
+.products-page.products-local-nav-active #products-local-nav-mount,
+.leadership-page.products-local-nav-active #leadership-local-nav-mount {
   margin-top: 0;
 }
 
@@ -244,9 +246,10 @@ html[data-theme-effective="light"]{
    11) LOCAL NAV RESPONSIVE BEHAVIOR
 ============================================================================= */
 @media (max-width: 980px) {
-  #products-local-nav-mount {
-    position: relative;
-    top: auto;
+  #products-local-nav-mount,
+  #leadership-local-nav-mount {
+    position: sticky;
+    top: 0;
   }
 
   .products-local-nav {

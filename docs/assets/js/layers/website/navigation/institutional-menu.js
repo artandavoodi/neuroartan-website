@@ -39,6 +39,7 @@
   ============================================================================= */
   const body = document.body;
   const desktopQuery = window.matchMedia('(min-width: 761px)');
+  const hoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   /* =============================================================================
      03) STATE FLAGS
@@ -65,6 +66,10 @@
 
   function isDesktop() {
     return desktopQuery.matches;
+  }
+
+  function supportsHoverOpen() {
+    return desktopQuery.matches && hoverQuery.matches;
   }
 
   function isElement(value) {
@@ -897,7 +902,7 @@
     }
 
     function openFromTrigger(trigger) {
-      if (!isDesktop() || !trigger) return;
+      if (!supportsHoverOpen() || !trigger) return;
       const panelKey = trigger.dataset.menuPanel || '';
       if (!panelKey || panelKey === 'search') return;
 
@@ -974,7 +979,7 @@
 
         const isAnchorTrigger = trigger instanceof HTMLAnchorElement && !!trigger.getAttribute('href');
 
-        if (isAnchorTrigger) {
+        if (isAnchorTrigger && supportsHoverOpen()) {
           openPanel(panelKey);
           return;
         }

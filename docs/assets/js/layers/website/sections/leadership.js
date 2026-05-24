@@ -223,13 +223,11 @@ function renderLeadershipDetail(member) {
 
   LEADERSHIP_PAGE_STATE.root.innerHTML = `
     <section class="catalog-page-hero leadership-profile-hero">
-      <a class="leadership-back-link" href="/pages/company/leadership/index.html">Leadership</a>
       <div class="leadership-profile-hero__layout">
         <span class="leadership-avatar leadership-avatar--hero">
           ${getMemberImageMarkup(member, 'hero')}
         </span>
         <div class="leadership-profile-hero__body">
-          <p class="catalog-page-eyebrow">${escapeHtml(isAvailable ? 'Available executive position' : 'Founder profile')}</p>
           <h1 class="catalog-page-title">${escapeHtml(displayName)}</h1>
           <p class="leadership-profile-hero__role">${escapeHtml(member.role_title || member.title || '')}</p>
           <div class="catalog-meta">

@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) PATH HELPERS
-   03) CONSTANTS
+   03) LOCAL NAV REGISTRY
    04) HELPERS
    05) REGISTRY LOADER
    06) SECTION RESOLUTION
@@ -47,40 +47,61 @@
   };
 
   /* =============================================================================
-     03) CONSTANTS
+     03) LOCAL NAV REGISTRY
   ============================================================================= */
-  const PRODUCTS_REGISTRY_URL = assetPath('/assets/data/sections/products.json');
-  const LOCAL_NAV_SELECTOR = '#products-local-nav-mount';
-  const SCROLLED_CLASS = 'products-local-nav--scrolled';
-  const ACTIVE_PAGE_CLASS = 'products-local-nav-active';
-  const ACTIVE_BODY_CLASS = 'products-local-nav-active';
+  const LOCAL_NAV_CONFIGS = [
+    {
+      id: 'products',
+      selector: '#products-local-nav-mount',
+      pageRootSelector: '.products-page',
+      registryUrl: assetPath('/assets/data/sections/products.json'),
+      label: 'Products',
+      labelHref: '/pages/products/index.html',
+      scrolledClass: 'products-local-nav--scrolled',
+      activePageClass: 'products-local-nav-active',
+      activeBodyClass: 'products-local-nav-active'
+    },
+    {
+      id: 'leadership',
+      selector: '#leadership-local-nav-mount',
+      pageRootSelector: '.leadership-page',
+      registryUrl: '',
+      label: 'Leadership',
+      labelHref: '/pages/company/leadership/index.html',
+      sections: [],
+      scrolledClass: 'products-local-nav--scrolled',
+      activePageClass: 'products-local-nav-active',
+      activeBodyClass: 'products-local-nav-active'
+    }
+  ];
+
   const SCROLL_THRESHOLD = 1;
 
   /* =============================================================================
      04) HELPERS
   ============================================================================= */
-  function getMount() {
-    return document.querySelector(LOCAL_NAV_SELECTOR);
+  function getMount(config) {
+    return document.querySelector(config.selector);
   }
 
-  function getPageRoot() {
-    return document.querySelector('.products-page') || document.body;
+  function getPageRoot(config) {
+    return document.querySelector(config.pageRootSelector) || document.body;
   }
 
-  function getLocalNavElement() {
-    const mount = getMount();
+  function getLocalNavElement(config) {
+    const mount = getMount(config);
     if (!mount) return null;
     return mount.querySelector('.products-local-nav');
   }
 
-  function getLocalNavLabel() {
-    const mount = getMount();
+  function getLocalNavLabel(config) {
+    const mount = getMount(config);
     if (!mount) return null;
     return mount.querySelector('[data-products-local-label]');
   }
 
-  function getLocalNavLinksContainer() {
-    const mount = getMount();
+  function getLocalNavLinksContainer(config) {
+    const mount = getMount(config);
     if (!mount) return null;
     return mount.querySelector('[data-products-local-links]');
   }
@@ -105,8 +126,17 @@
   /* =============================================================================
      05) REGISTRY LOADER
   ============================================================================= */
-  async function loadRegistry() {
-    return fetchJson(PRODUCTS_REGISTRY_URL);
+  async function loadRegistry(config) {
+    if (config.registryUrl) {
+      return fetchJson(config.registryUrl);
+    }
+
+    return {
+      label: config.label,
+      labelHref: config.labelHref,
+      sections: config.sections || [],
+      defaultSection: ''
+    };
   }
 
   /* =============================================================================
@@ -123,16 +153,16 @@
   /* =============================================================================
      07) RENDERERS
   ============================================================================= */
-  function renderLocalNav(registry, activeSection) {
-    const nav = getLocalNavElement();
-    const label = getLocalNavLabel();
-    const linksContainer = getLocalNavLinksContainer();
+  function renderLocalNav(config, registry, activeSection) {
+    const nav = getLocalNavElement(config);
+    const label = getLocalNavLabel(config);
+    const linksContainer = getLocalNavLinksContainer(config);
 
     if (!nav || !registry || !linksContainer) return false;
 
     if (label) {
-      label.textContent = registry.label || 'Products';
-      label.setAttribute('href', '/pages/products/index.html');
+      label.textContent = registry.label || config.label;
+      label.setAttribute('href', registry.labelHref || config.labelHref);
     }
 
     const links = (registry.sections || [])
@@ -155,18 +185,18 @@
   /* =============================================================================
      08) SCROLL STATE
   ============================================================================= */
-  function updateScrollState() {
-    const nav = getLocalNavElement();
-    const pageRoot = getPageRoot();
+  function updateScrollState(config) {
+    const nav = getLocalNavElement(config);
+    const pageRoot = getPageRoot(config);
     if (!nav || !pageRoot) return;
 
     const isActive = window.scrollY > SCROLL_THRESHOLD;
-    nav.classList.toggle(SCROLLED_CLASS, isActive);
-    pageRoot.classList.toggle(ACTIVE_PAGE_CLASS, isActive);
-    document.body.classList.toggle(ACTIVE_BODY_CLASS, isActive);
+    nav.classList.toggle(config.scrolledClass, isActive);
+    pageRoot.classList.toggle(config.activePageClass, isActive);
+    document.body.classList.toggle(config.activeBodyClass, isActive);
   }
 
-  function bindScrollState() {
+  function bindScrollState(config) {
     let ticking = false;
 
     const onStateChange = () => {
@@ -174,7 +204,7 @@
       ticking = true;
 
       window.requestAnimationFrame(() => {
-        updateScrollState();
+        updateScrollState(config);
         ticking = false;
       });
     };
@@ -188,18 +218,18 @@
   /* =============================================================================
      09) BOOTSTRAP
   ============================================================================= */
-  async function boot() {
-    const mount = getMount();
+  async function bootConfig(config) {
+    const mount = getMount(config);
     if (!mount) return;
 
     try {
-      const registry = await loadRegistry();
+      const registry = await loadRegistry(config);
       const activeSection = resolveActiveSection(registry);
 
       const tryRender = () => {
-        const rendered = renderLocalNav(registry, activeSection);
+        const rendered = renderLocalNav(config, registry, activeSection);
         if (rendered) {
-          bindScrollState();
+          bindScrollState(config);
           return true;
         }
         return false;
@@ -215,8 +245,14 @@
 
       observer.observe(mount, { childList: true, subtree: true });
     } catch (error) {
-      console.error('[products-local-nav] bootstrap failed', error);
+      console.error(`[products-local-nav] ${config.id} bootstrap failed`, error);
     }
+  }
+
+  async function boot() {
+    LOCAL_NAV_CONFIGS.forEach((config) => {
+      bootConfig(config);
+    });
   }
 
   /* =============================================================================

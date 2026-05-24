@@ -25,7 +25,7 @@
    02) ROOT TOKENS
 ============================================================================= */
 :root{
-  --announcement-overlay-panel-width: var(--layout-dialog-panel-width);
+  --announcement-overlay-panel-width: var(--layout-account-drawer-panel-width);
   --announcement-overlay-surface: var(--glass-overlay-drawer-shell-bg);
   --announcement-overlay-border: var(--panel-border-unified);
   --announcement-overlay-backdrop: var(--overlay-backdrop);
@@ -39,8 +39,12 @@
   --announcement-overlay-dialog-viewport-gap: var(--dialog-overlay-viewport-gap);
   --announcement-overlay-panel-transform-closed: var(--overlay-transform-closed);
   --announcement-overlay-panel-transform-open: var(--overlay-transform-open);
-  --announcement-overlay-content-max-width: var(--layout-dialog-content-max-width);
-  --announcement-overlay-content-padding: var(--layout-dialog-content-padding);
+  --announcement-overlay-shell-padding-y: var(--dialog-overlay-panel-padding-y);
+  --announcement-overlay-shell-padding-x: var(--dialog-overlay-panel-padding-x);
+  --announcement-overlay-shell-padding-bottom: var(--dialog-overlay-panel-padding-y);
+  --announcement-overlay-close-offset: var(--layout-account-drawer-close-offset);
+  --announcement-overlay-content-max-width: 34rem;
+  --announcement-overlay-content-padding: var(--spacing-none);
   --announcement-overlay-section-gap: var(--spacing-lg);
   --announcement-overlay-icon-size: var(--control-height-lg);
   --announcement-overlay-title-size: var(--headline-4-size);
@@ -135,7 +139,7 @@ body.announcement-overlay-closing .announcement-overlay-backdrop{
   max-width: calc(100vw - (2 * var(--announcement-overlay-dialog-viewport-gap)));
   height: auto;
   max-height: var(--announcement-overlay-dialog-max-height);
-  padding: var(--layout-dialog-shell-padding-y) var(--layout-dialog-shell-padding-x);
+  padding: var(--announcement-overlay-shell-padding-y) var(--announcement-overlay-shell-padding-x) var(--announcement-overlay-shell-padding-bottom);
   background-color: var(--announcement-overlay-surface);
   border: var(--border-width-hairline) solid var(--announcement-overlay-border);
   border-radius: var(--announcement-overlay-dialog-radius);
@@ -171,8 +175,8 @@ body.announcement-overlay-closing .announcement-overlay-shell{
 ============================================================================= */
 .announcement-overlay-close{
   position: absolute;
-  top: var(--layout-dialog-close-offset);
-  right: var(--layout-dialog-close-offset);
+  top: var(--announcement-overlay-close-offset);
+  right: var(--announcement-overlay-close-offset);
   left: auto;
   width: var(--announcement-overlay-close-size);
   min-width: var(--announcement-overlay-close-size);

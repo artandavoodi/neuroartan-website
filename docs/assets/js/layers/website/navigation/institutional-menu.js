@@ -304,6 +304,20 @@
     return rect.height || el.offsetHeight || window.innerHeight || 0;
   }
 
+  function getAboutRibbonActivationDistance(menu = getMenu()) {
+    const siteMain = byId('site-main') || document;
+    const targetText = 'ICOS is a cognitive operating system for voice, memory, reflection, and continuity';
+    const candidates = qa('h1, h2, h3, p, span, div', siteMain);
+    const target = candidates.find((element) => normalizeString(element.textContent).includes(targetText));
+
+    if (!target) {
+      return getRibbonActivationDistance();
+    }
+
+    const menuHeight = menu?.offsetHeight || 0;
+    return Math.max(getPageTop(target) - menuHeight, 0);
+  }
+
   function getRibbonActivationDistance() {
     const rawValue = window
       .getComputedStyle(document.documentElement)
@@ -367,10 +381,6 @@
   ============================================================================= */
   function bindRibbon() {
     const menu = getMenu();
-    const hero = byId('home-hero');
-    const stage = q('.stage-circle');
-    const essence = byId('home-essence');
-    const siteMain = byId('site-main');
 
     if (!body || !menu || menu.dataset.ribbonBound === 'true') return;
     menu.dataset.ribbonBound = 'true';
@@ -380,18 +390,12 @@
       const scrollY = window.scrollY || window.pageYOffset || 0;
       let threshold = Number.POSITIVE_INFINITY;
 
-      if (document.body?.classList.contains('profile-page')) {
-        body.classList.remove('menu-ribbon-active');
+      if (!isAboutPage()) {
+        body.classList.add('menu-ribbon-active');
         return;
-      } else if (isHomePage()) {
-        if (stage) {
-          threshold = getPageTop(stage) + getOuterHeight(stage) + 220;
-        } else {
-          threshold = window.innerHeight || 0;
-        }
-      } else {
-        threshold = getRibbonActivationDistance();
       }
+
+      threshold = getAboutRibbonActivationDistance(menu);
 
       if (!Number.isFinite(threshold)) {
         threshold = 12;
@@ -555,6 +559,7 @@
     let closeTimer = null;
     let isListening = false;
     const searchLinksHost = getSearchLinksHost(menu);
+    const searchInputDesktopPlaceholder = searchInput ? searchInput.getAttribute('placeholder') || 'Search Neuroartan.com' : '';
     let speechControllerPromise = null;
 
     function normalizeSearchValue(value) {
@@ -767,6 +772,11 @@
       mobileMenuTrigger.setAttribute('aria-label', open ? 'Close institutional menu' : 'Open institutional menu');
     }
 
+    function syncSearchPlaceholderForViewport() {
+      if (!searchInput) return;
+      searchInput.setAttribute('placeholder', isDesktop() ? searchInputDesktopPlaceholder : 'Search');
+    }
+
     function syncPanelHeight() {
       const activePanel = panels.find((panel) => panel.classList.contains('is-active'));
       const height = activePanel ? activePanel.offsetHeight : 0;
@@ -848,6 +858,7 @@
       window.requestAnimationFrame(() => {
         syncPanelHeight();
         if (panelKey === 'search' && searchInput) {
+          syncSearchPlaceholderForViewport();
           focusSearchInput();
           renderSearchResults(searchInput.value || '');
         } else if (panelKey !== 'search') {
@@ -936,6 +947,7 @@
       searchInput.dataset.searchResultsBound = 'true';
       searchInput.setAttribute('autocomplete', 'off');
       searchInput.setAttribute('spellcheck', 'false');
+      syncSearchPlaceholderForViewport();
 
       searchInput.addEventListener('input', () => {
         renderSearchResults(searchInput.value || '');
@@ -1106,6 +1118,7 @@
       window.addEventListener('resize', () => {
         const liveMenu = getMenu();
         if (!liveMenu || liveMenu.dataset.panelsBound !== 'true') return;
+        syncSearchPlaceholderForViewport();
 
         if (!isDesktop()) {
           closePanels();

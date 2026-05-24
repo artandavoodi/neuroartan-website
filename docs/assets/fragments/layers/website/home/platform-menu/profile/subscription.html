@@ -10,9 +10,25 @@
         <div class="home-platform-theme__action-row">
           <div class="home-platform-theme__action-copy">
             <p class="home-platform-theme__action-title">Current plan</p>
-            <p class="home-platform-theme__mode-caption">Free</p>
+            <p class="home-platform-theme__mode-caption" data-profile-plan-caption>Free</p>
           </div>
-          <span class="home-platform-theme__action-label">Active</span>
+          <span class="home-platform-theme__action-label" data-profile-plan-status>Active</span>
+        </div>
+
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Billing provider</p>
+            <p class="home-platform-theme__mode-caption" data-profile-billing-provider-caption>Stripe connection pending</p>
+          </div>
+          <span class="home-platform-theme__action-label" data-profile-billing-provider-status>Setup required</span>
+        </div>
+
+        <div class="home-platform-theme__action-row">
+          <div class="home-platform-theme__action-copy">
+            <p class="home-platform-theme__action-title">Invoices</p>
+            <p class="home-platform-theme__mode-caption" data-profile-invoice-caption>No invoices yet</p>
+          </div>
+          <span class="home-platform-theme__action-label" data-profile-invoice-status>0</span>
         </div>
 
         <button class="home-platform-theme__action-button" type="button" data-profile-action="manage-plan">

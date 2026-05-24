@@ -1,0 +1,5 @@
+{
+  "schema": "neuroartan.commerce.invoices.v1",
+  "provider": "stripe",
+  "invoices": []
+}

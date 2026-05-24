@@ -29,37 +29,28 @@
           <span class="home-platform-theme__action-label" data-profile-status>Signed out</span>
         </div>
 
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Thoughts Published</p>
-            <p class="home-platform-theme__mode-caption">Total captured thoughts</p>
-          </div>
-          <span class="home-platform-theme__action-label">0</span>
-        </div>
-
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Continuity Score</p>
-            <p class="home-platform-theme__mode-caption">Profile completeness</p>
-          </div>
-          <span class="home-platform-theme__action-label">0%</span>
-        </div>
       </div>
 
       <div class="home-platform-theme__action-list">
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="edit-profile">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-in" data-profile-auth-visible="signed-out">
+          <span class="home-platform-theme__action-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/sign-in/sign-in.svg" alt="" width="16" height="16">
+            Sign In
+          </span>
+        </button>
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="edit-profile" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/profile/actions/edit-identity.svg" alt="" width="16" height="16">
             Edit Profile
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="account-control">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="account-control" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-account-control.svg" alt="" width="16" height="16">
             Account Control
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="public-route">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="public-route" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" width="16" height="16">
             Public Route
@@ -75,19 +66,19 @@
       </div>
 
       <div class="home-platform-theme__action-list">
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="subscription">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="subscription" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/subscriptions/subscription.svg" alt="" width="16" height="16">
             Subscription
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/overlays/cookie/preferences.svg" alt="" width="16" height="16">
             Preferences
           </span>
         </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out">
+        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out" data-profile-auth-visible="signed-in">
           <span class="home-platform-theme__action-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/identity/signout/signout.svg" alt="" width="16" height="16">
             Sign Out

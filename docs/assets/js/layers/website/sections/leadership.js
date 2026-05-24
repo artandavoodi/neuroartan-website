@@ -4,9 +4,10 @@
    02) CONSTANTS
    03) STATE
    04) HELPERS
-   05) RENDER HELPERS
-   06) INITIALIZATION
-   07) END OF FILE
+   05) MARKUP HELPERS
+   06) RENDER HELPERS
+   07) INITIALIZATION
+   08) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -24,14 +25,13 @@ import {
    02) CONSTANTS
 ============================================================================= */
 const LEADERSHIP_URL = '/assets/data/company/leadership.json';
-const FOUNDER_URL = '/assets/data/company/founder.json';
 
 /* =============================================================================
    03) STATE
 ============================================================================= */
 const LEADERSHIP_PAGE_STATE = {
   leadership: null,
-  founder: null,
+  members: [],
   root: null
 };
 
@@ -46,101 +46,197 @@ function getLeadershipRoot() {
   return document.querySelector('[data-leadership-page-root]');
 }
 
-function getResolvedMember() {
-  const requestedId = readQueryParam('leader') || LEADERSHIP_PAGE_STATE.leadership?.members?.[0]?.id || '';
+function getLeadershipMemberId() {
+  const rootMemberId = normalizeString(document.body.dataset.leadershipMemberId);
+  const queryMemberId = normalizeString(readQueryParam('leader'));
 
-  if (requestedId === 'founder-artan-davoodi') {
-    return {
-      id: requestedId,
-      title: LEADERSHIP_PAGE_STATE.founder?.title || 'Founder',
-      display_name: LEADERSHIP_PAGE_STATE.founder?.public_name || LEADERSHIP_PAGE_STATE.founder?.display_name || 'Artan Davoodi',
-      summary: LEADERSHIP_PAGE_STATE.founder?.summary || '',
-      biography: Array.isArray(LEADERSHIP_PAGE_STATE.founder?.biography) ? LEADERSHIP_PAGE_STATE.founder.biography : [],
-      image: LEADERSHIP_PAGE_STATE.founder?.image || '',
-      public_route: '/artan',
-      profile_route: '/pages/profiles/index.html?model=artan-davoodi',
-      areas: Array.isArray(LEADERSHIP_PAGE_STATE.founder?.areas) ? LEADERSHIP_PAGE_STATE.founder.areas : [],
-      public_links: Array.isArray(LEADERSHIP_PAGE_STATE.founder?.public_links) ? LEADERSHIP_PAGE_STATE.founder.public_links : []
-    };
+  return rootMemberId || queryMemberId;
+}
+
+function getLeadershipMember() {
+  const requestedId = getLeadershipMemberId();
+  const pathname = window.location.pathname || '';
+
+  if (requestedId) {
+    return LEADERSHIP_PAGE_STATE.members.find((member) => member.id === requestedId || member.role_id === requestedId) || null;
   }
 
-  return null;
+  return LEADERSHIP_PAGE_STATE.members.find((member) => pathname.includes(`/leadership/${member.role_id}/`)) || null;
+}
+
+function isDetailPage() {
+  return Boolean(document.querySelector('[data-leadership-profile-root]') || getLeadershipMemberId() || getLeadershipMember());
+}
+
+function getExternalLinkAttributes(url) {
+  return /^https?:\/\//i.test(url) ? ' target="_blank" rel="noreferrer"' : '';
+}
+
+function getMemberDisplayName(member) {
+  return normalizeString(member.display_name || member.public_name || 'Available Position');
+}
+
+function getMemberImageMarkup(member, mode = 'card') {
+  const displayName = getMemberDisplayName(member);
+
+  if (member.image) {
+    return `
+      <img class="leadership-avatar__image" src="${escapeHtml(member.image)}" alt="${escapeHtml(displayName)}">
+    `;
+  }
+
+  return `
+    <span class="leadership-avatar__placeholder" aria-hidden="true">${escapeHtml(member.role_acronym || 'NA')}</span>
+    ${mode === 'hero' ? '' : '<span class="leadership-avatar__status">Open</span>'}
+  `;
 }
 
 /* =============================================================================
-   05) RENDER HELPERS
+   05) MARKUP HELPERS
 ============================================================================= */
-function renderLeadershipPage() {
-  if (!LEADERSHIP_PAGE_STATE.root || !LEADERSHIP_PAGE_STATE.leadership || !LEADERSHIP_PAGE_STATE.founder) {
-    return;
+function renderLeadershipCard(member) {
+  const displayName = getMemberDisplayName(member);
+  const isAvailable = member.appointment_status !== 'occupied';
+
+  return `
+    <article class="leadership-card" role="listitem" data-leadership-status="${escapeHtml(member.appointment_status || '')}">
+      <a class="leadership-card__link" href="${escapeHtml(member.profile_route)}" aria-label="${escapeHtml(displayName)} ${escapeHtml(member.role_title)}">
+        <span class="leadership-avatar leadership-avatar--card">
+          ${getMemberImageMarkup(member)}
+        </span>
+        <span class="leadership-card__body">
+          <span class="leadership-card__name">${escapeHtml(displayName)}</span>
+          <span class="leadership-card__role">${escapeHtml(member.role_title || '')}</span>
+          <span class="leadership-card__state">${escapeHtml(isAvailable ? 'Available position' : 'Active founder profile')}</span>
+        </span>
+      </a>
+    </article>
+  `;
+}
+
+function renderLeadershipActionStack(member) {
+  const links = Array.isArray(member.public_links) ? member.public_links : [];
+  const hiringRoute = normalizeString(member.hiring_route);
+
+  return `
+    <div class="catalog-action-stack">
+      ${hiringRoute ? `
+        <a class="ui-button ui-button--ghost" href="${escapeHtml(hiringRoute)}">Hiring route</a>
+      ` : ''}
+      ${links.map((link) => `
+        <a class="ui-button ui-button--ghost" href="${escapeHtml(link.url)}"${getExternalLinkAttributes(link.url)}>${escapeHtml(link.label)}</a>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderLeadershipList(title, items) {
+  if (!Array.isArray(items) || !items.length) {
+    return '';
   }
 
-  const member = getResolvedMember();
-  if (!member) {
+  return `
+    <article class="catalog-panel">
+      <h2 class="catalog-panel__title">${escapeHtml(title)}</h2>
+      <div class="catalog-list">
+        ${items.map((item) => `<div class="catalog-list-item">${escapeHtml(item)}</div>`).join('')}
+      </div>
+    </article>
+  `;
+}
+
+/* =============================================================================
+   06) RENDER HELPERS
+============================================================================= */
+function renderLeadershipOverview() {
+  if (!LEADERSHIP_PAGE_STATE.root || !LEADERSHIP_PAGE_STATE.leadership) {
     return;
   }
 
   LEADERSHIP_PAGE_STATE.root.innerHTML = `
-    <section class="catalog-page-hero">
+    <section class="catalog-page-hero leadership-overview-hero">
       <p class="catalog-page-eyebrow">${escapeHtml(LEADERSHIP_PAGE_STATE.leadership.label || 'Leadership')}</p>
-      <h1 class="catalog-page-title">${escapeHtml(member.display_name)}</h1>
-      <p class="catalog-page-description">${escapeHtml(member.summary)}</p>
+      <h1 class="catalog-page-title">${escapeHtml(LEADERSHIP_PAGE_STATE.leadership.title || 'Leadership')}</h1>
+      <p class="catalog-page-description">${escapeHtml(LEADERSHIP_PAGE_STATE.leadership.description || '')}</p>
       <div class="catalog-meta">
-        <span class="catalog-meta-item">${escapeHtml(member.title)}</span>
-        <span class="catalog-meta-item">${escapeHtml(LEADERSHIP_PAGE_STATE.leadership.expansion_state || 'founder-first')}</span>
+        <span class="catalog-meta-item">${escapeHtml(LEADERSHIP_PAGE_STATE.leadership.expansion_state || 'Founder-led')}</span>
+        <span class="catalog-meta-item">${escapeHtml(`${LEADERSHIP_PAGE_STATE.members.length} executive seats`)}</span>
       </div>
+    </section>
+
+    <section class="catalog-section leadership-showcase" aria-label="Executive leadership">
+      <div class="leadership-grid" role="list">
+        ${LEADERSHIP_PAGE_STATE.members.map(renderLeadershipCard).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderLeadershipDetail(member) {
+  if (!LEADERSHIP_PAGE_STATE.root || !member) {
+    return;
+  }
+
+  const displayName = getMemberDisplayName(member);
+  const isAvailable = member.appointment_status !== 'occupied';
+
+  LEADERSHIP_PAGE_STATE.root.innerHTML = `
+    <section class="catalog-page-hero leadership-profile-hero">
+      <a class="leadership-back-link" href="/pages/company/leadership/index.html">Leadership</a>
+      <div class="leadership-profile-hero__layout">
+        <span class="leadership-avatar leadership-avatar--hero">
+          ${getMemberImageMarkup(member, 'hero')}
+        </span>
+        <div class="leadership-profile-hero__body">
+          <p class="catalog-page-eyebrow">${escapeHtml(isAvailable ? 'Available executive position' : 'Founder profile')}</p>
+          <h1 class="catalog-page-title">${escapeHtml(displayName)}</h1>
+          <p class="leadership-profile-hero__role">${escapeHtml(member.role_title || member.title || '')}</p>
+          <div class="catalog-meta">
+            <span class="catalog-meta-item">${escapeHtml(member.role_acronym || '')}</span>
+            <span class="catalog-meta-item">${escapeHtml(isAvailable ? 'Hiring architecture ready' : `Joined ${member.joined_year || '2026'}`)}</span>
+            <span class="catalog-meta-item">${escapeHtml(member.source_posture || '')}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog-section leadership-profile-summary">
+      <p class="catalog-page-description">${escapeHtml(member.summary || '')}</p>
     </section>
 
     <section class="catalog-section">
       <div class="catalog-detail-grid">
         <article class="catalog-panel catalog-panel--primary">
-          <div class="catalog-media-card">
-            ${member.image ? `
-              <div class="catalog-media-card__figure">
-                <img src="${escapeHtml(member.image)}" alt="${escapeHtml(member.display_name)}">
-              </div>
-            ` : ''}
-            <div class="catalog-media-card__body">
-              <h2 class="catalog-panel__title">${escapeHtml(member.title)}</h2>
-              <div class="catalog-list">
-                ${member.biography.map((paragraph) => `
-                  <div class="catalog-list-item">${escapeHtml(paragraph)}</div>
-                `).join('')}
-              </div>
-            </div>
+          <h2 class="catalog-panel__title">${escapeHtml(isAvailable ? 'Role Mandate' : 'Founder Mandate')}</h2>
+          <p class="catalog-panel__copy">${escapeHtml(member.mandate || '')}</p>
+          <div class="catalog-list">
+            ${(member.biography || []).map((paragraph) => `<div class="catalog-list-item">${escapeHtml(paragraph)}</div>`).join('')}
           </div>
         </article>
 
-        <article class="catalog-panel">
-          <h2 class="catalog-panel__title">Leadership Areas</h2>
-          <div class="catalog-chip-list">
-            ${renderChipMarkup(member.areas)}
-          </div>
-        </article>
+
 
         <article class="catalog-panel">
-          <h2 class="catalog-panel__title">Public Surfaces</h2>
-          <div class="catalog-action-stack">
-            <a class="ui-button ui-button--secondary" href="${escapeHtml(member.profile_route)}">Open continuity model</a>
-            <a class="ui-button ui-button--ghost" href="${escapeHtml(member.public_route)}">Open public route</a>
-          </div>
-        </article>
-
-        <article class="catalog-panel">
-          <h2 class="catalog-panel__title">External Links</h2>
-          <div class="catalog-action-stack">
-            ${member.public_links.map((link) => `
-              <a class="ui-button ui-button--ghost" href="${escapeHtml(link.url)}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>
-            `).join('')}
-          </div>
+          ${renderLeadershipActionStack(member)}
         </article>
       </div>
     </section>
   `;
 }
 
+function renderLeadershipPage() {
+  const member = getLeadershipMember();
+
+  if (isDetailPage() && member) {
+    renderLeadershipDetail(member);
+    return;
+  }
+
+  renderLeadershipOverview();
+}
+
 /* =============================================================================
-   06) INITIALIZATION
+   07) INITIALIZATION
 ============================================================================= */
 async function initLeadershipPage() {
   if (!isLeadershipPage()) {
@@ -152,18 +248,16 @@ async function initLeadershipPage() {
     return;
   }
 
-  const [leadership, founder] = await Promise.all([
-    fetchJson(LEADERSHIP_URL),
-    fetchJson(FOUNDER_URL)
-  ]);
+  const leadership = await fetchJson(LEADERSHIP_URL);
+  const members = await Promise.all((leadership.members || []).map((member) => fetchJson(member.data_url)));
 
   LEADERSHIP_PAGE_STATE.leadership = leadership;
-  LEADERSHIP_PAGE_STATE.founder = founder;
+  LEADERSHIP_PAGE_STATE.members = members.sort((a, b) => (a.order || 0) - (b.order || 0));
   renderLeadershipPage();
 }
 
 void initLeadershipPage();
 
 /* =============================================================================
-   07) END OF FILE
+   08) END OF FILE
 ============================================================================= */

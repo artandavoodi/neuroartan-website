@@ -1,0 +1,33 @@
+{
+  "schema": "neuroartan.commerce.plans.v1",
+  "provider": "stripe",
+  "plans": [
+    {
+      "id": "free",
+      "label": "Free",
+      "status_label": "Active",
+      "summary": "Public profile, posting, discovery, and core account access.",
+      "billing_interval": "none",
+      "price_id": null,
+      "enabled": true
+    },
+    {
+      "id": "individual",
+      "label": "Individual",
+      "status_label": "Provider pending",
+      "summary": "Personal model, archive, and advanced continuity controls.",
+      "billing_interval": "monthly",
+      "price_id": null,
+      "enabled": false
+    },
+    {
+      "id": "studio",
+      "label": "Studio",
+      "status_label": "Provider pending",
+      "summary": "Creator, model, and publishing workspace for professional use.",
+      "billing_interval": "monthly",
+      "price_id": null,
+      "enabled": false
+    }
+  ]
+}

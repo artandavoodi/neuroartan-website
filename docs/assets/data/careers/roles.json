@@ -3,9 +3,150 @@
   "title": "Roles",
   "description": "Public job openings are published only when a role opening has cleared governed approval. The detail route architecture is active even when no public opening is currently live.",
   "status": {
-    "public_openings_state": "No public openings published",
-    "note": "The recruitment system is live. Public role cards appear here only after a role opening is approved for public release."
+    "public_openings_state": "Executive positions available for future hiring",
+    "note": "Executive role pages are published as available positions. Formal applications open when each role clears recruitment approval."
   },
   "detail_query_param": "role",
-  "openings": []
+  "openings": [
+    {
+      "id": "chief-operating-officer",
+      "title": "Chief Operating Officer",
+      "summary": "The operating leader who turns strategy into disciplined execution, delivery rhythm, measurable sequencing, and cross-functional alignment.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-operating-officer/index.html"
+    },
+    {
+      "id": "chief-financial-officer",
+      "title": "Chief Financial Officer",
+      "summary": "The financial leader responsible for capital discipline, liquidity awareness, financial reporting, and sustainable institutional scaling.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-financial-officer/index.html"
+    },
+    {
+      "id": "chief-strategy-officer",
+      "title": "Chief Strategy Officer",
+      "summary": "The strategy leader responsible for long-range direction, market logic, expansion sequencing, and institutional positioning.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-strategy-officer/index.html"
+    },
+    {
+      "id": "chief-science-research-officer",
+      "title": "Chief Science & Research Officer",
+      "summary": "The research leader who protects scientific defensibility, evidence discipline, research integrity, and responsible translation into product.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-science-research-officer/index.html"
+    },
+    {
+      "id": "chief-cognitive-systems-officer",
+      "title": "Chief Cognitive Systems Officer",
+      "summary": "The cognitive systems leader responsible for conceptual architecture, terminology, epistemic coherence, and the structure of ICOS thinking.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-cognitive-systems-officer/index.html"
+    },
+    {
+      "id": "chief-technology-officer",
+      "title": "Chief Technology Officer",
+      "summary": "The technology leader responsible for software architecture, security, resilience, scalability, and production engineering discipline.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-technology-officer/index.html"
+    },
+    {
+      "id": "chief-brand-aesthetic-officer",
+      "title": "Chief Brand & Aesthetic Officer",
+      "summary": "The brand and aesthetic leader responsible for identity, design language, visual discipline, naming, and perception architecture.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-brand-aesthetic-officer/index.html"
+    },
+    {
+      "id": "chief-publishing-officer",
+      "title": "Chief Publishing Officer",
+      "summary": "The publishing leader responsible for editorial standards, catalog architecture, rights discipline, and public knowledge release quality.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-publishing-officer/index.html"
+    },
+    {
+      "id": "chief-records-sonic-architecture-officer",
+      "title": "Chief Records & Sonic Architecture Officer",
+      "summary": "The records and sonic architecture leader responsible for music, sonic identity, metadata, master ownership, and catalog continuity.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-records-sonic-architecture-officer/index.html"
+    },
+    {
+      "id": "chief-risk-ethics-officer",
+      "title": "Chief Risk & Ethics Officer",
+      "summary": "The risk and ethics leader responsible for exposure review, ethical governance, compliance alignment, and institutional survivability.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-risk-ethics-officer/index.html"
+    },
+    {
+      "id": "general-counsel",
+      "title": "General Counsel",
+      "summary": "The legal leader responsible for contracts, rights, governance legality, regulatory posture, disclosure discipline, and institutional protection.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/general-counsel/index.html"
+    },
+    {
+      "id": "chief-communications-officer",
+      "title": "Chief Communications Officer",
+      "summary": "The communications leader responsible for narrative standards, public statements, crisis response, channel discipline, and message governance.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-communications-officer/index.html"
+    },
+    {
+      "id": "chief-of-staff",
+      "title": "Chief of Staff",
+      "summary": "The founder-support and executive coordination leader responsible for decision packets, prioritization, sequencing, and reality-check discipline.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/chief-of-staff/index.html"
+    },
+    {
+      "id": "corporate-secretary",
+      "title": "Corporate Secretary",
+      "summary": "The governance administration leader responsible for board process, minutes, resolutions, registers, formal records, and traceability.",
+      "department": "Executive Leadership Team",
+      "location": "Remote / Germany-ready",
+      "employment_type": "Executive appointment",
+      "status": "Future opening",
+      "leadership_route": "/pages/company/leadership/corporate-secretary/index.html"
+    }
+  ]
 }

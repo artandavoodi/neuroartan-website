@@ -1,0 +1,17 @@
+{
+  "schema": "neuroartan.commerce.subscriptions.v1",
+  "provider": {
+    "name": "stripe",
+    "connected": false,
+    "customer_portal_endpoint": "/api/billing/create-portal-session",
+    "checkout_session_endpoint": "/api/billing/create-checkout-session",
+    "webhook_endpoint": "/api/billing/stripe-webhook"
+  },
+  "current_subscription": {
+    "plan_id": "free",
+    "status": "active",
+    "renews_at": null,
+    "stripe_customer_id": null,
+    "stripe_subscription_id": null
+  }
+}

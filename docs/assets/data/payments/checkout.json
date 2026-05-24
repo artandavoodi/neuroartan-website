@@ -1,0 +1,13 @@
+{
+  "schema": "neuroartan.payments.checkout.v1",
+  "provider": "stripe",
+  "server_endpoint": "/api/billing/create-checkout-session",
+  "client_status": "provider_pending",
+  "required_server_fields": [
+    "authenticated_user_id",
+    "stripe_customer_id",
+    "price_id",
+    "success_url",
+    "cancel_url"
+  ]
+}

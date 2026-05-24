@@ -75,19 +75,21 @@ async function fetchGuidanceData() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'system-guidance') {
       updateSystemGuidanceDisplay(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateSystemGuidanceDisplay(root);
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:model:changed', () => {
     updateSystemGuidanceDisplay(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount system guidance module
@@ -102,7 +104,7 @@ export function mountHomeSystemGuidance(root) {
 
   // Initialize display
   updateSystemGuidanceDisplay(scope);
-  listenForConfigChanges(scope);
+  const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle action selection
   nodes.forEach((node) => {
@@ -119,6 +121,7 @@ export function mountHomeSystemGuidance(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

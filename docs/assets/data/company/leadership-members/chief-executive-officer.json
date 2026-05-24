@@ -1,0 +1,63 @@
+{
+  "id": "founder-artan-davoodi",
+  "role_id": "chief-executive-officer",
+  "order": 1,
+  "member_type": "founder",
+  "appointment_status": "occupied",
+  "status": "active",
+  "display_name": "Artan Davoodi",
+  "public_name": "Artan Davoodi",
+  "legal_name": "Saeed Davoodi",
+  "role_title": "Chief Executive Officer",
+  "role_acronym": "CEO",
+  "title": "Founder, Chief Executive Officer, and Cognitive Architect",
+  "joined_year": "2026",
+  "image": "/assets/images/layers/website/sections/company/leadership/artan-davoodi.jpeg",
+  "fallback_image": "/assets/images/layers/website/sections/home/hero/Fallback Profile Image.jpeg",
+  "summary": "Artan Davoodi founded Neuroartan to build ICOS as a cognitive operating system for reflection, continuity, profile intelligence, and governed human-computer interaction.",
+  "biography": [
+    "Artan leads Neuroartan from the founder seat, shaping the product doctrine, public language, and system architecture behind ICOS.",
+    "His work connects thought, sound, software, design, and governance into one continuous operating architecture rather than treating them as separate disciplines.",
+    "The public founder profile exists to make the company’s leadership, product direction, and continuity logic legible while the wider executive team is still being built."
+  ],
+  "mandate": "Set institutional direction, protect product truth, approve high-impact decisions, and keep Neuroartan’s strategy, governance, and public posture coherent as the company matures.",
+  "capabilities": [
+    "Product doctrine",
+    "Continuity architecture",
+    "Profile systems",
+    "Voice-training direction",
+    "Institutional design logic"
+  ],
+  "qualities": [
+    "Systems thinking",
+    "Founder-level judgment",
+    "Public representation",
+    "Governance discipline",
+    "Long-range product clarity"
+  ],
+  "responsibilities": [
+    "Institutional direction",
+    "Final executive approval",
+    "Founder governance",
+    "Strategic communications",
+    "Executive system oversight"
+  ],
+  "public_links": [
+    {
+      "label": "Public profile",
+      "url": "/artan"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/artandavoodi"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/artandavoodi"
+    }
+  ],
+  "hiring_route": "",
+  "profile_route": "/pages/company/leadership/chief-executive-officer/index.html",
+  "public_route": "/artan",
+  "source_posture": "Active founder-held executive profile"
+}

@@ -53,6 +53,10 @@ function renderProfileOverview(root, snapshot = {}) {
   setText(root, '[data-profile-username]', username ? `@${username}` : (signedIn ? '@username pending' : '@account required'));
   setText(root, '[data-profile-status]', signedIn ? (profileComplete ? 'Ready' : 'Setup required') : 'Signed out');
   setText(root, '[data-profile-route]', username ? `neuroartan.com/${username}` : 'Public route pending');
+  root.querySelectorAll('[data-profile-auth-visible]').forEach((node) => {
+    const mode = node.getAttribute('data-profile-auth-visible') || '';
+    node.hidden = mode === 'signed-in' ? !signedIn : signedIn;
+  });
 
   if (avatarImage instanceof HTMLImageElement) {
     if (avatarUrl) {
@@ -80,7 +84,17 @@ export function mountHomePlatformDestination(root) {
 
   bindProfileMenuActions(root);
 
-  subscribeHomeSurfaceState((snapshot) => {
+  const unsubscribe = subscribeHomeSurfaceState((snapshot) => {
     renderProfileOverview(root, snapshot);
   });
+
+  return unsubscribe;
+}
+
+export function updateHomePlatformDestination(root, options = {}) {
+  if (!(root instanceof Element)) {
+    return;
+  }
+
+  renderProfileOverview(root, options.snapshot || {});
 }

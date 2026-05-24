@@ -34,7 +34,8 @@ function updateUsageDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch usage data:', err);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Fetch usage data from backend
@@ -63,15 +64,17 @@ async function fetchUsageData() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'usage-interaction') {
       updateUsageDisplay(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateUsageDisplay(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount usage interaction module
@@ -86,7 +89,7 @@ export function mountHomeUsageInteraction(root) {
 
   // Initialize display
   updateUsageDisplay(scope);
-  listenForConfigChanges(scope);
+  const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle view selection
   nodes.forEach((node) => {
@@ -103,6 +106,7 @@ export function mountHomeUsageInteraction(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

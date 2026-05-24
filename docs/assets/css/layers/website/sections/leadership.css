@@ -2,7 +2,11 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) OWNERSHIP NOTE
-   03) END OF FILE
+   03) LEADERSHIP TOKENS
+   04) SHOWCASE GRID
+   05) PROFILE DETAIL
+   06) RESPONSIVE REFINEMENTS
+   07) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -17,5 +21,268 @@
 ============================================================================= */
 
 /* =============================================================================
-   03) END OF FILE
+   03) LEADERSHIP TOKENS
+============================================================================= */
+:root{
+  --leadership-grid-gap:var(--catalog-grid-gap);
+  --leadership-card-gap:var(--catalog-grid-compact-gap);
+  --leadership-card-body-gap:var(--catalog-card-body-gap);
+  --leadership-card-radius:var(--catalog-card-radius);
+  --leadership-card-padding:var(--catalog-card-body-padding);
+  --leadership-avatar-size:var(--layout-profile-avatar-size, 128px);
+  --leadership-profile-hero-height:clamp(28rem, 68vh, 44rem);
+  --leadership-profile-hero-content-width:min(34rem, calc(100vw - (var(--site-gutter) * 2)));
+  --leadership-avatar-border:var(--control-border);
+  --leadership-avatar-bg:var(--control-bg);
+  --leadership-name-size:var(--catalog-card-title-size);
+  --leadership-role-size:var(--catalog-chip-size);
+  --leadership-copy-line-height:var(--catalog-panel-copy-line-height);
+}
+
+/* =============================================================================
+   04) SHOWCASE GRID
+============================================================================= */
+.leadership-showcase{
+  margin-top:var(--catalog-section-margin-top);
+}
+
+.leadership-overview-hero{
+  border-bottom:0;
+}
+
+.leadership-overview-hero .catalog-page-eyebrow,
+.leadership-overview-hero .catalog-meta{
+  display:none;
+}
+
+.leadership-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap:var(--leadership-grid-gap);
+  align-items:start;
+}
+
+.leadership-card{
+  min-width:0;
+}
+
+.leadership-card a.leadership-card__link{
+  display:grid;
+  justify-items:center;
+  gap:var(--leadership-card-gap);
+  min-height:100%;
+  padding:0;
+  color:inherit;
+  text-align:center;
+  text-decoration:none;
+}
+
+.leadership-card a.leadership-card__link:hover,
+.leadership-card a.leadership-card__link:focus-visible{
+  outline:none;
+}
+
+.leadership-avatar{
+  position:relative;
+  display:inline-grid;
+  place-items:center;
+  overflow:hidden;
+  flex:0 0 auto;
+  border:1px solid var(--leadership-avatar-border);
+  border-radius:50%;
+  background:var(--leadership-avatar-bg);
+  color:var(--text-primary-color);
+  box-sizing:border-box;
+}
+
+.leadership-avatar--card{
+  width:var(--leadership-avatar-size);
+  height:var(--leadership-avatar-size);
+}
+
+.leadership-avatar--hero{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  width:100%;
+  height:100%;
+  border:0;
+  border-radius:0;
+  background:transparent;
+}
+
+.leadership-avatar__image{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.leadership-avatar__placeholder{
+  font-size:var(--catalog-card-title-size);
+  font-weight:var(--catalog-card-title-weight);
+  line-height:1;
+}
+
+.leadership-avatar__status{
+  display:none;
+}
+
+.leadership-avatar--hero .leadership-avatar__placeholder{
+  display:none;
+}
+
+.leadership-card__body{
+  display:grid;
+  gap:var(--leadership-card-body-gap);
+  align-content:start;
+}
+
+.leadership-card__name{
+  color:var(--text-primary-color);
+  font-size:var(--leadership-name-size);
+  font-weight:var(--catalog-card-title-weight);
+  line-height:var(--catalog-card-title-line-height);
+}
+
+.leadership-card__role{
+  color:var(--text-secondary-color);
+  font-size:var(--leadership-role-size);
+  line-height:var(--catalog-chip-line-height);
+}
+
+.leadership-card__state{
+  display:none;
+}
+
+/* =============================================================================
+   05) PROFILE DETAIL
+============================================================================= */
+.leadership-back-link{
+  width:max-content;
+  color:var(--text-secondary-color);
+  font-size:var(--catalog-chip-size);
+  line-height:var(--catalog-chip-line-height);
+  text-decoration:none;
+}
+
+
+.leadership-back-link:hover,
+.leadership-back-link:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.leadership-profile-hero{
+  border-bottom:0;
+}
+
+.leadership-profile-hero__layout{
+  position:relative;
+  left:50%;
+  display:grid;
+  min-height:var(--leadership-profile-hero-height);
+  width:100vw;
+  margin-left:-50vw;
+  overflow:hidden;
+  align-items:center;
+  isolation:isolate;
+}
+
+.leadership-profile-hero__body{
+  position:relative;
+  z-index:1;
+  display:grid;
+  gap:var(--catalog-hero-gap);
+  justify-self:start;
+  width:var(--leadership-profile-hero-content-width);
+  margin-left:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
+}
+
+.leadership-profile-hero .catalog-page-title,
+.leadership-profile-hero__role{
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.leadership-profile-hero .catalog-page-eyebrow,
+.leadership-profile-hero .catalog-meta{
+  display:none;
+}
+
+.leadership-profile-hero__role{
+  margin:0;
+  color:#fff;
+  font-size:var(--catalog-card-title-size);
+  line-height:var(--leadership-copy-line-height);
+}
+
+.leadership-profile-summary .catalog-page-description{
+  max-width:var(--catalog-description-max-width);
+}
+
+.leadership-profile-summary .catalog-panel,
+.leadership-profile-hero ~ .catalog-panel,
+.leadership-profile-hero ~ .catalog-section .catalog-panel,
+.leadership-profile-hero ~ .catalog-page-section .catalog-panel{
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+
+/* =============================================================================
+   06) RESPONSIVE REFINEMENTS
+============================================================================= */
+@media (max-width: 760px){
+  .leadership-grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+
+  .leadership-card__link{
+    padding:var(--catalog-grid-compact-gap);
+  }
+
+  .leadership-profile-hero__layout{
+    min-height:auto;
+    width:100%;
+    margin-left:0;
+    left:auto;
+    overflow:visible;
+    align-items:stretch;
+  }
+
+  .leadership-avatar--hero{
+    position:relative;
+    inset:auto;
+    width:100%;
+    height:min(28rem, 66vh);
+  }
+
+  .leadership-profile-hero__body{
+    justify-self:start;
+    width:100%;
+    margin:var(--catalog-hero-gap) 0 0;
+  }
+
+  .leadership-profile-hero .catalog-page-title{
+    color:var(--text-primary-color);
+    text-shadow:none;
+  }
+
+  .leadership-profile-hero__role{
+    color:var(--text-secondary-color);
+    text-shadow:none;
+  }
+}
+
+@media (max-width: 460px){
+  .leadership-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =============================================================================
+   07) END OF FILE
 ============================================================================= */

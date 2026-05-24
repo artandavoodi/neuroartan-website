@@ -34,7 +34,8 @@ function updateKnowledgeGraphDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch knowledge graph data:', err);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Fetch knowledge graph data from backend
@@ -63,15 +64,17 @@ async function fetchKnowledgeGraphData() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'knowledge-graph') {
       updateKnowledgeGraphDisplay(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateKnowledgeGraphDisplay(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount knowledge graph module
@@ -86,7 +89,7 @@ export function mountHomeKnowledgeGraph(root) {
 
   // Initialize display
   updateKnowledgeGraphDisplay(scope);
-  listenForConfigChanges(scope);
+  const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle node selection
   nodes.forEach((node) => {
@@ -103,6 +106,7 @@ export function mountHomeKnowledgeGraph(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

@@ -15,7 +15,17 @@ export function mountHomePlatformDestination(root) {
   }
 
   bindProfileMenuActions(root);
-  subscribeHomeSurfaceState((snapshot) => {
+  const unsubscribe = subscribeHomeSurfaceState((snapshot) => {
     renderAccountControl(root, snapshot);
   });
+
+  return unsubscribe;
+}
+
+export function updateHomePlatformDestination(root, options = {}) {
+  if (!(root instanceof Element)) {
+    return;
+  }
+
+  renderAccountControl(root, options.snapshot || {});
 }

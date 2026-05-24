@@ -1,0 +1,7 @@
+{
+  "schema": "neuroartan.payments.invoices.v1",
+  "provider": "stripe",
+  "source": "stripe_webhooks",
+  "client_status": "provider_pending",
+  "records": []
+}

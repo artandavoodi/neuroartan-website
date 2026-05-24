@@ -34,7 +34,8 @@ function updateContinuityDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch continuity data:', err);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Fetch continuity data from backend
@@ -63,15 +64,17 @@ async function fetchContinuityData() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'continuity-memory') {
       updateContinuityDisplay(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateContinuityDisplay(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount continuity memory module
@@ -86,7 +89,7 @@ export function mountHomeContinuityMemory(root) {
 
   // Initialize display
   updateContinuityDisplay(scope);
-  listenForConfigChanges(scope);
+  const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle thread selection
   nodes.forEach((node) => {
@@ -103,6 +106,7 @@ export function mountHomeContinuityMemory(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

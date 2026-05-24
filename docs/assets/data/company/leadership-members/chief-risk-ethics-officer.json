@@ -1,0 +1,50 @@
+{
+  "id": "chief-risk-ethics-officer",
+  "role_id": "chief-risk-ethics-officer",
+  "order": 11,
+  "member_type": "available-position",
+  "appointment_status": "available-position",
+  "status": "recruitment-ready",
+  "display_name": "Available Position",
+  "public_name": "Available Position",
+  "legal_name": "",
+  "role_title": "Chief Risk & Ethics Officer",
+  "role_acronym": "CREO",
+  "title": "Chief Risk & Ethics Officer",
+  "joined_year": "",
+  "image": "",
+  "fallback_image": "/assets/images/layers/website/sections/home/hero/Fallback Profile Image.jpeg",
+  "summary": "The risk and ethics leader responsible for exposure review, ethical governance, compliance alignment, and institutional survivability.",
+  "biography": [
+    "This executive seat is available. Neuroartan has defined the Chief Risk & Ethics Officer role as a real operating standard before appointing a public holder.",
+    "The risk and ethics leader responsible for exposure review, ethical governance, compliance alignment, and institutional survivability.",
+    "The public profile is intentionally role-first until a human executive is hired, verified, and approved for publication."
+  ],
+  "mandate": "Protect Neuroartan from preventable ethical, legal-adjacent, reputational, operational, and systemic risks as the platform expands.",
+  "capabilities": [
+    "Risk architecture",
+    "Ethics governance",
+    "Exposure review",
+    "Compliance alignment",
+    "Survivability analysis"
+  ],
+  "qualities": [
+    "Independent judgment",
+    "Ethical clarity",
+    "Risk literacy",
+    "Calm escalation",
+    "Governance discipline"
+  ],
+  "responsibilities": [
+    "Risk architecture",
+    "Ethics governance",
+    "Compliance alignment",
+    "Cross-division risk review",
+    "Institutional stability"
+  ],
+  "public_links": [],
+  "hiring_route": "/pages/careers/roles/index.html?role=chief-risk-ethics-officer",
+  "profile_route": "/pages/company/leadership/chief-risk-ethics-officer/index.html",
+  "public_route": "/pages/company/leadership/chief-risk-ethics-officer/index.html",
+  "source_posture": "Governed role placeholder for future executive hiring"
+}

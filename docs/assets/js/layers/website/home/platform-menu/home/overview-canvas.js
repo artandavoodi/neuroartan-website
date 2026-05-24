@@ -38,6 +38,8 @@ const HOME_OVERVIEW_MODULES = [
   },
 ];
 
+const HOME_OVERVIEW_ROOT_STATE = new WeakMap();
+
 // Get dashboard configuration
 function getDashboardConfig() {
   const stored = localStorage.getItem('neuroartan-dashboard-config');
@@ -92,7 +94,8 @@ async function mountHomeOverviewModule(root, descriptor) {
   slot.innerHTML = html;
 
   const mountedRoot = slot.firstElementChild || slot;
-  descriptor.mount?.(mountedRoot);
+  const cleanup = descriptor.mount?.(mountedRoot);
+  return typeof cleanup === 'function' ? cleanup : null;
 }
 
 // Reorder modules in the DOM based on priority
@@ -109,16 +112,16 @@ function reorderModules(root, orderedModules) {
 }
 
 // Listen for priority changes
-function listenForPriorityChanges(root) {
+function listenForPriorityChanges(root, signal) {
   document.addEventListener('neuroartan:dashboard:priority:changed', () => {
     const orderedModules = getOrderedModules();
     const visibleModules = getVisibleModules(orderedModules);
     reorderModules(root, visibleModules);
-  });
+  }, { signal });
 }
 
 // Listen for visibility changes
-function listenForVisibilityChanges(root) {
+function listenForVisibilityChanges(root, signal) {
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     const orderedModules = getOrderedModules();
     const visibleModules = getVisibleModules(orderedModules);
@@ -128,25 +131,47 @@ function listenForVisibilityChanges(root) {
     if (slot instanceof Element) {
       slot.style.display = e.detail.visible ? '' : 'none';
     }
-  });
+  }, { signal });
 }
 
 export async function mountHomePlatformDestination(root) {
   if (!(root instanceof Element)) return;
+
+  const previousCleanup = HOME_OVERVIEW_ROOT_STATE.get(root);
+  if (typeof previousCleanup === 'function') {
+    previousCleanup();
+  }
+
+  const controller = new AbortController();
+  const cleanupTasks = [];
 
   // Get ordered and visible modules
   const orderedModules = getOrderedModules();
   const visibleModules = getVisibleModules(orderedModules);
   
   // Mount all modules
-  await Promise.all(
+  const moduleCleanups = await Promise.all(
     visibleModules.map((descriptor) => mountHomeOverviewModule(root, descriptor))
   );
+  moduleCleanups.forEach((cleanup) => {
+    if (typeof cleanup === 'function') {
+      cleanupTasks.push(cleanup);
+    }
+  });
   
   // Reorder modules based on priority
   reorderModules(root, visibleModules);
   
   // Set up listeners for configuration changes
-  listenForPriorityChanges(root);
-  listenForVisibilityChanges(root);
+  listenForPriorityChanges(root, controller.signal);
+  listenForVisibilityChanges(root, controller.signal);
+
+  const cleanup = () => {
+    controller.abort();
+    cleanupTasks.splice(0).forEach((task) => task());
+    HOME_OVERVIEW_ROOT_STATE.delete(root);
+  };
+
+  HOME_OVERVIEW_ROOT_STATE.set(root, cleanup);
+  return cleanup;
 }

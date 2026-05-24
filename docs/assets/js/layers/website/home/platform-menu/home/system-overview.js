@@ -45,7 +45,8 @@ function updateSystemState(root) {
     if (sessionValue) sessionValue.textContent = 'No session';
     if (memoryValue) memoryValue.textContent = '0 MB';
     if (continuityValue) continuityValue.textContent = 'Not connected';
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Fetch system state from backend
@@ -75,21 +76,23 @@ async function fetchSystemState() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'system-overview') {
       updateSystemState(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateSystemState(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount system overview module
 export function mountHomeSystemOverview(root) {
   updateSystemState(root);
-  listenForConfigChanges(root);
+  const cleanupConfigChanges = listenForConfigChanges(root);
   
   // Set up periodic updates
   const updateInterval = setInterval(() => {
@@ -98,6 +101,7 @@ export function mountHomeSystemOverview(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

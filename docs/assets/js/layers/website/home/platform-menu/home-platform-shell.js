@@ -30,6 +30,11 @@ const HOME_PLATFORM_SHELL_STATE = {
   moduleCache: new Map(),
   renderToken: 0,
   shellSession: 0,
+  mountedDestination: '',
+  mountedSubdestination: '',
+  mountedRoot: null,
+  mountedModule: null,
+  mountedCleanup: null,
 };
 
 /* =============================================================================
@@ -471,6 +476,43 @@ function buildDefaultState({ title = '', copy = '', ctaLabel = '', href = '', ac
   return wrapper;
 }
 
+function cleanupHomePlatformMountedContent() {
+  const cleanup = HOME_PLATFORM_SHELL_STATE.mountedCleanup;
+  HOME_PLATFORM_SHELL_STATE.mountedDestination = '';
+  HOME_PLATFORM_SHELL_STATE.mountedSubdestination = '';
+  HOME_PLATFORM_SHELL_STATE.mountedRoot = null;
+  HOME_PLATFORM_SHELL_STATE.mountedModule = null;
+  HOME_PLATFORM_SHELL_STATE.mountedCleanup = null;
+
+  if (typeof cleanup === 'function') {
+    cleanup();
+  }
+}
+
+function updateHomePlatformMountedContent(snapshot = HOME_PLATFORM_SHELL_STATE.snapshot) {
+  const mountedRoot = HOME_PLATFORM_SHELL_STATE.mountedRoot;
+  const moduleNamespace = HOME_PLATFORM_SHELL_STATE.mountedModule;
+
+  if (
+    !(mountedRoot instanceof Element)
+    || typeof moduleNamespace?.updateHomePlatformDestination !== 'function'
+  ) {
+    return false;
+  }
+
+  moduleNamespace.updateHomePlatformDestination(mountedRoot, {
+    destination: HOME_PLATFORM_SHELL_STATE.mountedDestination,
+    subdestination: HOME_PLATFORM_SHELL_STATE.mountedSubdestination,
+    snapshot,
+    closeShell: closeHomePlatformShell,
+    requestMicrophoneInteraction,
+    setDestination: setHomePlatformDestination,
+    setSubdestination: setHomePlatformSubdestination,
+  });
+
+  return true;
+}
+
 function normalizeShellActionLabel(label) {
   return typeof label === 'string' ? label.trim().toLowerCase() : '';
 }
@@ -584,6 +626,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     copyNode.textContent = subdestinationConfig?.detailCopy || destinationConfig.description || '';
   }
 
+  cleanupHomePlatformMountedContent();
   contentRoot.innerHTML = '';
 
   if (!subdestinationConfig?.fragment) {
@@ -594,6 +637,8 @@ async function renderHomePlatformShellContent(destination, subdestination) {
       href: subdestinationConfig?.href || '',
       action: subdestinationConfig?.action || '',
     }));
+    HOME_PLATFORM_SHELL_STATE.mountedDestination = destination;
+    HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
     return;
   }
 
@@ -629,7 +674,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     }
 
     if (moduleNamespace?.mountHomePlatformDestination && mountedRoot instanceof Element) {
-      await moduleNamespace.mountHomePlatformDestination(mountedRoot, {
+      const cleanup = await moduleNamespace.mountHomePlatformDestination(mountedRoot, {
         destination,
         subdestination,
         destinationConfig,
@@ -640,7 +685,16 @@ async function renderHomePlatformShellContent(destination, subdestination) {
         setDestination: setHomePlatformDestination,
         setSubdestination: setHomePlatformSubdestination,
       });
+
+      HOME_PLATFORM_SHELL_STATE.mountedCleanup = typeof cleanup === 'function'
+        ? cleanup
+        : null;
     }
+
+    HOME_PLATFORM_SHELL_STATE.mountedDestination = destination;
+    HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
+    HOME_PLATFORM_SHELL_STATE.mountedRoot = mountedRoot instanceof Element ? mountedRoot : null;
+    HOME_PLATFORM_SHELL_STATE.mountedModule = moduleNamespace || null;
   } catch (_error) {
     if (renderToken !== HOME_PLATFORM_SHELL_STATE.renderToken) {
       return;
@@ -654,6 +708,8 @@ async function renderHomePlatformShellContent(destination, subdestination) {
       href: subdestinationConfig?.href || '',
       action: subdestinationConfig?.action || '',
     }));
+    HOME_PLATFORM_SHELL_STATE.mountedDestination = destination;
+    HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
   } finally {
     if (renderToken === HOME_PLATFORM_SHELL_STATE.renderToken) {
       window.requestAnimationFrame(() => {
@@ -1262,10 +1318,7 @@ function bindHomePlatformShellEvents() {
       return;
     }
 
-    void renderHomePlatformShellContent(
-      HOME_PLATFORM_SHELL_STATE.activeDestination,
-      HOME_PLATFORM_SHELL_STATE.activeSubdestination
-    );
+    updateHomePlatformMountedContent(snapshot);
   });
 }
 

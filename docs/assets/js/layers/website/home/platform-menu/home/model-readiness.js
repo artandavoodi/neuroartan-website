@@ -34,7 +34,8 @@ function updateModelReadinessDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch readiness data:', err);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Fetch readiness data from backend
@@ -67,15 +68,17 @@ async function fetchReadinessData() {
 
 // Listen for dashboard configuration changes
 function listenForConfigChanges(root) {
+  const controller = new AbortController();
   document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
     if (e.detail.moduleId === 'model-readiness') {
       updateModelReadinessDisplay(root);
     }
-  });
+  }, { signal: controller.signal });
   
   document.addEventListener('neuroartan:dashboard:initialized', () => {
     updateModelReadinessDisplay(root);
-  });
+  }, { signal: controller.signal });
+  return () => controller.abort();
 }
 
 // Mount model readiness module
@@ -90,7 +93,7 @@ export function mountHomeModelReadiness(root) {
 
   // Initialize display
   updateModelReadinessDisplay(scope);
-  listenForConfigChanges(scope);
+  const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle node selection
   nodes.forEach((node) => {
@@ -107,6 +110,7 @@ export function mountHomeModelReadiness(root) {
   
   // Return cleanup function
   return () => {
+    cleanupConfigChanges?.();
     clearInterval(updateInterval);
   };
 }

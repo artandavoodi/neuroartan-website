@@ -1,0 +1,8 @@
+{
+  "schema": "neuroartan.payments.center.v1",
+  "provider": "stripe",
+  "customer_portal_endpoint": "/api/billing/create-portal-session",
+  "checkout_session_endpoint": "/api/billing/create-checkout-session",
+  "webhook_endpoint": "/api/billing/stripe-webhook",
+  "client_status": "provider_pending"
+}

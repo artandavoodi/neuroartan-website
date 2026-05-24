@@ -316,6 +316,10 @@
   flex:0 0 auto;
 }
 
+.profile-private-hero__verified[hidden]{
+  display:none;
+}
+
 .profile-private-hero__verified img{
   display:block;
   width:var(--layout-home-search-result-badge-icon-size);

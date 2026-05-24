@@ -1686,15 +1686,14 @@ export function buildProfilePayload({
     || existingProfile?.verification_status
     || 'unverified'
   );
-  const verifiedAt = normalizeString(values.verified_at || existingProfile?.verified_at || existingProfile?.profile_verified_at || '');
-  const profileVerified = isApprovedProfileVerificationStatus(values.verification_status)
-    || isApprovedProfileVerificationStatus(existingProfile?.verification_status)
-    || isApprovedProfileVerificationStatus(values.public_verification_status)
-    || isApprovedProfileVerificationStatus(existingProfile?.public_verification_status)
-    || (
-      (values.profile_verified === true || existingProfile?.profile_verified === true)
-      && Boolean(verifiedAt)
-    );
+  const incomingVerifiedAt = normalizeString(values.verified_at || existingProfile?.verified_at || existingProfile?.profile_verified_at || '');
+  const approvedVerificationStatus = isApprovedProfileVerificationStatus(verificationStatus)
+    || isApprovedProfileVerificationStatus(publicVerificationStatus);
+  const profileVerified = approvedVerificationStatus
+    && (values.profile_verified === true || existingProfile?.profile_verified === true || Boolean(incomingVerifiedAt));
+  const verifiedAt = profileVerified
+    ? incomingVerifiedAt
+    : '';
   const explicitMissingRequiredFields = Array.isArray(values.missing_required_fields)
     ? values.missing_required_fields.map((field) => normalizeString(field)).filter(Boolean)
     : null;

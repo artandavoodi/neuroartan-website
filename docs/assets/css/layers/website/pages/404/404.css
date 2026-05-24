@@ -28,6 +28,8 @@
   --error404-eyebrow-color:color-mix(in srgb, var(--text-primary-color) 50%, transparent);
   --error404-body-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
   --error404-primary-text:var(--text-primary-color);
+  --error404-primary-action-content:var(--color-white);
+  --error404-action-icon-size:var(--icon-size-sm);
   --error404-secondary-border:var(--control-border);
   --error404-secondary-text:var(--text-primary-color);
   --error404-secondary-border-hover:var(--control-border-strong);
@@ -197,6 +199,40 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.error404-action{
+  gap:var(--control-gap);
+}
+
+.error404-action__icon{
+  width:var(--error404-action-icon-size);
+  height:var(--error404-action-icon-size);
+  flex:0 0 var(--error404-action-icon-size);
+  display:block;
+  background-color:currentColor;
+  mask-position:center;
+  mask-repeat:no-repeat;
+  mask-size:contain;
+  -webkit-mask-position:center;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-size:contain;
+}
+
+.error404-action__icon--home{
+  mask-image:url('/registry/icons/public/assets/core/navigation/primary/home.svg');
+  -webkit-mask-image:url('/registry/icons/public/assets/core/navigation/primary/home.svg');
+}
+
+.error404-action__icon--back{
+  mask-image:url('/registry/icons/public/assets/core/navigation/direction/back.svg');
+  -webkit-mask-image:url('/registry/icons/public/assets/core/navigation/direction/back.svg');
+}
+
+.error404-action--home,
+.error404-action--home:hover,
+.error404-action--home:focus-visible{
+  color:var(--error404-primary-action-content);
 }
 
 /* =========================================================

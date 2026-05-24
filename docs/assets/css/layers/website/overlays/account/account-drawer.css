@@ -156,10 +156,13 @@
 :root{
   --account-drawer-shell-padding-y:var(--layout-account-drawer-shell-padding-y);
   --account-drawer-shell-padding-x:var(--layout-account-drawer-shell-padding-x);
+  --account-drawer-shell-padding-bottom:var(--layout-account-drawer-shell-padding-bottom);
   --account-drawer-shell-padding-y-tablet:var(--layout-account-drawer-shell-padding-y-tablet);
   --account-drawer-shell-padding-x-tablet:var(--layout-account-drawer-shell-padding-x-tablet);
+  --account-drawer-shell-padding-bottom-tablet:var(--layout-account-drawer-shell-padding-bottom-tablet);
   --account-drawer-shell-padding-y-mobile:var(--layout-account-drawer-shell-padding-y-mobile);
   --account-drawer-shell-padding-x-mobile:var(--layout-account-drawer-shell-padding-x-mobile);
+  --account-drawer-shell-padding-bottom-mobile:var(--layout-account-drawer-shell-padding-bottom-mobile);
   --account-drawer-close-offset:var(--layout-account-drawer-close-offset);
   --account-drawer-close-offset-tablet:var(--layout-account-drawer-close-offset-tablet);
   --account-drawer-close-offset-mobile:var(--layout-account-drawer-close-offset-mobile);
@@ -279,7 +282,7 @@ body.account-drawer-closing .account-drawer-backdrop{
   max-width: calc(100vw - (2 * var(--account-drawer-dialog-viewport-gap)));
   height: auto;
   max-height: var(--account-drawer-dialog-max-height);
-  padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x);
+  padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x) var(--account-drawer-shell-padding-bottom);
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
   border: var(--border-width-hairline) solid var(--account-drawer-border);
@@ -1012,7 +1015,7 @@ body.account-drawer-closing .account-drawer-close{
 ============================================================================= */
 @media (max-width:1024px){
   .account-drawer-shell{
-    padding: var(--account-drawer-shell-padding-y-tablet) var(--account-drawer-shell-padding-x-tablet);
+    padding: var(--account-drawer-shell-padding-y-tablet) var(--account-drawer-shell-padding-x-tablet) var(--account-drawer-shell-padding-bottom-tablet);
   }
 
   .account-drawer-content-stage{
@@ -1045,7 +1048,7 @@ body.account-drawer-closing .account-drawer-close{
   }
 
   .account-drawer-shell{
-    padding: var(--account-drawer-shell-padding-y-mobile) var(--account-drawer-shell-padding-x-mobile);
+    padding: var(--account-drawer-shell-padding-y-mobile) var(--account-drawer-shell-padding-x-mobile) var(--account-drawer-shell-padding-bottom-mobile);
   }
 
   .account-drawer-content-stage{

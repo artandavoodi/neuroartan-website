@@ -894,10 +894,13 @@
   --layout-account-drawer-panel-width-mobile:min(100vw, calc(100vw - (1.05 * var(--site-gutter, 20px))));
   --layout-account-drawer-shell-padding-y:1.6rem;
   --layout-account-drawer-shell-padding-x:2rem;
+  --layout-account-drawer-shell-padding-bottom:calc(var(--layout-account-drawer-shell-padding-y) * 2);
   --layout-account-drawer-shell-padding-y-tablet:1.36rem;
   --layout-account-drawer-shell-padding-x-tablet:1.7rem;
+  --layout-account-drawer-shell-padding-bottom-tablet:calc(var(--layout-account-drawer-shell-padding-y-tablet) * 2);
   --layout-account-drawer-shell-padding-y-mobile:1.2rem;
   --layout-account-drawer-shell-padding-x-mobile:1.28rem;
+  --layout-account-drawer-shell-padding-bottom-mobile:calc(var(--layout-account-drawer-shell-padding-y-mobile) * 2);
   --layout-account-drawer-close-offset:1rem;
   --layout-account-drawer-close-offset-tablet:0.82rem;
   --layout-account-drawer-close-offset-mobile:0.68rem;

@@ -45,12 +45,56 @@ function setValue(root, name, value) {
   const field = root.querySelector(`[name="${name}"]`);
   if (!field) return;
 
+  if (field instanceof HTMLInputElement && field.type === 'hidden' && field.matches('[data-profile-settings-toggle-input]')) {
+    setProfileSettingsToggleValue(root, name, value === true);
+    return;
+  }
+
   if (field instanceof HTMLInputElement && field.type === 'checkbox') {
     field.checked = value === true;
     return;
   }
 
   field.value = value || '';
+}
+
+function getProfileSettingsToggle(root, name) {
+  return root.querySelector(`[data-profile-settings-toggle="${name}"]`);
+}
+
+function setProfileSettingsToggleValue(root, name, checked) {
+  const input = root.querySelector(`[data-profile-settings-toggle-input="${name}"]`);
+  const toggle = getProfileSettingsToggle(root, name);
+  const nextChecked = checked === true;
+
+  if (input instanceof HTMLInputElement) {
+    input.value = nextChecked ? 'on' : '';
+  }
+
+  if (toggle instanceof HTMLElement) {
+    toggle.setAttribute('aria-checked', nextChecked ? 'true' : 'false');
+    toggle.setAttribute('data-toggle-checked', nextChecked ? 'true' : 'false');
+    toggle.dataset.toggleState = nextChecked ? 'on' : 'off';
+    toggle.setAttribute('data-cookie-consent-enabled', nextChecked ? 'true' : 'false');
+
+    const track = toggle.querySelector('.na-toggle__track, [data-na-toggle-track]');
+    const thumb = toggle.querySelector('.na-toggle__thumb, [data-na-toggle-thumb]');
+    if (track instanceof HTMLElement) {
+      track.setAttribute('data-toggle-state', nextChecked ? 'on' : 'off');
+    }
+    if (thumb instanceof HTMLElement) {
+      thumb.setAttribute('data-toggle-state', nextChecked ? 'on' : 'off');
+    }
+  }
+}
+
+function syncProfileSettingsToggleInput(toggle) {
+  if (!(toggle instanceof HTMLElement)) return;
+  const root = toggle.closest('[data-profile-settings-panel]');
+  if (!(root instanceof HTMLElement)) return;
+  const name = toggle.getAttribute('data-profile-settings-toggle') || '';
+  if (!name) return;
+  setProfileSettingsToggleValue(root, name, toggle.getAttribute('aria-checked') === 'true');
 }
 
 function setControlDisabled(control, disabled) {
@@ -66,6 +110,13 @@ function setControlDisabled(control, disabled) {
   }
 
   control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+}
+
+function setProfileSettingsToggleDisabled(root, name, disabled) {
+  const input = root.querySelector(`[data-profile-settings-toggle-input="${name}"]`);
+  const toggle = getProfileSettingsToggle(root, name);
+  setControlDisabled(input, disabled);
+  setControlDisabled(toggle, disabled);
 }
 
 function renderStatus(root, scope, saveState) {
@@ -139,10 +190,6 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
 
     renderPaneState(root, navigationState);
 
-    setText(root, '[data-profile-settings-title]', navigationState.settingsPane === 'visibility' || navigationState.settingsPane === 'discovery' || navigationState.settingsPane === 'sharing'
-      ? 'Privacy Settings'
-      : 'Edit Profile');
-
     setValue(root, 'first_name', state.firstName);
     setValue(root, 'last_name', state.lastName);
     setValue(root, 'display_name', state.displayName);
@@ -170,7 +217,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
         : 'Choose a canonical username before enabling the public route.'
     );
 
-    root.querySelectorAll('input, select, textarea, button[type="submit"]').forEach((control) => {
+    root.querySelectorAll('input, select, textarea, button[type="submit"], [data-profile-settings-toggle]').forEach((control) => {
       setControlDisabled(control, !authenticated);
     });
 
@@ -179,9 +226,8 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
       setControlDisabled(usernameField, !authenticated || usernameLocked);
     }
 
-    const visibilityControls = root.querySelectorAll('[name="public_profile_enabled"], [name="public_profile_discoverable"]');
-    visibilityControls.forEach((control) => {
-      setControlDisabled(control, !authenticated || !state.username.normalized);
+    ['public_profile_enabled', 'public_profile_discoverable'].forEach((name) => {
+      setProfileSettingsToggleDisabled(root, name, !authenticated || !state.username.normalized);
     });
 
     const currentPasswordField = root.querySelector('[name="current_password"]');
@@ -351,6 +397,12 @@ function initProfileSettings() {
 
     event.preventDefault();
     await handlePasswordChangeSubmit(form);
+  });
+
+  document.addEventListener('neuroartan:toggle-changed', (event) => {
+    const toggle = event?.detail?.element;
+    if (!(toggle instanceof HTMLElement) || !toggle.matches('[data-profile-settings-toggle]')) return;
+    syncProfileSettingsToggleInput(toggle);
   });
 
   document.addEventListener('fragment:mounted', (event) => {

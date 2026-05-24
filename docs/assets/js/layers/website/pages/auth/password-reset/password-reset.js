@@ -16,6 +16,7 @@ import {
   normalizeString
 } from '../../../system/account/identity/account-profile-identity.js';
 import {
+  buildAccountPasswordHint,
   evaluateAccountPassword,
   loadAccountPasswordPolicy
 } from '../../../system/account/identity/account-password-policy.js';
@@ -38,6 +39,21 @@ function getStatus() {
   return document.querySelector('[data-password-reset-status]');
 }
 
+function getPasswordInput() {
+  const form = getForm();
+  return form?.elements?.password instanceof HTMLInputElement
+    ? form.elements.password
+    : null;
+}
+
+function getPasswordPolicyShell() {
+  return document.querySelector('[data-password-reset-policy-shell]');
+}
+
+function getPasswordPolicyMessage() {
+  return document.querySelector('[data-password-reset-policy-message]');
+}
+
 function setStatus(message, state = 'idle') {
   const node = getStatus();
   if (!(node instanceof HTMLElement)) return;
@@ -55,6 +71,22 @@ function setBusy(form, busy) {
       control.disabled = busy;
     }
   });
+}
+
+async function syncPasswordPolicyFeedback() {
+  const input = getPasswordInput();
+  const shell = getPasswordPolicyShell();
+  const message = getPasswordPolicyMessage();
+
+  if (!(shell instanceof HTMLElement) || !(message instanceof HTMLElement)) return;
+
+  const policy = await loadAccountPasswordPolicy();
+  const value = input?.value || '';
+  const evaluation = evaluateAccountPassword(value, policy);
+
+  shell.dataset.passwordResetPolicyShell = evaluation.status;
+  shell.dataset.accountProfileSetupPasswordStatusShell = evaluation.status;
+  message.textContent = value ? evaluation.message : buildAccountPasswordHint(policy);
 }
 
 function clearHashTokens() {
@@ -228,10 +260,25 @@ async function handlePasswordResetSubmit(event) {
 /* =============================================================================
    05) INITIALIZATION
 ============================================================================= */
+function bindPasswordFeedback() {
+  const form = getForm();
+  if (!(form instanceof HTMLFormElement)) return;
+
+  form.addEventListener('input', (event) => {
+    const target = event.target;
+    if (target instanceof HTMLInputElement && target.name === 'password') {
+      void syncPasswordPolicyFeedback();
+    }
+  });
+
+  void syncPasswordPolicyFeedback();
+}
+
 async function boot() {
   if (!getRoot()) return;
 
   document.addEventListener('submit', handlePasswordResetSubmit);
+  bindPasswordFeedback();
 
   try {
     const session = await resolveRecoverySession();

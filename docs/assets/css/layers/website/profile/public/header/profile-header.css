@@ -101,6 +101,10 @@
   display:none;
 }
 
+.profile-header[data-profile-surface="public"] .profile-header__verified[hidden]{
+  display:none;
+}
+
 .profile-header[data-profile-surface="public"] .profile-header__follow-button{
   min-height:var(--control-height-sm);
 }

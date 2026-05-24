@@ -123,6 +123,10 @@
   color:inherit;
 }
 
+.profile-header__verified[hidden]{
+  display:none;
+}
+
 
 
 .profile-header__creator-line,

@@ -59,13 +59,14 @@ function isApprovedVerificationStatus(value = '') {
 }
 
 export function resolveApprovedProfileVerification(profile = {}) {
-  const explicitStatus = normalizeString(
-    profile?.verification_state
-    || profile?.verification_status
-    || profile?.public_verification_status
-    || profile?.profile_verification_state
-    || ''
-  ).toLowerCase();
+  const explicitStatuses = [
+    profile?.verification_status,
+    profile?.public_verification_status,
+    profile?.verification_state,
+    profile?.profile_verification_state
+  ].map((status) => normalizeString(status).toLowerCase()).filter(Boolean);
+  const approvedStatus = explicitStatuses.find((status) => isApprovedVerificationStatus(status));
+  const explicitStatus = approvedStatus || explicitStatuses[0] || '';
   const verifiedAt = normalizeString(
     profile?.verified_at
     || profile?.profile_verified_at
@@ -73,15 +74,13 @@ export function resolveApprovedProfileVerification(profile = {}) {
     || profile?.verification_reviewed_at
     || ''
   );
-  const approvedByStatus = isApprovedVerificationStatus(explicitStatus);
-  const approvedByLegacyBoolean = profile?.profile_verified === true
-    && (approvedByStatus || Boolean(verifiedAt));
-  const verified = approvedByStatus || approvedByLegacyBoolean;
+  const approvedEvidence = profile?.profile_verified === true || Boolean(verifiedAt);
+  const verified = Boolean(approvedStatus) && approvedEvidence;
 
   return {
     verified,
     status: verified ? 'verified' : (explicitStatus || 'unverified'),
-    verifiedAt,
+    verifiedAt: verified ? verifiedAt : '',
     badgeVisible: verified
   };
 }

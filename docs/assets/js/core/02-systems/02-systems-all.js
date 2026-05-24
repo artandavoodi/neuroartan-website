@@ -22,6 +22,7 @@ import './editor.js';
 import './mega-menu.js';
 import './modal.js';
 import './pagination.js';
+import './password-field.js';
 import './pickers.js';
 import './popover.js';
 import './side-drawer.js';

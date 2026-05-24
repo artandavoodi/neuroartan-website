@@ -382,7 +382,7 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         username: normalizeString(formData.get('username') || seed.username || ''),
         public_display_name: normalizeString(formData.get('public_display_name') || ''),
         public_identity_label: normalizeString(formData.get('public_identity_label') || ''),
-        public_summary: normalizeString(formData.get('public_summary') || ''),
+        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
         public_primary_link: normalizeString(formData.get('public_primary_link') || '')
       };
     case 'visibility':

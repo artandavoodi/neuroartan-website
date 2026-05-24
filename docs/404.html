@@ -144,8 +144,14 @@
         </div>
 
         <div class="error404-actions" aria-label="404 recovery actions" data-i18n-aria-label="404.actions.ariaLabel">
-          <a href="/" class="ui-button ui-button--brand" data-404-home-link data-i18n-key="404.actions.home">Return to Active Homepage</a>
-          <button type="button" class="ui-button ui-button--secondary" data-404-back-button data-i18n-key="404.actions.back">Go Back</button>
+          <a href="/" class="ui-button ui-button--brand error404-action error404-action--home" data-404-home-link>
+            <span class="error404-action__icon error404-action__icon--home" aria-hidden="true"></span>
+            <span data-i18n-key="404.actions.home">Home</span>
+          </a>
+          <button type="button" class="ui-button ui-button--secondary error404-action error404-action--back" data-404-back-button>
+            <span class="error404-action__icon error404-action__icon--back" aria-hidden="true"></span>
+            <span data-i18n-key="404.actions.back">Back</span>
+          </button>
         </div>
       </section>
     </main>

@@ -24,6 +24,11 @@ import {
 /* =============================================================================
    02) CONSTANTS
 ============================================================================= */
+const LEADERSHIP_PUBLIC_LINK_ICON_KEYS = {
+  neuroartan: 'neuroartan',
+  x: 'x',
+  github: 'github'
+};
 const LEADERSHIP_URL = '/assets/data/company/leadership.json';
 
 /* =============================================================================
@@ -70,6 +75,44 @@ function isDetailPage() {
 
 function getExternalLinkAttributes(url) {
   return /^https?:\/\//i.test(url) ? ' target="_blank" rel="noreferrer"' : '';
+}
+
+function getLeadershipPublicLinkIconKey(link) {
+  const label = normalizeString(link?.label).toLowerCase();
+  const url = normalizeString(link?.url).toLowerCase();
+
+  if (label.includes('github') || url.includes('github.com')) {
+    return LEADERSHIP_PUBLIC_LINK_ICON_KEYS.github;
+  }
+
+  if (label === 'x' || label.includes('twitter') || url.includes('x.com') || url.includes('twitter.com')) {
+    return LEADERSHIP_PUBLIC_LINK_ICON_KEYS.x;
+  }
+
+  const isCompanyPublicProfile = label.includes('public profile') && (url.startsWith('/') || url.includes('neuroartan.com'));
+
+  if (label.includes('neuroartan') || url.includes('neuroartan.com') || isCompanyPublicProfile) {
+    return LEADERSHIP_PUBLIC_LINK_ICON_KEYS.neuroartan;
+  }
+
+  return '';
+}
+
+function renderLeadershipPublicLink(link) {
+  const iconKey = getLeadershipPublicLinkIconKey(link);
+  const label = normalizeString(link?.label || 'Public link');
+  const url = normalizeString(link?.url);
+
+  if (!url) {
+    return '';
+  }
+
+  return `
+    <a class="institutional-menu-utility-button leadership-public-link" href="${escapeHtml(url)}"${getExternalLinkAttributes(url)} aria-label="${escapeHtml(label)}">
+      ${iconKey ? `<span class="leadership-public-link__icon leadership-public-link__icon--${escapeHtml(iconKey)}" aria-hidden="true"></span>` : ''}
+      <span class="leadership-public-link__label">${escapeHtml(label)}</span>
+    </a>
+  `;
 }
 
 function getMemberDisplayName(member) {
@@ -123,9 +166,7 @@ function renderLeadershipActionStack(member) {
       ${hiringRoute ? `
         <a class="ui-button ui-button--ghost" href="${escapeHtml(hiringRoute)}">Hiring route</a>
       ` : ''}
-      ${links.map((link) => `
-        <a class="ui-button ui-button--ghost" href="${escapeHtml(link.url)}"${getExternalLinkAttributes(link.url)}>${escapeHtml(link.label)}</a>
-      `).join('')}
+      ${links.map(renderLeadershipPublicLink).join('')}
     </div>
   `;
 }

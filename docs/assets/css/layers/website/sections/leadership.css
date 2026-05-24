@@ -233,6 +233,71 @@
 }
 
 /* =============================================================================
+   Leadership public-link icons — matched to institutional top-bar icon system
+============================================================================= */
+.leadership-public-link{
+  width:var(--nav-institutional-trigger-size);
+  min-width:var(--nav-institutional-trigger-size);
+  height:var(--nav-institutional-trigger-size);
+  min-height:var(--nav-institutional-trigger-size);
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.leadership-public-link__icon{
+  display:block;
+  width:var(--nav-institutional-trigger-size);
+  height:var(--nav-institutional-trigger-size);
+  flex:0 0 auto;
+  opacity:var(--institutional-menu-icon-opacity);
+  background-color:currentColor;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+  transition:
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    background-color var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
+}
+
+.leadership-public-link:hover .leadership-public-link__icon,
+.leadership-public-link:focus-visible .leadership-public-link__icon,
+.leadership-public-link:active .leadership-public-link__icon{
+  opacity:var(--institutional-menu-icon-hover-opacity);
+}
+
+.leadership-public-link__icon--neuroartan{
+  -webkit-mask-image:url('/registry/icons/public/assets/core/identity/brand/neuroartan/logo-plain.svg');
+  mask-image:url('/registry/icons/public/assets/core/identity/brand/neuroartan/logo-plain.svg');
+}
+
+.leadership-public-link__icon--x{
+  -webkit-mask-image:url('/registry/icons/public/assets/system/social/x.svg');
+  mask-image:url('/registry/icons/public/assets/system/social/x.svg');
+}
+
+.leadership-public-link__icon--github{
+  -webkit-mask-image:url('/registry/icons/public/assets/system/social/github.svg');
+  mask-image:url('/registry/icons/public/assets/system/social/github.svg');
+}
+
+.leadership-public-link__label{
+  position:absolute;
+  width:var(--border-width-hairline);
+  height:var(--border-width-hairline);
+  padding:var(--spacing-none);
+  margin:calc(var(--border-width-hairline) * -1);
+  overflow:hidden;
+  clip:rect(0, 0, 0, 0);
+  white-space:nowrap;
+  border:var(--spacing-none);
+}
+
+/* =============================================================================
    06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 760px){
@@ -274,6 +339,18 @@
   .leadership-profile-hero__role{
     color:var(--text-secondary-color);
     text-shadow:none;
+  }
+
+  .leadership-public-link{
+    width:var(--nav-institutional-trigger-size-tablet);
+    min-width:var(--nav-institutional-trigger-size-tablet);
+    height:var(--nav-institutional-trigger-size-tablet);
+    min-height:var(--nav-institutional-trigger-size-tablet);
+  }
+
+  .leadership-public-link__icon{
+    width:var(--nav-institutional-trigger-size-tablet);
+    height:var(--nav-institutional-trigger-size-tablet);
   }
 }
 

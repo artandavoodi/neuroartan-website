@@ -203,79 +203,82 @@ html[data-theme-effective="dark"]{
    12) SOCIAL LINKS
 ============================================================================= */
 .institutional-links-social{
-  display: grid;
-  place-items: center;
-  min-width: 1.28rem;
-  width: 1.28rem;
-  height: 1.28rem;
-  overflow: visible;
-  color:var(--institutional-links-text-color);
-  text-decoration: none;
-  transform: none;
-  transform-origin: center;
+  appearance:none;
+  -webkit-appearance:none;
+  border:var(--spacing-none);
+  background:transparent;
+  padding:var(--spacing-none);
+  margin:var(--spacing-none);
+  width:var(--nav-institutional-trigger-size);
+  min-width:var(--nav-institutional-trigger-size);
+  height:var(--nav-institutional-trigger-size);
+  min-height:var(--nav-institutional-trigger-size);
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+  color:var(--institutional-menu-text-color);
+  text-decoration:none;
+  transform:none !important;
+  transform-origin:center;
   transition:
-    color var(--institutional-links-motion-fast) var(--institutional-links-motion-ease),
-    opacity var(--institutional-links-motion-fast) var(--institutional-links-motion-ease);
+    color var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
 }
 
-.institutional-links-social svg{
-  width: 82%;
-  height: 82%;
-  min-width: 82%;
-  min-height: 82%;
-  max-width: none;
-  max-height: none;
-  display: block;
-  overflow: visible;
+.institutional-links-social-icon{
+  display:block;
+  width:100%;
+  height:100%;
+  flex:0 0 auto;
+  background-color:currentColor;
+  opacity:var(--institutional-menu-icon-opacity);
+  visibility:visible;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  -webkit-mask-size:contain;
+  mask-repeat:no-repeat;
+  mask-position:center;
+  mask-size:contain;
+  transition:
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    background-color var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
 }
 
-.institutional-links-social[aria-label="X"] svg,
-.institutional-links-social[aria-label="LinkedIn"] svg,
-.institutional-links-social[aria-label="YouTube"] svg{
-  opacity: 1;
-  visibility: visible;
+.institutional-links-social-icon--youtube{
+  -webkit-mask-image:url('/registry/icons/public/assets/system/social/youtube.svg');
+  mask-image:url('/registry/icons/public/assets/system/social/youtube.svg');
 }
 
-.institutional-links-social[aria-label="LinkedIn"] svg,
-.institutional-links-social[aria-label="YouTube"] svg{
-  width: 94%;
-  height: 94%;
-  min-width: 94%;
-  min-height: 94%;
+.institutional-links-social-icon--x{
+  -webkit-mask-image:url('/registry/icons/public/assets/system/social/x.svg');
+  mask-image:url('/registry/icons/public/assets/system/social/x.svg');
 }
 
-.institutional-links-social svg path,
-.institutional-links-social svg circle,
-.institutional-links-social svg rect{
-  transform-box: fill-box;
-  transform-origin: center;
-  transition:none;
+.institutional-links-social-icon--linkedin{
+  -webkit-mask-image:url('/registry/icons/public/assets/system/social/linkedin.svg');
+  mask-image:url('/registry/icons/public/assets/system/social/linkedin.svg');
 }
 
 .institutional-links-social:hover,
 .institutional-links-social:focus-visible,
 .institutional-links-social:active{
-  color:var(--institutional-links-hover-color);
-  text-decoration: none;
-  transform:none;
-  outline: none;
-  opacity: 1;
+  color:var(--institutional-menu-text-hover-color);
+  text-decoration:none;
+  transform:none !important;
+  outline:none;
+  opacity:var(--overlay-opacity-open);
 }
 
-.institutional-links-social:hover svg path,
-.institutional-links-social:hover svg circle,
-.institutional-links-social:hover svg rect,
-.institutional-links-social:focus-visible svg path,
-.institutional-links-social:focus-visible svg circle,
-.institutional-links-social:focus-visible svg rect,
-.institutional-links-social:active svg path,
-.institutional-links-social:active svg circle,
-.institutional-links-social:active svg rect{
-  transform:none;
+.institutional-links-social:hover .institutional-links-social-icon,
+.institutional-links-social:focus-visible .institutional-links-social-icon,
+.institutional-links-social:active .institutional-links-social-icon{
+  opacity:var(--institutional-menu-icon-hover-opacity);
 }
 
 .institutional-links-social:not(:hover):not(:focus-visible):not(:active){
-  transform:none;
+  transform:none !important;
 }
 
 /* =============================================================================
@@ -318,4 +321,5 @@ html[data-theme-effective="dark"]{
     padding: 0.06rem 0 0.06rem 0;
     margin: 0;
   }
+
 }

@@ -103,7 +103,7 @@
       "slug": "longitudinal-continuity",
       "image": "",
       "scene": "/collections/featured/icos-featured-functions/scenes/longitudinal-continuity.scene.json",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/continuity/continuity.svg",
+      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/cognition/cognition.svg",
       "theme": "dark",
       "visibility": "public"
     }

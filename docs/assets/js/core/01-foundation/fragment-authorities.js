@@ -104,6 +104,7 @@ function getFragmentPaths() {
     'home-hero-matte': assetPath('/assets/fragments/layers/website/home/background/home-hero-matte.html'),
     'home-stage-composition': assetPath('/assets/fragments/layers/website/home/stage/home-stage-composition.html'),
     'home-stage-circle': assetPath('/assets/fragments/layers/website/home/stage/home-stage-circle.html'),
+    'about-product-definition': assetPath('/assets/fragments/layers/website/about/product-definition/about-product-definition.html'),
     'about-featured-functions': assetPath('/assets/fragments/layers/website/about/featured-functions/about-featured-functions.html'),
     'scroll-to-top': assetPath('/assets/fragments/core/scroll-to-top/scroll-to-top.html'),
     'products-sidebar': assetPath('/assets/fragments/layers/website/sections/products/products-sidebar.html'),

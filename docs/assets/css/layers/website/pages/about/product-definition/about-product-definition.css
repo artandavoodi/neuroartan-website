@@ -1,0 +1,98 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) ABOUT PRODUCT DEFINITION STACK SHELL
+   02) ABOUT PRODUCT DEFINITION CONTENT RAIL
+   03) ABOUT PRODUCT DEFINITION RESPONSIVE RULES
+============================================================================= */
+
+/* =============================================================================
+   01) ABOUT PRODUCT DEFINITION STACK SHELL
+============================================================================= */
+#about-product-definition-mount{
+  position: relative;
+  width: var(--layout-about-full-width, 100%);
+  min-height: var(--home-stack-shell-height, 200vh);
+  margin-bottom: calc(var(--home-stack-panel-height, 100vh) * -1);
+  isolation: isolate;
+  z-index: 2;
+  background: var(--home-stack-surface, var(--surface-primary, var(--background-color, Canvas)));
+  overflow: visible;
+}
+
+#about-product-definition-mount > .home-about-definition{
+  position: sticky;
+  top: var(--layout-about-zero, 0);
+  z-index: 2;
+  width: var(--layout-about-full-width, 100%);
+  min-height: var(--home-stack-panel-height, 100vh);
+  display: grid;
+  align-items: center;
+  background: var(--home-stack-surface, var(--surface-primary, var(--background-color, Canvas)));
+  overflow: clip;
+}
+
+#about-product-definition-mount > .home-about-definition::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--home-stack-surface, var(--surface-primary, var(--background-color, Canvas)));
+  pointer-events: none;
+  z-index: 0;
+}
+
+#about-product-definition-mount > .home-about-definition > *{
+  position: relative;
+  z-index: 1;
+}
+
+#about-product-definition-mount > .home-about-definition > .home-inner{
+  background: var(--home-stack-surface, var(--surface-primary, var(--background-color, Canvas)));
+}
+
+/* =============================================================================
+   02) ABOUT PRODUCT DEFINITION CONTENT RAIL
+============================================================================= */
+.home-about-definition .home-inner{
+  width: var(--home-rail-width, min(100% - 48px, 1120px));
+  min-height: var(--home-stack-panel-height, 100vh);
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  align-content: center;
+  padding-top: var(--home-section-padding-y, 8rem);
+  padding-bottom: var(--home-section-padding-y, 8rem);
+  box-sizing: border-box;
+}
+
+.home-about-definition .featured-header{
+  max-width: var(--home-reading-width, var(--reading-width-md, 720px));
+  display: grid;
+  gap: var(--home-featured-header-gap, var(--home-gap-compact, 1.25rem));
+}
+
+.home-about-definition .home-title{
+  color: var(--home-section-title-color);
+  font-size: var(--home-section-title-size);
+  font-weight: var(--home-section-title-weight);
+  line-height: var(--home-section-title-line-height);
+  letter-spacing: var(--home-section-title-tracking);
+  opacity: var(--home-section-title-opacity);
+  text-transform: var(--home-section-title-text-transform);
+  margin: 0;
+}
+
+.home-about-definition .home-text{
+  color: var(--home-description-color);
+  max-width: var(--home-reading-width, var(--reading-width-md, 720px));
+  margin: 0;
+}
+
+/* =============================================================================
+   03) ABOUT PRODUCT DEFINITION RESPONSIVE RULES
+============================================================================= */
+@media (max-width: 820px){
+  .home-about-definition .home-inner{
+    padding-top: var(--home-section-padding-y-mobile, 5rem);
+    padding-bottom: var(--home-section-padding-y-mobile, 5rem);
+  }
+}

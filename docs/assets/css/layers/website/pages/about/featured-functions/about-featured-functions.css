@@ -13,7 +13,7 @@
    10) CARD SUMMARY
    11) SECTION FOOTER
    12) SECTION TIMELINE
-   13) SECTION CONTROLS
+   13) SECTION CONTROLS — ARROWS HIDDEN
    14) SECTION DOTS
    15) READY STATE
    16) RESPONSIVE — TABLET
@@ -575,16 +575,10 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   13) SECTION CONTROLS
+   13) SECTION CONTROLS — ARROWS HIDDEN
 ============================================================================= */
 .about-featured-functions-controls{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: var(--about-featured-functions-controls-gap);
-  direction: ltr;
-  unicode-bidi: isolate;
+  display: none;
 }
 
 .about-featured-functions-control{

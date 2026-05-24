@@ -10,7 +10,7 @@
       "mobile_cards_per_view": 1
     },
     "controls": {
-      "show_arrows": true,
+      "show_arrows": false,
       "show_dots": true,
       "enable_drag": true,
       "enable_swipe": true

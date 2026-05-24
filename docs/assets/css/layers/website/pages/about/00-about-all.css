@@ -7,4 +7,5 @@
    01) ABOUT PAGE STYLE IMPORTS
 ============================================================================= */
 @import url('./about.css');
+@import url('./product-definition/about-product-definition.css');
 @import url('./featured-functions/00-about-featured-functions-all.css');

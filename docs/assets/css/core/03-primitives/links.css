@@ -17,20 +17,22 @@
    02) BASE LINK SYSTEM
 ============================================================================= */
 a{
-  color:var(--link-color);
+  color:inherit;
   text-decoration:none;
-  transition:var(--interaction-transition-control);
+  opacity:1;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
 }
 
 a:hover,
 a:focus-visible{
-  color:var(--link-hover-color);
+  color:inherit;
+  opacity:var(--hover-opacity-strong);
 }
 
 /* =============================================================================
    03) CLICKABLE TEXT HOVER SYSTEM
 ============================================================================= */
- a:not(.enter-button):not(.ui-button),
+a:not(.enter-button):not(.ui-button),
 .country-option,
 #language-toggle,
 #country-selector,
@@ -46,7 +48,7 @@ a:focus-visible{
   text-decoration:none !important;
 }
 
- a:not(.enter-button):not(.ui-button):hover,
+a:not(.enter-button):not(.ui-button):hover,
 .country-option:hover,
 #language-toggle:hover,
 #country-selector:hover,
@@ -57,7 +59,7 @@ a:focus-visible{
 .language-dropdown .language-option:hover,
 .language-dropdown .lang-option:hover,
 
- a:not(.enter-button):not(.ui-button):focus-visible,
+a:not(.enter-button):not(.ui-button):focus-visible,
 .country-option:focus-visible,
 #language-toggle:focus-visible,
 #country-selector:focus-visible,

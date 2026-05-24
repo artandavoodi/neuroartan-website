@@ -116,6 +116,20 @@
   -webkit-backdrop-filter:none;
 }
 
+.ui-button--ghost:hover,
+.ui-button--ghost:focus-visible,
+.ui-button--ghost:active{
+  background:transparent;
+  border-color:transparent;
+  box-shadow:none;
+  color:currentColor;
+  opacity:var(--hover-opacity-strong);
+}
+
+.ui-button--ghost:focus-visible{
+  outline:none;
+}
+
 /* =============================================================================
    08) ICON BUTTON PRIMITIVE
 ============================================================================= */

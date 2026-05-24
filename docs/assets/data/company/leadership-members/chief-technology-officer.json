@@ -14,13 +14,13 @@
   "joined_year": "",
   "image": "",
   "fallback_image": "/assets/images/layers/website/sections/home/hero/Fallback Profile Image.jpeg",
-  "summary": "The technology leader responsible for software architecture, security, resilience, scalability, and production engineering discipline.",
+  "summary": "The Chief Technology Officer builds the technical foundation that keeps Neuroartan secure, stable, scalable, and ready for real use.",
   "biography": [
-    "This executive seat is available. Neuroartan has defined the Chief Technology Officer role as a real operating standard before appointing a public holder.",
-    "The technology leader responsible for software architecture, security, resilience, scalability, and production engineering discipline.",
-    "The public profile is intentionally role-first until a human executive is hired, verified, and approved for publication."
+    "This executive seat is open. Neuroartan has defined the role before appointing a public holder so the standard is clear from the beginning.",
+    "The role leads software architecture, security, resilience, deployment discipline, and the technical systems that make ICOS dependable.",
+    "This profile remains role-first until a human executive is hired, verified, and approved for publication."
   ],
-  "mandate": "Build and govern the technical system that allows Neuroartan to become stable, secure, expandable, and operational across platforms.",
+  "mandate": "Build the technology that allows ICOS to work securely, scale carefully, and become a reliable product across platforms.",
   "capabilities": [
     "Technology architecture",
     "Security posture",
@@ -46,5 +46,5 @@
   "hiring_route": "/pages/careers/roles/index.html?role=chief-technology-officer",
   "profile_route": "/pages/company/leadership/chief-technology-officer/index.html",
   "public_route": "/pages/company/leadership/chief-technology-officer/index.html",
-  "source_posture": "Governed role placeholder for future executive hiring"
+  "source_posture": "Open executive role"
 }

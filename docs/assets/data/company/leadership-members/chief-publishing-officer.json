@@ -14,13 +14,13 @@
   "joined_year": "",
   "image": "",
   "fallback_image": "/assets/images/layers/website/sections/home/hero/Fallback Profile Image.jpeg",
-  "summary": "The publishing leader responsible for editorial standards, catalog architecture, rights discipline, and public knowledge release quality.",
+  "summary": "The Chief Publishing Officer turns Neuroartan’s writing, research, and institutional knowledge into clear, controlled public releases.",
   "biography": [
-    "This executive seat is available. Neuroartan has defined the Chief Publishing Officer role as a real operating standard before appointing a public holder.",
-    "The publishing leader responsible for editorial standards, catalog architecture, rights discipline, and public knowledge release quality.",
-    "The public profile is intentionally role-first until a human executive is hired, verified, and approved for publication."
+    "This executive seat is open. Neuroartan has defined the role before appointing a public holder so the standard is clear from the beginning.",
+    "The role protects editorial quality, catalog structure, rights discipline, and the way knowledge moves from internal work into public form.",
+    "This profile remains role-first until a human executive is hired, verified, and approved for publication."
   ],
-  "mandate": "Turn Neuroartan’s writing, research, and institutional records into controlled publication systems without weakening accuracy or ownership.",
+  "mandate": "Make Neuroartan’s knowledge publishable: clear, accurate, owned, and released with the discipline required for public trust.",
   "capabilities": [
     "Editorial doctrine",
     "Catalog architecture",
@@ -46,5 +46,5 @@
   "hiring_route": "/pages/careers/roles/index.html?role=chief-publishing-officer",
   "profile_route": "/pages/company/leadership/chief-publishing-officer/index.html",
   "public_route": "/pages/company/leadership/chief-publishing-officer/index.html",
-  "source_posture": "Governed role placeholder for future executive hiring"
+  "source_posture": "Open executive role"
 }

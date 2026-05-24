@@ -248,7 +248,6 @@ function renderLeadershipDetail(member) {
     <section class="catalog-section">
       <div class="catalog-detail-grid">
         <article class="catalog-panel catalog-panel--primary">
-          <h2 class="catalog-panel__title">${escapeHtml(isAvailable ? 'Role Mandate' : 'Founder Mandate')}</h2>
           <p class="catalog-panel__copy">${escapeHtml(member.mandate || '')}</p>
           <div class="catalog-list">
             ${(member.biography || []).map((paragraph) => `<div class="catalog-list-item">${escapeHtml(paragraph)}</div>`).join('')}

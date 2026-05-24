@@ -180,8 +180,9 @@
   --font-size-toast-title:0.84rem;
   --font-size-toast-body:0.78rem;
 
-  /* Profile scale: identity surfaces, handles, bio text, stats, and profile metadata. */
+  /* Profile scale: identity surfaces, handles, roles, bio text, stats, and profile metadata. */
   --font-size-profile-name:1.32rem;
+  --font-size-profile-role:1.42rem;
   --font-size-profile-handle:0.86rem;
   --font-size-profile-bio:0.92rem;
   --font-size-profile-stat-value:1rem;
@@ -572,6 +573,10 @@
   --profile-name-size:var(--font-size-profile-name);
   --profile-name-line-height:var(--line-height-heading-relaxed);
 
+  /* Profile role: executive title, institutional role, or position label. */
+  --profile-role-size:var(--font-size-profile-role);
+  --profile-role-line-height:var(--line-height-heading-relaxed);
+
   /* Profile handle: username, public identifier, or account handle. */
   --profile-handle-size:var(--font-size-profile-handle);
   --profile-handle-line-height:var(--line-height-body-tight);
@@ -642,6 +647,7 @@
 ============================================================================= */
 :root{
   /* Foundation weight scale. */
+  --font-weight-extra-light:var(--font-weight-light);
   --font-weight-light:300;
   --font-weight-body:400;
   --font-weight-medium:500;
@@ -755,6 +761,7 @@
 
   /* Profile, product, and marketing weights. */
   --profile-name-weight:var(--font-weight-heading);
+  --profile-role-weight:var(--font-weight-extra-light);
   --profile-handle-weight:var(--font-weight-body);
   --profile-bio-weight:var(--font-weight-body);
   --profile-stat-value-weight:var(--font-weight-heading-soft);
@@ -879,6 +886,7 @@
   --toast-title-tracking:var(--tracking-heading);
   --toast-body-tracking:var(--tracking-copy);
   --profile-name-tracking:var(--tracking-heading);
+  --profile-role-tracking:var(--tracking-heading);
   --profile-handle-tracking:var(--tracking-meta);
   --profile-bio-tracking:var(--tracking-copy);
   --profile-stat-value-tracking:var(--tracking-heading);

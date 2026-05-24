@@ -213,8 +213,10 @@
 .leadership-profile-hero__role{
   margin:0;
   color:#fff;
-  font-size:var(--catalog-card-title-size);
-  line-height:var(--leadership-copy-line-height);
+  font-size:var(--profile-role-size);
+  font-weight:var(--profile-role-weight);
+  letter-spacing:var(--profile-role-tracking);
+  line-height:var(--profile-role-line-height);
 }
 
 .leadership-profile-summary .catalog-page-description{

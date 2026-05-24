@@ -14,13 +14,13 @@
   "joined_year": "2026",
   "image": "/assets/images/layers/website/sections/company/leadership/artan-davoodi.jpeg",
   "fallback_image": "/assets/images/layers/website/sections/home/hero/Fallback Profile Image.jpeg",
-  "summary": "Artan Davoodi founded Neuroartan to build ICOS as a cognitive operating system for reflection, continuity, profile intelligence, and governed human-computer interaction.",
+  "summary": "Artan Davoodi founded Neuroartan to build ICOS, a cognitive operating system where software adapts to human thought, memory, voice, and continuity.",
   "biography": [
-    "Artan leads Neuroartan from the founder seat, shaping the product doctrine, public language, and system architecture behind ICOS.",
-    "His work connects thought, sound, software, design, and governance into one continuous operating architecture rather than treating them as separate disciplines.",
-    "The public founder profile exists to make the company’s leadership, product direction, and continuity logic legible while the wider executive team is still being built."
+    "Artan leads Neuroartan from the founder seat, shaping ICOS as a new kind of software system for thought, memory, voice, and continuity.",
+    "His work is guided by a simple principle: software should adapt to humans, instead of forcing humans to adapt to software.",
+    "Neuroartan is being built as a focused company around clearer thinking, usable memory, and long-term cognitive infrastructure."
   ],
-  "mandate": "Set institutional direction, protect product truth, approve high-impact decisions, and keep Neuroartan’s strategy, governance, and public posture coherent as the company matures.",
+  "mandate": "Build a future where software adapts to human thought, voice, memory, and continuity — and guide Neuroartan with the clarity, restraint, and discipline required to make that future real.",
   "capabilities": [
     "Product doctrine",
     "Continuity architecture",
@@ -45,7 +45,7 @@
   "public_links": [
     {
       "label": "Public profile",
-      "url": "/artan"
+      "url": "https://neuroartan.com/artan"
     },
     {
       "label": "X",
@@ -59,5 +59,5 @@
   "hiring_route": "",
   "profile_route": "/pages/company/leadership/chief-executive-officer/index.html",
   "public_route": "/artan",
-  "source_posture": "Active founder-held executive profile"
+  "source_posture": "Founder-held executive profile"
 }

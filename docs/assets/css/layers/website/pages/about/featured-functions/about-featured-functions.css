@@ -4,21 +4,23 @@
    01) SECTION ROOT
    02) SECTION SHELL
    03) SECTION HEADER
-   04) SECTION VIEWPORT
-   05) SECTION TRACK
-   06) CARD
-   07) CARD VISUAL
-   08) CARD LINKS
-   09) CARD COPY
-   10) CARD SUMMARY
-   11) SECTION FOOTER
-   12) SECTION TIMELINE
-   13) SECTION CONTROLS — ARROWS HIDDEN
-   14) SECTION DOTS
-   15) READY STATE
-   16) RESPONSIVE — TABLET
-   17) RESPONSIVE — MOBILE
-   18) END OF FILE
+   03A) ACTIVE DESCRIPTION
+   04) SECTION FRAME
+   05) SECTION VIEWPORT
+   06) SECTION TRACK
+   07) CARD
+   08) CARD VISUAL
+   09) CARD LINKS
+   10) CARD COPY
+   11) CARD SUMMARY
+   12) SECTION FOOTER
+   13) SECTION TIMELINE
+   14) SECTION CONTROLS — ARROWS HIDDEN
+   15) SECTION DOTS
+   16) READY STATE
+   17) RESPONSIVE — TABLET
+   18) RESPONSIVE — MOBILE
+   19) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -241,29 +243,132 @@ html[data-theme-effective="dark"] .about-featured-functions{
 }
 
 /* =============================================================================
-   04) SECTION VIEWPORT
+   03A) ACTIVE DESCRIPTION
 ============================================================================= */
-.about-featured-functions-viewport{
+.about-featured-functions-active-description{
+  margin: 0 auto;
+  max-width: var(--reading-width-sm);
+  color: var(--text-color);
+  font-size: var(--about-featured-functions-card-description-size);
+  font-weight: var(--body-1-weight);
+  line-height: var(--about-featured-functions-card-description-line-height);
+  letter-spacing: var(--about-featured-functions-card-description-tracking);
+  opacity: var(--about-featured-functions-description-opacity);
+  text-align: center;
+  text-wrap: pretty;
+}
+
+/* =============================================================================
+   04) SECTION FRAME
+============================================================================= */
+.about-featured-functions-frame{
   position: relative;
   width: min(100%, var(--about-featured-functions-viewport-max-width));
   margin: 0 auto;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--about-featured-functions-card-radius);
+  border: var(--about-featured-functions-card-border-width) solid var(--about-featured-functions-card-border-color);
+  background: var(--about-featured-functions-card-surface-bg);
+  background-clip: padding-box;
+  box-shadow: inset 0 1px 0 var(--about-featured-functions-card-surface-highlight-rest);
+  transition:border-color var(--interaction-motion-medium) var(--interaction-ease-standard), box-shadow var(--interaction-motion-medium) var(--interaction-ease-standard);
+}
+
+.about-featured-functions-frame:hover,
+.about-featured-functions-frame:focus-within{
+  border-color: var(--about-featured-functions-card-border-color-hover);
+  box-shadow: inset 0 1px 0 var(--about-featured-functions-card-surface-highlight-hover);
+}
+
+.about-featured-functions-frame::before{
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: calc(var(--about-featured-functions-card-radius) - 1px);
+  opacity: var(--about-featured-functions-card-spectrum-opacity);
+  mix-blend-mode: var(--about-featured-functions-card-spectrum-blend);
+  background:
+    radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-red) 100%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 80% 18%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-orange) 100%, transparent) 0%, transparent 36%),
+    radial-gradient(circle at 86% 78%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-violet) 100%, transparent) 0%, transparent 38%),
+    radial-gradient(circle at 18% 82%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-blue) 100%, transparent) 0%, transparent 36%),
+    radial-gradient(circle at 48% 50%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-yellow) 96%, transparent) 0%, transparent 30%),
+    radial-gradient(circle at 64% 40%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-cyan) 96%, transparent) 0%, transparent 28%),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-red) 100%, transparent) 0%,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-orange) 100%, transparent) 18%,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-yellow) 96%, transparent) 34%,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-cyan) 94%, transparent) 54%,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-blue) 96%, transparent) 72%,
+      color-mix(in srgb, var(--about-featured-functions-card-spectrum-violet) 100%, transparent) 100%);
+}
+
+.about-featured-functions-frame::after{
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  backdrop-filter: blur(var(--about-featured-functions-card-matte-blur)) saturate(var(--about-featured-functions-card-matte-saturation));
+  -webkit-backdrop-filter: blur(var(--about-featured-functions-card-matte-blur)) saturate(var(--about-featured-functions-card-matte-saturation));
+  background:
+    linear-gradient(
+      180deg,
+      var(--about-featured-functions-card-matte-surface-top) 0%,
+      var(--about-featured-functions-card-matte-surface-mid) 38%,
+      var(--about-featured-functions-card-matte-surface-bottom) 100%
+    );
+}
+
+.about-featured-functions-frame-scene{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.about-featured-functions-frame-scene canvas{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+}
+
+/* =============================================================================
+   05) SECTION VIEWPORT
+============================================================================= */
+.about-featured-functions-viewport{
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  margin: 0;
   clear: both;
   padding-top: 0;
   overflow: hidden;
+  border-radius: inherit;
+  background: transparent;
   touch-action: pan-y;
   direction: ltr;
   unicode-bidi: isolate;
 }
 
 /* =============================================================================
-   05) SECTION TRACK
+   06) SECTION TRACK
 ============================================================================= */
 .about-featured-functions-track{
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 100%;
   gap: var(--about-featured-functions-track-gap);
-  align-items: stretch;
+  align-items: start;
   transform: translateX(var(--about-featured-functions-rail-offset));
   transition:transform var(--layout-about-featured-functions-track-motion) var(--interaction-ease-standard);
   will-change: transform;
@@ -272,15 +377,17 @@ html[data-theme-effective="dark"] .about-featured-functions{
 }
 
 /* =============================================================================
-   06) CARD
+   07) CARD
 ============================================================================= */
 .about-featured-functions-card{
   position: relative;
   min-width: 0;
+  display: grid;
+  align-content: start;
 }
 
 /* =============================================================================
-   07) CARD VISUAL
+   08) CARD VISUAL
 ============================================================================= */
 .about-featured-functions-card-visual{
   position: relative;
@@ -289,19 +396,12 @@ html[data-theme-effective="dark"] .about-featured-functions{
   aspect-ratio: var(--about-featured-functions-visual-aspect-ratio);
   overflow: hidden;
   isolation: isolate;
-  border-radius: var(--about-featured-functions-card-radius);
-  border: var(--about-featured-functions-card-border-width) solid var(--about-featured-functions-card-border-color);
-  background: var(--about-featured-functions-card-surface-bg);
+  border-radius: 0;
+  border: 0;
+  background: transparent;
   background-clip: padding-box;
-  box-shadow: inset 0 1px 0 var(--about-featured-functions-card-surface-highlight-rest);
+  box-shadow: none;
   flex: 0 0 auto;
-  transition:border-color var(--interaction-motion-medium) var(--interaction-ease-standard), box-shadow var(--interaction-motion-medium) var(--interaction-ease-standard);
-}
-
-.about-featured-functions-card:hover .about-featured-functions-card-visual,
-.about-featured-functions-card:focus-within .about-featured-functions-card-visual{
-  border-color: var(--about-featured-functions-card-border-color-hover);
-  box-shadow: inset 0 1px 0 var(--about-featured-functions-card-surface-highlight-hover);
 }
 
 .about-featured-functions-card-visual-link{
@@ -311,7 +411,7 @@ html[data-theme-effective="dark"] .about-featured-functions{
 .about-featured-functions-card-scene{
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
   border-radius: inherit;
@@ -342,61 +442,15 @@ html[data-theme-effective="dark"] .about-featured-functions{
   background: transparent;
 }
 
-.about-featured-functions-card-visual::before{
-  content: '';
-  position: absolute;
-  inset: 1px;
-  z-index: 2;
-  pointer-events: none;
-  border-radius: calc(var(--about-featured-functions-card-radius) - 1px);
-  opacity: var(--about-featured-functions-card-spectrum-opacity);
-  mix-blend-mode: var(--about-featured-functions-card-spectrum-blend);
-  background:
-    radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-red) 100%, transparent) 0%, transparent 34%),
-    radial-gradient(circle at 80% 18%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-orange) 100%, transparent) 0%, transparent 36%),
-    radial-gradient(circle at 86% 78%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-violet) 100%, transparent) 0%, transparent 38%),
-    radial-gradient(circle at 18% 82%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-blue) 100%, transparent) 0%, transparent 36%),
-    radial-gradient(circle at 48% 50%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-yellow) 96%, transparent) 0%, transparent 30%),
-    radial-gradient(circle at 64% 40%, color-mix(in srgb, var(--about-featured-functions-card-spectrum-cyan) 96%, transparent) 0%, transparent 28%),
-    linear-gradient(135deg,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-red) 100%, transparent) 0%,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-orange) 100%, transparent) 18%,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-yellow) 96%, transparent) 34%,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-cyan) 94%, transparent) 54%,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-blue) 96%, transparent) 72%,
-      color-mix(in srgb, var(--about-featured-functions-card-spectrum-violet) 100%, transparent) 100%);
-}
-
-.about-featured-functions-card-visual::after{
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  border-radius: inherit;
-  backdrop-filter: blur(var(--about-featured-functions-card-matte-blur)) saturate(var(--about-featured-functions-card-matte-saturation));
-  -webkit-backdrop-filter: blur(var(--about-featured-functions-card-matte-blur)) saturate(var(--about-featured-functions-card-matte-saturation));
-  background:
-    linear-gradient(
-      180deg,
-      var(--about-featured-functions-card-matte-surface-top) 0%,
-      var(--about-featured-functions-card-matte-surface-mid) 38%,
-      var(--about-featured-functions-card-matte-surface-bottom) 100%
-    );
-}
-
 .about-featured-functions-card-placeholder{
   display: block;
   width: 100%;
   height: 100%;
-  background:
-    radial-gradient(circle at 20% 20%, var(--about-featured-functions-card-placeholder-glow-a) 0%, transparent 42%),
-    radial-gradient(circle at 80% 30%, var(--about-featured-functions-card-placeholder-glow-b) 0%, transparent 36%),
-    linear-gradient(180deg, var(--about-featured-functions-card-placeholder-fill-top) 0%, var(--about-featured-functions-card-placeholder-fill-bottom) 100%);
+  background: transparent;
 }
 
 /* =============================================================================
-   08) CARD LINKS
+   09) CARD LINKS
 ============================================================================= */
 .about-featured-functions-card-visual-link{
   display: block;
@@ -411,17 +465,22 @@ html[data-theme-effective="dark"] .about-featured-functions{
 }
 
 /* =============================================================================
-   09) CARD COPY
+   10) CARD COPY
 ============================================================================= */
 .about-featured-functions-card-copy{
-  position: static;
-  display: block;
+  position: relative;
+  display: grid;
   width: 100%;
   max-width: var(--about-featured-functions-card-copy-max-width);
-  padding-top: var(--about-featured-functions-card-copy-padding-top);
+  padding-top: 0;
   flex: 0 0 auto;
   pointer-events: none;
   justify-self: stretch;
+  z-index: 5;
+  color: var(--text-color);
+  min-height: var(--about-featured-functions-visual-aspect-ratio);
+  aspect-ratio: var(--about-featured-functions-visual-aspect-ratio);
+  place-items: center;
 }
 
  [data-about-featured-functions-language-direction='rtl'] .about-featured-functions-card-copy{
@@ -429,16 +488,7 @@ html[data-theme-effective="dark"] .about-featured-functions{
 }
 
 .about-featured-functions-card-text-link{
-  display: grid;
-  align-content: center;
-  gap: 0;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  color: inherit;
-  text-decoration: none;
-  pointer-events: auto;
-  justify-self: stretch;
+  display: none;
 }
 
 .about-featured-functions-card-label{
@@ -487,16 +537,12 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   10) CARD SUMMARY
+   11) CARD SUMMARY
 ============================================================================= */
 .about-featured-functions-card-summary{
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 6;
-  width: 100%;
-  aspect-ratio: var(--about-featured-functions-visual-aspect-ratio);
+  width: auto;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -506,6 +552,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
   direction: ltr;
   unicode-bidi: isolate;
   text-align: center;
+  color: var(--about-featured-functions-card-summary-color);
 }
 
 .about-featured-functions-card-icon{
@@ -533,11 +580,11 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: var(--about-featured-functions-card-icon-filter) !important;
+  filter: var(--about-featured-functions-card-icon-filter, none) !important;
 }
 
 /* =============================================================================
-   11) SECTION FOOTER
+   12) SECTION FOOTER
 ============================================================================= */
 .about-featured-functions-footer{
   width: min(100%, var(--about-featured-functions-footer-max-width));
@@ -551,7 +598,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   12) SECTION TIMELINE
+   13) SECTION TIMELINE
 ============================================================================= */
 .about-featured-functions-timeline{
   width: 100%;
@@ -575,7 +622,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   13) SECTION CONTROLS — ARROWS HIDDEN
+   14) SECTION CONTROLS — ARROWS HIDDEN
 ============================================================================= */
 .about-featured-functions-controls{
   display: none;
@@ -629,7 +676,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   14) SECTION DOTS
+   15) SECTION DOTS
 ============================================================================= */
 .about-featured-functions-dots{
   display: flex;
@@ -655,7 +702,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   15) READY STATE
+   16) READY STATE
 ============================================================================= */
 .about-featured-functions:not(.about-featured-functions-ready) .about-featured-functions-track{
   opacity: 0;
@@ -669,7 +716,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   16) RESPONSIVE — TABLET
+   17) RESPONSIVE — TABLET
 ============================================================================= */
 @media (max-width: 1060px){
   .about-featured-functions-shell{
@@ -697,7 +744,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   17) RESPONSIVE — MOBILE
+   18) RESPONSIVE — MOBILE
 ============================================================================= */
 @media (max-width: 720px){
   .about-featured-functions-shell{
@@ -724,5 +771,5 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 }
 
 /* =============================================================================
-   18) END OF FILE
+   19) END OF FILE
 ============================================================================= */

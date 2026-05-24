@@ -4,13 +4,14 @@
    02) DATA SOURCE
    03) SECTION SELECTORS
    04) RENDER HELPERS
-   05) CARD TEMPLATE
+   05) FRAME AND CARD TEMPLATES
    06) SECTION RENDERER
    07) SLIDE STATE HELPERS
    08) CONTROLS, GESTURES, AND AUTOPLAY
-   09) INITIALIZATION BOOTSTRAP
-   10) INITIALIZATION EXECUTION
-   11) END OF FILE
+   09) INITIAL SCENE STABILIZATION
+   10) INITIALIZATION BOOTSTRAP
+   11) INITIALIZATION EXECUTION
+   12) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -31,7 +32,9 @@
   const SECTION_SELECTOR = '[data-about-featured-functions]';
   const TITLE_SELECTOR = '[data-about-featured-functions-title]';
   const DESCRIPTION_SELECTOR = '[data-about-featured-functions-description]';
+  const ACTIVE_DESCRIPTION_SELECTOR = '[data-about-featured-functions-active-description]';
   const VIEWPORT_SELECTOR = '[data-about-featured-functions-viewport]';
+  const FRAME_SELECTOR = '[data-about-featured-functions-frame]';
   const TRACK_SELECTOR = '[data-about-featured-functions-track]';
   const TIMELINE_SELECTOR = '[data-about-featured-functions-timeline]';
   const TIMELINE_PROGRESS_SELECTOR = '[data-about-featured-functions-timeline-progress]';
@@ -100,27 +103,19 @@
     return response.json();
   }
 
-  async function loadFeaturedFunctionScenes(items) {
-    const entries = await Promise.all(
-      items.map(async (item) => {
-        const id = String(item?.id || '').trim();
-        const sceneRef = String(item?.scene || id).trim();
+  async function loadSectionScene(sectionData) {
+    const sceneRef = String(sectionData?.scene || '').trim();
 
-        if (!id || !sceneRef) {
-          return [id, null];
-        }
+    if (!sceneRef) {
+      return null;
+    }
 
-        try {
-          const scene = await loadSceneConfig(sceneRef);
-          return [id, scene];
-        } catch (error) {
-          console.warn(`[about-featured-functions] Failed to load scene config for ${id}.`, error);
-          return [id, null];
-        }
-      })
-    );
-
-    return new Map(entries.filter(([id]) => Boolean(id)));
+    try {
+      return await loadSceneConfig(sceneRef);
+    } catch (error) {
+      console.warn('[about-featured-functions] Failed to load unified section scene.', error);
+      return null;
+    }
   }
 
   function sortItems(items) {
@@ -208,50 +203,35 @@
   }
 
   /* ==========================================================================
-     05) CARD TEMPLATE
+     05) FRAME AND CARD TEMPLATES
      ========================================================================== */
+
+  function createFrameSceneMarkup(scene) {
+    const sceneId = escapeHtml(scene?.id || 'core-capabilities-frame');
+    const sceneType = escapeHtml(scene?.scene_type || 'unified');
+
+    return `
+      <div class="about-featured-functions-frame-scene" data-about-featured-functions-scene data-scene-id="${sceneId}" data-scene-type="${sceneType}" aria-hidden="true"></div>
+    `;
+  }
   function createCardMarkup(item) {
     const label = escapeHtml(item.label || '');
     const title = escapeHtml(item.title || '');
-    const description = escapeHtml(item.description || '');
     const href = escapeHtml(item.href || '/404.html');
-    const image = escapeHtml(item.image || '');
-    const isVideo = /\.webm$/i.test(image);
     const icon = escapeHtml(item.icon || '');
     const theme = escapeHtml(item.theme || 'dark');
     const id = escapeHtml(item.id || 'feature-card');
-    const sceneId = escapeHtml(item.scene?.id || item.id || '');
-    const sceneType = escapeHtml(item.scene?.scene_type || '');
-    const hasScene = Boolean(sceneId);
     const i18nBase = createI18nKey(item.id || item.title || 'item');
     const labelI18nKey = `${i18nBase}_label`;
-    const titleI18nKey = `${i18nBase}_title`;
-    const descriptionI18nKey = `${i18nBase}_description`;
     const linkAriaI18nKey = `${i18nBase}_link_aria_label`;
 
     return `
       <article class="about-featured-functions-card" data-about-featured-functions-card data-feature-id="${id}" data-theme="${theme}">
-        <a class="about-featured-functions-card-visual-link" href="${href}" aria-label="${title}" data-i18n-aria-label-key="${linkAriaI18nKey}">
-          <div class="about-featured-functions-card-visual" aria-hidden="true">
-            <div class="about-featured-functions-card-scene" data-about-featured-functions-scene data-scene-id="${sceneId}" data-scene-type="${sceneType}"></div>
-            ${image
-              ? isVideo
-                ? `<video src="${image}" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>`
-                : `<img src="${image}" alt="" loading="lazy">`
-              : hasScene
-                ? ''
-                : '<span class="about-featured-functions-card-placeholder"></span>'}
-          </div>
-        </a>
         <div class="about-featured-functions-card-copy">
           <div class="about-featured-functions-card-summary">
             ${icon ? `<span class="about-featured-functions-card-icon" aria-hidden="true"><img class="ui-icon-theme-aware" src="${icon}" alt="" decoding="async"></span>` : ''}
             <p class="about-featured-functions-card-label" data-i18n-key="${labelI18nKey}">${label}</p>
           </div>
-          <a class="about-featured-functions-card-text-link" href="${href}" aria-label="${title}">
-            <h3 class="about-featured-functions-card-title" data-i18n-key="${titleI18nKey}">${title}</h3>
-            <p class="about-featured-functions-card-description" data-i18n-key="${descriptionI18nKey}">${description}</p>
-          </a>
         </div>
       </article>
     `;
@@ -265,6 +245,7 @@
     const description = section.querySelector(DESCRIPTION_SELECTOR);
     const track = section.querySelector(TRACK_SELECTOR);
     const dots = section.querySelector(DOTS_SELECTOR);
+    const frame = section.querySelector(FRAME_SELECTOR);
 
     const sectionData = data.section || {};
     const items = sortItems(Array.isArray(data.items) ? data.items : []);
@@ -277,6 +258,10 @@
     if (description) {
       description.textContent = sectionData.description || '';
       description.setAttribute('data-i18n-key', 'about_featured_functions_section_description');
+    }
+
+    if (frame && data.scene && !frame.querySelector('[data-about-featured-functions-scene]')) {
+      frame.insertAdjacentHTML('afterbegin', createFrameSceneMarkup(data.scene));
     }
 
     if (track) track.innerHTML = items.map(createCardMarkup).join('');
@@ -300,7 +285,6 @@
         .join('');
     }
 
-    section.classList.add(READY_CLASS);
 
     return {
       section: sectionData,
@@ -353,6 +337,48 @@
     }
   }
 
+  function updateActiveDescription(state) {
+    const activeDescription = state.section.querySelector(ACTIVE_DESCRIPTION_SELECTOR);
+
+    if (!activeDescription) {
+      return;
+    }
+
+    const activeItem = state.data.items[state.currentIndex] || null;
+    activeDescription.textContent = activeItem?.description || '';
+
+    if (activeItem) {
+      activeDescription.setAttribute('data-i18n-key', `${createI18nKey(activeItem.id || activeItem.title || 'item')}_description`);
+    } else {
+      activeDescription.removeAttribute('data-i18n-key');
+    }
+  }
+
+  function updateFrameLink(state) {
+    const frame = state.section.querySelector(FRAME_SELECTOR);
+
+    if (!frame) {
+      return;
+    }
+
+    const activeItem = state.data.items[state.currentIndex] || null;
+    const href = String(activeItem?.href || '').trim();
+    const title = String(activeItem?.title || activeItem?.label || 'capability').trim();
+
+    if (!href) {
+      frame.removeAttribute('role');
+      frame.removeAttribute('tabindex');
+      frame.removeAttribute('aria-label');
+      frame.removeAttribute('data-active-href');
+      return;
+    }
+
+    frame.setAttribute('role', 'link');
+    frame.setAttribute('tabindex', '0');
+    frame.setAttribute('aria-label', `Open ${title}`);
+    frame.setAttribute('data-active-href', href);
+  }
+
   function emitSlideState(state) {
     state.section.dispatchEvent(new CustomEvent('about-featured-functions:slide-change', {
       bubbles: false,
@@ -379,6 +405,8 @@
     state.section.style.setProperty('--about-featured-functions-rail-offset', `${offset}px`);
     updateDots(state);
     updateControls(state);
+    updateActiveDescription(state);
+    updateFrameLink(state);
     emitSlideState(state);
   }
 
@@ -519,8 +547,73 @@
     scheduleAutoplay(state);
   }
 
+  function bindFrameLink(state) {
+    const frame = state.section.querySelector(FRAME_SELECTOR);
+
+    if (!frame || frame.__aboutFeaturedFunctionsFrameLinkBound) {
+      return;
+    }
+
+    frame.addEventListener('click', (event) => {
+      if (event.target.closest('button, a')) {
+        return;
+      }
+
+      const href = frame.getAttribute('data-active-href');
+
+      if (href) {
+        window.location.href = href;
+      }
+    });
+
+    frame.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return;
+      }
+
+      const href = frame.getAttribute('data-active-href');
+
+      if (!href) {
+        return;
+      }
+
+      event.preventDefault();
+      window.location.href = href;
+    });
+
+    frame.__aboutFeaturedFunctionsFrameLinkBound = true;
+  }
+
   /* ==========================================================================
-     09) INITIALIZATION BOOTSTRAP
+     09) INITIAL SCENE STABILIZATION
+     ========================================================================== */
+  function stabilizeInitialScene(state) {
+    if (!state?.section) {
+      return;
+    }
+
+    updateRail(state);
+    emitSlideState(state);
+  }
+
+  function markReadyAfterInitialPaint(section, state = null) {
+    if (!section) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (state) {
+          stabilizeInitialScene(state);
+        }
+
+        section.classList.add(READY_CLASS);
+      });
+    });
+  }
+
+  /* ==========================================================================
+     10) INITIALIZATION BOOTSTRAP
      ========================================================================== */
   function getSection() {
     return document.querySelector(SECTION_SELECTOR);
@@ -554,7 +647,7 @@
   }
 
   /* ==========================================================================
-     10) INITIALIZATION EXECUTION
+     11) INITIALIZATION EXECUTION
      ========================================================================== */
   async function initAboutFeaturedFunctions() {
     const section = getSection();
@@ -566,13 +659,11 @@
     try {
       const data = await loadFeaturedFunctionsData();
       const baseItems = sortItems(Array.isArray(data.items) ? data.items : []);
-      const scenesById = await loadFeaturedFunctionScenes(baseItems);
+      const sectionScene = await loadSectionScene(data.section || {});
       const hydratedData = {
         ...data,
-        items: baseItems.map((item) => ({
-          ...item,
-          scene: scenesById.get(String(item?.id || '').trim()) || null
-        }))
+        scene: sectionScene,
+        items: baseItems
       };
       const renderedData = renderSection(section, hydratedData);
       section.__featuredFunctionsData = hydratedData;
@@ -586,6 +677,8 @@
       const interactionState = createInteractionState(section, renderedData);
       bindLanguageDirection(section);
       bindControls(interactionState);
+      bindFrameLink(interactionState);
+      markReadyAfterInitialPaint(section, interactionState);
       markInitialized(section);
     } catch (error) {
       console.error('[about-featured-functions] Failed to initialize featured functions section.', error);
@@ -630,5 +723,5 @@
 })();
 
 /* =============================================================================
-   11) END OF FILE
+   12) END OF FILE
 ============================================================================= */

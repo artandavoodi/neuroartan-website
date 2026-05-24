@@ -4,15 +4,17 @@
 02) MENU BAR
 03) BRAND
 04) PRIMARY NAVIGATION AND UTILITIES
-05) SECONDARY MENU TOGGLE
-06) MENU PANELS
-07) ICOS PANEL
-08) KNOWLEDGE AND RESEARCH PANEL
-09) UPDATES PANEL
-10) CAREERS PANEL
-11) SEARCH PANEL
-12) ACCOUNT PANEL (TRANSITIONAL LEGACY)
-13) END OF MENU
+05) MOBILE MENU TRIGGER
+06) SECONDARY MENU TOGGLE
+07) MENU PANELS
+08) MOBILE MENU RAIL
+09) ICOS PANEL
+10) KNOWLEDGE AND RESEARCH PANEL
+11) UPDATES PANEL
+12) CAREERS PANEL
+13) SEARCH PANEL
+14) ACCOUNT PANEL (TRANSITIONAL LEGACY)
+15) END OF MENU
 ============================================================================= -->
 <!-- =============================================================================
 01) PRIMARY MENU SHELL
@@ -57,7 +59,17 @@
     </div>
 
     <!-- ========================================================================
-    05) SECONDARY MENU TOGGLE
+    05) MOBILE MENU TRIGGER
+    ======================================================================== -->
+    <button id="institutional-menu-mobile-trigger" class="institutional-menu-mobile-trigger" type="button" aria-label="Open institutional menu" aria-controls="institutional-menu-panels" aria-expanded="false" data-institutional-menu-mobile-trigger>
+      <span class="institutional-menu-mobile-trigger-icon" aria-hidden="true">
+        <span class="institutional-menu-mobile-trigger-line institutional-menu-mobile-trigger-line--top"></span>
+        <span class="institutional-menu-mobile-trigger-line institutional-menu-mobile-trigger-line--bottom"></span>
+      </span>
+    </button>
+
+    <!-- ========================================================================
+    06) SECONDARY MENU TOGGLE
     ======================================================================== -->
     <button id="institutional-menu-secondary-toggle" class="institutional-menu-secondary-toggle" type="button" aria-label="Open secondary navigation" aria-controls="menu-overlay" aria-expanded="false">
       <span class="institutional-menu-toggle-line institutional-menu-toggle-line--top"></span>
@@ -66,13 +78,23 @@
   </div>
 
   <!-- ==========================================================================
-  06) MENU PANELS
+  07) MENU PANELS
   ========================================================================== -->
-  <div class="institutional-menu-panels" aria-hidden="true">
+  <div id="institutional-menu-panels" class="institutional-menu-panels" aria-hidden="true">
     <div class="institutional-menu-panels-backdrop"></div>
 
     <!-- ========================================================================
-    07) ICOS PANEL
+    08) MOBILE MENU RAIL
+    ======================================================================== -->
+    <nav class="institutional-menu-mobile-rail" aria-label="Mobile institutional navigation" data-institutional-menu-mobile-rail>
+      <button type="button" class="institutional-menu-mobile-rail-link institutional-menu-panel-trigger" data-menu-panel="icos" aria-expanded="false" aria-controls="institutional-menu-panel-icos" data-i18n-key="menu.primary.icos">ICOS</button>
+      <button type="button" class="institutional-menu-mobile-rail-link institutional-menu-panel-trigger" data-menu-panel="knowledge-research" aria-expanded="false" aria-controls="institutional-menu-panel-knowledge-research" data-i18n-key="menu.primary.knowledgeResearch">Knowledge &amp; Research</button>
+      <button type="button" class="institutional-menu-mobile-rail-link institutional-menu-panel-trigger" data-menu-panel="updates" aria-expanded="false" aria-controls="institutional-menu-panel-updates" data-i18n-key="menu.primary.updates">Updates</button>
+      <button type="button" class="institutional-menu-mobile-rail-link institutional-menu-panel-trigger" data-menu-panel="careers" aria-expanded="false" aria-controls="institutional-menu-panel-careers" data-i18n-key="menu.primary.careers">Careers</button>
+    </nav>
+
+    <!-- ========================================================================
+    09) ICOS PANEL
     ======================================================================== -->
     <section id="institutional-menu-panel-icos" class="institutional-menu-panel" data-menu-panel-content="icos" aria-label="ICOS menu panel">
       <div class="institutional-menu-panel-shell">
@@ -91,7 +113,7 @@
     </section>
 
     <!-- ========================================================================
-    08) KNOWLEDGE AND RESEARCH PANEL
+    10) KNOWLEDGE AND RESEARCH PANEL
     ======================================================================== -->
     <section id="institutional-menu-panel-knowledge-research" class="institutional-menu-panel" data-menu-panel-content="knowledge-research" aria-label="Knowledge and Research menu panel">
       <div class="institutional-menu-panel-shell">
@@ -110,7 +132,7 @@
     </section>
 
     <!-- ========================================================================
-    09) UPDATES PANEL
+    11) UPDATES PANEL
     ======================================================================== -->
     <section id="institutional-menu-panel-updates" class="institutional-menu-panel" data-menu-panel-content="updates" aria-label="Updates menu panel">
       <div class="institutional-menu-panel-shell">
@@ -129,7 +151,7 @@
     </section>
 
     <!-- ========================================================================
-    10) CAREERS PANEL
+    12) CAREERS PANEL
     ======================================================================== -->
     <section id="institutional-menu-panel-careers" class="institutional-menu-panel" data-menu-panel-content="careers" aria-label="Careers menu panel">
       <div class="institutional-menu-panel-shell">
@@ -148,7 +170,7 @@
     </section>
 
     <!-- ========================================================================
-    11) SEARCH PANEL
+    13) SEARCH PANEL
     ======================================================================== -->
     <section id="institutional-menu-panel-search" class="institutional-menu-panel institutional-menu-panel--search" data-menu-panel-content="search" aria-label="Search panel">
       <div class="institutional-menu-panel-shell institutional-menu-panel-shell--search">
@@ -171,7 +193,7 @@
     </section>
 
     <!-- ========================================================================
-    12) ACCOUNT PANEL (TRANSITIONAL LEGACY)
+    14) ACCOUNT PANEL (TRANSITIONAL LEGACY)
     ======================================================================== -->
     <section id="institutional-menu-panel-account" class="institutional-menu-panel" data-menu-panel-content="account" aria-label="Account menu panel">
       <div class="institutional-menu-panel-shell">
@@ -189,6 +211,6 @@
     </section>
   </div>
 <!-- =============================================================================
-13) END OF MENU
+15) END OF MENU
 ============================================================================= -->
 </header>

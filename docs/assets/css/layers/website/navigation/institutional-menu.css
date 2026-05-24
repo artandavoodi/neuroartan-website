@@ -13,17 +13,19 @@
    09) LINKS AND UTILITY BUTTONS
    10) SEARCH TRIGGER
    11) ACCOUNT TRIGGER
-   12) SECONDARY TOGGLE
-   13) MENU PANELS
-   14) PAGE SCROLL LOCK
-   15) PANEL SHELL
-   16) PANEL TYPOGRAPHY AND LINKS
-   17) SEARCH FIELD
-   18) SEARCH RESULTS
-   19) GLOBAL HEADER SUPPRESSION
-   20) CARET ANIMATION
-   21) RESPONSIVE — 1100PX
-   22) RESPONSIVE — 760PX
+   12) MOBILE MENU TRIGGER
+   13) SECONDARY TOGGLE
+   14) MENU PANELS
+   14A) MOBILE MENU RAIL
+   15) PAGE SCROLL LOCK
+   16) PANEL SHELL
+   17) PANEL TYPOGRAPHY AND LINKS
+   18) SEARCH FIELD
+   19) SEARCH RESULTS
+   20) GLOBAL HEADER SUPPRESSION
+   21) CARET ANIMATION
+   22) RESPONSIVE — 1100PX
+   23) RESPONSIVE — 760PX
 ============================================================================= */
 
 /* =============================================================================
@@ -532,7 +534,79 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   12) SECONDARY TOGGLE
+   12) MOBILE MENU TRIGGER
+============================================================================= */
+.institutional-menu-mobile-trigger{
+  display: none;
+  appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nav-institutional-utility-gap);
+  padding: var(--spacing-none);
+  margin: var(--spacing-none);
+  border: var(--spacing-none);
+  background: transparent;
+  color: var(--institutional-menu-text-color);
+  font-size: var(--nav-institutional-link-size);
+  font-weight: var(--nav-institutional-link-weight);
+  letter-spacing: var(--nav-institutional-link-tracking);
+  line-height: var(--nav-institutional-link-line-height);
+  white-space: nowrap;
+  transform: none !important;
+  transition:
+    color var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
+}
+
+.institutional-menu-mobile-trigger:hover,
+.institutional-menu-mobile-trigger:focus-visible,
+.institutional-menu-mobile-trigger:active,
+.institutional-menu-mobile-trigger[aria-expanded="true"]{
+  color: var(--institutional-menu-text-hover-color);
+  opacity: var(--overlay-opacity-open);
+  transform: none !important;
+  text-decoration: none;
+  outline: none;
+}
+
+.institutional-menu-mobile-trigger-label{
+  display: inline-flex;
+  align-items: center;
+}
+
+.institutional-menu-mobile-trigger-icon{
+  width: var(--nav-institutional-trigger-size);
+  height: var(--nav-institutional-trigger-size);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--border-width-hairline) * 4);
+  color: currentColor;
+}
+
+.institutional-menu-mobile-trigger-line{
+  display: block;
+  width: var(--nav-institutional-trigger-size);
+  height: var(--border-width-hairline);
+  background: currentColor;
+  transform-origin: center center;
+  transition:
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    transform var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
+}
+
+.institutional-menu-mobile-trigger[aria-expanded="true"] .institutional-menu-mobile-trigger-line--top{
+  transform: translateY(calc(var(--border-width-hairline) * 2.5)) rotate(45deg);
+}
+
+.institutional-menu-mobile-trigger[aria-expanded="true"] .institutional-menu-mobile-trigger-line--bottom{
+  transform: translateY(calc(var(--border-width-hairline) * -2.5)) rotate(-45deg);
+}
+
+/* =============================================================================
+   13) SECONDARY TOGGLE
 ============================================================================= */
 .institutional-menu-secondary-toggle{
   display: none !important;
@@ -555,7 +629,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   13) MENU PANELS
+   14) MENU PANELS
 ============================================================================= */
 .institutional-menu-panels{
   position: fixed;
@@ -593,6 +667,44 @@ body.institutional-menu-panel-open .institutional-menu-panels{
   backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
   -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
   box-shadow:var(--institutional-menu-panel-shadow);
+}
+
+/* =============================================================================
+   14A) MOBILE MENU RAIL
+============================================================================= */
+.institutional-menu-mobile-rail{
+  display: none;
+}
+
+.institutional-menu-mobile-rail-link{
+  appearance: none;
+  -webkit-appearance: none;
+  width: var(--size-full);
+  margin: var(--spacing-none);
+  padding: var(--spacing-none);
+  border: var(--spacing-none);
+  background: transparent;
+  color: var(--institutional-menu-text-color);
+  text-align: left;
+  font-size: var(--institutional-menu-panel-copy-size);
+  font-weight: var(--institutional-menu-panel-copy-strong-weight);
+  letter-spacing: -0.01em;
+  line-height: var(--institutional-menu-panel-copy-line-height);
+  font-variation-settings: "wght" 300;
+  transform: none !important;
+  transition:
+    color var(--institutional-menu-motion-fast) var(--interaction-ease-standard),
+    opacity var(--institutional-menu-motion-fast) var(--interaction-ease-standard);
+}
+
+.institutional-menu-mobile-rail-link:hover,
+.institutional-menu-mobile-rail-link:focus-visible,
+.institutional-menu-mobile-rail-link:active,
+.institutional-menu-mobile-rail-link[aria-expanded="true"]{
+  color: var(--institutional-menu-text-hover-color);
+  opacity: var(--overlay-opacity-open);
+  transform: none !important;
+  outline: none;
 }
 
 html[data-theme-effective="light"]{
@@ -642,7 +754,7 @@ body:not(.institutional-menu-panel-open) .institutional-menu-panel-shell{
 }
 
 /* =============================================================================
-   14) PAGE SCROLL LOCK
+   15) PAGE SCROLL LOCK
 ============================================================================= */
 body.institutional-menu-panel-open{
   overflow: hidden;
@@ -650,7 +762,7 @@ body.institutional-menu-panel-open{
 }
 
 /* =============================================================================
-   15) PANEL SHELL
+   16) PANEL SHELL
 ============================================================================= */
 .institutional-menu-panel-shell{
   width: var(--size-full);
@@ -705,7 +817,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   16) PANEL TYPOGRAPHY AND LINKS
+   17) PANEL TYPOGRAPHY AND LINKS
 ============================================================================= */
 .institutional-menu-panel-label{
   margin:var(--spacing-none) var(--spacing-none) var(--institutional-menu-panel-eyebrow-margin-bottom);
@@ -813,7 +925,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   17) SEARCH FIELD
+   18) SEARCH FIELD
 ============================================================================= */
 .institutional-menu-search-field{
   display: inline-flex;
@@ -970,7 +1082,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   18) SEARCH RESULTS
+   19) SEARCH RESULTS
 ============================================================================= */
 .institutional-menu-search-links{
   width: var(--size-full);
@@ -1038,7 +1150,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   19) GLOBAL HEADER SUPPRESSION
+   20) GLOBAL HEADER SUPPRESSION
 ============================================================================= */
 #header-controls,
 #menu-button,
@@ -1048,7 +1160,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   20) CARET ANIMATION
+   21) CARET ANIMATION
 ============================================================================= */
 @keyframes institutional-menu-search-caret-blink{
   0%, 49%{
@@ -1060,7 +1172,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   21) RESPONSIVE — 1100PX
+   22) RESPONSIVE — 1100PX
 ============================================================================= */
 @media (max-width: 1100px){
   .institutional-menu-inner{
@@ -1155,7 +1267,7 @@ html[data-theme-effective="light"]{
 }
 
 /* =============================================================================
-   22) RESPONSIVE — 760PX
+   23) RESPONSIVE — 760PX
 ============================================================================= */
 @media (max-width: 760px){
   .institutional-menu{
@@ -1187,10 +1299,19 @@ html[data-theme-effective="light"]{
     padding-right: var(--spacing-none);
   }
 
-  .institutional-menu-nav,
-  .institutional-menu-utility,
-  .institutional-menu-panels{
+  .institutional-menu-nav{
     display: none;
+  }
+
+  .institutional-menu-utility{
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--nav-institutional-utility-gap);
+  }
+
+  .institutional-menu-mobile-trigger{
+    display: inline-flex;
   }
 
   .institutional-menu-brand{
@@ -1204,5 +1325,49 @@ html[data-theme-effective="light"]{
 
   .institutional-menu-brand-wordmark{
     height:var(--nav-institutional-brand-wordmark-height-mobile);
+  }
+
+  .institutional-menu-mobile-trigger{
+    font-size: var(--nav-institutional-link-size-tablet);
+  }
+
+  .institutional-menu-mobile-trigger-icon{
+    width: var(--nav-institutional-trigger-size-tablet);
+    height: var(--nav-institutional-trigger-size-tablet);
+  }
+
+  .institutional-menu-mobile-trigger-line{
+    width: var(--nav-institutional-trigger-size-tablet);
+  }
+
+  .institutional-menu-panels{
+    top: calc(env(safe-area-inset-top, 0px) + var(--nav-institutional-surface-height-mobile));
+    height: calc(var(--viewport-height, 100vh) - var(--nav-institutional-surface-height-mobile));
+  }
+
+  .institutional-menu-mobile-rail{
+    position: relative;
+    z-index: 3;
+    display: grid;
+    align-content: start;
+    gap: var(--institutional-menu-panel-copy-margin-bottom);
+    width: min(14rem, calc(var(--size-full) - (var(--site-gutter) * 2)));
+    padding: var(--institutional-menu-tablet-panel-padding-y) var(--site-gutter) var(--institutional-menu-tablet-panel-padding-bottom);
+    box-sizing: border-box;
+    pointer-events: auto;
+  }
+
+  .institutional-menu-panel{
+    left: min(14rem, calc(var(--size-full) - (var(--site-gutter) * 2)));
+    width: calc(var(--size-full) - min(14rem, calc(var(--size-full) - (var(--site-gutter) * 2))));
+  }
+
+  .institutional-menu-panel-shell{
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--institutional-menu-tablet-panel-padding-y) var(--site-gutter) var(--institutional-menu-tablet-panel-padding-bottom);
+  }
+
+  .institutional-menu-panel-column--secondary{
+    display: none;
   }
 }

@@ -4,6 +4,7 @@
     "eyebrow": "ICOS",
     "title": "Core Capabilities",
     "description": "Tools for capturing thought, reflecting through voice, and building cognitive continuity over time.",
+    "scene": "/collections/featured/icos-featured-functions/scenes/voice-reflection.scene.json",
     "layout": {
       "desktop_cards_per_view": 3,
       "tablet_cards_per_view": 2,
@@ -27,7 +28,6 @@
       "href": "/products/#reflection-loop",
       "slug": "voice-reflection",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/voice-reflection.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/reflection/reflection.svg",
       "theme": "dark",
       "visibility": "public"
@@ -42,7 +42,6 @@
       "href": "/products/#voice-training",
       "slug": "thought-capture",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/thought-capture.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/capture/capture.svg",
       "theme": "dark",
       "visibility": "public"
@@ -57,7 +56,6 @@
       "href": "/products/#profile-intelligence",
       "slug": "pattern-mapping",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/pattern-mapping.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/patterning/patterning.svg",
       "theme": "dark",
       "visibility": "public"
@@ -72,7 +70,6 @@
       "href": "/products/#discovery-selection",
       "slug": "cognitive-graph",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/cognitive-graph.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/structure/structure.svg",
       "theme": "dark",
       "visibility": "public"
@@ -87,7 +84,6 @@
       "href": "/products/#verification-permissions",
       "slug": "emotional-tracking",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/emotional-tracking.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/signals/signals.svg",
       "theme": "dark",
       "visibility": "public"
@@ -102,7 +98,6 @@
       "href": "/products/#workspace-shell",
       "slug": "longitudinal-continuity",
       "image": "",
-      "scene": "/collections/featured/icos-featured-functions/scenes/longitudinal-continuity.scene.json",
       "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/cognition/cognition.svg",
       "theme": "dark",
       "visibility": "public"

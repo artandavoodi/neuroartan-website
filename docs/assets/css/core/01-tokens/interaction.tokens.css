@@ -82,9 +82,9 @@
   /* ----------------------------------------------------------------
   GLOBAL SEARCH INPUT SYSTEM
   ---------------------------------------------------------------- */
-  --search-field-border-width:var(--border-width-hairline);
-  --search-field-border:var(--control-border-unified);
-  --search-field-border-focus:var(--control-border-hover-unified);
+  --search-field-border-width:0;
+  --search-field-border:transparent;
+  --search-field-border-focus:transparent;
   --search-field-radius:var(--control-radius-composer);
   --search-field-surface:var(--field-bg);
   --search-field-surface-clear:transparent;

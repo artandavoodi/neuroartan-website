@@ -13,16 +13,17 @@
    11) RIBBON BINDING
    12) COUNTRY SELECTOR BINDING
    13) PANEL SYSTEM BINDING
-   14) SEARCH INDEX HELPERS
-   15) SEARCH RESULTS RENDERING
-   16) ACCOUNT DRAWER TRIGGER BINDING
-   17) ACCOUNT DRAWER STATE SYNCHRONIZATION
-   18) ACCOUNT DRAWER OPEN-REQUEST ROUTING
-   19) COOKIE CONSENT OVERLAY COORDINATION
-   20) EVENT BINDING
-   21) MAIN INITIALIZATION
-   22) BOOTSTRAP
-   23) END OF FILE
+   14) MOBILE MENU TRIGGER BINDING
+   15) SEARCH INDEX HELPERS
+   16) SEARCH RESULTS RENDERING
+   17) ACCOUNT DRAWER TRIGGER BINDING
+   18) ACCOUNT DRAWER STATE SYNCHRONIZATION
+   19) ACCOUNT DRAWER OPEN-REQUEST ROUTING
+   20) COOKIE CONSENT OVERLAY COORDINATION
+   21) EVENT BINDING
+   22) MAIN INITIALIZATION
+   23) BOOTSTRAP
+   24) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -166,6 +167,10 @@
 
   function getSecondaryToggle() {
     return byId('institutional-menu-secondary-toggle');
+  }
+
+  function getMobileMenuTrigger(menu = getMenu()) {
+    return menu ? q('[data-institutional-menu-mobile-trigger]', menu) : null;
   }
 
   function getLegacyMenuButton() {
@@ -470,6 +475,7 @@
     const searchInput = getSearchInput(menu);
     const micButton = getMicButton(menu);
     const accountDrawerTrigger = getAccountDrawerTrigger(menu);
+    const mobileMenuTrigger = getMobileMenuTrigger(menu);
 
     function openAccountDrawerFromMenu(event) {
       if (event) {
@@ -755,10 +761,31 @@
       closeTimer = null;
     }
 
+    function syncMobileMenuTriggerState(open) {
+      if (!mobileMenuTrigger) return;
+      mobileMenuTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      mobileMenuTrigger.setAttribute('aria-label', open ? 'Close institutional menu' : 'Open institutional menu');
+    }
+
     function syncPanelHeight() {
       const activePanel = panels.find((panel) => panel.classList.contains('is-active'));
       const height = activePanel ? activePanel.offsetHeight : 0;
       menu.style.setProperty('--institutional-menu-panel-height', `${height}px`);
+    }
+
+    function focusSearchInput() {
+      if (!searchInput) return;
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          searchInput.focus({ preventScroll: true });
+
+          const valueLength = searchInput.value.length;
+          if (typeof searchInput.setSelectionRange === 'function') {
+            searchInput.setSelectionRange(valueLength, valueLength);
+          }
+        });
+      });
     }
 
     function syncMicState() {
@@ -780,6 +807,7 @@
 
     function closePanels() {
       activePanelKey = null;
+      syncMobileMenuTriggerState(false);
       body.classList.remove('institutional-menu-panel-open');
       menu.removeAttribute('data-active-menu-panel');
       container.setAttribute('aria-hidden', 'true');
@@ -803,6 +831,7 @@
       if (!nextPanel) return;
 
       activePanelKey = panelKey;
+      syncMobileMenuTriggerState(true);
       body.classList.add('institutional-menu-panel-open');
       menu.setAttribute('data-active-menu-panel', panelKey);
       container.setAttribute('aria-hidden', 'false');
@@ -819,11 +848,28 @@
       window.requestAnimationFrame(() => {
         syncPanelHeight();
         if (panelKey === 'search' && searchInput) {
-          searchInput.focus();
+          focusSearchInput();
           renderSearchResults(searchInput.value || '');
         } else if (panelKey !== 'search') {
           restoreQuickLinks();
         }
+      });
+    }
+    if (mobileMenuTrigger && mobileMenuTrigger.dataset.mobileMenuTriggerBound !== 'true') {
+      mobileMenuTrigger.dataset.mobileMenuTriggerBound = 'true';
+      syncMobileMenuTriggerState(false);
+
+      mobileMenuTrigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        clearCloseTimer();
+
+        if (body.classList.contains('institutional-menu-panel-open')) {
+          closePanels();
+          return;
+        }
+
+        openPanel('icos');
       });
     }
 
@@ -873,7 +919,7 @@
             syncMicState();
 
             if (activePanelKey === 'search' && searchInput) {
-              window.requestAnimationFrame(() => searchInput.focus());
+              focusSearchInput();
             }
           },
           onError: () => {
@@ -1075,7 +1121,7 @@
   }
 
   /* =============================================================================
-     20) EVENT BINDING
+     21) EVENT BINDING
   ============================================================================= */
   function bindInstitutionalMenuEvents() {
     if (document.documentElement.dataset.institutionalMenuEventsBound === 'true') return;
@@ -1110,7 +1156,7 @@
   }
 
   /* =============================================================================
-     21) MAIN INITIALIZATION
+     22) MAIN INITIALIZATION
   ============================================================================= */
   function initInstitutionalMenu() {
     if (!hasInstitutionalMenuDom()) return;
@@ -1125,7 +1171,7 @@
   }
 
   /* =============================================================================
-     22) BOOTSTRAP
+     23) BOOTSTRAP
   ============================================================================= */
   function boot() {
     bindInstitutionalMenuEvents();
@@ -1140,5 +1186,5 @@
 })();
 
 /* =============================================================================
-   23) END OF FILE
+   24) END OF FILE
 ============================================================================= */

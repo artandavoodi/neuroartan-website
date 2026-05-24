@@ -1,9 +1,10 @@
 /* =============================================================================
    ABOUT FEATURED FUNCTIONS SHADER
-   Shared shader scene engine for About Core Capabilities media frames.
+   Shared shader scene engine for About Core Capabilities frame.
    - Uses shared NeuroShaderCore if available.
-   - Mounts one shader scene per capability card.
-   - Reads per-capability scene JSON from data already hydrated into the card DOM.
+   - Mounts one unified shader scene on the stable section frame.
+   - Reads section-level scene JSON from hydrated section data.
+   - The slide track changes content only; the frame scene remains stable.
 ============================================================================= */
 
 (() => {
@@ -109,19 +110,9 @@
   }
 
   function getInlineSceneConfig(sceneNode) {
-    const card = sceneNode.closest('[data-feature-id]');
-
-    if (!card) {
-      return null;
-    }
-
-    const featureId = String(card.getAttribute('data-feature-id') || '').trim();
     const section = sceneNode.closest(SECTION_SELECTOR);
     const data = section && section.__featuredFunctionsData;
-    const items = Array.isArray(data?.items) ? data.items : [];
-    const matched = items.find((item) => String(item?.id || '').trim() === featureId);
-
-    return matched?.scene || null;
+    return data?.scene || null;
   }
 
   function createFragmentSource() {
@@ -1100,13 +1091,8 @@
     section.__featuredFunctionActiveIndex = null;
   }
 
-  function getActiveSceneMount(section, preferredIndex = 0) {
-    const cards = Array.from(section?.querySelectorAll('[data-about-featured-functions-card]') || []);
-    if (!cards.length) return null;
-
-    const normalizedIndex = Math.min(Math.max(Number(preferredIndex) || 0, 0), cards.length - 1);
-    const activeCard = cards[normalizedIndex] || cards[0];
-    return activeCard ? activeCard.querySelector(SCENE_SELECTOR) : null;
+  function getFrameSceneMount(section) {
+    return section?.querySelector(SCENE_SELECTOR) || null;
   }
 
   function getSection() {
@@ -1121,33 +1107,96 @@
     section.setAttribute(LIFECYCLE_BOUND_ATTRIBUTE, 'true');
   }
 
-  function initFeaturedFunctionShaders(section = document.querySelector(SECTION_SELECTOR), preferredIndex = 0) {
+  function hasMeasurableSceneMount(section) {
+    const mount = getFrameSceneMount(section);
+
+    if (!mount) {
+      return false;
+    }
+
+    const rect = mount.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
+  function canInitializeShaders(section) {
+    return Boolean(
+      section &&
+      section.__featuredFunctionsData &&
+      section.__featuredFunctionsData.scene &&
+      section.querySelector(SCENE_SELECTOR) &&
+      hasMeasurableSceneMount(section)
+    );
+  }
+
+  function initializeWhenReady(section) {
+    if (!canInitializeShaders(section)) {
+      return false;
+    }
+
+    initFeaturedFunctionShaders(section);
+    return true;
+  }
+
+  function bindFirstRenderObserver(section) {
+    if (!section || section.__featuredFunctionFirstRenderObserver) {
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      if (initializeWhenReady(section)) {
+        observer.disconnect();
+        section.__featuredFunctionFirstRenderObserver = null;
+
+        if (section.__featuredFunctionFirstRenderResizeObserver) {
+          section.__featuredFunctionFirstRenderResizeObserver.disconnect();
+          section.__featuredFunctionFirstRenderResizeObserver = null;
+        }
+      }
+    });
+
+    observer.observe(section, {
+      childList: true,
+      subtree: true
+    });
+
+    section.__featuredFunctionFirstRenderObserver = observer;
+
+    if (typeof ResizeObserver === 'function') {
+      const resizeObserver = new ResizeObserver(() => {
+        if (initializeWhenReady(section)) {
+          resizeObserver.disconnect();
+          section.__featuredFunctionFirstRenderResizeObserver = null;
+        }
+      });
+
+      resizeObserver.observe(section);
+      section.__featuredFunctionFirstRenderResizeObserver = resizeObserver;
+    }
+  }
+
+  function initFeaturedFunctionShaders(section = document.querySelector(SECTION_SELECTOR)) {
     if (!section) {
       return;
     }
 
-    const normalizedIndex = Math.max(0, Number(preferredIndex) || 0);
-    if (section.__featuredFunctionActiveIndex === normalizedIndex && Array.isArray(section.__featuredFunctionScenes) && section.__featuredFunctionScenes.length) {
+    if (Array.isArray(section.__featuredFunctionScenes) && section.__featuredFunctionScenes.length) {
       return;
     }
 
     destroyFeaturedFunctionShaders(section);
 
-    const mount = getActiveSceneMount(section, normalizedIndex);
+    const mount = getFrameSceneMount(section);
+    const config = mount ? getInlineSceneConfig(mount) : null;
     const scenes = [];
 
-    if (mount) {
-      const config = getInlineSceneConfig(mount);
-
-      if (config) {
-        const scene = new FeaturedFunctionShaderScene(mount, config);
-        scene.mount();
-        scenes.push(scene);
-      }
+    if (mount && config) {
+      const scene = new FeaturedFunctionShaderScene(mount, config);
+      scene.mount();
+      scenes.push(scene);
     }
 
     section.__featuredFunctionScenes = scenes;
-    section.__featuredFunctionActiveIndex = normalizedIndex;
+    section.__featuredFunctionActiveIndex = 0;
   }
 
   function bindFeaturedFunctionShaderLifecycle() {
@@ -1158,17 +1207,19 @@
     }
 
     section.addEventListener('about-featured-functions:rendered', () => {
-      initFeaturedFunctionShaders(section, 0);
+      window.requestAnimationFrame(() => {
+        initializeWhenReady(section);
+      });
     });
 
-    section.addEventListener('about-featured-functions:slide-change', (event) => {
-      const nextIndex = Number(event?.detail?.currentIndex || 0);
-      initFeaturedFunctionShaders(section, nextIndex);
+    section.addEventListener('about-featured-functions:slide-change', () => {
+      initializeWhenReady(section);
     });
 
-    if (section.__featuredFunctionsData) {
-      initFeaturedFunctionShaders(section, 0);
-    }
+    bindFirstRenderObserver(section);
+    window.requestAnimationFrame(() => {
+      initializeWhenReady(section);
+    });
 
     markLifecycleBound(section);
   }

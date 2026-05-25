@@ -8,11 +8,12 @@ import { subscribeHomeSurfaceState } from '../core/home-surface-state.js';
 05) ASSET HELPERS
 06) CONTENT HELPERS
 07) RAIL MODE HELPERS
-08) SHELL STATE HELPERS
-09) OPEN / CLOSE HELPERS
-10) EVENT BINDING
-11) BOOT
-12) END OF FILE
+08) MOBILE STACK HELPERS
+09) SHELL STATE HELPERS
+10) OPEN / CLOSE HELPERS
+11) EVENT BINDING
+12) BOOT
+13) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -30,6 +31,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   moduleCache: new Map(),
   renderToken: 0,
   shellSession: 0,
+  mobileStackLevel: 'root',
   mountedDestination: '',
   mountedSubdestination: '',
   mountedRoot: null,
@@ -55,6 +57,7 @@ const HOME_PLATFORM_DESTINATIONS = new Set([
 const HOME_PLATFORM_CONFIG_URL = '/assets/data/platform/home-platform-shell.json';
 const HOME_PLATFORM_RAIL_STORAGE_KEY = 'neuroartan.home.platformShell.railMode';
 const HOME_PLATFORM_HASH_PREFIX = '#home-platform-';
+const HOME_PLATFORM_MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
 
 /* =============================================================================
 03) DOM HELPERS
@@ -111,6 +114,10 @@ function getHomePlatformShellRailToggleIconHost() {
   return document.querySelector('#home-platform-shell .home-platform-shell__rail-toggle-icon[data-inline-stroke-icon]');
 }
 
+function getHomePlatformShellBackTrigger() {
+  return document.querySelector('#home-platform-shell [data-home-platform-shell-back]');
+}
+
 function getHomePlatformShellNavItems() {
   return Array.from(document.querySelectorAll('#home-platform-shell .home-platform-shell__nav-item[data-home-platform-destination]'));
 }
@@ -123,6 +130,72 @@ function getRenderedHomePlatformDestination() {
   const root = getHomePlatformShellRoot();
   const destination = normalizeString(root?.getAttribute('data-home-platform-destination') || '');
   return HOME_PLATFORM_DESTINATIONS.has(destination) ? destination : '';
+}
+
+function isHomePlatformMobileView() {
+  return HOME_PLATFORM_MOBILE_QUERY.matches;
+}
+/* =============================================================================
+08) MOBILE STACK HELPERS
+============================================================================= */
+function normalizeHomePlatformMobileStackLevel(level) {
+  if (level === 'subnav' || level === 'content') {
+    return level;
+  }
+
+  return 'root';
+}
+
+function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobileStackLevel) {
+  const root = getHomePlatformShellRoot();
+  const normalized = normalizeHomePlatformMobileStackLevel(level);
+  HOME_PLATFORM_SHELL_STATE.mobileStackLevel = normalized;
+
+  if (root) {
+    root.setAttribute('data-home-platform-mobile-level', normalized);
+  }
+
+  const backTrigger = getHomePlatformShellBackTrigger();
+  if (backTrigger) {
+    const canGoBack = normalized !== 'root';
+    backTrigger.hidden = !canGoBack;
+    backTrigger.setAttribute('aria-hidden', canGoBack ? 'false' : 'true');
+    backTrigger.setAttribute('aria-label', normalized === 'content' ? 'Back to section navigation' : 'Back to main navigation');
+  }
+}
+
+function setHomePlatformMobileStackLevel(level) {
+  syncHomePlatformMobileStackLevel(level);
+}
+
+function resetHomePlatformMobileStackLevel() {
+  syncHomePlatformMobileStackLevel('root');
+}
+
+function advanceHomePlatformMobileStackLevel(level) {
+  if (!isHomePlatformMobileView()) {
+    return;
+  }
+
+  setHomePlatformMobileStackLevel(level);
+}
+
+function navigateHomePlatformMobileBack() {
+  if (!isHomePlatformMobileView()) {
+    return false;
+  }
+
+  if (HOME_PLATFORM_SHELL_STATE.mobileStackLevel === 'content') {
+    setHomePlatformMobileStackLevel('subnav');
+    return true;
+  }
+
+  if (HOME_PLATFORM_SHELL_STATE.mobileStackLevel === 'subnav') {
+    setHomePlatformMobileStackLevel('root');
+    return true;
+  }
+
+  return false;
 }
 
 function buildHomePlatformSubdestinationHash(destination, subdestination) {
@@ -945,7 +1018,7 @@ function toggleHomePlatformRailMode() {
 }
 
 /* =============================================================================
-08) SHELL STATE HELPERS
+09) SHELL STATE HELPERS
 ============================================================================= */
 async function setHomePlatformDestination(destination, subdestination = '') {
   if (!HOME_PLATFORM_DESTINATIONS.has(destination)) {
@@ -1021,7 +1094,7 @@ async function routeHomePlatformHash(hashValue = window.location.hash) {
 }
 
 /* =============================================================================
-09) OPEN / CLOSE HELPERS
+10) OPEN / CLOSE HELPERS
 ============================================================================= */
 function closeConflictingHomeChrome() {
   getHomePlatformShellChromeRoots().forEach(hideRoot);
@@ -1039,8 +1112,9 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   root.setAttribute('aria-hidden', 'false');
   document.body.classList.add('home-platform-shell-open');
 
-  if (window.matchMedia?.('(max-width: 760px)').matches) {
+  if (isHomePlatformMobileView()) {
     HOME_PLATFORM_SHELL_STATE.railMode = 'expanded';
+    resetHomePlatformMobileStackLevel();
   }
 
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
@@ -1070,6 +1144,7 @@ function closeHomePlatformShell() {
   document.documentElement.classList.remove('home-platform-shell-open');
   root.removeAttribute('data-home-platform-destination');
   root.removeAttribute('data-home-platform-subdestination');
+  resetHomePlatformMobileStackLevel();
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   document.dispatchEvent(new CustomEvent('neuroartan:home-topbar-reset-triggers'));
   document.dispatchEvent(new CustomEvent('home:platform-shell-closed'));
@@ -1093,7 +1168,7 @@ function toggleHomePlatformShell(destination = 'home') {
 }
 
 /* =============================================================================
-10) EVENT BINDING
+11) EVENT BINDING
 ============================================================================= */
 function activateHomePlatformNavTrigger(target) {
   const eventTarget = getEventElementTarget(target);
@@ -1110,7 +1185,9 @@ function activateHomePlatformNavTrigger(target) {
     return true;
   }
 
-  void setHomePlatformDestination(destination);
+  void setHomePlatformDestination(destination).then(() => {
+    advanceHomePlatformMobileStackLevel('subnav');
+  });
   return true;
 }
 
@@ -1162,7 +1239,9 @@ function activateHomePlatformSubnavTrigger(target, event = null) {
     return true;
   }
 
-  void routeHomePlatformSubdestination(destination, subdestination);
+  void routeHomePlatformSubdestination(destination, subdestination).then(() => {
+    advanceHomePlatformMobileStackLevel('content');
+  });
   return true;
 }
 
@@ -1226,6 +1305,14 @@ function bindHomePlatformShellEvents() {
     if (closeTrigger) {
       event.preventDefault();
       closeHomePlatformShell();
+      return;
+    }
+
+    const backTrigger = eventTarget.closest('[data-home-platform-shell-back]');
+    if (backTrigger) {
+      event.preventDefault();
+      event.stopPropagation();
+      navigateHomePlatformMobileBack();
       return;
     }
 
@@ -1336,6 +1423,15 @@ function bindHomePlatformShellStaticControls() {
     });
   }
 
+  const backTrigger = root.querySelector('[data-home-platform-shell-back]');
+  if (backTrigger instanceof HTMLElement && backTrigger.dataset.homePlatformDirectBound !== 'true') {
+    backTrigger.dataset.homePlatformDirectBound = 'true';
+    backTrigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      navigateHomePlatformMobileBack();
+    });
+  }
 
   getHomePlatformShellNavItems().forEach((trigger) => {
     if (!(trigger instanceof HTMLElement)) return;
@@ -1352,7 +1448,7 @@ function bindHomePlatformShellStaticControls() {
 }
 
 /* =============================================================================
-11) BOOT
+12) BOOT
 ============================================================================= */
 function bootHomePlatformShell() {
   if (!getHomePlatformShellRoot()) return;
@@ -1360,6 +1456,7 @@ function bootHomePlatformShell() {
   bindHomePlatformShellStaticControls();
   HOME_PLATFORM_SHELL_STATE.railMode = loadHomePlatformRailMode();
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
+  syncHomePlatformMobileStackLevel(HOME_PLATFORM_SHELL_STATE.mobileStackLevel);
   syncHomePlatformCommunicationIndicators(HOME_PLATFORM_SHELL_STATE.snapshot);
   window.dispatchEvent(new CustomEvent('fragment:mounted', {
     detail: {
@@ -1397,5 +1494,5 @@ if (document.readyState === 'loading') {
 }
 
 /* =============================================================================
-12) END OF FILE
+13) END OF FILE
 ============================================================================= */

@@ -114,7 +114,6 @@ html[data-theme-effective="light"]{
 ============================================================================= */
 .products-local-nav__inner {
   width: var(--site-rail-width);
-  max-width: calc(100% - (var(--site-gutter) * 2));
   margin: 0 auto;
   padding: 0;
   display: flex;
@@ -261,6 +260,7 @@ html[data-theme-effective="light"]{
   }
 
   .products-local-nav__inner {
+    width:var(--site-rail-width-mobile);
     display:flex;
     align-items:center;
     justify-content:flex-start;

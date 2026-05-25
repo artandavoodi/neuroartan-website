@@ -13,7 +13,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs1" />
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0.5,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0.5,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
   <sodipodi:namedview
      id="namedview1"
      pagecolor="#505050"
@@ -24,21 +59,41 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="14.38603"
-     inkscape:cx="12.442627"
+     inkscape:cx="12.512139"
      inkscape:cy="15.188346"
      inkscape:window-width="1472"
-     inkscape:window-height="868"
+     inkscape:window-height="840"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1"
      showgrid="false" />
   <path
-     style="fill:none;stroke:#ff5555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-     d="M 3.5511811,3.5511824 20.448819,20.448818"
-     id="path1" />
+     style="fill:none;stroke:#000000;stroke-width:0.993877;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m -6.8981333,3.6563746 c -2.4374473,0 -4.4133887,-1.9759417 -4.4133887,-4.41338923 0,-1.90787497 1.277227,-3.72855787 3.2955217,-4.26685597 0,-2.0512737 1.6549736,-5.1396664 5.0478437,-5.4176614 0.2751173,-0.02254 0.7237896,-0.02254 0.9987488,0.002 2.82969519,0.252455 5.0479033,2.6297208 5.0479033,5.5250774 0,0.1981698 -0.012337,0.8437499 -0.1649286,1.2606629 1.1882959,-0.050061 3.2548694,0.9976805 3.5347912,3.15417622 0.035514,0.27360132 0.035285,0.72362413 -0.00197,0.99702836 C 6.2032484,2.2815611 4.6734738,3.6564039 2.8225876,3.6564039 Z"
+     id="path2-8"
+     sodipodi:nodetypes="cscsscscc"
+     inkscape:path-effect="#path-effect4"
+     inkscape:original-d="m -6.8981333,3.6563746 c -2.4374473,0 -4.4133887,-1.9759417 -4.4133887,-4.41338923 0,-1.90787497 1.277227,-3.72855787 3.2955217,-4.26685597 0,-2.1495064 1.8172779,-5.4378424 5.5472494,-5.4378424 3.06365964,0 5.5472464,2.4835873 5.5472464,5.5472474 0,0.1981698 -0.012337,0.8437499 -0.1649286,1.2606629 1.2765006,-0.053777 3.5665031,1.1592724 3.5665031,3.65272375 0,2.01997205 -1.6375107,3.65748285 -3.6574824,3.65748285 z"
+     transform="matrix(1.0061153,0,0,1.0062,14.431855,15.422549)" />
   <path
-     style="fill:none;stroke:#ff5555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-     d="M 3.5511833,20.448818 20.448817,3.5511824"
-     id="path1-9" />
+     d="m 7.5659186,5.5000001 -3.792893,3.7928931 a 1,1 90 0 0 0,1.4142138 L 7.5659186,14.5"
+     stroke="currentColor"
+     stroke-width="1.25"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path1"
+     style="stroke-width:1.81282;stroke-dasharray:none"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 7.5659186,5.5000001 3.0659188,10 7.5659186,14.5"
+     sodipodi:nodetypes="ccc"
+     transform="matrix(0,-0.55971506,-0.54366373,0,17.436637,18.051643)" />
+  <path
+     d="M 12.000001,16.1079 V 9.339069"
+     stroke="currentColor"
+     stroke-width="1.25"
+     stroke-linecap="round"
+     id="path2"
+     style="stroke-width:1.00001;stroke-dasharray:none"
+     sodipodi:nodetypes="cc" />
 </svg>

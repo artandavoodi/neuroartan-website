@@ -41,9 +41,153 @@ function setText(root, selector, value) {
   node.textContent = value;
 }
 
+function buildLocalizedMonthLabel(monthIndex) {
+  try {
+    return new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+      month: 'long',
+      timeZone: 'UTC'
+    }).format(new Date(Date.UTC(2000, monthIndex, 1)));
+  } catch (_) {
+    return String(monthIndex + 1).padStart(2, '0');
+  }
+}
+
+function buildOption(value, label) {
+  const option = document.createElement('option');
+  option.value = String(value);
+  option.textContent = label;
+  return option;
+}
+
+function getDateControl(root, control) {
+  return root.querySelector(`[data-profile-settings-date-control="${control}"]`);
+}
+
+function getSelectedOptionLabel(select, fallback = '') {
+  if (!(select instanceof HTMLSelectElement)) return fallback;
+  const option = select.selectedOptions?.[0];
+  return normalizeString(option?.textContent || fallback);
+}
+
+function setSelectLabel(root, name, fallback = '') {
+  const select = root.querySelector(`[name="${name}"]`);
+  const label = root.querySelector(`[data-profile-settings-select-label="${name}"]`);
+  if (!(label instanceof HTMLElement)) return;
+  label.textContent = getSelectedOptionLabel(select, fallback) || fallback;
+}
+
+function syncProfileSettingsDateLabels(root) {
+  ['month', 'day', 'year'].forEach((control) => {
+    const select = getDateControl(root, control);
+    const label = root.querySelector(`[data-profile-settings-date-label="${control}"]`);
+    if (!(label instanceof HTMLElement)) return;
+    label.textContent = getSelectedOptionLabel(select, control.replace(/^./, (char) => char.toUpperCase()));
+  });
+}
+
+function populateProfileSettingsDateOptions(root) {
+  const monthSelect = getDateControl(root, 'month');
+  const yearSelect = getDateControl(root, 'year');
+
+  if (monthSelect instanceof HTMLSelectElement && monthSelect.options.length <= 1) {
+    for (let monthIndex = 0; monthIndex < 12; monthIndex += 1) {
+      monthSelect.appendChild(buildOption(monthIndex + 1, buildLocalizedMonthLabel(monthIndex)));
+    }
+  }
+
+  if (yearSelect instanceof HTMLSelectElement && yearSelect.options.length <= 1) {
+    const currentYear = new Date().getUTCFullYear();
+    for (let year = currentYear; year >= currentYear - 110; year -= 1) {
+      yearSelect.appendChild(buildOption(year, String(year)));
+    }
+  }
+}
+
+function syncProfileSettingsDayOptions(root) {
+  const daySelect = getDateControl(root, 'day');
+  const monthSelect = getDateControl(root, 'month');
+  const yearSelect = getDateControl(root, 'year');
+  if (!(daySelect instanceof HTMLSelectElement)) return;
+
+  const selectedDay = Number.parseInt(daySelect.value, 10) || 0;
+  const selectedMonth = Number.parseInt(monthSelect?.value || '', 10) || 0;
+  const selectedYear = Number.parseInt(yearSelect?.value || '', 10) || 2000;
+  const maxDay = selectedMonth
+    ? new Date(Date.UTC(selectedYear, selectedMonth, 0)).getUTCDate()
+    : 31;
+
+  while (daySelect.options.length > 1) {
+    daySelect.remove(1);
+  }
+
+  for (let day = 1; day <= maxDay; day += 1) {
+    daySelect.appendChild(buildOption(day, String(day).padStart(2, '0')));
+  }
+
+  if (selectedDay) {
+    daySelect.value = String(Math.min(selectedDay, maxDay));
+  }
+
+  syncProfileSettingsDateLabels(root);
+}
+
+function syncProfileSettingsDateValue(root) {
+  const hiddenInput = root.querySelector('[data-profile-settings-date-of-birth]');
+  const month = Number.parseInt(getDateControl(root, 'month')?.value || '', 10) || 0;
+  const year = Number.parseInt(getDateControl(root, 'year')?.value || '', 10) || 0;
+
+  if (!(hiddenInput instanceof HTMLInputElement)) return;
+
+  syncProfileSettingsDayOptions(root);
+  const day = Number.parseInt(getDateControl(root, 'day')?.value || '', 10) || 0;
+
+  hiddenInput.value = month && day && year
+    ? `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    : '';
+  syncProfileSettingsDateLabels(root);
+}
+
+function syncProfileSettingsDateControls(root, value = '') {
+  const hiddenInput = root.querySelector('[data-profile-settings-date-of-birth]');
+  const monthSelect = getDateControl(root, 'month');
+  const daySelect = getDateControl(root, 'day');
+  const yearSelect = getDateControl(root, 'year');
+
+  populateProfileSettingsDateOptions(root);
+
+  if (hiddenInput instanceof HTMLInputElement) {
+    hiddenInput.value = value || '';
+  }
+
+  if (!(monthSelect instanceof HTMLSelectElement) || !(daySelect instanceof HTMLSelectElement) || !(yearSelect instanceof HTMLSelectElement)) {
+    return;
+  }
+
+  const match = String(value || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    monthSelect.value = '';
+    yearSelect.value = '';
+    syncProfileSettingsDayOptions(root);
+    daySelect.value = '';
+    syncProfileSettingsDateLabels(root);
+    return;
+  }
+
+  yearSelect.value = String(Number.parseInt(match[1], 10));
+  monthSelect.value = String(Number.parseInt(match[2], 10));
+  syncProfileSettingsDayOptions(root);
+  daySelect.value = String(Number.parseInt(match[3], 10));
+  syncProfileSettingsDateLabels(root);
+}
+
 function setValue(root, name, value) {
   const field = root.querySelector(`[name="${name}"]`);
   if (!field) return;
+
+  if (name === 'date_of_birth') {
+    syncProfileSettingsDateControls(root, value || '');
+    return;
+  }
 
   if (field instanceof HTMLInputElement && field.type === 'hidden' && field.matches('[data-profile-settings-toggle-input]')) {
     setProfileSettingsToggleValue(root, name, value === true);
@@ -56,6 +200,10 @@ function setValue(root, name, value) {
   }
 
   field.value = value || '';
+
+  if (field instanceof HTMLSelectElement) {
+    setSelectLabel(root, name, field.options?.[0]?.textContent || '');
+  }
 }
 
 function getProfileSettingsToggle(root, name) {
@@ -189,6 +337,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     const usernameLocked = Boolean(state.username.normalized);
 
     renderPaneState(root, navigationState);
+    populateProfileSettingsDateOptions(root);
 
     setValue(root, 'first_name', state.firstName);
     setValue(root, 'last_name', state.lastName);
@@ -241,6 +390,8 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
     renderStatus(root, 'visibility', saveState);
+    setSelectLabel(root, 'gender', 'Optional');
+    syncProfileSettingsDateLabels(root);
 
     void renderVerificationState(root, state);
   });
@@ -403,6 +554,19 @@ function initProfileSettings() {
     const toggle = event?.detail?.element;
     if (!(toggle instanceof HTMLElement) || !toggle.matches('[data-profile-settings-toggle]')) return;
     syncProfileSettingsToggleInput(toggle);
+  });
+
+  document.addEventListener('change', (event) => {
+    const control = event.target;
+    if (!(control instanceof HTMLSelectElement)) return;
+    const root = control.closest('[data-profile-settings-panel]');
+    if (!(root instanceof HTMLElement)) return;
+    if (control.matches('[data-profile-settings-date-control]')) {
+      syncProfileSettingsDateValue(root);
+    }
+    if (control.name) {
+      setSelectLabel(root, control.name, control.options?.[0]?.textContent || '');
+    }
   });
 
   document.addEventListener('fragment:mounted', (event) => {

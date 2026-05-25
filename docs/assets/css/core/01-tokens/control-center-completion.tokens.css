@@ -340,6 +340,8 @@
   --cc-home-platform-mobile-content-header-padding-top:var(--layout-home-platform-mobile-content-header-padding-top);
   --cc-home-platform-mobile-content-inner-footer-gap:var(--layout-home-platform-mobile-content-inner-footer-gap);
   --cc-home-platform-mobile-content-inner-padding-top:var(--layout-home-platform-mobile-content-inner-padding-top);
+  --cc-home-platform-mobile-column-padding-x:var(--layout-home-platform-mobile-column-padding-x);
+  --cc-home-platform-mobile-column-padding-y:var(--layout-home-platform-mobile-column-padding-y);
   --cc-home-platform-mobile-inline-padding-fallback:var(--layout-home-platform-mobile-inline-padding-fallback);
   --cc-home-platform-mobile-nav-gap:var(--layout-home-platform-mobile-nav-gap);
   --cc-home-platform-mobile-nav-icon-size:var(--layout-home-platform-mobile-nav-icon-size);
@@ -1404,7 +1406,7 @@
   --primary:var(--color-primary1);
   --surface-primary-color:var(--surface-color);
   --cc-width-sm:2px;
-  --cc-shell-panel-inline-padding:max(var(--site-gutter), 1rem);
+  --cc-shell-panel-inline-padding:var(--site-shell-inline-padding);
 
   --cc-developer-mode-shell-viewport-height:calc(100vh - var(--cc-dashboard-topbar-height, var(--control-height-xl)));
   --cc-developer-mode-shell-padding-x:var(--spacing-md);

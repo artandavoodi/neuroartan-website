@@ -30,6 +30,7 @@
   --global-close-button-hover-color:var(--close-control-color-hover);
   --global-close-button-duration:var(--interaction-motion-medium);
   --global-close-button-ease:var(--interaction-ease-standard);
+  --global-close-button-optical-end-offset:calc((var(--global-close-button-line-width) - var(--global-close-button-size)) / 2);
 }
 
 /* =============================================================================

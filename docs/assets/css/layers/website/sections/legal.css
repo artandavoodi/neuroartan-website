@@ -1,6 +1,6 @@
 :root {
-  --legal-page-max-width: var(--site-rail-width, min(calc(100% - (var(--site-gutter, 24px) * 2)), var(--site-max-width, 1320px)));
-  --legal-page-max-width-mobile: min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--site-max-width, 1320px));
+  --legal-page-max-width: var(--site-rail-width);
+  --legal-page-max-width-mobile: var(--site-rail-width-mobile);
   --legal-page-narrow-width: var(--layout-legal-page-narrow-width);
   --legal-page-border: var(--border-color, var(--layout-legal-page-border-fallback));
   --legal-page-surface: var(--layout-legal-page-surface);

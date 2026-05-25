@@ -20,7 +20,7 @@
   --profile-workspace-right-toolbar-compact-width:var(--layout-home-platform-rail-compact-width);
   --profile-workspace-sidebar-edge-padding:var(--spacing-md);
   --profile-workspace-right-toolbar-edge-padding:var(--spacing-md);
-  --profile-workspace-content-inset:var(--spacing-lg);
+  --profile-workspace-content-inset:var(--site-shell-inline-padding-mobile);
   display:grid;
   grid-template-columns:
     var(--profile-workspace-sidebar-expanded-width)
@@ -88,7 +88,7 @@
 
 .profile-workspace__content-mount{
   min-width:var(--spacing-none);
-  padding-inline:var(--spacing-none);
+  padding-inline:var(--profile-workspace-content-inset);
   padding-block:var(--spacing-xl);
 }
 
@@ -131,10 +131,10 @@
 @media (max-width:820px){
   .profile-workspace__layout{
     --profile-workspace-sidebar-edge-padding:var(--spacing-sm);
-    --profile-workspace-content-inset:var(--spacing-sm);
+    --profile-workspace-content-inset:var(--site-shell-inline-padding-mobile);
     --profile-workspace-right-toolbar-edge-padding:var(--spacing-sm);
     --profile-workspace-mobile-rail-overlay-width:var(--home-platform-shell-rail-toggle-size);
-    --profile-workspace-mobile-rail-overlay-left:var(--site-gutter);
+    --profile-workspace-mobile-rail-overlay-left:var(--site-shell-inline-padding-mobile);
     gap:var(--spacing-none);
   }
 
@@ -162,7 +162,7 @@
   }
 
   .profile-workspace__content-mount{
-    padding-inline:var(--spacing-none);
+    padding-inline:var(--profile-workspace-content-inset);
   }
 
   .profile-workspace__layout[data-profile-sidebar-rail="collapsed"] .profile-workspace__sidebar-mount{
@@ -183,8 +183,8 @@
   .profile-workspace__layout[data-profile-sidebar-rail="collapsed"] .profile-workspace__content-mount{
     grid-column:1;
     grid-row:1;
-    padding-inline-start:var(--spacing-none);
-    padding-inline-end:var(--spacing-none);
+    padding-inline-start:var(--profile-workspace-content-inset);
+    padding-inline-end:var(--profile-workspace-content-inset);
   }
 
   .profile-workspace__layout[data-profile-sidebar-rail="collapsed"] .profile-sidebar__surface{

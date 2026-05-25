@@ -29,7 +29,7 @@
   --country-accent: var(--color-primary1);
   --country-close-button-color:var(--global-close-button-color);
   --country-close-button-hover-color:var(--global-close-button-hover-color);
-  --country-container-max: var(--site-rail-width, min(calc(100% - (var(--site-gutter, 24px) * 2)), var(--site-max-width, 1320px)));
+  --country-container-max: var(--site-rail-width);
   --country-container-pad:var(--layout-country-container-pad);
   --country-motion-fast:var(--interaction-motion-fast);
   --country-motion-medium:var(--interaction-motion-medium);
@@ -428,6 +428,7 @@ body.country-active .stage-circle{
   position: relative;
   top: var(--spacing-none);
   right: var(--spacing-none);
+  margin-inline-end:var(--global-close-button-optical-end-offset);
   z-index:var(--z-overlay-modal);
 }
 

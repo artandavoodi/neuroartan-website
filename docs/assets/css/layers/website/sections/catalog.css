@@ -124,7 +124,7 @@ body.models-page{
 }
 
 .catalog-page-rail{
-  width:min(var(--site-rail-width), calc(100% - (var(--site-gutter) * 2)));
+  width:var(--site-rail-width);
   margin:0 auto;
   padding:var(--catalog-rail-padding-top) 0 var(--catalog-rail-padding-bottom);
   box-sizing:border-box;
@@ -641,6 +641,7 @@ body.models-page{
 
 @media (max-width: 760px){
   .catalog-page-rail{
+    width:var(--site-rail-width-mobile);
     padding-top:var(--catalog-rail-padding-top-mobile);
     padding-bottom:var(--catalog-rail-padding-bottom-mobile);
   }

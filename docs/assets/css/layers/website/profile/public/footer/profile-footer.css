@@ -11,7 +11,6 @@
 
 .profile-footer[data-profile-surface="public"] .profile-footer__rail{
   width:var(--site-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
   margin-inline:auto;
 }
 
@@ -57,6 +56,10 @@
 }
 
 @media (max-width:720px){
+  .profile-footer[data-profile-surface="public"] .profile-footer__rail{
+    width:var(--site-rail-width-mobile);
+  }
+
   .profile-footer[data-profile-surface="public"] .profile-footer__surface,
   .profile-footer[data-profile-surface="public"] .profile-footer__meta{
     align-items:flex-start;

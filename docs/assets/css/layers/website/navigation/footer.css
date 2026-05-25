@@ -52,7 +52,7 @@
    03) FOOTER INNER LAYOUT
 ============================================================================= */
 .footer-flex{
-  width:min(var(--site-rail-width), calc(var(--size-full) - (var(--site-gutter) * 2)));
+  width:var(--footer-rail-width);
   margin:var(--spacing-none) auto;
   padding:var(--spacing-none);
   display:flex;
@@ -163,6 +163,7 @@
   }
 
   .footer-flex{
+    width:var(--footer-rail-width-mobile);
     gap:var(--space-3);
     flex-direction:column;
     align-items:center;

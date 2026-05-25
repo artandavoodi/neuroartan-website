@@ -13,7 +13,6 @@
 
 .profile-shell[data-profile-surface="public"] .profile-shell__rail{
   width:var(--site-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
   margin-inline:auto;
 }
 
@@ -40,6 +39,10 @@
 @media (max-width:820px){
   .profile-shell[data-profile-surface="public"]{
     padding-top:var(--profile-shell-top-clearance-mobile);
+  }
+
+  .profile-shell[data-profile-surface="public"] .profile-shell__rail{
+    width:var(--site-rail-width-mobile);
   }
 
   .profile-shell[data-profile-surface="public"] .profile-shell__inner{

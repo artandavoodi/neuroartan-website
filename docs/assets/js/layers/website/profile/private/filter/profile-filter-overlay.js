@@ -251,7 +251,6 @@ function setOverlayOpen(open) {
   const root = getOverlayRoot();
   if (!(root instanceof HTMLElement)) return;
   root.hidden = !open;
-  document.body?.classList.toggle('profile-filter-overlay-open', open);
 }
 
 function clearNode(node) {

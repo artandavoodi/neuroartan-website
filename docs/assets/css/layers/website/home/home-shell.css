@@ -34,7 +34,7 @@
 
   --home-shell-topbar-height: 3.55rem;
   --home-shell-footer-separator-offset: 3.25rem;
-  --home-shell-panel-inline-padding: max(var(--site-gutter), 1rem);
+  --home-shell-panel-inline-padding:var(--site-shell-inline-padding);
   --home-shell-panel-top: calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height));
   --home-shell-panel-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset));
 
@@ -309,13 +309,17 @@ body.home-platform-shell-open .home-dashboard-topbar *{
   .home-shell{
     --home-shell-topbar-height: 3.3rem;
     --home-shell-footer-separator-offset: 3.04rem;
-    --home-shell-panel-inline-padding: max(var(--site-gutter), 0.85rem);
+    --home-shell-panel-inline-padding:var(--site-shell-inline-padding-mobile);
+  }
+
+  .home-shell__footer-separator{
+    width:var(--footer-rail-width-mobile);
   }
 
   .home-navigation-drawer__inner,
   .home-workspace-panel__inner,
   .home-profile-control-panel__inner,
   .home-settings-panel__inner{
-    padding:1rem 1rem 1.3rem;
+    padding:var(--site-shell-inline-padding-mobile) var(--site-shell-inline-padding-mobile) calc(var(--site-shell-inline-padding-mobile) + var(--space-2));
   }
 }

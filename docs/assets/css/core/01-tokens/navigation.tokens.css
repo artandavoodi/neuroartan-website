@@ -280,7 +280,7 @@
   --nav-institutional-panel-content-delay:70ms;
   --nav-institutional-panel-content-stagger:34ms;
   --nav-institutional-panel-padding-y:5.15rem;
-  --nav-institutional-panel-padding-x-fallback:3.2rem;
+  --nav-institutional-panel-padding-x-fallback:var(--site-gutter);
   --nav-institutional-panel-padding-bottom:3.9rem;
   --nav-institutional-panel-gap:5.8rem;
   --nav-institutional-panel-col-gap:1.9rem;
@@ -334,7 +334,7 @@
   --nav-institutional-tablet-search-shell-padding-x:0.94rem;
   --nav-institutional-tablet-panel-gap:3rem;
   --nav-institutional-tablet-panel-padding-y:4.6rem;
-  --nav-institutional-tablet-panel-padding-x-fallback:2.2rem;
+  --nav-institutional-tablet-panel-padding-x-fallback:var(--site-shell-inline-padding-mobile);
   --nav-institutional-tablet-panel-padding-bottom:3.2rem;
   --nav-institutional-tablet-panel-title-size:1.86rem;
   --nav-institutional-tablet-search-input-size:1.62rem;
@@ -347,7 +347,7 @@
   --nav-menu-hover-pulse-duration:760ms;
   --nav-menu-pack-toggle-nudge:-10px;
   --nav-menu-harmonic-gap:46px;
-  --nav-menu-gutter:var(--footer-gutter, 56px);
+  --nav-menu-gutter:var(--footer-gutter);
   --nav-menu-vpad:90px;
   --nav-menu-rail-pad:34px;
   --nav-menu-rail-label-pad:34px;

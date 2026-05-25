@@ -51,7 +51,6 @@ import './sidebar/profile-sidebar.js';
 import './right-toolbar/profile-right-toolbar.js';
 import './thoughts/profile-thought-bank.js';
 import './thoughts/profile-thought-bank-panel.js';
-import './thoughts/profile-thought-composer-panel.js';
 import './thoughts/profile-thought-stream-panel.js';
 import './settings/profile-settings.js';
 

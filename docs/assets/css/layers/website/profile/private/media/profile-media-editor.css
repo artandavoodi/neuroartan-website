@@ -12,7 +12,7 @@
 ============================================================================= */
 :root{
   --profile-media-editor-z-index:var(--z-overlay-control);
-  --profile-media-editor-dialog-width:min(34rem, calc(100vw - (var(--site-gutter) * 2)));
+  --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
   --profile-media-editor-dialog-radius:var(--dialog-overlay-radius);
   --profile-media-editor-dialog-padding:var(--spacing-lg);
   --profile-media-editor-backdrop-bg:var(--glass-overlay-backdrop-bg);
@@ -54,13 +54,13 @@ body.profile-media-editor-open{
   z-index:var(--profile-media-editor-z-index);
   display:grid;
   place-items:center;
-  padding:var(--site-gutter);
+  padding:var(--site-shell-inline-padding);
   overflow:auto;
   overscroll-behavior:contain;
 }
 
 .profile-media-editor[data-profile-media-editor-kind="cover"]{
-  --profile-media-editor-dialog-width:min(34rem, calc(100vw - (var(--site-gutter) * 2)));
+  --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
 }
 
 .profile-media-editor__backdrop{
@@ -78,7 +78,7 @@ body.profile-media-editor-open{
   position:relative;
   z-index:1;
   width:var(--profile-media-editor-dialog-width);
-  max-height:calc(100dvh - (var(--site-gutter) * 2));
+  max-height:calc(100dvh - (var(--site-shell-inline-padding) * 2));
   box-sizing:border-box;
   display:grid;
   gap:var(--spacing-lg);
@@ -297,6 +297,44 @@ body.profile-media-editor-open{
   gap:var(--spacing-xs);
 }
 
+.profile-media-editor__select-control{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--spacing-sm);
+  min-height:auto;
+  width:fit-content;
+}
+
+.profile-media-editor__select-value{
+  min-width:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--body-3-size);
+  font-weight:var(--body-3-weight);
+  line-height:var(--body-3-line-height);
+  letter-spacing:var(--body-3-tracking);
+}
+
+.profile-media-editor__dropdown-icon-wrapper{
+  position:relative;
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+}
+
+.profile-media-editor__dropdown-icon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  pointer-events:none;
+  transform:translate(-50%, -50%);
+}
+
 .profile-media-editor__dialog .profile-media-editor__range{
   width:100%;
   height: var(--slider-track-height);
@@ -355,23 +393,28 @@ body.profile-media-editor-open{
 }
 
 .profile-media-editor__select{
-  width:100%;
-  min-height:var(--button-height-md);
+  position:absolute;
+  inset:var(--spacing-none);
+  width:var(--size-full);
+  height:var(--size-full);
+  min-height:var(--spacing-none);
   box-sizing:border-box;
-  padding-inline:var(--button-padding-x-md);
-  border:var(--border-width-hairline) solid var(--profile-media-editor-control-border);
-  border-radius:var(--control-radius-md);
-  background:var(--profile-media-editor-control-bg);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--spacing-none);
+  background:transparent;
   color:var(--text-primary-color);
   font:inherit;
+  opacity:0;
   cursor:pointer;
+  z-index:1;
   color-scheme:light dark;
 }
 
 .profile-media-editor__select:hover,
 .profile-media-editor__select:focus-visible{
-  border-color:var(--profile-media-editor-control-border-hover);
-  background:var(--profile-media-editor-control-bg-hover);
+  border-color:transparent;
+  background:transparent;
   outline:none;
 }
 
@@ -396,11 +439,17 @@ body.profile-media-editor-open{
 ============================================================================= */
 @media (max-width:720px){
   :root{
+    --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width-mobile));
     --profile-media-editor-dialog-padding:var(--spacing-md);
     --profile-media-editor-preview-size:11rem;
   }
 
+  .profile-media-editor{
+    padding:var(--site-shell-inline-padding-mobile);
+  }
+
   .profile-media-editor__dialog{
     width:100%;
+    max-height:calc(100dvh - (var(--site-shell-inline-padding-mobile) * 2));
   }
 }

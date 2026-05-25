@@ -9,7 +9,7 @@
    ============================================================================= */
 
 .profile-thought-bank{
-  --profile-thought-fab-bottom:calc(var(--site-gutter) + var(--nav-glass-surface-height));
+  --profile-thought-fab-bottom:calc(var(--site-shell-inline-padding) + var(--nav-glass-surface-height));
   display:grid;
   gap:var(--spacing-lg);
   position:relative;
@@ -20,15 +20,10 @@ body.profile-thought-overlay-open{
   overscroll-behavior:none;
 }
 
-.profile-thought-composer,
 .profile-thought-stream__lane{
   padding:var(--spacing-lg);
   border-radius:var(--radius-xl);
   border:none;
-}
-
-.profile-thought-composer{
-  padding:var(--spacing-lg);
 }
 
 .profile-thought-stream__lane{
@@ -45,7 +40,7 @@ body.profile-thought-overlay-open{
   z-index:var(--z-language-dropdown);
   display:grid;
   place-items:center;
-  padding:var(--site-gutter);
+  padding:var(--site-shell-inline-padding);
 }
 
 .profile-thought-bank__overlay-backdrop{
@@ -59,14 +54,15 @@ body.profile-thought-overlay-open{
 .profile-thought-bank__overlay-dialog{
   position:relative;
   z-index:var(--z-raised);
-  width:min(42rem, calc(100vw - (var(--site-gutter) * 2)));
-  max-height:calc(100dvh - (var(--site-gutter) * 2));
+  width:min(42rem, var(--site-rail-width));
+  max-height:calc(100dvh - (var(--site-shell-inline-padding) * 2));
   overflow:auto;
+  border-radius:var(--radius-dialog);
 }
 
 .profile-thought-bank__fab{
   position:fixed;
-  right:var(--site-gutter);
+  right:var(--site-shell-inline-padding);
   bottom:var(--profile-thought-fab-bottom);
   z-index:var(--z-overlay-surface);
   width:calc(var(--home-platform-shell-rail-toggle-size) * 2);
@@ -302,24 +298,29 @@ body.profile-thought-overlay-open{
 }
 
 @media (max-width:820px){
-  .profile-thought-composer,
+  .profile-thought-bank{
+    --profile-thought-fab-bottom:calc(var(--site-shell-inline-padding-mobile) + var(--nav-glass-surface-height));
+  }
+
+  .profile-thought-bank__overlay{
+    padding:var(--site-shell-inline-padding-mobile);
+  }
+
+  .profile-thought-bank__overlay-dialog{
+    width:min(42rem, var(--site-rail-width-mobile));
+    max-height:calc(100dvh - (var(--site-shell-inline-padding-mobile) * 2));
+  }
+
+  .profile-thought-bank__fab{
+    right:var(--site-shell-inline-padding-mobile);
+  }
+
   .profile-thought-stream__lane{
     padding:var(--spacing-md);
   }
 
-  .profile-thought-composer__header,
-  .profile-thought-composer__footer,
   .profile-thought-stream__lane-header{
     flex-direction:column;
     align-items:flex-start;
-  }
-
-  .profile-thought-composer__field-grid{
-    grid-template-columns:minmax(0, 1fr);
-  }
-
-  .profile-thought-composer__actions{
-    width:100%;
-    justify-content:flex-start;
   }
 }

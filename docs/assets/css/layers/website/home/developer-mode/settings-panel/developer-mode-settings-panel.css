@@ -183,7 +183,7 @@ html[data-theme-effective="light"]{
 03) SHELL ROOT
 ============================================================================= */
 .developer-mode-settings-panel-shell{
-  --developer-mode-settings-shell-inline-padding:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
+  --developer-mode-settings-shell-inline-padding:var(--site-shell-inline-padding);
   --developer-mode-settings-shell-rail-width:var(--developer-mode-settings-shell-rail-width-token);
   --developer-mode-settings-shell-subrail-width:var(--developer-mode-settings-shell-subrail-width-token);
 
@@ -337,7 +337,7 @@ html[data-theme-effective="light"]{
 
 @media (max-width: 760px){
   .developer-mode-settings-panel-shell{
-    --developer-mode-settings-shell-inline-padding:max(var(--site-gutter), var(--developer-mode-settings-shell-mobile-inline-padding-fallback));
+    --developer-mode-settings-shell-inline-padding:var(--site-shell-inline-padding-mobile);
   }
 
   .developer-mode-settings-panel-shell__sections{

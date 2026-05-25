@@ -56,6 +56,12 @@ body.site-body main{
   margin:0 auto;
 }
 
+@media (max-width:768px){
+  .container{
+    width:var(--site-rail-width-mobile);
+  }
+}
+
 /* =============================================================================
    05) COLOR / SELECTION BASELINE
 ============================================================================= */

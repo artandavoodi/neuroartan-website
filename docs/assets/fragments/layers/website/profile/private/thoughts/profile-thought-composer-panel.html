@@ -16,19 +16,34 @@
   </div>
 
   <form class="profile-thought-composer__form" data-profile-thought-compose-form="true">
-    <div class="profile-thought-composer__audiences" data-profile-thought-audience-controls>
-      <button class="profile-thought-composer__audience ui-button ui-button--ghost" type="button" data-profile-thought-audience-toggle="private">
-        Private bank
+    <div class="profile-thought-composer__visibility" data-profile-thought-audience-controls>
+      <button class="profile-thought-composer__visibility-trigger" type="button" data-profile-thought-audience-trigger aria-expanded="false" aria-haspopup="listbox">
+        <img class="ui-icon-theme-aware profile-thought-composer__visibility-icon" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
+        <span class="profile-thought-composer__visibility-label">Private bank</span>
       </button>
-      <button class="profile-thought-composer__audience ui-button ui-button--ghost" type="button" data-profile-thought-audience-toggle="public">
-        Public route
-      </button>
+      <div class="profile-thought-composer__visibility-dropdown" data-profile-thought-audience-dropdown hidden role="listbox">
+        <button class="profile-thought-composer__visibility-option profile-thought-composer__visibility-option--active" type="button" data-profile-thought-audience-option="private" role="option" aria-selected="true">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
+          <span>Private bank</span>
+        </button>
+        <button class="profile-thought-composer__visibility-option" type="button" data-profile-thought-audience-option="public" role="option" aria-selected="false">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
+          <span>Public route</span>
+        </button>
+      </div>
+      <input type="hidden" name="audience" value="private" data-profile-thought-audience>
     </div>
 
     <div class="profile-thought-composer__field-grid">
-      <label class="profile-thought-composer__field">
+      <label class="profile-thought-composer__field profile-thought-composer__field--full">
         <span class="profile-thought-composer__label">Category</span>
-        <select class="ui-field profile-thought-composer__select" data-profile-thought-category="true"></select>
+        <span class="home-platform-theme__dropdown-container profile-thought-composer__select-control">
+          <span class="profile-thought-composer__select-value" data-profile-thought-category-label>Thought</span>
+          <span class="home-platform-theme__dropdown-icon-wrapper profile-thought-composer__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon profile-thought-composer__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select class="ui-dropdown ui-dropdown--icon-only profile-thought-composer__select" data-profile-thought-category="true" aria-label="Thought category"></select>
+          </span>
+        </span>
       </label>
     </div>
 

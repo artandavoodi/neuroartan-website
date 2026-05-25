@@ -86,7 +86,6 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
 ============================================================================= */
 #profile-menu-mount .home-dashboard-topbar__inner{
   width:var(--site-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
   margin:0 auto;
   padding:0;
   min-height:var(--nav-glass-surface-height);
@@ -317,6 +316,7 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   }
 
   #profile-menu-mount .home-dashboard-topbar__inner{
+    width:var(--chrome-rail-width-mobile);
     min-height:var(--nav-glass-surface-height-tablet);
     gap:0.85rem;
   }

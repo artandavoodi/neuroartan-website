@@ -126,6 +126,12 @@ function getActiveFilter() {
   return FILTER_PRESETS[RUNTIME.filter] || FILTER_PRESETS.original;
 }
 
+function syncFilterLabel(root = getEditorRoot()) {
+  const label = root?.querySelector('[data-profile-media-editor-filter-label]');
+  if (!(label instanceof HTMLElement)) return;
+  label.textContent = getActiveFilter().label || FILTER_PRESETS.original.label;
+}
+
 function resetEditorTransform() {
   RUNTIME.zoom = 1;
   RUNTIME.panX = 0;
@@ -239,6 +245,7 @@ function renderEditor() {
     filterSelect.value = FILTER_PRESETS[RUNTIME.filter] ? RUNTIME.filter : 'original';
   }
 
+  syncFilterLabel(root);
   updateRangeProgress(root);
 }
 

@@ -51,12 +51,12 @@
   --site-header-height:72px;
   --header-height:var(--site-header-height);
   --footer-height:72px;
-  --footer-gutter:var(--site-gutter, 24px);
+  --footer-gutter:var(--site-gutter);
   --surface-color:var(--bg-color, transparent);
   --shadow-color:#000000;
   --panel-width:960px;
   --content-width:var(--site-max-width);
-  --page-gutter:var(--site-gutter, 24px);
+  --page-gutter:var(--site-gutter);
   --z-overlay-modal:80;
   --background-color:var(--bg-color, transparent);
   --bg-primary-color:var(--bg-color, transparent);
@@ -93,22 +93,31 @@
    03) GLOBAL RAIL TOKENS
 ============================================================================= */
 :root{
-  --site-gutter:4vw;
+  --site-edge-gutter:3.2rem;
+  --site-gutter:var(--site-edge-gutter);
+  --site-mobile-gutter:1.25rem;
+  --site-shell-inline-padding:var(--site-gutter);
+  --site-shell-inline-padding-mobile:var(--site-mobile-gutter);
   --site-rail-width:calc(100% - (var(--site-gutter) * 2));
+  --site-rail-width-mobile:calc(100% - (var(--site-mobile-gutter) * 2));
 }
 
 /* =============================================================================
    04) SITE CHROME TOKENS
 ============================================================================= */
 :root{
-  --site-gutter-min:18px;
-  --site-gutter-max:96px;
+  --site-gutter-min:var(--site-edge-gutter);
+  --site-gutter-max:var(--site-edge-gutter);
   --site-inline-gutter:clamp(var(--site-gutter-min), var(--site-gutter), var(--site-gutter-max));
   --site-rail-measure:min(var(--site-rail-width), calc(100% - (var(--site-inline-gutter) * 2)));
+  --site-rail-measure-mobile:var(--site-rail-width-mobile);
 
   --chrome-rail-width:var(--site-rail-measure);
   --footer-rail-width:var(--site-rail-measure);
   --menu-rail-width:var(--site-rail-measure);
+  --chrome-rail-width-mobile:var(--site-rail-measure-mobile);
+  --footer-rail-width-mobile:var(--site-rail-measure-mobile);
+  --menu-rail-width-mobile:var(--site-rail-measure-mobile);
 
   --chrome-padding-y-sm:0.8rem;
   --chrome-padding-y-md:0.9rem;
@@ -413,7 +422,7 @@
   --layout-home-search-filter-panel-padding:1rem;
   --layout-home-search-light-border:rgba(0, 0, 0, 0.12);
   --layout-home-search-dark-border:rgba(255, 255, 255, 0.16);
-  --layout-home-search-mobile-padding-x-fallback:1rem;
+  --layout-home-search-mobile-padding-x-fallback:var(--site-shell-inline-padding-mobile);
   --layout-home-search-mobile-title-size:1.15rem;
   --layout-home-search-mobile-input-row-min-height:3.2rem;
   --layout-home-search-mobile-input-row-padding-y:0.68rem;
@@ -448,12 +457,14 @@
   --layout-home-platform-tablet-rail-max:15rem;
   --layout-home-platform-tablet-subrail-min:11rem;
   --layout-home-platform-tablet-subrail-max:13rem;
-  --layout-home-platform-mobile-inline-padding-fallback:0.85rem;
-  --layout-home-platform-mobile-column-padding:var(--space-4);
-  --layout-home-platform-mobile-rail-inner-padding-y:var(--layout-home-platform-mobile-column-padding);
+  --layout-home-platform-mobile-inline-padding-fallback:var(--site-shell-inline-padding-mobile);
+  --layout-home-platform-mobile-column-padding-y:var(--site-shell-inline-padding-mobile);
+  --layout-home-platform-mobile-column-padding-x:var(--spacing-none);
+  --layout-home-platform-mobile-column-padding:var(--layout-home-platform-mobile-column-padding-y);
+  --layout-home-platform-mobile-rail-inner-padding-y:var(--layout-home-platform-mobile-column-padding-y);
   --layout-home-platform-mobile-nav-gap:var(--space-2);
   --layout-home-platform-mobile-nav-item-min-height:var(--layout-home-platform-nav-item-min-height);
-  --layout-home-platform-mobile-nav-item-padding-x:var(--layout-home-platform-mobile-column-padding);
+  --layout-home-platform-mobile-nav-item-padding-x:var(--layout-home-platform-mobile-column-padding-x);
   --layout-home-platform-mobile-nav-icon-size:var(--layout-home-platform-nav-icon-size);
   --layout-home-platform-rail-padding-top:1.45rem;
   --layout-home-platform-rail-padding-right:1.5rem;
@@ -766,8 +777,15 @@
 ============================================================================= */
 :root{
   --layout-about-featured-functions-max-width:var(--layout-home-featured-functions-max-width);
+  --layout-about-featured-functions-shell-padding-x:var(--site-shell-inline-padding);
+  --layout-about-featured-functions-shell-padding-y:var(--spacing-2xl);
+  --layout-about-featured-functions-shell-padding-x-tablet:var(--site-shell-inline-padding);
+  --layout-about-featured-functions-shell-padding-y-tablet:var(--spacing-2xl);
+  --layout-about-featured-functions-shell-padding-x-mobile:var(--site-shell-inline-padding-mobile);
+  --layout-about-featured-functions-shell-padding-y-mobile:var(--spacing-2xl);
   --layout-about-featured-functions-viewport-max-width:var(--layout-home-featured-functions-viewport-max-width);
   --layout-about-featured-functions-footer-max-width:var(--layout-home-featured-functions-footer-max-width);
+  --layout-about-featured-functions-header-bottom-gap:var(--spacing-3xl);
   --layout-about-featured-functions-timeline-height:var(--layout-home-featured-functions-timeline-height);
   --layout-about-featured-functions-timeline-progress-scale:var(--layout-home-featured-functions-timeline-progress-scale);
   --layout-about-featured-functions-description-opacity:var(--layout-home-featured-functions-description-opacity);
@@ -784,6 +802,10 @@
   --layout-about-featured-functions-card-padding:var(--layout-home-featured-functions-card-padding);
   --layout-about-featured-functions-visual-aspect-ratio:var(--layout-home-featured-functions-visual-aspect-ratio);
   --layout-about-featured-functions-card-copy-max-width:var(--layout-home-featured-functions-card-copy-max-width);
+  --layout-about-featured-functions-card-copy-gap:var(--spacing-xl);
+  --layout-about-featured-functions-card-icon-size:var(--site-edge-gutter);
+  --layout-about-featured-functions-card-summary-width:14rem;
+  --layout-about-featured-functions-card-label-size:var(--font-size-display-2);
   --layout-about-featured-functions-card-summary-gap:var(--layout-home-featured-functions-card-summary-gap);
   --layout-about-featured-functions-card-title-gap:var(--layout-home-featured-functions-card-title-gap);
   --layout-about-featured-functions-card-label-line-height:var(--layout-home-featured-functions-card-label-line-height);
@@ -897,8 +919,8 @@
    15) ACCOUNT DRAWER TOKENS
 ============================================================================= */
 :root{
-  --layout-account-drawer-panel-width:min(40rem, calc(100vw - (2 * var(--site-gutter, 24px))));
-  --layout-account-drawer-panel-width-mobile:min(100vw, calc(100vw - (1.05 * var(--site-gutter, 20px))));
+  --layout-account-drawer-panel-width:min(40rem, calc(100vw - (2 * var(--site-gutter))));
+  --layout-account-drawer-panel-width-mobile:min(100vw, calc(100vw - (2 * var(--site-shell-inline-padding-mobile))));
   --layout-account-drawer-shell-padding-y:1.6rem;
   --layout-account-drawer-shell-padding-x:2rem;
   --layout-account-drawer-shell-padding-bottom:calc(var(--layout-account-drawer-shell-padding-y) * 2);
@@ -1086,7 +1108,7 @@
   /* Exact globalized values lifted from the established cookie language overlay. */
   --layout-cookie-language-overlay-shadow:0 20px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
   --layout-cookie-language-overlay-shadow-dark:0 24px 70px color-mix(in srgb, var(--shadow-color, #000000) 24%, transparent);
-  --layout-cookie-language-overlay-width:min(36rem, calc(100vw - (2 * var(--site-gutter, 24px))));
+  --layout-cookie-language-overlay-width:min(36rem, calc(100vw - (2 * var(--site-gutter))));
   --layout-cookie-language-overlay-max-height:min(46rem, calc(100vh - 3rem));
   --layout-cookie-language-overlay-max-height-mobile:min(42rem, calc(100vh - 1.6rem));
   --layout-cookie-language-overlay-min-height:24rem;
@@ -1663,7 +1685,7 @@
 ============================================================================= */
 :root{
   --layout-home-interaction-panel-width:min(46rem, calc(100vw - (2 * var(--site-gutter))));
-  --layout-home-interaction-panel-width-mobile:min(100%, calc(100vw - (2 * var(--site-gutter))));
+  --layout-home-interaction-panel-width-mobile:min(100%, calc(100vw - (2 * var(--site-shell-inline-padding-mobile))));
   --layout-home-interaction-panel-gap:0.38rem;
   --layout-home-interaction-panel-padding:0.54rem;
   --layout-home-interaction-panel-padding-mobile:0.52rem;

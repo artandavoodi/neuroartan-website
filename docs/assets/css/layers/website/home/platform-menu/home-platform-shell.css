@@ -188,7 +188,7 @@ html[data-theme-effective="light"]{
 03) SHELL ROOT
 ============================================================================= */
 .home-platform-shell{
-  --home-platform-shell-inline-padding:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
+  --home-platform-shell-inline-padding:var(--site-shell-inline-padding);
   --home-platform-shell-rail-width:var(--home-platform-shell-rail-width-token);
   --home-platform-shell-subrail-width:var(--home-platform-shell-subrail-width-token);
 
@@ -255,7 +255,7 @@ body.home-platform-shell-open .home-platform-shell{
 
 .home-platform-shell__close{
   flex:0 0 auto;
-  margin-inline-end:-0.485rem;
+  margin-inline-end:var(--global-close-button-optical-end-offset);
 }
 
 .home-platform-shell__close.global-close-button{
@@ -990,7 +990,7 @@ body.home-platform-shell-open .home-platform-shell{
 
 @media (max-width: 760px){
   .home-platform-shell{
-    --home-platform-shell-inline-padding:max(var(--site-gutter), var(--home-platform-shell-mobile-inline-padding-fallback));
+    --home-platform-shell-inline-padding:var(--site-shell-inline-padding-mobile);
   }
 
   .home-platform-shell__main{

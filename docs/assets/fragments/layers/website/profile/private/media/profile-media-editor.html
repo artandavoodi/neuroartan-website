@@ -61,7 +61,13 @@
         <span class="profile-media-editor__label">
           <span>Filter</span>
         </span>
-        <select class="profile-media-editor__select" data-profile-media-editor-filter-select aria-label="Image filter"></select>
+        <span class="ui-inline-dropdown profile-media-editor__select-control">
+          <span class="ui-inline-dropdown__value profile-media-editor__select-value" data-profile-media-editor-filter-label>Original</span>
+          <span class="ui-inline-dropdown__icon-wrapper profile-media-editor__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-media-editor__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select class="ui-dropdown ui-dropdown--icon-only profile-media-editor__select" data-profile-media-editor-filter-select aria-label="Image filter"></select>
+          </span>
+        </span>
       </div>
     </div>
 

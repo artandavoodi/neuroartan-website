@@ -60,7 +60,7 @@ html[data-theme-effective="dark"]{
   display: grid;
   position: relative;
   z-index: 21;
-  width: var(--footer-rail-width, min(calc(100% - (var(--footer-gutter, var(--site-gutter, 24px)) * 2)), var(--site-max-width, 1320px)));
+  width: var(--footer-rail-width);
   margin: 0 auto;
   box-sizing: border-box;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -310,7 +310,7 @@ html[data-theme-effective="dark"]{
 
   .institutional-links-inner{
     grid-template-columns: 1fr;
-    width: min(calc(100% - (var(--footer-gutter, var(--site-gutter, 20px)) * 2)), var(--site-max-width, 1320px));
+    width: var(--footer-rail-width-mobile);
     row-gap: 1.05rem;
   }
 

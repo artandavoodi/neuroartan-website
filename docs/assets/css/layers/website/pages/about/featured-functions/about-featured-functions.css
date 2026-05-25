@@ -28,8 +28,8 @@
 ============================================================================= */
 .about-featured-functions{
   --about-featured-functions-max-width: var(--layout-about-featured-functions-max-width);
-  --about-featured-functions-shell-padding-x: clamp(var(--spacing-lg), 4vw, var(--spacing-2xl));
-  --about-featured-functions-shell-padding-y: clamp(var(--spacing-xl), 6vh, var(--spacing-2xl));
+  --about-featured-functions-shell-padding-x: var(--layout-about-featured-functions-shell-padding-x);
+  --about-featured-functions-shell-padding-y: var(--layout-about-featured-functions-shell-padding-y);
 
   --about-featured-functions-viewport-max-width: var(--layout-about-featured-functions-viewport-max-width);
   --about-featured-functions-footer-max-width: var(--layout-about-featured-functions-footer-max-width);
@@ -42,7 +42,7 @@
 
   --about-featured-functions-header-gap: var(--spacing-md);
   --about-featured-functions-header-max-width: min(100%, var(--reading-width-sm));
-  --about-featured-functions-header-bottom-gap: clamp(var(--spacing-xl), 7vh, var(--spacing-3xl));
+  --about-featured-functions-header-bottom-gap: var(--layout-about-featured-functions-header-bottom-gap);
 
   --about-featured-functions-section-title-size: var(--layout-home-platform-content-title-size);
   --about-featured-functions-section-title-weight: var(--layout-home-platform-content-title-weight);
@@ -73,17 +73,17 @@
   --about-featured-functions-card-placeholder-fill-bottom: var(--layout-about-featured-functions-card-placeholder-fill-bottom-dark);
   --about-featured-functions-card-padding: var(--layout-about-featured-functions-card-padding);
   --about-featured-functions-card-copy-padding-top: var(--spacing-xl);
-  --about-featured-functions-card-copy-gap: clamp(var(--spacing-lg), 2.4vw, var(--spacing-xl));
+  --about-featured-functions-card-copy-gap: var(--layout-about-featured-functions-card-copy-gap);
   --about-featured-functions-visual-aspect-ratio: var(--layout-about-featured-functions-visual-aspect-ratio);
   --about-featured-functions-card-copy-max-width: var(--layout-about-featured-functions-card-copy-max-width);
 
-  --about-featured-functions-card-icon-size: clamp(3.2rem, 5vw, 4.8rem);
+  --about-featured-functions-card-icon-size: var(--layout-about-featured-functions-card-icon-size);
   --about-featured-functions-card-summary-gap: var(--layout-about-featured-functions-card-summary-gap);
-  --about-featured-functions-card-summary-width: clamp(12rem, 18vw, 14rem);
+  --about-featured-functions-card-summary-width: var(--layout-about-featured-functions-card-summary-width);
 
   --about-featured-functions-card-description-gap: var(--spacing-md);
   --about-featured-functions-card-title-gap: var(--layout-about-featured-functions-card-title-gap);
-  --about-featured-functions-card-label-size: clamp(3.6rem, 5.8vw, 5.8rem);
+  --about-featured-functions-card-label-size: var(--layout-about-featured-functions-card-label-size);
   --about-featured-functions-card-label-line-height: var(--layout-about-featured-functions-card-label-line-height);
   --about-featured-functions-card-label-weight: var(--layout-about-featured-functions-card-label-weight);
   --about-featured-functions-card-label-tracking: var(--layout-about-featured-functions-card-label-tracking);
@@ -720,7 +720,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 ============================================================================= */
 @media (max-width: 1060px){
   .about-featured-functions-shell{
-    padding: clamp(var(--spacing-xl), 8vh, var(--spacing-2xl)) var(--spacing-xl);
+    padding: var(--layout-about-featured-functions-shell-padding-y-tablet) var(--layout-about-featured-functions-shell-padding-x-tablet);
   }
 
   .about-featured-functions-header{
@@ -748,7 +748,7 @@ html[data-theme-effective="dark"] .about-featured-functions-card-title{
 ============================================================================= */
 @media (max-width: 720px){
   .about-featured-functions-shell{
-    padding: var(--spacing-2xl) var(--spacing-lg);
+    padding: var(--layout-about-featured-functions-shell-padding-y-mobile) var(--layout-about-featured-functions-shell-padding-x-mobile);
     min-height: auto;
   }
 

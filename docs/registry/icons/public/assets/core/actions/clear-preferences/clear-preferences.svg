@@ -13,7 +13,25 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs1" />
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1 @ F,0,0,1,0,6,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
   <sodipodi:namedview
      id="namedview1"
      pagecolor="#505050"
@@ -23,9 +41,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="14.38603"
-     inkscape:cx="12.442627"
-     inkscape:cy="15.188346"
+     inkscape:zoom="11.529706"
+     inkscape:cx="9.4104739"
+     inkscape:cy="14.007295"
      inkscape:window-width="1472"
      inkscape:window-height="868"
      inkscape:window-x="0"
@@ -34,11 +52,18 @@
      inkscape:current-layer="svg1"
      showgrid="false" />
   <path
-     style="fill:none;stroke:#ff5555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-     d="M 3.5511811,3.5511824 20.448819,20.448818"
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+     d="m 8.720472,8.7204725 6.559056,6.5590555"
      id="path1" />
   <path
-     style="fill:none;stroke:#ff5555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-     d="M 3.5511833,20.448818 20.448817,3.5511824"
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"
+     d="M 8.7204725,15.279528 15.279528,8.7204725"
      id="path1-9" />
+  <path
+     id="rect1"
+     style="fill:none;stroke:#000000;stroke-width:1.05587;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 8.5511808,2.5511808 h 6.8976382 a 6,6 45 0 1 6,6 v 6.8976382 a 6,6 135 0 1 -6,6 H 8.5511808 a 6,6 45 0 1 -6,-6 V 8.5511808 a 6,6 135 0 1 6,-6 z"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 2.5511808,2.5511808 H 21.448819 V 21.448819 H 2.5511808 Z"
+     transform="matrix(0.94708342,0,0,0.94708342,0.63499905,0.63499905)" />
 </svg>

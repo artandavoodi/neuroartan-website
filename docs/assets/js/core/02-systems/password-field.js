@@ -69,6 +69,29 @@ function isPasswordVisible(input) {
   return wrapper instanceof HTMLElement && wrapper.dataset.passwordVisible === 'true';
 }
 
+function setPasswordInputType(input, type) {
+  if (!(input instanceof HTMLInputElement) || input.type === type) return;
+
+  const active = document.activeElement === input;
+  const selectionStart = input.selectionStart;
+  const selectionEnd = input.selectionEnd;
+  const selectionDirection = input.selectionDirection || 'none';
+
+  try {
+    input.type = type;
+  } catch (_) {
+    return;
+  }
+
+  if (!active || selectionStart === null || selectionEnd === null) return;
+
+  window.requestAnimationFrame(() => {
+    try {
+      input.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
+    } catch (_) {}
+  });
+}
+
 function updateToggleState(input, toggle) {
   const wrapper = input.closest(`.${WRAPPER_CLASS}`);
   const visible = isPasswordVisible(input);
@@ -86,8 +109,10 @@ function updateToggleState(input, toggle) {
     wrapper.dataset.passwordVisible = visible && hasValue ? 'true' : 'false';
   }
 
+  setPasswordInputType(input, visible && hasValue ? 'text' : 'password');
+
   if (mirror instanceof HTMLElement) {
-    mirror.textContent = hasValue ? input.value : '';
+    mirror.textContent = '';
   }
 
   if (icon instanceof HTMLImageElement) {

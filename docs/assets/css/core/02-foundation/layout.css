@@ -123,12 +123,23 @@ body.menu-open #header-controls .theme-toggle{
    06) RESPONSIVE RAIL ADJUSTMENTS
 ============================================================================= */
 @media (max-width:768px){
+  .site-rail,
+  .container{
+    width:var(--site-rail-measure-mobile);
+  }
+
   #header-controls{
+    width:var(--chrome-rail-width-mobile);
     height:60px;
   }
 
   #header-controls #menu-button-container{
     height:60px;
+  }
+
+  .footer-separator,
+  .footer-flex{
+    width:var(--footer-rail-width-mobile);
   }
 }
 

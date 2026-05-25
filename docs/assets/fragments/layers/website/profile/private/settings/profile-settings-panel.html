@@ -26,24 +26,73 @@
 
           <label class="profile-settings__field">
             <span class="profile-settings__label">Date of birth</span>
-            <input class="ui-field profile-settings__input" type="date" name="date_of_birth" autocomplete="bday">
-          </label>
-
-          <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Gender</span>
-            <span class="profile-settings__dropdown">
-              <img class="ui-icon-theme-aware profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-              <select class="ui-dropdown profile-settings__dropdown-select" name="gender" aria-label="Gender">
-                <option value="">Optional</option>
-                <option value="woman">Woman</option>
-                <option value="man">Man</option>
-              </select>
+            <input
+              class="ui-field profile-settings__input"
+              type="hidden"
+              name="date_of_birth"
+              autocomplete="bday"
+              data-profile-settings-date-of-birth
+            >
+            <span class="profile-settings__date-grid" data-profile-settings-date-grid>
+              <span class="ui-inline-dropdown profile-settings__select-control">
+                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="month">Month</span>
+                <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                  <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                  <select
+                    class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                    data-profile-settings-date-control="month"
+                    aria-label="Birth month"
+                  >
+                    <option value="">Month</option>
+                  </select>
+                </span>
+              </span>
+              <span class="ui-inline-dropdown profile-settings__select-control">
+                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="day">Day</span>
+                <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                  <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                  <select
+                    class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                    data-profile-settings-date-control="day"
+                    aria-label="Birth day"
+                  >
+                    <option value="">Day</option>
+                  </select>
+                </span>
+              </span>
+              <span class="ui-inline-dropdown profile-settings__select-control">
+                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="year">Year</span>
+                <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                  <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                  <select
+                    class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                    data-profile-settings-date-control="year"
+                    aria-label="Birth year"
+                  >
+                    <option value="">Year</option>
+                  </select>
+                </span>
+              </span>
             </span>
           </label>
 
           <label class="profile-settings__field profile-settings__field--full">
-            <span class="profile-settings__label">Bio</span>
-            <textarea class="ui-field profile-settings__input profile-settings__textarea" rows="4" maxlength="180" name="public_summary" placeholder="A short bio for your profile."></textarea>
+            <span class="profile-settings__label">Gender</span>
+            <span class="ui-inline-dropdown profile-settings__dropdown">
+              <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-select-label="gender">Optional</span>
+              <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                <select class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select" name="gender" aria-label="Gender">
+                  <option value="">Optional</option>
+                  <option value="woman">Woman</option>
+                  <option value="man">Man</option>
+                </select>
+              </span>
+            </span>
+          </label>
+
+          <label class="profile-settings__field profile-settings__field--full">
+            <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Bio"></textarea>
           </label>
         </div>
 

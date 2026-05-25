@@ -36,9 +36,9 @@
    03) HOVER / FOCUS STATES
 ============================================================================= */
 .ui-field:hover{
-  border-color:var(--control-border-hover-unified);
-  background:var(--control-surface-hover);
-  color:var(--control-text-hover-unified);
+  border-color:var(--control-border-unified);
+  background:var(--control-surface);
+  color:var(--control-text-unified);
 }
 
 .ui-field:focus,

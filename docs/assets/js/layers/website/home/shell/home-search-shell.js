@@ -1299,6 +1299,7 @@ function bindHomeSearchShell() {
       '#home-search-shell-voice-button, ' +
       '#home-search-shell [data-home-search-clear], ' +
       '#home-search-shell [data-home-search-filter], ' +
+      '#home-search-shell [data-home-search-filter-close], ' +
       '#home-search-shell [data-home-search-filter-reset], ' +
       '#home-search-shell [data-home-search-filter-option], ' +
       '#home-search-shell [data-home-search-close="true"], ' +
@@ -1328,6 +1329,14 @@ function bindHomeSearchShell() {
       event.preventDefault();
       HOME_SEARCH_SHELL_STATE.filtersOpen = !HOME_SEARCH_SHELL_STATE.filtersOpen;
       syncHomeSearchFilterChrome();
+      return;
+    }
+
+    if (target.matches('[data-home-search-filter-close]')) {
+      event.preventDefault();
+      HOME_SEARCH_SHELL_STATE.filtersOpen = false;
+      syncHomeSearchFilterChrome();
+      getHomeSearchShellNodes().input?.focus();
       return;
     }
 

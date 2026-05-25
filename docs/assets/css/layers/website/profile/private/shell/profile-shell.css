@@ -66,7 +66,6 @@
 
 .profile-shell__rail{
   width:var(--profile-shell-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
   margin-inline:auto;
   overflow:visible;
 }
@@ -151,6 +150,7 @@
 
 @media (max-width:820px){
   :root{
+    --profile-shell-rail-width:var(--site-rail-width-mobile);
     --profile-shell-group-gap:var(--spacing-md);
     --profile-shell-mount-gap:var(--spacing-none);
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);

@@ -16,8 +16,8 @@
   padding-bottom:4rem;
 
   /* Align with footer rail */
-  padding-left:var(--footer-gutter, 2rem);
-  padding-right:var(--footer-gutter, 2rem);
+  padding-left:var(--footer-gutter);
+  padding-right:var(--footer-gutter);
 }
 
 /* BLOCK: PUBLICATION TEXT BASE */

@@ -31,7 +31,7 @@
   --profile-private-hero-media-action-layer:var(--z-above);
   --profile-private-hero-details-max-height:calc(var(--body-2-line-height) + var(--spacing-sm));
   --profile-private-hero-details-max-height-hidden:0;
-  --profile-private-hero-info-popover-width:min(22rem, calc(100vw - (var(--site-gutter) * 2)));
+  --profile-private-hero-info-popover-width:min(22rem, var(--site-rail-width));
   --profile-private-hero-actions-layer:var(--z-above);
   --profile-private-hero-media-action-opacity:1;
   --profile-private-hero-media-action-opacity-hidden:0;
@@ -611,6 +611,10 @@
 }
 
 @media (max-width:720px){
+  :root{
+    --profile-private-hero-info-popover-width:min(22rem, var(--site-rail-width-mobile));
+  }
+
   :root{
     --profile-private-hero-cover-height:var(--profile-private-hero-cover-height-mobile);
     --profile-private-hero-avatar-size:6rem;

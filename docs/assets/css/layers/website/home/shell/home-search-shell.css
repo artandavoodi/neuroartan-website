@@ -202,7 +202,6 @@ body.home-search-shell-open{
   justify-content:flex-end;
   gap:var(--home-search-shell-header-gap);
   width:var(--site-rail-width);
-  max-width:calc(100% - (var(--site-gutter) * 2));
   margin:var(--home-search-shell-none) auto;
   padding:var(--home-search-shell-header-padding-y) 0 var(--home-search-shell-header-padding-bottom);
   box-sizing:border-box;
@@ -238,7 +237,7 @@ body.home-search-shell-open{
   gap:0;
   min-height:0;
   overflow:hidden;
-  padding:var(--home-search-shell-body-padding-y) max(var(--site-gutter), var(--home-search-shell-body-padding-x-fallback)) 0;
+  padding:var(--home-search-shell-body-padding-y) var(--site-shell-inline-padding) 0;
   box-sizing:border-box;
 }
 
@@ -753,13 +752,17 @@ html[data-theme-effective="dark"] .home-search-shell__input-row{
   .home-search-shell__header{
     width:var(--home-search-shell-full);
     max-width:none;
-    padding-left:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
-    padding-right:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
+    padding-left:var(--site-shell-inline-padding-mobile);
+    padding-right:var(--site-shell-inline-padding-mobile);
   }
 
   .home-search-shell__body{
-    padding-left:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
-    padding-right:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
+    padding-left:var(--site-shell-inline-padding-mobile);
+    padding-right:var(--site-shell-inline-padding-mobile);
+  }
+
+  .home-search-shell__filter-panel{
+    max-width:calc(var(--home-search-shell-full) - (var(--site-shell-inline-padding-mobile) * 2));
   }
 
   .home-search-shell__input-row{
@@ -1001,6 +1004,17 @@ html[data-theme-effective="dark"] .home-search-shell__input-row{
   color:var(--text-secondary-color);
   font-size:var(--home-search-shell-result-body-size);
   line-height:var(--home-search-shell-result-body-line-height);
+}
+
+.home-search-shell__filter-actions{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--home-search-shell-result-list-gap);
+  flex:0 0 auto;
+}
+
+.home-search-shell__filter-close{
+  flex:0 0 auto;
 }
 
 .home-search-shell__filter-reset{

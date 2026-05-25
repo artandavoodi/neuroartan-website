@@ -19,8 +19,8 @@
 .site-header{
   position:relative;
   width:100%;
-  padding-top:3.2rem;
-  padding-bottom:1.6rem;
+  padding-top:var(--site-edge-gutter);
+  padding-bottom:calc(var(--site-edge-gutter) / 2);
   background:transparent;
   z-index:var(--z-raised);
 }

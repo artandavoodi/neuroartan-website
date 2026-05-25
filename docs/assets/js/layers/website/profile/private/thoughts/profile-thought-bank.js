@@ -95,6 +95,59 @@ function ensureCategoryOptions(select, state) {
   select.value = state.composerCategory;
 }
 
+function syncThoughtCategoryLabel(root, state = getProfileThoughtState()) {
+  const label = root?.querySelector('[data-profile-thought-category-label]');
+  const select = root?.querySelector('[data-profile-thought-category="true"]');
+  if (!(label instanceof HTMLElement)) return;
+
+  if (select instanceof HTMLSelectElement) {
+    label.textContent = select.selectedOptions?.[0]?.textContent || formatCategoryLabel(state.composerCategory, state.taxonomy);
+    return;
+  }
+
+  label.textContent = formatCategoryLabel(state.composerCategory, state.taxonomy);
+}
+
+function getAudienceMeta(audience = 'private') {
+  return audience === 'public'
+    ? {
+        icon: '/registry/icons/public/assets/core/actions/visibility/public-route.svg',
+        label: 'Public route'
+      }
+    : {
+        icon: '/registry/icons/public/assets/core/actions/visibility/private-draft.svg',
+        label: 'Private bank'
+      };
+}
+
+function setAudienceDropdownOpen(root, open) {
+  const dropdown = root?.querySelector('[data-profile-thought-audience-dropdown]');
+  const trigger = root?.querySelector('[data-profile-thought-audience-trigger]');
+  if (dropdown instanceof HTMLElement) dropdown.hidden = !open;
+  if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+function syncThoughtAudienceControl(root, state = getProfileThoughtState()) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const audience = state.composerAudience === 'public' ? 'public' : 'private';
+  const meta = getAudienceMeta(audience);
+  const trigger = root.querySelector('[data-profile-thought-audience-trigger]');
+  const icon = trigger?.querySelector('.profile-thought-composer__visibility-icon');
+  const label = trigger?.querySelector('.profile-thought-composer__visibility-label');
+  const input = root.querySelector('[data-profile-thought-audience]');
+
+  if (icon instanceof HTMLImageElement) icon.src = meta.icon;
+  if (label instanceof HTMLElement) label.textContent = meta.label;
+  if (input instanceof HTMLInputElement) input.value = audience;
+
+  root.querySelectorAll('[data-profile-thought-audience-option]').forEach((option) => {
+    const selected = option.getAttribute('data-profile-thought-audience-option') === audience;
+    option.setAttribute('aria-selected', selected ? 'true' : 'false');
+    option.classList.toggle('profile-thought-composer__visibility-option--active', selected);
+  });
+}
+
 function createThoughtEntry(entry, taxonomy) {
   const article = document.createElement('article');
   article.className = 'profile-thought-stream__entry';
@@ -182,9 +235,9 @@ function renderComposer(state = getProfileThoughtState()) {
       submitStatus.textContent = state.submitMessage || '';
     }
 
-    root.querySelectorAll('[data-profile-thought-audience-toggle]').forEach((button) => {
-      const audience = button.getAttribute('data-profile-thought-audience-toggle') || '';
-      button.dataset.profileThoughtAudienceActive = audience === state.composerAudience ? 'true' : 'false';
+    syncThoughtAudienceControl(root, state);
+    setControlDisabled(root.querySelector('[data-profile-thought-audience-trigger]'), !authenticated);
+    root.querySelectorAll('[data-profile-thought-audience-option]').forEach((button) => {
       setControlDisabled(button, !authenticated);
     });
 
@@ -199,6 +252,7 @@ function renderComposer(state = getProfileThoughtState()) {
     }
 
     ensureCategoryOptions(categorySelect, state);
+    syncThoughtCategoryLabel(root, state);
     setControlDisabled(categorySelect, !authenticated);
     setControlDisabled(submitButton, !authenticated);
 
@@ -288,14 +342,18 @@ function bindThoughtComposerEvents() {
   document.documentElement.dataset.profileThoughtComposerBound = 'true';
 
   document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
     const openTrigger = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-overlay-open]')
       : null;
     const closeTrigger = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-overlay-close]')
       : null;
-    const audienceToggle = event.target instanceof Element
-      ? event.target.closest('[data-profile-thought-audience-toggle]')
+    const audienceTrigger = event.target instanceof Element
+      ? event.target.closest('[data-profile-thought-audience-trigger]')
+      : null;
+    const audienceOption = event.target instanceof Element
+      ? event.target.closest('[data-profile-thought-audience-option]')
       : null;
 
     if (openTrigger) {
@@ -311,13 +369,29 @@ function bindThoughtComposerEvents() {
       return;
     }
 
-    if (!audienceToggle) return;
+    const openDropdown = document.querySelector('[data-profile-thought-audience-dropdown]:not([hidden])');
+    if (openDropdown instanceof HTMLElement && !audienceTrigger && !audienceOption && !target?.closest('[data-profile-thought-audience-controls]')) {
+      const openRoot = openDropdown.closest('[data-profile-thought-composer]');
+      setAudienceDropdownOpen(openRoot, false);
+    }
 
-    event.preventDefault();
-    updateProfileThoughtComposer({
-      composerAudience: audienceToggle.getAttribute('data-profile-thought-audience-toggle') || 'private',
-      resetStatus: true
-    });
+    if (audienceTrigger) {
+      event.preventDefault();
+      const root = audienceTrigger.closest('[data-profile-thought-composer]');
+      const dropdown = root?.querySelector('[data-profile-thought-audience-dropdown]');
+      setAudienceDropdownOpen(root, !(dropdown instanceof HTMLElement) || dropdown.hidden);
+      return;
+    }
+
+    if (audienceOption) {
+      event.preventDefault();
+      const root = audienceOption.closest('[data-profile-thought-composer]');
+      updateProfileThoughtComposer({
+        composerAudience: audienceOption.getAttribute('data-profile-thought-audience-option') || 'private',
+        resetStatus: true
+      });
+      setAudienceDropdownOpen(root, false);
+    }
   });
 
   document.addEventListener('input', (event) => {
@@ -344,6 +418,9 @@ function bindThoughtComposerEvents() {
       composerCategory: categorySelect.value,
       resetStatus: true
     });
+
+    const root = categorySelect.closest('[data-profile-thought-composer]');
+    syncThoughtCategoryLabel(root);
   });
 
   document.addEventListener('submit', (event) => {

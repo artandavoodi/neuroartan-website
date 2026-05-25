@@ -144,7 +144,7 @@
 ============================================================================= */
 @media (max-width:760px){
   :root{
-    --home-interaction-response-panel-width:min(42rem, calc(100vw - (2 * var(--site-gutter))));
+    --home-interaction-response-panel-width:min(42rem, var(--site-rail-width-mobile));
     --home-interaction-response-panel-max-height:18rem;
     --home-interaction-response-panel-content-max-width:100%;
     --home-interaction-response-panel-font-size:0.96rem;

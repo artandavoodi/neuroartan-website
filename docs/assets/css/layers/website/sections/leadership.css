@@ -31,7 +31,7 @@
   --leadership-card-padding:var(--catalog-card-body-padding);
   --leadership-avatar-size:var(--layout-profile-avatar-size, 128px);
   --leadership-profile-hero-height:clamp(28rem, 68vh, 44rem);
-  --leadership-profile-hero-content-width:min(34rem, calc(100vw - (var(--site-gutter) * 2)));
+  --leadership-profile-hero-content-width:min(34rem, var(--site-rail-width));
   --leadership-avatar-border:var(--control-border);
   --leadership-avatar-bg:var(--control-bg);
   --leadership-name-size:var(--catalog-card-title-size);
@@ -196,7 +196,7 @@
   gap:var(--catalog-hero-gap);
   justify-self:start;
   width:var(--leadership-profile-hero-content-width);
-  margin-left:max(var(--site-gutter), calc((100vw - var(--site-rail-width)) / 2));
+  margin-left:var(--site-shell-inline-padding);
 }
 
 .leadership-profile-hero .catalog-page-title,
@@ -303,6 +303,10 @@
    06) RESPONSIVE REFINEMENTS
 ============================================================================= */
 @media (max-width: 760px){
+  :root{
+    --leadership-profile-hero-content-width:var(--site-rail-width-mobile);
+  }
+
   .leadership-grid{
     grid-template-columns:repeat(2, minmax(0, 1fr));
   }

@@ -1063,10 +1063,10 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
 
 @media (max-width:760px){
   .home-interaction-settings-panel{
-    top:var(--site-gutter);
-    right:var(--site-gutter);
-    bottom:calc(var(--site-gutter) + env(safe-area-inset-bottom, var(--spacing-none)));
-    left:var(--site-gutter);
+    top:var(--site-shell-inline-padding-mobile);
+    right:var(--site-shell-inline-padding-mobile);
+    bottom:calc(var(--site-shell-inline-padding-mobile) + env(safe-area-inset-bottom, var(--spacing-none)));
+    left:var(--site-shell-inline-padding-mobile);
   }
 
   .home-interaction-settings-panel__surface{

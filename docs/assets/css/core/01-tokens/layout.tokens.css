@@ -903,7 +903,7 @@
   --layout-account-drawer-shell-padding-bottom-mobile:calc(var(--layout-account-drawer-shell-padding-y-mobile) * 2);
   --layout-account-drawer-close-offset:1rem;
   --layout-account-drawer-close-offset-tablet:0.82rem;
-  --layout-account-drawer-close-offset-mobile:0.68rem;
+  --layout-account-drawer-close-offset-mobile:var(--spacing-none);
   --layout-account-drawer-header-padding-bottom-mobile:1.04rem;
   --layout-account-drawer-content-stage-padding-inline:4.8rem;
   --layout-account-drawer-content-stage-padding-inline-tablet:3.2rem;

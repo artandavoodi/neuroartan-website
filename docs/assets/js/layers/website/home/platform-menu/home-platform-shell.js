@@ -32,6 +32,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   renderToken: 0,
   shellSession: 0,
   mobileStackLevel: 'root',
+  mobileTouchLockTimer: null,
   mountedDestination: '',
   mountedSubdestination: '',
   mountedRoot: null,
@@ -58,6 +59,7 @@ const HOME_PLATFORM_CONFIG_URL = '/assets/data/platform/home-platform-shell.json
 const HOME_PLATFORM_RAIL_STORAGE_KEY = 'neuroartan.home.platformShell.railMode';
 const HOME_PLATFORM_HASH_PREFIX = '#home-platform-';
 const HOME_PLATFORM_MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
+const HOME_PLATFORM_MOBILE_TOUCH_LOCK_MS = 180;
 
 /* =============================================================================
 03) DOM HELPERS
@@ -146,10 +148,53 @@ function normalizeHomePlatformMobileStackLevel(level) {
   return 'root';
 }
 
+function setHomePlatformMobileTouchLock(isLocked) {
+  const root = getHomePlatformShellRoot();
+
+  if (root) {
+    root.toggleAttribute('data-home-platform-touch-locked', isLocked);
+  }
+}
+
+function clearHomePlatformMobileTouchLock() {
+  if (HOME_PLATFORM_SHELL_STATE.mobileTouchLockTimer) {
+    window.clearTimeout(HOME_PLATFORM_SHELL_STATE.mobileTouchLockTimer);
+    HOME_PLATFORM_SHELL_STATE.mobileTouchLockTimer = null;
+  }
+
+  setHomePlatformMobileTouchLock(false);
+}
+
+function lockHomePlatformMobileTouchCycle() {
+  if (!isHomePlatformMobileView()) {
+    return;
+  }
+
+  clearHomePlatformMobileTouchLock();
+  setHomePlatformMobileTouchLock(true);
+
+  HOME_PLATFORM_SHELL_STATE.mobileTouchLockTimer = window.setTimeout(() => {
+    clearHomePlatformMobileTouchLock();
+  }, HOME_PLATFORM_MOBILE_TOUCH_LOCK_MS);
+}
+
+function isHomePlatformMobileTouchLocked() {
+  return !!getHomePlatformShellRoot()?.hasAttribute('data-home-platform-touch-locked');
+}
+
+function shouldIgnoreHomePlatformMobileActivationEvent(event) {
+  return isHomePlatformMobileView() && event?.type !== 'click';
+}
+
 function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobileStackLevel) {
   const root = getHomePlatformShellRoot();
   const normalized = normalizeHomePlatformMobileStackLevel(level);
+  const previous = HOME_PLATFORM_SHELL_STATE.mobileStackLevel;
   HOME_PLATFORM_SHELL_STATE.mobileStackLevel = normalized;
+
+  if (isHomePlatformMobileView() && normalized !== previous) {
+    lockHomePlatformMobileTouchCycle();
+  }
 
   if (root) {
     root.setAttribute('data-home-platform-mobile-level', normalized);
@@ -169,6 +214,7 @@ function setHomePlatformMobileStackLevel(level) {
 }
 
 function resetHomePlatformMobileStackLevel() {
+  clearHomePlatformMobileTouchLock();
   syncHomePlatformMobileStackLevel('root');
 }
 
@@ -183,6 +229,10 @@ function advanceHomePlatformMobileStackLevel(level) {
 function navigateHomePlatformMobileBack() {
   if (!isHomePlatformMobileView()) {
     return false;
+  }
+
+  if (isHomePlatformMobileTouchLocked()) {
+    return true;
   }
 
   if (HOME_PLATFORM_SHELL_STATE.mobileStackLevel === 'content') {
@@ -1180,6 +1230,10 @@ function activateHomePlatformNavTrigger(target) {
     return false;
   }
 
+  if (isHomePlatformMobileView() && isHomePlatformMobileTouchLocked()) {
+    return true;
+  }
+
   const destination = navTrigger.getAttribute('data-home-platform-destination') || 'home';
   if (destination === HOME_PLATFORM_SHELL_STATE.activeDestination && destination === getRenderedHomePlatformDestination()) {
     return true;
@@ -1228,6 +1282,10 @@ function activateHomePlatformSubnavTrigger(target, event = null) {
     return false;
   }
 
+  if (isHomePlatformMobileView() && isHomePlatformMobileTouchLocked()) {
+    return true;
+  }
+
   const subdestination = subnavTrigger.getAttribute('data-home-platform-subdestination') || '';
   const destination = subnavTrigger.getAttribute('data-home-platform-destination')
     || getRenderedHomePlatformDestination()
@@ -1266,6 +1324,10 @@ function activateHomePlatformLinkTrigger(target) {
 }
 
 function handleHomePlatformShellActivationEvent(event) {
+  if (shouldIgnoreHomePlatformMobileActivationEvent(event)) {
+    return;
+  }
+
   if (
     activateHomePlatformLinkTrigger(event.target)
     || activateHomePlatformSubnavTrigger(event.target, event)

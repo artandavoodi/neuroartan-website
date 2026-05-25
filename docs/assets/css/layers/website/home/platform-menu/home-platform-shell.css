@@ -941,6 +941,17 @@ body.home-platform-shell-open .home-platform-shell{
   box-sizing:border-box;
 }
 
+html:has(body.home-platform-shell-open),
+body.home-platform-shell-open{
+  overflow:hidden;
+  overscroll-behavior:none;
+  touch-action:none;
+}
+
+body.home-platform-shell-open .home-platform-shell{
+  touch-action:auto;
+}
+
 .home-platform-shell :is(button, a, input, textarea, select, [role="button"]){
   pointer-events:auto;
 }
@@ -1027,6 +1038,12 @@ body.home-platform-shell-open .home-platform-shell{
     opacity:var(--overlay-opacity-open);
     visibility:visible;
     pointer-events:auto;
+  }
+
+  .home-platform-shell[data-home-platform-touch-locked] .home-platform-shell__rail,
+  .home-platform-shell[data-home-platform-touch-locked] .home-platform-shell__subrail,
+  .home-platform-shell[data-home-platform-touch-locked] .home-platform-shell__content{
+    pointer-events:none;
   }
 
   .home-platform-shell__subrail{

@@ -219,9 +219,11 @@ body.home-search-shell-open{
 }
 
 .home-search-shell__close{
-  flex:0 0 auto;
+  flex:0 0 var(--home-search-shell-icon-size);
+  width:var(--home-search-shell-icon-size);
+  height:var(--home-search-shell-icon-size);
   color:var(--text-secondary-color);
-  margin-inline-end:-0.485rem;
+  margin-inline-end:var(--spacing-none);
 }
 
 /* =============================================================================
@@ -723,11 +725,17 @@ html[data-theme-effective="dark"] .home-search-shell__input-row{
   .home-search-shell{
     top:var(--home-shell-panel-top);
     right:0;
-    bottom:var(--home-shell-panel-bottom);
+    bottom:0;
     left:0;
   }
 
-  .home-search-shell__header,
+  .home-search-shell__header{
+    width:var(--home-search-shell-full);
+    max-width:none;
+    padding-left:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
+    padding-right:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
+  }
+
   .home-search-shell__body{
     padding-left:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));
     padding-right:max(var(--site-gutter), var(--home-search-shell-mobile-padding-x-fallback));

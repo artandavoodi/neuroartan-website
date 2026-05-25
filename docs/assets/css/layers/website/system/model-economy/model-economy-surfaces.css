@@ -1,0 +1,11 @@
+/* MARK: - FSC-T-0007 Model Economy Surfaces */
+
+.model-economy-surface {
+  background: color-mix(in srgb, var(--surface-primary, #000) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-primary, #fff) 16%, transparent);
+  border-radius: var(--radius-lg, 24px);
+}
+
+.model-economy-copy {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.72));
+}

@@ -1,0 +1,13 @@
+/* MARK: - FSC-T-0007 Personal Models Section */
+
+.personal-models-section {
+  position: relative;
+}
+
+.personal-models-section__copy {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.72));
+}
+
+.personal-models-section__boundary {
+  opacity: 0.72;
+}

@@ -1,0 +1,24 @@
+{
+  "id": "fsc-t-0007-model-dignity-policy",
+  "version": "0.1",
+  "definition": "Model dignity protects user-derived continuity material. It does not imply consciousness, sentience, legal personhood, biological life, or metaphysical identity transfer.",
+  "protectedMaterial": [
+    "voice",
+    "memory",
+    "source history",
+    "browsing context",
+    "social graph context",
+    "behavioral patterns",
+    "identity-adjacent data",
+    "posthumous continuity material"
+  ],
+  "requiredControls": [
+    "consent",
+    "permission",
+    "deletion",
+    "suspension",
+    "archive",
+    "public exposure control",
+    "marketplace exposure control"
+  ]
+}

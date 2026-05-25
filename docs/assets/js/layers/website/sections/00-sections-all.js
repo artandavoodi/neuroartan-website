@@ -100,6 +100,10 @@ import './vendors.js';
 import './vouchers.js';
 import './workspace.js';
 
+import './personal-models.js';
+
+import './model-economy.js';
+
 /* =============================================================================
    03) END OF FILE
 ============================================================================= */

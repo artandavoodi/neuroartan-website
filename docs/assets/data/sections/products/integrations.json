@@ -10,9 +10,9 @@
       "title": "Integrations",
       "anchor": "#integrations",
       "paragraphs": [
-        "ICOS integrations define how the product connects trusted inputs, governed services, and future external systems without weakening the core architecture.",
-        "The integration layer is designed to extend capability while preserving continuity, permissions, and user control.",
-        "Each integration must serve the product system rather than fragment it into unrelated tools."
+        "ICOS integrations define how the product connects trusted inputs, identity sources, governed services, model routing, and future external systems without weakening the core architecture.",
+        "The integration layer extends capability while preserving continuity, permissions, model identity, privacy, and user authority.",
+        "Each integration must strengthen the product system rather than fragment ICOS into disconnected tools, marketplaces, or isolated assistant features."
       ],
       "highlights": [
         "Governed service connections",
@@ -26,14 +26,14 @@
       "title": "Vault Integration",
       "anchor": "#vault-integration",
       "paragraphs": [
-        "Vault integration connects ICOS with durable knowledge structures, preserved reflections, and governed records.",
-        "This allows profile memory and user-authored material to remain organized rather than scattered across disconnected surfaces.",
-        "The vault layer supports long-term continuity and review without reducing the product to simple storage."
+        "Vault integration connects ICOS with durable knowledge structures, preserved reflections, source records, and governed continuity material.",
+        "This allows profile memory, user-authored material, and future model training sources to remain organized instead of scattered across disconnected surfaces.",
+        "The vault layer supports long-term review, provenance, and personal model formation without reducing the product to simple storage."
       ],
       "highlights": [
         "Structured knowledge connection",
-        "Governed record continuity",
-        "Long-term review support"
+        "Governed source continuity",
+        "Long-term model training support"
       ]
     },
     {
@@ -42,13 +42,13 @@
       "title": "Model Integration",
       "anchor": "#model-integration",
       "paragraphs": [
-        "Model integration allows ICOS to route interaction through suitable intelligence layers while preserving product-level governance.",
-        "The system can evolve across model providers, local models, and future dedicated infrastructure without changing the user-facing continuity logic.",
-        "This keeps ICOS flexible at the intelligence layer while maintaining a stable product identity."
+        "Model integration allows ICOS to route interaction through suitable intelligence layers while preserving product-level governance, continuity, and user authority.",
+        "The system can evolve across model providers, local models, personal models, and future dedicated infrastructure without changing the user-facing continuity logic.",
+        "This keeps ICOS flexible at the intelligence layer while maintaining a stable product identity and a governed path toward model economy readiness."
       ],
       "highlights": [
         "Provider-flexible routing",
-        "Local model readiness",
+        "Personal model compatibility",
         "Stable product identity"
       ]
     },
@@ -58,13 +58,13 @@
       "title": "Identity Integration",
       "anchor": "#identity-integration",
       "paragraphs": [
-        "Identity integration governs how profiles, access states, and public or private visibility settings connect across the product.",
-        "It protects the boundary between user-owned continuity and public discovery surfaces.",
-        "This makes identity a governed product system rather than a passive account layer."
+        "Identity integration governs how profiles, model identities, access states, visibility settings, and verification signals connect across the product.",
+        "It protects the boundary between user-owned continuity, private model identity, public discovery surfaces, and future marketplace readiness.",
+        "This makes identity a governed product system rather than a passive account layer or a decorative profile label."
       ],
       "highlights": [
         "Profile-aware access",
-        "Public and private boundaries",
+        "Public/private model boundaries",
         "Governed identity state"
       ]
     },
@@ -74,14 +74,110 @@
       "title": "Publishing Integration",
       "anchor": "#publishing-integration",
       "paragraphs": [
-        "Publishing integration connects selected profile or knowledge material to public-facing surfaces when permissions allow it.",
-        "The product can support discovery, presentation, and controlled exposure without making private continuity public by default.",
-        "This creates a clean bridge between internal reflection and external publication."
+        "Publishing integration connects selected profile, knowledge, or model-facing material to public surfaces only where permissions allow it.",
+        "The product can support discovery, presentation, and controlled exposure without making private continuity, private model identity, provider routing, or source evidence public by default.",
+        "This creates a clean bridge between internal reflection, personal model formation, and external publication under owner authority."
       ],
       "highlights": [
         "Permission-based publication",
         "Discovery-ready surfaces",
         "Private-to-public control"
+      ]
+    },
+    {
+      "id": "model-economy-integration",
+      "label": "Model Economy Integration",
+      "title": "Model Economy Integration",
+      "anchor": "#model-economy-integration",
+      "paragraphs": [
+        "Model Economy integration connects profile, personal model formation, model registry, entitlement, permissions, dashboard, provider routing, capability readiness, and marketplace readiness into one governed system.",
+        "This prevents the economy layer from becoming a separate marketplace product detached from ICOS continuity and user authority.",
+        "The integration makes the model economy a natural extension of personal models: a future pathway for approved models to become discoverable, hireable, or monetizable under strict review."
+      ],
+      "highlights": [
+        "Registry and entitlement integration",
+        "Dashboard and readiness states",
+        "Marketplace boundary control"
+      ]
+    },
+    {
+      "id": "provider-api-integration",
+      "label": "Provider & API Integration",
+      "title": "Provider & API Integration",
+      "anchor": "#provider-api-integration",
+      "paragraphs": [
+        "Provider and API integration allows models to operate through controlled runtime routes while preserving user trust, model identity, cost boundaries, and private infrastructure controls.",
+        "The product may communicate capability, but it must not expose provider routes, token authority, private serials, source authorization evidence, or operational routing details on public surfaces.",
+        "This keeps ICOS adaptable across providers while protecting model identity, security, and future economic legitimacy."
+      ],
+      "highlights": [
+        "Private provider routing",
+        "Runtime flexibility",
+        "Economic traceability"
+      ]
+    },
+    {
+      "id": "ownership-permission-integration",
+      "label": "Ownership & Permission Integration",
+      "title": "Ownership & Permission Integration",
+      "anchor": "#ownership-permission-integration",
+      "paragraphs": [
+        "Ownership and permission integration ensures that every profile, personal model, public surface, and future economy state remains tied to the user’s authority.",
+        "ICOS must distinguish private, public, searchable, interactable, monetizable, hireable, marketplace-visible, legacy-enabled, and posthumous-restricted states.",
+        "This prevents future discovery, hiring, or monetization from bypassing consent, identity governance, dignity protection, or owner control."
+      ],
+      "highlights": [
+        "Owner authority",
+        "Granular permission states",
+        "Consent-bound economy readiness"
+      ]
+    },
+    {
+      "id": "capability-profile-integration",
+      "label": "Capability Profile Integration",
+      "title": "Capability Profile Integration",
+      "anchor": "#capability-profile-integration",
+      "paragraphs": [
+        "Capability profile integration connects what a model knows, how it was trained, which sources support it, and what it is allowed to do.",
+        "A future model economy needs structured capability signals rather than vague claims of intelligence, expertise, or professional replacement.",
+        "This keeps model discovery and readiness commercially useful while preserving provenance, reliability, and regulated-domain boundaries."
+      ],
+      "highlights": [
+        "Capability profile",
+        "Training and provenance",
+        "Regulated-domain boundary"
+      ]
+    },
+    {
+      "id": "ocean-brain-integration",
+      "label": "Ocean-Brain Integration",
+      "title": "Ocean-Brain Integration",
+      "anchor": "#ocean-brain-integration",
+      "paragraphs": [
+        "Ocean-Brain integration is the future platform-awareness layer for the population of personal models inside ICOS.",
+        "It should derive model counts and states from canonical records, not from public page projections or decorative analytics.",
+        "This allows ICOS to understand its model universe across private, public, verified, monetizable, hireable, suspended, archived, posthumous, and marketplace-visible states."
+      ],
+      "highlights": [
+        "Model population awareness",
+        "Canonical record source",
+        "Platform-level coordination"
+      ]
+    },
+    {
+      "id": "model-economy-release-boundary",
+      "label": "Model Economy Release Boundary",
+      "title": "Model Economy Release Boundary",
+      "anchor": "#model-economy-release-boundary",
+      "paragraphs": [
+        "Model Economy integration remains blocked until review for any public marketplace, payouts, public ranking, autonomous inter-model hiring, posthumous economy, guaranteed-income language, model consciousness claims, or regulated-domain claims.",
+        "The integration layer may prepare registry, entitlement, permission, dashboard, provider, capability profile, and model population awareness connections, but it must not imply active commercial marketplace availability.",
+        "This keeps the Products page commercially clear, production-ready, and defensible while preserving legal, governance, product, security, and implementation discipline."
+      ],
+      "highlights": [
+        "Blocked until review",
+        "No public marketplace launch",
+        "No uncontrolled autonomous labor"
       ]
     }
   ]

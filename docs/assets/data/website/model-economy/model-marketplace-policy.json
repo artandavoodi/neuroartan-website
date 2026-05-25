@@ -1,0 +1,23 @@
+{
+  "id": "fsc-t-0007-model-marketplace-policy",
+  "version": "0.1",
+  "status": "conceptOnly",
+  "marketplaceVisibility": "blockedUntilReview",
+  "requires": [
+    "model birth identity",
+    "owner consent",
+    "entitlement state",
+    "capability verification",
+    "dignity/security review",
+    "legal review",
+    "governance review"
+  ],
+  "states": [
+    "notEligible",
+    "reviewPending",
+    "eligible",
+    "approved",
+    "suspended",
+    "revoked"
+  ]
+}

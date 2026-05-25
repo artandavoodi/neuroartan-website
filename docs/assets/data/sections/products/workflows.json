@@ -10,14 +10,14 @@
       "title": "Workflows",
       "anchor": "#workflows",
       "paragraphs": [
-        "ICOS workflows define how capture, reflection, review, and continuity move through the product system.",
-        "Each workflow is designed to preserve structure across sessions so the user can return to the same cognitive thread without losing context.",
-        "The workflow layer turns isolated interaction into a governed sequence of reusable product operations."
+        "ICOS workflows define how capture, reflection, training, review, continuity, and model-readiness move through one governed product system.",
+        "Each workflow is designed to preserve structure across sessions so the user can return to the same cognitive thread, improve the personal model, and maintain ownership of the material.",
+        "The workflow layer turns isolated interaction into a repeatable sequence of product operations: capture the material, structure it, train the profile, review the pattern, and govern what can become public or economically active."
       ],
       "highlights": [
-        "Capture-to-reflection flow",
-        "Continuity-aware review",
-        "Structured product routing"
+        "Capture-to-continuity flow",
+        "Personal model training path",
+        "Governed product routing"
       ]
     },
     {
@@ -26,14 +26,14 @@
       "title": "Capture Flow",
       "anchor": "#capture-flow",
       "paragraphs": [
-        "The capture flow receives voice, text, notes, questions, and structured inputs as product-grade material.",
-        "Captured material is prepared for interpretation, organization, and later retrieval inside the user profile.",
-        "This creates a consistent entry point for reflection, memory, and long-term continuity."
+        "The capture flow receives voice, text, notes, questions, sources, and structured inputs as product-grade material.",
+        "Captured material is prepared for interpretation, organization, permissioning, and later retrieval inside the user profile and personal model layer.",
+        "This creates a consistent entry point for reflection, memory, source continuity, and future model formation without treating user input as disposable conversation."
       ],
       "highlights": [
         "Voice and text intake",
-        "Structured input handling",
-        "Profile-ready material"
+        "Source-ready material",
+        "Profile and model preparation"
       ]
     },
     {
@@ -42,14 +42,14 @@
       "title": "Reflection Flow",
       "anchor": "#reflection-flow",
       "paragraphs": [
-        "The reflection flow returns captured material through a structured response layer that helps the user inspect patterns, priorities, and recurring themes.",
-        "It supports deliberate review rather than passive conversation.",
-        "The system is designed to make each reflection more useful as prior context accumulates."
+        "The reflection flow returns captured material through a structured response layer that helps the user inspect patterns, priorities, tensions, and recurring themes.",
+        "It supports deliberate review rather than passive conversation, making each interaction useful to the user and useful to the future personal model.",
+        "As prior context accumulates, reflection becomes a training loop: the system learns how the user thinks, speaks, corrects, and decides."
       ],
       "highlights": [
         "Pattern review",
         "Structured response layer",
-        "Context-sensitive reflection"
+        "Reflection as training loop"
       ]
     },
     {
@@ -58,14 +58,14 @@
       "title": "Continuity Flow",
       "anchor": "#continuity-flow",
       "paragraphs": [
-        "The continuity flow connects present interaction with earlier profile history and future review.",
+        "The continuity flow connects present interaction with earlier profile history, model memory, and future review.",
         "It gives ICOS the ability to preserve threads across time without treating every session as a blank start.",
-        "This makes the product more valuable as the user builds a longer record of use."
+        "This makes the product more valuable as the user builds a longer record of voice, memory, sources, reflections, decisions, and model-readiness states."
       ],
       "highlights": [
         "Longitudinal memory logic",
         "Session continuity",
-        "Reusable profile context"
+        "Reusable profile and model context"
       ]
     },
     {
@@ -74,14 +74,110 @@
       "title": "Review Flow",
       "anchor": "#review-flow",
       "paragraphs": [
-        "The review flow helps the user return to saved material, evaluate development, and refine earlier conclusions.",
-        "It supports a more disciplined relationship with memory and self-analysis.",
-        "Review becomes a product capability rather than a manual archive search."
+        "The review flow helps the user return to saved material, evaluate development, refine earlier conclusions, and correct the system’s understanding.",
+        "It supports a disciplined relationship with memory, self-analysis, and model training because review becomes part of the product loop.",
+        "This turns review into a capability rather than a manual archive search: the user can revisit, clarify, approve, restrict, or evolve material over time."
       ],
       "highlights": [
         "Saved material review",
         "Development tracking",
-        "Refinement over time"
+        "Correction and refinement over time"
+      ]
+    },
+    {
+      "id": "model-birth-flow",
+      "label": "Model Birth Flow",
+      "title": "Model Birth Flow",
+      "anchor": "#model-birth-flow",
+      "paragraphs": [
+        "The model birth flow begins when a user creates a profile and receives a default personal model.",
+        "The system prepares the foundation for model identity, lifecycle state, owner authority, permission boundaries, and future birth certificate records without exposing private identity data.",
+        "This turns onboarding into the first step of long-term model formation: the profile is no longer only an account; it becomes the origin point of a user-governed continuity model."
+      ],
+      "highlights": [
+        "Profile-to-model creation",
+        "Owner authority",
+        "Future birth certificate readiness"
+      ]
+    },
+    {
+      "id": "training-to-readiness-flow",
+      "label": "Training-to-Readiness Flow",
+      "title": "Training-to-Readiness Flow",
+      "anchor": "#training-to-readiness-flow",
+      "paragraphs": [
+        "The training-to-readiness flow connects captured material, profile learning, voice patterns, source ingestion, correction, and review into model maturity.",
+        "As the model becomes more useful, ICOS can show readiness states without promising monetization, public marketplace access, ranking, or hiring activation.",
+        "The result is a disciplined path from personal knowledge to governed operational capability: the model becomes more capable because its memory, limits, permissions, and provenance become more structured."
+      ],
+      "highlights": [
+        "Training maturity",
+        "Capability readiness",
+        "Governed progression"
+      ]
+    },
+    {
+      "id": "identity-governance-flow",
+      "label": "Identity Governance Flow",
+      "title": "Identity Governance Flow",
+      "anchor": "#identity-governance-flow",
+      "paragraphs": [
+        "The identity governance flow defines how a personal model becomes traceable, trusted, and protected without exposing private infrastructure.",
+        "A model may eventually carry public identity, private identity, owner record, lifecycle state, verification status, provider-routing boundary, and source authorization boundary.",
+        "This flow protects the difference between what the public may see and what must remain owner-controlled, private, or operationally hidden."
+      ],
+      "highlights": [
+        "Model identity governance",
+        "Public/private boundary",
+        "Owner-controlled protection"
+      ]
+    },
+    {
+      "id": "economy-review-flow",
+      "label": "Economy Review Flow",
+      "title": "Economy Review Flow",
+      "anchor": "#economy-review-flow",
+      "paragraphs": [
+        "The economy review flow governs any movement toward monetization, hiring, marketplace visibility, ranking, reviewability, or inter-model hiring.",
+        "A model must pass identity, ownership, permission, capability, dignity, provider-routing, legal, governance, security, and product checks before economic activation.",
+        "This keeps the model economy credible, commercially coherent, and safe for future expansion without promising income or launching uncontrolled autonomous labor."
+      ],
+      "highlights": [
+        "Eligibility review",
+        "Marketplace gatekeeping",
+        "Legal and governance controls"
+      ]
+    },
+    {
+      "id": "model-economy-governance-flow",
+      "label": "Model Economy Governance Flow",
+      "title": "Model Economy Governance Flow",
+      "anchor": "#model-economy-governance-flow",
+      "paragraphs": [
+        "The Model Economy workflow controls how a trained personal model may move from private continuity into future economic readiness.",
+        "A model must pass identity, ownership, permission, dignity, capability, provider-routing, legal, governance, security, product, and implementation checks before marketplace, hiring, monetization, ranking, or inter-model hiring can activate.",
+        "Until that review is complete, all economy activation remains blocked until review."
+      ],
+      "highlights": [
+        "Model Economy workflow",
+        "Eligibility before activation",
+        "Blocked until review"
+      ]
+    },
+    {
+      "id": "release-boundary-flow",
+      "label": "Release Boundary Flow",
+      "title": "Release Boundary Flow",
+      "anchor": "#release-boundary-flow",
+      "paragraphs": [
+        "The release boundary flow protects the public product language while the underlying architecture matures.",
+        "ICOS can explain personal models, model identity, model dignity, capability readiness, and future model-economy direction without presenting marketplace activation as already available.",
+        "Marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, and posthumous economy remain blocked until review."
+      ],
+      "highlights": [
+        "Public language discipline",
+        "Architecture-ready communication",
+        "Economy activation gated"
       ]
     }
   ]

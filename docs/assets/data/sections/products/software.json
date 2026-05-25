@@ -10,9 +10,9 @@
       "title": "Software",
       "anchor": "#software",
       "paragraphs": [
-        "Neuroartan software is the execution layer where ICOS product logic becomes usable application infrastructure.",
-        "The software layer connects interface, runtime behavior, model routing, profile continuity, and governed user experience into one operational system.",
-        "Its purpose is to turn product doctrine into stable, testable, and expandable software surfaces."
+        "Neuroartan software is the execution layer where ICOS becomes a usable cognitive operating system rather than a static product concept.",
+        "The software layer connects interface, runtime behavior, model routing, profile continuity, personal model formation, identity governance, permissions, and model-economy readiness into one operational system.",
+        "Its purpose is to turn product doctrine into stable, testable, modular, and expandable software surfaces without weakening the user’s authority over memory, identity, and model state."
       ],
       "highlights": [
         "Application execution layer",
@@ -26,9 +26,9 @@
       "title": "Runtime Architecture",
       "anchor": "#runtime-architecture",
       "paragraphs": [
-        "Runtime architecture defines how the application loads models, manages interaction state, and streams responses through the product interface.",
-        "The system is designed to support a stable path from app shell to runtime manager, model registry, inference engine, and response surface.",
-        "This keeps implementation aligned with the long-term ICOS product architecture."
+        "Runtime architecture defines how ICOS loads intelligence, manages interaction state, resolves model routes, and streams responses through the product interface.",
+        "The system is designed to support a stable path from application shell to runtime manager, model registry, provider or local inference layer, and response surface.",
+        "This keeps implementation aligned with the long-term ICOS architecture: personal models, continuity, routing, and governed capability must operate through a real runtime system, not through visual switching or disconnected UI state."
       ],
       "highlights": [
         "Runtime manager path",
@@ -42,9 +42,9 @@
       "title": "Application Shell",
       "anchor": "#application-shell",
       "paragraphs": [
-        "The application shell provides the visible product environment for capture, review, profile interaction, and settings control.",
+        "The application shell provides the visible product environment for capture, reflection, review, profile interaction, model state, and settings control.",
         "It must remain coherent across web, app, and future software layers so users experience ICOS as one system rather than fragmented tools.",
-        "The shell is where interface discipline, accessibility, motion, and continuity meet."
+        "The shell is where interface discipline, accessibility, motion, continuity, identity, and model readiness meet in a governed user experience."
       ],
       "highlights": [
         "Unified product surface",
@@ -58,13 +58,13 @@
       "title": "Model Routing",
       "anchor": "#model-routing",
       "paragraphs": [
-        "Model routing allows ICOS to select the appropriate intelligence layer while preserving product-level control.",
-        "The routing system can evolve between external APIs, local models, and embedded runtime paths without changing the user's core continuity experience.",
-        "This makes software architecture flexible without making product behavior unstable."
+        "Model routing allows ICOS to select the appropriate intelligence layer while preserving product-level control, continuity, and user authority.",
+        "The routing system can evolve between external APIs, local models, embedded runtime paths, personal models, and future dedicated infrastructure without changing the user’s core continuity experience.",
+        "This makes software architecture flexible without making product behavior unstable, and it protects private routing data from becoming public-facing marketing content."
       ],
       "highlights": [
         "External API readiness",
-        "Local model path",
+        "Local and personal model paths",
         "Stable user experience"
       ]
     },
@@ -74,14 +74,126 @@
       "title": "Profile Continuity",
       "anchor": "#profile-continuity",
       "paragraphs": [
-        "Profile continuity connects software state with long-term user memory, settings, permissions, and reflection history.",
+        "Profile continuity connects software state with long-term user memory, settings, permissions, reflection history, voice patterns, source context, and personal model formation.",
         "It ensures that product intelligence remains anchored in the user profile rather than isolated session fragments.",
-        "This is the layer that makes ICOS durable across time, devices, and future product surfaces."
+        "This is the layer that makes ICOS durable across time, devices, and future product surfaces, and it is the origin point for the default personal model."
       ],
       "highlights": [
         "Long-term profile memory",
         "Permission-bound state",
-        "Cross-surface continuity"
+        "Profile-to-model continuity"
+      ]
+    },
+    {
+      "id": "personal-model-software-layer",
+      "label": "Personal Model Layer",
+      "title": "Personal Model Software Layer",
+      "anchor": "#personal-model-software-layer",
+      "paragraphs": [
+        "The personal model software layer turns profile creation into the beginning of a governed continuity model.",
+        "The system must support a default private model, owner authority, model identity readiness, voice and memory training signals, source continuity, and permission-bound lifecycle state.",
+        "This is the closest MVP path for ICOS: a private personal model that learns, remembers, reflects voice, organizes thought, and remains under user control."
+      ],
+      "highlights": [
+        "Default private model",
+        "Owner authority",
+        "MVP path for ICOS"
+      ]
+    },
+    {
+      "id": "model-economy-software-layer",
+      "label": "Model Economy Layer",
+      "title": "Model Economy Software Layer",
+      "anchor": "#model-economy-software-layer",
+      "paragraphs": [
+        "The model economy requires software architecture before public marketplace features can exist.",
+        "ICOS must support model identity, owner authority, entitlement state, provider routing, dignity boundaries, monetization readiness, hiring readiness, marketplace visibility, ranking readiness, and release governance as explicit system states.",
+        "This creates a production path where economic capability is built into the architecture without prematurely exposing payouts, public ranking, autonomous inter-model hiring, or posthumous economy."
+      ],
+      "highlights": [
+        "Model economy state architecture",
+        "Provider and entitlement readiness",
+        "Marketplace blocked until review"
+      ]
+    },
+    {
+      "id": "model-identity-registry",
+      "label": "Model Identity Registry",
+      "title": "Model Identity Registry",
+      "anchor": "#model-identity-registry",
+      "paragraphs": [
+        "The model registry must treat every model as a traceable product entity with ownership, lifecycle state, public/private identity, verification readiness, and future marketplace eligibility.",
+        "Public identity can support discovery and trust. Private identity must protect serials, provider routing, source authorization, token authority, and sensitive security metadata.",
+        "This registry becomes the structural foundation for personal models, future monetization, marketplace readiness, inter-model coordination, and Ocean-Brain awareness."
+      ],
+      "highlights": [
+        "Canonical model identity",
+        "Public/private boundary",
+        "Verification and lifecycle readiness"
+      ]
+    },
+    {
+      "id": "provider-routing-boundary",
+      "label": "Provider Routing",
+      "title": "Provider Routing Boundary",
+      "anchor": "#provider-routing-boundary",
+      "paragraphs": [
+        "ICOS may route models through different providers, local systems, embedded engines, or future dedicated infrastructure, but provider routing must remain governed.",
+        "Private routing data should never become public-facing marketing content, and public product surfaces must not expose provider routes, token authority, private serials, or source authorization evidence.",
+        "This protects cost structure, security state, API authority, model identity, and user trust while allowing the intelligence layer to evolve."
+      ],
+      "highlights": [
+        "API-provider embedding",
+        "Private routing protection",
+        "Runtime flexibility"
+      ]
+    },
+    {
+      "id": "dashboard-readiness-layer",
+      "label": "Dashboard Readiness",
+      "title": "Dashboard Readiness Layer",
+      "anchor": "#dashboard-readiness-layer",
+      "paragraphs": [
+        "Dashboard readiness gives the user a clear view of model state without exposing private infrastructure.",
+        "Owner-facing dashboards can show personal model formation, model identity readiness, dignity and security state, permission state, training maturity, and blocked economy readiness.",
+        "Public dashboards and marketplace-facing surfaces must remain gated until legal, governance, product, security, and implementation review are complete."
+      ],
+      "highlights": [
+        "Owner-facing model state",
+        "Training and readiness signals",
+        "Public activation gated"
+      ]
+    },
+    {
+      "id": "security-governance-layer",
+      "label": "Security & Governance",
+      "title": "Security and Governance Layer",
+      "anchor": "#security-governance-layer",
+      "paragraphs": [
+        "Software must preserve the dignity and security of user-derived continuity material: memory, voice, behavior, sources, preferences, and identity-adjacent data.",
+        "This requires permission boundaries, deletion controls, suspension states, private identity protection, posthumous restrictions, and regulated-domain constraints.",
+        "Model dignity does not imply consciousness, personhood, or legal autonomy; it means human-derived material inside the model must be protected with seriousness."
+      ],
+      "highlights": [
+        "Continuity-data protection",
+        "Private identity security",
+        "No consciousness or personhood claim"
+      ]
+    },
+    {
+      "id": "software-release-boundary",
+      "label": "Software Release Boundary",
+      "title": "Software Release Boundary",
+      "anchor": "#software-release-boundary",
+      "paragraphs": [
+        "Software can prepare the architecture for model economy capabilities before those capabilities are publicly active.",
+        "Marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, and posthumous economy remain blocked until review.",
+        "The current product path should prioritize private personal models, profile continuity, model identity registry, provider-routing boundaries, owner-facing dashboards, and governed readiness states."
+      ],
+      "highlights": [
+        "Architecture-ready first",
+        "Economy activation gated",
+        "Personal model MVP priority"
       ]
     }
   ]

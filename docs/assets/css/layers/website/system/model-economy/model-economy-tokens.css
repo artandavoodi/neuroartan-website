@@ -1,0 +1,7 @@
+/* MARK: - FSC-T-0007 Model Economy Tokens */
+
+:root {
+  --model-economy-surface-opacity: 0.72;
+  --model-economy-border-opacity: 0.16;
+  --model-economy-state-opacity: 0.68;
+}

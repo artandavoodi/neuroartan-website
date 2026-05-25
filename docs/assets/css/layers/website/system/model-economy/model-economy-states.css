@@ -1,0 +1,13 @@
+/* MARK: - FSC-T-0007 Model Economy States */
+
+.model-economy-state {
+  opacity: var(--model-economy-state-opacity);
+}
+
+.model-economy-state[data-state="blockedUntilReview"] {
+  pointer-events: none;
+}
+
+.model-economy-state[data-visibility="private"] {
+  visibility: hidden;
+}

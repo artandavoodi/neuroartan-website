@@ -32,7 +32,7 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "0.9"
+version: "1.0"
 
 created_date: "2026-05-02"
 last_updated: "2026-05-07"
@@ -102,6 +102,10 @@ related:
   - "/Users/artan/Documents/Neuroartan/website/planning/06 - GitHub & Terminal Workflows/01 - Repository Development Workflow Specification.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md"
   - "/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/13 - FSC-T-0007 Website Model Economy Architecture Specification.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/02 - FSC-T-0007 Website Provider, API & Model Routing Strategy.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/09 - Product Positioning/01 - ICOS Personal Models & Model Economy Website Positioning.md"
+  - "/Users/artan/Documents/Neuroartan/website/planning/10 - Implementation Routing/01 - FSC-T-0007 Website Implementation Routing Memo.md"
   - "/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/development-cockpit/developer-operations-console-directive.html"
 
 tags:
@@ -134,6 +138,14 @@ tags:
   - "stitch"
   - "google-stitch"
   - "design-tokens"
+  - "fsc-t-0007"
+  - "model-economy"
+  - "personal-models"
+  - "model-birth-certificate"
+  - "model-dignity"
+  - "model-marketplace"
+  - "inter-model-hiring"
+  - "icos-ocean-brain"
 ---
 
 # Website Planning Index
@@ -308,8 +320,41 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — Website Planning Index  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 0.9
+VERSION: 1.0
 
 ---
 
 END OF DOCUMENT
+
+
+---
+
+## FSC-T-0007 Website Branch Status
+
+The website planning layer now contains the FSC-T-0007 architecture branch.
+
+Created and registered:
+
+- Website Model Economy Architecture Specification
+- Website Provider, API & Model Routing Strategy
+- ICOS Personal Models & Model Economy Website Positioning
+- FSC-T-0007 Website Implementation Routing Memo
+- model-economy JSON schema and policy layer
+- model-economy JS system layer
+- model-economy CSS system layer
+- personal-models and model-economy section placeholders
+
+Current status:
+
+- architecture foundation created
+- data schemas created
+- JS/CSS system modules created
+- orchestrators wired
+- broken imports verified clean
+- public marketplace, payouts, inter-model hiring, ranking, and posthumous economy remain blocked until review
+
+Canonical doctrine:
+
+> AI absorbs operational labor while the human retains sovereign authorship, ownership, and direction.
+
+---

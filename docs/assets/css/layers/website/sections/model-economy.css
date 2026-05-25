@@ -1,0 +1,14 @@
+/* MARK: - FSC-T-0007 Model Economy Section */
+
+.model-economy-section {
+  position: relative;
+}
+
+.model-economy-section__copy {
+  color: var(--text-secondary, rgba(255, 255, 255, 0.72));
+}
+
+.model-economy-section__state[data-state="blockedUntilReview"] {
+  pointer-events: none;
+  opacity: 0.68;
+}

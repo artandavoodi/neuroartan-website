@@ -378,3 +378,16 @@ initProfileState();
 /* =============================================================================
    09) END OF FILE
 ============================================================================= */
+
+/* =============================================================================
+   FSC-T-0007) PROFILE-TO-MODEL BIRTH STATE
+============================================================================= */
+
+export const PROFILE_MODEL_BIRTH_STATE = Object.freeze({
+  profileCreatesDefaultModel: true,
+  defaultPersonalModel: "freeByDefault",
+  modelBirthIdentity: "required",
+  ownerAuthority: "required",
+  dignityBoundary: "required",
+  publicPrivateIdentityBoundary: "required"
+});

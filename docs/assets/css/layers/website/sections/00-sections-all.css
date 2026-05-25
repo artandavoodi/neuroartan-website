@@ -101,6 +101,10 @@
 @import url('./vouchers.css');
 @import url('./workspace.css');
 
+@import url('./personal-models.css');
+
+@import url('./model-economy.css');
+
 /* =============================================================================
    03) END OF FILE
 ============================================================================= */

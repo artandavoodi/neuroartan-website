@@ -1,0 +1,21 @@
+{
+  "id": "fsc-t-0007-public-positioning-safety-gate",
+  "version": "0.1",
+  "requiresReviewBeforePublication": true,
+  "reviewChain": [
+    "Founder",
+    "Governance",
+    "Legal",
+    "Product",
+    "WSDA",
+    "Final Copy Review"
+  ],
+  "blockedClaims": [
+    "guaranteed income",
+    "model consciousness",
+    "legal personhood",
+    "professional replacement without regulation",
+    "uncontrolled autonomous labor",
+    "posthumous economy by default"
+  ]
+}

@@ -384,3 +384,18 @@ export async function listModelTrainingRecords(modelId) {
 /* =============================================================================
    10) END OF FILE
 ============================================================================= */
+
+/* =============================================================================
+   FSC-T-0007) MODEL ECONOMY READINESS
+============================================================================= */
+
+export const MODEL_ECONOMY_READINESS_STATE = Object.freeze({
+  defaultPersonalModel: "profileBirthRequired",
+  modelBirthCertificate: "schemaReady",
+  publicPrivateIdentity: "boundaryRequired",
+  modelDignity: "required",
+  monetization: "blockedUntilReview",
+  hiring: "blockedUntilReview",
+  marketplace: "blockedUntilReview",
+  interModelHiring: "blockedUntilReview"
+});

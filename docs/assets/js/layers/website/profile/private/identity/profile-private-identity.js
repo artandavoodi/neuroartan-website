@@ -101,3 +101,29 @@ if (document.readyState === 'loading') {
 } else {
   initProfilePrivateIdentity();
 }
+
+/* =============================================================================
+   FSC-T-0007) PRIVATE IDENTITY TO MODEL IDENTITY BOUNDARY
+============================================================================= */
+
+export const PROFILE_PRIVATE_MODEL_IDENTITY_BOUNDARY = Object.freeze({
+  profileIdentity: "ownerControlled",
+  defaultModelIdentity: "derivedFromProfileBirth",
+  privateModelIdentity: "neverPublic",
+  providerRoutingIdentity: "neverPublic",
+  modelBirthCertificate: "futureOwnerVisibleState"
+});
+
+/* =============================================================================
+   FSC-T-0007) MODEL BIRTH IDENTITY PLACEHOLDERS
+============================================================================= */
+
+export const PROFILE_MODEL_BIRTH_IDENTITY_PLACEHOLDERS = Object.freeze({
+  modelBirthCertificate: "futureOwnerVisibleState",
+  publicModelIdentity: "approvedPublicOnly",
+  privateModelIdentity: "neverPublic",
+  privateSerialIdentity: "neverPublic",
+  providerRoutingIdentity: "neverPublic",
+  sourceAuthorizationEvidence: "neverPublic",
+  dignitySecurityClassification: "ownerGoverned"
+});

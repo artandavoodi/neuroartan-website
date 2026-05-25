@@ -225,3 +225,59 @@ function initProfileDashboard() {
 }
 
 initProfileDashboard();
+
+/* =============================================================================
+   FSC-T-0007) DASHBOARD MODEL ECONOMY READINESS
+============================================================================= */
+
+export const PROFILE_DASHBOARD_MODEL_ECONOMY_READINESS = Object.freeze({
+  modelIdentity: "ownerFacingFutureState",
+  dignitySecurity: "ownerFacingFutureState",
+  entitlement: "ownerFacingFutureState",
+  monetization: "blockedUntilReview",
+  hiring: "blockedUntilReview",
+  marketplace: "blockedUntilReview"
+});
+
+/* =============================================================================
+   FSC-T-0007) DASHBOARD MODEL ECONOMY CARDS
+============================================================================= */
+
+export const PROFILE_DASHBOARD_MODEL_ECONOMY_CARDS = Object.freeze([
+  {
+    id: "default-personal-model",
+    label: "Default Personal Model",
+    value: "Profile birth state",
+    status: "architecture-ready"
+  },
+  {
+    id: "model-birth-identity",
+    label: "Model Birth Identity",
+    value: "Future owner-visible state",
+    status: "schema-ready"
+  },
+  {
+    id: "model-dignity-security",
+    label: "Dignity / Security",
+    value: "Owner-governed continuity data",
+    status: "required"
+  },
+  {
+    id: "monetization-readiness",
+    label: "Monetization",
+    value: "Blocked until review",
+    status: "blockedUntilReview"
+  },
+  {
+    id: "hiring-readiness",
+    label: "Hiring",
+    value: "Blocked until review",
+    status: "blockedUntilReview"
+  },
+  {
+    id: "marketplace-readiness",
+    label: "Marketplace",
+    value: "Blocked until review",
+    status: "blockedUntilReview"
+  }
+]);

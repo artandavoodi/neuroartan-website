@@ -1,0 +1,23 @@
+{
+  "id": "fsc-t-0007-model-identity-schema",
+  "version": "0.1",
+  "publicIdentityFields": [
+    "publicModelId",
+    "publicSerialIdentity",
+    "displayName",
+    "verificationState",
+    "publicLifecycleState",
+    "marketplaceState"
+  ],
+  "privateIdentityFields": [
+    "privateModelId",
+    "privateSerialIdentity",
+    "ownerAccountId",
+    "providerRoute",
+    "apiRoute",
+    "tokenAuthority",
+    "sourceAuthorizationEvidence",
+    "dignitySecurityClassification"
+  ],
+  "publicExposureRule": "Private model identity and provider-routing data must never render in public surfaces."
+}

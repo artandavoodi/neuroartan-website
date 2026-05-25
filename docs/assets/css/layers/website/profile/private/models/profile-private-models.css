@@ -76,3 +76,24 @@
     flex-direction:column;
   }
 }
+
+/* =============================================================================
+   FSC-T-0007) PRIVATE MODEL READINESS LABELS
+============================================================================= */
+
+.profile-private-models__readiness-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 1.75rem;
+  padding: 0 var(--spacing-sm);
+  border: 1px solid color-mix(in srgb, var(--text-color) 14%, transparent);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary-color);
+  font-size: var(--body-3-size);
+  line-height: var(--body-3-line-height);
+}
+
+.profile-private-models__readiness-label[data-state="blockedUntilReview"] {
+  opacity: 0.72;
+}

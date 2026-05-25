@@ -2,7 +2,7 @@
   "id": "products",
   "label": "Products",
   "title": "Products",
-  "description": "Canonical registry for the Neuroartan product system, including ICOS category framing, capability architecture, user workflows, integrations, and software-facing implementation surfaces.",
+  "description": "Canonical registry for the Neuroartan product system, defining ICOS as a governed cognitive operating system for personal models, continuity, profile intelligence, capability formation, model identity, and future model-economy readiness.",
   "defaultSection": "overview",
   "layout": {
     "sidebar": true,
@@ -13,7 +13,7 @@
   "hero": {
     "eyebrow": "Products",
     "title": "Products",
-    "description": "Neuroartan Products defines ICOS as a new category: a voice-trained reflective cognition system that organizes continuity, pattern intelligence, profile memory, and long-term self-authored development into one governed product architecture."
+    "description": "Neuroartan Products defines ICOS as a governed cognitive operating system where personal models, profile memory, voice-trained continuity, pattern intelligence, and future model-economy readiness form one coherent product architecture."
   },
   "sections": [
     {
@@ -21,7 +21,7 @@
       "label": "Overview",
       "title": "Overview",
       "route": "/pages/products/overview/index.html",
-      "description": "ICOS is positioned as a new product category: a user-trained reflective cognition system where voice, memory continuity, emotional patterning, and profile intelligence are organized into one long-term architecture.",
+      "description": "ICOS is positioned as a new product category: a user-trained cognitive operating system where voice, memory continuity, profile intelligence, personal models, and governed model-economy readiness are organized into one long-term architecture.",
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
@@ -39,7 +39,7 @@
       "label": "Capabilities",
       "title": "Capabilities",
       "route": "/pages/products/capabilities/index.html",
-      "description": "Core capabilities include voice training, reflective dialogue, thought-pattern analysis, emotion-aware interpretation, graph-linked continuity, profile memory, and longitudinal cognitive structuring across the user’s evolving record.",
+      "description": "Core capabilities include voice training, reflective dialogue, thought-pattern analysis, profile memory, personal model formation, model identity readiness, graph-linked continuity, and governed readiness for future model-economy participation.",
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
@@ -57,7 +57,7 @@
       "label": "Workflows",
       "title": "Workflows",
       "route": "/pages/products/workflows/index.html",
-      "description": "Product workflows define how users capture, decode, label, link, reflect on, and govern their own material so the system can support continuity, insight retrieval, self-review, and structured long-term development.",
+      "description": "Product workflows define how users capture, structure, train, govern, and evolve their own material so ICOS can support continuity, personal model formation, readiness review, and future model-economy governance.",
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
@@ -75,7 +75,7 @@
       "label": "Integrations",
       "title": "Integrations",
       "route": "/pages/products/integrations/index.html",
-      "description": "Integration architecture is reserved for identity sources, external knowledge inputs, continuity-linked services, and future governed system connections that extend ICOS without fragmenting profile ownership.",
+      "description": "Integration architecture connects identity sources, external knowledge inputs, provider-routing boundaries, continuity-linked services, and future governed systems without fragmenting profile ownership or exposing private model infrastructure.",
       "status": "active",
       "showInSidebar": true,
       "showInTopbar": true,
@@ -89,11 +89,29 @@
       }
     },
     {
+      "id": "model-economy",
+      "label": "Model Economy",
+      "title": "Model Economy",
+      "route": "/pages/products/model-economy/index.html",
+      "description": "Model Economy defines the governed pathway where personal models mature from private continuity into identity-bound, dignity-protected, user-directed cognitive assets, with future discoverability, hiring, and monetization remaining subject to strict review and release governance.",
+      "status": "active",
+      "showInSidebar": true,
+      "showInTopbar": true,
+      "localNavigationSource": {
+        "type": "json",
+        "path": "/assets/data/sections/products/model-economy.json"
+      },
+      "contentSource": {
+        "type": "json",
+        "path": "/assets/data/sections/products/model-economy.json"
+      }
+    },
+    {
       "id": "software",
       "label": "Software",
       "title": "Software",
       "route": "/pages/software/index.html",
-      "description": "Software surfaces translate the product architecture into release-facing systems, interface layers, profile infrastructure, and implementation pathways that operationalize ICOS as a governed software institution.",
+      "description": "Software surfaces translate the product architecture into runtime systems, interface layers, profile infrastructure, model identity foundations, provider-routing boundaries, and implementation pathways that operationalize ICOS as a governed software institution.",
       "status": "linked",
       "showInSidebar": true,
       "showInTopbar": true,

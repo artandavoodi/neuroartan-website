@@ -1,0 +1,28 @@
+{
+  "id": "fsc-t-0007-model-economy-policy",
+  "version": "0.1",
+  "status": "draft",
+  "doctrine": "AI absorbs operational labor while the human retains sovereign authorship, ownership, and direction.",
+  "allowedPublicLanguage": [
+    "personal model",
+    "trainable digital model",
+    "verified model identity",
+    "future monetization potential",
+    "user-directed cognitive asset"
+  ],
+  "blockedClaims": [
+    "guaranteed income",
+    "model consciousness",
+    "legal personhood",
+    "professional replacement without regulation",
+    "uncontrolled autonomous labor",
+    "posthumous economy by default"
+  ],
+  "launchRestrictions": {
+    "marketplace": "blockedUntilReview",
+    "payouts": "blockedUntilReview",
+    "interModelHiring": "blockedUntilReview",
+    "posthumousEconomy": "blockedUntilReview",
+    "regulatedDomainClaims": "blockedUntilReview"
+  }
+}

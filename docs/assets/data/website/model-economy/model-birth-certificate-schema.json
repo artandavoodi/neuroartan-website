@@ -1,0 +1,16 @@
+{
+  "id": "fsc-t-0007-model-birth-certificate-schema",
+  "version": "0.1",
+  "fields": [
+    "modelBirthCertificateNumber",
+    "canonicalModelId",
+    "ownerAccountId",
+    "createdAt",
+    "profileLink",
+    "modelType",
+    "lifecycleState",
+    "identityVerificationState",
+    "dignitySecurityClassification"
+  ],
+  "rule": "A model may be private and still have a birth identity."
+}

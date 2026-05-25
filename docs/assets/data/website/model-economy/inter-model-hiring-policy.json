@@ -1,0 +1,16 @@
+{
+  "id": "fsc-t-0007-inter-model-hiring-policy",
+  "version": "0.1",
+  "status": "blockedUntilReview",
+  "requires": [
+    "requesting model identity",
+    "target model identity",
+    "owner authorization",
+    "task scope",
+    "provider/API routing",
+    "cost boundary",
+    "audit trail",
+    "revocation pathway"
+  ],
+  "rule": "Inter-model hiring must not bypass human authority."
+}

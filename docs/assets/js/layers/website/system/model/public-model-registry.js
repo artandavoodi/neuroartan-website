@@ -406,3 +406,26 @@ export function searchPublicModels(query) {
 /* =============================================================================
    09) END OF FILE
 ============================================================================= */
+
+/* =============================================================================
+   FSC-T-0007) PUBLIC MODEL REGISTRY BOUNDARY
+============================================================================= */
+
+export const PUBLIC_MODEL_ECONOMY_BOUNDARY = Object.freeze({
+  mayExpose: [
+    "publicModelId",
+    "displayName",
+    "verificationState",
+    "publicLifecycleState",
+    "marketplaceStateWhereApproved"
+  ],
+  mustNeverExpose: [
+    "privateModelId",
+    "privateSerialIdentity",
+    "providerRoute",
+    "apiRoute",
+    "tokenAuthority",
+    "sourceAuthorizationEvidence"
+  ],
+  marketplaceState: "blockedUntilReview"
+});

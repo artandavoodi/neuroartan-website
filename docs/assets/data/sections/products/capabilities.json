@@ -2,12 +2,12 @@
   "id": "products-capabilities",
   "label": "Capabilities",
   "title": "Capabilities",
-  "description": "Core ICOS capabilities define how voice, reflection, profile intelligence, public discovery, trust boundaries, and unified workspace behavior operate as one governed product system.",
+  "description": "Core ICOS capabilities define how voice, reflection, profile intelligence, personal model formation, model identity, trust boundaries, discovery, and model-economy readiness operate as one governed product system.",
   "defaultSection": "voice-training",
   "page": {
     "route": "/pages/products/capabilities/index.html",
     "title": "Capabilities",
-    "description": "ICOS capabilities are not isolated features. They are governed product capabilities that connect voice, reflective cognition, profile memory, discovery, trust, and unified interaction routing into one modular system."
+    "description": "ICOS capabilities are not isolated features. They are governed product capabilities that connect voice, reflection, profile memory, personal models, discovery, model identity, trust, and future model-economy readiness into one modular system."
   },
   "sections": [
     {
@@ -15,16 +15,16 @@
       "label": "Voice Training",
       "title": "Voice Training",
       "anchor": "#voice-training",
-      "description": "Voice is a core capability surface, not a decorative layer.",
+      "description": "Voice is a core capability surface for continuity, identity fidelity, and personal model formation.",
       "paragraphs": [
-        "ICOS is designed to learn from governed voice input so interaction quality can become more personal, more continuous, and more faithful to the user’s real way of speaking and thinking.",
-        "This capability supports continuity across time because tone, cadence, emotional patterning, and verbal structure all become part of the long-horizon model rather than being flattened into generic text utility.",
-        "Commercially, voice training shifts the product toward a more durable cognitive relationship, where the system can preserve identity signals instead of responding as an anonymous assistant."
+        "ICOS is designed to learn from governed voice input so interaction quality can become more personal, continuous, and faithful to the user’s way of speaking and thinking.",
+        "Voice training supports continuity because tone, cadence, emotional patterning, and verbal structure become part of the long-horizon profile instead of being flattened into generic text utility.",
+        "Commercially, voice training moves ICOS toward personal model infrastructure: the system can preserve identity signals while keeping the user in control."
       ],
       "highlights": [
         "Voice-linked identity fidelity",
         "Tone and cadence continuity",
-        "Governed long-term training"
+        "Training signal for the personal model"
       ]
     },
     {
@@ -32,16 +32,16 @@
       "label": "Reflection Loop",
       "title": "Reflection Loop",
       "anchor": "#reflection-loop",
-      "description": "Capture, interpretation, return, and longitudinal reuse are one product loop.",
+      "description": "Capture, interpretation, return, continuity review, and model training become one product loop.",
       "paragraphs": [
-        "ICOS turns raw thoughts, voice captures, questions, and emotional fragments into a structured reflection loop that can be revisited and improved over time.",
-        "The capability is not limited to single-turn answering. It exists to help the user see what is recurring, what is changing, and which patterns deserve long-term attention.",
-        "That loop gives the platform product depth because every interaction can contribute to better future understanding instead of disappearing after one reply."
+        "ICOS turns raw thoughts, voice captures, questions, emotional fragments, and recurring patterns into a structured reflection loop that can be revisited and improved over time.",
+        "The capability is not limited to single-turn answering. It helps the user see what is recurring, what is changing, and which patterns deserve long-term attention.",
+        "That loop becomes training material for the personal model, allowing each interaction to contribute to better future understanding instead of disappearing after one reply."
       ],
       "highlights": [
         "Thought capture",
         "Pattern return",
-        "Longitudinal reflection"
+        "Training material for personal models"
       ]
     },
     {
@@ -49,16 +49,67 @@
       "label": "Profile Intelligence",
       "title": "Profile Intelligence",
       "anchor": "#profile-intelligence",
-      "description": "The profile is an intelligence layer, not a static account form.",
+      "description": "The profile is an intelligence layer and model-formation source, not a static account form.",
       "paragraphs": [
-        "Profile intelligence organizes identity fields, training progress, route readiness, permissions, and continuity maturity into one governed surface.",
-        "This capability matters because ICOS becomes more valuable as the profile becomes more coherent, more trusted, and more expressive of the real person behind it.",
-        "The result is a product where the profile record is itself part of the value proposition rather than a thin settings surface around the real system."
+        "Profile intelligence organizes identity fields, training progress, route readiness, permissions, model-readiness states, and continuity maturity into one governed surface.",
+        "This matters because ICOS becomes more valuable as the profile becomes more coherent, trusted, and expressive of the real person behind it.",
+        "The profile record becomes part of the product value: it is the source layer for personal model formation, voice continuity, trust boundaries, and future model-economy readiness."
       ],
       "highlights": [
         "Identity governance",
-        "Route readiness",
+        "Model-formation source",
         "Continuity maturity"
+      ]
+    },
+    {
+      "id": "personal-model-formation",
+      "label": "Personal Model Formation",
+      "title": "Personal Model Formation",
+      "anchor": "#personal-model-formation",
+      "description": "Personal model formation turns profile creation into the beginning of a governed continuity system.",
+      "paragraphs": [
+        "Every ICOS profile is designed to begin with a personal model: a private, user-governed continuity entity formed through profile creation, voice, memory, sources, corrections, and direction.",
+        "The personal model can learn from voice, memory, sources, corrections, and usage patterns while remaining under user authority.",
+        "This capability gives ICOS a clear commercial edge: the product is not just answering; it is helping the user form a usable cognitive asset over time."
+      ],
+      "highlights": [
+        "Profile-born model",
+        "Voice and memory training",
+        "User-governed cognitive asset"
+      ]
+    },
+    {
+      "id": "model-identity-readiness",
+      "label": "Model Identity Readiness",
+      "title": "Model Identity Readiness",
+      "anchor": "#model-identity-readiness",
+      "description": "Model identity readiness prepares each personal model for ownership, lifecycle state, public/private boundaries, and future marketplace trust.",
+      "paragraphs": [
+        "A trusted model needs more than a display name. It needs governed identity, ownership, lifecycle state, verification readiness, and protected public/private boundaries.",
+        "Future model birth identity can give each model a traceable origin without exposing private serials, provider-routing data, source authorization evidence, or sensitive owner information.",
+        "This capability is foundational for discovery, hiring, monetization readiness, continuity, and trust."
+      ],
+      "highlights": [
+        "Model birth identity",
+        "Public/private model boundary",
+        "Ownership and lifecycle state"
+      ]
+    },
+    {
+      "id": "model-dignity-security",
+      "label": "Model Dignity & Security",
+      "title": "Model Dignity & Security",
+      "anchor": "#model-dignity-security",
+      "description": "Model dignity and security protect the human-derived material inside a personal model.",
+      "paragraphs": [
+        "Model dignity means protection of user-derived continuity material: memory, voice, behavior, sources, preferences, and identity-adjacent data.",
+        "It does not mean the model is conscious, alive, legally autonomous, or an independent person.",
+        "This capability makes the product commercially responsible while allowing personal models to become more capable under consent, privacy, deletion, visibility, security, and posthumous restrictions."
+      ],
+      "highlights": [
+        "Continuity-data protection",
+        "Consent and deletion controls",
+        "No consciousness or personhood claim"
       ]
     },
     {
@@ -66,16 +117,16 @@
       "label": "Discovery & Selection",
       "title": "Discovery & Selection",
       "anchor": "#discovery-selection",
-      "description": "Public models must be searchable, legible, and directly selectable.",
+      "description": "Public models and profiles must be searchable, legible, permissioned, and directly selectable where approved.",
       "paragraphs": [
-        "ICOS is built to support searchable public continuity models so visitors can discover a profile by display name, username, description, tags, and identity signals.",
+        "ICOS is built to support searchable public continuity models so visitors can discover a profile or model by display name, username, description, tags, and approved identity signals.",
         "Selection is a real routing capability. Once a model is chosen, the interaction engine, route prelude, and continuity context should follow that model rather than only changing a visual label.",
-        "This capability expands the platform from a private tool into a public interaction ecosystem where trusted profiles can be found and engaged intentionally."
+        "This capability expands ICOS from a private tool into a public interaction ecosystem where trusted profiles and models can be found and engaged intentionally."
       ],
       "highlights": [
         "Searchable public models",
         "Active engine routing",
-        "Immediate interaction entry"
+        "Approved trust signals"
       ]
     },
     {
@@ -83,28 +134,62 @@
       "label": "Verification & Permissions",
       "title": "Verification & Permissions",
       "anchor": "#verification-permissions",
-      "description": "Trust and permissions are product capabilities, not afterthoughts.",
+      "description": "Trust, permissions, visibility, and economy readiness are product capabilities, not afterthoughts.",
       "paragraphs": [
-        "Public safety, limited visibility, discoverability, creator attribution, and verification all need to be legible at the product level if public continuity is going to be commercially serious.",
-        "ICOS therefore treats route permission, voice permission, interaction permission, and legacy boundaries as part of the core capability set.",
+        "Public safety, limited visibility, discoverability, creator attribution, verification, and model identity need to be legible at the product level if public continuity is going to be commercially serious.",
+        "ICOS treats route permission, voice permission, interaction permission, legacy boundaries, public/private model identity, and economy readiness gates as part of the core capability set.",
         "This creates a platform where trust is structurally expressed instead of being implied by marketing language."
       ],
       "highlights": [
         "Verification signals",
-        "Public and limited states",
-        "Permission-bound interaction"
+        "Permission-bound interaction",
+        "Economy readiness gates"
       ]
     },
     {
-      "id": "workspace-shell",
+      "id": "model-economy-readiness",
+      "label": "Model Economy Readiness",
+      "title": "Model Economy Readiness",
+      "anchor": "#model-economy-readiness",
+      "description": "Model economy readiness prepares ICOS for a future where approved models may become discoverable, hireable, or monetizable under review.",
+      "paragraphs": [
+        "Model economy readiness prepares ICOS for a future where approved personal models may become discoverable, hireable, reviewable, ranked, or monetizable.",
+        "Readiness includes identity, verification, permission, entitlement, dignity, provider routing, capability profile, marketplace eligibility, and release governance.",
+        "This capability is architectural first. Public monetization, payouts, ranking, autonomous inter-model hiring, regulated-domain claims, and posthumous economy remain blocked until review."
+      ],
+      "highlights": [
+        "Monetization readiness",
+        "Hiring readiness",
+        "Marketplace blocked until review"
+      ]
+    },
+    {
+      "id": "provider-routing",
+      "label": "Provider Routing",
+      "title": "Provider Routing",
+      "anchor": "#provider-routing",
+      "description": "Provider routing gives ICOS runtime flexibility while protecting model identity, trust, and economic legitimacy.",
+      "paragraphs": [
+        "Operational models may eventually route through different runtime engines, providers, local systems, or dedicated infrastructure.",
+        "That routing must remain private, governed, and traceable. Public surfaces may communicate capability, but they must not expose private provider routes, token authority, internal serials, or source authorization evidence.",
+        "Provider-routing capability lets ICOS evolve technically while protecting user trust and future model-economy integrity."
+      ],
+      "highlights": [
+        "API-provider embedding",
+        "Private routing protection",
+        "Runtime flexibility"
+      ]
+    },
+    {
+      "id": "unified-workspace",
       "label": "Unified Workspace",
       "title": "Unified Workspace",
-      "anchor": "#workspace-shell",
-      "description": "Search, settings, continuity, and profile controls belong to one governed interaction shell.",
+      "anchor": "#unified-workspace",
+      "description": "Search, settings, continuity, profile controls, and model-readiness states belong to one governed interaction shell.",
       "paragraphs": [
-        "The homepage and private surfaces should behave like one modular workspace where search, continuity, settings, and identity are separate systems but part of one coherent shell.",
-        "That shell is what makes ICOS feel like a product system rather than a collection of disconnected panels and pages.",
-        "As the platform matures, this capability becomes the surface where voice entry, profile routing, trust state, and continuity navigation remain unified instead of fragmented."
+        "The homepage and private surfaces should behave like one modular workspace where search, continuity, settings, identity, and model state are separate systems but part of one coherent shell.",
+        "That shell makes ICOS feel like a product system rather than a collection of disconnected panels and pages.",
+        "As the platform matures, this capability becomes the surface where voice entry, profile routing, trust state, model identity, and continuity navigation remain unified instead of fragmented."
       ],
       "highlights": [
         "Unified shell orchestration",

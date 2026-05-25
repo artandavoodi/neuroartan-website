@@ -1,0 +1,19 @@
+{
+  "id": "fsc-t-0007-model-population-awareness",
+  "version": "0.1",
+  "status": "schemaReadiness",
+  "populationCounts": {
+    "totalModels": 0,
+    "defaultPersonalModels": 0,
+    "privateModels": 0,
+    "publicModels": 0,
+    "verifiedModels": 0,
+    "monetizableModels": 0,
+    "hireableModels": 0,
+    "marketplaceVisibleModels": 0,
+    "suspendedModels": 0,
+    "posthumousModels": 0,
+    "archivedModels": 0
+  },
+  "rule": "Ocean-Brain awareness must derive from canonical model records, not public rendering projections."
+}

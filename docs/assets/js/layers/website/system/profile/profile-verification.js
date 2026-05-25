@@ -209,3 +209,15 @@ window.NEUROARTAN_PROFILE_VERIFICATION = {
 /* =============================================================================
    08) END OF FILE
 ============================================================================= */
+
+/* =============================================================================
+   FSC-T-0007) MODEL IDENTITY VERIFICATION BOUNDARY
+============================================================================= */
+
+export const PROFILE_MODEL_VERIFICATION_BOUNDARY = Object.freeze({
+  verifiesProfileIdentity: true,
+  preparesModelIdentity: true,
+  doesNotApproveMonetization: true,
+  doesNotApproveMarketplace: true,
+  doesNotApproveHiring: true
+});

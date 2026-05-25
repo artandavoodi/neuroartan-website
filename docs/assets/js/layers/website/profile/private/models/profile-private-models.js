@@ -132,3 +132,30 @@ function initProfilePrivateModels() {
 }
 
 initProfilePrivateModels();
+
+/* =============================================================================
+   FSC-T-0007) PRIVATE MODEL ECONOMY PLACEHOLDER STATE
+============================================================================= */
+
+export const PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER = Object.freeze({
+  defaultPersonalModel: "assignedAtProfileBirth",
+  birthIdentity: "ownerVisibleFutureState",
+  dignitySecurity: "ownerVisibleFutureState",
+  monetizationReadiness: "blockedUntilReview",
+  hiringReadiness: "blockedUntilReview",
+  marketplaceVisibility: "blockedUntilReview"
+});
+
+/* =============================================================================
+   FSC-T-0007) PRIVATE MODEL READINESS LABELS
+============================================================================= */
+
+export const PROFILE_PRIVATE_MODEL_READINESS_LABELS = Object.freeze({
+  defaultPersonalModel: "Default personal model",
+  modelBirthIdentity: "Birth identity pending",
+  modelDignity: "Dignity protected",
+  monetization: "Monetization blocked until review",
+  hiring: "Hiring blocked until review",
+  marketplace: "Marketplace blocked until review",
+  interModelHiring: "Inter-model hiring blocked until review"
+});

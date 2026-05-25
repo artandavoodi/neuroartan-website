@@ -2,12 +2,12 @@
   "id": "products-overview",
   "label": "Overview",
   "title": "Overview",
-  "description": "",
+  "description": "Overview of ICOS as a governed cognitive operating system for personal models, voice-trained continuity, profile intelligence, model identity, and future model-economy readiness.",
   "defaultSection": "what-icos-is",
   "page": {
     "route": "/pages/products/overview/index.html",
     "title": "Overview",
-    "description": ""
+    "description": "A public-facing overview of ICOS as personal model infrastructure: continuity, voice training, profile intelligence, model identity, trust, and future model-economy readiness under user authority."
   },
   "sections": [
     {
@@ -15,77 +15,272 @@
       "label": "What ICOS Is",
       "title": "What ICOS Is",
       "anchor": "#what-icos-is",
-      "description": "Defines ICOS as a new category: a voice-trained continuity system for reflection, profile intelligence, and long-term cognitive development."
+      "description": "Defines ICOS as a new category: a governed cognitive operating system where voice-trained continuity, profile intelligence, personal models, and long-term memory become one coherent product architecture.",
+      "paragraphs": [
+        "ICOS is a cognitive operating system for forming, training, and governing personal models.",
+        "It begins with memory, voice, reflection, and profile intelligence, then organizes those signals into a continuity layer the user can direct over time.",
+        "The product is not a generic chatbot. It is infrastructure for personal intelligence, model identity, and future model-economy readiness."
+      ],
+      "highlights": [
+        "Cognitive operating system",
+        "Personal model infrastructure",
+        "Continuity under user authority"
+      ]
     },
     {
       "id": "core-framing",
       "label": "Core Framing",
       "title": "Core Framing",
       "anchor": "#core-framing",
-      "description": "Positions ICOS as a governed product architecture focused on continuity, structured reflection, and premium cognitive tooling rather than generic conversation."
+      "description": "Positions ICOS as governed personal model infrastructure focused on continuity, structured reflection, identity, memory, and user-directed cognitive capability rather than generic conversation.",
+      "paragraphs": [
+        "The core framing is simple: ICOS turns personal memory, voice, sources, and reflection into a governed model layer.",
+        "The user remains the author, owner, and controlling authority. The model becomes the operational extension of the user’s knowledge and direction.",
+        "This gives ICOS a larger commercial category: personal model infrastructure, digital continuity, and future model economy architecture."
+      ],
+      "highlights": [
+        "User authority remains central",
+        "Model as operational extension",
+        "Commercial category expansion"
+      ]
     },
     {
       "id": "reflection-loop",
       "label": "Reflection Loop",
       "title": "Reflection Loop",
       "anchor": "#reflection-loop",
-      "description": "Explains the product’s core interaction cycle: capture, reflection, continuity review, and long-term profile refinement."
+      "description": "Explains the product’s core interaction cycle: capture, reflection, profile refinement, personal model training, continuity review, and long-term readiness development.",
+      "paragraphs": [
+        "The reflection loop is the first engine of personal model formation.",
+        "A user captures thought, receives structured reflection, reviews continuity, and gradually teaches ICOS how their memory, language, priorities, and decisions evolve.",
+        "Over time, the loop becomes more than interaction. It becomes training material for a governed personal model."
+      ],
+      "highlights": [
+        "Capture and reflection",
+        "Profile refinement",
+        "Training material for the personal model"
+      ]
     },
     {
       "id": "profile-intelligence",
       "label": "Profile Intelligence",
       "title": "Profile Intelligence",
       "anchor": "#profile-intelligence",
-      "description": "Describes how ICOS turns reflection, memory, and identity signals into a governed profile layer rather than a simple account surface."
+      "description": "Describes how ICOS turns reflection, memory, identity signals, source context, and model-readiness states into a governed profile layer rather than a simple account surface.",
+      "paragraphs": [
+        "Profile intelligence is the bridge between account identity and personal model formation.",
+        "The profile is not only a user record. It becomes the governed source layer for voice, memory, permissions, source context, model identity, and continuity state.",
+        "This is how ICOS prepares the user’s material for long-term intelligence without fragmenting ownership or exposing private model infrastructure."
+      ],
+      "highlights": [
+        "Governed profile layer",
+        "Source for model formation",
+        "Ownership-preserving intelligence"
+      ]
+    },
+    {
+      "id": "personal-models",
+      "label": "Personal Models",
+      "title": "Personal Models",
+      "anchor": "#personal-models",
+      "description": "Introduces the default personal model as the user-governed continuity entity formed through profile creation, voice, memory, sources, and direction.",
+      "paragraphs": [
+        "Every ICOS profile is designed to begin with a personal model: a private, user-governed continuity entity formed through profile creation, voice, memory, sources, corrections, and direction.",
+        "The personal model is not a disposable assistant or theatrical digital persona. It is the structured foundation through which the user’s knowledge, preferences, cognitive patterns, and working style become increasingly usable over time.",
+        "This is the entry point into the model economy. Before any marketplace, monetization, or public visibility exists, the personal model must first become useful, trustworthy, and governed."
+      ],
+      "highlights": [
+        "Default personal model",
+        "Voice, memory, and source training",
+        "Private continuity under user authority"
+      ]
+    },
+    {
+      "id": "model-birth-identity",
+      "label": "Model Birth Identity",
+      "title": "Model Birth Identity",
+      "anchor": "#model-birth-identity",
+      "description": "Frames model identity, birth records, public/private identity boundaries, and owner authority as future-compatible architecture rather than decorative profile metadata.",
+      "paragraphs": [
+        "A model that can be trusted must have identity. ICOS treats model identity as infrastructure for ownership, lifecycle state, verification, public visibility, and private protection.",
+        "Future model birth identity gives each model a traceable origin without exposing private serials, provider-routing information, source authorization evidence, or sensitive owner data.",
+        "This identity layer is what allows a personal model to become more than a temporary interface: it becomes a governed entity inside the ICOS product system."
+      ],
+      "highlights": [
+        "Model ID and birth identity",
+        "Public/private identity boundary",
+        "Owner authority and lifecycle state"
+      ]
     },
     {
       "id": "voice-training",
       "label": "Voice Training",
       "title": "Voice Training",
       "anchor": "#voice-training",
-      "description": "Frames voice training as core infrastructure for continuity, identity fidelity, and long-term interaction quality."
+      "description": "Frames voice training as core infrastructure for continuity, identity fidelity, personal model formation, and long-term interaction quality.",
+      "paragraphs": [
+        "Voice training gives ICOS a deeper continuity layer than text alone.",
+        "The user’s tone, language, cadence, and reflective style become part of how the system understands and supports them over time.",
+        "As the personal model matures, voice becomes a source of identity fidelity, not a decorative audio feature."
+      ],
+      "highlights": [
+        "Voice-trained continuity",
+        "Identity fidelity",
+        "Model formation signal"
+      ]
     },
     {
       "id": "public-discovery",
       "label": "Public Discovery",
       "title": "Public Discovery",
       "anchor": "#public-discovery",
-      "description": "Introduces guest interaction, searchable profile surfaces, and discovery pathways as commercial entry points into ICOS."
+      "description": "Introduces guest interaction, searchable profile surfaces, verified model identity, and future discovery pathways as commercial entry points into ICOS.",
+      "paragraphs": [
+        "Public discovery is the bridge between private continuity and external trust.",
+        "Some profiles and models may eventually become searchable or publicly interactable where the owner allows it and the system confirms the correct visibility boundaries.",
+        "Discovery must remain governed. Public surfaces can show approved trust signals, but private identity, provider routing, source evidence, and sensitive continuity material remain protected."
+      ],
+      "highlights": [
+        "Searchable public surfaces",
+        "Verified trust signals",
+        "Private infrastructure protected"
+      ]
     },
     {
       "id": "permissions-trust",
       "label": "Permissions & Trust",
       "title": "Permissions & Trust",
       "anchor": "#permissions-trust",
-      "description": "Defines visibility states, permission architecture, and trust boundaries as core product systems rather than secondary settings."
+      "description": "Defines visibility states, permission architecture, trust boundaries, public/private model identity, and economy readiness gates as core product systems rather than secondary settings.",
+      "paragraphs": [
+        "Permissions are product infrastructure, not cosmetic settings.",
+        "ICOS must distinguish private, public, searchable, interactable, monetizable, hireable, marketplace-visible, legacy-enabled, and posthumous-restricted states.",
+        "This ensures that model identity, discovery, and future economy participation never collapse into a single public/private toggle."
+      ],
+      "highlights": [
+        "Granular visibility states",
+        "Trust and permission architecture",
+        "Economy readiness gates"
+      ]
+    },
+    {
+      "id": "model-dignity",
+      "label": "Model Dignity",
+      "title": "Model Dignity",
+      "anchor": "#model-dignity",
+      "description": "Explains model dignity as protection of user-derived continuity material, not as a claim of consciousness, personhood, or autonomous legal status.",
+      "paragraphs": [
+        "Model dignity means protection of user-derived continuity material: memory, voice, behavior, sources, preferences, and identity-adjacent data.",
+        "It does not mean the model is conscious, alive, legally autonomous, or an independent person.",
+        "The dignity layer exists because personal models may contain sensitive human-derived material. ICOS must protect that material through consent, permission, privacy, deletion, visibility, security, and posthumous restrictions."
+      ],
+      "highlights": [
+        "Continuity-data protection",
+        "No consciousness or personhood claim",
+        "Consent and security boundary"
+      ]
+    },
+    {
+      "id": "model-economy",
+      "label": "Model Economy",
+      "title": "Model Economy",
+      "anchor": "#model-economy",
+      "description": "Positions the ICOS Model Economy as a governed future pathway where approved personal models may become discoverable, hireable, or monetizable under strict review.",
+      "paragraphs": [
+        "The ICOS Model Economy is the governed product architecture where personal models can mature from private continuity into user-directed cognitive assets.",
+        "A trained personal model may eventually become discoverable, hireable, or monetizable under strict review, but this is not a guaranteed-income promise and not an open marketplace launch.",
+        "The user remains the author, owner, and controlling authority while the model absorbs operational labor under governed conditions."
+      ],
+      "highlights": [
+        "Governed model economy",
+        "User-directed cognitive assets",
+        "Future marketplace readiness"
+      ]
     },
     {
       "id": "legacy-continuity",
       "label": "Legacy Continuity",
       "title": "Legacy Continuity",
       "anchor": "#legacy-continuity",
-      "description": "Presents governed legacy continuity as a serious continuation model shaped by permissions, profile maturity, and long-term preservation."
+      "description": "Presents governed legacy continuity as a serious continuation model shaped by permissions, model maturity, posthumous restrictions, and long-term preservation.",
+      "paragraphs": [
+        "Legacy continuity allows ICOS to preserve a user’s authorized memory, voice, and model state beyond ordinary account activity.",
+        "This does not mean automatic public access, automatic economic activity, or uncontrolled posthumous interaction.",
+        "Any legacy or posthumous model state must remain governed by consent, successor authority, privacy, security, and legal review."
+      ],
+      "highlights": [
+        "Long-term continuity",
+        "Posthumous restrictions",
+        "Consent and successor control"
+      ]
+    },
+    {
+      "id": "blocked-until-review",
+      "label": "Governed Release Boundary",
+      "title": "Blocked Until Review",
+      "anchor": "#blocked-until-review",
+      "description": "Clarifies that marketplace launch, payouts, ranking, inter-model hiring, posthumous economy, and regulated-domain claims remain blocked until legal, governance, product, and implementation review.",
+      "paragraphs": [
+        "Marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, and posthumous economy remain blocked until review.",
+        "The product can communicate the future pathway without pretending those systems are already active.",
+        "This keeps the public language commercially clear, production-ready, and defensible while preserving legal, governance, product, and implementation discipline."
+      ],
+      "highlights": [
+        "Blocked until review",
+        "No guaranteed-income claims",
+        "No uncontrolled autonomous labor"
+      ]
     },
     {
       "id": "release",
       "label": "Release",
       "title": "Release",
       "anchor": "#release",
-      "description": "Defines the current public release layer and what is presently exposed as the market-facing introduction to ICOS."
+      "description": "Defines the current public release layer as category education, personal model positioning, and architecture-readiness communication rather than marketplace activation.",
+      "paragraphs": [
+        "The current public release layer introduces the category and explains the architecture without launching the full economy.",
+        "ICOS can present personal models, model identity, model dignity, and future economy readiness as product direction.",
+        "Marketplace activation, payouts, ranking, inter-model hiring, and posthumous economy remain outside the public launch layer until review."
+      ],
+      "highlights": [
+        "Category education",
+        "Architecture readiness",
+        "Economy activation gated"
+      ]
     },
     {
       "id": "version",
       "label": "Version",
       "title": "Version",
       "anchor": "#version",
-      "description": "Clarifies the current version posture of the product architecture and how the public surface relates to deeper product maturity."
+      "description": "Clarifies the current version posture: conceptually mature, architecturally coherent, MVP-oriented around personal models, and long-range for marketplace economy activation.",
+      "paragraphs": [
+        "The current version posture is architecture-ready, not marketplace-launched.",
+        "The closest MVP path is the personal model: one private model that learns, remembers, reflects voice, organizes thought, and acts as a continuity profile.",
+        "Marketplace, monetization, ranking, inter-model hiring, and posthumous economy belong to later maturity stages."
+      ],
+      "highlights": [
+        "Architecture-ready",
+        "Personal model MVP path",
+        "Marketplace long-range"
+      ]
     },
     {
       "id": "status",
       "label": "Status",
       "title": "Status",
       "anchor": "#status",
-      "description": "States the present maturity state of ICOS across concept architecture, public framing, continuity systems, and future development readiness."
+      "description": "States the present maturity state of ICOS across product category, public framing, personal model infrastructure, continuity systems, and future model-economy readiness.",
+      "paragraphs": [
+        "ICOS now has a clear product category: personal model infrastructure inside a governed cognitive operating system.",
+        "The concept is mature, the architecture is coherent, and the MVP path should prioritize private personal models, profile intelligence, model identity, and continuity.",
+        "The model economy remains a powerful long-range branch that should continue through legal, governance, software, and product readiness before public activation."
+      ],
+      "highlights": [
+        "Product category defined",
+        "MVP priority: personal models",
+        "Economy branch gated by review"
+      ]
     }
   ]
 }

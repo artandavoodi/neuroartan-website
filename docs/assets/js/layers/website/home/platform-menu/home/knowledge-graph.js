@@ -34,8 +34,7 @@ function updateKnowledgeGraphDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch knowledge graph data:', err);
-  }, { signal: controller.signal });
-  return () => controller.abort();
+  });
 }
 
 // Fetch knowledge graph data from backend

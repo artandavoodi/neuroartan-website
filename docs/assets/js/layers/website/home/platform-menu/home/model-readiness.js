@@ -34,8 +34,7 @@ function updateModelReadinessDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch readiness data:', err);
-  }, { signal: controller.signal });
-  return () => controller.abort();
+  });
 }
 
 // Fetch readiness data from backend

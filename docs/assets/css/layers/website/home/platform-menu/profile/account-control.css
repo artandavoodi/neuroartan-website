@@ -4,8 +4,8 @@
   width:100%;
 }
 
-.home-platform-destination__surface.home-platform-theme {
-  padding: var(--spacing-2xl);
+.home-platform-destination__surface.home-platform-theme{
+  padding:var(--spacing-none);
 }
 
 .home-platform-theme__action-list{

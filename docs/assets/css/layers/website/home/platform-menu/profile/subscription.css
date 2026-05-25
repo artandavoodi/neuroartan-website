@@ -5,7 +5,7 @@
 }
 
 .home-platform-destination__surface.home-platform-theme{
-  padding:var(--spacing-2xl);
+  padding:var(--spacing-none);
 }
 
 .home-platform-theme__action-list{

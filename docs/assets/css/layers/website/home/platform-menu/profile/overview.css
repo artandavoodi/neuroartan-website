@@ -5,8 +5,8 @@
   width:var(--size-full);
 }
 
-.home-platform-destination__surface.home-platform-theme {
-  padding: var(--spacing-2xl);
+.home-platform-destination__surface.home-platform-theme{
+  padding:var(--spacing-none);
 }
 
 .profile-private-hero__avatar-wrap{

@@ -11,7 +11,8 @@
    09) TOAST TOKENS
    10) VALIDATION TOKENS
    11) SYSTEM MESSAGE TOKENS
-   12) END OF FILE
+   12) LOADER TOKENS
+   13) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -243,5 +244,21 @@
 }
 
 /* =============================================================================
-   12) END OF FILE
+   12) LOADER TOKENS
+============================================================================= */
+:root{
+  /* Circular loader primitive tokens. */
+  --loader-circle-size-sm:0.86rem;
+  --loader-circle-size:1.08rem;
+  --loader-circle-size-lg:1.42rem;
+  --loader-circle-stroke-width:var(--border-width-hairline);
+  --loader-circle-color:var(--text-secondary-color);
+  --loader-circle-opacity:var(--overlay-opacity-open);
+  --loader-circle-motion-duration:720ms;
+  --loader-circle-motion-ease:linear;
+  --loader-circle-reduced-motion-duration:1800ms;
+}
+
+/* =============================================================================
+   13) END OF FILE
 ============================================================================= */

@@ -34,8 +34,7 @@ function updateUsageDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch usage data:', err);
-  }, { signal: controller.signal });
-  return () => controller.abort();
+  });
 }
 
 // Fetch usage data from backend

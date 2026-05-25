@@ -34,8 +34,7 @@ function updateContinuityDisplay(root) {
     }
   }).catch(err => {
     console.error('Failed to fetch continuity data:', err);
-  }, { signal: controller.signal });
-  return () => controller.abort();
+  });
 }
 
 // Fetch continuity data from backend

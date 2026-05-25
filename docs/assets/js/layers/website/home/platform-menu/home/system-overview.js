@@ -45,8 +45,7 @@ function updateSystemState(root) {
     if (sessionValue) sessionValue.textContent = 'No session';
     if (memoryValue) memoryValue.textContent = '0 MB';
     if (continuityValue) continuityValue.textContent = 'Not connected';
-  }, { signal: controller.signal });
-  return () => controller.abort();
+  });
 }
 
 // Fetch system state from backend

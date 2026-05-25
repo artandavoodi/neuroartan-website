@@ -78,6 +78,17 @@ const HOME_SEARCH_SHELL_SCOPES = Object.freeze([
   { id: 'company', label: 'Company' },
 ]);
 
+const HOME_SEARCH_VISIBLE_SCOPE_IDS = Object.freeze([
+  'all',
+  'profiles',
+  'models',
+  'content',
+]);
+
+function getVisibleHomeSearchScopes() {
+  return HOME_SEARCH_SHELL_SCOPES.filter((scope) => HOME_SEARCH_VISIBLE_SCOPE_IDS.includes(scope.id));
+}
+
 function normalizeHomeSearchScope(value = 'all') {
   const normalized = normalizeHomeSearchQuery(value).toLowerCase();
   return HOME_SEARCH_SHELL_SCOPES.some((scope) => scope.id === normalized) ? normalized : 'all';
@@ -1133,11 +1144,8 @@ function renderHomeSearchShell() {
   if (!HOME_SEARCH_SHELL_STATE.dataReady && HOME_SEARCH_SHELL_STATE.loadingPromise) {
     syncHomeSearchRailAskAction(false);
     nodes.results.innerHTML = `
-      <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
-        <p class="home-search-shell__empty-title">Loading search surfaces</p>
-        <p class="home-search-shell__empty-text">
-          The homepage is loading public models, published routes, and institutional sections.
-        </p>
+      <div class="home-search-shell__loading-state" id="home-search-shell-loading-state" role="status" aria-live="polite" aria-label="Loading search results">
+        <span class="ui-loader-circle ui-loader-circle--lg" aria-hidden="true"></span>
       </div>
     `;
     return;

@@ -2,8 +2,9 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) LOADER PRIMITIVE GOVERNANCE NOTE
-   03) RESERVED FOR CANONICAL EXTRACTION
-   04) END OF FILE
+   03) CIRCULAR LOADER PRIMITIVE
+   04) ACCESSIBILITY
+   05) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -14,15 +15,74 @@
 /* =============================================================================
    02) LOADER PRIMITIVE GOVERNANCE NOTE
 ============================================================================= */
-/* This file is intentionally scaffolded only.
-   Canonical loader styling must be extracted from approved live consumers.
-   No new visual behavior, spacing, hover logic, or color invention is permitted here.
-   Future work must preserve the current live style exactly and only modularize/tokenize it. */
+/* Loader primitives must remain reusable, theme-aware, and token-governed.
+   Consumers may control placement only; animation, size, stroke, opacity, and
+   color must come from the global loader token system. */
 
 /* =============================================================================
-   03) RESERVED FOR CANONICAL EXTRACTION
+   03) CIRCULAR LOADER PRIMITIVE
 ============================================================================= */
+.ui-loader-circle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--loader-circle-size);
+  height:var(--loader-circle-size);
+  color:var(--loader-circle-color);
+  opacity:var(--loader-circle-opacity);
+  pointer-events:none;
+}
+
+.ui-loader-circle::before{
+  content:"";
+  display:block;
+  width:var(--loader-circle-size);
+  height:var(--loader-circle-size);
+  border:var(--loader-circle-stroke-width) solid currentColor;
+  border-right-color:transparent;
+  border-radius:var(--radius-full);
+  animation:ui-loader-circle-spin var(--loader-circle-motion-duration) var(--loader-circle-motion-ease) infinite;
+}
+
+.ui-loader-circle--sm{
+  width:var(--loader-circle-size-sm);
+  height:var(--loader-circle-size-sm);
+}
+
+.ui-loader-circle--sm::before{
+  width:var(--loader-circle-size-sm);
+  height:var(--loader-circle-size-sm);
+}
+
+.ui-loader-circle--lg{
+  width:var(--loader-circle-size-lg);
+  height:var(--loader-circle-size-lg);
+}
+
+.ui-loader-circle--lg::before{
+  width:var(--loader-circle-size-lg);
+  height:var(--loader-circle-size-lg);
+}
+
+@keyframes ui-loader-circle-spin{
+  from{
+    transform:rotate(0deg);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+}
 
 /* =============================================================================
-   04) END OF FILE
+   04) ACCESSIBILITY
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .ui-loader-circle::before{
+    animation-duration:var(--loader-circle-reduced-motion-duration);
+  }
+}
+
+/* =============================================================================
+   05) END OF FILE
 ============================================================================= */

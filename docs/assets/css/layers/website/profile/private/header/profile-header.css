@@ -159,9 +159,9 @@
 .profile-header__meta-item::before{
   content:"";
   display:inline-block;
-  width:4px;
-  height:4px;
-  margin-right:0.5rem;
+  width:var(--border-width-thick);
+  height:var(--border-width-thick);
+  margin-right:var(--spacing-xs);
   border-radius:var(--control-radius-pill);
   background:color-mix(in srgb, var(--text-color) 32%, transparent);
   vertical-align:middle;

@@ -83,7 +83,6 @@
               <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
                 <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
                 <select class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select" name="gender" aria-label="Gender">
-                  <option value="">Optional</option>
                   <option value="woman">Woman</option>
                   <option value="man">Man</option>
                 </select>
@@ -112,12 +111,23 @@
     <section class="profile-settings__pane" data-profile-settings-pane="route" hidden>
       <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="route" novalidate>
         <div class="profile-settings__field-grid">
-          <label class="profile-settings__field">
-            <span class="profile-settings__label">Username</span>
+          <label class="profile-settings__field profile-settings__field--with-info">
+            <div class="profile-settings__label-row">
+              <span class="profile-settings__label">Username</span>
+              <span class="profile-settings__field-info">
+                <button class="profile-settings__info-button" type="button" data-profile-settings-info-toggle aria-expanded="false" aria-label="Username information">
+                  <span class="profile-settings__icon-wrap" aria-hidden="true">
+                    <img class="profile-settings__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/for-more-information-about/for-more-information-about.svg" alt="" aria-hidden="true">
+                  </span>
+                </button>
+                <span class="profile-settings__info-popover" data-profile-settings-info-popover hidden>
+                  <span class="profile-settings__info-content" data-profile-settings-username-note>
+                    Username changes are governed by the canonical reservation policy.
+                  </span>
+                </span>
+              </span>
+            </div>
             <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false">
-            <span class="profile-settings__hint" data-profile-settings-username-note>
-              Username changes are governed by the canonical reservation policy.
-            </span>
           </label>
 
           <label class="profile-settings__field">
@@ -127,7 +137,7 @@
 
           <label class="profile-settings__field">
             <span class="profile-settings__label">Identity label</span>
-            <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Founder, Researcher, Builder">
+            <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Your role">
           </label>
 
           <label class="profile-settings__field">
@@ -300,12 +310,12 @@
             <input class="ui-field profile-settings__input" type="password" name="current_password" autocomplete="current-password">
           </label>
 
-          <label class="profile-settings__field">
+          <label class="profile-settings__field profile-settings__field--full">
             <span class="profile-settings__label">New password</span>
             <input class="ui-field profile-settings__input" type="password" name="new_password" autocomplete="new-password">
           </label>
 
-          <label class="profile-settings__field">
+          <label class="profile-settings__field profile-settings__field--full">
             <span class="profile-settings__label">Confirm password</span>
             <input class="ui-field profile-settings__input" type="password" name="new_password_confirm" autocomplete="new-password">
           </label>
@@ -333,7 +343,23 @@
           </label>
         </div>
 
-        <div class="profile-settings__status" data-profile-verification-status aria-live="polite"></div>
+        <div class="profile-settings__status profile-settings__status--overlay" data-profile-verification-status aria-live="polite" hidden>
+          <div class="profile-settings__verification-overlay-backdrop"></div>
+          <div class="profile-settings__verification-overlay">
+            <button type="button" class="profile-settings__verification-overlay-close global-close-button" aria-label="Close verification status" data-profile-verification-overlay-close="true" data-core-close-button="true" data-close-button-primitive-bound="true">
+              <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+              <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+            </button>
+            <div class="profile-settings__verification-overlay-body">
+              <div class="profile-settings__verification-overlay-content">
+                <div class="profile-settings__verification-overlay-icon">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/info/info.svg" alt="" aria-hidden="true">
+                </div>
+                <div class="profile-settings__verification-overlay-message" data-profile-verification-message></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="profile-settings__actions">
           <button class="ui-button ui-button--secondary" type="submit" data-profile-verification-submit>

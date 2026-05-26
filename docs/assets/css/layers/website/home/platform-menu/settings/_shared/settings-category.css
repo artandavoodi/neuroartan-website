@@ -8,7 +8,7 @@
   gap:var(--layout-home-platform-theme-shell-gap);
   width:var(--size-full);
   max-width:var(--size-full);
-  overflow-x:hidden;
+  overflow:visible;
 }
 
 .home-platform-settings-category,
@@ -60,6 +60,7 @@
   gap:var(--layout-home-platform-theme-section-gap);
   padding:var(--layout-home-platform-theme-section-padding-top) var(--spacing-none) var(--spacing-none);
   border-top:var(--border-width-hairline) solid var(--control-border);
+  overflow:visible;
 }
 
 .home-platform-settings-category__section:first-of-type{
@@ -71,6 +72,52 @@
   display:flex;
   flex-direction:column;
   gap:var(--layout-home-platform-theme-section-header-gap);
+  overflow:visible;
+}
+
+/* Collapsible section toggle button */
+.home-platform-theme__section-eyebrow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-sm);
+  width:var(--size-full);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  background:transparent;
+  color:var(--text-color);
+  font:inherit;
+  text-align:left;
+  cursor:pointer;
+  overflow:visible;
+}
+
+.home-platform-theme__section-eyebrow-text{
+  font-size:var(--control-font-size);
+  font-weight:var(--control-font-weight);
+  letter-spacing:var(--home-platform-theme-eyebrow-tracking);
+  opacity:var(--home-platform-theme-eyebrow-opacity);
+}
+
+.home-platform-theme__section-toggle-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:16px;
+  height:16px;
+  flex:0 0 auto;
+}
+
+/* Collapsible section content */
+.home-platform-theme__section-content{
+  display:block;
+  overflow:visible;
+}
+
+.home-platform-theme__section[data-home-platform-theme-section-collapsed="true"] > .home-platform-theme__section-content{
+  visibility:hidden;
+  height:0;
+  overflow:hidden;
 }
 
 .home-platform-settings-category__grid{

@@ -16,6 +16,7 @@
 /* =============================================================================
    01) MODULE IMPORTS
 ============================================================================= */
+import { mountSettingsCategory } from '../_shared/settings-category.js';
 
 /* =============================================================================
    02) MODULE CONSTANTS
@@ -665,6 +666,7 @@ export function mountHomePlatformDestination(root) {
 
   if (!(destinationRoot instanceof HTMLElement)) return;
 
+  mountSettingsCategory(destinationRoot);
   bindModeOptions(destinationRoot);
   bindDropdownTrigger(destinationRoot);
   bindCursorControls(destinationRoot);

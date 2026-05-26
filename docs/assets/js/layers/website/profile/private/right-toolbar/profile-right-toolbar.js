@@ -118,7 +118,7 @@ const CONTEXT_ACTIONS = Object.freeze({
   models: ['createModel', 'filterModels'],
   organizations: ['organizationSettings'],
   dashboard: ['filterDashboard'],
-  settings: ['identitySettings', 'settingsChangelog']
+  settings: ['settingsChangelog']
 });
 
 function toolbarRoots(){

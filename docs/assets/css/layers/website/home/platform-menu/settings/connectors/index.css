@@ -32,8 +32,8 @@
 
 .home-platform-theme__connector-icon{
   flex:0 0 auto;
-  width:24px;
-  height:24px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -69,8 +69,8 @@
 }
 
 .home-platform-theme__connector-icon img{
-  width:24px;
-  height:24px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
 }
 
 .home-platform-theme__connector-info{
@@ -99,15 +99,15 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  width:12px;
-  height:12px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
 }
 
 .home-platform-theme__connector-status::before{
   content:'';
   display:block;
-  width:8px;
-  height:8px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
   border-radius:50%;
   background-color:var(--color-primary7);
 }
@@ -121,8 +121,8 @@
 }
 
 .home-platform-theme__connector-chevron{
-  width:16px;
-  height:16px;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
   opacity:0.5;
 }
 

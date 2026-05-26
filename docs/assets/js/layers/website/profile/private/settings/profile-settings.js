@@ -308,7 +308,15 @@ function setPasswordStatus(root, message, state = 'idle') {
 function setVerificationStatus(root, message, state = 'idle') {
   const node = root.querySelector('[data-profile-verification-status]');
   if (!(node instanceof HTMLElement)) return;
-  node.textContent = message || '';
+  const messageNode = root.querySelector('[data-profile-verification-message]');
+  if (messageNode instanceof HTMLElement) {
+    messageNode.textContent = message || '';
+  }
+  if (state !== 'idle' && state !== 'ready') {
+    node.hidden = false;
+  } else {
+    node.hidden = true;
+  }
   node.dataset.profileVerificationState = state;
 }
 
@@ -566,6 +574,45 @@ function initProfileSettings() {
     }
     if (control.name) {
       setSelectLabel(root, control.name, control.options?.[0]?.textContent || '');
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-profile-settings-info-toggle]');
+    if (!(button instanceof HTMLElement)) return;
+    const root = button.closest('[data-profile-settings-panel]');
+    if (!(root instanceof HTMLElement)) return;
+    const popover = root.querySelector('[data-profile-settings-info-popover]');
+    if (!(popover instanceof HTMLElement)) return;
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', (!isExpanded).toString());
+    popover.hidden = isExpanded;
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    const button = target.closest('[data-profile-settings-info-toggle]');
+    const popover = target.closest('[data-profile-settings-info-popover]');
+    if (button || popover) return;
+    document.querySelectorAll('[data-profile-settings-info-toggle][aria-expanded="true"]').forEach((expandedButton) => {
+      expandedButton.setAttribute('aria-expanded', 'false');
+      const root = expandedButton.closest('[data-profile-settings-panel]');
+      if (!(root instanceof HTMLElement)) return;
+      const expandedPopover = root.querySelector('[data-profile-settings-info-popover]');
+      if (expandedPopover instanceof HTMLElement) {
+        expandedPopover.hidden = true;
+      }
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    const closeButton = event.target.closest('[data-profile-verification-overlay-close]');
+    if (!(closeButton instanceof HTMLElement)) return;
+    const root = closeButton.closest('[data-profile-settings-panel]');
+    if (!(root instanceof HTMLElement)) return;
+    const overlay = root.querySelector('[data-profile-verification-status]');
+    if (overlay instanceof HTMLElement) {
+      overlay.hidden = true;
     }
   });
 

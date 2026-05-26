@@ -13,6 +13,10 @@ const RUNTIME_PROVIDER_SELECTOR = '[data-home-platform-runtime-provider]';
 const RUNTIME_MODEL_SELECTOR = '[data-home-platform-runtime-model]';
 const RUNTIME_API_KEY_SELECTOR = '[data-home-platform-runtime-api-key]';
 const RUNTIME_SERVER_URL_SELECTOR = '[data-home-platform-runtime-server-url]';
+const SECTION_TOGGLE_SELECTOR = '[data-home-platform-theme-section-toggle]';
+const SECTION_CONTENT_SELECTOR = '[data-home-platform-theme-section-content]';
+const PLUS_ICON_PATH = '/registry/icons/public/assets/core/actions/create/plus.svg';
+const MINUS_ICON_PATH = '/registry/icons/public/assets/core/actions/minus/minus.svg';
 
 function emit(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
@@ -254,6 +258,33 @@ function testVoiceOutput(root) {
   setStatus(root, 'Voice output test sent to the browser speech runtime.', 'ok');
 }
 
+function toggleSection(toggleButton) {
+  if (!(toggleButton instanceof HTMLButtonElement)) return;
+
+  const section = toggleButton.closest('[data-home-platform-theme-section]');
+  if (!(section instanceof HTMLElement)) return;
+
+  const content = section.querySelector(SECTION_CONTENT_SELECTOR);
+  if (!(content instanceof HTMLElement)) return;
+
+  const icon = toggleButton.querySelector('.home-platform-theme__section-toggle-icon');
+  const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+
+  if (isExpanded) {
+    toggleButton.setAttribute('aria-expanded', 'false');
+    section.setAttribute('data-home-platform-theme-section-collapsed', 'true');
+    if (icon instanceof HTMLImageElement) {
+      icon.src = PLUS_ICON_PATH;
+    }
+  } else {
+    toggleButton.setAttribute('aria-expanded', 'true');
+    section.removeAttribute('data-home-platform-theme-section-collapsed');
+    if (icon instanceof HTMLImageElement) {
+      icon.src = MINUS_ICON_PATH;
+    }
+  }
+}
+
 function hydrateCategory(root, options = {}) {
   const snapshot = getSnapshot(options);
   const username = snapshot?.account?.profile?.username || '';
@@ -375,6 +406,17 @@ export function mountSettingsCategory(root, options = {}) {
     control.addEventListener('click', (event) => {
       event.preventDefault();
       void handleAction(root, control.getAttribute('data-home-platform-settings-action') || '', options);
+    });
+  });
+
+  root.querySelectorAll(SECTION_TOGGLE_SELECTOR).forEach((toggleButton) => {
+    if (!(toggleButton instanceof HTMLButtonElement)) return;
+    if (toggleButton.dataset.sectionToggleBound === 'true') return;
+
+    toggleButton.dataset.sectionToggleBound = 'true';
+    toggleButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleSection(toggleButton);
     });
   });
 }

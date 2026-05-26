@@ -160,10 +160,10 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:1rem;
-  height:1rem;
-  flex:0 0 1rem;
-  line-height:1rem;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  flex:0 0 var(--home-platform-shell-nav-icon-size);
+  line-height:var(--home-platform-shell-nav-icon-size);
   align-self:center;
 }
 

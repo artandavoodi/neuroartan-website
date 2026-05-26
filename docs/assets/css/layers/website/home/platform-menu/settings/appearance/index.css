@@ -102,6 +102,25 @@
   letter-spacing:var(--home-platform-theme-eyebrow-tracking);
 }
 
+.home-platform-theme__section-eyebrow{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-sm);
+  width:var(--size-full);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+  transition:var(--interaction-transition-control);
+}
+
+
 .home-platform-theme__title,
 .home-platform-theme__section-title{
   margin:var(--spacing-none);
@@ -134,12 +153,6 @@
 .home-platform-theme__section:first-of-type{
   padding-top:var(--spacing-none);
   border-top:var(--spacing-none);
-}
-
-.home-platform-theme__section-header{
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-md);
 }
 
 /* =============================================================================

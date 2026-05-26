@@ -88,7 +88,6 @@
 
 .profile-workspace__content-mount{
   min-width:var(--spacing-none);
-  padding-inline:var(--profile-workspace-content-inset);
   padding-block:var(--spacing-xl);
 }
 

@@ -299,6 +299,10 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
       if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
       const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
       if (iconPath) {
+        const iconWrap = document.createElement('span');
+        iconWrap.className = 'profile-private-hero__tab-icon-wrap';
+        iconWrap.setAttribute('aria-hidden', 'true');
+
         const icon = document.createElement('img');
         icon.className = tabConfig.key === 'verification'
           ? 'profile-private-hero__tab-icon'
@@ -306,7 +310,8 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
         icon.src = iconPath;
         icon.alt = '';
         icon.setAttribute('aria-hidden', 'true');
-        button.appendChild(icon);
+        iconWrap.appendChild(icon);
+        button.appendChild(iconWrap);
       }
       const label = document.createElement('span');
       label.className = 'profile-private-hero__tab-label';

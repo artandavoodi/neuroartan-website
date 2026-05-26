@@ -46,7 +46,7 @@
   --announcement-overlay-content-max-width: 34rem;
   --announcement-overlay-content-padding: var(--spacing-none);
   --announcement-overlay-section-gap: var(--spacing-lg);
-  --announcement-overlay-icon-size: var(--control-height-lg);
+  --announcement-overlay-icon-size: var(--home-platform-shell-nav-icon-size);
   --announcement-overlay-title-size: var(--headline-4-size);
   --announcement-overlay-title-line-height: var(--headline-4-line-height);
   --announcement-overlay-title-letter-spacing: var(--tracking-copy);

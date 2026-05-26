@@ -103,8 +103,8 @@ body.profile-posts-overlay-open{
 }
 
 .profile-posts__fab img{
-  width:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
-  height:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
   opacity:var(--nav-institutional-icon-opacity);
   filter:var(--icon-image-filter);
 }
@@ -509,8 +509,8 @@ body.profile-posts-overlay-open{
 }
 
 .profile-posts__attachment-button[data-profile-post-submit] img{
-  width:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
-  height:calc(var(--home-platform-shell-nav-icon-size) * 1.5);
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
 }
 
 .profile-posts__attachment-button[data-profile-post-voice-trigger]{

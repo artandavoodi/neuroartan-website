@@ -1,11 +1,14 @@
 <section class="home-platform-destination home-platform-destination--settings-general" data-home-platform-destination-root aria-label="General settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" aria-labelledby="settings-general-defaults">
+    <section class="home-platform-theme__section" aria-labelledby="settings-general-defaults" data-home-platform-theme-section data-home-platform-theme-section-collapsed="true">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Navigation</p>
+        <button class="home-platform-theme__section-eyebrow" type="button" data-home-platform-theme-section-toggle aria-expanded="false">
+          <span class="home-platform-theme__section-eyebrow-text">Navigation</span>
+          <img class="ui-icon-theme-aware home-platform-theme__section-toggle-icon" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" width="16" height="16">
+        </button>
         <h2 class="home-platform-theme__section-title" id="settings-general-defaults">Settings shortcuts</h2>
       </div>
-      <div class="home-platform-theme__shortcut-list">
+      <div class="home-platform-theme__section-content" data-home-platform-theme-section-content>
         <button class="home-platform-theme__shortcut-item" type="button" data-home-platform-settings-action="open:appearance">
           <span class="home-platform-theme__shortcut-label">Appearance</span>
           <img class="ui-icon-theme-aware home-platform-theme__shortcut-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-right.svg" alt="" width="16" height="16">
@@ -25,12 +28,15 @@
       </div>
     </section>
 
-    <section class="home-platform-theme__section" aria-labelledby="settings-general-behavior">
+    <section class="home-platform-theme__section" aria-labelledby="settings-general-behavior" data-home-platform-theme-section data-home-platform-theme-section-collapsed="true">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Runtime</p>
+        <button class="home-platform-theme__section-eyebrow" type="button" data-home-platform-theme-section-toggle aria-expanded="false">
+          <span class="home-platform-theme__section-eyebrow-text">Runtime</span>
+          <img class="ui-icon-theme-aware home-platform-theme__section-toggle-icon" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" width="16" height="16">
+        </button>
         <h2 class="home-platform-theme__section-title" id="settings-general-behavior">Runtime controls</h2>
       </div>
-      <div class="home-platform-theme__toggle-list">
+      <div class="home-platform-theme__section-content" data-home-platform-theme-section-content>
         <button class="home-platform-theme__action-button" type="button" data-home-platform-settings-action="reset-rail">
           <span class="home-platform-theme__action-button-label">
             <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/reset/reset.svg" alt="" width="16" height="16">

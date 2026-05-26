@@ -9,6 +9,7 @@
 import { PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER } from '../models/profile-private-models.js';
 import { PROFILE_DASHBOARD_MODEL_ECONOMY_READINESS } from '../dashboard/profile-dashboard.js';
 import { PROFILE_PRIVATE_MODEL_IDENTITY_BOUNDARY } from '../identity/profile-private-identity.js';
+import { listOwnedModels } from '../../../system/model/model-store.js';
 
 /* =============================================================================
    01. PROFILE PRIVATE MODEL ECONOMY MODULE
@@ -22,7 +23,7 @@ const BLOCKED_STATE = 'Blocked until review';
    02. STATE RESOLUTION
 ============================================================================= */
 
-function getResolvedModelEconomyState() {
+function getFallbackModelEconomyState() {
   return Object.freeze({
     defaultPersonalModel:
       PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.defaultPersonalModel || 'Assigned at profile birth',
@@ -42,6 +43,30 @@ function getResolvedModelEconomyState() {
       PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.marketplaceVisibility || BLOCKED_STATE,
     interModelHiring: BLOCKED_STATE
   });
+}
+
+async function getResolvedModelEconomyState() {
+  const fallbackState = getFallbackModelEconomyState();
+
+  try {
+    const [model] = await listOwnedModels();
+    if (!model) return fallbackState;
+
+    return Object.freeze({
+      defaultPersonalModel: model.model_name || model.slug || fallbackState.defaultPersonalModel,
+      birthIdentity: model.birth_certificate_id ? 'Created' : fallbackState.birthIdentity,
+      privateIdentity: model.private_identity_id ? 'Active · Owner only' : fallbackState.privateIdentity,
+      providerRouting: model.runtime_policy?.provider || fallbackState.providerRouting,
+      dignitySecurity: model.foundation_state || fallbackState.dignitySecurity,
+      monetization: model.economy_state || BLOCKED_STATE,
+      hiring: BLOCKED_STATE,
+      marketplace: BLOCKED_STATE,
+      interModelHiring: BLOCKED_STATE
+    });
+  } catch (error) {
+    console.warn('[profile-private-model-economy] Backend state unavailable:', error);
+    return fallbackState;
+  }
 }
 
 /* =============================================================================
@@ -92,7 +117,7 @@ function createModelEconomySurface(state) {
   return surface;
 }
 
-function renderProfilePrivateModelEconomy() {
+async function renderProfilePrivateModelEconomy() {
   if (getModelEconomyRoot()) return;
 
   const target =
@@ -102,7 +127,8 @@ function renderProfilePrivateModelEconomy() {
 
   if (!target) return;
 
-  target.appendChild(createModelEconomySurface(getResolvedModelEconomyState()));
+  const state = await getResolvedModelEconomyState();
+  target.appendChild(createModelEconomySurface(state));
 }
 
 /* =============================================================================

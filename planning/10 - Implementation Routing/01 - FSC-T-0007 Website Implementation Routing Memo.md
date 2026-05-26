@@ -19,7 +19,7 @@ approval_status: "Draft"
 status: "Active"
 lifecycle: "Implementation Routing"
 
-version: "0.4"
+version: "0.5"
 created_date: "2026-05-25"
 last_updated: "2026-05-25"
 last_reviewed: "2026-05-25"
@@ -69,6 +69,11 @@ This memo defines the execution sequence for implementing FSC-T-0007 inside the 
 - [x] Orchestrators verified.
 - [x] Owner-facing private profile model-economy module created and wired.
 - [x] Owner-facing private profile model-economy runtime binding completed.
+- [x] Products public-facing Model Economy route created.
+- [x] Products registry updated and Model Economy activated.
+- [x] Products data family matured for public-facing commercial awareness.
+- [x] Products JSON validation completed.
+- [x] Products route and content-source verification completed.
 - [ ] Public copy reviewed — blocked until review.
 - [ ] Legal / Governance review completed — blocked until review.
 - [ ] Website publication approved — blocked until review.
@@ -165,8 +170,65 @@ Next implementation priority:
 
 ---
 
+## IV-D. Products Public-Facing Propagation Status
+
+The FSC-T-0007 Model Economy branch has now been propagated into the public-facing Products layer.
+
+Created / updated static route and registry records:
+
+- `docs/pages/products/model-economy/index.html`
+- `docs/assets/data/sections/products.json`
+- `docs/assets/data/sections/products/model-economy.json`
+
+Updated Products data family:
+
+- `docs/assets/data/sections/products/overview.json`
+- `docs/assets/data/sections/products/capabilities.json`
+- `docs/assets/data/sections/products/workflows.json`
+- `docs/assets/data/sections/products/integrations.json`
+- `docs/assets/data/sections/products/software.json`
+
+Public-facing doctrine now represented:
+
+- ICOS as a governed cognitive operating system;
+- personal models as user-born continuity entities;
+- model identity and model birth identity;
+- model dignity as protection of user-derived continuity material;
+- model economy readiness as a future governed pathway;
+- provider/API routing boundaries;
+- model registry and capability-profile readiness;
+- Ocean-Brain / model population awareness;
+- software architecture requirements;
+- marketplace, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, and posthumous economy remain blocked until review.
+
+Verification completed:
+
+- Products JSON data family validated successfully;
+- Products registry routes verified;
+- Products registered content sources verified;
+- Model Economy route exists and resolves to valid static data;
+- missing route/data reference count: `0`.
+
+Current boundary:
+
+- public-facing category education is active;
+- public-facing commercial awareness is active;
+- economy activation remains blocked until legal, governance, product, security, and implementation review;
+- no public claim may imply guaranteed income, consciousness/personhood, licensed professional replacement, uncontrolled autonomous labor, active payout availability, or active posthumous economy.
+
+Next propagation priority:
+
+1. update Website Planning Index to register Products public-facing propagation;
+2. propagate public-facing status into Product Definition / Product Vision Core;
+3. update Software Direction to recognize website-public category exposure;
+4. create or update legal/governance review note for public Model Economy language;
+5. shift technical execution toward private personal model MVP, model identity registry, profile-to-model birth flow, owner-facing dashboard states, provider/API routing boundary, entitlement state, and permission state.
+
+---
+
 ## Change Log
 
+- 2026-05-25 — v0.5 routing memo updated after Products public-facing FSC-T-0007 propagation. Registered Model Economy route creation, Products registry activation, public-facing Products data-family maturation, JSON validation, route/content-source verification, and remaining legal/governance/product-definition/software-direction propagation priorities. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: GPT-5.5 Thinking.
 - 2026-05-25 — v0.4 routing memo updated after private profile model-economy runtime binding. The owner-facing module now resolves state from private models, dashboard readiness, and private identity modules; runtime update events are registered; broken imports are verified clean. Next priority is safe dashboard cards, model birth identity placeholders, and controlled private model-readiness labels. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: GPT-5.5 Thinking.
 - 2026-05-25 — v0.3 routing memo updated after owner-facing private profile model-economy JS/CSS module creation, private profile orchestrator wiring, and broken-import verification. Next priority is binding the owner-facing state into existing private profile data, identity, and dashboard structures while keeping public/marketplace surfaces blocked until review. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: GPT-5.5 Thinking.
 - 2026-05-25 — v0.2 routing memo updated after creation of FSC-T-0007 data schemas, JS system modules, CSS system modules, section placeholders, orchestrator wiring, and import verification. Public copy review, legal/governance review, and publication approval remain pending. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: GPT-5.5 Thinking.
@@ -177,7 +239,7 @@ Next implementation priority:
 ## Document Control & Validation
 
 DOCUMENT STATUS: Draft — Implementation Routing  
-VERSION: 0.4
+VERSION: 0.5
 
 ---
 

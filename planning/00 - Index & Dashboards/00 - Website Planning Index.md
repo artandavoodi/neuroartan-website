@@ -32,11 +32,11 @@ system: "Website Planning"
 
 spine_version: "1.0"
 template_lock: "Global Document Metadata Standard"
-version: "1.0"
+version: "1.1"
 
 created_date: "2026-05-02"
-last_updated: "2026-05-07"
-last_reviewed: "2026-05-07"
+last_updated: "2026-05-25"
+last_reviewed: "2026-05-25"
 review_cycle: "Weekly"
 
 effective_date: "2026-05-02"
@@ -66,6 +66,11 @@ scope:
   - "Developer Mode topbar simplification and utility planning"
   - "Developer Mode shell cleanup and sidebar repurposing pipeline"
   - "Sovereign design system and Stitch integration direction"
+  - "FSC-T-0007 website architecture branch"
+  - "Products public-facing Model Economy propagation"
+  - "Personal Models public category education"
+  - "Model Economy public commercial awareness"
+  - "Model identity and model dignity public-facing product language"
 
 index_targets:
   - "Strategic Decisions Register"
@@ -81,6 +86,8 @@ index_targets:
   - "Provider Strategy Register"
   - "Repository Workflow Register"
   - "Daily Execution Records Register"
+  - "FSC-T-0007 Website Branch Register"
+  - "Products Public-Facing Model Economy Propagation Register"
 
 vault_path: "/Users/artan/Documents/Neuroartan/website/planning/00 - Index & Dashboards/00 - Website Planning Index.md"
 
@@ -194,6 +201,10 @@ It must not be treated as public website content unless explicit publication app
 | Daily Execution Log | `/Users/artan/Documents/Neuroartan/website/planning/07 - Daily Execution Records/01 - Daily Execution Log.md` | Records daily execution, verification, blockers, and next actions. |
 | AI Development Cockpit Implementation Change Log | `/Users/artan/Documents/Neuroartan/website/planning/08 - Implementation Change Logs/01 - AI Development Cockpit Implementation Change Log.md` | Records implementation sessions, file changes, verification results, blockers, and reusable system baselines including the Control Center nested settings pilot. |
 | Developer Operations Console Directive | `/Users/artan/Documents/Neuroartan/website/docs/assets/fragments/layers/website/development-cockpit/developer-operations-console-directive.html` | Defines the Developer Operations Console direction, Mini View and Full View model, tab migration governance, terminal dock planning, and parent-token styling rule. |
+| FSC-T-0007 Website Model Economy Architecture Specification | `/Users/artan/Documents/Neuroartan/website/planning/04 - Architecture Specifications/13 - FSC-T-0007 Website Model Economy Architecture Specification.md` | Defines the website-layer architecture for Personal Models, Model Birth Certificate, Model Dignity, Model Marketplace, Inter-Model Hiring, Ocean-Brain, and blocked-until-review economy boundaries. |
+| FSC-T-0007 Website Provider, API & Model Routing Strategy | `/Users/artan/Documents/Neuroartan/website/planning/05 - Provider & Runtime Strategy/02 - FSC-T-0007 Website Provider, API & Model Routing Strategy.md` | Defines website-facing provider/API routing boundaries, private infrastructure exposure limits, and model-routing privacy for FSC-T-0007. |
+| ICOS Personal Models & Model Economy Website Positioning | `/Users/artan/Documents/Neuroartan/website/planning/09 - Product Positioning/01 - ICOS Personal Models & Model Economy Website Positioning.md` | Defines public-facing website language for Personal Models, Model Economy, Model Dignity, and safe commercial awareness without unsafe marketplace or income claims. |
+| FSC-T-0007 Website Implementation Routing Memo | `/Users/artan/Documents/Neuroartan/website/planning/10 - Implementation Routing/01 - FSC-T-0007 Website Implementation Routing Memo.md` | Controls FSC-T-0007 website implementation sequencing, public Products propagation, route/data verification, and blocked-until-review boundaries. |
 
 ---
 
@@ -286,21 +297,108 @@ Each Codex prompt must be scoped to one bounded objective and must request:
 | Daily Execution Log | Draft | Active for continuity tracking. |
 | AI Development Cockpit Implementation Change Log | Active | Requires update for Developer Operations Console tab migration, Developer Mode topbar simplification, footer/content viewport stabilization, and legacy shell cleanup. |
 | Developer Operations Console Directive | Active | Requires update for completed tab-runtime migration, fixed footer/content viewport architecture, global topbar/menu tokenization, and next terminal/sidebar pipeline. |
+| FSC-T-0007 Website Model Economy Architecture Specification | Draft | Architecture foundation created; requires Product Definition, Governance, Legal, and Software Direction propagation review. |
+| FSC-T-0007 Website Provider, API & Model Routing Strategy | Draft | Provider/API routing boundaries defined; requires software/runtime and security review before implementation exposure. |
+| ICOS Personal Models & Model Economy Website Positioning | Draft | Public-facing positioning drafted and propagated to Products; requires legal/governance copy review before broader publication claims. |
+| FSC-T-0007 Website Implementation Routing Memo | Active | Version 0.5 records Products public-facing Model Economy propagation, JSON validation, route/content-source verification, and next propagation priorities. |
 
 ---
 
 ## 9. Next Action
 
-Next action is to update the Developer Mode Architecture Specification, Developer Operations Console Directive, and AI Development Cockpit Implementation Change Log with the completed Developer Operations Console stabilization and migration work.
+The next action is to continue FSC-T-0007 propagation beyond the website Products layer.
 
-The next implementation focus is the Developer Mode shell cleanup phase. This phase must audit the remaining left sidebar, right sidebar, center shell, static placeholder content, runtime-bearing content, and visual hierarchy before further redesign.
+Immediate propagation sequence:
 
-The simplified Developer Mode topbar is the active direction: Code, App, Docs, Notifications, Settings, and Account. Notifications, Settings, and Account require separate planning before implementation, including dropdown behavior, state ownership, accessibility, and global token use.
+1. propagate public-facing Model Economy status into Product Definition / Product Vision Core;
+2. update Software Direction to recognize that website-public category exposure is now active while technical marketplace activation remains blocked;
+3. create or update legal/governance review notes for public Model Economy language;
+4. preserve the current Products layer as category education and commercial awareness, not marketplace activation;
+5. shift implementation planning toward private personal model MVP, model identity registry, profile-to-model birth flow, owner-facing dashboard states, provider/API routing boundary, entitlement state, and permission state.
 
-The cleared left sidebar is reserved for future terminal, logs, command history, approval queue, and runtime monitor surfaces.
+Current website status:
+
+- FSC-T-0007 website architecture branch created;
+- Products public-facing Model Economy route created;
+- Products registry updated and Model Economy activated;
+- Products data family matured for public-facing commercial awareness;
+- Products JSON validation completed;
+- Products route and content-source verification completed;
+- missing route/data reference count: `0`.
+
+Current boundary:
+
+- marketplace activation remains blocked until review;
+- payouts remain blocked until review;
+- public ranking remains blocked until review;
+- autonomous inter-model hiring remains blocked until review;
+- regulated-domain claims remain blocked until review;
+- guaranteed-income language remains blocked until review;
+- model consciousness/personhood claims remain blocked until review;
+- posthumous economy remains blocked until review.
 
 ---
 
+## 10. FSC-T-0007 Website Branch Status
+
+The website planning layer now contains the FSC-T-0007 architecture branch and public-facing Products propagation record.
+
+Created and registered:
+
+- Website Model Economy Architecture Specification
+- Website Provider, API & Model Routing Strategy
+- ICOS Personal Models & Model Economy Website Positioning
+- FSC-T-0007 Website Implementation Routing Memo
+- model-economy JSON schema and policy layer
+- model-economy JS system layer
+- model-economy CSS system layer
+- personal-models and model-economy section placeholders
+- Products Model Economy route
+- Products Model Economy data source
+- Products registry activation
+- Products public-facing data-family maturation
+
+Public-facing Products layer updated:
+
+- `docs/pages/products/model-economy/index.html`
+- `docs/assets/data/sections/products.json`
+- `docs/assets/data/sections/products/model-economy.json`
+- `docs/assets/data/sections/products/overview.json`
+- `docs/assets/data/sections/products/capabilities.json`
+- `docs/assets/data/sections/products/workflows.json`
+- `docs/assets/data/sections/products/integrations.json`
+- `docs/assets/data/sections/products/software.json`
+
+Public-facing doctrine now represented:
+
+- ICOS as a governed cognitive operating system;
+- Personal Models as user-born continuity entities;
+- Model Birth Identity as future-compatible model origin infrastructure;
+- Model Dignity as protection of user-derived continuity material;
+- Model Economy as a governed future pathway for discoverability, hiring, and monetization readiness;
+- Provider/API routing boundaries as private infrastructure;
+- Ocean-Brain as future model population awareness;
+- Software architecture as the implementation layer for private personal model MVP and later economy readiness.
+
+Canonical doctrine:
+
+> AI absorbs operational labor while the human retains sovereign authorship, ownership, and direction.
+
+Current verification status:
+
+- Products JSON data family validated successfully;
+- Products registry routes verified;
+- Products registered content sources verified;
+- Model Economy route exists and resolves to valid static data;
+- missing route/data reference count: `0`.
+
+Current publication boundary:
+
+- category education is active;
+- public-facing commercial awareness is active;
+- marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness/personhood claims, and posthumous economy remain blocked until review.
+
+- 2026-05-25 — v1.1 Registered FSC-T-0007 website branch and Products public-facing Model Economy propagation in the Website Planning Index. Recorded Model Economy route creation, Products registry activation, Products data-family maturation, JSON validation, route/content-source verification, public-facing doctrine coverage, and remaining Product Definition / Software Direction / Legal-Governance propagation priorities. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: GPT-5.5 Thinking. Execution Context: Website Planning Index update for FSC-T-0007 public-facing Products propagation under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-07 — v0.9 Indexed Neuroartan Sovereign Design System & Stitch Integration Direction as an active architecture specification for cost-free design-system acceleration, sovereign token authority, and cross-surface propagation across website, ICOS, apps, dashboards, and future platform surfaces. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update for sovereign design system and Stitch integration direction under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-04 — v0.8 Recorded Developer Operations Console stabilization achievements, including Mini View and Full View layout correction, fixed summary footer, independent content viewport, tab-runtime migration from the legacy Developer Mode shell, cleared left sidebar registry, simplified Developer Mode topbar, global topbar menu gap tokenization, profile/account global structure alignment, and next Developer Mode shell cleanup pipeline. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update for Developer Operations Console migration and Developer Mode shell cleanup readiness under `/Users/artan/Documents/Neuroartan/website`.
 - 2026-05-04 — v0.7 Indexed Developer Operations Console direction, including Mini View and Full View governance, tab migration model, topbar preservation requirement, terminal dock planning, and parent-token styling direction. Operator Name: Artan. Operator Personnel ID: CEO-001-01-01. Agent Name: Website Systems & Development Agent. Agent ID: A-0205-0022. Execution Context: Website Planning Index update for Developer Operations Console direction under `/Users/artan/Documents/Neuroartan/website`.
@@ -320,41 +418,8 @@ GSA APPROVAL: false
 DOCUMENT STATUS: Draft — Website Planning Index  
 VISIBILITY: Internal  
 PUBLISH TO WEBSITE: No  
-VERSION: 1.0
+VERSION: 1.1
 
 ---
 
 END OF DOCUMENT
-
-
----
-
-## FSC-T-0007 Website Branch Status
-
-The website planning layer now contains the FSC-T-0007 architecture branch.
-
-Created and registered:
-
-- Website Model Economy Architecture Specification
-- Website Provider, API & Model Routing Strategy
-- ICOS Personal Models & Model Economy Website Positioning
-- FSC-T-0007 Website Implementation Routing Memo
-- model-economy JSON schema and policy layer
-- model-economy JS system layer
-- model-economy CSS system layer
-- personal-models and model-economy section placeholders
-
-Current status:
-
-- architecture foundation created
-- data schemas created
-- JS/CSS system modules created
-- orchestrators wired
-- broken imports verified clean
-- public marketplace, payouts, inter-model hiring, ranking, and posthumous economy remain blocked until review
-
-Canonical doctrine:
-
-> AI absorbs operational labor while the human retains sovereign authorship, ownership, and direction.
-
----

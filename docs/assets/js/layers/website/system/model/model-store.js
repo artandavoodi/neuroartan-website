@@ -42,30 +42,39 @@ const ACTIVE_MODEL_PREFERENCES_TABLE = 'active_model_preferences';
 const MODEL_SELECT_FIELDS = [
   'id',
   'profile_id',
-  'owner_auth_user_id',
-  'model_slug',
+  'slug',
   'model_name',
   'description',
-  'model_image_url',
-  'creator_display_name',
-  'creator_username',
   'model_visibility',
-  'lifecycle_state',
+  'model_status',
   'readiness_state',
   'publication_state',
-  'verification_state',
-  'training_state',
-  'interaction_state',
-  'routing_class',
-  'default_runtime_policy',
-  'deployment_origin',
-  'external_source_ref',
-  'source_count',
-  'release_version',
-  'workspace_state',
+  'runtime_policy',
+  'birth_certificate_id',
+  'private_identity_id',
+  'public_identity_id',
+  'entitlement_state',
+  'permission_state',
+  'economy_state',
+  'foundation_state',
   'created_at',
   'updated_at',
 ].join(', ');
+
+const MODEL_FOUNDATION_TABLES = Object.freeze({
+  birthCertificates: 'model_birth_certificates',
+  identityRegistry: 'model_identity_registry',
+  publicIdentities: 'model_public_identities',
+  privateIdentities: 'model_private_identities',
+  providerRouting: 'model_provider_routing_state',
+  entitlement: 'model_entitlement_state',
+  permission: 'model_permission_state',
+  sourceAuthorization: 'model_source_authorization_state',
+  lifecycle: 'model_lifecycle_state',
+  ownerDashboard: 'model_owner_dashboard_state',
+  dignitySecurity: 'model_dignity_security_state',
+  blockedEconomy: 'model_blocked_economy_state',
+});
 
 /* =============================================================================
    04) BACKEND HELPERS
@@ -100,15 +109,15 @@ export async function getCurrentSupabaseUser() {
   return data?.session?.user || null;
 }
 
+function getUserId(user) {
+  return normalizeString(user?.id || user?.uid || '');
+}
+
 /* =============================================================================
    05) VALUE HELPERS
 ============================================================================= */
 export function buildModelSlug(value = '') {
   return normalizeUsername(value || `model-${Date.now()}`);
-}
-
-function getUserId(user) {
-  return normalizeString(user?.id || user?.uid || '');
 }
 
 function mapSupabaseModel(row = {}) {
@@ -117,20 +126,20 @@ function mapSupabaseModel(row = {}) {
   return {
     ...row,
     id: normalizeString(row.id),
-    slug: normalizeString(row.model_slug || row.slug || row.id),
-    model_slug: normalizeString(row.model_slug || row.slug || row.id),
+    slug: normalizeString(row.slug || row.id),
+    model_slug: normalizeString(row.slug || row.id),
     model_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     display_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     description: normalizeString(row.description || ''),
     creator_display_name: normalizeString(row.creator_display_name || ''),
     creator_username: normalizeUsername(row.creator_username || ''),
     model_visibility: normalizeString(row.model_visibility || 'private'),
-    lifecycle_state: normalizeString(row.lifecycle_state || 'draft'),
+    lifecycle_state: normalizeString(row.model_status || 'draft'),
     readiness_state: normalizeString(row.readiness_state || 'uninitialized'),
     publication_state: normalizeString(row.publication_state || 'unpublished'),
-    verification_state: normalizeString(row.verification_state || 'unverified'),
-    training_state: normalizeString(row.training_state || 'uninitialized'),
-    release_version: normalizeString(row.release_version || '0.1.0'),
+    verification_state: normalizeString(row.foundation_state || 'private_foundation_created'),
+    training_state: normalizeString(row.readiness_state || 'not_ready'),
+    release_version: normalizeString(row.foundation_state || 'private_foundation_created'),
   };
 }
 
@@ -193,7 +202,7 @@ export async function getModelBySlug(modelSlug) {
   const { data, error } = await supabase
     .from(MODELS_TABLE)
     .select(MODEL_SELECT_FIELDS)
-    .eq('model_slug', normalizedSlug)
+    .eq('slug', normalizedSlug)
     .maybeSingle();
 
   if (error) {
@@ -206,17 +215,16 @@ export async function getModelBySlug(modelSlug) {
 
 export async function listOwnedModels() {
   const supabase = getSupabaseClient();
-  const user = await getCurrentSupabaseUser();
-  const ownerAuthUserId = getUserId(user);
+  const profile = await getCurrentCanonicalProfile();
 
-  if (!supabase || !ownerAuthUserId) {
+  if (!supabase || !profile?.id) {
     return [];
   }
 
   const { data, error } = await supabase
     .from(MODELS_TABLE)
     .select(MODEL_SELECT_FIELDS)
-    .eq('owner_auth_user_id', ownerAuthUserId)
+    .eq('profile_id', profile.id)
     .order('updated_at', { ascending: false });
 
   if (error) {
@@ -249,19 +257,10 @@ export async function listPublishedModels() {
 /* =============================================================================
    08) MODEL WRITE HELPERS
 ============================================================================= */
-async function assertModelSlugAvailable(modelSlug, ownerAuthUserId = '') {
+async function assertModelSlugAvailable(modelSlug) {
   const existingModel = await getModelBySlug(modelSlug);
   if (!existingModel) {
     return buildModelSlug(modelSlug);
-  }
-
-  const existingOwnerAuthUserId = normalizeString(existingModel.owner_auth_user_id || '');
-  const normalizedOwnerAuthUserId = normalizeString(ownerAuthUserId || '');
-
-  if (existingOwnerAuthUserId && normalizedOwnerAuthUserId && existingOwnerAuthUserId === normalizedOwnerAuthUserId) {
-    const error = new Error('MODEL_SLUG_ALREADY_OWNED');
-    error.code = 'MODEL_SLUG_ALREADY_OWNED';
-    throw error;
   }
 
   const error = new Error('MODEL_SLUG_TAKEN');
@@ -269,19 +268,168 @@ async function assertModelSlugAvailable(modelSlug, ownerAuthUserId = '') {
   throw error;
 }
 
+async function insertModelFoundationRecord(supabase, tableName, payload) {
+  const { data, error } = await supabase
+    .from(tableName)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('id')
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+async function initializePrivateModelFoundation(supabase, model, values = {}) {
+  const modelId = normalizeString(model?.id || '');
+  if (!supabase || !modelId) return model;
+
+  const modelName = normalizeString(model.model_name || values.model_name || values.name || 'Personal Model');
+  const modelSlug = normalizeString(model.slug || values.slug || values.model_slug || '');
+  const description = normalizeString(model.description || values.description || '');
+
+  const birthCertificate = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.birthCertificates, {
+    model_id: modelId,
+    birth_state: 'created',
+    birth_reason: 'default_private_personal_model',
+    birth_source: 'website_profile_creation',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.identityRegistry, {
+    model_id: modelId,
+    registry_state: 'registered_private',
+    registry_scope: 'private_personal_model',
+    canonical_slug: modelSlug,
+  });
+
+  const publicIdentity = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.publicIdentities, {
+    model_id: modelId,
+    public_identity_state: 'not_published',
+    public_display_name: modelName,
+    public_slug: modelSlug,
+    public_description: description,
+    public_avatar_url: '',
+    public_visibility: 'private',
+  });
+
+  const privateIdentity = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.privateIdentities, {
+    model_id: modelId,
+    private_identity_state: 'active',
+    private_name: modelName,
+    private_notes: '',
+    owner_visibility: 'owner_only',
+    source_boundary: 'private_foundation_only',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.providerRouting, {
+    model_id: modelId,
+    provider_state: 'not_assigned',
+    provider_name: 'unassigned',
+    route_class: 'site_knowledge',
+    runtime_policy: model.runtime_policy || {},
+    routing_enabled: false,
+    voice_enabled: false,
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.entitlement, {
+    model_id: modelId,
+    subscription_tier: 'free',
+    model_creation_limit: 1,
+    personal_model_included: true,
+    additional_model_slots: 0,
+    marketplace_access_state: 'blocked_until_review',
+    monetization_request_state: 'blocked_until_review',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.permission, {
+    model_id: modelId,
+    permission_scope: 'private_owner_only',
+    owner_read_enabled: true,
+    owner_write_enabled: true,
+    public_read_enabled: false,
+    public_interaction_enabled: false,
+    export_enabled: false,
+    deletion_enabled: true,
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.sourceAuthorization, {
+    model_id: modelId,
+    source_type: 'none',
+    authorization_scope: 'none',
+    authorization_state: 'not_yet_granted',
+    revocation_state: 'not_applicable',
+    revocation_effect: 'none',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.lifecycle, {
+    model_id: modelId,
+    current_state: 'created',
+    previous_state: 'none',
+    state_reason: 'default_personal_model_birth',
+    archive_eligible: true,
+    delete_eligible: true,
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.ownerDashboard, {
+    model_id: modelId,
+    birth_status_display: 'created',
+    registry_status_display: 'registered_private',
+    provider_route_display: 'not_assigned',
+    entitlement_display: 'free_personal_model_included',
+    permission_display: 'private_owner_only',
+    readiness_display: 'foundation_ready',
+    blocked_economy_display: 'economy_features_blocked_until_review',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.dignitySecurity, {
+    model_id: modelId,
+    sensitive_data_state: 'protected',
+    identity_protection_state: 'private_owner_controlled',
+    voice_protection_state: 'not_yet_linked',
+    memory_protection_state: 'private_foundation_only',
+    deletion_policy_state: 'owner_request_required',
+    export_policy_state: 'blocked_until_policy_review',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.blockedEconomy, {
+    model_id: modelId,
+    marketplace_blocked: true,
+    monetization_blocked: true,
+    payout_blocked: true,
+    public_ranking_blocked: true,
+    inter_model_hiring_blocked: true,
+    regulated_domain_blocked: true,
+    guaranteed_income_claim_blocked: true,
+    consciousness_personhood_claim_blocked: true,
+    posthumous_economy_blocked: true,
+  });
+
+  const referencePayload = {
+    birth_certificate_id: birthCertificate?.id || model.birth_certificate_id || null,
+    private_identity_id: privateIdentity?.id || model.private_identity_id || null,
+    public_identity_id: publicIdentity?.id || model.public_identity_id || null,
+  };
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .update(referencePayload)
+    .eq('id', modelId)
+    .select(MODEL_SELECT_FIELDS)
+    .single();
+
+  if (error) throw error;
+
+  return mapSupabaseModel(data || {
+    ...model,
+    ...referencePayload,
+  });
+}
+
 export async function createOwnedModel(values = {}) {
   const supabase = getSupabaseClient();
   if (!supabase) {
     const error = new Error('MODEL_BACKEND_UNAVAILABLE');
     error.code = 'MODEL_BACKEND_UNAVAILABLE';
-    throw error;
-  }
-
-  const user = await getCurrentSupabaseUser();
-  const ownerAuthUserId = getUserId(user);
-  if (!ownerAuthUserId) {
-    const error = new Error('AUTH_REQUIRED');
-    error.code = 'AUTH_REQUIRED';
     throw error;
   }
 
@@ -299,34 +447,25 @@ export async function createOwnedModel(values = {}) {
     throw error;
   }
 
-  const modelSlug = await assertModelSlugAvailable(values.model_slug || modelName, ownerAuthUserId);
+  const modelSlug = await assertModelSlugAvailable(values.slug || values.model_slug || modelName);
   const payload = {
     profile_id: profile.id,
-    owner_auth_user_id: ownerAuthUserId,
-    model_slug: modelSlug,
+    slug: modelSlug,
     model_name: modelName,
     description: normalizeString(values.description || ''),
-    model_image_url: normalizeString(values.model_image_url || values.image_url || ''),
-    creator_display_name: normalizeString(profile.public_display_name || profile.display_name || user.user_metadata?.name || ''),
-    creator_username: normalizeUsername(profile.username || profile.username_lower || profile.public_username || ''),
     model_visibility: normalizeString(values.model_visibility || 'private'),
-    lifecycle_state: 'draft',
-    readiness_state: 'uninitialized',
+    model_status: normalizeString(values.model_status || 'draft'),
+    readiness_state: normalizeString(values.readiness_state || 'not_ready'),
     publication_state: normalizeString(values.publication_state || 'unpublished'),
-    verification_state: normalizeString(values.verification_state || 'unverified'),
-    training_state: 'uninitialized',
-    interaction_state: normalizeString(values.interaction_state || 'private'),
-    routing_class: normalizeString(values.routing_class || 'profile_continuity'),
-    default_runtime_policy: {
+    runtime_policy: {
       provider: normalizeString(values.provider || 'unassigned'),
       route: normalizeString(values.route || 'site_knowledge'),
       voice_enabled: values.voice_enabled === true,
     },
-    deployment_origin: 'neuroartan_supabase',
-    external_source_ref: {},
-    source_count: 0,
-    release_version: '0.1.0',
-    workspace_state: 'active',
+    entitlement_state: normalizeString(values.entitlement_state || 'free_personal_model_included'),
+    permission_state: normalizeString(values.permission_state || 'private_owner_only'),
+    economy_state: normalizeString(values.economy_state || 'blocked_until_review'),
+    foundation_state: normalizeString(values.foundation_state || 'private_foundation_created'),
   };
 
   const { data, error } = await supabase
@@ -337,7 +476,8 @@ export async function createOwnedModel(values = {}) {
 
   if (error) throw error;
 
-  return mapSupabaseModel(data);
+  const model = mapSupabaseModel(data);
+  return initializePrivateModelFoundation(supabase, model, values);
 }
 
 /* =============================================================================

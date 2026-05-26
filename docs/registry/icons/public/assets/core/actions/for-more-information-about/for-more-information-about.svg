@@ -20,11 +20,11 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="1.9533003"
-     inkscape:cx="34.300922"
-     inkscape:cy="26.877588"
+     inkscape:zoom="12.381437"
+     inkscape:cx="16.23398"
+     inkscape:cy="19.989602"
      inkscape:window-width="1472"
-     inkscape:window-height="844"
+     inkscape:window-height="868"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
@@ -37,13 +37,21 @@
      r="8.9488192" />
   <path
      style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
-     d="M 11.999999,8.9383901 V 17.033217"
+     d="M 12,8.9293893 V 17.024216"
      id="path2" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 12.000001,8.9293888 H 11.48688"
+     id="path2-5" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;stroke-dasharray:none;paint-order:stroke fill markers"
+     d="M 12.538487,17.024216 H 11.461514"
+     id="path2-5-8" />
   <ellipse
      style="fill:#000000;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
      id="path3"
-     cx="12"
-     cy="7.0265408"
+     cx="12.000001"
+     cy="7.01754"
      rx="0.55172151"
      ry="0.54175556" />
 </svg>

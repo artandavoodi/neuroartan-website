@@ -587,7 +587,9 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     values.minimum_eligible_age_years = eligibility.minimumAge;
   }
 
-  if (normalizedUsername) {
+  const shouldReserveUsernameRoute = normalizedScope === 'route' && normalizedUsername;
+
+  if (shouldReserveUsernameRoute) {
     return reserveSupabaseUsernameProfile({
       supabase,
       user,
@@ -613,58 +615,66 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
   const currentProfile = existingProfile || await getSupabaseProfileByAuthUserId(supabase, user.id || user.uid);
   const existingRecordId = currentProfile?.id || null;
 
+  const visibilityPayload = buildProfileVisibilityPayload(payload, values);
+  const routePayload = buildProfileRoutePayload(payload, normalizedUsername, user);
+
   const supabasePayload = {
     auth_user_id: user.id || user.uid,
-    display_name: payload.display_name || '',
+    username: routePayload.username || normalizedUsername || currentProfile?.username || '',
+    display_name: payload.display_name || currentProfile?.display_name || '',
     avatar_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'avatar_url') && values.avatar_url === ''
       ? ''
-      : (payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+      : (payload.avatar_url || currentProfile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    bio: payload.public_summary || payload.public_bio || payload.bio || currentProfile?.bio || '',
+    visibility_state: visibilityPayload.visibility_state || currentProfile?.visibility_state || 'private',
+    profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
+    email: payload.email || normalizeEmail(user.email || currentProfile?.email || ''),
+    first_name: payload.first_name || currentProfile?.first_name || '',
+    last_name: payload.last_name || currentProfile?.last_name || '',
+    date_of_birth: payload.date_of_birth || payload.birth_date || currentProfile?.date_of_birth || null,
+    gender: payload.gender || currentProfile?.gender || '',
+    username_lower: normalizeUsername(routePayload.username || normalizedUsername || currentProfile?.username || ''),
+    username_normalized: normalizeUsername(routePayload.username || normalizedUsername || currentProfile?.username || ''),
+    profile_exists: true,
+    profile_complete: payload.profile_complete === true,
+    profile_completion_status: payload.profile_completion_status || currentProfile?.profile_completion_status || '',
+    profile_completion_percent: Number.isFinite(payload.profile_completion_percent) ? payload.profile_completion_percent : currentProfile?.profile_completion_percent || null,
+    missing_required_fields: Array.isArray(payload.missing_required_fields) ? payload.missing_required_fields : currentProfile?.missing_required_fields || [],
+    public_profile_enabled: visibilityPayload.public_profile_enabled === true,
+    public_profile_discoverable: visibilityPayload.public_profile_discoverable === true,
+    public_profile_visibility: visibilityPayload.public_profile_visibility || currentProfile?.public_profile_visibility || 'private',
+    public_route_path: routePayload.public_route_path || currentProfile?.public_route_path || '',
+    public_route_url: routePayload.public_route_url || currentProfile?.public_route_url || '',
+    public_route_status: routePayload.public_route_status || payload.public_route_status || currentProfile?.public_route_status || '',
+    verification_status: payload.verification_status || currentProfile?.verification_status || null,
+    public_verification_status: payload.public_verification_status || currentProfile?.public_verification_status || null,
+    profile_verified: payload.profile_verified === true || currentProfile?.profile_verified === true,
+    verified_at: payload.verified_at || currentProfile?.verified_at || null,
+    profile_verified_at: payload.profile_verified_at || currentProfile?.profile_verified_at || null,
+    public_bio: payload.public_bio || payload.public_summary || currentProfile?.public_bio || '',
+    public_tagline: payload.public_tagline || currentProfile?.public_tagline || '',
     cover_url: normalizedScope === 'media' && values.cover_url === ''
       ? ''
       : (payload.cover_url || currentProfile?.cover_url || ''),
-    bio: payload.public_summary || currentProfile?.bio || '',
-    profile_status: payload.profile_status || currentProfile?.profile_status || 'active',
-    ...buildProfileVisibilityPayload(payload, values),
-    ...buildProfileRoutePayload(payload, normalizedUsername, user),
-    public_avatar_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'public_avatar_url') && values.public_avatar_url === ''
-      ? ''
-      : (payload.public_avatar_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
-    public_summary: payload.public_summary || '',
-    public_primary_link: payload.public_primary_link || '',
-    public_bio: payload.public_bio || payload.public_summary || '',
-    public_tagline: payload.public_tagline || '',
-    public_links: payload.public_links || [],
-    public_modules: payload.public_modules || [],
-    public_feature_flags: payload.public_feature_flags || [],
-    photo_url: normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'photo_url') && values.photo_url === ''
-      ? ''
-      : (payload.photo_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    username_status: routePayload.username_status || payload.username_status || currentProfile?.username_status || '',
+    profile_image_storage_bucket: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket'))
+      ? values.profile_image_storage_bucket
+      : (values.profile_image_storage_bucket || payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
+    public_feature_flags: payload.public_feature_flags || currentProfile?.public_feature_flags || [],
     avatar_storage_path: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'avatar_storage_path'))
       ? values.avatar_storage_path
       : (values.avatar_storage_path || payload.avatar_storage_path || currentProfile?.avatar_storage_path || ''),
     cover_storage_path: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'cover_storage_path'))
       ? values.cover_storage_path
       : (values.cover_storage_path || payload.cover_storage_path || currentProfile?.cover_storage_path || ''),
-    profile_image_storage_bucket: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket'))
-      ? values.profile_image_storage_bucket
-      : (values.profile_image_storage_bucket || payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
-    email: payload.email || normalizeEmail(user.email || ''),
-    first_name: payload.first_name || '',
-    last_name: payload.last_name || '',
-    date_of_birth: payload.date_of_birth || payload.birth_date || null,
-    birth_date: payload.birth_date || payload.date_of_birth || null,
-    gender: payload.gender || '',
-    profile_exists: true,
-    profile_complete: payload.profile_complete === true,
-    profile_completion_status: payload.profile_completion_status || '',
-    profile_completion_percent: Number.isFinite(payload.profile_completion_percent) ? payload.profile_completion_percent : null,
-    missing_required_fields: Array.isArray(payload.missing_required_fields) ? payload.missing_required_fields : [],
-    profile_visibility_status: payload.profile_visibility_status || '',
-    eligibility_status: payload.eligibility_status || '',
-    eligibility_age_years: Number.isFinite(payload.eligibility_age_years) ? payload.eligibility_age_years : null,
-    minimum_eligible_age_years: Number.isFinite(payload.minimum_eligible_age_years) ? payload.minimum_eligible_age_years : null,
-    eligibility_policy_status: payload.eligibility_policy_status || '',
-    eligibility_checked_at: payload.eligibility_checked_at || null,
+    assistant_name: payload.assistant_name || currentProfile?.assistant_name || '',
+    assistant_description: payload.assistant_description || currentProfile?.assistant_description || '',
+    assistant_avatar_url: payload.assistant_avatar_url || payload.avatar_url || currentProfile?.assistant_avatar_url || '',
+    assistant_avatar_storage_path: payload.assistant_avatar_storage_path || currentProfile?.assistant_avatar_storage_path || '',
+    sense_of_humor: Number.isFinite(payload.sense_of_humor) ? payload.sense_of_humor : currentProfile?.sense_of_humor || null,
+    efficiency_preference: Number.isFinite(payload.efficiency_preference) ? payload.efficiency_preference : currentProfile?.efficiency_preference || null,
+    creativity_level: Number.isFinite(payload.creativity_level) ? payload.creativity_level : currentProfile?.creativity_level || null,
+    risk_tolerance: Number.isFinite(payload.risk_tolerance) ? payload.risk_tolerance : currentProfile?.risk_tolerance || null,
     created_at: currentProfile?.created_at || null,
     updated_at: new Date().toISOString()
   };

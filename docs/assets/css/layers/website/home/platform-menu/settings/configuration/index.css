@@ -2,33 +2,6 @@
 
 .home-platform-destination--settings-configuration{width:var(--size-full);}
 
-.home-platform-theme__action-button {
-  width: auto;
-  padding: 0;
-  background-color: transparent;
-  border: none;
-  border-radius: 0;
-  color: var(--text-color);
-  font-size: var(--control-font-size);
-  font-weight: var(--control-font-weight);
-  cursor: pointer;
-  text-align: left;
-}
-
-.home-platform-theme__action-button:hover,
-.home-platform-theme__action-button:focus-visible {
-  outline: none;
-  opacity: 0.7;
-}
-
-.home-platform-theme__action-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: var(--spacing-sm);
-  vertical-align: middle;
-}
-
 .home-platform-theme__dropdown-container {
   display: flex;
   justify-content: space-between;

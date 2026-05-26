@@ -228,7 +228,7 @@ body.profile-media-editor-open{
 ============================================================================= */
 .profile-media-editor__controls{
   display:grid;
-  gap:var(--spacing-md);
+  row-gap:var(--spacing-md);
 }
 
 .profile-media-editor__tool-row{
@@ -237,6 +237,11 @@ body.profile-media-editor-open{
   justify-content:center;
   gap:var(--spacing-sm);
   flex-wrap:wrap;
+}
+
+.profile-media-editor__tool-row + .profile-media-editor__field,
+.profile-media-editor__field + .profile-media-editor__field{
+  margin-top:var(--spacing-sm);
 }
 
 .profile-media-editor__upload,
@@ -287,14 +292,19 @@ body.profile-media-editor-open{
 
 .profile-media-editor__field{
   display:grid;
-  gap:var(--spacing-xs);
+  gap:var(--spacing-sm);
 }
+
 
 .profile-media-editor__label{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:var(--spacing-xs);
+}
+
+.profile-media-editor__field > .profile-media-editor__label{
+  display:none;
 }
 
 .profile-media-editor__select-control{
@@ -419,7 +429,7 @@ body.profile-media-editor-open{
 }
 
 .profile-media-editor__status{
-  min-height:var(--profile-media-editor-status-min-height);
+  display:none;
 }
 
 .profile-media-editor__status[data-profile-media-editor-state="success"]{

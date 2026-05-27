@@ -17,7 +17,7 @@
 ============================================================================= */
 
 .system-node{
-  --system-node-max-width: 760px;
+  --system-node-max-width: calc(760px * var(--accessibility-density-scale));
   position:relative;
   width:min(100%, var(--system-node-max-width));
   max-width:var(--system-node-max-width);

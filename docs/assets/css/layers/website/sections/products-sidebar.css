@@ -14,7 +14,7 @@
 ============================================================================= */
 .products-page .products-sidebar {
   position: sticky;
-  top: calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem) + var(--space-4, 1.5rem));
+  top: calc(var(--header-height, calc(5rem * var(--accessibility-density-scale))) + var(--products-local-nav-height, calc(3.55rem * var(--accessibility-density-scale))) + var(--space-4, calc(1.5rem * var(--accessibility-density-scale))));
   align-self: start;
   min-width: 0;
   --products-sidebar-link-min-height:var(--nav-local-min-height);
@@ -30,8 +30,8 @@
 
 .products-page .products-sidebar__inner {
   display: grid;
-  gap: var(--space-4, 1.5rem);
-  padding: var(--space-4, 1.5rem);
+  gap: var(--space-4, calc(1.5rem * var(--accessibility-density-scale)));
+  padding: var(--space-4, calc(1.5rem * var(--accessibility-density-scale)));
   border: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
   border-radius: var(--radius-xl, 1.5rem);
   background: var(--control-bg, transparent);
@@ -52,10 +52,10 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 1.3rem;
-  min-width: 1.3rem;
-  height: 1.3rem;
-  min-height: 1.3rem;
+  width: calc(1.3rem * var(--accessibility-icon-scale));
+  min-width: calc(1.3rem * var(--accessibility-icon-scale));
+  height: calc(1.3rem * var(--accessibility-icon-scale));
+  min-height: calc(1.3rem * var(--accessibility-icon-scale));
   color: var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
   transform: none !important;
   transition:
@@ -76,8 +76,8 @@
 .products-page .products-sidebar__toggle::before {
   content: "";
   display: block;
-  width: 1.3rem;
-  height: 1.3rem;
+  width: calc(1.3rem * var(--accessibility-icon-scale));
+  height: calc(1.3rem * var(--accessibility-icon-scale));
   background-color: currentColor;
   -webkit-mask-image: url('/registry/icons/public/assets/core/navigation/sidebar/sidebar-left.svg');
   -webkit-mask-repeat: no-repeat;
@@ -106,14 +106,14 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--space-2, 0.75rem);
-  min-height: 1.3rem;
+  gap: var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
+  min-height: calc(1.3rem * var(--accessibility-icon-scale));
 }
 
 .products-page .products-sidebar__heading {
   display: flex;
   align-items: center;
-  min-height: 1.3rem;
+  min-height: calc(1.3rem * var(--accessibility-icon-scale));
 }
 
 .products-page .products-sidebar__eyebrow {
@@ -124,7 +124,7 @@
   margin: 0;
   display: flex;
   align-items: center;
-  min-height: 1.3rem;
+  min-height: calc(1.3rem * var(--accessibility-icon-scale));
   color: var(--text-primary-color, var(--text-primary, #fff));
   font-size: var(--home-section-title-size);
   font-weight: 300;
@@ -153,7 +153,7 @@
 
 .products-page .products-sidebar__panel {
   width: 100%;
-  padding-top: var(--space-3, 1rem);
+  padding-top: var(--space-3, calc(1rem * var(--accessibility-density-scale)));
   border-top: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
 }
 
@@ -169,7 +169,7 @@
   padding: 0;
   margin: 0;
   display: grid;
-  gap: var(--space-2, 0.75rem);
+  gap: var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
 }
 
 /* =============================================================================

@@ -19,19 +19,19 @@
    01) PRIVATE PROFILE HERO TOKENS
 ============================================================================= */
 :root{
-  --profile-private-hero-cover-height:13.5rem;
-  --profile-private-hero-cover-height-mobile:10.5rem;
-  --profile-private-hero-cover-radius:1.4rem;
+  --profile-private-hero-cover-height:calc(13.5rem * var(--accessibility-density-scale));
+  --profile-private-hero-cover-height-mobile:calc(10.5rem * var(--accessibility-density-scale));
+  --profile-private-hero-cover-radius:calc(1.4rem * var(--accessibility-density-scale));
   --profile-private-hero-cover-offset-top:var(--spacing-md);
-  --profile-private-hero-avatar-size:7.25rem;
-  --profile-private-hero-avatar-border-width:0.25rem;
-  --profile-private-hero-media-action-size:2.15rem;
+  --profile-private-hero-avatar-size:calc(7.25rem * var(--accessibility-icon-scale));
+  --profile-private-hero-avatar-border-width:calc(0.25rem * var(--accessibility-density-scale));
+  --profile-private-hero-media-action-size:calc(2.15rem * var(--accessibility-icon-scale));
   --profile-private-hero-identity-layer:var(--z-raised);
   --profile-private-hero-avatar-layer:var(--z-raised);
   --profile-private-hero-media-action-layer:var(--z-above);
   --profile-private-hero-details-max-height:calc(var(--body-2-line-height) + var(--spacing-sm));
   --profile-private-hero-details-max-height-hidden:0;
-  --profile-private-hero-info-popover-width:min(22rem, var(--site-rail-width));
+  --profile-private-hero-info-popover-width:min(calc(22rem * var(--accessibility-density-scale)), var(--site-rail-width));
   --profile-private-hero-actions-layer:var(--z-above);
   --profile-private-hero-media-action-opacity:1;
   --profile-private-hero-media-action-opacity-hidden:0;
@@ -64,7 +64,7 @@
   --profile-private-hero-tab-indicator-opacity:0;
   --profile-private-hero-tab-indicator-opacity-active:var(--selected-indicator-opacity);
   --profile-private-hero-tab-indicator-bottom:var(--spacing-none);
-  --profile-private-hero-tab-band-height:var(--products-local-nav-height, 3.55rem);
+  --profile-private-hero-tab-band-height:var(--products-local-nav-height, calc(3.55rem * var(--accessibility-density-scale)));
   --profile-private-hero-tab-indicator-height:var(--border-width-hairline);
   --profile-private-hero-tab-color:var(--nav-local-color);
   --profile-private-hero-tab-hover-color:var(--local-nav-hover-text-color);
@@ -277,7 +277,7 @@
   align-items:center;
   justify-content:center;
   padding:0;
-  border:0.0625rem solid var(--avatar-media-action-border);
+  border:calc(0.0625rem * var(--accessibility-density-scale)) solid var(--avatar-media-action-border);
   border-radius:var(--avatar-media-action-radius);
   background:var(--avatar-media-action-bg);
   color:var(--text-primary-color);
@@ -447,8 +447,8 @@
   top:calc(100% + var(--spacing-xs));
   right:0;
   z-index:var(--z-raised);
-  min-width:12.5rem;
-  max-width:18.75rem;
+  min-width:calc(12.5rem * var(--accessibility-density-scale));
+  max-width:calc(18.75rem * var(--accessibility-density-scale));
   display:grid;
   gap:var(--spacing-md);
   overflow:auto;
@@ -616,7 +616,7 @@
 ============================================================================= */
 @media (min-width:721px){
   :root{
-    --profile-private-hero-tab-band-height:3rem;
+    --profile-private-hero-tab-band-height:calc(3rem * var(--accessibility-density-scale));
   }
 }
 
@@ -633,7 +633,7 @@
 
   :root{
     --profile-private-hero-cover-height:var(--profile-private-hero-cover-height-mobile);
-    --profile-private-hero-avatar-size:6rem;
+    --profile-private-hero-avatar-size:calc(6rem * var(--accessibility-icon-scale));
     --profile-private-hero-tab-band-height:var(--nav-glass-surface-height-tablet);
   }
 

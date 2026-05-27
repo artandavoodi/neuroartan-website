@@ -144,7 +144,7 @@
   --account-drawer-close-duration:var(--global-close-button-duration);
   --account-drawer-close-ease:var(--global-close-button-ease);
   --account-drawer-dialog-radius:var(--dialog-radius-unified);
-  --account-drawer-dialog-max-height:calc(100dvh - var(--home-shell-topbar-height, var(--site-header-height, 4rem)) - var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  --account-drawer-dialog-max-height:calc(100dvh - var(--home-shell-topbar-height, var(--site-header-height, calc(4rem * var(--accessibility-density-scale)))) - var(--home-shell-footer-separator-offset, var(--footer-height, calc(5rem * var(--accessibility-density-scale)))));
   --account-drawer-dialog-viewport-gap:var(--dialog-overlay-viewport-gap);
   --account-drawer-panel-transform-closed:var(--overlay-transform-closed);
   --account-drawer-panel-transform-open:var(--overlay-transform-open);
@@ -220,7 +220,7 @@ html[data-theme-effective="dark"]{
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding:calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, var(--site-header-height, 4rem))) var(--account-drawer-dialog-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  padding:calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, var(--site-header-height, calc(4rem * var(--accessibility-density-scale))))) var(--account-drawer-dialog-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--footer-height, calc(5rem * var(--accessibility-density-scale)))));
   pointer-events: none;
   opacity: var(--overlay-opacity-closed);
   visibility: hidden;

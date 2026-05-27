@@ -22,7 +22,7 @@
   --account-provider-google-surface:var(--panel-surface-unified);
   --account-provider-google-border:var(--panel-border-unified);
   --account-provider-google-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
-  --account-provider-google-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-provider-google-shell-inner-shadow: inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-provider-google-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-provider-google-primary-shadow:var(--panel-shadow-unified);
@@ -75,7 +75,7 @@ html[data-theme-effective="light"]{
 
 html[data-theme-effective="dark"]{
   --account-provider-google-surface:var(--panel-surface-unified);
-  --account-provider-google-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-provider-google-shell-inner-shadow:inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
   --account-provider-google-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-provider-google-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --account-provider-google-primary-shadow:var(--panel-shadow-unified);
@@ -208,7 +208,7 @@ html[data-theme-effective="dark"]{
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: var(--border-width-hairline);
-  text-underline-offset: 0.14em;
+  text-underline-offset: calc(0.14em * var(--accessibility-typography-scale));
   text-decoration-skip-ink: auto;
   font-size: var(--account-provider-google-text-action-font-size);
   font-weight: var(--type-body-regular-weight);

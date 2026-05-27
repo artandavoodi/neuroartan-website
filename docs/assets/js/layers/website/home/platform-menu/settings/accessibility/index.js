@@ -3,11 +3,11 @@ import { mountSettingsCategory } from '../_shared/settings-category.js';
 const STORAGE_KEY = 'neuroartan.accessibility';
 
 const ACCESSIBILITY_DEFAULTS = {
-  typography: 'large',
+  typography: 'medium',
   density: 'standard',
   motion: 'enabled',
   ariaAnnouncements: false,
-  iconSize: 'large'
+  iconSize: 'medium'
 };
 
 const TYPOGRAPHY_SCALE = {
@@ -210,7 +210,7 @@ function bindResetButton(root) {
 
       const options = root.querySelectorAll('[data-accessibility-typography-option]');
       options.forEach((opt) => {
-        opt.setAttribute('aria-pressed', String(opt.dataset.typographyOption === 'large'));
+        opt.setAttribute('aria-pressed', String(opt.dataset.typographyOption === 'medium'));
       });
 
       const densityOptions = root.querySelectorAll('[data-accessibility-density-option]');
@@ -230,7 +230,7 @@ function bindResetButton(root) {
 
       const iconOptions = root.querySelectorAll('[data-accessibility-icon-option]');
       iconOptions.forEach((opt) => {
-        opt.setAttribute('aria-pressed', String(opt.dataset.iconOption === 'large'));
+        opt.setAttribute('aria-pressed', String(opt.dataset.iconOption === 'medium'));
       });
     });
   }

@@ -14,8 +14,8 @@
 .institutional-links-separator{
   grid-column: 1 / -1;
   width: 100%;
-  height: 1px;
-  margin: 0.4rem 0 0.2rem;
+  height: calc(1px * var(--accessibility-density-scale));
+  margin: calc(0.4rem * var(--accessibility-density-scale)) 0 calc(0.2rem * var(--accessibility-density-scale));
   background: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
   pointer-events: none;
 }

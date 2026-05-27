@@ -13,19 +13,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: calc(12px * var(--accessibility-density-scale));
 }
 
 #auth-access-button {
   appearance: none;
   -webkit-appearance: none;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--border-color);
+  min-height: calc(36px * var(--accessibility-density-scale));
+  padding: 0 calc(14px * var(--accessibility-density-scale));
+  border: calc(1px * var(--accessibility-density-scale)) solid var(--border-color);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text-color);
   font-family: var(--font-base);
-  font-size: 0.78rem;
+  font-size: calc(0.78rem * var(--accessibility-typography-scale));
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;

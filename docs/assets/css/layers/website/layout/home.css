@@ -109,7 +109,7 @@ body{
    02) ANNOUNCEMENT + CTA BASE
 ============================================================================= */
 #announcement{
-  max-width:90%;
+  max-width:calc(90% * var(--accessibility-density-scale));
   font-size:var(--home-layout-announcement-size);
   font-weight:var(--home-layout-announcement-weight);
   letter-spacing:var(--home-layout-announcement-tracking);
@@ -332,7 +332,7 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
   position:relative;
   z-index:4;
   display:block;
-  width:min(var(--home-layout-logo-width), 72vw);
+  width:min(var(--home-layout-logo-width), calc(72vw * var(--accessibility-density-scale)));
   height:auto;
   margin:0 auto var(--home-layout-logo-margin-bottom) auto;
   pointer-events:auto;
@@ -343,7 +343,7 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
 
 #stage #announcement{
   width:100%;
-  max-width:90%;
+  max-width:calc(90% * var(--accessibility-density-scale));
   margin:var(--home-layout-stage-copy-margin-top) auto 0 auto;
   text-align:center;
 }
@@ -402,9 +402,6 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
    10) HOME HERO MOBILE / TABLET REFINEMENTS
 ============================================================================= */
 @media (max-width:820px){
-  :root{
-  }
-
   #stage .stage-container{
     max-width:none;
     padding:0;
@@ -412,7 +409,7 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
 
 
   #stage .logo-container .site-logo{
-    width:min(var(--home-layout-logo-width-mobile), 68vw);
+    width:min(var(--home-layout-logo-width-mobile), calc(68vw * var(--accessibility-density-scale)));
   }
 
   #announcement{
@@ -439,14 +436,14 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
   .stage-wallpaper,
     #stage .stage-wallpaper{
     inset:0;
-    width:100vw;
-    height:100svh;
+    width:calc(100vw * var(--accessibility-density-scale));
+    height:calc(100svh * var(--accessibility-density-scale));
   }
 
   @supports (height:100dvh){
     .stage-wallpaper,
         #stage .stage-wallpaper{
-      height:100dvh;
+      height:calc(100dvh * var(--accessibility-density-scale));
     }
   }
 
@@ -462,7 +459,7 @@ html[data-homepage-theme-cinematic-background="true"] body.home-page.site-entere
     .stage-wallpaper .neuroartan-wallpaper__svg,
         #stage .stage-wallpaper .neuroartan-wallpaper__svg,
     #stage .neuroartan-wallpaper__svg{
-      height:100dvh;
+      height:calc(100dvh * var(--accessibility-density-scale));
     }
   }
 }
@@ -559,7 +556,7 @@ body.home-page.intro-reveal .enter-button{
   right:auto;
   bottom:auto;
   display:block;
-  width:min(62vw, var(--intro-logo-max));
+  width:min(calc(62vw * var(--accessibility-density-scale)), var(--intro-logo-max));
   height:auto;
   margin:0;
   z-index:300000;
@@ -572,7 +569,7 @@ body.home-page.intro-reveal .enter-button{
 
 .site-logo.intro-logo.intro-pop{
   opacity:1;
-  transform:translate(-50%, -50%) scale(1);
+  transform:translate(-50%, -50%) scale(calc(1 * var(--accessibility-density-scale)));
 }
 
 .site-logo.intro-logo.intro-settle{
@@ -606,7 +603,7 @@ body[dir="rtl"] .site-logo.intro-logo{
 
 @media (max-width:640px){
   .site-logo.intro-logo{
-    width:min(78vw, var(--intro-logo-mobile-max));
+    width:min(calc(78vw * var(--accessibility-density-scale)), var(--intro-logo-mobile-max));
   }
 
   .site-logo.intro-docked{

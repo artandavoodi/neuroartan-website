@@ -23,7 +23,7 @@
   --account-phone-auth-surface:var(--panel-surface-unified);
   --account-phone-auth-border:var(--panel-border-unified);
   --account-phone-auth-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
-  --account-phone-auth-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-phone-auth-shell-inner-shadow: inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-phone-auth-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-phone-auth-primary-shadow:var(--panel-shadow-unified);
@@ -92,7 +92,7 @@ html[data-theme-effective="light"]{
 
 html[data-theme-effective="dark"]{
   --account-phone-auth-surface:var(--panel-surface-unified);
-  --account-phone-auth-shell-inner-shadow:inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
+  --account-phone-auth-shell-inner-shadow:inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 4%, transparent);
   --account-phone-auth-shell-highlight:linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
   --account-phone-auth-primary-shadow:var(--panel-shadow-unified);
@@ -176,7 +176,7 @@ html[data-theme-effective="dark"]{
 .account-phone-auth-drawer-phone-entry{
   width: var(--size-full);
   display: grid;
-  grid-template-columns: minmax(8.5rem, 0.92fr) minmax(0, 1.55fr);
+  grid-template-columns: minmax(calc(8.5rem * var(--accessibility-density-scale)), 0.92fr) minmax(0, 1.55fr);
   align-items: stretch;
   gap: var(--space-4);
 }
@@ -250,7 +250,7 @@ html[data-theme-effective="dark"]{
 }
 
 .account-phone-auth-drawer-dial-list{
-  max-height: min(16rem, 38vh);
+  max-height: min(calc(16rem * var(--accessibility-density-scale)), 38vh);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -263,7 +263,7 @@ html[data-theme-effective="dark"]{
   appearance: none;
   -webkit-appearance: none;
   width: var(--size-full);
-  min-height: var(--control-height-md, 2.75rem);
+  min-height: var(--control-height-md, calc(2.75rem * var(--accessibility-density-scale)));
   padding: var(--space-2) var(--space-3);
   border: 0;
   border-radius: var(--radius-md);

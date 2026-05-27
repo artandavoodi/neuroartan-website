@@ -1,11 +1,11 @@
 const STORAGE_KEY = 'neuroartan.accessibility';
 
 const ACCESSIBILITY_DEFAULTS = {
-  typography: 'large',
+  typography: 'medium',
   density: 'standard',
   motion: 'enabled',
   ariaAnnouncements: false,
-  iconSize: 'large'
+  iconSize: 'medium'
 };
 
 const TYPOGRAPHY_SCALE = {

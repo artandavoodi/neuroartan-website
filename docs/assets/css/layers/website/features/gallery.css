@@ -4,15 +4,15 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    gap: calc(16px * var(--accessibility-density-scale));
+    padding: calc(16px * var(--accessibility-density-scale));
     box-sizing: border-box;
 }
 
 /* --- Gallery Items --- */
 .gallery-item {
-    flex: 0 1 calc(45% - 16px);
-    max-width: 220px;
+    flex: 0 1 calc(45% - calc(16px * var(--accessibility-density-scale)));
+    max-width: calc(220px * var(--accessibility-density-scale));
     position: relative;
     transition:transform var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
@@ -22,23 +22,23 @@
     aspect-ratio: 1 / 1;
     border-radius:var(--control-radius-pill);
     object-fit: cover;
-    border: 2px solid rgba(255,255,255,0.2);
+    border: calc(2px * var(--accessibility-density-scale)) solid rgba(255,255,255,0.2);
     transition:transform var(--interaction-motion-medium) var(--interaction-ease-standard), box-shadow var(--interaction-motion-medium) var(--interaction-ease-standard);
 }
 
 /* Hover effect */
 .gallery-item img:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 24px rgba(255,255,255,0.3);
+    box-shadow: 0 calc(8px * var(--accessibility-density-scale)) calc(24px * var(--accessibility-density-scale)) rgba(255,255,255,0.3);
 }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-    .gallery-item { flex: 0 1 calc(48% - 16px); }
+    .gallery-item { flex: 0 1 calc(48% - calc(16px * var(--accessibility-density-scale))); }
 }
 
 @media (max-width: 480px) {
-    .gallery-item { flex: 0 1 calc(80% - 16px); }
+    .gallery-item { flex: 0 1 calc(80% - calc(16px * var(--accessibility-density-scale))); }
 }
 
 
@@ -47,11 +47,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 2rem 0;
+    margin: calc(2rem * var(--accessibility-density-scale)) 0;
 }
 
 .logo-container img {
-    width: 320px;
+    width: calc(320px * var(--accessibility-density-scale));
     max-width: 80%;
     height: auto;
     display: block; /* ensures proper centering */
@@ -60,20 +60,20 @@
 /* Responsive adjustments for logo */
 @media (max-width: 768px) {
     .logo-container {
-        margin: 1.5rem 0;
+        margin: calc(1.5rem * var(--accessibility-density-scale)) 0;
     }
     .logo-container img {
-        width: 280px;
+        width: calc(280px * var(--accessibility-density-scale));
         max-width: 70%;
     }
 }
 
 @media (max-width: 480px) {
     .logo-container {
-        margin: 1rem 0;
+        margin: calc(1rem * var(--accessibility-density-scale)) 0;
     }
     .logo-container img {
-        width: 220px;
+        width: calc(220px * var(--accessibility-density-scale));
         max-width: 90%;
     }
 }

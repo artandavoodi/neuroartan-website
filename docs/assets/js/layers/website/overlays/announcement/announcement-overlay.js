@@ -218,16 +218,6 @@
         closeOverlay('close-control');
         return;
       }
-
-      const backdrop = event.target instanceof Element
-        ? event.target.closest('.announcement-overlay-backdrop')
-        : null;
-
-      if (backdrop) {
-        event.preventDefault();
-        closeOverlay('backdrop');
-        return;
-      }
     });
   }
 

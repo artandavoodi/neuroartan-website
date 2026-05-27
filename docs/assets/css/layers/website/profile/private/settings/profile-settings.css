@@ -170,8 +170,8 @@
   top:calc(100% + var(--spacing-xs));
   right:0;
   z-index:var(--z-raised);
-  min-width:200px;
-  max-width:300px;
+  min-width:calc(200px * var(--accessibility-density-scale));
+  max-width:calc(300px * var(--accessibility-density-scale));
   display:grid;
   gap:var(--spacing-md);
   overflow:auto;
@@ -209,7 +209,7 @@
   align-items:center;
   justify-content:center;
   box-sizing:border-box;
-  padding:calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, var(--site-header-height, 4rem))) var(--dialog-overlay-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  padding:calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height, calc(4rem * var(--accessibility-density-scale)))) var(--dialog-overlay-viewport-gap) calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, calc(5rem * var(--accessibility-density-scale))));
   pointer-events:none;
   opacity:var(--overlay-opacity-closed);
   visibility:hidden;
@@ -241,7 +241,7 @@
   width:var(--layout-account-drawer-panel-width);
   max-width:calc(100vw - (2 * var(--dialog-overlay-viewport-gap)));
   height:auto;
-  max-height:calc(100dvh - var(--home-shell-topbar-height, var(--site-header-height, 4rem)) - var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)));
+  max-height:calc(100dvh - var(--home-shell-topbar-height, calc(4rem * var(--accessibility-density-scale))) - var(--home-shell-footer-separator-offset, calc(5rem * var(--accessibility-density-scale))));
   padding:var(--dialog-overlay-panel-padding-y) var(--dialog-overlay-panel-padding-x) var(--dialog-overlay-panel-padding-y);
   background-color:var(--glass-overlay-drawer-shell-bg);
   border:var(--border-width-hairline) solid var(--panel-border-unified);
@@ -303,7 +303,7 @@
   justify-content:center;
   gap:var(--spacing-lg);
   padding:var(--spacing-none);
-  max-width:34rem;
+  max-width:calc(34rem * var(--accessibility-density-scale));
   margin:var(--spacing-none) auto;
   text-align:center;
 }
@@ -457,7 +457,7 @@
 }
 
 .profile-settings__status{
-  min-height:1.4rem;
+  min-height:calc(1.4rem * var(--accessibility-density-scale));
   color:var(--profile-settings-status-color);
   opacity:var(--profile-settings-caption-opacity);
 }

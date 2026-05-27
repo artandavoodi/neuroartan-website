@@ -92,7 +92,7 @@
 ============================================================================= */
 @media (max-width: 820px){
   .home-about-definition .home-inner{
-    padding-top: var(--home-section-padding-y-mobile, 5rem);
-    padding-bottom: var(--home-section-padding-y-mobile, 5rem);
+    padding-top: var(--home-section-padding-y-mobile, calc(5rem * var(--accessibility-density-scale)));
+    padding-bottom: var(--home-section-padding-y-mobile, calc(5rem * var(--accessibility-density-scale)));
   }
 }

@@ -23,17 +23,17 @@
 ============================================================================= */
 :root{
   --home-interaction-response-panel-width:min(42rem, calc(100vw - (2 * var(--site-gutter))));
-  --home-interaction-response-panel-max-height:18rem;
-  --home-interaction-response-panel-padding:0.18rem 0.18rem 0.18rem;
+  --home-interaction-response-panel-max-height:calc(18rem * var(--accessibility-density-scale));
+  --home-interaction-response-panel-padding:calc(0.18rem * var(--accessibility-density-scale)) calc(0.18rem * var(--accessibility-density-scale)) calc(0.18rem * var(--accessibility-density-scale));
   --home-interaction-response-panel-content-max-width:52rem;
   --home-interaction-response-panel-content-align:left;
   --home-interaction-response-panel-radius:var(--control-radius-composer);
   --home-interaction-response-panel-surface:transparent;
   --home-interaction-response-panel-text:var(--text-primary-color);
   --home-interaction-response-panel-muted:var(--text-secondary-color);
-  --home-interaction-response-panel-font-size:1.06rem;
+  --home-interaction-response-panel-font-size:calc(1.06rem * var(--accessibility-typography-scale));
   --home-interaction-response-panel-font-weight:300;
-  --home-interaction-response-panel-line-height:1.92;
+  --home-interaction-response-panel-line-height:calc(1.92 * var(--accessibility-typography-scale));
   --home-interaction-response-panel-letter-spacing:-0.012em;
   --home-interaction-response-panel-scrollbar:color-mix(in srgb, var(--text-secondary-color) 22%, transparent);
   --home-interaction-response-panel-scrollbar-hover:color-mix(in srgb, var(--text-secondary-color) 38%, transparent);
@@ -146,10 +146,10 @@
 @media (max-width:760px){
   :root{
     --home-interaction-response-panel-width:min(42rem, var(--site-rail-width-mobile));
-    --home-interaction-response-panel-max-height:18rem;
+    --home-interaction-response-panel-max-height:calc(18rem * var(--accessibility-density-scale));
     --home-interaction-response-panel-content-max-width:100%;
     --home-interaction-response-panel-font-size:calc(0.96rem * var(--accessibility-typography-scale));
-    --home-interaction-response-panel-line-height:1.66;
+    --home-interaction-response-panel-line-height:calc(1.66 * var(--accessibility-typography-scale));
   }
 }
 
@@ -161,7 +161,7 @@
 
 .home-interaction-response-panel__content{
   display:grid;
-  gap:1.2rem;
+  gap:calc(1.2rem * var(--accessibility-density-scale));
   text-rendering:optimizeLegibility;
   -webkit-font-smoothing:antialiased;
   text-wrap:pretty;
@@ -173,12 +173,12 @@
 
 .home-interaction-response-panel__content p{
   opacity:0;
-  transform:translateY(0.4rem);
+  transform:translateY(calc(0.4rem * var(--accessibility-density-scale)));
   animation:home-response-emergence 680ms var(--interaction-ease-standard) forwards;
 }
 
 .home-interaction-response-panel__content p + p{
-  margin-top:0.2rem;
+  margin-top:calc(0.2rem * var(--accessibility-density-scale));
 }
 
 .home-interaction-response-panel__content h1,
@@ -186,7 +186,7 @@
 .home-interaction-response-panel__content h3{
   font-weight:500;
   letter-spacing:-0.03em;
-  line-height:1.18;
+  line-height:calc(1.18 * var(--accessibility-typography-scale));
 }
 
 .home-interaction-response-panel__content strong{
@@ -195,16 +195,16 @@
 }
 
 .home-interaction-response-panel__content code{
-  padding:0.14rem 0.38rem;
-  border-radius:0.5rem;
+  padding:calc(0.14rem * var(--accessibility-density-scale)) calc(0.38rem * var(--accessibility-density-scale));
+  border-radius:calc(0.5rem * var(--accessibility-density-scale));
   background:transparent;
   font-size:calc(0.92em * var(--accessibility-typography-scale));
 }
 
 .home-interaction-response-panel__content pre{
   overflow:auto;
-  padding:1rem 1.1rem;
-  border-radius:1rem;
+  padding:calc(1rem * var(--accessibility-density-scale)) calc(1.1rem * var(--accessibility-density-scale));
+  border-radius:calc(1rem * var(--accessibility-density-scale));
   background:transparent;
   scrollbar-width:thin;
 }
@@ -219,7 +219,7 @@
   display:block;
   bottom:0;
   width:100%;
-  height:3.5rem;
+  height:calc(3.5rem * var(--accessibility-density-scale));
   pointer-events:none;
   background:transparent;
 }
@@ -227,7 +227,7 @@
 @keyframes home-response-emergence{
   from{
     opacity:0;
-    transform:translateY(0.4rem);
+    transform:translateY(calc(0.4rem * var(--accessibility-density-scale)));
   }
 
   to{

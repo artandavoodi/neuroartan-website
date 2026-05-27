@@ -11,7 +11,7 @@
 ----------------------------------------------------------------------------- */
 :root{
   --collections-card-surface:var(--surface-color);
-  --collections-card-hover-shadow:0 28px 60px color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
+  --collections-card-hover-shadow:0 calc(28px * var(--accessibility-density-scale)) calc(60px * var(--accessibility-density-scale)) color-mix(in srgb, var(--shadow-color, #000000) 8%, transparent);
   --collections-card-inner-highlight:radial-gradient(circle at center, color-mix(in srgb, var(--text-primary-color) 6%, transparent) 0%, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 40%, color-mix(in srgb, var(--text-primary-color) 1.5%, transparent) 65%, transparent 85%);
   --collections-card-copy-opacity:0.9;
 }
@@ -34,13 +34,13 @@
 }
 
 .featured-header{
-  margin-block: 0 3.2rem;
+  margin-block: 0 calc(3.2rem * var(--accessibility-density-scale));
 }
 
 .featured-grid{
   display:grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.8rem;
+  gap: calc(1.8rem * var(--accessibility-density-scale));
 }
 
 @media (max-width:1100px){
@@ -64,8 +64,8 @@
   overflow:hidden;
   border-radius:var(--control-radius);
   background:var(--collections-card-surface);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(calc(8px * var(--accessibility-density-scale)));
+  -webkit-backdrop-filter: blur(calc(8px * var(--accessibility-density-scale)));
   transition:
     transform var(--interaction-motion-slow) var(--interaction-ease-standard),
     box-shadow var(--interaction-motion-slow) var(--interaction-ease-standard),
@@ -74,7 +74,7 @@
 }
 
 .featured-card:hover{
-  transform: translateY(-10px);
+  transform: translateY(calc(-10px * var(--accessibility-density-scale)));
   box-shadow:var(--collections-card-hover-shadow);
 }
 
@@ -94,7 +94,7 @@
 
 .featured-header.motion-init{
   opacity:0;
-  transform: translateY(60px);
+  transform: translateY(calc(60px * var(--accessibility-density-scale)));
 }
 
 .featured-header.motion-visible{
@@ -104,7 +104,7 @@
 
 .featured-card.motion-init{
   opacity:0;
-  transform: translateY(70px);
+  transform: translateY(calc(70px * var(--accessibility-density-scale)));
 }
 
 .featured-card.motion-visible{
@@ -141,6 +141,6 @@ html.lang-rtl .featured-grid{
 }
 
 .featured-section p{
-  line-height:1.6;
+  line-height:calc(1.6 * var(--accessibility-typography-scale));
   opacity:var(--collections-card-copy-opacity);
 }

@@ -25,7 +25,7 @@
   --account-sign-in-surface:var(--panel-surface-unified);
   --account-sign-in-border:var(--panel-border-unified);
   --account-sign-in-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
-  --account-sign-in-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-in-shell-inner-shadow: inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-sign-in-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-in-primary-shadow:var(--panel-shadow-unified);
@@ -134,8 +134,8 @@ html[data-theme-effective="dark"]{
 }
 
 .account-sign-in-drawer-header-brand-icon{
-  width: 2.4rem;
-  height: 2.4rem;
+  width: calc(2.4rem * var(--accessibility-icon-scale));
+  height: calc(2.4rem * var(--accessibility-icon-scale));
   display: block;
   object-fit: contain;
 }

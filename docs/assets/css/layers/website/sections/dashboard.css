@@ -18,7 +18,7 @@
 .dashboard-summary-grid{
   display:grid;
   grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:1rem;
+  gap:calc(1rem * var(--accessibility-density-scale));
 }
 
 .dashboard-summary-card{
@@ -39,17 +39,17 @@
 ============================================================================= */
 .dashboard-groups{
   display:grid;
-  gap:1.4rem;
+  gap:calc(1.4rem * var(--accessibility-density-scale));
 }
 
 .dashboard-section-group{
   display:grid;
-  gap:0.9rem;
+  gap:calc(0.9rem * var(--accessibility-density-scale));
 }
 
 .dashboard-section-group__header{
   display:grid;
-  gap:0.28rem;
+  gap:calc(0.28rem * var(--accessibility-density-scale));
 }
 
 .dashboard-section-group__eyebrow,
@@ -67,7 +67,7 @@
 
 .dashboard-section-group__title{
   color:var(--text-primary-color);
-  font-size:1.02rem;
+  font-size:calc(1.02rem * var(--accessibility-typography-scale));
   font-weight:500;
 }
 

@@ -138,7 +138,7 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:1.6rem;
+  gap:calc(1.6rem * var(--accessibility-density-scale));
   flex:1 1 auto;
   min-width:0;
 }
@@ -182,7 +182,7 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   font-size:calc(0.8rem * var(--accessibility-typography-scale));
   font-weight:400;
   letter-spacing:0.008em;
-  line-height:1rem;
+  line-height:calc(1rem * var(--accessibility-typography-scale));
   white-space:nowrap;
   font-variation-settings:"wght" 400;
   transition:color var(--interaction-motion-medium) var(--interaction-ease-standard), opacity var(--interaction-motion-medium) var(--interaction-ease-standard), transform var(--interaction-motion-medium) var(--interaction-ease-standard);
@@ -266,7 +266,7 @@ body.profile-page.menu-ribbon-active .institutional-menu::before{
   border-radius:var(--control-radius-pill);
   overflow:hidden;
   flex:0 0 auto;
-  border:1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  border:calc(1px * var(--accessibility-density-scale)) solid color-mix(in srgb, var(--text-primary-color) 10%, transparent);
 }
 
 #profile-menu-mount .home-dashboard-topbar__profile-avatar-image{

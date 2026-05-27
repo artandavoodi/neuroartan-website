@@ -15,12 +15,12 @@
 ============================================================================= */
 .products-page {
   position: relative;
-  --products-content-gap:var(--space-12, 8rem);
+  --products-content-gap:var(--space-12, calc(8rem * var(--accessibility-density-scale)));
   --products-content-bottom-space:calc((var(--products-content-gap) * 1.5) + var(--products-content-block-offset));
   --products-hub-bottom-gap:var(--products-content-bottom-space);
-  --products-content-rail-gap:var(--space-6, 2.5rem);
-  --products-content-block-gap:var(--space-3, 1rem);
-  --products-content-block-offset:var(--space-9, 5rem);
+  --products-content-rail-gap:var(--space-6, calc(2.5rem * var(--accessibility-density-scale)));
+  --products-content-block-gap:var(--space-3, calc(1rem * var(--accessibility-density-scale)));
+  --products-content-block-offset:var(--space-9, calc(5rem * var(--accessibility-density-scale)));
   --products-content-divider:var(--border-width-hairline) solid var(--border-color);
 }
 
@@ -62,7 +62,7 @@
 
 .products-page .products-rail {
   width: 100%;
-  max-width: var(--content-width, 120rem);
+  max-width: var(--content-width, calc(120rem * var(--accessibility-density-scale)));
   margin: 0 auto;
   padding-inline: var(--page-gutter);
   box-sizing: border-box;
@@ -75,7 +75,7 @@
 ============================================================================= */
 .products-page .products-hub-layout {
   display: grid;
-  grid-template-columns: minmax(16rem, 19rem) minmax(0, 1fr);
+  grid-template-columns: minmax(calc(16rem * var(--accessibility-density-scale)), calc(19rem * var(--accessibility-density-scale))) minmax(0, 1fr);
   gap:var(--products-content-rail-gap);
   align-items:start;
   margin-block-end:var(--products-hub-bottom-gap);
@@ -131,14 +131,14 @@
 
 .products-page .products-index-shell__header {
   display: grid;
-  gap: var(--space-2, 0.75rem);
+  gap: var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
 }
 
 .products-page .products-index-shell__title-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--space-2, 0.75rem);
+  gap: var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
 }
 
 .products-page .products-index-shell__title {
@@ -153,7 +153,7 @@
 
 .products-page .products-index-shell__description {
   margin: 0;
-  max-width: 48rem;
+  max-width: calc(48rem * var(--accessibility-density-scale));
   color: var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
 }
 
@@ -165,7 +165,7 @@
 }
 
 .products-page .products-overview-block {
-  scroll-margin-top: calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem));
+  scroll-margin-top: calc(var(--header-height, calc(5rem * var(--accessibility-density-scale))) + var(--products-local-nav-height, calc(3.55rem * var(--accessibility-density-scale))));
 }
 
 .products-page .products-overview-block__inner {
@@ -212,19 +212,19 @@
 
 .products-page .products-detail-shell__description{
   margin:0;
-  max-width:48rem;
+  max-width:calc(48rem * var(--accessibility-density-scale));
   color:var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
   font-size:var(--font-size-body-1);
   line-height:var(--line-height-body);
 }
 
 .products-page .products-detail-block{
-  scroll-margin-top:calc(var(--header-height, 5rem) + var(--products-local-nav-height, 3.55rem));
+  scroll-margin-top:calc(var(--header-height, calc(5rem * var(--accessibility-density-scale))) + var(--products-local-nav-height, calc(3.55rem * var(--accessibility-density-scale))));
 }
 
 .products-page .products-detail-block__inner{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) minmax(14rem, 18rem);
+  grid-template-columns:minmax(0, 1fr) minmax(calc(14rem * var(--accessibility-density-scale)), calc(18rem * var(--accessibility-density-scale)));
   gap:var(--products-content-rail-gap);
   align-items:start;
 }
@@ -262,19 +262,19 @@
 
 .products-page .products-detail-block__highlights{
   display:grid;
-  gap:var(--space-2, 0.75rem);
+  gap:var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
   padding:0;
   margin:0;
   list-style:none;
 }
 
 .products-page .products-detail-block__highlight{
-  padding:var(--space-3, 1rem) var(--space-4, 1.25rem);
-  border:1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
-  border-radius:var(--radius-lg, 1rem);
+  padding:var(--space-3, calc(1rem * var(--accessibility-density-scale))) var(--space-4, calc(1.25rem * var(--accessibility-density-scale)));
+  border:calc(1px * var(--accessibility-density-scale)) solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
+  border-radius:var(--radius-lg, calc(1rem * var(--accessibility-density-scale)));
   background:var(--control-bg, var(--surface-elevated, rgba(255, 255, 255, 0.04)));
   color:var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
-  font-size:var(--body-3-size, 0.875rem);
+  font-size:var(--body-3-size, calc(0.875rem * var(--accessibility-typography-scale)));
   line-height:var(--body-3-line-height, 1.5);
 }
 
@@ -286,7 +286,7 @@
 .products-page .products-index-shell__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-5, 2rem);
+  gap: var(--space-5, calc(2rem * var(--accessibility-density-scale)));
   align-items: stretch;
 }
 
@@ -303,9 +303,9 @@
 .products-page .products-index-shell .book-card[aria-disabled="true"] {
   display: flex;
   min-height: 100%;
-  padding: var(--space-5, 2rem);
-  border: 1px solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
-  border-radius: var(--radius-xl, 1.5rem);
+  padding: var(--space-5, calc(2rem * var(--accessibility-density-scale)));
+  border: calc(1px * var(--accessibility-density-scale)) solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
+  border-radius: var(--radius-xl, calc(1.5rem * var(--accessibility-density-scale)));
   background: var(--control-bg, var(--surface-elevated, rgba(255, 255, 255, 0.04)));
   color: inherit;
   text-decoration: none;
@@ -315,7 +315,7 @@
 .products-page .products-index-shell .book-card__content {
   display: grid;
   align-content: start;
-  gap: var(--space-3, 1rem);
+  gap: var(--space-3, calc(1rem * var(--accessibility-density-scale)));
   width: 100%;
   min-width: 0;
 }

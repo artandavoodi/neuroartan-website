@@ -768,7 +768,7 @@ body.institutional-menu-panel-open{
   margin: var(--spacing-none);
   padding:var(--institutional-menu-panel-padding-y) var(--institutional-menu-panel-padding-x-fallback) var(--institutional-menu-panel-padding-bottom);
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(16rem, 0.56fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(calc(16rem * var(--accessibility-density-scale)), 0.56fr);
   gap:var(--institutional-menu-panel-gap);
   position: relative;
   z-index: 2;

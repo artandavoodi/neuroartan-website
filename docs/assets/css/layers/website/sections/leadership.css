@@ -29,9 +29,9 @@
   --leadership-card-body-gap:var(--catalog-card-body-gap);
   --leadership-card-radius:var(--catalog-card-radius);
   --leadership-card-padding:var(--catalog-card-body-padding);
-  --leadership-avatar-size:var(--layout-profile-avatar-size, 128px);
-  --leadership-profile-hero-height:clamp(28rem, 68vh, 44rem);
-  --leadership-profile-hero-content-width:min(34rem, var(--site-rail-width));
+  --leadership-avatar-size:var(--layout-profile-avatar-size, calc(128px * var(--accessibility-icon-scale)));
+  --leadership-profile-hero-height:clamp(calc(28rem * var(--accessibility-density-scale)), 68vh, calc(44rem * var(--accessibility-density-scale)));
+  --leadership-profile-hero-content-width:min(calc(34rem * var(--accessibility-density-scale)), var(--site-rail-width));
   --leadership-avatar-border:var(--control-border);
   --leadership-avatar-bg:var(--control-bg);
   --leadership-name-size:var(--catalog-card-title-size);
@@ -57,7 +57,7 @@
 
 .leadership-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(min(100%, calc(180px * var(--accessibility-density-scale))), 1fr));
   gap:var(--leadership-grid-gap);
   align-items:start;
 }
@@ -88,7 +88,7 @@
   place-items:center;
   overflow:hidden;
   flex:0 0 auto;
-  border:1px solid var(--leadership-avatar-border);
+  border:calc(1px * var(--accessibility-density-scale)) solid var(--leadership-avatar-border);
   border-radius:50%;
   background:var(--leadership-avatar-bg);
   color:var(--text-primary-color);
@@ -202,7 +202,7 @@
 .leadership-profile-hero .catalog-page-title,
 .leadership-profile-hero__role{
   color:#fff;
-  text-shadow:0 1px 2px rgba(0, 0, 0, 0.24);
+  text-shadow:0 calc(1px * var(--accessibility-density-scale)) calc(2px * var(--accessibility-density-scale)) rgba(0, 0, 0, 0.24);
 }
 
 .leadership-profile-hero .catalog-page-eyebrow,
@@ -328,7 +328,7 @@
     position:relative;
     inset:auto;
     width:100%;
-    height:min(28rem, 66vh);
+    height:min(calc(28rem * var(--accessibility-density-scale)), 66vh);
   }
 
   .leadership-profile-hero__body{

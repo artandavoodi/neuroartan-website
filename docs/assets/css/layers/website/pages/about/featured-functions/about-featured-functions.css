@@ -284,10 +284,10 @@ html[data-theme-effective="dark"] .about-featured-functions{
 .about-featured-functions-frame::before{
   content: '';
   position: absolute;
-  inset: 1px;
+  inset: calc(1px * var(--accessibility-density-scale));
   z-index: 1;
   pointer-events: none;
-  border-radius: calc(var(--about-featured-functions-card-radius) - 1px);
+  border-radius: calc(var(--about-featured-functions-card-radius) - calc(1px * var(--accessibility-density-scale)));
   opacity: var(--about-featured-functions-card-spectrum-opacity);
   mix-blend-mode: var(--about-featured-functions-card-spectrum-blend);
   background:
@@ -460,7 +460,7 @@ html[data-theme-effective="dark"] .about-featured-functions{
 
 .about-featured-functions-card-visual-link:focus-visible,
 .about-featured-functions-card-text-link:focus-visible{
-  outline: var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline: var(--focus-ring-width, calc(1px * var(--accessibility-density-scale))) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
   outline-offset: var(--focus-ring-offset, var(--spacing-xs));
 }
 

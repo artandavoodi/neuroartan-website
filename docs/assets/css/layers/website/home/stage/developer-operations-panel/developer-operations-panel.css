@@ -43,7 +43,7 @@
   --home-stage-developer-operations-control-font-size:var(--home-platform-shell-nav-text-size);
   --home-stage-developer-operations-label-font-size:var(--font-size-caption);
   --home-stage-developer-operations-copy-font-size:var(--font-size-body-3);
-  --home-stage-developer-operations-scrollbar-size:0.35rem;
+  --home-stage-developer-operations-scrollbar-size:calc(0.35rem * var(--accessibility-density-scale));
   --home-stage-developer-operations-icon-size:var(--home-platform-shell-nav-icon-size);
   --home-stage-developer-operations-icon-button-size:var(--home-platform-shell-nav-icon-size);
   --home-stage-developer-operations-icon-gap:var(--home-platform-shell-nav-item-gap);
@@ -58,8 +58,8 @@
   --home-stage-developer-operations-control-active-surface:var(--home-platform-shell-nav-item-bg-active);
   --home-stage-developer-operations-control-padding:var(--home-interaction-panel-control-padding);
   --home-stage-developer-operations-button-radius:var(--home-search-shell-input-row-radius);
-  --home-stage-developer-operations-max-height:min(28vh, 14rem);
-  --home-stage-developer-operations-full-top:3.55rem;
+  --home-stage-developer-operations-max-height:min(28vh, calc(14rem * var(--accessibility-density-scale)));
+  --home-stage-developer-operations-full-top:calc(3.55rem * var(--accessibility-density-scale));
   --home-stage-developer-operations-full-inset:0px;
   --home-stage-developer-operations-full-height:calc(100dvh - var(--home-stage-developer-operations-full-top));
   --home-stage-developer-operations-full-width:100vw;
@@ -96,10 +96,6 @@
   box-shadow:var(--home-stage-developer-operations-shadow);
   overflow:hidden;
   font-size:var(--home-stage-developer-operations-copy-font-size);
-}
-
-.home-stage-developer-operations-panel{
-  
 }
 
 /* =============================================================================

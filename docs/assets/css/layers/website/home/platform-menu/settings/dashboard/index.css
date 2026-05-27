@@ -61,7 +61,7 @@
 .home-platform-dashboard__priority-handle{
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:left;
   width:var(--control-height-sm);
   height:var(--control-height-sm);
   cursor:grab;

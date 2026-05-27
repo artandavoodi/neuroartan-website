@@ -26,14 +26,14 @@
 
   --home-panel-surface: color-mix(in srgb, var(--bg-color) 24%, transparent);
   --home-panel-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  --home-panel-shadow: 0 24px 72px rgba(0, 0, 0, 0.16);
+  --home-panel-shadow: 0 calc(24px * var(--accessibility-density-scale)) calc(72px * var(--accessibility-density-scale)) rgba(0, 0, 0, 0.16);
   --home-panel-card-surface: var(--control-bg);
   --home-panel-card-border: var(--control-border);
   --home-panel-radius:var(--control-radius-composer);
   --home-panel-card-radius:var(--control-radius-composer);
 
-  --home-shell-topbar-height: 3.55rem;
-  --home-shell-footer-separator-offset: 3.25rem;
+  --home-shell-topbar-height: calc(3.55rem * var(--accessibility-density-scale));
+  --home-shell-footer-separator-offset: calc(3.25rem * var(--accessibility-density-scale));
   --home-shell-panel-inline-padding:var(--site-shell-inline-padding);
   --home-shell-panel-top: calc(env(safe-area-inset-top, 0px) + var(--home-shell-topbar-height));
   --home-shell-panel-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset));
@@ -48,7 +48,7 @@ html[data-theme-effective="light"] .home-shell{
   --home-ribbon-surface: color-mix(in srgb, white 26%, transparent);
   --home-ribbon-border: color-mix(in srgb, black 6%, transparent);
   --home-panel-surface: color-mix(in srgb, white 20%, transparent);
-  --home-panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.04);
+  --home-panel-shadow: 0 calc(20px * var(--accessibility-density-scale)) calc(60px * var(--accessibility-density-scale)) rgba(0, 0, 0, 0.04);
   --home-panel-card-surface: var(--control-bg);
   --home-panel-card-border: var(--control-border);
   --home-panel-radius:var(--control-radius-composer);
@@ -169,24 +169,24 @@ body.home-platform-shell-open .home-dashboard-topbar *{
 .home-profile-control-panel__inner,
 .home-settings-panel__inner{
   background:var(--home-panel-surface);
-  border:1px solid var(--home-panel-border);
+  border:calc(1px * var(--accessibility-density-scale)) solid var(--home-panel-border);
   box-shadow:var(--home-panel-shadow);
-  backdrop-filter:blur(18px) saturate(145%);
-  -webkit-backdrop-filter:blur(18px) saturate(145%);
+  backdrop-filter:blur(calc(18px * var(--accessibility-density-scale))) saturate(145%);
+  -webkit-backdrop-filter:blur(calc(18px * var(--accessibility-density-scale))) saturate(145%);
   border-radius:var(--home-panel-radius);
-  padding:1.25rem 1.25rem 1.6rem;
+  padding:calc(1.25rem * var(--accessibility-density-scale)) calc(1.25rem * var(--accessibility-density-scale)) calc(1.6rem * var(--accessibility-density-scale));
 }
 
 .home-workspace-panel__summary-card,
 .home-profile-control-panel__identity-card,
 .home-profile-control-panel__status-card{
   background:var(--home-panel-card-surface);
-  border:1px solid var(--home-panel-card-border);
+  border:calc(1px * var(--accessibility-density-scale)) solid var(--home-panel-card-border);
   border-radius:var(--home-panel-card-radius);
 }
 
 .home-profile-control-panel__avatar{
-  border:1px solid var(--home-panel-card-border);
+  border:calc(1px * var(--accessibility-density-scale)) solid var(--home-panel-card-border);
   background:var(--home-panel-card-surface);
   color:var(--text-primary-color);
 }
@@ -208,7 +208,7 @@ body.home-platform-shell-open .home-dashboard-topbar *{
 .home-workspace-panel__section-title,
 .home-profile-control-panel__section-title,
 .home-settings-panel__section-title{
-  margin:0 0 0.35rem;
+  margin:0 0 calc(0.35rem * var(--accessibility-density-scale));
   color:color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
   font-size:calc(0.72rem * var(--accessibility-typography-scale));
   font-weight:500;
@@ -223,7 +223,7 @@ body.home-platform-shell-open .home-dashboard-topbar *{
 .home-settings-panel__title{
   margin:0;
   color:var(--text-primary-color);
-  font-size:1.02rem;
+  font-size:calc(1.02rem * var(--accessibility-typography-scale));
   font-weight:500;
   line-height:1.3;
 }
@@ -254,7 +254,7 @@ body.home-platform-shell-open .home-dashboard-topbar *{
 .home-settings-panel__item{
   appearance:none;
   -webkit-appearance:none;
-  border:1px solid transparent;
+  border:calc(1px * var(--accessibility-density-scale)) solid transparent;
   border-radius:var(--control-radius-pill);
   background:transparent;
   color:var(--text-secondary-color);
@@ -307,8 +307,8 @@ body.home-platform-shell-open .home-dashboard-topbar *{
 ============================================================================= */
 @media (max-width: 760px){
   .home-shell{
-    --home-shell-topbar-height: 3.3rem;
-    --home-shell-footer-separator-offset: 3.04rem;
+    --home-shell-topbar-height: calc(3.3rem * var(--accessibility-density-scale));
+    --home-shell-footer-separator-offset: calc(3.04rem * var(--accessibility-density-scale));
     --home-shell-panel-inline-padding:var(--site-shell-inline-padding-mobile);
   }
 

@@ -196,7 +196,7 @@
   .profile-workspace__layout[data-profile-sidebar-rail="collapsed"] .profile-sidebar__rail-toggle{
     pointer-events:auto !important;
     border-radius:var(--control-radius-pill) !important;
-    border:1px solid color-mix(in srgb, var(--text-primary-color) 10%, transparent) !important;
+    border:calc(1px * var(--accessibility-density-scale)) solid color-mix(in srgb, var(--text-primary-color) 10%, transparent) !important;
     background:var(--control-surface) !important;
     background-color:var(--control-surface) !important;
     opacity:1 !important;

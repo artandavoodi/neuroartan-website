@@ -24,7 +24,7 @@
   --account-sign-up-surface:var(--panel-surface-unified);
   --account-sign-up-border:var(--panel-border-unified);
   --account-sign-up-muted: color-mix(in srgb, var(--text-secondary-color) 86%, transparent);
-  --account-sign-up-shell-inner-shadow: inset -1px 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
+  --account-sign-up-shell-inner-shadow: inset calc(-1px * var(--accessibility-density-scale)) 0 0 color-mix(in srgb, var(--text-primary-color) 3%, transparent);
   --account-sign-up-shell-highlight: linear-gradient(180deg, color-mix(in srgb, var(--text-primary-color) 3%, transparent) 0%, transparent 22%);
   --account-sign-up-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-up-primary-shadow:var(--panel-shadow-unified);
@@ -46,10 +46,10 @@
   --account-sign-up-secondary-actions-gap: var(--account-sign-up-content-gap-sm);
   --account-sign-up-note-size:var(--control-font-size);
   --account-sign-up-note-size-mobile:var(--type-body-sm-size);
-  --account-sign-up-label-size: 0.88rem;
-  --account-sign-up-action-label-size: 0.94rem;
-  --account-sign-up-divider-label-size: 0.82rem;
-  --account-sign-up-text-action-size: 0.82rem;
+  --account-sign-up-label-size: calc(0.88rem * var(--accessibility-typography-scale));
+  --account-sign-up-action-label-size: calc(0.94rem * var(--accessibility-typography-scale));
+  --account-sign-up-divider-label-size: calc(0.82rem * var(--accessibility-typography-scale));
+  --account-sign-up-text-action-size: calc(0.82rem * var(--accessibility-typography-scale));
   --account-sign-up-motion-fast:var(--interaction-motion-fast);
   --account-sign-up-motion-medium:var(--interaction-motion-medium);
   --account-sign-up-action-text:var(--text-primary-color);
@@ -349,7 +349,7 @@ html[data-theme-effective="dark"]{
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: var(--border-width-hairline);
-  text-underline-offset: 0.14em;
+  text-underline-offset: calc(0.14em * var(--accessibility-typography-scale));
   text-decoration-skip-ink: auto;
   font-size: var(--account-sign-up-text-action-font-size);
   font-weight: var(--type-body-regular-weight);

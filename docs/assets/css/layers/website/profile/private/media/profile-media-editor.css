@@ -19,7 +19,7 @@
   --profile-media-editor-backdrop-blur:var(--glass-overlay-backdrop-blur);
   --profile-media-editor-shell-bg:var(--glass-overlay-shell-bg);
   --profile-media-editor-shell-blur:var(--glass-overlay-shell-blur);
-  --profile-media-editor-preview-size:13rem;
+  --profile-media-editor-preview-size:calc(13rem * var(--accessibility-density-scale));
   --profile-media-editor-cover-preview-ratio:16 / 9;
   --profile-media-editor-avatar-radius:var(--control-radius-pill);
   --profile-media-editor-cover-radius:var(--shape-card-radius);
@@ -451,7 +451,7 @@ body.profile-media-editor-open{
   :root{
     --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width-mobile));
     --profile-media-editor-dialog-padding:var(--spacing-md);
-    --profile-media-editor-preview-size:11rem;
+    --profile-media-editor-preview-size:calc(11rem * var(--accessibility-density-scale));
   }
 
   .profile-media-editor{

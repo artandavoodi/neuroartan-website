@@ -9,11 +9,11 @@
    01) BREATHING CIRCLE TOKENS
 ============================================================================= */
 :root{
-  --stage-circle-mobile:520px;
-  --stage-circle-tablet:600px;
-  --stage-circle-desktop:720px;
-  --stage-circle-wide:840px;
-  --stage-circle-max-desktop:1200px;
+  --stage-circle-mobile:calc(520px * var(--accessibility-density-scale));
+  --stage-circle-tablet:calc(600px * var(--accessibility-density-scale));
+  --stage-circle-desktop:calc(720px * var(--accessibility-density-scale));
+  --stage-circle-wide:calc(840px * var(--accessibility-density-scale));
+  --stage-circle-max-desktop:calc(1200px * var(--accessibility-density-scale));
   --home-stage-circle-motion:620ms;
   --home-stage-circle-blur:var(--layout-home-circle-blur);
   --home-stage-circle-halo-scale:var(--layout-home-circle-halo-scale);
@@ -63,8 +63,8 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-  width:min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px));
-  height:min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px));
+  width:min(var(--stage-circle-desktop, calc(720px * var(--accessibility-density-scale))), 86vh, 92vw, var(--stage-circle-max-desktop, calc(1200px * var(--accessibility-density-scale))));
+  height:min(var(--stage-circle-desktop, calc(720px * var(--accessibility-density-scale))), 86vh, 92vw, var(--stage-circle-max-desktop, calc(1200px * var(--accessibility-density-scale))));
   border-radius:var(--control-radius-pill);
   background:radial-gradient(
     circle at center,
@@ -100,8 +100,8 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
   left:50%;
   top:50%;
   transform:translate(-50%, -50%);
-  width:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--home-stage-circle-halo-scale));
-  height:calc(min(var(--stage-circle-desktop, 720px), 86vh, 92vw, var(--stage-circle-max-desktop, 1200px)) * var(--home-stage-circle-halo-scale));
+  width:calc(min(var(--stage-circle-desktop, calc(720px * var(--accessibility-density-scale))), 86vh, 92vw, var(--stage-circle-max-desktop, calc(1200px * var(--accessibility-density-scale)))) * var(--home-stage-circle-halo-scale));
+  height:calc(min(var(--stage-circle-desktop, calc(720px * var(--accessibility-density-scale))), 86vh, 92vw, var(--stage-circle-max-desktop, calc(1200px * var(--accessibility-density-scale)))) * var(--home-stage-circle-halo-scale));
   border-radius:var(--control-radius-pill);
   background:radial-gradient(circle, color-mix(in srgb, var(--color-primary1) 12%, transparent), transparent 75%);
   opacity:var(--home-stage-circle-halo-opacity);

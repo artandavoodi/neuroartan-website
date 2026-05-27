@@ -456,6 +456,20 @@
   opacity:var(--home-interaction-panel-icon-opacity-hover);
 }
 
+/* Spin animation for loading icon */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"] .home-interaction-panel__continuity-icon img{
+  animation: spin 1s linear infinite;
+}
+
 /* =============================================================================
    09) MODEL AND SETTINGS CONTROLS
 ============================================================================= */

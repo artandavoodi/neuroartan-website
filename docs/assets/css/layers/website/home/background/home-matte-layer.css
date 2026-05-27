@@ -21,7 +21,7 @@
   --home-matte-opacity-low: 0.76;
   --home-matte-opacity-bottom: 1;
 
-  --home-matte-blur: 20px;
+  --home-matte-blur: calc(20px * var(--accessibility-density-scale));
   --home-matte-saturate: 1.1;
   --home-matte-transition-duration: 0.95s;
   --home-matte-transition-ease: var(--interaction-ease-standard);
@@ -130,7 +130,7 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-blur{
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-light);
   --home-matte-opacity-low: var(--home-matte-opacity-low-light);
   --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-light);
-  --home-matte-blur: 24px;
+  --home-matte-blur: calc(24px * var(--accessibility-density-scale));
 }
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-soft{
@@ -138,7 +138,7 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-soft{
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-soft);
   --home-matte-opacity-low: var(--home-matte-opacity-low-soft);
   --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-soft);
-  --home-matte-blur: 30px;
+  --home-matte-blur: calc(30px * var(--accessibility-density-scale));
 }
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid{
@@ -146,7 +146,7 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid{
   --home-matte-opacity-mid: 1;
   --home-matte-opacity-low: 1;
   --home-matte-opacity-bottom: 1;
-  --home-matte-blur: 28px;
+  --home-matte-blur: calc(28px * var(--accessibility-density-scale));
 }
 
 /* =============================================================================
@@ -159,7 +159,7 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-clear{
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-clear);
   --home-matte-opacity-low: var(--home-matte-opacity-low-clear);
   --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-clear);
-  --home-matte-blur: 10px;
+  --home-matte-blur: calc(10px * var(--accessibility-density-scale));
 }
 
 html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid-softedge{
@@ -167,7 +167,7 @@ html[data-homepage-theme-matte-atmosphere="true"] body.matte-solid-softedge{
   --home-matte-opacity-mid: var(--home-matte-opacity-mid-solid-softedge);
   --home-matte-opacity-low: var(--home-matte-opacity-low-solid-softedge);
   --home-matte-opacity-bottom: var(--home-matte-opacity-bottom-solid-softedge);
-  --home-matte-blur: 32px;
+  --home-matte-blur: calc(32px * var(--accessibility-density-scale));
 }
 
 /* =============================================================================

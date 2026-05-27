@@ -9,10 +9,10 @@
    ============================================================================= */
 
 .profile-private-model-economy {
-  margin-top: var(--space-8, 2rem);
-  padding: var(--space-6, 1.5rem);
-  border: 1px solid color-mix(in srgb, var(--text-primary, #fff) 14%, transparent);
-  border-radius: var(--radius-lg, 24px);
+  margin-top: var(--space-8, calc(2rem * var(--accessibility-density-scale)));
+  padding: var(--space-6, calc(1.5rem * var(--accessibility-density-scale)));
+  border: calc(1px * var(--accessibility-density-scale)) solid color-mix(in srgb, var(--text-primary, #fff) 14%, transparent);
+  border-radius: var(--radius-lg, calc(24px * var(--accessibility-density-scale)));
   background: color-mix(in srgb, var(--surface-primary, #000) 72%, transparent);
 }
 
@@ -23,13 +23,13 @@
 .profile-private-model-economy__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4, 1rem);
-  margin: var(--space-6, 1.5rem) 0 0;
+  gap: var(--space-4, calc(1rem * var(--accessibility-density-scale)));
+  margin: var(--space-6, calc(1.5rem * var(--accessibility-density-scale))) 0 0;
 }
 
 .profile-private-model-economy__grid div {
-  padding-top: var(--space-3, 0.75rem);
-  border-top: 1px solid color-mix(in srgb, var(--text-primary, #fff) 12%, transparent);
+  padding-top: var(--space-3, calc(0.75rem * var(--accessibility-density-scale)));
+  border-top: calc(1px * var(--accessibility-density-scale)) solid color-mix(in srgb, var(--text-primary, #fff) 12%, transparent);
 }
 
 /* =============================================================================
@@ -48,7 +48,7 @@
 }
 
 .profile-private-model-economy__grid dd {
-  margin: var(--space-1, 0.25rem) 0 0;
+  margin: var(--space-1, calc(0.25rem * var(--accessibility-density-scale))) 0 0;
 }
 
 @media (max-width: 720px) {

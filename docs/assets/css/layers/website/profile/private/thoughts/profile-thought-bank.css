@@ -54,7 +54,7 @@ body.profile-thought-overlay-open{
 .profile-thought-bank__overlay-dialog{
   position:relative;
   z-index:var(--z-raised);
-  width:min(42rem, var(--site-rail-width));
+  width:min(calc(42rem * var(--accessibility-density-scale)), var(--site-rail-width));
   max-height:calc(100dvh - (var(--site-shell-inline-padding) * 2));
   overflow:auto;
   border-radius:var(--radius-dialog);
@@ -190,7 +190,7 @@ body.profile-thought-overlay-open{
 
 .profile-thought-composer__field-grid{
   display:grid;
-  grid-template-columns:minmax(0, 14rem);
+  grid-template-columns:minmax(0, calc(14rem * var(--accessibility-density-scale)));
   gap:var(--spacing-md);
 }
 

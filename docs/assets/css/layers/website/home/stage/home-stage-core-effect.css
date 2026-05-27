@@ -14,16 +14,16 @@
   position:absolute;
   left:50%;
   top:50%;
-  width:16.75rem;
-  height:16.75rem;
+  width:calc(16.75rem * var(--accessibility-density-scale));
+  height:calc(16.75rem * var(--accessibility-density-scale));
   display:block;
   border-radius:var(--control-radius-pill);
   overflow:visible;
   pointer-events:none;
   transform:translate(-50%, -50%);
   z-index:0;
-  filter:blur(20.8px) saturate(1.28);
-  -webkit-filter:blur(20.8px) saturate(1.28);
+  filter:blur(calc(20.8px * var(--accessibility-density-scale))) saturate(1.28);
+  -webkit-filter:blur(calc(20.8px * var(--accessibility-density-scale))) saturate(1.28);
 }
 
 /* =============================================================================
@@ -41,8 +41,8 @@
   opacity:0.92;
   mix-blend-mode:screen;
   transform:translate(-50%, -50%);
-  filter:blur(25.6px) saturate(1.36);
-  -webkit-filter:blur(25.6px) saturate(1.36);
+  filter:blur(calc(25.6px * var(--accessibility-density-scale))) saturate(1.36);
+  -webkit-filter:blur(calc(25.6px * var(--accessibility-density-scale))) saturate(1.36);
 }
 
 /* =============================================================================
@@ -92,14 +92,14 @@
 #stage-cognitive-core-shell[data-core-effect-mode="transcribing"] [data-home-stage-core-effect="mount"],
 #stage-cognitive-core-shell[data-core-effect-mode="thinking"] [data-home-stage-core-effect="mount"],
 #stage-cognitive-core-shell[data-core-effect-mode="responding"] [data-home-stage-core-effect="mount"]{
-  filter:blur(27.2px) saturate(1.42);
-  -webkit-filter:blur(27.2px) saturate(1.42);
+  filter:blur(calc(27.2px * var(--accessibility-density-scale))) saturate(1.42);
+  -webkit-filter:blur(calc(27.2px * var(--accessibility-density-scale))) saturate(1.42);
 }
 
 #stage-cognitive-core-shell[data-core-effect-mode="listening"] canvas[data-home-stage-core-effect="canvas"],
 #stage-cognitive-core-shell[data-core-effect-mode="transcribing"] canvas[data-home-stage-core-effect="canvas"],
 #stage-cognitive-core-shell[data-core-effect-mode="thinking"] canvas[data-home-stage-core-effect="canvas"],
 #stage-cognitive-core-shell[data-core-effect-mode="responding"] canvas[data-home-stage-core-effect="canvas"]{
-  filter:blur(32.8px) saturate(1.52);
-  -webkit-filter:blur(32.8px) saturate(1.52);
+  filter:blur(calc(32.8px * var(--accessibility-density-scale))) saturate(1.52);
+  -webkit-filter:blur(calc(32.8px * var(--accessibility-density-scale))) saturate(1.52);
 }

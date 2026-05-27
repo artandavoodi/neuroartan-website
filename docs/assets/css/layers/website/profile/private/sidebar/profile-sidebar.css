@@ -6,7 +6,7 @@
   width:var(--size-full);
   min-width:var(--spacing-none);
   min-height:var(--size-full);
-  --profile-sidebar-top-offset:3.55rem;
+  --profile-sidebar-top-offset:calc(3.55rem * var(--accessibility-density-scale));
 }
 
 .profile-sidebar__surface{

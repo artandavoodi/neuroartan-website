@@ -41,10 +41,10 @@
   --cookie-consent-surface:var(--panel-surface-unified);
   --cookie-consent-border:var(--panel-border-unified);
   --cookie-consent-shadow:var(--panel-shadow-unified);
-  --cookie-consent-width: min(36rem, calc(100vw - (2 * var(--cookie-consent-min-viewport-gap))));
+  --cookie-consent-width: min(calc(36rem * var(--accessibility-density-scale)), calc(100vw - (2 * var(--cookie-consent-min-viewport-gap))));
   --cookie-consent-min-viewport-gap:var(--dialog-overlay-viewport-gap);
-  --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, var(--site-header-height, 4rem));
-  --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, var(--footer-height, 5rem));
+  --cookie-consent-viewport-gap-top:var(--home-shell-topbar-height, calc(4rem * var(--accessibility-density-scale)));
+  --cookie-consent-viewport-gap-bottom:var(--home-shell-footer-separator-offset, calc(5rem * var(--accessibility-density-scale)));
   --cookie-consent-footer-links-max-width:100%;
   --cookie-consent-max-height:calc(100dvh - var(--cookie-consent-viewport-gap-top) - var(--cookie-consent-viewport-gap-bottom));
   --cookie-consent-radius:var(--dialog-radius-unified);

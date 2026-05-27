@@ -828,7 +828,7 @@ body.menu-packs-unified #menu-overlay a[href*="github.com"],
 #menu-overlay .menu-col-b{
   height: var(--size-full);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 460px);
+  grid-template-columns: minmax(0, 1fr) minmax(calc(300px * var(--accessibility-density-scale)), calc(460px * var(--accessibility-density-scale)));
   align-items: stretch;
   justify-self: end;
 }

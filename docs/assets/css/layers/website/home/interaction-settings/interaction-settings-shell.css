@@ -26,9 +26,9 @@
 :root{
   --home-interaction-settings-panel-z-index:var(--z-overlay-modal);
   --home-interaction-settings-panel-width:var(--layout-interaction-settings-panel-width);
-  --home-interaction-settings-panel-top:calc(var(--home-shell-topbar-height, var(--site-header-height, 4rem)) + var(--site-gutter));
+  --home-interaction-settings-panel-top:calc(var(--home-shell-topbar-height, var(--site-header-height, calc(4rem * var(--accessibility-density-scale)))) + var(--site-gutter));
   --home-interaction-settings-panel-inline:var(--site-gutter);
-  --home-interaction-settings-panel-bottom:calc(var(--home-shell-footer-separator-offset, var(--footer-height, 5rem)) + var(--site-gutter));
+  --home-interaction-settings-panel-bottom:calc(var(--home-shell-footer-separator-offset, var(--footer-height, calc(5rem * var(--accessibility-density-scale)))) + var(--site-gutter));
   --home-interaction-settings-panel-height:var(--layout-interaction-settings-panel-height);
 
   --home-interaction-settings-panel-radius:var(--home-platform-shell-radius, var(--control-radius-composer));
@@ -331,7 +331,7 @@
   font-size:var(--home-interaction-settings-active-description-size);
   font-weight:var(--home-interaction-settings-active-description-weight);
   line-height:var(--home-interaction-settings-active-description-line-height);
-  max-width:min(44rem, 58vw);
+  max-width:min(calc(44rem * var(--accessibility-density-scale)), 58vw);
   min-height:var(--home-interaction-settings-title-line-height);
 }
 
@@ -402,7 +402,7 @@
 
 .home-interaction-settings-panel__nested-back:focus-visible,
 .home-interaction-settings-panel__nested-next:focus-visible{
-  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline:var(--focus-ring-width, calc(1px * var(--accessibility-density-scale))) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
   outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 
@@ -832,7 +832,7 @@
 }
 
 .home-interaction-settings-panel__drill-indicator:focus-visible{
-  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline:var(--focus-ring-width, calc(1px * var(--accessibility-density-scale))) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
   outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 
@@ -895,7 +895,7 @@
 }
 
 .home-interaction-settings-panel__toggle:focus-visible{
-  outline:var(--focus-ring-width, 1px) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline:var(--focus-ring-width, calc(1px * var(--accessibility-density-scale))) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
   outline-offset:var(--focus-ring-offset, var(--spacing-xs));
 }
 

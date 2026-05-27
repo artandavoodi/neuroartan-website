@@ -15,7 +15,7 @@
    01) ROOT TOKENS
 ============================================================================= */
 :root{
-  --glass-matte-blur: 18px;
+  --glass-matte-blur: calc(18px * var(--accessibility-density-scale));
   --glass-matte-opacity: 0.24;
   --glass-matte-surface-light: rgba(255, 255, 255, 0.08);
   --glass-matte-surface-dark: rgba(0, 0, 0, 0.14);
@@ -53,17 +53,17 @@ html[data-theme-effective="dark"] .glass-matte{
    04) INTENSITY MODIFIERS
 ============================================================================= */
 .glass-matte--soft{
-  --glass-matte-blur: 12px;
+  --glass-matte-blur: calc(12px * var(--accessibility-density-scale));
   --glass-matte-opacity: 0.18;
 }
 
 .glass-matte--medium{
-  --glass-matte-blur: 18px;
+  --glass-matte-blur: calc(18px * var(--accessibility-density-scale));
   --glass-matte-opacity: 0.24;
 }
 
 .glass-matte--strong{
-  --glass-matte-blur: 26px;
+  --glass-matte-blur: calc(26px * var(--accessibility-density-scale));
   --glass-matte-opacity: 0.32;
 }
 
@@ -83,7 +83,7 @@ html[data-theme-effective="dark"] .glass-matte{
 ============================================================================= */
 @media (max-width: 820px){
   :root{
-    --glass-matte-blur: 14px;
+    --glass-matte-blur: calc(14px * var(--accessibility-density-scale));
     --glass-matte-opacity: 0.2;
   }
 }

@@ -22,12 +22,12 @@
   --home-hero-shader-z-index: 0;
   --home-hero-shader-opacity: 0;
   --home-hero-shader-matte-opacity: 0.42;
-  --home-hero-shader-matte-blur: 28px;
+  --home-hero-shader-matte-blur: calc(28px * var(--accessibility-density-scale));
   --home-hero-shader-matte-surface-light: rgba(255, 255, 255, 0.08);
   --home-hero-shader-matte-surface-dark: rgba(0, 0, 0, 0.14);
   --home-hero-shader-veil-opacity: 0.22;
-  --home-hero-shader-veil-blur: 56px;
-  --home-hero-shader-canvas-softness: 14px;
+  --home-hero-shader-veil-blur: calc(56px * var(--accessibility-density-scale));
+  --home-hero-shader-canvas-softness: calc(14px * var(--accessibility-density-scale));
   --home-hero-shader-transition: 700ms var(--interaction-ease-standard);
 }
 
@@ -196,10 +196,10 @@ html[data-homepage-theme-hero-shader="false"] .home-hero-shader .home-hero-shade
 ============================================================================= */
 @media (max-width: 820px){
   :root{
-    --home-hero-shader-matte-blur: 20px;
+    --home-hero-shader-matte-blur: calc(20px * var(--accessibility-density-scale));
     --home-hero-shader-matte-opacity: 0.32;
     --home-hero-shader-veil-opacity: 0.18;
-    --home-hero-shader-veil-blur: 34px;
-    --home-hero-shader-canvas-softness: 10px;
+    --home-hero-shader-veil-blur: calc(34px * var(--accessibility-density-scale));
+    --home-hero-shader-canvas-softness: calc(10px * var(--accessibility-density-scale));
   }
 }

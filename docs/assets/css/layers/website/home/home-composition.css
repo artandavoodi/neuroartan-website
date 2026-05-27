@@ -17,12 +17,12 @@
    02) STAGE REGION COMPOSITION
 ============================================================================= */
 :root{
-  --home-composition-topbar-clearance:3.55rem;
-  --home-composition-footer-clearance:3.25rem;
+  --home-composition-topbar-clearance:calc(3.55rem * var(--accessibility-density-scale));
+  --home-composition-footer-clearance:calc(3.25rem * var(--accessibility-density-scale));
   --home-composition-shell-block-padding:calc(var(--home-composition-stage-component-gap) * 2);
   --home-composition-circle-to-text-gap:var(--home-composition-stage-component-gap);
   --home-composition-text-to-panel-gap:var(--home-composition-stage-component-gap);
-  --home-composition-panel-to-response-gap:1rem;
+  --home-composition-panel-to-response-gap:calc(1rem * var(--accessibility-density-scale));
   --home-composition-stage-component-gap:var(--home-composition-panel-to-response-gap);
   --home-composition-panel-stack-gap:var(--home-composition-stage-component-gap);
   --home-composition-stage-width:var(--layout-home-interaction-panel-width);
@@ -44,7 +44,7 @@
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:var(--home-layout-stage-center-gap, 24px);
+  gap:var(--home-layout-stage-center-gap, calc(24px * var(--accessibility-density-scale)));
 }
 
 #stage .stage-region{

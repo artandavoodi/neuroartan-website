@@ -16,14 +16,14 @@
    02) CORE SPACING TOKENS
 ============================================================================= */
 :root{
-  --spacing-xs:0.35rem;
-  --spacing-sm:0.75rem;
-  --spacing-md:1.1rem;
-  --spacing-lg:1.6rem;
-  --spacing-xl:2.4rem;
-  --spacing-2xl:3.6rem;
-  --spacing-3xl:4.5rem;
-  --spacing-4xl:6rem;
+  --spacing-xs:calc(0.35rem * var(--accessibility-density-scale));
+  --spacing-sm:calc(0.75rem * var(--accessibility-density-scale));
+  --spacing-md:calc(1.1rem * var(--accessibility-density-scale));
+  --spacing-lg:calc(1.6rem * var(--accessibility-density-scale));
+  --spacing-xl:calc(2.4rem * var(--accessibility-density-scale));
+  --spacing-2xl:calc(3.6rem * var(--accessibility-density-scale));
+  --spacing-3xl:calc(4.5rem * var(--accessibility-density-scale));
+  --spacing-4xl:calc(6rem * var(--accessibility-density-scale));
 }
 
 /* =============================================================================

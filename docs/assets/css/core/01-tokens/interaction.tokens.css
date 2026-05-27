@@ -57,7 +57,7 @@
   --control-padding-x-md:1rem;
   --control-padding-x-lg:1.25rem;
   --control-gap:0.42rem;
-  --control-font-size:0.9rem;
+  --control-font-size:calc(0.9rem * var(--accessibility-typography-scale));
   --control-font-weight:400;
   --control-line-height:1.2;
   --control-tracking:-0.01em;

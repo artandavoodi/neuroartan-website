@@ -99,7 +99,7 @@
   width:100%;
   min-height:2.8rem;
   padding:0.78rem 0;
-  font-size:0.84rem;
+  font-size:calc(0.84rem * var(--accessibility-typography-scale));
   font-weight:500;
   letter-spacing:0.02em;
   text-align:left;

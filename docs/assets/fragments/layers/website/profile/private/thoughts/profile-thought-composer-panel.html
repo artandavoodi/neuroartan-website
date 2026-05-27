@@ -16,25 +16,19 @@
   </div>
 
   <form class="profile-thought-composer__form" data-profile-thought-compose-form="true">
-    <div class="profile-thought-composer__visibility" data-profile-thought-audience-controls>
-      <button class="profile-thought-composer__visibility-trigger" type="button" data-profile-thought-audience-trigger aria-expanded="false" aria-haspopup="listbox">
-        <img class="ui-icon-theme-aware profile-thought-composer__visibility-icon" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
-        <span class="profile-thought-composer__visibility-label">Private bank</span>
-      </button>
-      <div class="profile-thought-composer__visibility-dropdown" data-profile-thought-audience-dropdown hidden role="listbox">
-        <button class="profile-thought-composer__visibility-option profile-thought-composer__visibility-option--active" type="button" data-profile-thought-audience-option="private" role="option" aria-selected="true">
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
-          <span>Private bank</span>
-        </button>
-        <button class="profile-thought-composer__visibility-option" type="button" data-profile-thought-audience-option="public" role="option" aria-selected="false">
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
-          <span>Public route</span>
-        </button>
-      </div>
-      <input type="hidden" name="audience" value="private" data-profile-thought-audience>
+    <div>
+      <label class="profile-thought-composer__field profile-thought-composer__field--full">
+        <span class="profile-thought-composer__label">Thought</span>
+        <textarea
+          class="ui-field profile-thought-composer__textarea"
+          rows="7"
+          data-profile-thought-textarea="true"
+          placeholder="Capture a thought, reflection, or public idea for your profile surface."
+        ></textarea>
+      </label>
     </div>
 
-    <div class="profile-thought-composer__field-grid">
+    <div>
       <label class="profile-thought-composer__field profile-thought-composer__field--full">
         <span class="profile-thought-composer__label">Category</span>
         <span class="home-platform-theme__dropdown-container profile-thought-composer__select-control">
@@ -47,25 +41,34 @@
       </label>
     </div>
 
-    <label class="profile-thought-composer__field profile-thought-composer__field--full">
-      <span class="profile-thought-composer__label">Thought</span>
-      <textarea
-        class="ui-field profile-thought-composer__textarea"
-        rows="7"
-        data-profile-thought-textarea="true"
-        placeholder="Capture a thought, reflection, or public idea for your profile surface."
-      ></textarea>
-    </label>
+    <div>
+      <div class="profile-thought-composer__field profile-thought-composer__field--full profile-thought-composer__visibility" data-profile-thought-audience-controls>
+        <button class="profile-thought-composer__visibility-trigger" type="button" data-profile-thought-audience-trigger aria-expanded="false" aria-haspopup="listbox">
+          <img class="ui-icon-theme-aware profile-thought-composer__visibility-icon" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
+          <span class="profile-thought-composer__visibility-label">Private bank</span>
+        </button>
+        <div class="profile-thought-composer__visibility-dropdown" data-profile-thought-audience-dropdown hidden role="listbox">
+          <button class="profile-thought-composer__visibility-option profile-thought-composer__visibility-option--active" type="button" data-profile-thought-audience-option="private" role="option" aria-selected="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="" aria-hidden="true">
+            <span>Private bank</span>
+          </button>
+          <button class="profile-thought-composer__visibility-option" type="button" data-profile-thought-audience-option="public" role="option" aria-selected="false">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
+            <span>Public route</span>
+          </button>
+        </div>
+        <input type="hidden" name="audience" value="private" data-profile-thought-audience>
+      </div>
+    </div>
 
     <div class="profile-thought-composer__footer">
       <div class="profile-thought-composer__meta">
-        <p class="profile-thought-composer__status" data-profile-thought-bank-status></p>
         <p class="profile-thought-composer__submit-status" data-profile-thought-submit-status="idle"></p>
       </div>
 
       <div class="profile-thought-composer__actions">
-        <button class="ui-button ui-button--secondary" type="submit" data-profile-thought-submit="true">
-          <span data-profile-thought-submit-label>Save Privately</span>
+        <button class="profile-thought-composer__attachment-button" type="submit" data-profile-thought-submit="true" aria-label="Save thought">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
         </button>
       </div>
     </div>

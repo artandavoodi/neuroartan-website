@@ -134,7 +134,7 @@
   gap:0.42rem;
   color:var(--text-secondary-color);
   text-decoration:none;
-  font-size:0.8rem;
+  font-size:calc(0.8rem * var(--accessibility-typography-scale));
   font-weight:400;
   letter-spacing:0.008em;
   line-height:1rem;

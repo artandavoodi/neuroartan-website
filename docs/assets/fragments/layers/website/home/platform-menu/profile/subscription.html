@@ -2,53 +2,30 @@
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
     <section class="home-platform-theme__section" aria-labelledby="profile-subscription">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Subscription</p>
         <h2 class="home-platform-theme__section-title" id="profile-subscription">Plans &amp; Billing</h2>
       </div>
 
-      <div class="home-platform-theme__action-list">
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Current plan</p>
-            <p class="home-platform-theme__mode-caption" data-profile-plan-caption>Free</p>
-          </div>
-          <span class="home-platform-theme__action-label" data-profile-plan-status>Active</span>
+      <div class="home-platform-theme__section-content">
+        <div class="home-platform-theme__toggle-list">
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="manage-plan" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/subscriptions/plan.svg" alt="" width="16" height="16">
+              Manage Plan
+            </span>
+          </button>
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="billing" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/billing/billing.svg" alt="" width="16" height="16">
+              Billing
+            </span>
+          </button>
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="invoices" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/billing/invoice.svg" alt="" width="16" height="16">
+              Invoices
+            </span>
+          </button>
         </div>
-
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Billing provider</p>
-            <p class="home-platform-theme__mode-caption" data-profile-billing-provider-caption>Stripe connection pending</p>
-          </div>
-          <span class="home-platform-theme__action-label" data-profile-billing-provider-status>Setup required</span>
-        </div>
-
-        <div class="home-platform-theme__action-row">
-          <div class="home-platform-theme__action-copy">
-            <p class="home-platform-theme__action-title">Invoices</p>
-            <p class="home-platform-theme__mode-caption" data-profile-invoice-caption>No invoices yet</p>
-          </div>
-          <span class="home-platform-theme__action-label" data-profile-invoice-status>0</span>
-        </div>
-
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="manage-plan">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/subscriptions/plan.svg" alt="" width="16" height="16">
-            Manage Plan
-          </span>
-        </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="billing">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/billing/billing.svg" alt="" width="16" height="16">
-            Billing
-          </span>
-        </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="invoices">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/commerce/billing/invoice.svg" alt="" width="16" height="16">
-            Invoices
-          </span>
-        </button>
       </div>
     </section>
   </div>

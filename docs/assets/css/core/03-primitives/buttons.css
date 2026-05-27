@@ -159,8 +159,8 @@
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:var(--close-control-line-width);
-  height:var(--close-control-line-width);
+  width:calc(var(--close-control-line-width) * var(--accessibility-icon-scale));
+  height:calc(var(--close-control-line-width) * var(--accessibility-icon-scale));
   flex:0 0 auto;
 }
 

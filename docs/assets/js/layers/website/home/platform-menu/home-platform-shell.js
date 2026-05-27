@@ -317,6 +317,17 @@ function hasSignedInAccount() {
   return !!HOME_PLATFORM_SHELL_STATE.snapshot?.account?.signedIn;
 }
 
+function syncHomePlatformShellAuthState() {
+  const shellRoot = getHomePlatformShellRoot();
+  if (!shellRoot) return;
+
+  const signedIn = hasSignedInAccount();
+  shellRoot.setAttribute('data-home-platform-shell-auth-state', signedIn ? 'signed-in' : 'signed-out');
+
+  // Set global auth state on body for global auth visibility system
+  document.body.setAttribute('data-auth-state', signedIn ? 'signed-in' : 'signed-out');
+}
+
 function hasCompletedProfile() {
   const account = HOME_PLATFORM_SHELL_STATE.snapshot?.account || {};
   return account.profileComplete === true || account.profile?.profile_complete === true;
@@ -429,6 +440,7 @@ function normalizeHomePlatformSubdestinations(value) {
         stylesheet: normalizeString(item?.stylesheet || ''),
         module: normalizeString(item?.module || ''),
         icon: normalizeString(item?.icon || ''),
+        authVisible: normalizeString(item?.auth_visible || item?.authVisible || ''),
       };
     })
     .filter(Boolean);
@@ -878,6 +890,7 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
     return;
   }
 
+  const signedIn = hasSignedInAccount();
   const suppressMobileSubnavActiveState = isHomePlatformMobileView() && HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection;
   items.forEach((item) => {
     const button = document.createElement('button');
@@ -890,6 +903,9 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
       button.setAttribute('aria-pressed', 'true');
     }
     button.classList.toggle('is-active', isActive);
+    if (item.authVisible) {
+      button.setAttribute('data-profile-auth-visible', item.authVisible);
+    }
 
     if (item.icon) {
       const iconSpan = document.createElement('span');
@@ -925,6 +941,8 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
     button.addEventListener('click', routeSubdestination);
     subnavRoot.append(button);
   });
+
+  syncHomePlatformShellAuthState();
 }
 
 function syncHomePlatformShellNav(destination) {
@@ -1495,6 +1513,7 @@ function bindHomePlatformShellEvents() {
   subscribeHomeSurfaceState((snapshot) => {
     HOME_PLATFORM_SHELL_STATE.snapshot = snapshot;
     syncHomePlatformCommunicationIndicators(snapshot);
+    syncHomePlatformShellAuthState();
 
     const root = getHomePlatformShellRoot();
     if (!root || root.hidden) {
@@ -1560,6 +1579,7 @@ function bootHomePlatformShell() {
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
   syncHomePlatformMobileStackLevel(HOME_PLATFORM_SHELL_STATE.mobileStackLevel);
   syncHomePlatformCommunicationIndicators(HOME_PLATFORM_SHELL_STATE.snapshot);
+  syncHomePlatformShellAuthState();
   window.dispatchEvent(new CustomEvent('fragment:mounted', {
     detail: {
       name: 'home-platform-shell-icons',

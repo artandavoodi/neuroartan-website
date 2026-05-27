@@ -14,3 +14,9 @@
   width:var(--spacing-3xl);
   height:var(--spacing-3xl);
 }
+
+.home-platform-destination--profile-overview .home-platform-theme__action-list:first-child{
+  flex-direction:row;
+  align-items:center;
+  gap:var(--spacing-md);
+}

@@ -32,6 +32,26 @@
 ============================================================================= */
 /* /website/docs/assets/css/core/01-tokens/typography.tokens.css */
 
+/* =============================================================================
+   ACCESSIBILITY TOKENS
+============================================================================= */
+:root{
+  /* Accessibility typography scale: controlled by accessibility settings */
+  --accessibility-typography-scale:1;
+  
+  /* Accessibility density scale: controlled by accessibility settings */
+  --accessibility-density-scale:1;
+  
+  /* Accessibility motion preference: controlled by accessibility settings */
+  --accessibility-motion-reduced:0;
+  
+  /* Accessibility icon size scale: controlled by accessibility settings */
+  --accessibility-icon-scale:1.25;
+  
+  /* Accessibility ARIA announcements: controlled by accessibility settings */
+  --accessibility-aria-announcements:0;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
 
 /* =============================================================================
@@ -70,140 +90,140 @@
 ============================================================================= */
 :root{
   /* Display scale: used for rare, high-impact homepage/product hero statements. */
-  --font-size-display-1:4.2rem;
-  --font-size-display-2:3.4rem;
-  --font-size-display-3:2.9rem;
+  --font-size-display-1:calc(4.2rem * var(--accessibility-typography-scale));
+  --font-size-display-2:calc(3.4rem * var(--accessibility-typography-scale));
+  --font-size-display-3:calc(2.9rem * var(--accessibility-typography-scale));
 
   /* Headline scale: maps directly to semantic H1-H6 heading roles. */
-  --font-size-h1:2.6rem;
-  --font-size-h2:1.9rem;
-  --font-size-h3:1.4rem;
-  --font-size-h4:1.15rem;
-  --font-size-h5:1rem;
-  --font-size-h6:0.9rem;
+  --font-size-h1:calc(2.6rem * var(--accessibility-typography-scale));
+  --font-size-h2:calc(1.9rem * var(--accessibility-typography-scale));
+  --font-size-h3:calc(1.4rem * var(--accessibility-typography-scale));
+  --font-size-h4:calc(1.15rem * var(--accessibility-typography-scale));
+  --font-size-h5:calc(1rem * var(--accessibility-typography-scale));
+  --font-size-h6:calc(0.9rem * var(--accessibility-typography-scale));
 
 /* Title scale: component-level titles below page-level headings. */
-  --font-size-title-1:1.25rem;
-  --font-size-title-2:1.08rem;
-  --font-size-title-3:0.98rem;
+  --font-size-title-1:calc(1.25rem * var(--accessibility-typography-scale));
+  --font-size-title-2:calc(1.08rem * var(--accessibility-typography-scale));
+  --font-size-title-3:calc(0.98rem * var(--accessibility-typography-scale));
 
   /* Section title scale: recurring major section titles such as Updates, Insights & Research, Core Capabilities, platform content titles, and search section titles. */
-  --font-size-section-title:2.08rem;
-  --font-size-section-title-wide:2.3rem;
-  --font-size-section-title-tablet:1.82rem;
-  --font-size-section-title-mobile:1.56rem;
+  --font-size-section-title:calc(2.08rem * var(--accessibility-typography-scale));
+  --font-size-section-title-wide:calc(2.3rem * var(--accessibility-typography-scale));
+  --font-size-section-title-tablet:calc(1.82rem * var(--accessibility-typography-scale));
+  --font-size-section-title-mobile:calc(1.56rem * var(--accessibility-typography-scale));
 
   /* Subtitle scale: supporting title copy, panel intros, and section descriptors. */
-  --font-size-subtitle-1:1rem;
-  --font-size-subtitle-2:0.92rem;
+  --font-size-subtitle-1:calc(1rem * var(--accessibility-typography-scale));
+  --font-size-subtitle-2:calc(0.92rem * var(--accessibility-typography-scale));
 
   /* Body scale: long-form text, interface descriptions, dense notes, and microcopy. */
-  --font-size-body-1:1rem;
-  --font-size-body-2:0.95rem;
-  --font-size-body-3:0.9rem;
-  --font-size-body-4:0.84rem;
+  --font-size-body-1:calc(1rem * var(--accessibility-typography-scale));
+  --font-size-body-2:calc(0.95rem * var(--accessibility-typography-scale));
+  --font-size-body-3:calc(0.9rem * var(--accessibility-typography-scale));
+  --font-size-body-4:calc(0.84rem * var(--accessibility-typography-scale));
 
   /* Editorial scale: essays, publishing pages, article metadata, and long-form surfaces. */
-  --font-size-editorial-title:2.8rem;
-  --font-size-editorial-heading:1.55rem;
-  --font-size-editorial-subheading:1.12rem;
-  --font-size-editorial-body:1.02rem;
-  --font-size-editorial-lede:1.12rem;
-  --font-size-editorial-note:0.9rem;
+  --font-size-editorial-title:calc(2.8rem * var(--accessibility-typography-scale));
+  --font-size-editorial-heading:calc(1.55rem * var(--accessibility-typography-scale));
+  --font-size-editorial-subheading:calc(1.12rem * var(--accessibility-typography-scale));
+  --font-size-editorial-body:calc(1.02rem * var(--accessibility-typography-scale));
+  --font-size-editorial-lede:calc(1.12rem * var(--accessibility-typography-scale));
+  --font-size-editorial-note:calc(0.9rem * var(--accessibility-typography-scale));
 
   /* UI text scale: captions, labels, metadata, eyebrow lines, and overlines. */
-  --font-size-caption-1:0.78rem;
-  --font-size-caption-2:0.72rem;
-  --font-size-label-1:0.82rem;
-  --font-size-label-2:0.76rem;
-  --font-size-meta-1:0.8rem;
-  --font-size-meta-2:0.74rem;
-  --font-size-eyebrow:0.72rem;
-  --font-size-overline:0.7rem;
+  --font-size-caption-1:calc(0.78rem * var(--accessibility-typography-scale));
+  --font-size-caption-2:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-label-1:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-label-2:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-meta-1:calc(0.8rem * var(--accessibility-typography-scale));
+  --font-size-meta-2:calc(0.74rem * var(--accessibility-typography-scale));
+  --font-size-eyebrow:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-overline:calc(0.7rem * var(--accessibility-typography-scale));
 
   /* Navigation scale: global nav, local nav, tabs, breadcrumb, and utility nav. */
-  --font-size-nav-primary:0.82rem;
-  --font-size-nav-secondary:0.78rem;
-  --font-size-nav-local-label:1rem;
-  --font-size-nav-local-link:0.8rem;
+  --font-size-nav-primary:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-nav-secondary:calc(0.78rem * var(--accessibility-typography-scale));
+  --font-size-nav-local-label:calc(1rem * var(--accessibility-typography-scale));
+  --font-size-nav-local-link:calc(0.8rem * var(--accessibility-typography-scale));
   --font-size-nav-tab:var(--font-size-nav-local-link);
-  --font-size-breadcrumb:0.76rem;
-  --font-size-utility-nav:0.74rem;
+  --font-size-breadcrumb:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-utility-nav:calc(0.74rem * var(--accessibility-typography-scale));
 
   /* Control scale: buttons, pills, toggles, menus, chips, and compact controls. */
-  --font-size-button-sm:0.76rem;
-  --font-size-button-md:0.82rem;
-  --font-size-button-lg:0.9rem;
-  --font-size-control-xs:0.7rem;
-  --font-size-control-sm:0.76rem;
-  --font-size-control-md:0.82rem;
-  --font-size-control-lg:0.9rem;
-  --font-size-chip:0.74rem;
-  --font-size-pill:0.74rem;
-  --font-size-menu-item:0.82rem;
-  --font-size-tooltip:0.74rem;
+  --font-size-button-sm:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-button-md:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-button-lg:calc(0.9rem * var(--accessibility-typography-scale));
+  --font-size-control-xs:calc(0.7rem * var(--accessibility-typography-scale));
+  --font-size-control-sm:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-control-md:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-control-lg:calc(0.9rem * var(--accessibility-typography-scale));
+  --font-size-chip:calc(0.74rem * var(--accessibility-typography-scale));
+  --font-size-pill:calc(0.74rem * var(--accessibility-typography-scale));
+  --font-size-menu-item:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-tooltip:calc(0.74rem * var(--accessibility-typography-scale));
 
   /* Field scale: labels, inputs, helper text, errors, placeholders, and counters. */
-  --font-size-field-label:0.76rem;
-  --font-size-field-input:0.9rem;
-  --font-size-field-placeholder:0.9rem;
-  --font-size-field-helper:0.76rem;
-  --font-size-field-error:0.76rem;
-  --font-size-field-counter:0.72rem;
+  --font-size-field-label:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-field-input:calc(0.9rem * var(--accessibility-typography-scale));
+  --font-size-field-placeholder:calc(0.9rem * var(--accessibility-typography-scale));
+  --font-size-field-helper:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-field-error:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-field-counter:calc(0.72rem * var(--accessibility-typography-scale));
 
   /* Data scale: metrics, numbers, legends, graph labels, and dashboard annotations. */
-  --font-size-data-value-xl:2.2rem;
-  --font-size-data-value-lg:1.55rem;
-  --font-size-data-value-md:1.05rem;
-  --font-size-data-label:0.76rem;
-  --font-size-data-caption:0.72rem;
-  --font-size-chart-axis:0.7rem;
-  --font-size-chart-legend:0.72rem;
+  --font-size-data-value-xl:calc(2.2rem * var(--accessibility-typography-scale));
+  --font-size-data-value-lg:calc(1.55rem * var(--accessibility-typography-scale));
+  --font-size-data-value-md:calc(1.05rem * var(--accessibility-typography-scale));
+  --font-size-data-label:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-data-caption:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-chart-axis:calc(0.7rem * var(--accessibility-typography-scale));
+  --font-size-chart-legend:calc(0.72rem * var(--accessibility-typography-scale));
 
   /* Table scale: governed table headings, cells, captions, and dense table values. */
-  --font-size-table-heading:0.76rem;
-  --font-size-table-cell:0.82rem;
-  --font-size-table-cell-dense:0.76rem;
-  --font-size-table-caption:0.72rem;
+  --font-size-table-heading:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-table-cell:calc(0.82rem * var(--accessibility-typography-scale));
+  --font-size-table-cell-dense:calc(0.76rem * var(--accessibility-typography-scale));
+  --font-size-table-caption:calc(0.72rem * var(--accessibility-typography-scale));
 
   /* Code scale: inline code, code blocks, keyboard tokens, and technical paths. */
   --font-size-code-inline:0.86em;
-  --font-size-code-block:0.86rem;
-  --font-size-kbd:0.72rem;
-  --font-size-path:0.78rem;
+  --font-size-code-block:calc(0.86rem * var(--accessibility-typography-scale));
+  --font-size-kbd:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-path:calc(0.78rem * var(--accessibility-typography-scale));
 
   /* Status scale: badges, states, alerts, banners, toasts, and system messages. */
-  --font-size-status-sm:0.74rem;
-  --font-size-status-md:0.8rem;
-  --font-size-alert-title:0.92rem;
-  --font-size-alert-body:0.84rem;
-  --font-size-toast-title:0.84rem;
-  --font-size-toast-body:0.78rem;
+  --font-size-status-sm:calc(0.74rem * var(--accessibility-typography-scale));
+  --font-size-status-md:calc(0.8rem * var(--accessibility-typography-scale));
+  --font-size-alert-title:calc(0.92rem * var(--accessibility-typography-scale));
+  --font-size-alert-body:calc(0.84rem * var(--accessibility-typography-scale));
+  --font-size-toast-title:calc(0.84rem * var(--accessibility-typography-scale));
+  --font-size-toast-body:calc(0.78rem * var(--accessibility-typography-scale));
 
   /* Profile scale: identity surfaces, handles, roles, bio text, stats, and profile metadata. */
-  --font-size-profile-name:1.32rem;
-  --font-size-profile-role:1.42rem;
-  --font-size-profile-handle:0.86rem;
-  --font-size-profile-bio:0.92rem;
-  --font-size-profile-stat-value:1rem;
-  --font-size-profile-stat-label:0.72rem;
-  --font-size-profile-meta:0.78rem;
+  --font-size-profile-name:calc(1.32rem * var(--accessibility-typography-scale));
+  --font-size-profile-role:calc(1.42rem * var(--accessibility-typography-scale));
+  --font-size-profile-handle:calc(0.86rem * var(--accessibility-typography-scale));
+  --font-size-profile-bio:calc(0.92rem * var(--accessibility-typography-scale));
+  --font-size-profile-stat-value:calc(1rem * var(--accessibility-typography-scale));
+  --font-size-profile-stat-label:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-profile-meta:calc(0.78rem * var(--accessibility-typography-scale));
 
   /* Product scale: product shells, feature modules, specification rows, and plan cards. */
-  --font-size-product-title:1.28rem;
-  --font-size-product-kicker:0.72rem;
-  --font-size-product-summary:0.94rem;
-  --font-size-product-feature-title:0.92rem;
-  --font-size-product-feature-body:0.84rem;
-  --font-size-product-spec-label:0.74rem;
-  --font-size-product-spec-value:0.84rem;
+  --font-size-product-title:calc(1.28rem * var(--accessibility-typography-scale));
+  --font-size-product-kicker:calc(0.72rem * var(--accessibility-typography-scale));
+  --font-size-product-summary:calc(0.94rem * var(--accessibility-typography-scale));
+  --font-size-product-feature-title:calc(0.92rem * var(--accessibility-typography-scale));
+  --font-size-product-feature-body:calc(0.84rem * var(--accessibility-typography-scale));
+  --font-size-product-spec-label:calc(0.74rem * var(--accessibility-typography-scale));
+  --font-size-product-spec-value:calc(0.84rem * var(--accessibility-typography-scale));
 
   /* Marketing scale: acquisition sections, landing modules, proof points, and CTAs. */
-  --font-size-marketing-hero:3.2rem;
-  --font-size-marketing-section-title:1.72rem;
-  --font-size-marketing-card-title:1.05rem;
-  --font-size-marketing-proof:0.84rem;
-  --font-size-marketing-cta:0.84rem;
+  --font-size-marketing-hero:calc(3.2rem * var(--accessibility-typography-scale));
+  --font-size-marketing-section-title:calc(1.72rem * var(--accessibility-typography-scale));
+  --font-size-marketing-card-title:calc(1.05rem * var(--accessibility-typography-scale));
+  --font-size-marketing-proof:calc(0.84rem * var(--accessibility-typography-scale));
+  --font-size-marketing-cta:calc(0.84rem * var(--accessibility-typography-scale));
 }
 
 /* =============================================================================

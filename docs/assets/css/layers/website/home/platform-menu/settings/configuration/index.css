@@ -7,6 +7,11 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: var(--spacing-md);
+}
+
+.home-platform-theme__dropdown-container:last-child {
+  margin-bottom: 0;
 }
 
 .home-platform-theme__dropdown-static-label {

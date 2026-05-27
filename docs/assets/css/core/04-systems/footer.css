@@ -14,8 +14,8 @@
 /* /website/docs/assets/css/core/04-systems/footer.css */
 
 :root{
-  --footer-copy-font-size:0.9rem;
-  --footer-locale-font-size:0.85rem;
+  --footer-copy-font-size:calc(0.9rem * var(--accessibility-typography-scale));
+  --footer-locale-font-size:calc(0.85rem * var(--accessibility-typography-scale));
 }
 
 /* =============================================================================

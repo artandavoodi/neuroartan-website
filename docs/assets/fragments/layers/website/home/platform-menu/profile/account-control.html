@@ -2,45 +2,36 @@
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
     <section class="home-platform-theme__section" aria-labelledby="account-control">
       <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Account</p>
         <h2 class="home-platform-theme__section-title" id="account-control">Account Control</h2>
       </div>
 
-      <div class="home-platform-theme__action-list">
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-in" data-profile-auth-visible="signed-out">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/sign-in/sign-in.svg" alt="" width="16" height="16">
-            Sign In
-          </span>
-        </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="change-password" data-profile-auth-visible="signed-in">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/password-security/password-security.svg" alt="" width="16" height="16">
-            Change Password
-          </span>
-        </button>
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/overlays/cookie/preferences.svg" alt="" width="16" height="16">
-            Privacy Preferences
-          </span>
-        </button>
-      </div>
-    </section>
-
-    <section class="home-platform-theme__section" aria-labelledby="account-security">
-      <div class="home-platform-theme__section-header">
-        <p class="home-platform-theme__section-eyebrow">Security</p>
-        <h2 class="home-platform-theme__section-title" id="account-security">Security Settings</h2>
-      </div>
-
-      <div class="home-platform-theme__action-list">
-        <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out" data-profile-auth-visible="signed-in">
-          <span class="home-platform-theme__action-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/identity/signout/signout.svg" alt="" width="16" height="16">
-            Sign Out
-          </span>
-        </button>
+      <div class="home-platform-theme__section-content">
+        <div class="home-platform-theme__toggle-list">
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-in" data-profile-auth-visible="signed-out" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/sign-in/sign-in.svg" alt="" width="16" height="16">
+              Sign In
+            </span>
+          </button>
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="change-password" data-profile-auth-visible="signed-in" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/password-security/password-security.svg" alt="" width="16" height="16">
+              Change Password
+            </span>
+          </button>
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="preferences" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/overlays/cookie/preferences.svg" alt="" width="16" height="16">
+              Privacy Preferences
+            </span>
+          </button>
+          <button class="home-platform-theme__action-button" type="button" data-profile-action="sign-out" data-profile-auth-visible="signed-in" data-settings-action-bound="true">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/identity/signout/signout.svg" alt="" width="16" height="16">
+              Sign Out
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   </div>

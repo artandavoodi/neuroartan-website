@@ -42,44 +42,9 @@ const DEFAULT_SETTINGS = {
   riskTolerance: 50
 };
 
-async function loadSettings() {
+function loadSettings() {
   try {
-    // Try to load from Supabase first
-    if (window.neuroartanSupabase) {
-      const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await window.neuroartanSupabase
-          .from('profiles')
-          .select('assistant_name, assistant_description, assistant_avatar_url, assistant_avatar_storage_path, sense_of_humor, efficiency_preference, creativity_level, risk_tolerance')
-          .eq('auth_user_id', user.id)
-          .single();
-        
-        if (profile) {
-          const supabaseSettings = {
-            ...DEFAULT_SETTINGS,
-            assistantName: profile.assistant_name || '',
-            assistantDescription: profile.assistant_description || '',
-            assistantAvatar: profile.assistant_avatar_url || '',
-            assistantAvatarStoragePath: profile.assistant_avatar_storage_path || '',
-            senseOfHumor: profile.sense_of_humor || 50,
-            efficiencyPreference: profile.efficiency_preference || 50,
-            creativityLevel: profile.creativity_level || 50,
-            riskTolerance: profile.risk_tolerance || 50
-          };
-          
-          // Load other settings from localStorage
-          const stored = localStorage.getItem(STORAGE_KEY);
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            return { ...supabaseSettings, ...parsed };
-          }
-          
-          return supabaseSettings;
-        }
-      }
-    }
-    
-    // Fallback to localStorage
+    // Load from localStorage first (primary storage)
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
@@ -109,41 +74,75 @@ async function loadSettings() {
   return { ...DEFAULT_SETTINGS };
 }
 
-async function saveSettings(settings) {
+async function syncFromSupabase() {
+  if (!window.neuroartanSupabase) return;
+
   try {
-    // Save to localStorage for non-identity settings
-    const localStorageSettings = { ...settings };
-    delete localStorageSettings.assistantName;
-    delete localStorageSettings.assistantDescription;
-    delete localStorageSettings.assistantAvatar;
-    delete localStorageSettings.assistantAvatarStoragePath;
-    delete localStorageSettings.senseOfHumor;
-    delete localStorageSettings.efficiencyPreference;
-    delete localStorageSettings.creativityLevel;
-    delete localStorageSettings.riskTolerance;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(localStorageSettings));
+    const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await window.neuroartanSupabase
+      .from('profiles')
+      .select('assistant_name, assistant_description, assistant_avatar_url, assistant_avatar_storage_path, sense_of_humor, efficiency_preference, creativity_level, risk_tolerance')
+      .eq('auth_user_id', user.id)
+      .single();
     
-    // Save assistant identity and personality to Supabase
-    if (window.neuroartanSupabase) {
-      const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
-      if (user) {
-        await window.neuroartanSupabase
-          .from('profiles')
-          .update({
-            assistant_name: settings.assistantName,
-            assistant_description: settings.assistantDescription,
-            assistant_avatar_url: settings.assistantAvatar,
-            assistant_avatar_storage_path: settings.assistantAvatarStoragePath,
-            sense_of_humor: settings.senseOfHumor,
-            efficiency_preference: settings.efficiencyPreference,
-            creativity_level: settings.creativityLevel,
-            risk_tolerance: settings.riskTolerance
-          })
-          .eq('auth_user_id', user.id);
-      }
+    if (profile) {
+      const currentSettings = loadSettings();
+      const supabaseSettings = {
+        ...currentSettings,
+        assistantName: profile.assistant_name || '',
+        assistantDescription: profile.assistant_description || '',
+        assistantAvatar: profile.assistant_avatar_url || '',
+        assistantAvatarStoragePath: profile.assistant_avatar_storage_path || '',
+        senseOfHumor: profile.sense_of_humor || 50,
+        efficiencyPreference: profile.efficiency_preference || 50,
+        creativityLevel: profile.creativity_level || 50,
+        riskTolerance: profile.risk_tolerance || 50
+      };
+      
+      // Sync Supabase settings to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(supabaseSettings));
     }
   } catch (error) {
+    console.error('Failed to sync from Supabase:', error);
+  }
+}
+
+function saveSettings(settings) {
+  try {
+    // Save all settings to localStorage immediately (primary storage)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    
+    // Sync to Supabase in background (secondary storage)
+    syncToSupabase(settings);
+  } catch (error) {
     console.error('Failed to save personalization settings:', error);
+  }
+}
+
+async function syncToSupabase(settings) {
+  if (!window.neuroartanSupabase) return;
+
+  try {
+    const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
+    if (!user) return;
+
+    await window.neuroartanSupabase
+      .from('profiles')
+      .update({
+        assistant_name: settings.assistantName,
+        assistant_description: settings.assistantDescription,
+        assistant_avatar_url: settings.assistantAvatar,
+        assistant_avatar_storage_path: settings.assistantAvatarStoragePath,
+        sense_of_humor: settings.senseOfHumor,
+        efficiency_preference: settings.efficiencyPreference,
+        creativity_level: settings.creativityLevel,
+        risk_tolerance: settings.riskTolerance
+      })
+      .eq('auth_user_id', user.id);
+  } catch (error) {
+    console.error('Failed to sync to Supabase:', error);
   }
 }
 
@@ -556,11 +555,16 @@ function setupEventListeners(settings) {
   }
 }
 
-export async function mountHomePlatformDestination(root, options = {}) {
+export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   
-  const settings = await loadSettings();
+  const settings = loadSettings();
   initializeForm(settings);
   setupEventListeners(settings);
+  
+  // Sync from Supabase when ready (background operation)
+  window.addEventListener('neuroartan:supabase-ready', () => {
+    syncFromSupabase();
+  });
 }
 

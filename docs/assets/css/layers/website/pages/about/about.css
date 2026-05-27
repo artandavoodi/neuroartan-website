@@ -468,7 +468,7 @@ html.lang-rtl .featured-grid [data-i18n-key]{
     filter 0.38s var(--interaction-ease-standard);
   will-change:transform, opacity;
   filter:blur(0.25px);
-  font-size:5.4vw;
+  font-size:calc(5.4vw * var(--accessibility-typography-scale));
   line-height:0.92;
 }
 
@@ -520,7 +520,7 @@ body.country-overlay-active .home-hero-headlines__inner{
 }
 
 @media (min-width: 1200px){
-  .home-hero-headline{font-size:72px;}
+  .home-hero-headline{font-size:calc(4.5rem * var(--accessibility-typography-scale));}
 }
 
 @media (max-width: 820px){
@@ -529,7 +529,7 @@ body.country-overlay-active .home-hero-headlines__inner{
     max-width:none;
   }
 
-  .home-hero-headline{font-size:9.8vw;}
+  .home-hero-headline{font-size:calc(9.8vw * var(--accessibility-typography-scale));}
 }
 
 /* =============================================================================

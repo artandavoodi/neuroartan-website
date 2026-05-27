@@ -147,7 +147,7 @@
     --home-interaction-response-panel-width:min(42rem, var(--site-rail-width-mobile));
     --home-interaction-response-panel-max-height:18rem;
     --home-interaction-response-panel-content-max-width:100%;
-    --home-interaction-response-panel-font-size:0.96rem;
+    --home-interaction-response-panel-font-size:calc(0.96rem * var(--accessibility-typography-scale));
     --home-interaction-response-panel-line-height:1.66;
   }
 }
@@ -197,7 +197,7 @@
   padding:0.14rem 0.38rem;
   border-radius:0.5rem;
   background:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
-  font-size:0.92em;
+  font-size:calc(0.92em * var(--accessibility-typography-scale));
 }
 
 .home-interaction-response-panel__content pre{

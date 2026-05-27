@@ -42,6 +42,15 @@
   --error404-shader-veil-blur:18px;
   --error404-page-padding-y:48px;
   --error404-page-padding-x:24px;
+  
+  /* Typography using accessibility scale */
+  --error404-mark-size:calc(0.8125rem * var(--accessibility-typography-scale));
+  --error404-eyebrow-size:calc(0.75rem * var(--accessibility-typography-scale));
+  --error404-title-size:calc(3.375rem * var(--accessibility-typography-scale));
+  --error404-description-size:calc(1.125rem * var(--accessibility-typography-scale));
+  --error404-title-size-tablet:calc(2.75rem * var(--accessibility-typography-scale));
+  --error404-title-size-mobile:calc(2.125rem * var(--accessibility-typography-scale));
+  --error404-description-size-mobile:calc(1rem * var(--accessibility-typography-scale));
 }
 
 /* =========================================================
@@ -155,7 +164,7 @@
    ========================================================= */
 .error404-mark {
   margin-bottom: 24px;
-  font-size: 13px;
+  font-size: var(--error404-mark-size);
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -168,7 +177,7 @@
 
 .error404-eyebrow {
   margin: 0 0 14px;
-  font-size: 12px;
+  font-size: var(--error404-eyebrow-size);
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -177,7 +186,7 @@
 
 .error404-title {
   margin: 0 0 18px;
-  font-size: 54px;
+  font-size: var(--error404-title-size);
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.04em;
@@ -185,7 +194,7 @@
 
 .error404-description {
   margin: 0 0 14px;
-  font-size: 18px;
+  font-size: var(--error404-description-size);
   line-height: 1.65;
   color: var(--error404-body-color);
 }
@@ -249,7 +258,7 @@
   }
 
   .error404-title {
-    font-size: 44px;
+    font-size: var(--error404-title-size-tablet);
   }
 }
 
@@ -280,11 +289,11 @@ body.page-404 .error404-shell {
   }
 
   .error404-title {
-    font-size: 34px;
+    font-size: var(--error404-title-size-mobile);
   }
 
   .error404-description {
-    font-size: 16px;
+    font-size: var(--error404-description-size-mobile);
     line-height: 1.55;
   }
 

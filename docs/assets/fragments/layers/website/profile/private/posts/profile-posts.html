@@ -34,12 +34,14 @@
       </header>
 
       <form class="profile-posts__form" data-profile-post-form novalidate>
-        <div class="profile-posts__field-grid">
+        <div>
           <label class="profile-posts__field profile-posts__field--full">
             <span class="profile-posts__label">Post</span>
             <textarea class="ui-field profile-posts__textarea" rows="4" name="body" maxlength="500" placeholder="What is in your mind?"></textarea>
           </label>
+        </div>
 
+        <div>
           <div class="profile-posts__field profile-posts__field--full profile-posts__visibility">
             <button class="profile-posts__visibility-trigger" type="button" data-profile-post-visibility-trigger aria-expanded="false" aria-haspopup="listbox">
               <img class="ui-icon-theme-aware profile-posts__visibility-icon" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="" aria-hidden="true">
@@ -57,22 +59,26 @@
             </div>
             <input type="hidden" name="visibility" value="public" data-profile-post-visibility>
           </div>
+        </div>
 
+        <div>
           <div class="profile-posts__attachment profile-posts__field--full" data-profile-post-attachment>
-            <input class="sr-only" type="file" name="post_media" accept="image/*,video/*,audio/*,image/gif" data-profile-post-media-input>
-            <div class="profile-posts__toolbar" aria-label="Post tools">
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger aria-label="Attach media">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/media.svg" alt="" aria-hidden="true">
-              <span>Media</span>
-            </button>
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="gif" aria-label="Attach GIF">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/gif.svg" alt="" aria-hidden="true">
-              <span>GIF</span>
-            </button>
-            <button class="profile-posts__attachment-button" type="button" data-profile-post-voice-trigger aria-label="Dictate post">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/mic.svg" alt="" aria-hidden="true">
-            </button>
+            <div class="profile-posts__toolbar-left">
+              <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger aria-label="Attach media">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/media.svg" alt="" aria-hidden="true">
+                <span>Media</span>
+              </button>
+              <button class="profile-posts__attachment-button" type="button" data-profile-post-media-trigger data-profile-post-media-kind="gif" aria-label="Attach GIF">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/content/media/gif.svg" alt="" aria-hidden="true">
+                <span>GIF</span>
+              </button>
             </div>
+            <div class="profile-posts__toolbar-right">
+              <button class="profile-posts__attachment-button" type="button" data-profile-post-voice-trigger aria-label="Dictate post">
+                <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/mic.svg" alt="" aria-hidden="true">
+              </button>
+            </div>
+            <input type="file" name="post_media" accept="image/*,video/*,audio/*,image/gif" data-profile-post-media-input hidden>
             <figure class="profile-posts__attachment-preview" data-profile-post-media-preview hidden>
               <img src="" alt="" data-profile-post-media-preview-image hidden>
               <video controls data-profile-post-media-preview-video hidden></video>

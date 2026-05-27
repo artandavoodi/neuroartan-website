@@ -99,15 +99,15 @@
   display:flex;
   align-items:center;
   justify-content:center;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:var(--spacing-xs);
+  height:var(--spacing-xs);
 }
 
 .home-platform-theme__connector-status::before{
   content:'';
   display:block;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:var(--spacing-xs);
+  height:var(--spacing-xs);
   border-radius:50%;
   background-color:var(--color-primary7);
 }

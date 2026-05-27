@@ -116,7 +116,7 @@ body.menu-open #header-controls .theme-toggle{
   max-width:none;
   margin:0 auto 1rem auto;
   color:var(--text-secondary-color);
-  font-size:0.75rem;
+  font-size:calc(0.75rem * var(--accessibility-typography-scale));
 }
 
 /* =============================================================================

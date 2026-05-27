@@ -1,5 +1,7 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
 
+const STORAGE_KEY = 'neuroartan.runtime-configuration';
+
 const PROVIDER_MODELS = {
   gemini: [
     'gemini-2.5-pro',
@@ -22,6 +24,22 @@ const PROVIDER_MODELS = {
 };
 
 const CLOUD_PROVIDERS = ['gemini', 'openai', 'anthropic'];
+
+function loadConfiguration() {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch {
+  }
+  return { provider: 'gemini', model: 'gemini-2.5-pro' };
+}
+
+function saveConfiguration(config) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+  } catch {
+  }
+}
 
 function updateProviderLabel(provider) {
   const label = document.querySelector('[data-home-platform-provider-label]');
@@ -104,6 +122,9 @@ function bindProviderChange(root) {
   providerSelect.dataset.configProviderBound = 'true';
   providerSelect.addEventListener('change', () => {
     const provider = providerSelect.value;
+    const config = loadConfiguration();
+    config.provider = provider;
+    saveConfiguration(config);
     updateProviderLabel(provider);
     populateModelDropdown(provider);
     updateFieldVisibility(root, provider);
@@ -116,6 +137,9 @@ function bindModelChange(root) {
 
   modelSelect.dataset.configModelBound = 'true';
   modelSelect.addEventListener('change', () => {
+    const config = loadConfiguration();
+    config.model = modelSelect.value;
+    saveConfiguration(config);
     updateModelLabel();
   });
 }
@@ -123,16 +147,20 @@ function bindModelChange(root) {
 export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
 
+  const config = loadConfiguration();
+
   const providerSelect = root.querySelector('[data-home-platform-runtime-provider]');
   if (providerSelect) {
-    updateProviderLabel(providerSelect.value);
-    populateModelDropdown(providerSelect.value);
-    updateFieldVisibility(root, providerSelect.value);
+    providerSelect.value = config.provider;
+    updateProviderLabel(config.provider);
+    populateModelDropdown(config.provider);
+    updateFieldVisibility(root, config.provider);
     bindProviderChange(root);
   }
 
   const modelSelect = root.querySelector('[data-home-platform-runtime-model]');
   if (modelSelect) {
+    modelSelect.value = config.model;
     updateModelLabel();
     bindModelChange(root);
   }

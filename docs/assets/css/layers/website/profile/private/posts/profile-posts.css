@@ -122,13 +122,22 @@ body.profile-posts-overlay-open{
 
 .profile-posts__header,
 .profile-posts__stream-header,
-.profile-posts__footer,
 .profile-posts__item-header{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:var(--spacing-md);
   position:relative;
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+}
+
+.profile-posts__footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-md);
+  position:relative;
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__stream-header [data-profile-post-count]{
@@ -311,7 +320,7 @@ body.profile-posts-overlay-open{
 .profile-posts__overlay .profile-posts__textarea{
   border:var(--input-minimal-border);
   background:var(--input-minimal-background);
-  padding:var(--input-minimal-padding);
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
   border-radius:var(--input-minimal-radius);
   outline:var(--input-minimal-outline);
   box-shadow:var(--input-minimal-box-shadow);
@@ -325,7 +334,7 @@ body.profile-posts-overlay-open{
 
 .profile-posts__visibility{
   margin:0;
-  padding:0;
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
   border:0;
   position:relative;
 }
@@ -481,20 +490,32 @@ body.profile-posts-overlay-open{
   color:var(--text-secondary-color);
 }
 
-.profile-posts__attachment{
-  display:grid;
-  gap:var(--spacing-sm);
-  background:var(--panel-surface-solid-unified);
-  opacity:1;
+.profile-posts__attachment input[type="file"],
+.profile-posts__attachment-preview[hidden]{
+  display:none;
 }
 
-.profile-posts__toolbar{
-  display:flex;
+.profile-posts__attachment{
+  display:grid;
+  grid-template-columns: 1fr auto;
   align-items:center;
-  flex-wrap:wrap;
-  gap:var(--nav-global-topbar-menu-gap);
   background:var(--panel-surface-solid-unified);
   opacity:1;
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+}
+
+.profile-posts__toolbar-left{
+  display:flex;
+  align-items:center;
+  gap:var(--nav-global-topbar-menu-gap);
+  grid-column:1;
+}
+
+.profile-posts__toolbar-right{
+  display:flex;
+  align-items:center;
+  grid-column:2;
+  justify-self:end;
 }
 
 .profile-posts__attachment-button{
@@ -513,9 +534,6 @@ body.profile-posts-overlay-open{
   height:var(--home-platform-shell-nav-icon-size);
 }
 
-.profile-posts__attachment-button[data-profile-post-voice-trigger]{
-  margin-left:auto;
-}
 
 .profile-posts__attachment-preview{
   display:grid;
@@ -605,7 +623,7 @@ body.profile-posts-overlay-open{
 .profile-posts__item{
   display:grid;
   gap:var(--spacing-sm);
-  padding:var(--spacing-md) var(--spacing-lg);
+  padding:0;
   border-top:var(--border-width-hairline) solid var(--data-surface-border);
 }
 
@@ -618,6 +636,7 @@ body.profile-posts-overlay-open{
   color:var(--text-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__item-image{
@@ -627,6 +646,7 @@ body.profile-posts-overlay-open{
   object-fit:cover;
   border-radius:var(--shape-card-radius);
   border:var(--border-width-hairline) solid var(--data-surface-border);
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__item-media{
@@ -635,6 +655,7 @@ body.profile-posts-overlay-open{
   max-height:28rem;
   border-radius:var(--shape-card-radius);
   border:var(--border-width-hairline) solid var(--data-surface-border);
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__item-actions{
@@ -643,6 +664,7 @@ body.profile-posts-overlay-open{
   justify-content:flex-end;
   flex-wrap:wrap;
   gap:var(--spacing-xs);
+  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__item-action{
@@ -716,9 +738,12 @@ body.profile-posts-overlay-open{
 
   .profile-posts__header,
   .profile-posts__stream-header,
-  .profile-posts__footer,
   .profile-posts__item-header{
     flex-direction:column;
+  }
+
+  .profile-posts__footer{
+    flex-direction:row;
   }
 
 }

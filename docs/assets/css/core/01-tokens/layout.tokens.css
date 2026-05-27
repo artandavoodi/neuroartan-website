@@ -188,7 +188,7 @@
   --layout-home-enter-tracking:0.14em;
   --layout-home-enter-border-width:1px;
   --layout-home-enter-radius:999px;
-  --layout-home-enter-icon-size:1.42rem;
+  --layout-home-enter-icon-size:calc(1.42rem * var(--accessibility-icon-scale));
   --layout-home-enter-hover-y:-1px;
   --layout-home-enter-hover-opacity:0.95;
   --layout-home-enter-breathe-duration:6s;
@@ -358,7 +358,7 @@
   --layout-home-search-input-row-opacity:0.9;
   --layout-home-search-input-row-border:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --layout-home-search-input-row-border-focus:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
-  --layout-home-search-icon-size:1.38rem;
+  --layout-home-search-icon-size:calc(1.38rem * var(--accessibility-icon-scale));
   --layout-home-search-icon-opacity:0.82;
   --layout-home-search-voice-motion:180ms;
   --layout-home-search-input-size:1.88rem;
@@ -403,7 +403,7 @@
   --layout-home-search-result-badge-size:0.7rem;
   --layout-home-search-result-badge-weight:600;
   --layout-home-search-result-badge-tracking:0.08em;
-  --layout-home-search-result-badge-icon-size:1.5rem;
+  --layout-home-search-result-badge-icon-size:calc(1.5rem * var(--accessibility-icon-scale));
   --layout-home-search-result-tags-gap:0.45rem;
   --layout-home-search-result-tag-min-height:1.85rem;
   --layout-home-search-result-tag-padding-x:0.7rem;
@@ -449,7 +449,7 @@
   --layout-home-platform-chrome-saturate:120%;
   --layout-home-platform-rail-toggle-size:1.25rem;
   --layout-home-platform-rail-toggle-margin-left:0.7rem;
-  --layout-home-platform-rail-toggle-icon-size:1.05rem;
+  --layout-home-platform-rail-toggle-icon-size:calc(1.05rem * var(--accessibility-icon-scale));
   --layout-home-platform-rail-width:18rem;
   --layout-home-platform-subrail-width:15rem;
   --layout-home-platform-rail-compact-width:3.25rem;
@@ -493,7 +493,7 @@
   --layout-home-platform-nav-item-radius:999px;
   --layout-home-platform-nav-item-padding-y:0.86rem;
   --layout-home-platform-nav-item-padding-x:1rem;
-  --layout-home-platform-nav-icon-size:1rem;
+  --layout-home-platform-nav-icon-size:calc(1rem * var(--accessibility-icon-scale));
   --layout-home-platform-nav-indicator-min-size:1.15rem;
   --layout-home-platform-nav-indicator-padding-x:0.32rem;
   --layout-home-platform-nav-indicator-size:0.64rem;
@@ -612,7 +612,7 @@
   --layout-home-stage-motion-core-signal-blur:16px;
   --layout-home-stage-motion-core-pulse-blur:10px;
   --layout-home-stage-motion-mic-size:4.8rem;
-  --layout-home-stage-motion-mic-icon-size:2.35rem;
+  --layout-home-stage-motion-mic-icon-size:calc(2.35rem * var(--accessibility-icon-scale));
   --layout-home-stage-motion-mic-margin-bottom:1.15rem;
   --layout-home-stage-motion-mic-color:color-mix(in srgb, var(--text-primary-color) 72%, transparent);
   --layout-home-stage-motion-mic-hover-color:color-mix(in srgb, var(--color-primary1) 94%, var(--text-primary-color));
@@ -656,7 +656,7 @@
   --layout-home-stage-motion-mobile-vessel-size:min(17rem, 66vw, 31vh);
   --layout-home-stage-motion-mobile-vessel-active-size:min(14rem, 54vw, 24vh);
   --layout-home-stage-motion-mobile-mic-size:4rem;
-  --layout-home-stage-motion-mobile-mic-icon-size:2rem;
+  --layout-home-stage-motion-mobile-mic-icon-size:calc(2rem * var(--accessibility-icon-scale));
   --layout-home-stage-motion-mobile-mic-margin-bottom:0.85rem;
   --layout-home-stage-motion-key-core-listen-start-scale:0.88;
   --layout-home-stage-motion-key-core-listen-mid-scale:1.1;
@@ -983,7 +983,7 @@
   --layout-interaction-settings-panel-nav-width-tablet:11rem;
   --layout-interaction-settings-panel-nav-opacity:0.72;
   --layout-interaction-settings-panel-nav-hover-opacity:1;
-  --layout-interaction-settings-panel-nav-font-size:0.82rem;
+  --layout-interaction-settings-panel-nav-font-size:calc(0.82rem * var(--accessibility-typography-scale));
   --layout-interaction-settings-panel-nav-font-weight:500;
   --layout-interaction-settings-panel-nav-line-height:1.2;
   --layout-interaction-settings-panel-nav-item-radius:0.82rem;

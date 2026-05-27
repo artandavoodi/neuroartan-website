@@ -24,6 +24,13 @@
   --icon-color:var(--text-color);
   --icon-color-muted:var(--text-secondary-color);
   --icon-color-accent:var(--color-primary1);
+  
+  /* Icon size tokens using accessibility scale */
+  --icon-size-xs:calc(0.75rem * var(--accessibility-icon-scale));
+  --icon-size-sm:calc(1rem * var(--accessibility-icon-scale));
+  --icon-size-md:calc(1.25rem * var(--accessibility-icon-scale));
+  --icon-size-lg:calc(1.5rem * var(--accessibility-icon-scale));
+  --icon-size-xl:calc(2rem * var(--accessibility-icon-scale));
 }
 
 

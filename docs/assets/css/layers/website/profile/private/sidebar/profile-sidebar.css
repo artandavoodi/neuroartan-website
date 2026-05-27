@@ -111,6 +111,7 @@
   gap:var(--home-platform-shell-nav-item-gap);
   padding:var(--home-platform-shell-nav-item-padding);
   padding-left:var(--spacing-none);
+  padding-right:var(--spacing-none);
   border:var(--border-width-hairline) solid var(--home-platform-shell-nav-item-border);
   border-radius:var(--home-platform-shell-nav-item-radius);
   background:var(--home-platform-shell-nav-item-bg);

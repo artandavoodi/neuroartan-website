@@ -286,6 +286,11 @@ body.profile-posts-overlay-open{
   color:var(--text-secondary-color);
 }
 
+.profile-posts__empty{
+  text-align:center;
+  padding:var(--spacing-lg) 0;
+}
+
 .profile-posts__form,
 .profile-posts__field-grid{
   display:grid;

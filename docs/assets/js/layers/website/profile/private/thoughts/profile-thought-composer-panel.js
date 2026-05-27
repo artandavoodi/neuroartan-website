@@ -37,18 +37,43 @@ function renderComposer(state) {
         category.appendChild(option);
       });
       category.value = activeValue || state.composerCategory;
+      
+      const categoryLabel = root.querySelector('[data-profile-thought-category-label]');
+      if (categoryLabel instanceof HTMLElement) {
+        const selectedCategory = state.taxonomy.categories.find((entry) => entry.key === category.value);
+        categoryLabel.textContent = selectedCategory?.label || 'Thought';
+      }
     }
 
     if (textarea instanceof HTMLTextAreaElement && textarea.value !== state.composerText) {
       textarea.value = state.composerText;
     }
 
-    root.querySelectorAll('[data-profile-thought-audience-toggle]').forEach((button) => {
-      const key = button.getAttribute('data-profile-thought-audience-toggle') || '';
+    root.querySelectorAll('[data-profile-thought-audience-option]').forEach((button) => {
+      const key = button.getAttribute('data-profile-thought-audience-option') || '';
       const active = key === state.composerAudience;
-      button.dataset.profileThoughtAudienceActive = active ? 'true' : 'false';
-      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      button.classList.toggle('profile-thought-composer__visibility-option--active', active);
+      button.setAttribute('aria-selected', active ? 'true' : 'false');
     });
+    
+    const audienceInput = root.querySelector('[data-profile-thought-audience]');
+    if (audienceInput instanceof HTMLInputElement) {
+      audienceInput.value = state.composerAudience || 'private';
+    }
+    
+    const visibilityTrigger = root.querySelector('[data-profile-thought-audience-trigger]');
+    const visibilityLabel = visibilityTrigger?.querySelector('.profile-thought-composer__visibility-label');
+    const visibilityIcon = visibilityTrigger?.querySelector('.profile-thought-composer__visibility-icon');
+    if (visibilityLabel instanceof HTMLElement) {
+      const audience = state.taxonomy.audiences.find((entry) => entry.key === state.composerAudience);
+      visibilityLabel.textContent = audience?.label || 'Private bank';
+    }
+    if (visibilityIcon instanceof HTMLImageElement) {
+      const iconSrc = state.composerAudience === 'public'
+        ? '/registry/icons/public/assets/core/actions/visibility/public-route.svg'
+        : '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
+      visibilityIcon.src = iconSrc;
+    }
 
     if (submitLabel) {
       submitLabel.textContent = state.composerAudience === 'public' ? 'Stage Public Thought' : 'Save Privately';
@@ -64,15 +89,36 @@ function renderComposer(state) {
 function bindComposerEvents() {
   document.addEventListener('click', (event) => {
     const trigger = event.target instanceof Element
-      ? event.target.closest('[data-profile-thought-audience-toggle]')
+      ? event.target.closest('[data-profile-thought-audience-trigger]')
       : null;
-    if (!trigger) return;
+    if (trigger) {
+      event.preventDefault();
+      const dropdown = trigger.nextElementSibling;
+      if (dropdown instanceof HTMLElement) {
+        const isHidden = dropdown.hidden;
+        dropdown.hidden = !isHidden;
+        trigger.setAttribute('aria-expanded', (!isHidden).toString());
+      }
+      return;
+    }
 
-    event.preventDefault();
-    updateProfileThoughtComposer({
-      composerAudience: trigger.getAttribute('data-profile-thought-audience-toggle') || 'private',
-      resetStatus: true
-    });
+    const option = event.target instanceof Element
+      ? event.target.closest('[data-profile-thought-audience-option]')
+      : null;
+    if (option) {
+      event.preventDefault();
+      const audience = option.getAttribute('data-profile-thought-audience-option') || 'private';
+      updateProfileThoughtComposer({
+        composerAudience: audience,
+        resetStatus: true
+      });
+      const controls = option.closest('[data-profile-thought-audience-controls]');
+      const dropdown = controls?.querySelector('[data-profile-thought-audience-dropdown]');
+      const trigger = controls?.querySelector('[data-profile-thought-audience-trigger]');
+      if (dropdown instanceof HTMLElement) dropdown.hidden = true;
+      if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'false');
+      return;
+    }
   });
 
   document.addEventListener('input', (event) => {

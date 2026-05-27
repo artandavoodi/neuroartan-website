@@ -546,6 +546,8 @@
   border:0;
   background:transparent;
   padding:0;
+  padding-top:var(--spacing-lg);
+  padding-bottom:var(--spacing-md);
   margin:0;
   position:relative;
   display:inline-flex;
@@ -571,6 +573,7 @@
   height:var(--layout-home-platform-nav-icon-size);
   flex:0 0 var(--layout-home-platform-nav-icon-size);
   align-self:center;
+  opacity:var(--nav-institutional-icon-opacity);
 }
 
 .profile-private-hero__tab-label{
@@ -583,6 +586,7 @@
 .profile-private-hero__tab[aria-current="page"] .profile-private-hero__tab-icon{
   opacity:var(--nav-institutional-icon-hover-opacity);
 }
+
 
 .profile-private-hero__tab::after{
   content:"";

@@ -188,7 +188,7 @@ function readEntries(key) {
       .map((entry) => ({
         id: normalizeString(entry?.id || '') || buildEntryId(),
         text: normalizeComposerText(entry?.text || '').trim(),
-        audience: normalizeString(entry?.audience || ''),
+        audience: normalizeString(entry?.audience || entry?.visibility || 'private'),
         category: normalizeString(entry?.category || ''),
         createdAt: normalizeString(entry?.createdAt || '')
       }))

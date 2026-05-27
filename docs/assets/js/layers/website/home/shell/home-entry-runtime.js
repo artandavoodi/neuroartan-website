@@ -20,7 +20,7 @@
 (() => {
 
   const releaseIntroVisibility = () => {
-    if (!document.body || !document.body.classList.contains('home-page')) return;
+    if (!document.body || (!document.body.classList.contains('home-page') && !document.body.classList.contains('about-page'))) return;
     if (document.body.classList.contains('site-entered')) return;
     if (document.documentElement.dataset.homeFirstPaint !== 'ready') return;
 
@@ -51,7 +51,7 @@
   let isEntering = false;
   let touchStartY = null;
 
-  const isHomePage = () => document.body.classList.contains('home-page');
+  const isHomePage = () => document.body.classList.contains('home-page') || document.body.classList.contains('about-page');
   const getTarget = () => document.querySelector(ENTER_TARGET_SELECTOR);
   const getEnterTrigger = () => document.querySelector(ENTER_TRIGGER_SELECTOR);
 

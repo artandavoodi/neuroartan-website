@@ -3,19 +3,20 @@
      02) THOUGHT BANK COMPOSER MOUNT
      03) THOUGHT BANK STREAM MOUNT
 ============================================================================= -->
-<div class="profile-thought-bank" data-profile-thought-bank-panel data-profile-surface="private">
-  <div data-include="profile-private-thought-stream-panel"></div>
+<section class="profile-thought-bank" data-profile-thought-bank-panel data-profile-surface="private">
+  <article class="profile-thought-bank__stream ui-card ui-surface--glass">
+    <div class="profile-thought-bank__list" data-profile-thought-list></div>
+    <p class="profile-thought-bank__empty" data-profile-thought-empty>Nothing is here yet.</p>
+  </article>
 
   <button class="profile-thought-bank__fab" type="button" data-profile-thought-overlay-open aria-label="Create thought">
-    <span class="home-dashboard-topbar__icon" aria-hidden="true">
-      <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="">
-    </span>
+    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
   </button>
 
   <div class="profile-thought-bank__overlay" data-profile-thought-overlay hidden>
     <div class="profile-thought-bank__overlay-backdrop" aria-hidden="true"></div>
-    <div class="profile-thought-bank__overlay-dialog">
+    <article class="profile-thought-bank__overlay-dialog ui-card ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="profile-thought-composer-title">
       <div data-include="profile-private-thought-composer-panel"></div>
-    </div>
+    </article>
   </div>
-</div>
+</section>

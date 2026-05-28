@@ -208,14 +208,14 @@ function bootSidebar(){
     const storedState = readStoredSidebarRail();
     setSidebarRail(
       root,
-      window.matchMedia?.('(max-width: 820px)').matches === true
+      window.matchMedia?.('(max-width: 980px)').matches === true
         ? 'collapsed'
         : storedState
           || (root.getAttribute('data-profile-sidebar-rail') === 'collapsed'
             ? 'collapsed'
             : 'expanded'),
       {
-        persist: window.matchMedia?.('(max-width: 820px)').matches !== true
+        persist: window.matchMedia?.('(max-width: 980px)').matches !== true
       }
     );
   });
@@ -236,7 +236,7 @@ document.addEventListener('fragment:mounted', (event) => {
 });
 
 window.addEventListener('resize', () => {
-  if(window.matchMedia?.('(max-width: 820px)').matches !== true) return;
+  if(window.matchMedia?.('(max-width: 980px)').matches !== true) return;
   sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed', { persist:false }));
 }, { passive:true });
 

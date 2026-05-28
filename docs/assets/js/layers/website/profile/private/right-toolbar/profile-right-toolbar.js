@@ -152,6 +152,12 @@ function renderToolbarActions(root, state = getProfileNavigationState()){
 
     icon.appendChild(image);
     button.appendChild(icon);
+
+    const text = document.createElement('span');
+    text.className = 'profile-right-toolbar__nav-text';
+    text.textContent = action.label;
+    button.appendChild(text);
+
     nav.appendChild(button);
   });
 
@@ -372,10 +378,15 @@ function bootRightToolbar(){
     const storedState = readStoredRightToolbarRail();
     setRightToolbarRail(
       root,
-      storedState
-        || (root.getAttribute('data-profile-right-toolbar-rail') === 'collapsed'
-          ? 'collapsed'
-          : 'expanded')
+      window.matchMedia?.('(max-width: 980px)').matches === true
+        ? 'expanded'
+        : storedState
+          || (root.getAttribute('data-profile-right-toolbar-rail') === 'collapsed'
+            ? 'collapsed'
+            : 'expanded'),
+      {
+        persist: window.matchMedia?.('(max-width: 980px)').matches !== true
+      }
     );
   });
 }
@@ -383,6 +394,11 @@ function bootRightToolbar(){
 export function initProfileRightToolbar(){
   bindRightToolbar();
   bootRightToolbar();
+
+  window.addEventListener('resize', () => {
+    if(window.matchMedia?.('(max-width: 980px)').matches !== true) return;
+    toolbarRoots().forEach((root) => setRightToolbarRail(root, 'expanded', { persist:false }));
+  }, { passive:true });
 }
 
 subscribeProfileNavigation((state) => {

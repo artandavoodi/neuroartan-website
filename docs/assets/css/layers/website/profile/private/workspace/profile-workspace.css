@@ -18,7 +18,7 @@
   --profile-workspace-right-toolbar-expanded-width:var(--layout-home-platform-rail-compact-width);
   --profile-workspace-right-toolbar-compact-width:var(--layout-home-platform-rail-compact-width);
   --profile-workspace-sidebar-edge-padding:var(--spacing-md);
-  --profile-workspace-right-toolbar-edge-padding:0.78rem;
+  --profile-workspace-right-toolbar-edge-padding:var(--spacing-md);
   --profile-workspace-content-inset:var(--site-shell-inline-padding-mobile);
   display:grid;
   grid-template-columns:
@@ -59,7 +59,7 @@
 }
 
 .profile-workspace__right-toolbar-mount{
-  padding-inline:var(--profile-workspace-right-toolbar-edge-padding);
+  padding-inline-start:var(--profile-workspace-right-toolbar-edge-padding);
   padding-block:calc(var(--spacing-xl) * 2);
   border-left:var(--border-width-hairline) solid var(--border-color);
 }
@@ -86,3 +86,20 @@
 ============================================================================= */
 
 /* Content panels remain owned by their section files. */
+
+/* =============================================================================
+   03) RESPONSIVE
+============================================================================= */
+
+@media (max-width:980px){
+  .profile-workspace__layout{
+    grid-template-columns:
+      var(--profile-workspace-sidebar-compact-width)
+      1fr
+      var(--profile-workspace-right-toolbar-compact-width);
+  }
+
+  .profile-workspace__content{
+    padding-inline:var(--spacing-none);
+  }
+}

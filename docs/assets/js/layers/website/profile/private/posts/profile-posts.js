@@ -627,7 +627,6 @@ function bindPostForm() {
   });
 
   root.addEventListener('click', (event) => {
-    const openTrigger = event.target.closest('[data-profile-post-overlay-open]');
     const closeTrigger = event.target.closest('[data-profile-post-overlay-close]');
     const visibilityDropdownTrigger = event.target.closest('[data-profile-post-visibility-trigger]');
     const visibilityTrigger = event.target.closest('[data-profile-post-visibility-option]');
@@ -727,12 +726,6 @@ function bindPostForm() {
     if (mediaRemove) {
       event.preventDefault();
       resetPostMedia(root);
-      return;
-    }
-
-    if (openTrigger) {
-      event.preventDefault();
-      openPostComposer(root);
       return;
     }
 

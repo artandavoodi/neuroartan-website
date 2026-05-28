@@ -29,8 +29,7 @@
 }
 
 .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__rail-inner{
-  padding-inline:
-    var(--home-platform-shell-rail-compact-padding-inline);
+  padding-inline:var(--spacing-none);
 }
 
 .profile-sidebar__header{
@@ -184,8 +183,27 @@
 }
 
 .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__nav-item{
-  justify-content:flex-start;
+  justify-content:center;
   gap:var(--spacing-none);
-  padding-right:var(--home-platform-shell-nav-item-padding);
-  padding-left:var(--spacing-none);
+  padding:var(--spacing-none);
+  width:auto;
+}
+
+@media (max-width:980px){
+  .profile-sidebar__rail-toggle{
+    display:none;
+  }
+
+  .profile-sidebar__surface{
+    width:100%;
+  }
+
+  .profile-sidebar__rail-inner{
+    padding:0;
+    align-items:center;
+  }
+
+  .profile-sidebar__nav-text{
+    display:none;
+  }
 }

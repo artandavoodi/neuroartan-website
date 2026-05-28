@@ -343,9 +343,6 @@ function bindThoughtComposerEvents() {
 
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
-    const openTrigger = event.target instanceof Element
-      ? event.target.closest('[data-profile-thought-overlay-open]')
-      : null;
     const closeTrigger = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-overlay-close]')
       : null;
@@ -355,13 +352,6 @@ function bindThoughtComposerEvents() {
     const audienceOption = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-audience-option]')
       : null;
-
-    if (openTrigger) {
-      event.preventDefault();
-      setThoughtOverlayOpen(true);
-      document.querySelector('[data-profile-thought-textarea="true"]')?.focus();
-      return;
-    }
 
     if (closeTrigger) {
       event.preventDefault();

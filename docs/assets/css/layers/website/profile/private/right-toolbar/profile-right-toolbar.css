@@ -11,8 +11,8 @@
 .profile-right-toolbar__surface{
   position:sticky;
   top:8rem;
-  align-self:start;
-  width:var(--layout-home-platform-rail-compact-width);
+  align-self:end;
+  width:max-content;
   min-width:var(--spacing-none);
   background:transparent;
   padding:0;
@@ -24,19 +24,18 @@
   gap:var(--home-platform-shell-rail-gap);
   padding:
     0
-    var(--home-platform-shell-rail-compact-padding-inline)
+    var(--home-platform-shell-rail-padding-inline)
     var(--spacing-lg);
 }
 
 .profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__rail-inner{
-  padding-inline:
-    var(--home-platform-shell-rail-compact-padding-inline);
+  padding-inline:var(--spacing-none);
 }
 
 .profile-right-toolbar__header{
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
   padding-top:var(--spacing-none);
 }
 
@@ -62,14 +61,17 @@
   min-height:var(--home-platform-shell-nav-item-min-height);
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
   gap:var(--home-platform-shell-nav-item-gap);
   padding:var(--home-platform-shell-nav-item-padding);
-  border:var(--border-width-hairline) solid transparent;
+  padding-left:var(--spacing-none);
+  padding-right:var(--spacing-none);
+  border:var(--border-width-hairline) solid var(--home-platform-shell-nav-item-border);
   border-radius:var(--home-platform-shell-nav-item-radius);
-  background:transparent;
+  background:var(--home-platform-shell-nav-item-bg);
   color:var(--home-platform-shell-nav-item-color);
   opacity:var(--home-platform-shell-nav-base-opacity);
+  text-align:left;
   cursor:pointer;
   transition:var(--interaction-transition-control);
 }
@@ -85,16 +87,28 @@
   color:var(--home-platform-shell-nav-item-color-hover);
   opacity:var(--home-platform-shell-nav-hover-opacity);
   outline:none;
-  transform:none;
+  transform:none !important;
+}
+
+.profile-right-toolbar__nav-item[aria-pressed="true"],
+.profile-right-toolbar__nav-item[aria-current="page"],
+.profile-right-toolbar__nav-item.is-active{
+  border-color:var(--home-platform-shell-nav-item-border-active);
+  background:var(--home-platform-shell-nav-item-bg-active);
+  color:var(--home-platform-shell-nav-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+  transform:none !important;
 }
 
 .profile-right-toolbar__rail-toggle-icon,
 .profile-right-toolbar__nav-icon{
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
+  flex:0 0 var(--home-platform-shell-nav-icon-size);
   display:block;
   color:currentColor;
-  transform:none;
+  transform:none !important;
 }
 
 .profile-right-toolbar__rail-toggle-icon{
@@ -124,8 +138,18 @@
 .profile-right-toolbar__nav-item:focus-visible .profile-right-toolbar__nav-icon img,
 .profile-right-toolbar__nav-item:focus-visible .profile-right-toolbar__nav-icon svg,
 .profile-right-toolbar__nav-item:active .profile-right-toolbar__nav-icon img,
-.profile-right-toolbar__nav-item:active .profile-right-toolbar__nav-icon svg{
+.profile-right-toolbar__nav-item:active .profile-right-toolbar__nav-icon svg,
+.profile-right-toolbar__nav-item[aria-pressed="true"] .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item[aria-pressed="true"] .profile-right-toolbar__nav-icon svg,
+.profile-right-toolbar__nav-item[aria-current="page"] .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item[aria-current="page"] .profile-right-toolbar__nav-icon svg,
+.profile-right-toolbar__nav-item.is-active .profile-right-toolbar__nav-icon img,
+.profile-right-toolbar__nav-item.is-active .profile-right-toolbar__nav-icon svg{
   opacity:var(--nav-institutional-icon-hover-opacity);
+}
+
+.profile-right-toolbar__nav-text{
+  display:none;
 }
 
 .profile-right-toolbar__nav{
@@ -140,4 +164,30 @@
 
 .profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__nav{
   display:none;
+}
+
+.profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__nav-item{
+  justify-content:center;
+  gap:var(--spacing-none);
+  padding:var(--spacing-none);
+  width:auto;
+}
+
+@media (max-width:980px){
+  .profile-right-toolbar__rail-toggle{
+    display:none;
+  }
+
+  .profile-right-toolbar__surface{
+    width:100%;
+  }
+
+  .profile-right-toolbar__rail-inner{
+    padding:0;
+    align-items:center;
+  }
+
+  .profile-right-toolbar__nav-text{
+    display:none;
+  }
 }

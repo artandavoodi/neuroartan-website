@@ -89,9 +89,9 @@
   width:100%;
   gap:calc(var(--spacing-lg) * var(--accessibility-density-scale));
   position:relative;
-  isolation:isolate;
   border-radius:var(--profile-private-hero-cover-radius);
   padding-top:0;
+  margin-top:0;
 }
 
 .profile-private-hero__surface::before{
@@ -502,7 +502,7 @@
   min-height:var(--profile-private-hero-tab-band-height);
   padding-block:var(--spacing-none);
   position:sticky;
-  top:0;
+  top:var(--nav-glass-surface-height);
   z-index:var(--z-sticky);
 }
 
@@ -555,7 +555,7 @@
   border:0;
   background:transparent;
   padding:0;
-  padding-top:var(--spacing-lg);
+  padding-top:var(--spacing-md);
   padding-bottom:var(--spacing-md);
   margin:0;
   position:relative;

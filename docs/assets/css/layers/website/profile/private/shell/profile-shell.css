@@ -94,7 +94,7 @@
   position:relative;
   display:grid;
   width:100%;
-  gap:var(--profile-shell-group-gap);
+  gap:var(--spacing-none);
   align-items:start;
   overflow:visible;
   min-height:100%;
@@ -125,7 +125,7 @@
 
 .profile-shell__mount--hero{
   position:sticky;
-  top:var(--profile-shell-hero-sticky-top);
+  top:0;
   z-index:var(--profile-shell-hero-sticky-z-index);
   align-self:start;
 }

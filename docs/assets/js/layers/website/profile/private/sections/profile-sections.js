@@ -75,6 +75,12 @@ function renderPrivateSections(root, state, navigationState) {
     const panelKey = panel.getAttribute('data-profile-section-panel') || '';
     panel.hidden = panelKey !== effectiveSection;
   });
+
+  // Update shell with current section for CSS targeting
+  const shell = document.querySelector('[data-profile-shell][data-profile-surface="private"]');
+  if (shell) {
+    shell.dataset.profileSection = effectiveSection;
+  }
 }
 
 /* =============================================================================

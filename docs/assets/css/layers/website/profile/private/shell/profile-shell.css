@@ -124,10 +124,15 @@
 }
 
 .profile-shell__mount--hero{
-  position:sticky;
-  top:0;
-  z-index:var(--profile-shell-hero-sticky-z-index);
+  position:relative;
   align-self:start;
+}
+
+.profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
+  position:sticky;
+  top:-23.5rem;
+  align-self:start;
+  z-index:2000;
 }
 
 .profile-shell__overlay-mount{
@@ -156,5 +161,15 @@
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);
     --profile-shell-hero-sticky-top:var(--profile-shell-hero-sticky-top-mobile);
     --profile-shell-workspace-sticky-top:var(--profile-shell-workspace-sticky-top-mobile);
+  }
+
+  .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
+    top:-23.5rem;
+  }
+}
+
+@media (max-width:480px){
+  .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
+    top:-28rem;
   }
 }

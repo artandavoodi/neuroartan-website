@@ -9,7 +9,7 @@
 ============================================================================= */
 
 .profile-workspace{
-  height:100%;
+  height:auto;
 }
 
 .profile-workspace__layout{
@@ -27,8 +27,8 @@
     var(--profile-workspace-right-toolbar-expanded-width);
   gap:var(--spacing-none);
   align-items:stretch;
-  margin-top:calc(var(--profile-shell-group-gap) * -1);
   min-height:100vh;
+
 }
 
 .profile-workspace__layout[data-profile-sidebar-rail="collapsed"]{
@@ -56,12 +56,16 @@
   padding-inline-end:var(--profile-workspace-sidebar-edge-padding);
   padding-block:calc(var(--spacing-xl) * 2);
   border-right:var(--border-width-hairline) solid var(--border-color);
+  position:relative;
+  z-index:0;
 }
 
 .profile-workspace__right-toolbar-mount{
   padding-inline-start:calc(var(--profile-workspace-right-toolbar-edge-padding) * 1.2);
   padding-block:calc(var(--spacing-xl) * 2);
   border-left:var(--border-width-hairline) solid var(--border-color);
+  position:relative;
+  z-index:0;
 }
 
 .profile-workspace__content-mount{

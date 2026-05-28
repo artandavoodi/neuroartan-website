@@ -3,12 +3,11 @@
    02) MODULE STATE
    03) STRUCTURED TAXONOMY
    04) VALUE HELPERS
-   05) STORAGE HELPERS
-   06) STATE DERIVATION
-   07) STORE HELPERS
-   08) COMPOSER ACTIONS
-   09) RUNTIME SYNC
-   10) INITIALIZATION
+   05) STATE DERIVATION
+   06) STORE HELPERS
+   07) COMPOSER ACTIONS
+   08) RUNTIME SYNC
+   09) INITIALIZATION
    ============================================================================= */
 
 /* =============================================================================
@@ -17,19 +16,23 @@
 
 import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
 import { normalizeString } from '../../../system/account/identity/account-profile-identity.js';
+import {
+  listProfileThoughts,
+  createProfileThought,
+  deleteProfileThought,
+  updateProfileThought
+} from '../../../system/profile/profile-thought-store.js';
 
 /* =============================================================================
    02) MODULE STATE
    ============================================================================= */
 
-const STORAGE_PREFIX = 'neuroartan_profile_thought_surface_v1';
 const STORE = (window.__NEUROARTAN_PROFILE_THOUGHT_STORE__ ||= {
   initialized: false,
   taxonomy: null,
   taxonomyPromise: null,
   runtimeState: null,
   state: null,
-  storageKey: '',
   subscribers: new Set()
 });
 
@@ -140,22 +143,6 @@ function normalizeComposerText(value) {
   return String(value || '').replace(/\r\n/g, '\n');
 }
 
-function buildStorageKey(runtimeState = STORE.runtimeState || getProfileRuntimeState()) {
-  const uid = normalizeString(runtimeState?.user?.id || runtimeState?.user?.uid || '');
-  const username = normalizeString(runtimeState?.username?.normalized || '');
-  const email = normalizeString(runtimeState?.email || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const identity = uid || username || email || 'guest';
-  return `${STORAGE_PREFIX}:${identity}`;
-}
-
-function buildEntryId() {
-  if (window.crypto?.randomUUID) {
-    return window.crypto.randomUUID();
-  }
-
-  return `thought-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
 function formatEntryTimestamp(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return 'Just now';
@@ -171,46 +158,7 @@ function formatEntryTimestamp(value) {
 }
 
 /* =============================================================================
-   05) STORAGE HELPERS
-   ============================================================================= */
-
-function readEntries(key) {
-  if (!key) return [];
-
-  try {
-    const raw = window.localStorage?.getItem(key);
-    if (!raw) return [];
-
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed
-      .map((entry) => ({
-        id: normalizeString(entry?.id || '') || buildEntryId(),
-        text: normalizeComposerText(entry?.text || '').trim(),
-        audience: normalizeString(entry?.audience || entry?.visibility || 'private'),
-        category: normalizeString(entry?.category || ''),
-        createdAt: normalizeString(entry?.createdAt || '')
-      }))
-      .filter((entry) => entry.text && entry.createdAt);
-  } catch (error) {
-    console.error('[profile-thought-store] Failed to read local thought entries.', error);
-    return [];
-  }
-}
-
-function persistEntries(key, entries) {
-  if (!key) return;
-
-  try {
-    window.localStorage?.setItem(key, JSON.stringify(entries));
-  } catch (error) {
-    console.error('[profile-thought-store] Failed to persist local thought entries.', error);
-  }
-}
-
-/* =============================================================================
-   06) STATE DERIVATION
+   05) STATE DERIVATION
    ============================================================================= */
 
 function getThoughtTaxonomy() {
@@ -223,11 +171,13 @@ function buildDerivedState(nextState = {}) {
   const entries = Array.isArray(nextState.entries) ? nextState.entries.slice() : [];
   const normalizedEntries = entries
     .map((entry) => ({
-      id: normalizeString(entry?.id || '') || buildEntryId(),
+      id: normalizeString(entry?.id || ''),
       text: normalizeComposerText(entry?.text || '').trim(),
       audience: normalizeAudience(entry?.audience || 'private', taxonomy),
       category: normalizeCategory(entry?.category || '', taxonomy),
-      createdAt: normalizeString(entry?.createdAt || '') || new Date().toISOString()
+      createdAt: entry?.createdAt || null,
+      updatedAt: entry?.updatedAt || null,
+      ownedByCurrentUser: entry?.ownedByCurrentUser || false
     }))
     .filter((entry) => entry.text)
     .sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)));
@@ -240,7 +190,6 @@ function buildDerivedState(nextState = {}) {
   return {
     runtimeState,
     taxonomy,
-    storageKey: nextState.storageKey || STORE.storageKey || buildStorageKey(runtimeState),
     entries: normalizedEntries,
     privateEntries,
     publicEntries,
@@ -262,7 +211,7 @@ function buildDerivedState(nextState = {}) {
 }
 
 /* =============================================================================
-   07) STORE HELPERS
+   06) STORE HELPERS
    ============================================================================= */
 
 function notifySubscribers() {
@@ -300,26 +249,23 @@ export function subscribeProfileThoughtState(subscriber) {
 function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRuntimeState()) {
   STORE.runtimeState = runtimeState;
 
-  const storageKey = buildStorageKey(runtimeState);
-  const shouldReloadEntries = storageKey !== STORE.storageKey;
-  STORE.storageKey = storageKey;
-
-  const entries = shouldReloadEntries ? readEntries(storageKey) : (STORE.state?.entries || []);
-
-  setThoughtState({
-    runtimeState,
-    storageKey,
-    entries,
-    composerText: shouldReloadEntries ? '' : STORE.state?.composerText || '',
-    composerAudience: STORE.state?.composerAudience || 'private',
-    composerCategory: STORE.state?.composerCategory || '',
-    submitStatus: shouldReloadEntries ? 'idle' : STORE.state?.submitStatus || 'idle',
-    submitMessage: shouldReloadEntries ? '' : STORE.state?.submitMessage || ''
-  });
+  listProfileThoughts()
+    .catch(() => [])
+    .then((entries) => {
+      setThoughtState({
+        runtimeState,
+        entries,
+        composerText: STORE.state?.composerText || '',
+        composerAudience: STORE.state?.composerAudience || 'private',
+        composerCategory: STORE.state?.composerCategory || '',
+        submitStatus: 'idle',
+        submitMessage: ''
+      });
+    });
 }
 
 /* =============================================================================
-   08) COMPOSER ACTIONS
+   07) COMPOSER ACTIONS
    ============================================================================= */
 
 export function updateProfileThoughtComposer(patch = {}) {
@@ -362,34 +308,46 @@ export function submitProfileThought() {
     return false;
   }
 
-  const nextEntry = {
-    id: buildEntryId(),
-    text,
-    audience: normalizeAudience(state.composerAudience, state.taxonomy),
-    category: normalizeCategory(state.composerCategory, state.taxonomy),
-    createdAt: new Date().toISOString()
-  };
-
-  const entries = [nextEntry, ...(state.entries || [])];
-  persistEntries(state.storageKey, entries);
-
   setThoughtState({
     ...state,
-    entries,
-    composerText: '',
-    submitStatus: 'success',
-    submitMessage: nextEntry.audience === 'public'
-      ? (runtimeState.publicViewAvailable
-          ? 'Thought added to your public-writing lane.'
-          : 'Thought staged for your public route. Complete route readiness to publish it outward.')
-      : 'Thought saved to your private bank.'
+    submitStatus: 'submitting',
+    submitMessage: 'Saving thought...'
   });
+
+  createProfileThought({
+    text,
+    audience: normalizeAudience(state.composerAudience, state.taxonomy),
+    category: normalizeCategory(state.composerCategory, state.taxonomy)
+  })
+    .then((createdThought) => {
+      const entries = [createdThought, ...(state.entries || [])];
+      setThoughtState({
+        ...state,
+        entries,
+        composerText: '',
+        submitStatus: 'success',
+        submitMessage: createdThought.audience === 'public'
+          ? (runtimeState.publicViewAvailable
+              ? 'Thought added to your public-writing lane.'
+              : 'Thought staged for your public route. Complete route readiness to publish it outward.')
+          : 'Thought saved to your private bank.'
+      });
+    })
+    .catch((error) => {
+      console.error('[profile-thought-store] Failed to save thought.', error);
+      const errorMessage = error?.message || String(error);
+      setThoughtState({
+        ...state,
+        submitStatus: 'error',
+        submitMessage: `Failed to save thought: ${errorMessage}`
+      });
+    });
 
   return true;
 }
 
 /* =============================================================================
-   09) RUNTIME SYNC
+   08) RUNTIME SYNC
    ============================================================================= */
 
 function bindRuntimeState() {
@@ -399,7 +357,7 @@ function bindRuntimeState() {
 }
 
 /* =============================================================================
-   10) INITIALIZATION
+   09) INITIALIZATION
    ============================================================================= */
 
 function initProfileThoughtStore() {
@@ -407,11 +365,9 @@ function initProfileThoughtStore() {
   STORE.initialized = true;
 
   STORE.runtimeState = getProfileRuntimeState();
-  STORE.storageKey = buildStorageKey(STORE.runtimeState);
   STORE.state = buildDerivedState({
     runtimeState: STORE.runtimeState,
-    storageKey: STORE.storageKey,
-    entries: readEntries(STORE.storageKey)
+    entries: []
   });
 
   bindRuntimeState();

@@ -2,6 +2,7 @@
   display:grid;
   gap:var(--spacing-lg);
   padding:var(--spacing-lg);
+  border:none;
 }
 
 .profile-private-models__header,

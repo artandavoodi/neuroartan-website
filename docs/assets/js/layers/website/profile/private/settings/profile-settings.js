@@ -280,7 +280,7 @@ function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
   getSettingsRoots().forEach((root) => {
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
-    renderStatus(root, 'visibility', saveState);
+    renderStatus(root, 'privacy', saveState);
   });
 }
 
@@ -397,11 +397,13 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
 
     renderStatus(root, 'identity', saveState);
     renderStatus(root, 'route', saveState);
-    renderStatus(root, 'visibility', saveState);
+    renderStatus(root, 'privacy', saveState);
     setSelectLabel(root, 'gender', 'Optional');
     syncProfileSettingsDateLabels(root);
 
-    void renderVerificationState(root, state);
+    if (navigationState.settingsPane === 'verification') {
+      void renderVerificationState(root, state);
+    }
   });
 }
 

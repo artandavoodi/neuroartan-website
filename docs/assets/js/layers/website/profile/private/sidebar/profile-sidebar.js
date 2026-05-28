@@ -56,22 +56,29 @@ function sidebarItems(root){
 }
 
 function renderSidebar(root, state = getProfileNavigationState()){
-  const privacyPanes = new Set(['visibility', 'discovery', 'sharing']);
+  const editProfilePanes = new Set(['identity', 'route', 'privacy']);
+  const settingsPanes = new Set(['password', 'verification']);
   const homeSections = new Set(['posts', 'thoughts', 'models', 'organizations']);
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
+    const link = item.dataset.profileNavLink || '';
+    const searchTrigger = item.dataset.profileSearchTrigger || '';
     
-    let active;
-    if (section === 'home') {
+    let active = false;
+    
+    if (link || searchTrigger) {
+      active = false;
+    } else if (section === 'home') {
       active = homeSections.has(state.section) || state.section === 'home';
-    } else {
-      active = section === state.section && (
-        section !== 'settings'
-        || pane === state.settingsPane
-        || (pane === 'identity' && !privacyPanes.has(state.settingsPane))
-        || (pane === 'visibility' && privacyPanes.has(state.settingsPane))
+    } else if (section === 'settings') {
+      active = state.section === 'settings' && (
+        pane === state.settingsPane || 
+        (pane === 'identity' && editProfilePanes.has(state.settingsPane)) ||
+        (pane === 'password' && settingsPanes.has(state.settingsPane))
       );
+    } else if (section === 'dashboard') {
+      active = state.section === 'dashboard';
     }
 
     item.classList.toggle('is-active', active);

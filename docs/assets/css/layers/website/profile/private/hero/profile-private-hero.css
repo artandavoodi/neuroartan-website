@@ -103,7 +103,6 @@
   width:100vw;
   z-index:-1;
   border-radius:0;
-  border-bottom:var(--profile-private-hero-surface-layer-border);
   background:var(--profile-private-hero-surface-layer-bg);
   opacity:var(--profile-private-hero-surface-layer-opacity);
   pointer-events:none;
@@ -507,6 +506,16 @@
   z-index:var(--z-sticky);
 }
 
+.profile-private-hero__social-row::after{
+  content:"";
+  position:absolute;
+  left:calc(50% - 50vw);
+  right:calc(50% - 50vw);
+  bottom:0;
+  height:var(--border-width-hairline);
+  background:var(--border-color);
+}
+
 /* =============================================================================
    10) PRIVATE PROFILE HERO STATS
 ============================================================================= */
@@ -613,6 +622,21 @@
 
 .profile-private-hero__tab[aria-current="page"]::after{
   opacity:var(--profile-private-hero-tab-indicator-opacity-active);
+}
+
+/* =============================================================================
+   12) PRIVATE PROFILE HERO SURFACE LAYER STATES
+============================================================================= */
+
+.profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__cover,
+.profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__identity-row{
+  display:none;
+}
+
+.profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__social-row{
+  position:sticky;
+  top:0;
+  z-index:var(--z-sticky);
 }
 
 /* =============================================================================

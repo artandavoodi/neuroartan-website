@@ -41,21 +41,19 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
       { key: 'graph', label: 'Graph', section: 'dashboard', dashboardPane: 'graph' }
     ]
   },
-  settings: {
-    label: 'Profile settings sections',
+  editProfile: {
+    label: 'Edit Profile',
     tabs: [
       { key: 'identity', label: 'Personal Info', section: 'settings', settingsPane: 'identity' },
       { key: 'route', label: 'Public Route', section: 'settings', settingsPane: 'route' },
-      { key: 'password', label: 'Password', section: 'settings', settingsPane: 'password' },
-      { key: 'verification', label: 'Verification', section: 'settings', settingsPane: 'verification' }
+      { key: 'privacy', label: 'Privacy & Visibility', section: 'settings', settingsPane: 'privacy' }
     ]
   },
-  privacy: {
-    label: 'Privacy settings sections',
+  settings: {
+    label: 'Settings',
     tabs: [
-      { key: 'visibility', label: 'Visibility', section: 'settings', settingsPane: 'visibility' },
-      { key: 'discovery', label: 'Discovery', section: 'settings', settingsPane: 'discovery' },
-      { key: 'sharing', label: 'Sharing', section: 'settings', settingsPane: 'sharing' }
+      { key: 'password', label: 'Password', section: 'settings', settingsPane: 'password' },
+      { key: 'verification', label: 'Verification', section: 'settings', settingsPane: 'verification' }
     ]
   }
 };
@@ -71,11 +69,9 @@ const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   graph: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-panel.svg',
   identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg',
   route: '/registry/icons/public/assets/core/navigation/route/route.svg',
+  privacy: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
   password: '/registry/icons/public/assets/core/identity/password/password.svg',
-  verification: '/registry/icons/public/assets/core/identity/trust/verified.svg',
-  visibility: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
-  discovery: '/registry/icons/public/assets/layers/website/settings/overview/overview.svg',
-  sharing: '/registry/icons/public/assets/layers/icos/publishing/visibility.svg'
+  verification: '/registry/icons/public/assets/core/identity/trust/verified.svg'
 });
 
 /* =============================================================================
@@ -132,11 +128,11 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
       return 'content';
     case 'settings':
       if (
-        navigationState.settingsPane === 'visibility'
-        || navigationState.settingsPane === 'discovery'
-        || navigationState.settingsPane === 'sharing'
+        navigationState.settingsPane === 'identity'
+        || navigationState.settingsPane === 'route'
+        || navigationState.settingsPane === 'privacy'
       ) {
-        return 'privacy';
+        return 'editProfile';
       }
       return 'settings';
     case 'dashboard':
@@ -276,6 +272,13 @@ async function renderProfilePrivateHeroSocialGraph(profile = {}) {
 function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationState()) {
   const root = getHeroRoot();
   if (!root) return;
+
+  const homeSections = new Set(['home', 'posts', 'thoughts', 'models', 'organizations']);
+  const isHomeSection = homeSections.has(navigationState.section);
+  const surface = root.querySelector('.profile-private-hero__surface');
+  if (surface instanceof HTMLElement) {
+    surface.dataset.profileHeroVisible = isHomeSection ? 'true' : 'false';
+  }
 
   const tabsRoot = root.querySelector('[data-profile-hero-tabs]');
   if (!(tabsRoot instanceof HTMLElement)) return;

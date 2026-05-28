@@ -6,35 +6,26 @@
   width:var(--size-full);
   min-width:var(--spacing-none);
   min-height:var(--size-full);
-  --profile-sidebar-top-offset:calc(3.55rem * var(--accessibility-density-scale));
 }
 
 .profile-sidebar__surface{
   position:sticky;
-  top:calc(var(--profile-shell-top-clearance) + var(--home-platform-shell-nav-gap) + var(--spacing-md));
+  top:8rem;
   align-self:start;
   width:max-content;
   min-width:var(--spacing-none);
-  max-height:calc(100dvh - var(--profile-shell-top-clearance) - var(--home-platform-shell-nav-gap) - var(--spacing-md));
-  overflow-y:auto;
   background:transparent;
   padding:0;
-  scrollbar-width:none;
-}
-
-.profile-sidebar__surface::-webkit-scrollbar{
-  display:none;
 }
 
 .profile-sidebar__rail-inner{
-  min-height:var(--size-full);
   display:flex;
   flex-direction:column;
   gap:var(--home-platform-shell-rail-gap);
   padding:
     0
     var(--home-platform-shell-rail-padding-inline)
-    0;
+    var(--spacing-lg);
 }
 
 .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__rail-inner{
@@ -46,7 +37,7 @@
   display:flex;
   align-items:center;
   justify-content:flex-start;
-  padding-top:var(--home-platform-shell-rail-padding-top);
+  padding-top:var(--spacing-none);
 }
 
 .profile-sidebar__rail-toggle{
@@ -197,38 +188,4 @@
   gap:var(--spacing-none);
   padding-right:var(--home-platform-shell-nav-item-padding);
   padding-left:var(--spacing-none);
-}
-
-@media (max-width:820px){
-  .profile-sidebar__surface{
-    position:static;
-    min-height:auto;
-    max-height:none;
-  }
-
-  .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__nav-text{
-    display:none;
-  }
-
-  .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__nav-item{
-    display:none;
-  }
-
-  .profile-sidebar__nav-text{
-    display:none;
-  }
-
-  .profile-sidebar__nav-item{
-    justify-content:flex-start;
-    gap:var(--spacing-none);
-    padding-right:var(--home-platform-shell-nav-item-padding);
-    padding-left:var(--spacing-none);
-  }
-
-  .profile-sidebar[data-profile-sidebar-rail="collapsed"] .profile-sidebar__surface{
-    position:relative;
-    top:auto;
-    max-height:none;
-    pointer-events:none;
-  }
 }

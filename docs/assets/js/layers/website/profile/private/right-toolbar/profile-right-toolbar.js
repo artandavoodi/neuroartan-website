@@ -73,16 +73,6 @@ const ACTIONS = Object.freeze({
     label: 'Public route settings',
     icon: ACTION_ICONS.route
   },
-  visibilitySettings: {
-    id: 'visibility-settings',
-    label: 'Visibility settings',
-    icon: ACTION_ICONS.visibility
-  },
-  verificationSettings: {
-    id: 'verification-settings',
-    label: 'Verification settings',
-    icon: ACTION_ICONS.verification
-  },
   identitySettings: {
     id: 'identity-settings',
     label: 'Personal info',
@@ -314,16 +304,6 @@ function requestProfileToolAction(action){
     case 'route-settings':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
         detail: { section: 'settings', settingsPane: 'route' }
-      }));
-      return;
-    case 'visibility-settings':
-      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'settings', settingsPane: 'visibility' }
-      }));
-      return;
-    case 'verification-settings':
-      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'settings', settingsPane: 'verification' }
       }));
       return;
     case 'identity-settings':

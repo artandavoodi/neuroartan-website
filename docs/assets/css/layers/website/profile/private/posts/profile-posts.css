@@ -143,8 +143,8 @@ body.profile-posts-overlay-open{
 }
 
 .profile-posts__item-more img{
-  width:calc(20px * var(--accessibility-icon-scale));
-  height:calc(20px * var(--accessibility-icon-scale));
+  width:var(--icon-size-sm);
+  height:var(--icon-size-sm);
   opacity:var(--nav-institutional-icon-opacity);
   filter:var(--icon-image-filter);
 }

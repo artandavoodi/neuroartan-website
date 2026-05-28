@@ -353,6 +353,13 @@ function bindThoughtComposerEvents() {
       ? event.target.closest('[data-profile-thought-audience-option]')
       : null;
 
+    if (openTrigger) {
+      event.preventDefault();
+      setThoughtOverlayOpen(true);
+      document.querySelector('[data-profile-thought-textarea="true"]')?.focus();
+      return;
+    }
+
     if (closeTrigger) {
       event.preventDefault();
       setThoughtOverlayOpen(false);

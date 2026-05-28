@@ -124,15 +124,14 @@
 }
 
 .profile-shell__mount--hero{
-  position:relative;
+  position:sticky;
+  top:0;
   align-self:start;
+  z-index:2000;
 }
 
 .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-  position:sticky;
-  top:-23.5rem;
-  align-self:start;
-  z-index:2000;
+  top:-23rem;
 }
 
 .profile-shell__overlay-mount{
@@ -164,12 +163,12 @@
   }
 
   .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-    top:-23.5rem;
+    top:-17rem;
   }
 }
 
 @media (max-width:480px){
   .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-    top:-28rem;
+    top:-19rem;
   }
 }

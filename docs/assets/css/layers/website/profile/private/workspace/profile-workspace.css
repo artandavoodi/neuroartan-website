@@ -59,7 +59,7 @@
 }
 
 .profile-workspace__right-toolbar-mount{
-  padding-inline-start:var(--profile-workspace-right-toolbar-edge-padding);
+  padding-inline-start:calc(var(--profile-workspace-right-toolbar-edge-padding) * 1.2);
   padding-block:calc(var(--spacing-xl) * 2);
   border-left:var(--border-width-hairline) solid var(--border-color);
 }

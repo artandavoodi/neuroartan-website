@@ -51,32 +51,29 @@ function renderComposer(state) {
 
     root.querySelectorAll('[data-profile-thought-audience-option]').forEach((button) => {
       const key = button.getAttribute('data-profile-thought-audience-option') || '';
-      const active = key === state.composerAudience;
+      const active = key === 'private';
       button.classList.toggle('profile-thought-composer__visibility-option--active', active);
       button.setAttribute('aria-selected', active ? 'true' : 'false');
+      if (key !== 'private') button.hidden = true;
     });
     
     const audienceInput = root.querySelector('[data-profile-thought-audience]');
     if (audienceInput instanceof HTMLInputElement) {
-      audienceInput.value = state.composerAudience || 'private';
+      audienceInput.value = 'private';
     }
     
     const visibilityTrigger = root.querySelector('[data-profile-thought-audience-trigger]');
     const visibilityLabel = visibilityTrigger?.querySelector('.profile-thought-composer__visibility-label');
     const visibilityIcon = visibilityTrigger?.querySelector('.profile-thought-composer__visibility-icon');
     if (visibilityLabel instanceof HTMLElement) {
-      const audience = state.taxonomy.audiences.find((entry) => entry.key === state.composerAudience);
-      visibilityLabel.textContent = audience?.label || 'Private bank';
+      visibilityLabel.textContent = 'Private Thought Bank';
     }
     if (visibilityIcon instanceof HTMLImageElement) {
-      const iconSrc = state.composerAudience === 'public'
-        ? '/registry/icons/public/assets/core/actions/visibility/public-route.svg'
-        : '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
-      visibilityIcon.src = iconSrc;
+      visibilityIcon.src = '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
     }
 
     if (submitLabel) {
-      submitLabel.textContent = state.composerAudience === 'public' ? 'Stage Public Thought' : 'Save Privately';
+      submitLabel.textContent = 'Save to Thought Bank';
     }
 
     if (status instanceof HTMLElement) {
@@ -107,9 +104,8 @@ function bindComposerEvents() {
       : null;
     if (option) {
       event.preventDefault();
-      const audience = option.getAttribute('data-profile-thought-audience-option') || 'private';
       updateProfileThoughtComposer({
-        composerAudience: audience,
+        composerAudience: 'private',
         resetStatus: true
       });
       const controls = option.closest('[data-profile-thought-audience-controls]');

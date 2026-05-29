@@ -42,8 +42,7 @@ const STORE = (window.__NEUROARTAN_PROFILE_THOUGHT_STORE__ ||= {
 
 const DEFAULT_TAXONOMY = Object.freeze({
   audiences: [
-    { key: 'private', label: 'Private bank', summary: 'Owner-only captured reflections and thought records.' },
-    { key: 'public', label: 'Public route', summary: 'Thoughts staged for company-domain public presence.' }
+    { key: 'private', label: 'Private Thought Bank', summary: 'Owner-only captured reflections and thought records.' }
   ],
   categories: [
     { key: 'identity', label: 'Identity', summary: 'Self-definition, role, and personal orientation.' },
@@ -76,7 +75,7 @@ export async function loadProfileThoughtTaxonomy() {
       }
 
       const payload = await response.json();
-      const audiences = Array.isArray(payload?.audiences) ? payload.audiences : DEFAULT_TAXONOMY.audiences;
+      const audiences = DEFAULT_TAXONOMY.audiences;
       const categories = Array.isArray(payload?.categories) ? payload.categories : DEFAULT_TAXONOMY.categories;
 
       STORE.taxonomy = {
@@ -125,11 +124,8 @@ export async function loadProfileThoughtTaxonomy() {
    04) VALUE HELPERS
    ============================================================================= */
 
-function normalizeAudience(value, taxonomy = STORE.taxonomy || DEFAULT_TAXONOMY) {
-  const normalized = normalizeString(value);
-  return taxonomy.audiences.some((entry) => entry.key === normalized)
-    ? normalized
-    : taxonomy.audiences[0]?.key || 'private';
+function normalizeAudience() {
+  return 'private';
 }
 
 function normalizeCategory(value, taxonomy = STORE.taxonomy || DEFAULT_TAXONOMY) {
@@ -173,7 +169,7 @@ function buildDerivedState(nextState = {}) {
     .map((entry) => ({
       id: normalizeString(entry?.id || ''),
       text: normalizeComposerText(entry?.text || '').trim(),
-      audience: normalizeAudience(entry?.audience || 'private', taxonomy),
+      audience: 'private',
       category: normalizeCategory(entry?.category || '', taxonomy),
       createdAt: entry?.createdAt || null,
       updatedAt: entry?.updatedAt || null,
@@ -182,9 +178,9 @@ function buildDerivedState(nextState = {}) {
     .filter((entry) => entry.text)
     .sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)));
 
-  const privateEntries = normalizedEntries.filter((entry) => entry.audience === 'private');
-  const publicEntries = normalizedEntries.filter((entry) => entry.audience === 'public');
-  const currentAudience = normalizeAudience(nextState.composerAudience || STORE.state?.composerAudience || 'private', taxonomy);
+  const privateEntries = normalizedEntries;
+  const publicEntries = [];
+  const currentAudience = 'private';
   const currentCategory = normalizeCategory(nextState.composerCategory || STORE.state?.composerCategory || '', taxonomy);
 
   return {
@@ -256,7 +252,7 @@ function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRunt
         runtimeState,
         entries,
         composerText: STORE.state?.composerText || '',
-        composerAudience: STORE.state?.composerAudience || 'private',
+        composerAudience: 'private',
         composerCategory: STORE.state?.composerCategory || '',
         submitStatus: 'idle',
         submitMessage: ''
@@ -274,9 +270,7 @@ export function updateProfileThoughtComposer(patch = {}) {
     composerText: Object.prototype.hasOwnProperty.call(patch, 'composerText')
       ? normalizeComposerText(patch.composerText)
       : STORE.state?.composerText || '',
-    composerAudience: Object.prototype.hasOwnProperty.call(patch, 'composerAudience')
-      ? patch.composerAudience
-      : STORE.state?.composerAudience || 'private',
+    composerAudience: 'private',
     composerCategory: Object.prototype.hasOwnProperty.call(patch, 'composerCategory')
       ? patch.composerCategory
       : STORE.state?.composerCategory || '',
@@ -303,7 +297,7 @@ export function submitProfileThought() {
     setThoughtState({
       ...state,
       submitStatus: 'error',
-      submitMessage: 'Write a thought before saving it to your profile surface.'
+      submitMessage: 'Write a thought before saving it to your private Thought Bank.'
     });
     return false;
   }
@@ -311,12 +305,12 @@ export function submitProfileThought() {
   setThoughtState({
     ...state,
     submitStatus: 'submitting',
-    submitMessage: 'Saving thought...'
+    submitMessage: 'Saving private thought...'
   });
 
   createProfileThought({
     text,
-    audience: normalizeAudience(state.composerAudience, state.taxonomy),
+    audience: 'private',
     category: normalizeCategory(state.composerCategory, state.taxonomy)
   })
     .then((createdThought) => {
@@ -326,11 +320,7 @@ export function submitProfileThought() {
         entries,
         composerText: '',
         submitStatus: 'success',
-        submitMessage: createdThought.audience === 'public'
-          ? (runtimeState.publicViewAvailable
-              ? 'Thought added to your public-writing lane.'
-              : 'Thought staged for your public route. Complete route readiness to publish it outward.')
-          : 'Thought saved to your private bank.'
+        submitMessage: 'Thought saved to your private Thought Bank.'
       });
     })
     .catch((error) => {

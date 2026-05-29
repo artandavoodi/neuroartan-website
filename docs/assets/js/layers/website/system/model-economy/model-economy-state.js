@@ -5,9 +5,15 @@ export const modelEconomyState = Object.freeze({
   status: "architecture-readiness",
   marketplace: "blockedUntilReview",
   payouts: "blockedUntilReview",
-  interModelHiring: "blockedUntilReview",
+  interModelCoordination: "blockedUntilReview",
   posthumousEconomy: "blockedUntilReview",
-  regulatedDomainClaims: "blockedUntilReview"
+  regulatedDomainClaims: "blockedUntilReview",
+  rawPhysicalDeviceSerialNumberCollection: "blocked",
+  deviceBasedPublicReputationScoring: "blocked",
+  deviceIntegrityUse: "securityOnlyReviewBlocked",
+  impersonationPrevention: "required",
+  modelIdentityAntiAbuse: "required",
+  restrictionReviewAppeal: "requiredForSevereRestriction"
 });
 
 export function getModelEconomyState() {

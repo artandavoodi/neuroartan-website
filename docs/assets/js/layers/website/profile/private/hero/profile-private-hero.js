@@ -12,6 +12,8 @@
    01) MODULE IDENTITY
 ============================================================================= */
 const MODULE_ID = 'profile-private-hero';
+const PROFILE_HOME_TAB_SECTIONS = new Set(['home', 'posts', 'thoughts', 'models', 'organizations']);
+let profileHeroLayoutFrame = 0;
 
 const PROFILE_CONTEXT_TAB_GROUPS = {
   overview: {
@@ -188,6 +190,33 @@ function syncProfileMobileSidebarTop(root = getHeroRoot()) {
   document.documentElement.style.setProperty('--profile-mobile-sidebar-toggle-top', `${nextTop}px`);
 }
 
+function syncProfileHeroStickyTravel(root = getHeroRoot()) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const shell = document.querySelector('[data-profile-shell][data-profile-surface="private"]');
+  const mount = root.closest('.profile-shell__mount--hero');
+  const socialRow = root.querySelector('.profile-private-hero__social-row');
+  if (!(shell instanceof HTMLElement) || !(mount instanceof HTMLElement) || !(socialRow instanceof HTMLElement)) return;
+
+  const mountRect = mount.getBoundingClientRect();
+  const socialRect = socialRow.getBoundingClientRect();
+  const stickyTravel = Math.max(0, socialRect.top - mountRect.top);
+
+  shell.style.setProperty('--profile-shell-home-tab-sticky-travel', `${stickyTravel.toFixed(2)}px`);
+}
+
+function scheduleProfileHeroLayoutSync(root = getHeroRoot()) {
+  if (profileHeroLayoutFrame) {
+    window.cancelAnimationFrame(profileHeroLayoutFrame);
+  }
+
+  profileHeroLayoutFrame = window.requestAnimationFrame(() => {
+    profileHeroLayoutFrame = 0;
+    syncProfileHeroStickyTravel(root);
+    syncProfileMobileSidebarTop(root);
+  });
+}
+
 /* =============================================================================
    04) HERO STATE RENDERING
 ============================================================================= */
@@ -273,8 +302,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
   const root = getHeroRoot();
   if (!root) return;
 
-  const homeSections = new Set(['home', 'posts', 'thoughts', 'models', 'organizations']);
-  const isHomeSection = homeSections.has(navigationState.section);
+  const isHomeSection = PROFILE_HOME_TAB_SECTIONS.has(navigationState.section);
   const surface = root.querySelector('.profile-private-hero__surface');
   if (surface instanceof HTMLElement) {
     surface.dataset.profileHeroVisible = isHomeSection ? 'true' : 'false';
@@ -331,7 +359,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
     tab.dataset.profileTabActive = active ? 'true' : 'false';
   });
 
-  syncProfileMobileSidebarTop(root);
+  scheduleProfileHeroLayoutSync(root);
 }
 
 /* =============================================================================
@@ -420,12 +448,16 @@ function initProfilePrivateHero() {
     if (event?.detail?.name !== 'profile-private-hero') return;
     bindProfilePrivateHeroActions();
     renderProfilePrivateHero();
-    syncProfileMobileSidebarTop();
+    scheduleProfileHeroLayoutSync();
   });
 
   document.addEventListener('profile:sidebar-rail-change', () => {
-    window.requestAnimationFrame(() => syncProfileMobileSidebarTop());
+    scheduleProfileHeroLayoutSync();
   });
+
+  window.addEventListener('resize', () => {
+    scheduleProfileHeroLayoutSync();
+  }, { passive:true });
 }
 
 if (document.readyState === 'loading') {

@@ -384,10 +384,15 @@ initProfileState();
 ============================================================================= */
 
 export const PROFILE_MODEL_BIRTH_STATE = Object.freeze({
-  profileCreatesDefaultModel: true,
-  defaultPersonalModel: "freeByDefault",
+  profileCreatesCanonicalPersonalModel: true,
+  canonicalPersonalModel: "freeByDefault",
   modelBirthIdentity: "required",
   ownerAuthority: "required",
   dignityBoundary: "required",
-  publicPrivateIdentityBoundary: "required"
+  publicPrivateIdentityBoundary: "required",
+  paidMultiModelPersonalExpansionBlocked: true,
+  deviceIntegrityReviewBoundary: "reviewBlocked",
+  impersonationPreventionBoundary: "required",
+  modelIdentityAntiAbuseBoundary: "required",
+  restrictionReviewAppealBoundary: "required"
 });

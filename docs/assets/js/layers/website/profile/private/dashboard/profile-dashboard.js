@@ -62,7 +62,7 @@ function computeVisibilityProgress(profileState) {
 }
 
 function computeContinuityProgress(profileState, thoughtState) {
-  if (profileState.completion.complete && profileState.publicViewAvailable && thoughtState.totalEntries > 0) return 100;
+  if (profileState.completion.complete && thoughtState.totalEntries > 0) return 100;
   if (profileState.completion.complete && thoughtState.totalEntries > 0) return 88;
   if (profileState.completion.complete) return 78;
   return Math.max(18, profileState.completion.percent);
@@ -104,7 +104,7 @@ function renderMetrics(profileState = getProfileRuntimeState(), thoughtState = g
       root,
       '[data-profile-dashboard-copy]',
       profileState.viewerState === 'authenticated'
-        ? 'This dashboard now tracks both profile maturity and the thought activity captured inside the private surface.'
+        ? 'This dashboard tracks profile maturity and private Thought Bank activity captured inside the owner surface.'
         : 'Authenticate to activate the owner-facing profile dashboard.'
     );
 
@@ -119,7 +119,7 @@ function renderMetrics(profileState = getProfileRuntimeState(), thoughtState = g
     setProgress(root, '[data-profile-dashboard-bar="continuity"]', continuity);
 
     setText(root, '[data-profile-dashboard-thought-count="private"]', String(thoughtState.privateEntries.length));
-    setText(root, '[data-profile-dashboard-thought-count="public"]', String(thoughtState.publicEntries.length));
+    setText(root, '[data-profile-dashboard-thought-count="public"]', '0');
   });
 }
 
@@ -154,7 +154,7 @@ function renderGraph(profileState = getProfileRuntimeState(), thoughtState = get
       root,
       '[data-profile-dashboard-thought-summary]',
       thoughtState.totalEntries > 0
-        ? `${thoughtState.totalEntries} thought ${thoughtState.totalEntries === 1 ? 'entry' : 'entries'} captured across private and public lanes.`
+        ? `${thoughtState.totalEntries} private Thought Bank ${thoughtState.totalEntries === 1 ? 'entry' : 'entries'} captured.`
         : 'No thought entries captured yet.'
     );
 
@@ -245,8 +245,8 @@ export const PROFILE_DASHBOARD_MODEL_ECONOMY_READINESS = Object.freeze({
 
 export const PROFILE_DASHBOARD_MODEL_ECONOMY_CARDS = Object.freeze([
   {
-    id: "default-personal-model",
-    label: "Default Personal Model",
+    id: "canonical-personal-model",
+    label: "Canonical Personal Model",
     value: "Profile birth state",
     status: "architecture-ready"
   },

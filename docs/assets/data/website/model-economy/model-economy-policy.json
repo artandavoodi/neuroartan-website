@@ -1,14 +1,16 @@
 {
   "id": "fsc-t-0007-model-economy-policy",
-  "version": "0.1",
-  "status": "draft",
-  "doctrine": "AI absorbs operational labor while the human retains sovereign authorship, ownership, and direction.",
+  "version": "0.2",
+  "status": "blockedUntilReviewPolicyReadiness",
+  "doctrine": "AI may support operational labor while the human retains sovereign authorship, ownership, direction, and control. The model economy remains blocked until legal, governance, privacy, security, finance, product, impersonation, and anti-abuse review.",
   "allowedPublicLanguage": [
-    "personal model",
-    "trainable digital model",
+    "canonical personal model",
+    "trainable digital continuity model",
     "verified model identity",
-    "future monetization potential",
-    "user-directed cognitive asset"
+    "future governed economic-extension potential",
+    "user-directed cognitive asset",
+    "anti-abuse protected model identity",
+    "privacy-preserving account integrity"
   ],
   "blockedClaims": [
     "guaranteed income",
@@ -16,13 +18,36 @@
     "legal personhood",
     "professional replacement without regulation",
     "uncontrolled autonomous labor",
-    "posthumous economy by default"
+    "posthumous economy by default",
+    "raw physical device serial-number collection",
+    "automatic permanent device bans without review",
+    "device-based public reputation scoring",
+    "device-signal advertising or personalization use",
+    "paid additional canonical personal model slots",
+    "bot-factory model creation"
   ],
   "launchRestrictions": {
     "marketplace": "blockedUntilReview",
     "payouts": "blockedUntilReview",
-    "interModelHiring": "blockedUntilReview",
+    "interModelCoordination": "blockedUntilReview",
     "posthumousEconomy": "blockedUntilReview",
-    "regulatedDomainClaims": "blockedUntilReview"
+    "regulatedDomainClaims": "blockedUntilReview",
+    "rawPhysicalDeviceSerialNumberCollection": "blocked",
+    "deviceBasedPublicReputationScoring": "blocked",
+    "advertisingTrackingPersonalizationUse": "blocked",
+    "productionDeviceIntegrityEnforcement": "blockedUntilLegalGovernancePrivacySecurityReview"
+  },
+  "modelCreationPolicy": {
+    "oneProfileOneCanonicalPersonalModel": true,
+    "paidMultiModelPersonalExpansionBlocked": true,
+    "additionalCanonicalPersonalModels": "blocked",
+    "premiumDepthControls": "allowedByEntitlement"
+  },
+  "antiAbusePolicy": {
+    "deviceIntegrityUse": "securityOnlyReviewBlocked",
+    "impersonationPrevention": "required",
+    "modelIdentityAntiAbuse": "required",
+    "restrictionReviewAppeal": "requiredForSevereRestriction",
+    "privacyNoticeReview": "requiredBeforePublicLanguageOrProductionEnforcement"
   }
 }

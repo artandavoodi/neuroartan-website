@@ -73,10 +73,11 @@ async function renderModels() {
     return true;
   });
   const trainedModels = filteredModels.filter((model) => model.training_state === 'trained' || model.readiness_state === 'ready');
+  const canonicalModelExists = models.length > 0;
   const sourceCount = filteredModels.reduce((total, model) => total + (Number(model.source_count) || 0), 0);
   const authenticated = state.viewerState === 'authenticated';
   const profileComplete = state.completion?.complete === true;
-  const canCreateModel = authenticated;
+  const canCreateModel = authenticated && !canonicalModelExists;
 
   setText(root, '[data-profile-saved-models-count]', String(filteredModels.length));
   setText(root, '[data-profile-owned-models-count]', String(trainedModels.length));
@@ -86,13 +87,15 @@ async function renderModels() {
     '[data-profile-model-status]',
     authenticated
       ? profileComplete && backend.supabaseConfigured
-        ? 'Model registry is connected. Create and manage models from the canonical model creation control panel.'
+        ? canonicalModelExists
+          ? 'Canonical personal model is active. Additional canonical models are blocked by one-profile / one-model policy.'
+          : 'Model registry is connected. Create your canonical personal model from the canonical model creation control panel.'
         : profileComplete
-          ? 'Open model creation to prepare a model draft. Canonical save requires the active models table and account policies.'
+          ? 'Open canonical model creation only after the active models table, entitlement boundary, and anti-abuse policies are ready.'
           : 'Open model creation after completing the private profile identity and username requirements.'
       : state.viewerState !== 'authenticated'
         ? 'Sign in to activate model registry access.'
-        : 'Complete your profile before creating or registering models.'
+        : 'Complete your profile before creating your canonical personal model.'
   );
   setDisabled(root, '[data-profile-action="create-model"]', !canCreateModel);
 }
@@ -107,6 +110,7 @@ function bindModelActions() {
       ? event.target.closest('[data-profile-action="create-model"]')
       : null;
     if (!trigger || trigger.disabled) return;
+    if (trigger.getAttribute('aria-disabled') === 'true') return;
 
     event.preventDefault();
     window.location.href = '/pages/models/create/index.html';
@@ -138,9 +142,17 @@ initProfilePrivateModels();
 ============================================================================= */
 
 export const PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER = Object.freeze({
-  defaultPersonalModel: "assignedAtProfileBirth",
+  canonicalPersonalModel: "assignedAtProfileBirth",
+  oneProfileOneCanonicalModel: true,
+  paidMultiModelPersonalExpansionBlocked: true,
   birthIdentity: "ownerVisibleFutureState",
   dignitySecurity: "ownerVisibleFutureState",
+  deviceIntegrityBoundary: "securityOnlyReviewBlocked",
+  impersonationPrevention: "required",
+  modelIdentityAntiAbuse: "required",
+  restrictionReviewAppeal: "requiredForSevereRestriction",
+  rawPhysicalDeviceSerialNumberCollection: "blocked",
+  advertisingTrackingPersonalizationUse: "blocked",
   monetizationReadiness: "blockedUntilReview",
   hiringReadiness: "blockedUntilReview",
   marketplaceVisibility: "blockedUntilReview"
@@ -151,11 +163,15 @@ export const PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER = Object.freeze({
 ============================================================================= */
 
 export const PROFILE_PRIVATE_MODEL_READINESS_LABELS = Object.freeze({
-  defaultPersonalModel: "Default personal model",
+  canonicalPersonalModel: "Canonical personal model",
   modelBirthIdentity: "Birth identity pending",
   modelDignity: "Dignity protected",
   monetization: "Monetization blocked until review",
   hiring: "Hiring blocked until review",
   marketplace: "Marketplace blocked until review",
-  interModelHiring: "Inter-model hiring blocked until review"
+  interModelCoordination: "Inter-model coordination blocked until review",
+  deviceIntegrity: "Device integrity review blocked until legal/governance review",
+  impersonationPrevention: "Impersonation prevention required",
+  modelIdentityAntiAbuse: "Model identity anti-abuse required",
+  restrictionReviewAppeal: "Restriction, review, and appeal required for severe restrictions"
 });

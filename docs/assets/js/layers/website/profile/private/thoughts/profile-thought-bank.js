@@ -108,16 +108,11 @@ function syncThoughtCategoryLabel(root, state = getProfileThoughtState()) {
   label.textContent = formatCategoryLabel(state.composerCategory, state.taxonomy);
 }
 
-function getAudienceMeta(audience = 'private') {
-  return audience === 'public'
-    ? {
-        icon: '/registry/icons/public/assets/core/actions/visibility/public-route.svg',
-        label: 'Public route'
-      }
-    : {
-        icon: '/registry/icons/public/assets/core/actions/visibility/private-draft.svg',
-        label: 'Private bank'
-      };
+function getAudienceMeta() {
+  return {
+    icon: '/registry/icons/public/assets/core/actions/visibility/private-draft.svg',
+    label: 'Private Thought Bank'
+  };
 }
 
 function setAudienceDropdownOpen(root, open) {
@@ -130,8 +125,8 @@ function setAudienceDropdownOpen(root, open) {
 function syncThoughtAudienceControl(root, state = getProfileThoughtState()) {
   if (!(root instanceof HTMLElement)) return;
 
-  const audience = state.composerAudience === 'public' ? 'public' : 'private';
-  const meta = getAudienceMeta(audience);
+  const audience = 'private';
+  const meta = getAudienceMeta();
   const trigger = root.querySelector('[data-profile-thought-audience-trigger]');
   const icon = trigger?.querySelector('.profile-thought-composer__visibility-icon');
   const label = trigger?.querySelector('.profile-thought-composer__visibility-label');
@@ -202,7 +197,7 @@ function filterThoughtEntries(entries = [], audience = '') {
 function renderComposer(state = getProfileThoughtState()) {
   getComposerRoots().forEach((root) => {
     const authenticated = state.runtimeState.viewerState === 'authenticated';
-    const publicAudienceSelected = state.composerAudience === 'public';
+    const publicAudienceSelected = false;
     const textarea = root.querySelector('[data-profile-thought-textarea="true"]');
     const categorySelect = root.querySelector('[data-profile-thought-category="true"]');
     const submitButton = root.querySelector('[data-profile-thought-submit="true"]');
@@ -211,10 +206,10 @@ function renderComposer(state = getProfileThoughtState()) {
       root,
       '[data-profile-thought-bank-copy]',
       !authenticated
-        ? 'Authenticate to activate the private and public writing lanes tied to your profile.'
+        ? 'Authenticate to activate the private Thought Bank tied to your profile.'
         : state.runtimeState.completion.complete
-          ? 'Capture private reflections or stage public writing inside the mature private profile surface.'
-          : 'Thought capture is already available here, but complete your identity and username state to stabilize the route-facing publishing layer.'
+          ? 'Capture private reflections inside your owner-only Thought Bank.'
+          : 'Thought capture is available here as a private cognitive substrate while your profile identity matures.'
     );
 
     setText(
@@ -222,11 +217,7 @@ function renderComposer(state = getProfileThoughtState()) {
       '[data-profile-thought-bank-status]',
       !authenticated
         ? 'Thought capture is locked until account access is active.'
-        : publicAudienceSelected && !state.runtimeState.publicViewAvailable
-          ? 'Public writing is currently staged inside your private profile until the public route is ready.'
-          : publicAudienceSelected
-            ? 'Public writing is active for your route-facing lane.'
-            : 'Private thought capture is active inside your owner environment.'
+        : 'Private Thought Bank capture is active inside your owner environment.'
     );
 
     const submitStatus = root.querySelector('[data-profile-thought-submit-status]');
@@ -244,10 +235,8 @@ function renderComposer(state = getProfileThoughtState()) {
     if (textarea instanceof HTMLTextAreaElement) {
       textarea.value = state.composerText;
       textarea.placeholder = authenticated
-        ? publicAudienceSelected
-          ? 'Write a public-facing thought for your company-domain route.'
-          : 'Write a private reflection, note, or structured thought.'
-        : 'Authenticate to activate the thought composer.';
+        ? 'Write a private reflection, note, or structured thought.'
+        : 'Authenticate to activate the private Thought Bank composer.';
       setControlDisabled(textarea, !authenticated);
     }
 
@@ -259,9 +248,7 @@ function renderComposer(state = getProfileThoughtState()) {
     setText(
       root,
       '[data-profile-thought-submit-label]',
-      publicAudienceSelected
-        ? (state.runtimeState.publicViewAvailable ? 'Publish Publicly' : 'Stage for Public Route')
-        : 'Save Privately'
+      'Save to Thought Bank'
     );
   });
 }
@@ -287,11 +274,7 @@ function renderLane(root, audience, entries, state) {
   if (!filteredEntries.length) {
     if (empty instanceof HTMLElement) {
       empty.hidden = false;
-      empty.textContent = audience === 'public' && !state.runtimeState.publicViewAvailable
-        ? 'No public-writing entries are staged yet. Public route readiness is still pending.'
-        : audience === 'public'
-          ? 'No public-writing entries have been published yet.'
-          : 'No private thought entries have been captured yet.';
+      empty.textContent = 'No private Thought Bank entries have been captured yet.';
     }
     return;
   }
@@ -308,7 +291,6 @@ function renderLane(root, audience, entries, state) {
 function renderStream(state = getProfileThoughtState()) {
   getStreamRoots().forEach((root) => {
     renderLane(root, 'private', state.privateEntries, state);
-    renderLane(root, 'public', state.publicEntries, state);
   });
 }
 
@@ -343,6 +325,7 @@ function bindThoughtComposerEvents() {
 
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
+    const openTrigger = target?.closest('[data-profile-thought-overlay-open]') || null;
     const closeTrigger = event.target instanceof Element
       ? event.target.closest('[data-profile-thought-overlay-close]')
       : null;
@@ -384,7 +367,7 @@ function bindThoughtComposerEvents() {
       event.preventDefault();
       const root = audienceOption.closest('[data-profile-thought-composer]');
       updateProfileThoughtComposer({
-        composerAudience: audienceOption.getAttribute('data-profile-thought-audience-option') || 'private',
+        composerAudience: 'private',
         resetStatus: true
       });
       setAudienceDropdownOpen(root, false);

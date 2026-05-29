@@ -21,27 +21,8 @@
   --profile-shell-top-clearance:calc(env(safe-area-inset-top, 0px) + calc(1rem * var(--accessibility-density-scale)));
   --home-shell-panel-top:var(--profile-shell-top-clearance);
   --profile-shell-top-clearance-mobile:calc(env(safe-area-inset-top, 0px) + calc(0.75rem * var(--accessibility-density-scale)));
-  --profile-shell-hero-sticky-travel:calc(
-    var(--profile-private-hero-cover-offset-top, var(--spacing-md))
-    + var(--profile-private-hero-cover-height, calc(13.5rem * var(--accessibility-density-scale)))
-    + var(--spacing-lg)
-    + (var(--profile-private-hero-avatar-size, 7.25rem) / 2)
-    + var(--spacing-xl)
-    + calc(2rem * var(--accessibility-density-scale))
-  );
-  --profile-shell-hero-sticky-travel-mobile:calc(
-    var(--profile-private-hero-cover-offset-top, var(--spacing-md))
-    + var(--profile-private-hero-cover-height-mobile, calc(10.5rem * var(--accessibility-density-scale)))
-    + var(--spacing-lg)
-    + var(--profile-private-hero-avatar-size, calc(6rem * var(--accessibility-icon-scale)))
-    + var(--spacing-lg)
-    + calc(var(--body-2-size) * var(--body-2-line-height))
-    + calc(var(--body-2-size) * var(--body-2-line-height))
-    + var(--spacing-xl)
-    + calc(-0.5rem * var(--accessibility-density-scale))
-  );
-  --profile-shell-hero-sticky-top:calc(var(--profile-shell-top-clearance) - var(--profile-shell-hero-sticky-travel));
-  --profile-shell-hero-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) - var(--profile-shell-hero-sticky-travel-mobile));
+  --profile-shell-home-tab-sticky-target-top:0px;
+  --profile-shell-home-tab-sticky-travel:0px;
   --profile-shell-hero-sticky-z-index:1200;
   --profile-shell-workspace-sticky-top:calc(var(--profile-shell-top-clearance) + var(--profile-private-hero-cover-height, 13.5rem) + var(--spacing-xl));
   --profile-shell-workspace-sticky-top-mobile:calc(var(--profile-shell-top-clearance-mobile) + var(--profile-private-hero-cover-height-mobile) + var(--spacing-lg));
@@ -130,8 +111,17 @@
   z-index:2000;
 }
 
-.profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-  top:-23rem;
+.profile-shell[data-profile-surface="private"]:is(
+  [data-profile-section="home"],
+  [data-profile-section="posts"],
+  [data-profile-section="thoughts"],
+  [data-profile-section="models"],
+  [data-profile-section="organizations"]
+) .profile-shell__mount--hero{
+  top:calc(
+    var(--profile-shell-home-tab-sticky-target-top)
+    - var(--profile-shell-home-tab-sticky-travel)
+  );
 }
 
 .profile-shell__overlay-mount{
@@ -158,17 +148,6 @@
     --profile-shell-group-gap:var(--spacing-md);
     --profile-shell-mount-gap:var(--spacing-none);
     --profile-shell-top-clearance:var(--profile-shell-top-clearance-mobile);
-    --profile-shell-hero-sticky-top:var(--profile-shell-hero-sticky-top-mobile);
     --profile-shell-workspace-sticky-top:var(--profile-shell-workspace-sticky-top-mobile);
-  }
-
-  .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-    top:-17rem;
-  }
-}
-
-@media (max-width:480px){
-  .profile-shell[data-profile-surface="private"][data-profile-section="posts"] .profile-shell__mount--hero{
-    top:-19rem;
   }
 }

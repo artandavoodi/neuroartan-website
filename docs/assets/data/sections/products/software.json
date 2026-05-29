@@ -11,7 +11,7 @@
       "anchor": "#software",
       "paragraphs": [
         "Neuroartan software is the execution layer where ICOS becomes a usable cognitive operating system rather than a static product concept.",
-        "The software layer connects interface, runtime behavior, model routing, profile continuity, personal model formation, identity governance, permissions, and model-economy readiness into one operational system.",
+        "The software layer connects interface, runtime behavior, model routing, profile continuity, canonical personal model formation, identity governance, permissions, anti-abuse boundaries, and model-economy readiness into one operational system.",
         "Its purpose is to turn product doctrine into stable, testable, modular, and expandable software surfaces without weakening the user’s authority over memory, identity, and model state."
       ],
       "highlights": [
@@ -28,7 +28,7 @@
       "paragraphs": [
         "Runtime architecture defines how ICOS loads intelligence, manages interaction state, resolves model routes, and streams responses through the product interface.",
         "The system is designed to support a stable path from application shell to runtime manager, model registry, provider or local inference layer, and response surface.",
-        "This keeps implementation aligned with the long-term ICOS architecture: personal models, continuity, routing, and governed capability must operate through a real runtime system, not through visual switching or disconnected UI state."
+        "This keeps implementation aligned with the long-term ICOS architecture: canonical personal models, continuity, routing, anti-abuse boundaries, and governed capability must operate through a real runtime system, not through visual switching or disconnected UI state."
       ],
       "highlights": [
         "Runtime manager path",
@@ -59,7 +59,7 @@
       "anchor": "#model-routing",
       "paragraphs": [
         "Model routing allows ICOS to select the appropriate intelligence layer while preserving product-level control, continuity, and user authority.",
-        "The routing system can evolve between external APIs, local models, embedded runtime paths, personal models, and future dedicated infrastructure without changing the user’s core continuity experience.",
+        "The routing system can evolve between external APIs, local models, embedded runtime paths, the canonical personal model, and future dedicated infrastructure without changing the user’s core continuity experience.",
         "This makes software architecture flexible without making product behavior unstable, and it protects private routing data from becoming public-facing marketing content."
       ],
       "highlights": [
@@ -74,9 +74,9 @@
       "title": "Profile Continuity",
       "anchor": "#profile-continuity",
       "paragraphs": [
-        "Profile continuity connects software state with long-term user memory, settings, permissions, reflection history, voice patterns, source context, and personal model formation.",
+        "Profile continuity connects software state with long-term user memory, settings, permissions, reflection history, voice patterns, source context, and canonical personal model formation.",
         "It ensures that product intelligence remains anchored in the user profile rather than isolated session fragments.",
-        "This is the layer that makes ICOS durable across time, devices, and future product surfaces, and it is the origin point for the default personal model."
+        "This is the layer that makes ICOS durable across time, devices, and future product surfaces, and it is the origin point for the canonical personal model."
       ],
       "highlights": [
         "Long-term profile memory",
@@ -90,12 +90,12 @@
       "title": "Personal Model Software Layer",
       "anchor": "#personal-model-software-layer",
       "paragraphs": [
-        "The personal model software layer turns profile creation into the beginning of a governed continuity model.",
-        "The system must support a default private model, owner authority, model identity readiness, voice and memory training signals, source continuity, and permission-bound lifecycle state.",
-        "This is the closest MVP path for ICOS: a private personal model that learns, remembers, reflects voice, organizes thought, and remains under user control."
+        "The canonical personal model software layer turns profile creation into the beginning of one governed continuity model.",
+        "The system must support one private canonical model, owner authority, model identity readiness, voice and memory training signals, source continuity, anti-abuse review readiness, and permission-bound lifecycle state.",
+        "This is the closest MVP path for ICOS: a private canonical personal model that learns, remembers, reflects voice, organizes thought, and remains under user control."
       ],
       "highlights": [
-        "Default private model",
+        "Canonical private model",
         "Owner authority",
         "MVP path for ICOS"
       ]
@@ -107,8 +107,8 @@
       "anchor": "#model-economy-software-layer",
       "paragraphs": [
         "The model economy requires software architecture before public marketplace features can exist.",
-        "ICOS must support model identity, owner authority, entitlement state, provider routing, dignity boundaries, monetization readiness, hiring readiness, marketplace visibility, ranking readiness, and release governance as explicit system states.",
-        "This creates a production path where economic capability is built into the architecture without prematurely exposing payouts, public ranking, autonomous inter-model hiring, or posthumous economy."
+        "ICOS must support model identity, owner authority, entitlement state, provider routing, dignity boundaries, anti-abuse review state, impersonation review state, restriction and appeal state, blocked economy readiness, and release governance as explicit system states.",
+        "This creates a production path where future economic capability is represented as blocked-until-review architecture without prematurely exposing payouts, public ranking, autonomous inter-model hiring, marketplace behavior, or posthumous economy."
       ],
       "highlights": [
         "Model economy state architecture",
@@ -122,9 +122,9 @@
       "title": "Model Identity Registry",
       "anchor": "#model-identity-registry",
       "paragraphs": [
-        "The model registry must treat every model as a traceable product entity with ownership, lifecycle state, public/private identity, verification readiness, and future marketplace eligibility.",
+        "The model registry must treat every canonical personal model as a traceable product entity with ownership, lifecycle state, public/private identity, verification readiness, anti-abuse review state, and future blocked-until-review marketplace eligibility.",
         "Public identity can support discovery and trust. Private identity must protect serials, provider routing, source authorization, token authority, and sensitive security metadata.",
-        "This registry becomes the structural foundation for personal models, future monetization, marketplace readiness, inter-model coordination, and Ocean-Brain awareness."
+        "This registry becomes the structural foundation for canonical personal models, future monetization, marketplace readiness, inter-model coordination, anti-abuse governance, and model population awareness."
       ],
       "highlights": [
         "Canonical model identity",
@@ -155,8 +155,8 @@
       "anchor": "#dashboard-readiness-layer",
       "paragraphs": [
         "Dashboard readiness gives the user a clear view of model state without exposing private infrastructure.",
-        "Owner-facing dashboards can show personal model formation, model identity readiness, dignity and security state, permission state, training maturity, and blocked economy readiness.",
-        "Public dashboards and marketplace-facing surfaces must remain gated until legal, governance, product, security, and implementation review are complete."
+        "Owner-facing dashboards can show canonical personal model formation, model identity readiness, dignity and security state, permission state, training maturity, anti-abuse review readiness, and blocked economy readiness.",
+        "Public dashboards and marketplace-facing surfaces must remain gated until legal, governance, privacy, security, finance, product, anti-abuse, and implementation review are complete."
       ],
       "highlights": [
         "Owner-facing model state",
@@ -171,7 +171,7 @@
       "anchor": "#security-governance-layer",
       "paragraphs": [
         "Software must preserve the dignity and security of user-derived continuity material: memory, voice, behavior, sources, preferences, and identity-adjacent data.",
-        "This requires permission boundaries, deletion controls, suspension states, private identity protection, posthumous restrictions, and regulated-domain constraints.",
+        "This requires permission boundaries, deletion controls, suspension states, private identity protection, anti-impersonation controls, restriction review, appeal pathways, posthumous restrictions, and regulated-domain constraints.",
         "Model dignity does not imply consciousness, personhood, or legal autonomy; it means human-derived material inside the model must be protected with seriousness."
       ],
       "highlights": [
@@ -187,13 +187,13 @@
       "anchor": "#software-release-boundary",
       "paragraphs": [
         "Software can prepare the architecture for model economy capabilities before those capabilities are publicly active.",
-        "Marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, and posthumous economy remain blocked until review.",
-        "The current product path should prioritize private personal models, profile continuity, model identity registry, provider-routing boundaries, owner-facing dashboards, and governed readiness states."
+        "Marketplace activation, payouts, public ranking, autonomous inter-model hiring, regulated-domain claims, guaranteed-income language, model consciousness claims, raw physical device serial-number collection claims, device-based public reputation scoring, and posthumous economy remain blocked until review.",
+        "The current product path should prioritize the private canonical personal model, profile continuity, model identity registry, provider-routing boundaries, anti-abuse boundaries, owner-facing dashboards, and governed readiness states."
       ],
       "highlights": [
         "Architecture-ready first",
         "Economy activation gated",
-        "Personal model MVP priority"
+        "Canonical model MVP priority"
       ]
     }
   ]

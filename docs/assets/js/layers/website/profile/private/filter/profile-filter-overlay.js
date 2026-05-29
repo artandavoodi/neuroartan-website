@@ -50,15 +50,13 @@ const FILTER_CONTEXTS = Object.freeze({
   },
   thoughts: {
     title: 'Thought Filters',
-    copy: 'Refine private and public thoughts by lane, category, year, and order.',
+    copy: 'Refine private Thought Bank entries by category, year, and order.',
     groups: [
       {
         key: 'audience',
-        label: 'Lane',
+        label: 'Thought Bank',
         options: [
-          { value: 'all', label: 'All' },
-          { value: 'public', label: 'Public' },
-          { value: 'private', label: 'Private' }
+          { value: 'private', label: 'Private Thought Bank' }
         ]
       },
       {
@@ -194,18 +192,23 @@ function getDefaultFilters(context) {
   const definition = FILTER_CONTEXTS[normalizeContext(context)];
   return Object.fromEntries(definition.groups.map((group) => [
     group.key,
-    group.options[0]?.value || DEFAULT_VALUE
+    normalizeContext(context) === 'thoughts' && group.key === 'audience'
+      ? 'private'
+      : group.options[0]?.value || DEFAULT_VALUE
   ]));
 }
 
 function normalizeFilters(context, filters = {}) {
   const definition = FILTER_CONTEXTS[normalizeContext(context)];
   const defaults = getDefaultFilters(context);
+  const normalizedContext = normalizeContext(context);
 
   definition.groups.forEach((group) => {
     const value = String(filters?.[group.key] || '').trim();
     const allowed = new Set(group.options.map((option) => option.value));
-    defaults[group.key] = allowed.has(value) ? value : defaults[group.key];
+    defaults[group.key] = normalizedContext === 'thoughts' && group.key === 'audience'
+      ? 'private'
+      : allowed.has(value) ? value : defaults[group.key];
   });
 
   return defaults;

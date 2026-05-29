@@ -82,10 +82,7 @@ function renderEntry(entry) {
   `;
   const badge = article.querySelector('.ui-badge');
   if (badge instanceof HTMLElement) {
-    const iconSrc = entry.audience === 'public'
-      ? '/registry/icons/public/assets/core/actions/visibility/public-route.svg'
-      : '/registry/icons/public/assets/core/actions/visibility/private-draft.svg';
-    badge.innerHTML = `<img class="ui-icon-theme-aware" src="${iconSrc}" alt="${entry.audience === 'public' ? 'Public route' : 'Private draft'}" width="16" height="16">`;
+    badge.innerHTML = '<img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/private-draft.svg" alt="Private Thought Bank" width="16" height="16">';
   }
   article.querySelector('.profile-thought-bank__item-body').textContent = entry.text || '';
   article.querySelector('.profile-thought-bank__item-meta').textContent = formatDate(entry.createdAt);
@@ -103,7 +100,7 @@ function renderThoughtList(root) {
   const filters = getProfileFilterState('thoughts').filters;
   const thoughts = STORE.thoughts
     .filter((thought) => {
-      if (filters.audience !== 'all' && thought.audience !== filters.audience) return false;
+      if (filters.audience !== 'all' && filters.audience !== 'private') return false;
 
       if (filters.category !== 'all' && thought.category !== filters.category) return false;
 

@@ -114,26 +114,26 @@ function messageForModelCreateError(error) {
   const message = normalizeString(error?.message || '').toLowerCase();
   switch (code) {
     case 'AUTH_REQUIRED':
-      return 'Sign in before creating a model.';
+      return 'Sign in before creating your canonical personal model.';
     case 'PROFILE_COMPLETE_REQUIRED':
-      return 'Complete your private profile and username before creating a model.';
+      return 'Complete your private profile and username before creating your canonical personal model.';
     case 'MODEL_BACKEND_UNAVAILABLE':
-      return 'Model backend is not configured for this environment.';
+      return 'Canonical model backend is not configured for this environment.';
     case 'MODEL_NAME_REQUIRED':
-      return 'Enter a model name.';
+      return 'Enter a canonical model name.';
     case 'MODEL_SLUG_TAKEN':
     case 'MODEL_SLUG_ALREADY_OWNED':
-      return 'That model route is already reserved.';
+      return 'That canonical model route is already reserved.';
     default:
       if (message.includes('row-level security') || message.includes('violates row-level security')) {
-        return 'Model creation is blocked by active model policy. Apply the latest model and developer policy migration, then retry while signed in with a complete profile.';
+        return 'Canonical model creation is blocked by active model policy. Apply the latest model, entitlement, and anti-abuse policy migration, then retry while signed in with a complete profile.';
       }
 
       if (message.includes('permission denied')) {
-        return 'Model creation is blocked by backend permissions. Confirm the models table owner policies are deployed.';
+        return 'Canonical model creation is blocked by backend permissions. Confirm the models table owner, entitlement, and anti-abuse policies are deployed.';
       }
 
-      return 'Model creation could not complete. Review the active account schema and model policies.';
+      return 'Canonical model creation could not complete. Review the active account schema, model policies, entitlement boundary, and anti-abuse policies.';
   }
 }
 
@@ -144,11 +144,11 @@ function bindModelCreateForm(root) {
   form.dataset.modelCreateBound = 'true';
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    setStatus(root, 'Creating model…');
+    setStatus(root, 'Creating canonical personal model…');
 
     try {
       const model = await createOwnedModel(readModelCreateForm(form));
-      setStatus(root, `Model created: ${model.model_name}. Source intake, training, and runtime routing remain the next workspace steps.`);
+      setStatus(root, `Canonical personal model created: ${model.model_name}. Source intake, training, anti-abuse review readiness, and runtime routing remain the next workspace steps.`);
       form.reset();
     } catch (error) {
       console.error('[model-create] Model creation failed.', error);
@@ -171,7 +171,7 @@ async function initModelCreate() {
 
   renderModelCreateFields(root, schema);
   bindModelCreateForm(root);
-  setStatus(root, 'Model creation is ready. Canonical save requires an active account session, a complete profile, and the models table.');
+  setStatus(root, 'Canonical personal model creation is ready. Save requires an active account session, a complete profile, the models table, entitlement enforcement, and anti-abuse policy readiness.');
 }
 
 if (document.readyState === 'loading') {

@@ -25,8 +25,8 @@ const BLOCKED_STATE = 'Blocked until review';
 
 function getFallbackModelEconomyState() {
   return Object.freeze({
-    defaultPersonalModel:
-      PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.defaultPersonalModel || 'Assigned at profile birth',
+    canonicalPersonalModel:
+      PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.canonicalPersonalModel || 'Assigned at profile birth',
     birthIdentity:
       PROFILE_PRIVATE_MODEL_IDENTITY_BOUNDARY?.modelBirthCertificate || 'Future owner-visible state',
     privateIdentity:
@@ -41,7 +41,7 @@ function getFallbackModelEconomyState() {
       PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.hiringReadiness || BLOCKED_STATE,
     marketplace:
       PROFILE_PRIVATE_MODEL_ECONOMY_PLACEHOLDER?.marketplaceVisibility || BLOCKED_STATE,
-    interModelHiring: BLOCKED_STATE
+    interModelCoordination: BLOCKED_STATE
   });
 }
 
@@ -53,7 +53,7 @@ async function getResolvedModelEconomyState() {
     if (!model) return fallbackState;
 
     return Object.freeze({
-      defaultPersonalModel: model.model_name || model.slug || fallbackState.defaultPersonalModel,
+      canonicalPersonalModel: model.model_name || model.slug || fallbackState.canonicalPersonalModel,
       birthIdentity: model.birth_certificate_id ? 'Created' : fallbackState.birthIdentity,
       privateIdentity: model.private_identity_id ? 'Active · Owner only' : fallbackState.privateIdentity,
       providerRouting: model.runtime_policy?.provider || fallbackState.providerRouting,
@@ -61,7 +61,7 @@ async function getResolvedModelEconomyState() {
       monetization: model.economy_state || BLOCKED_STATE,
       hiring: BLOCKED_STATE,
       marketplace: BLOCKED_STATE,
-      interModelHiring: BLOCKED_STATE
+      interModelCoordination: BLOCKED_STATE
     });
   } catch (error) {
     console.warn('[profile-private-model-economy] Backend state unavailable:', error);
@@ -95,14 +95,14 @@ function createModelEconomySurface(state) {
   surface.innerHTML = `
     <header class="profile-private-model-economy__header">
       <p class="profile-private-model-economy__eyebrow">FSC-T-0007</p>
-      <h2 class="profile-private-model-economy__title">Personal Model Economy</h2>
+      <h2 class="profile-private-model-economy__title">Canonical Model Readiness</h2>
       <p class="profile-private-model-economy__copy">
-        Your default personal model is treated as an owner-governed continuity entity. Marketplace, hiring, monetization, ranking, payouts, inter-model hiring, and posthumous economy remain blocked until review.
+        Your canonical personal model is treated as an owner-governed continuity entity. Marketplace, hiring, monetization, ranking, payouts, inter-model coordination, and posthumous economy remain blocked until review.
       </p>
     </header>
 
     <dl class="profile-private-model-economy__grid">
-      ${createStateRow('Default Personal Model', state.defaultPersonalModel)}
+      ${createStateRow('Canonical Personal Model', state.canonicalPersonalModel)}
       ${createStateRow('Model Birth Identity', state.birthIdentity)}
       ${createStateRow('Private Model Identity', state.privateIdentity, 'private')}
       ${createStateRow('Provider Routing Identity', state.providerRouting, 'private')}
@@ -110,7 +110,7 @@ function createModelEconomySurface(state) {
       ${createStateRow('Monetization', state.monetization, 'blocked')}
       ${createStateRow('Hiring', state.hiring, 'blocked')}
       ${createStateRow('Marketplace', state.marketplace, 'blocked')}
-      ${createStateRow('Inter-Model Hiring', state.interModelHiring, 'blocked')}
+      ${createStateRow('Inter-Model Coordination', state.interModelCoordination, 'blocked')}
     </dl>
   `;
 

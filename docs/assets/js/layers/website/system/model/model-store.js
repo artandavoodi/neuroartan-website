@@ -15,7 +15,7 @@
 /* =============================================================================
    01) MODULE IDENTITY
 ============================================================================= */
-/* /website/docs/assets/js/layers/website/system/model-store.js */
+/* /website/docs/assets/js/layers/website/system/model/model-store.js */
 
 /* =============================================================================
    02) IMPORTS
@@ -74,6 +74,10 @@ const MODEL_FOUNDATION_TABLES = Object.freeze({
   ownerDashboard: 'model_owner_dashboard_state',
   dignitySecurity: 'model_dignity_security_state',
   blockedEconomy: 'model_blocked_economy_state',
+  deviceIntegrity: 'model_device_integrity_state',
+  impersonationReview: 'model_impersonation_review_state',
+  modelIdentityAntiAbuse: 'model_identity_anti_abuse_state',
+  restrictionReviewAppeal: 'model_restriction_review_appeal_state',
 });
 
 /* =============================================================================
@@ -284,14 +288,14 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
   const modelId = normalizeString(model?.id || '');
   if (!supabase || !modelId) return model;
 
-  const modelName = normalizeString(model.model_name || values.model_name || values.name || 'Personal Model');
+  const modelName = normalizeString(model.model_name || values.model_name || values.name || 'Canonical Personal Model');
   const modelSlug = normalizeString(model.slug || values.slug || values.model_slug || '');
   const description = normalizeString(model.description || values.description || '');
 
   const birthCertificate = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.birthCertificates, {
     model_id: modelId,
     birth_state: 'created',
-    birth_reason: 'default_private_personal_model',
+    birth_reason: 'canonical_private_personal_model',
     birth_source: 'website_profile_creation',
   });
 
@@ -337,6 +341,7 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
     model_creation_limit: 1,
     personal_model_included: true,
     additional_model_slots: 0,
+    paid_multi_model_personal_expansion_blocked: true,
     marketplace_access_state: 'blocked_until_review',
     monetization_request_state: 'blocked_until_review',
   });
@@ -365,7 +370,7 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
     model_id: modelId,
     current_state: 'created',
     previous_state: 'none',
-    state_reason: 'default_personal_model_birth',
+    state_reason: 'canonical_personal_model_birth',
     archive_eligible: true,
     delete_eligible: true,
   });
@@ -404,6 +409,42 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
     posthumous_economy_blocked: true,
   });
 
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.deviceIntegrity, {
+    model_id: modelId,
+    device_integrity_state: 'review_blocked',
+    raw_physical_device_serial_collection_blocked: true,
+    security_only_use_confirmed: true,
+    advertising_tracking_personalization_use_blocked: true,
+    production_enforcement_approved: false,
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.impersonationReview, {
+    model_id: modelId,
+    impersonation_review_state: 'not_required',
+    profile_identity_review_state: 'pending_if_triggered',
+    public_identity_review_state: 'blocked_until_publication_review',
+    manual_review_required: false,
+    appeal_state: 'available_for_severe_restriction',
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.modelIdentityAntiAbuse, {
+    model_id: modelId,
+    canonical_model_limit_state: 'one_profile_one_canonical_model',
+    additional_personal_model_slots_blocked: true,
+    duplicate_model_risk_state: 'blocked_by_policy',
+    bot_factory_creation_blocked: true,
+    future_economy_activation_blocked: true,
+  });
+
+  await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.restrictionReviewAppeal, {
+    model_id: modelId,
+    restriction_level: 'none',
+    restriction_scope: 'none',
+    manual_review_state: 'not_required',
+    user_notice_state: 'not_required',
+    appeal_state: 'available_for_severe_restriction',
+  });
+
   const referencePayload = {
     birth_certificate_id: birthCertificate?.id || model.birth_certificate_id || null,
     private_identity_id: privateIdentity?.id || model.private_identity_id || null,
@@ -440,6 +481,13 @@ export async function createOwnedModel(values = {}) {
     throw error;
   }
 
+  const ownedModels = await listOwnedModels();
+  if (ownedModels.length > 0) {
+    const error = new Error('CANONICAL_MODEL_ALREADY_EXISTS');
+    error.code = 'CANONICAL_MODEL_ALREADY_EXISTS';
+    throw error;
+  }
+
   const modelName = normalizeString(values.model_name || values.name || '');
   if (!modelName) {
     const error = new Error('MODEL_NAME_REQUIRED');
@@ -462,7 +510,7 @@ export async function createOwnedModel(values = {}) {
       route: normalizeString(values.route || 'site_knowledge'),
       voice_enabled: values.voice_enabled === true,
     },
-    entitlement_state: normalizeString(values.entitlement_state || 'free_personal_model_included'),
+    entitlement_state: normalizeString(values.entitlement_state || 'free_canonical_personal_model_included'),
     permission_state: normalizeString(values.permission_state || 'private_owner_only'),
     economy_state: normalizeString(values.economy_state || 'blocked_until_review'),
     foundation_state: normalizeString(values.foundation_state || 'private_foundation_created'),
@@ -530,12 +578,20 @@ export async function listModelTrainingRecords(modelId) {
 ============================================================================= */
 
 export const MODEL_ECONOMY_READINESS_STATE = Object.freeze({
-  defaultPersonalModel: "profileBirthRequired",
+  canonicalPersonalModel: "profileBirthRequired",
+  oneProfileOneCanonicalModel: true,
+  paidMultiModelPersonalExpansionBlocked: true,
   modelBirthCertificate: "schemaReady",
   publicPrivateIdentity: "boundaryRequired",
   modelDignity: "required",
+  deviceIntegrity: "reviewBlocked",
+  impersonationPrevention: "required",
+  modelIdentityAntiAbuse: "required",
+  restrictionReviewAppeal: "required",
+  rawPhysicalDeviceSerialCollection: "blocked",
+  advertisingTrackingPersonalizationUse: "blocked",
   monetization: "blockedUntilReview",
   hiring: "blockedUntilReview",
   marketplace: "blockedUntilReview",
-  interModelHiring: "blockedUntilReview"
+  interModelCoordination: "blockedUntilReview"
 });

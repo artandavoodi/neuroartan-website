@@ -2,13 +2,8 @@
   "audiences": [
     {
       "key": "private",
-      "label": "Private bank",
+      "label": "Private Thought Bank",
       "summary": "Owner-only captured reflections and thought records."
-    },
-    {
-      "key": "public",
-      "label": "Public route",
-      "summary": "Thoughts staged for company-domain public presence."
     }
   ],
   "categories": [

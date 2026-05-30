@@ -13,6 +13,7 @@ import './profile-router.js';
 import './profile-image-storage.js';
 import './profile-social-graph.js';
 import './profile-verification.js';
+import './profile-changelog-store.js';
 
 /* =============================================================================
    02) END OF FILE

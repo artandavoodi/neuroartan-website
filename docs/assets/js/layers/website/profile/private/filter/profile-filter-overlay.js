@@ -1,3 +1,7 @@
+import {
+  listProfileChangelogEvents
+} from '../../../system/profile/profile-changelog-store.js';
+
 /* =============================================================================
    PROFILE FILTER OVERLAY
 ============================================================================= */
@@ -205,9 +209,12 @@ const FILTER_CONTEXTS = Object.freeze({
         label: 'Area',
         options: [
           { value: 'all', label: 'All' },
+          { value: 'general', label: 'General' },
           { value: 'identity', label: 'Identity' },
           { value: 'route', label: 'Route' },
-          { value: 'privacy', label: 'Privacy' }
+          { value: 'privacy', label: 'Privacy' },
+          { value: 'security', label: 'Security' },
+          { value: 'verification', label: 'Verification' }
         ]
       },
       {
@@ -354,6 +361,51 @@ function renderOverlay(context = STORE.context) {
     section.appendChild(options);
     groupsRoot.appendChild(section);
   });
+
+  if (normalizedContext === 'settingsChangelog') {
+    const ledger = document.createElement('section');
+    ledger.className = 'profile-filter-overlay__ledger';
+    ledger.setAttribute('aria-live', 'polite');
+    ledger.innerHTML = '<div class="ui-loading-inline"><span class="ui-loading-inline__spinner" aria-hidden="true"></span></div>';
+    groupsRoot.appendChild(ledger);
+    void renderChangelogLedger(ledger, state.filters);
+  }
+}
+
+function formatEventDate(value = '') {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+}
+
+function escapeHtml(value = '') {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+async function renderChangelogLedger(root, filters = {}) {
+  const events = await listProfileChangelogEvents(filters);
+  if (!events.length) {
+    root.innerHTML = '<p class="profile-filter-overlay__empty">No changes recorded yet.</p>';
+    return;
+  }
+
+  root.innerHTML = events.map((event) => `
+    <article class="profile-filter-overlay__event">
+      <strong>${escapeHtml(event.event_title || 'Change recorded')}</strong>
+      <span>${escapeHtml(formatEventDate(event.created_at))}</span>
+      ${event.event_detail ? `<p>${escapeHtml(event.event_detail)}</p>` : ''}
+    </article>
+  `).join('');
 }
 
 function updateFilter(context, key, value) {
@@ -372,9 +424,12 @@ function resetFilters(context) {
   notifySubscribers(normalizedContext);
 }
 
-function openFilterOverlay(context) {
+function openFilterOverlay(context, filters = {}) {
   STORE.context = normalizeContext(context);
-  STORE.filters[STORE.context] = normalizeFilters(STORE.context, STORE.filters[STORE.context]);
+  STORE.filters[STORE.context] = normalizeFilters(STORE.context, {
+    ...STORE.filters[STORE.context],
+    ...filters
+  });
   renderOverlay(STORE.context);
   setOverlayOpen(true);
 }
@@ -418,7 +473,7 @@ function bindFilterOverlay() {
 
   document.addEventListener('profile:filter-open-request', (event) => {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
-    openFilterOverlay(detail.context || 'posts');
+    openFilterOverlay(detail.context || 'posts', detail.filters || {});
   });
 }
 

@@ -78,6 +78,39 @@
   gap:var(--home-search-shell-result-list-gap, var(--spacing-md));
 }
 
+.profile-filter-overlay__ledger{
+  display:grid;
+  gap:var(--home-search-shell-empty-gap, var(--spacing-sm));
+}
+
+.profile-filter-overlay__event{
+  display:grid;
+  gap:var(--spacing-2xs);
+  padding-block:var(--spacing-sm);
+  border-top:var(--border-width-hairline) solid var(--border-color);
+}
+
+.profile-filter-overlay__event strong,
+.profile-filter-overlay__event span,
+.profile-filter-overlay__event p,
+.profile-filter-overlay__empty{
+  margin:0;
+}
+
+.profile-filter-overlay__event strong{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
+.profile-filter-overlay__event span,
+.profile-filter-overlay__event p,
+.profile-filter-overlay__empty{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
 .profile-filter-overlay__group{
   display:grid;
   gap:var(--home-search-shell-empty-gap, var(--spacing-sm));

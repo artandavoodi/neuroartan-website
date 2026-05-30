@@ -61,6 +61,7 @@ const DEFAULT_POLICY = Object.freeze({
 const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   initialized: false,
   policy: null,
+  loading: true,
   posts: [],
   selectedMediaFile: null,
   selectedMediaKind: '',
@@ -285,10 +286,12 @@ function ensurePostSpeechController(root) {
 function renderPostList(root) {
   const list = root.querySelector('[data-profile-post-list]');
   const empty = root.querySelector('[data-profile-post-empty]');
+  const loading = root.querySelector('[data-profile-post-loading]');
   const count = root.querySelector('[data-profile-post-count]');
   if (!(list instanceof HTMLElement)) return;
 
   list.innerHTML = '';
+  if (loading instanceof HTMLElement) loading.hidden = !STORE.loading;
 
   const filters = getProfileFilterState('posts').filters;
   const posts = STORE.posts
@@ -317,8 +320,10 @@ function renderPostList(root) {
   }
 
   if (empty instanceof HTMLElement) {
-    empty.hidden = posts.length > 0;
+    empty.hidden = STORE.loading || posts.length > 0;
   }
+
+  if (STORE.loading) return;
 
   posts.forEach((post) => {
     const item = document.createElement('article');
@@ -383,6 +388,8 @@ async function renderPosts() {
   if (!root) return;
 
   const state = getProfileRuntimeState();
+  STORE.loading = true;
+  renderPostList(root);
   const policy = await loadPolicy();
   try {
     await syncStoreWithRuntime(state);
@@ -390,6 +397,7 @@ async function renderPosts() {
     console.error('[profile-posts] Failed to load profile feed posts.', error);
     STORE.posts = [];
   }
+  STORE.loading = false;
 
   root.dataset.profileViewerState = state.viewerState;
   syncPostCounter(root, policy);

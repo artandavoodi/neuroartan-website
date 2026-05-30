@@ -52,6 +52,11 @@
   --home-matte-opacity-bottom-clear: 0.42;
 }
 
+body.home-page{
+  background-color: rgb(var(--home-matte-rgb-dark));
+  overscroll-behavior: none;
+}
+
 /* =============================================================================
    02) HOME MATTE LAYER BASE
 ============================================================================= */

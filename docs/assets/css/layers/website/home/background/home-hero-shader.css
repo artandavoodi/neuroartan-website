@@ -49,6 +49,15 @@
   isolation: isolate;
 }
 
+@media (max-width: 760px){
+  .home-background-shell .home-hero-shader,
+  #home-hero-shader{
+    inset: calc(var(--site-shell-inline-padding-mobile) * -1);
+    width: auto;
+    height: auto;
+  }
+}
+
 /* =============================================================================
    03) SHADER ROOT
 ============================================================================= */

@@ -21,6 +21,11 @@ const ACTION_ICONS = Object.freeze({
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
   model: '/registry/icons/public/assets/core/cognition/model/model.svg',
   organization: '/registry/icons/public/assets/layers/website/profile/actions/organizations.svg',
+  modelTraining: '/registry/icons/public/assets/core/actions/model-training-panel/model-training-panel.svg',
+  modelInteraction: '/registry/icons/public/assets/core/actions/model-next-action-panel/model-next-action-panel.svg',
+  modelReadiness: '/registry/icons/public/assets/core/actions/model-evaluation-panel/model-evaluation-panel.svg',
+  thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
+  createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
   dashboard: '/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg',
   metrics: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-metrics-panel.svg',
   graph: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-panel.svg',
@@ -44,11 +49,23 @@ const ACTIONS = Object.freeze({
     tooltip: 'Thought',
     icon: ACTION_ICONS.create
   },
-  createModel: {
-    id: 'create-model',
-    label: 'Create model',
-    tooltip: 'Model',
-    icon: ACTION_ICONS.model
+  modelTraining: {
+    id: 'model-training',
+    label: 'Model training',
+    tooltip: 'Training',
+    icon: ACTION_ICONS.modelTraining
+  },
+  modelInteraction: {
+    id: 'model-interaction',
+    label: 'Model interaction',
+    tooltip: 'Interaction',
+    icon: ACTION_ICONS.modelInteraction
+  },
+  modelReadiness: {
+    id: 'model-readiness',
+    label: 'Model readiness',
+    tooltip: 'Readiness',
+    icon: ACTION_ICONS.modelReadiness
   },
   filterPosts: {
     id: 'filter-posts',
@@ -85,6 +102,12 @@ const ACTIONS = Object.freeze({
     label: 'Filter thoughts',
     tooltip: 'Filter',
     icon: ACTION_ICONS.filter
+  },
+  thoughtMemory: {
+    id: 'thought-memory',
+    label: 'Thought memory',
+    tooltip: 'Memory',
+    icon: ACTION_ICONS.thoughtMemory
   },
   filterModels: {
     id: 'filter-models',
@@ -139,6 +162,12 @@ const ACTIONS = Object.freeze({
     label: 'Organization settings',
     tooltip: 'Organization',
     icon: ACTION_ICONS.organization
+  },
+  createOrganization: {
+    id: 'create-organization',
+    label: 'Create organization',
+    tooltip: 'Create organization',
+    icon: ACTION_ICONS.createOrganization
   }
 });
 
@@ -150,9 +179,9 @@ const CONTEXT_ACTIONS = Object.freeze({
   profile: ['editProfile', 'createPost', 'filterPosts'],
   overview: ['editProfile', 'createPost', 'filterPosts'],
   posts: ['editProfile', 'createPost', 'filterPosts'],
-  thoughts: ['editProfile', 'createThought', 'filterThoughts'],
-  models: ['editProfile', 'createModel', 'filterModels'],
-  organizations: ['editProfile', 'organizationSettings'],
+  thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
+  models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
+  organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
 });
@@ -163,6 +192,25 @@ function toolbarRoots(){
 
 function resolveActionKeys(state = getProfileNavigationState()){
   return CONTEXT_ACTIONS[state.section] || CONTEXT_ACTIONS.home;
+}
+
+function resolveSettingsChangelogArea(state = getProfileNavigationState()){
+  const hashPane = String(window.location.hash || '').replace(/^#settings\/?/, '').split('/')[0];
+  const settingsPane = state?.settingsPane || hashPane || 'identity';
+
+  switch (settingsPane) {
+    case 'route':
+      return 'route';
+    case 'privacy':
+      return 'privacy';
+    case 'password':
+      return 'security';
+    case 'verification':
+      return 'verification';
+    case 'identity':
+    default:
+      return 'identity';
+  }
 }
 
 function renderToolbarActions(root, state = getProfileNavigationState()){
@@ -326,8 +374,14 @@ function requestProfileToolAction(action){
         detail: { source: 'profile-right-toolbar' }
       }));
       return;
-    case 'create-model':
-      window.location.href = '/pages/models/create/index.html';
+    case 'model-training':
+    case 'model-interaction':
+    case 'model-readiness':
+    case 'thought-memory':
+    case 'create-organization':
+      document.dispatchEvent(new CustomEvent('profile:right-toolbar-action-request', {
+        detail: { action, source: 'profile-right-toolbar' }
+      }));
       return;
     case 'filter-posts':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
@@ -369,7 +423,13 @@ function requestProfileToolAction(action){
       return;
     case 'settings-changelog':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
-        detail: { context: 'settingsChangelog', source: 'profile-right-toolbar' }
+        detail: {
+          context: 'settingsChangelog',
+          source: 'profile-right-toolbar',
+          filters: {
+            area: resolveSettingsChangelogArea()
+          }
+        }
       }));
       return;
     case 'route-settings':

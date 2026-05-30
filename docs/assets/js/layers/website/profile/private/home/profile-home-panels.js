@@ -16,6 +16,7 @@ const MESSAGE_STORAGE_KEY = 'neuroartan.profile.home.messages';
 
 const STATE = (window.__NEUROARTAN_PROFILE_HOME_PANELS__ ||= {
   initialized: false,
+  feedLoading: true,
   feedPosts: [],
   followedProfileIds: [],
   messages: []
@@ -108,9 +109,11 @@ function renderFeed() {
   feedRoots().forEach((root) => {
     const list = root.querySelector('[data-profile-home-feed-list]');
     const empty = root.querySelector('[data-profile-home-feed-empty]');
+    const loading = root.querySelector('[data-profile-home-feed-loading]');
     if (!(list instanceof HTMLElement) || !(empty instanceof HTMLElement)) return;
-    list.innerHTML = posts.map((post) => renderFeedPost(post)).join('');
-    empty.hidden = posts.length > 0;
+    list.innerHTML = STATE.feedLoading ? '' : posts.map((post) => renderFeedPost(post)).join('');
+    if (loading instanceof HTMLElement) loading.hidden = !STATE.feedLoading;
+    empty.hidden = STATE.feedLoading || posts.length > 0;
   });
 }
 
@@ -171,6 +174,8 @@ function renderMessages() {
 }
 
 async function loadFeed() {
+  STATE.feedLoading = true;
+  renderFeed();
   try {
     const [posts, followedProfileIds] = await Promise.all([
       listFeedPosts(),
@@ -183,6 +188,7 @@ async function loadFeed() {
     STATE.followedProfileIds = [];
     console.error('[profile-home-panels] Feed load failed.', error);
   }
+  STATE.feedLoading = false;
   renderFeed();
 }
 

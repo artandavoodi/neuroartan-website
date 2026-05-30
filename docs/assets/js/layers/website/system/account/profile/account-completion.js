@@ -65,6 +65,10 @@ import {
 import {
   validateAccountUsernamePolicy
 } from '../username/account-username-policy.js';
+import {
+  hydrateAccountLandingPreferenceFromSupabase,
+  resolveAccountLandingHref
+} from '../account-landing-preferences.js';
 
 /* =============================================================================
    02) MODULE IDENTITY
@@ -348,6 +352,11 @@ import {
 
   function redirectToProfile() {
     window.location.href = PROFILE_ROUTE;
+  }
+
+  async function redirectToAccountLanding() {
+    const target = await hydrateAccountLandingPreferenceFromSupabase();
+    window.location.href = resolveAccountLandingHref(target);
   }
 
   function requestGuestAccountEntry(detail = {}) {
@@ -1022,7 +1031,7 @@ import {
     clearFlowState();
 
     if (!isProfileRoute()) {
-      redirectToProfile();
+      await redirectToAccountLanding();
       return;
     }
 
@@ -1189,7 +1198,7 @@ import {
       });
 
       if (supabase && (provider === 'google' || provider === 'apple')) {
-        const redirectTo = `${window.location.origin}${PROFILE_ROUTE}`;
+        const redirectTo = `${window.location.origin}${resolveAccountLandingHref()}`;
 
         await supabase.auth.signInWithOAuth({
           provider,
@@ -1276,7 +1285,7 @@ import {
         }
 
         if (data?.user) {
-          emitSignInStatus('success', 'Signed in. Opening your private profile...');
+          emitSignInStatus('success', 'Signed in. Opening your workspace...');
           await handleSignedInState(data.user);
         }
         return;

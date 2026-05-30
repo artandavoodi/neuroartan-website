@@ -51,6 +51,27 @@
   animation: loading-overlay-spin var(--interaction-motion-slow) linear infinite;
 }
 
+.ui-loading-inline{
+  min-height: var(--control-height-2xl);
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-8);
+  color: var(--text-color);
+}
+
+.ui-loading-inline[hidden]{
+  display: none;
+}
+
+.ui-loading-inline__spinner{
+  width: var(--control-height-md);
+  height: var(--control-height-md);
+  border-radius: var(--radius-circle);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--color-primary1) 18%, transparent);
+  border-top-color: var(--color-primary1);
+  animation: loading-overlay-spin var(--interaction-motion-slow) linear infinite;
+}
+
 .loading-overlay__label{
   margin: var(--spacing-none);
   color: var(--text-color);

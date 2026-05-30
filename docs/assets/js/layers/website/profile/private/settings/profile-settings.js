@@ -24,6 +24,9 @@ import {
   evaluateAccountPassword,
   loadAccountPasswordPolicy
 } from '../../../system/account/identity/account-password-policy.js';
+import {
+  recordProfileChangelogEvent
+} from '../../../system/profile/profile-changelog-store.js';
 
 const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
 
@@ -480,6 +483,12 @@ async function handlePasswordChangeSubmit(form) {
     clearPasswordRecoveryState();
     form.reset();
     setPasswordStatus(root, 'Password updated.', 'success');
+    void recordProfileChangelogEvent({
+      area: 'security',
+      action: 'password_changed',
+      title: 'Password changed',
+      detail: 'The account password was updated from profile settings.'
+    });
   } catch (error) {
     const message = normalizeString(error?.message || '').toLowerCase().includes('invalid login')
       ? 'Current password is not correct.'
@@ -541,6 +550,12 @@ function initProfileSettings() {
       });
       form.reset();
       setVerificationStatus(root, 'Verification request submitted for review.', 'success');
+      void recordProfileChangelogEvent({
+        area: 'verification',
+        action: 'verification_requested',
+        title: 'Verification requested',
+        detail: 'A profile verification request was submitted.'
+      });
     } catch (error) {
       const code = String(error?.code || error?.message || '').trim();
       const message = code === 'PROFILE_VERIFICATION_BACKEND_UNAVAILABLE'

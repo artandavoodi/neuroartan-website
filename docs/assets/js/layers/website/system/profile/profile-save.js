@@ -32,6 +32,7 @@ import {
   reserveSupabaseUsernameProfile,
 } from '../account/identity/account-profile-identity.js';
 import { uploadProfileImage } from './profile-image-storage.js';
+import { recordProfileChangelogEvent } from './profile-changelog-store.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -48,7 +49,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_SAVE__ ||= {
 const PROFILE_COLLECTION = 'profiles';
 const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
 const SUPABASE_PROFILE_SELECT_FIELDS = '*';
-const SAVE_SCOPES = Object.freeze(['identity', 'route', 'visibility', 'media']);
+const SAVE_SCOPES = Object.freeze(['identity', 'route', 'privacy', 'visibility', 'media']);
 
 /* =============================================================================
    04) SUPABASE HELPERS
@@ -217,6 +218,7 @@ function createDefaultState() {
   return {
     identity: createScopeState(),
     route: createScopeState(),
+    privacy: createScopeState(),
     visibility: createScopeState(),
     media: createScopeState()
   };
@@ -385,6 +387,7 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
         public_primary_link: normalizeString(formData.get('public_primary_link') || '')
       };
+    case 'privacy':
     case 'visibility':
       return {
         ...seed,
@@ -412,6 +415,61 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
     default:
       return seed;
   }
+}
+
+function getProfileChangelogAreaForScope(scope = '') {
+  switch (normalizeString(scope)) {
+    case 'identity':
+      return 'identity';
+    case 'route':
+      return 'route';
+    case 'privacy':
+    case 'visibility':
+      return 'privacy';
+    case 'media':
+      return 'media';
+    default:
+      return 'profile';
+  }
+}
+
+function getProfileChangelogCopyForScope(scope = '') {
+  switch (getProfileChangelogAreaForScope(scope)) {
+    case 'identity':
+      return {
+        title: 'Personal info updated',
+        detail: 'Personal profile information was updated.'
+      };
+    case 'route':
+      return {
+        title: 'Public route updated',
+        detail: 'Public route information was updated.'
+      };
+    case 'privacy':
+      return {
+        title: 'Privacy settings updated',
+        detail: 'Profile privacy settings were updated.'
+      };
+    case 'media':
+      return {
+        title: 'Profile media updated',
+        detail: 'Profile media was updated.'
+      };
+    default:
+      return {
+        title: 'Profile updated',
+        detail: 'Profile settings were updated.'
+      };
+  }
+}
+
+function getSubmittedFieldNames(formData) {
+  const names = new Set();
+  if (!(formData instanceof FormData)) return [];
+  formData.forEach((_value, key) => {
+    if (key) names.add(key);
+  });
+  return Array.from(names).sort();
 }
 
 async function resolveMediaUploadValues({
@@ -569,7 +627,7 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
   const normalizedScope = normalizeString(scope || 'identity') || 'identity';
   const normalizedUsername = await ensureSupabaseUsernameAvailability(values, existingProfile, user, supabase);
 
-  if (normalizedScope === 'visibility' && values.public_profile_enabled && !normalizedUsername) {
+  if ((normalizedScope === 'privacy' || normalizedScope === 'visibility') && values.public_profile_enabled && !normalizedUsername) {
     const error = new Error('USERNAME_REQUIRED');
     error.code = 'USERNAME_REQUIRED';
     throw error;
@@ -737,7 +795,20 @@ async function handleSaveRequest(form) {
       supabase
     });
 
-    await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
+    const savedProfile = await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
+    const changelogCopy = getProfileChangelogCopyForScope(scope);
+
+    void recordProfileChangelogEvent({
+      area: getProfileChangelogAreaForScope(scope),
+      action: 'updated',
+      title: changelogCopy.title,
+      detail: changelogCopy.detail,
+      profile_id: savedProfile?.id || existingProfile?.id || '',
+      metadata: {
+        scope,
+        fields: getSubmittedFieldNames(submittedFormData)
+      }
+    });
 
     setScopeState(scope, {
       status: 'success',

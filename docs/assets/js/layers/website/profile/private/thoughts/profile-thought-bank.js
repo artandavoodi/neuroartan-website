@@ -265,6 +265,7 @@ function renderComposer(state = getProfileThoughtState()) {
 function renderLane(root, audience, entries, state) {
   const list = root.querySelector(`[data-profile-thought-stream-list="${audience}"]`);
   const empty = root.querySelector(`[data-profile-thought-stream-empty="${audience}"]`);
+  const loading = root.querySelector(`[data-profile-thought-stream-loading="${audience}"]`);
   const filteredEntries = filterThoughtEntries(entries, audience);
 
   setText(
@@ -275,6 +276,11 @@ function renderLane(root, audience, entries, state) {
 
   if (!(list instanceof HTMLElement)) return;
   clearNode(list);
+  if (loading instanceof HTMLElement) loading.hidden = !state.loading;
+  if (state.loading) {
+    if (empty instanceof HTMLElement) empty.hidden = true;
+    return;
+  }
 
   if (!filteredEntries.length) {
     if (empty instanceof HTMLElement) {
@@ -295,6 +301,25 @@ function renderLane(root, audience, entries, state) {
 
 function renderStream(state = getProfileThoughtState()) {
   getStreamRoots().forEach((root) => {
+    const list = root.querySelector('[data-profile-thought-stream-list]');
+    const empty = root.querySelector('[data-profile-thought-stream-empty]');
+    const loading = root.querySelector('[data-profile-thought-stream-loading]');
+    if (list instanceof HTMLElement && empty instanceof HTMLElement) {
+      clearNode(list);
+      if (loading instanceof HTMLElement) loading.hidden = !state.loading;
+      if (state.loading) {
+        empty.hidden = true;
+        return;
+      }
+      const entries = filterThoughtEntries(state.privateEntries, 'private');
+      const count = root.querySelector('[data-profile-thought-stream-count]');
+      if (count instanceof HTMLElement) count.textContent = `${entries.length} thought${entries.length === 1 ? '' : 's'}`;
+      empty.hidden = entries.length > 0;
+      entries.forEach((entry) => {
+        list.appendChild(createThoughtEntry(entry, state.taxonomy));
+      });
+      return;
+    }
     renderLane(root, 'private', state.privateEntries, state);
   });
 }

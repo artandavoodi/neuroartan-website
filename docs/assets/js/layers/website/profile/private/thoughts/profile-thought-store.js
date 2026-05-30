@@ -33,6 +33,7 @@ const STORE = (window.__NEUROARTAN_PROFILE_THOUGHT_STORE__ ||= {
   taxonomyPromise: null,
   runtimeState: null,
   state: null,
+  loading: true,
   hydrateRequestId: 0,
   subscribers: new Set()
 });
@@ -188,6 +189,7 @@ function buildDerivedState(nextState = {}) {
     runtimeState,
     taxonomy,
     entries: normalizedEntries,
+    loading: nextState.loading === true,
     privateEntries,
     publicEntries,
     totalEntries: normalizedEntries.length,
@@ -247,6 +249,12 @@ function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRunt
   STORE.runtimeState = runtimeState;
   const requestId = STORE.hydrateRequestId + 1;
   STORE.hydrateRequestId = requestId;
+  setThoughtState({
+    ...(STORE.state || {}),
+    runtimeState,
+    entries: STORE.state?.entries || [],
+    loading: true
+  });
 
   listProfileThoughts()
     .then((entries) => {
@@ -257,6 +265,7 @@ function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRunt
         composerText: STORE.state?.composerText || '',
         composerAudience: 'private',
         composerCategory: STORE.state?.composerCategory || '',
+        loading: false,
         submitStatus: 'idle',
         submitMessage: ''
       });
@@ -264,6 +273,11 @@ function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRunt
     .catch((error) => {
       if (requestId !== STORE.hydrateRequestId) return;
       const code = normalizeString(error?.code || error?.message || '');
+      setThoughtState({
+        ...(STORE.state || {}),
+        runtimeState,
+        loading: false
+      });
       if (code === 'AUTH_REQUIRED') return;
       console.error('[profile-thought-store] Failed to hydrate thoughts.', error);
     });
@@ -384,7 +398,8 @@ function initProfileThoughtStore() {
   STORE.runtimeState = getProfileRuntimeState();
   STORE.state = buildDerivedState({
     runtimeState: STORE.runtimeState,
-    entries: []
+    entries: [],
+    loading: true
   });
 
   bindRuntimeState();

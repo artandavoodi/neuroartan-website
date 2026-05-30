@@ -622,9 +622,18 @@
     dd.setAttribute('aria-hidden', 'true');
     dd.classList.remove('visible');
 
-    const base = Array.isArray(availableLangs) && availableLangs.length
-      ? availableLangs.map(normalizeLang)
-      : [normalizeLang(primaryLang)];
+    const localeApi = getLocaleAPI();
+    const supportedLanguages = typeof localeApi?.getSupportedLanguages === 'function'
+      ? localeApi.getSupportedLanguages()
+      : null;
+    const supportedCodes = Array.isArray(supportedLanguages) && supportedLanguages.length
+      ? supportedLanguages.map((item) => normalizeLang(item?.code || item)).filter(Boolean)
+      : [];
+    const base = supportedCodes.length
+      ? supportedCodes
+      : (Array.isArray(availableLangs) && availableLangs.length
+        ? availableLangs.map(normalizeLang)
+        : [normalizeLang(primaryLang)]);
 
     const langs = Array.from(new Set([
       ...base,
@@ -639,7 +648,10 @@
       btn.setAttribute('data-lang', code);
       btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       btn.classList.toggle('is-selected', isSelected);
-      btn.textContent = code.toUpperCase();
+      const languageConfig = Array.isArray(supportedLanguages)
+        ? supportedLanguages.find((item) => normalizeLang(item?.code || item) === code)
+        : null;
+      btn.textContent = languageConfig?.nativeLabel || code.toUpperCase();
       btn.addEventListener('click', async () => {
         state.language = code;
         closeLanguageDropdown();

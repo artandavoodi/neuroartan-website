@@ -1,0 +1,7 @@
+{
+  "$schema": "../schemas/neuroartan-localization-catalog.schema.json",
+  "language": "ru",
+  "direction": "ltr",
+  "sourceLanguage": "en",
+  "entries": {}
+}

@@ -30,6 +30,114 @@
       "source": false,
       "enabled": true,
       "catalog": "fa.json"
+    },
+    {
+      "code": "es",
+      "label": "Spanish",
+      "nativeLabel": "Español",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "es.json"
+    },
+    {
+      "code": "fr",
+      "label": "French",
+      "nativeLabel": "Français",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "fr.json"
+    },
+    {
+      "code": "pt",
+      "label": "Portuguese",
+      "nativeLabel": "Português",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "pt.json"
+    },
+    {
+      "code": "ar",
+      "label": "Arabic",
+      "nativeLabel": "العربية",
+      "direction": "rtl",
+      "source": false,
+      "enabled": true,
+      "catalog": "ar.json"
+    },
+    {
+      "code": "tr",
+      "label": "Turkish",
+      "nativeLabel": "Türkçe",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "tr.json"
+    },
+    {
+      "code": "zh",
+      "label": "Chinese",
+      "nativeLabel": "中文",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "zh.json"
+    },
+    {
+      "code": "ja",
+      "label": "Japanese",
+      "nativeLabel": "日本語",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "ja.json"
+    },
+    {
+      "code": "ko",
+      "label": "Korean",
+      "nativeLabel": "한국어",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "ko.json"
+    },
+    {
+      "code": "hi",
+      "label": "Hindi",
+      "nativeLabel": "हिन्दी",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "hi.json"
+    },
+    {
+      "code": "ru",
+      "label": "Russian",
+      "nativeLabel": "Русский",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "ru.json"
+    },
+    {
+      "code": "it",
+      "label": "Italian",
+      "nativeLabel": "Italiano",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "it.json"
+    },
+    {
+      "code": "nl",
+      "label": "Dutch",
+      "nativeLabel": "Nederlands",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "nl.json"
     }
   ]
 }

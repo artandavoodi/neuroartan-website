@@ -36,8 +36,8 @@ import './tree-view.js';
 import './upload.js';
 import './wizard.js';
 import './countries.js';
-import './country-language.js';
 import './locale.js';
+import './country-language.js';
 import './scroll-to-top.js';
 import './theme.js';
 

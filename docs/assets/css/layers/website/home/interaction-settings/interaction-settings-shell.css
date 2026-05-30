@@ -543,16 +543,11 @@
 }
 
 .home-interaction-settings-panel__section-heading{
-  display:grid;
-  gap:var(--home-interaction-settings-section-heading-gap);
+  display:none;
 }
 
 .home-interaction-settings-panel__section-heading--with-icon{
-  display:grid;
-  gap:var(--home-interaction-settings-section-copy-gap);
-  padding-top:var(--home-interaction-settings-section-header-padding-top);
-  padding-bottom:calc(var(--home-interaction-settings-section-header-padding-bottom) + var(--home-interaction-settings-panel-gap));
-  border-bottom:var(--border-width-hairline) solid var(--home-interaction-settings-section-header-separator);
+  display:none;
 }
 
 .home-interaction-settings-panel__section-title-row{

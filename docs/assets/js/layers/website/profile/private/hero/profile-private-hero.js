@@ -63,7 +63,7 @@ const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   overview: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview.svg',
   feed: '/registry/icons/public/assets/core/navigation/feed/feed.svg',
   notifications: '/registry/icons/public/assets/core/system/notifications/notification.svg',
-  messaging: '/registry/icons/public/assets/core/communication/messaging/message.svg',
+  messaging: '/registry/icons/public/assets/layers/icos/communication/chat/chat.svg',
   posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
   models: '/registry/icons/public/assets/layers/website/profile/actions/models.svg',

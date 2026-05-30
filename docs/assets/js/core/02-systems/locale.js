@@ -9,7 +9,7 @@
    05A) TRANSLATABLE ATTRIBUTE HELPERS
    06) DOM READINESS
    07) TRANSLATION LIFECYCLE EVENTS
-   08) GOOGLE TRANSLATE FETCH
+   08) LOCALIZATION CATALOG RESOLUTION
    09) RTL TEXT-ONLY STYLING
    09A) TRANSLATION PAYLOAD PREPARATION
    10) LANGUAGE APPLICATION
@@ -39,9 +39,15 @@ window.NEUROARTAN_TRANSLATION = (() => {
   let fragmentRefreshScheduled = false;
   let pendingFragmentFlushPromise = null;
   const pendingFragmentRoots = new Set();
-  const cache = new Map();
-
+  let localizationManifestPromise = null;
+  let supportedLanguages = [
+    { code: 'en', label: 'English', nativeLabel: 'English', direction: 'ltr', source: true, enabled: true },
+    { code: 'de', label: 'German', nativeLabel: 'Deutsch', direction: 'ltr', source: false, enabled: true },
+    { code: 'fa', label: 'Persian', nativeLabel: 'فارسی', direction: 'rtl', source: false, enabled: true }
+  ];
+  const catalogCache = new Map();
   const keyCache = new Map();
+  const missingTranslationCache = new Set();
 
   const queuePendingFragmentRoot = (root) => {
     if (!(root instanceof Element)) return;
@@ -261,9 +267,10 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const nextDir = isRtl ? "rtl" : "ltr";
 
     document.documentElement.lang = nl;
-    document.documentElement.dir = "ltr";
+    document.documentElement.dir = nextDir;
     document.documentElement.classList.toggle("lang-rtl", isRtl);
     document.documentElement.setAttribute("data-lang", nl);
+    document.documentElement.setAttribute("data-language-direction", nextDir);
 
     if (document.body) {
       document.body.setAttribute("dir", nextDir);
@@ -382,7 +389,9 @@ window.NEUROARTAN_TRANSLATION = (() => {
 
     for (const el of nodes) {
       if (el.hasAttribute('data-i18n-key') && !el.dataset.i18nEn) {
-        el.dataset.i18nEn = (el.textContent || '').trim();
+        el.dataset.i18nEn = el instanceof HTMLMetaElement
+          ? (el.getAttribute('content') || '').trim()
+          : (el.textContent || '').trim();
       }
 
       if (el.hasAttribute('data-i18n-aria-label-key') && !el.dataset.i18nAriaEn) {
@@ -430,28 +439,162 @@ window.NEUROARTAN_TRANSLATION = (() => {
   }
 
   /* =============================================================================
-     08) GOOGLE TRANSLATE FETCH
+     08) LOCALIZATION CATALOG RESOLUTION
   ============================================================================= */
-  async function translate(text, lang) {
-    if (!text) return text;
-    const tl = normalizeLang(lang);
-    if (!tl || tl === "en") return text;
+  const LOCALIZATION_MANIFEST_URL = '/assets/data/system/localization/manifest.json';
+  const LOCALIZATION_DEFAULT_CATALOG_BASE_PATH = '/assets/data/system/localization/locales/';
 
-    const key = `${tl}::${text}`;
-    if (cache.has(key)) return cache.get(key);
+  function normalizeManifestLanguages(manifest) {
+    const languages = Array.isArray(manifest?.languages) ? manifest.languages : [];
+    const normalized = languages
+      .map((item) => {
+        const code = normalizeLang(item?.code || '');
+        if (!code || item?.enabled === false) return null;
 
-    try {
-      const res = await fetch(
-        "https://translate.googleapis.com/translate_a/single" +
-          `?client=gtx&sl=auto&tl=${encodeURIComponent(tl)}&dt=t&q=${encodeURIComponent(text)}`
-      );
-      const json = await res.json();
-      const out = (json?.[0] || []).map((x) => x?.[0] || "").join("");
-      cache.set(key, out || text);
-      return out || text;
-    } catch {
-      return text;
+        return {
+          code,
+          label: String(item?.label || code.toUpperCase()).trim(),
+          nativeLabel: String(item?.nativeLabel || item?.native_label || item?.label || code.toUpperCase()).trim(),
+          direction: item?.direction === 'rtl' ? 'rtl' : 'ltr',
+          source: item?.source === true,
+          enabled: true,
+          catalog: String(item?.catalog || `${code}.json`).trim()
+        };
+      })
+      .filter(Boolean);
+
+    return normalized.length ? normalized : supportedLanguages;
+  }
+
+  function normalizeCatalogEntries(catalog) {
+    const entries = catalog?.entries;
+    return entries && typeof entries === 'object' && !Array.isArray(entries) ? entries : {};
+  }
+
+  async function fetchLocalizationJson(path) {
+    const response = await fetch(path, {
+      cache: 'no-store',
+      credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to load localization asset ${path}: HTTP ${response.status}`);
     }
+
+    return response.json();
+  }
+
+  async function loadLocalizationManifest() {
+    if (!localizationManifestPromise) {
+      localizationManifestPromise = fetchLocalizationJson(LOCALIZATION_MANIFEST_URL)
+        .then((manifest) => {
+          supportedLanguages = normalizeManifestLanguages(manifest);
+          return manifest;
+        })
+        .catch(() => ({
+          sourceLanguage: 'en',
+          defaultLanguage: 'en',
+          catalogBasePath: LOCALIZATION_DEFAULT_CATALOG_BASE_PATH,
+          languages: [
+            { code: 'en', direction: 'ltr', catalog: 'en.json', enabled: true, source: true }
+          ]
+        }));
+    }
+
+    return localizationManifestPromise;
+  }
+
+  async function getLocalizationLanguageConfig(lang) {
+    const manifest = await loadLocalizationManifest();
+    const normalized = normalizeLang(lang);
+    const languages = Array.isArray(manifest.languages) ? manifest.languages : [];
+    return languages.find((item) => normalizeLang(item?.code) === normalized)
+      || languages.find((item) => normalizeLang(item?.code) === normalizeLang(manifest.defaultLanguage || 'en'))
+      || { code: 'en', direction: 'ltr', catalog: 'en.json', enabled: true, source: true };
+  }
+
+  async function loadLocalizationCatalog(lang) {
+    const config = await getLocalizationLanguageConfig(lang);
+    const code = normalizeLang(config?.code || lang || 'en');
+
+    if (catalogCache.has(code)) {
+      return catalogCache.get(code);
+    }
+
+    const manifest = await loadLocalizationManifest();
+    const basePath = String(manifest.catalogBasePath || LOCALIZATION_DEFAULT_CATALOG_BASE_PATH).replace(/\/?$/, '/');
+    const catalogPath = `${basePath}${config.catalog || `${code}.json`}`;
+
+    const promise = fetchLocalizationJson(catalogPath)
+      .then((catalog) => ({
+        language: normalizeLang(catalog?.language || code),
+        direction: catalog?.direction === 'rtl' ? 'rtl' : 'ltr',
+        entries: normalizeCatalogEntries(catalog)
+      }))
+      .catch(() => ({
+        language: code,
+        direction: config?.direction === 'rtl' ? 'rtl' : 'ltr',
+        entries: {}
+      }));
+
+    catalogCache.set(code, promise);
+    return promise;
+  }
+
+  async function resolveCatalogValue(key, fallback = '', lang = currentLang) {
+    const normalizedKey = String(key || '').trim();
+    const fallbackText = String(fallback || '').trim();
+    const normalizedLang = normalizeLang(lang);
+
+    if (!normalizedKey) {
+      return fallbackText;
+    }
+
+    const sourceLang = 'en';
+    const targetCatalog = await loadLocalizationCatalog(normalizedLang);
+    const sourceCatalog = normalizedLang === sourceLang
+      ? targetCatalog
+      : await loadLocalizationCatalog(sourceLang);
+
+    const targetValue = targetCatalog.entries?.[normalizedKey];
+    if (typeof targetValue === 'string' && targetValue.trim()) {
+      return targetValue;
+    }
+
+    const sourceValue = sourceCatalog.entries?.[normalizedKey];
+    if (typeof sourceValue === 'string' && sourceValue.trim()) {
+      if (normalizedLang !== sourceLang) {
+        reportMissingTranslation(normalizedKey, normalizedLang);
+      }
+      return sourceValue;
+    }
+
+    if (fallbackText) {
+      if (normalizedLang !== sourceLang) {
+        reportMissingTranslation(normalizedKey, normalizedLang);
+      }
+      return fallbackText;
+    }
+
+    return '';
+  }
+
+  function reportMissingTranslation(key, lang) {
+    const normalizedKey = String(key || '').trim();
+    const normalizedLang = normalizeLang(lang);
+    if (!normalizedKey || normalizedLang === 'en') return;
+
+    const cacheKey = `${normalizedLang}::${normalizedKey}`;
+    if (missingTranslationCache.has(cacheKey)) return;
+    missingTranslationCache.add(cacheKey);
+
+    document.dispatchEvent(new CustomEvent('localization:missing-translation', {
+      detail: {
+        key: normalizedKey,
+        lang: normalizedLang,
+        source: 'localization-catalog'
+      }
+    }));
   }
 
   /* =============================================================================
@@ -497,6 +640,7 @@ window.NEUROARTAN_TRANSLATION = (() => {
   async function prepareNodeTranslationPayload(el, lang) {
     const payload = {
       textContent: null,
+      content: null,
       ariaLabel: null,
       title: null,
       placeholder: null,
@@ -505,30 +649,29 @@ window.NEUROARTAN_TRANSLATION = (() => {
     const enText = (el.dataset.i18nEn || '').trim();
 
     if (el.hasAttribute('data-i18n-key')) {
-      if (lang === 'en') {
-        payload.textContent = enText || null;
+      const textKey = (el.getAttribute('data-i18n-key') || '').trim();
+      const source = enText || (el instanceof HTMLMetaElement ? (el.getAttribute('content') || '').trim() : (el.textContent || '').trim());
+      const value = source ? await resolveCatalogValue(textKey, source, lang) : null;
+      if (el instanceof HTMLMetaElement) {
+        payload.content = value;
       } else {
-        const source = enText || (el.textContent || '').trim();
-        payload.textContent = source ? await translate(source, lang) : null;
+        payload.textContent = value;
       }
     }
 
     if (el.dataset.i18nAriaEn) {
-      payload.ariaLabel = lang === 'en'
-        ? el.dataset.i18nAriaEn
-        : await translate(el.dataset.i18nAriaEn, lang);
+      const ariaKey = (el.getAttribute('data-i18n-aria-label-key') || el.getAttribute('data-i18n-key') || '').trim();
+      payload.ariaLabel = await resolveCatalogValue(ariaKey, el.dataset.i18nAriaEn, lang);
     }
 
     if (el.dataset.i18nTitleEn) {
-      payload.title = lang === 'en'
-        ? el.dataset.i18nTitleEn
-        : await translate(el.dataset.i18nTitleEn, lang);
+      const titleKey = (el.getAttribute('data-i18n-title-key') || el.getAttribute('data-i18n-key') || '').trim();
+      payload.title = await resolveCatalogValue(titleKey, el.dataset.i18nTitleEn, lang);
     }
 
     if (el.dataset.i18nPlaceholderEn) {
-      payload.placeholder = lang === 'en'
-        ? el.dataset.i18nPlaceholderEn
-        : await translate(el.dataset.i18nPlaceholderEn, lang);
+      const placeholderKey = (el.getAttribute('data-i18n-placeholder-key') || el.getAttribute('data-i18n-key') || '').trim();
+      payload.placeholder = await resolveCatalogValue(placeholderKey, el.dataset.i18nPlaceholderEn, lang);
     }
 
     return payload;
@@ -578,6 +721,18 @@ window.NEUROARTAN_TRANSLATION = (() => {
         for (const { el, payload } of payloads) {
           if (el.hasAttribute('data-i18n-key') && payload.textContent !== null) {
             el.textContent = payload.textContent;
+            const textKey = (el.getAttribute('data-i18n-key') || '').trim();
+            if (textKey) {
+              keyCache.set(textKey, payload.textContent);
+            }
+          }
+
+          if (payload.content !== null) {
+            el.setAttribute('content', payload.content);
+            const contentKey = (el.getAttribute('data-i18n-key') || '').trim();
+            if (contentKey) {
+              keyCache.set(contentKey, payload.content);
+            }
           }
 
           if (payload.ariaLabel !== null) {
@@ -602,13 +757,13 @@ window.NEUROARTAN_TRANSLATION = (() => {
 
           if (titleKey) {
             const enTitle = ((el.getAttribute("data-preview-title") || "")).trim();
-            const val = lang === "en" ? enTitle : await translate(enTitle, lang);
+            const val = await resolveCatalogValue(titleKey, enTitle, lang);
             if (val) keyCache.set(titleKey, val);
           }
 
           if (subKey) {
             const enSub = ((el.getAttribute("data-preview-sub") || "")).trim();
-            const val = lang === "en" ? enSub : await translate(enSub, lang);
+            const val = await resolveCatalogValue(subKey, enSub, lang);
             if (val) keyCache.set(subKey, val);
           }
         }
@@ -687,10 +842,30 @@ window.NEUROARTAN_TRANSLATION = (() => {
     return applyLanguage(lang, root);
   }
 
+  function getSupportedLanguages() {
+    return supportedLanguages.map((item) => ({ ...item }));
+  }
+
+  function getLanguageDirection(lang) {
+    const normalized = normalizeLang(lang);
+    return supportedLanguages.find((item) => item.code === normalized)?.direction
+      || (RTL_LANGS.includes(normalized) ? 'rtl' : 'ltr');
+  }
+
   /* =============================================================================
      13) API EXPOSURE
   ============================================================================= */
-  const api = { applyLanguage, refreshCurrentLanguage, t, getCurrentLanguage, setLanguage, normalizeLang };
+  const api = {
+    applyLanguage,
+    refreshCurrentLanguage,
+    t,
+    getCurrentLanguage,
+    setLanguage,
+    normalizeLang,
+    getSupportedLanguages,
+    getLanguageDirection,
+    loadLocalizationManifest
+  };
   window.ARTAN_TRANSLATION = api;
   window.NEUROARTAN_TRANSLATION = api;
 

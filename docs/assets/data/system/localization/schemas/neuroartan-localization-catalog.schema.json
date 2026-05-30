@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://neuroartan.com/schemas/neuroartan-localization-catalog.schema.json",
+  "title": "Neuroartan Localization Catalog",
+  "type": "object",
+  "required": ["language", "direction", "sourceLanguage", "entries"],
+  "properties": {
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$"
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["ltr", "rtl"]
+    },
+    "sourceLanguage": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$"
+    },
+    "entries": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

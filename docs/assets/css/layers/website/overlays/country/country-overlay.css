@@ -479,10 +479,15 @@ body.country-active .stage-circle{
 ============================================================================= */
 @media (max-width:768px){
   #country-overlay.country-overlay,
+  .country-overlay{
+    --country-container-max:var(--site-rail-width-mobile);
+  }
+
+  #country-overlay.country-overlay,
   .country-overlay{padding:var(--site-shell-inline-padding-mobile) var(--spacing-none);}
 
   #country-overlay .country-overlay-inner,
-  .country-overlay .country-overlay-inner{padding:var(--spacing-none) var(--site-shell-inline-padding-mobile);}
+  .country-overlay .country-overlay-inner{padding:var(--spacing-none);}
 
   #country-overlay .country-overlay-title,
   .country-overlay .country-overlay-title{font-size: var(--country-title-size-mobile);}

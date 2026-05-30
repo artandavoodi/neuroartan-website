@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node server/developer-mode/server.mjs",
     "dev:developer-mode": "node server/developer-mode/server.mjs",
-    "check:developer-mode": "node --check server/developer-mode/server.mjs && find server/developer-mode -name '*.mjs' -print0 | xargs -0 -n1 node --check"
+    "check:developer-mode": "node --check server/developer-mode/server.mjs && find server/developer-mode -name '*.mjs' -print0 | xargs -0 -n1 node --check",
+    "localization:sync": "node docs/assets/utilities/localization/sync-locales.mjs",
+    "localization:check": "node --check docs/assets/js/core/02-systems/locale.js && node docs/assets/utilities/localization/sync-locales.mjs"
   },
   "engines": {
     "node": ">=20"

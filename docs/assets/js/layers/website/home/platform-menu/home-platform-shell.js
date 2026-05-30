@@ -205,9 +205,12 @@ function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobi
   const backTrigger = getHomePlatformShellBackTrigger();
   if (backTrigger) {
     const canGoBack = normalized !== 'root';
+    const backTarget = normalized === 'content' && shouldRouteMobileDestinationDirectlyToContent(HOME_PLATFORM_SHELL_STATE.activeDestination)
+      ? 'main navigation'
+      : 'section navigation';
     backTrigger.hidden = !canGoBack;
     backTrigger.setAttribute('aria-hidden', canGoBack ? 'false' : 'true');
-    backTrigger.setAttribute('aria-label', normalized === 'content' ? 'Back to section navigation' : 'Back to main navigation');
+    backTrigger.setAttribute('aria-label', normalized === 'content' ? `Back to ${backTarget}` : 'Back to main navigation');
   }
 }
 
@@ -238,7 +241,9 @@ function navigateHomePlatformMobileBack() {
   }
 
   if (HOME_PLATFORM_SHELL_STATE.mobileStackLevel === 'content') {
-    setHomePlatformMobileStackLevel('subnav');
+    setHomePlatformMobileStackLevel(
+      shouldRouteMobileDestinationDirectlyToContent(HOME_PLATFORM_SHELL_STATE.activeDestination) ? 'root' : 'subnav'
+    );
     return true;
   }
 
@@ -492,6 +497,11 @@ function resolveDefaultSubdestination(destination) {
   }
 
   return destinationConfig.subdestinations[0]?.id || '';
+}
+
+function shouldRouteMobileDestinationDirectlyToContent(destination) {
+  const destinationConfig = getHomePlatformDestinationConfig(destination);
+  return isHomePlatformMobileView() && (destinationConfig?.subdestinations || []).length <= 1;
 }
 
 async function ensureHomePlatformConfig() {
@@ -1288,7 +1298,7 @@ function activateHomePlatformNavTrigger(target) {
   }
 
   void setHomePlatformDestination(destination).then(() => {
-    advanceHomePlatformMobileStackLevel('subnav');
+    advanceHomePlatformMobileStackLevel(shouldRouteMobileDestinationDirectlyToContent(destination) ? 'content' : 'subnav');
   });
   return true;
 }
@@ -1562,7 +1572,7 @@ function bindHomePlatformShellStaticControls() {
         HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection = true;
       }
       void setHomePlatformDestination(destination).then(() => {
-        advanceHomePlatformMobileStackLevel('subnav');
+        advanceHomePlatformMobileStackLevel(shouldRouteMobileDestinationDirectlyToContent(destination) ? 'content' : 'subnav');
       });
     });
   });

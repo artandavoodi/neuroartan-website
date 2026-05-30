@@ -52,9 +52,9 @@
 @media (max-width: 760px){
   .home-background-shell .home-hero-shader,
   #home-hero-shader{
-    inset: calc(var(--site-shell-inline-padding-mobile) * -1);
-    width: auto;
-    height: auto;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
   }
 }
 

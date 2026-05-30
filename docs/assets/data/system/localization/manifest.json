@@ -1,0 +1,35 @@
+{
+  "system": "neuroartan-localization",
+  "sourceLanguage": "en",
+  "defaultLanguage": "en",
+  "catalogBasePath": "/assets/data/system/localization/locales/",
+  "languages": [
+    {
+      "code": "en",
+      "label": "English",
+      "nativeLabel": "English",
+      "direction": "ltr",
+      "source": true,
+      "enabled": true,
+      "catalog": "en.json"
+    },
+    {
+      "code": "de",
+      "label": "German",
+      "nativeLabel": "Deutsch",
+      "direction": "ltr",
+      "source": false,
+      "enabled": true,
+      "catalog": "de.json"
+    },
+    {
+      "code": "fa",
+      "label": "Persian",
+      "nativeLabel": "فارسی",
+      "direction": "rtl",
+      "source": false,
+      "enabled": true,
+      "catalog": "fa.json"
+    }
+  ]
+}

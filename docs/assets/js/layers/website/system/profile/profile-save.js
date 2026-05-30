@@ -50,6 +50,45 @@ const PROFILE_COLLECTION = 'profiles';
 const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
 const SUPABASE_PROFILE_SELECT_FIELDS = '*';
 const SAVE_SCOPES = Object.freeze(['identity', 'route', 'privacy', 'visibility', 'media']);
+const BOOLEAN_PROFILE_FIELDS = new Set([
+  'public_profile_enabled',
+  'public_profile_discoverable',
+  'profile_search_visible',
+  'profile_models_visible',
+  'profile_followers_visible',
+  'profile_posts_visible',
+  'profile_thoughts_visible'
+]);
+
+const PROFILE_CHANGELOG_FIELD_LABELS = Object.freeze({
+  first_name: 'First name',
+  last_name: 'Last name',
+  display_name: 'Display name',
+  date_of_birth: 'Date of birth',
+  gender: 'Gender',
+  public_summary: 'Bio',
+  public_bio: 'Bio',
+  username: 'Username',
+  public_display_name: 'Public display name',
+  public_identity_label: 'Identity label',
+  public_primary_link: 'Primary public link',
+  public_profile_enabled: 'Public profile visibility',
+  public_profile_discoverable: 'Public discovery',
+  profile_search_visible: 'Search visibility',
+  profile_models_visible: 'Model visibility',
+  profile_followers_visible: 'Follower visibility',
+  profile_posts_visible: 'Post visibility',
+  profile_thoughts_visible: 'Thought visibility',
+  avatar_url: 'Profile image',
+  cover_url: 'Header image'
+});
+
+const PROFILE_CHANGELOG_FORM_FIELD_ALIASES = Object.freeze({
+  avatar_file: 'avatar_url',
+  cover_file: 'cover_url',
+  photo_url: 'avatar_url',
+  public_avatar_url: 'avatar_url'
+});
 
 /* =============================================================================
    04) SUPABASE HELPERS
@@ -297,7 +336,7 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     username: normalizeString(existingProfile?.username || existingProfile?.username_normalized || existingProfile?.username_lower || ''),
     public_display_name: normalizeString(existingProfile?.public_display_name || existingProfile?.display_name || userDisplayName),
     public_identity_label: normalizeString(existingProfile?.public_identity_label || ''),
-    public_summary: normalizeString(existingProfile?.public_summary || ''),
+    public_summary: normalizeString(existingProfile?.public_summary || existingProfile?.public_bio || existingProfile?.bio || ''),
     public_primary_link: normalizeString(existingProfile?.public_primary_link || ''),
     public_profile_enabled: existingProfile?.public_profile_enabled === true,
     public_profile_discoverable: existingProfile?.public_profile_discoverable === true,
@@ -433,34 +472,23 @@ function getProfileChangelogAreaForScope(scope = '') {
   }
 }
 
-function getProfileChangelogCopyForScope(scope = '') {
-  switch (getProfileChangelogAreaForScope(scope)) {
-    case 'identity':
-      return {
-        title: 'Personal info updated',
-        detail: 'Personal profile information was updated.'
-      };
-    case 'route':
-      return {
-        title: 'Public route updated',
-        detail: 'Public route information was updated.'
-      };
-    case 'privacy':
-      return {
-        title: 'Privacy settings updated',
-        detail: 'Profile privacy settings were updated.'
-      };
-    case 'media':
-      return {
-        title: 'Profile media updated',
-        detail: 'Profile media was updated.'
-      };
-    default:
-      return {
-        title: 'Profile updated',
-        detail: 'Profile settings were updated.'
-      };
+function normalizeProfileChangelogFieldName(fieldName = '') {
+  const normalized = normalizeString(fieldName);
+  return PROFILE_CHANGELOG_FORM_FIELD_ALIASES[normalized] || normalized;
+}
+
+function getProfileChangelogFieldLabel(fieldName = '') {
+  return PROFILE_CHANGELOG_FIELD_LABELS[normalizeProfileChangelogFieldName(fieldName)] || '';
+}
+
+function normalizeProfileComparableValue(value, fieldName = '') {
+  const normalizedField = normalizeProfileChangelogFieldName(fieldName);
+
+  if (BOOLEAN_PROFILE_FIELDS.has(normalizedField)) {
+    return value === true || value === 'true' || value === 'on';
   }
+
+  return normalizeString(value ?? '');
 }
 
 function getSubmittedFieldNames(formData) {
@@ -470,6 +498,76 @@ function getSubmittedFieldNames(formData) {
     if (key) names.add(key);
   });
   return Array.from(names).sort();
+}
+
+function getProfileChangelogSubmittedFields(formData) {
+  const fields = new Set();
+  if (!(formData instanceof FormData)) return [];
+
+  formData.forEach((value, key) => {
+    const fieldName = normalizeProfileChangelogFieldName(key);
+    if (!fieldName || !getProfileChangelogFieldLabel(fieldName)) return;
+
+    if (typeof File !== 'undefined' && value instanceof File && value.size <= 0) return;
+    fields.add(fieldName);
+  });
+
+  return Array.from(fields).sort();
+}
+
+function getChangedProfileFields(scope, values = {}, existingProfile = null, user = null, formData = null) {
+  const seed = getExistingProfileSeed(existingProfile, user);
+  const submittedFields = getProfileChangelogSubmittedFields(formData);
+
+  return submittedFields
+    .filter((fieldName) => {
+      const beforeValue = normalizeProfileComparableValue(seed[fieldName], fieldName);
+      const afterValue = normalizeProfileComparableValue(values[fieldName], fieldName);
+      return beforeValue !== afterValue;
+    })
+    .map((fieldName) => ({
+      field: fieldName,
+      label: getProfileChangelogFieldLabel(fieldName)
+    }));
+}
+
+function formatChangedProfileFieldsDetail(changedFields = []) {
+  const labels = changedFields.map((field) => field.label).filter(Boolean);
+
+  if (labels.length === 1) {
+    return `${labels[0]} was updated.`;
+  }
+
+  if (labels.length === 2) {
+    return `${labels[0]} and ${labels[1]} were updated.`;
+  }
+
+  return `${labels[0]}, ${labels[1]}, and ${labels.length - 2} more fields were updated.`;
+}
+
+function buildProfileChangelogEvent(scope, values = {}, existingProfile = null, user = null, formData = null, savedProfile = null) {
+  const changedFields = getChangedProfileFields(scope, values, existingProfile, user, formData);
+  if (!changedFields.length) return null;
+
+  const title = changedFields.length === 1
+    ? `${changedFields[0].label} changed`
+    : `${changedFields.length} profile fields changed`;
+
+  return {
+    area: getProfileChangelogAreaForScope(scope),
+    action: changedFields.length === 1
+      ? `${changedFields[0].field}_changed`
+      : 'profile_fields_changed',
+    title,
+    detail: formatChangedProfileFieldsDetail(changedFields),
+    profile_id: savedProfile?.id || existingProfile?.id || '',
+    metadata: {
+      scope,
+      fields: getSubmittedFieldNames(formData),
+      changed_fields: changedFields.map((field) => field.field),
+      changed_field_labels: changedFields.map((field) => field.label)
+    }
+  };
 }
 
 async function resolveMediaUploadValues({
@@ -796,19 +894,10 @@ async function handleSaveRequest(form) {
     });
 
     const savedProfile = await persistProfileWithSupabase(scope, values, existingProfile, user, policy, supabase);
-    const changelogCopy = getProfileChangelogCopyForScope(scope);
-
-    void recordProfileChangelogEvent({
-      area: getProfileChangelogAreaForScope(scope),
-      action: 'updated',
-      title: changelogCopy.title,
-      detail: changelogCopy.detail,
-      profile_id: savedProfile?.id || existingProfile?.id || '',
-      metadata: {
-        scope,
-        fields: getSubmittedFieldNames(submittedFormData)
-      }
-    });
+    const changelogEvent = buildProfileChangelogEvent(scope, values, existingProfile, user, submittedFormData, savedProfile);
+    if (changelogEvent) {
+      void recordProfileChangelogEvent(changelogEvent);
+    }
 
     setScopeState(scope, {
       status: 'success',

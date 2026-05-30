@@ -374,7 +374,7 @@ function handleHomeProfileControlPanelAction(action) {
   }
 
   if (normalized === 'dashboard') {
-    window.location.href = '/pages/dashboard/index.html';
+    window.location.href = '/dashboard.html';
     return;
   }
 

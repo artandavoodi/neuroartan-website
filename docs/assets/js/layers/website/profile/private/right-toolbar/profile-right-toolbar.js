@@ -13,6 +13,9 @@ const PROFILE_RIGHT_TOOLBAR_RAIL_COOKIE_KEY = 'neuroartan_profile_right_toolbar_
 const ACTION_ICONS = Object.freeze({
   create: '/registry/icons/public/assets/core/actions/create/plus.svg',
   filter: '/registry/icons/public/assets/core/actions/filter/filter.svg',
+  feed: '/registry/icons/public/assets/core/navigation/feed/feed.svg',
+  notification: '/registry/icons/public/assets/core/system/notifications/notification.svg',
+  message: '/registry/icons/public/assets/core/communication/messaging/message.svg',
   changelog: '/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg',
   posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
@@ -24,89 +27,132 @@ const ACTION_ICONS = Object.freeze({
   route: '/registry/icons/public/assets/core/navigation/route/route.svg',
   visibility: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
   verification: '/registry/icons/public/assets/core/identity/trust/verified.svg',
-  identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg'
+  identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg',
+  edit: '/registry/icons/public/assets/core/actions/editing/edit.svg'
 });
 
 const ACTIONS = Object.freeze({
   createPost: {
     id: 'create-post',
     label: 'Create post',
+    tooltip: 'Post',
     icon: ACTION_ICONS.create
   },
   createThought: {
     id: 'create-thought',
     label: 'Create thought',
+    tooltip: 'Thought',
     icon: ACTION_ICONS.create
   },
   createModel: {
     id: 'create-model',
     label: 'Create model',
+    tooltip: 'Model',
     icon: ACTION_ICONS.model
   },
   filterPosts: {
     id: 'filter-posts',
     label: 'Filter posts',
+    tooltip: 'Filter',
     icon: ACTION_ICONS.filter
+  },
+  editProfile: {
+    id: 'edit-profile',
+    label: 'Edit profile',
+    tooltip: 'Edit profile',
+    icon: ACTION_ICONS.edit
+  },
+  filterFeed: {
+    id: 'filter-feed',
+    label: 'Filter feed',
+    tooltip: 'Filter',
+    icon: ACTION_ICONS.filter
+  },
+  filterNotifications: {
+    id: 'filter-notifications',
+    label: 'Filter notifications',
+    tooltip: 'Filter',
+    icon: ACTION_ICONS.filter
+  },
+  createMessage: {
+    id: 'create-message',
+    label: 'Create message',
+    tooltip: 'Message',
+    icon: ACTION_ICONS.message
   },
   filterThoughts: {
     id: 'filter-thoughts',
     label: 'Filter thoughts',
+    tooltip: 'Filter',
     icon: ACTION_ICONS.filter
   },
   filterModels: {
     id: 'filter-models',
     label: 'Filter models',
+    tooltip: 'Filter',
     icon: ACTION_ICONS.filter
   },
   filterDashboard: {
     id: 'filter-dashboard',
     label: 'Filter dashboard',
+    tooltip: 'Filter',
     icon: ACTION_ICONS.filter
   },
   settingsChangelog: {
     id: 'settings-changelog',
     label: 'Settings changelog',
+    tooltip: 'Changelog',
     icon: ACTION_ICONS.changelog
   },
   routeSettings: {
     id: 'route-settings',
     label: 'Public route settings',
+    tooltip: 'Public route',
     icon: ACTION_ICONS.route
   },
   identitySettings: {
     id: 'identity-settings',
     label: 'Personal info',
+    tooltip: 'Personal info',
     icon: ACTION_ICONS.identity
   },
   dashboardSummary: {
     id: 'dashboard-summary',
     label: 'Dashboard summary',
+    tooltip: 'Summary',
     icon: ACTION_ICONS.dashboard
   },
   dashboardMetrics: {
     id: 'dashboard-metrics',
     label: 'Dashboard metrics',
+    tooltip: 'Metrics',
     icon: ACTION_ICONS.metrics
   },
   dashboardGraph: {
     id: 'dashboard-graph',
     label: 'Dashboard graph',
+    tooltip: 'Graph',
     icon: ACTION_ICONS.graph
   },
   organizationSettings: {
     id: 'organization-settings',
     label: 'Organization settings',
+    tooltip: 'Organization',
     icon: ACTION_ICONS.organization
   }
 });
 
 const CONTEXT_ACTIONS = Object.freeze({
-  home: ['createPost', 'filterPosts'],
-  overview: ['createPost', 'filterPosts'],
-  posts: ['createPost', 'filterPosts'],
-  thoughts: ['createThought', 'filterThoughts'],
-  models: ['createModel', 'filterModels'],
-  organizations: ['organizationSettings'],
+  home: ['createPost', 'filterFeed'],
+  feed: ['createPost', 'filterFeed'],
+  notifications: ['filterNotifications'],
+  messaging: ['createMessage'],
+  profile: ['editProfile', 'createPost', 'filterPosts'],
+  overview: ['editProfile', 'createPost', 'filterPosts'],
+  posts: ['editProfile', 'createPost', 'filterPosts'],
+  thoughts: ['editProfile', 'createThought', 'filterThoughts'],
+  models: ['editProfile', 'createModel', 'filterModels'],
+  organizations: ['editProfile', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
 });
@@ -136,6 +182,7 @@ function renderToolbarActions(root, state = getProfileNavigationState()){
     button.className = 'profile-right-toolbar__nav-item';
     button.type = 'button';
     button.dataset.profileRightToolbarAction = action.id;
+    button.dataset.profileRightToolbarTooltip = action.tooltip || action.label;
     button.setAttribute('aria-label', action.label);
 
     const icon = document.createElement('span');
@@ -286,6 +333,24 @@ function requestProfileToolAction(action){
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
         detail: { context: 'posts', source: 'profile-right-toolbar' }
       }));
+      return;
+    case 'edit-profile':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'settings', settingsPane: 'identity' }
+      }));
+      return;
+    case 'filter-feed':
+      document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+        detail: { context: 'feed', source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'filter-notifications':
+      document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+        detail: { context: 'notifications', source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'create-message':
+      document.querySelector('[data-profile-home-message-form] input[name="message"]')?.focus();
       return;
     case 'filter-thoughts':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {

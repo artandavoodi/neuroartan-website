@@ -324,27 +324,29 @@ function renderPostList(root) {
     const item = document.createElement('article');
     item.className = 'profile-posts__item';
     item.innerHTML = `
-      <div class="profile-posts__item-header">
-        <span class="ui-badge ui-badge--outline"></span>
-        <span class="profile-posts__item-meta"></span>
-        <button class="profile-posts__item-more" type="button" data-profile-post-more="${post.id}" aria-label="More options">
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
-        </button>
-        <div class="profile-posts__more-dropdown ui-card ui-surface--glass" data-profile-post-more-dropdown hidden aria-label="Post options">
-          <button class="profile-posts__more-dropdown-item" type="button" data-profile-post-more-dropdown-edit>
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
-            <span>Edit</span>
+      <div class="profile-posts__item-content-wrapper">
+        <div class="profile-posts__item-header">
+          <span class="ui-badge ui-badge--outline"></span>
+          <span class="profile-posts__item-meta"></span>
+          <button class="profile-posts__item-more" type="button" data-profile-post-more="${post.id}" aria-label="More options">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
           </button>
-          <button class="profile-posts__more-dropdown-item profile-posts__more-dropdown-item--danger" type="button" data-profile-post-more-dropdown-delete>
-            <img class="profile-posts__more-dropdown-item-icon" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
-            <span>Delete</span>
-          </button>
+          <div class="profile-posts__more-dropdown ui-card ui-surface--glass" data-profile-post-more-dropdown hidden aria-label="Post options">
+            <button class="profile-posts__more-dropdown-item" type="button" data-profile-post-more-dropdown-edit>
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
+              <span>Edit</span>
+            </button>
+            <button class="profile-posts__more-dropdown-item profile-posts__more-dropdown-item--danger" type="button" data-profile-post-more-dropdown-delete>
+              <img class="profile-posts__more-dropdown-item-icon" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
+              <span>Delete</span>
+            </button>
+          </div>
         </div>
+        <p class="profile-posts__item-body"></p>
+        ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
+        ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
+        ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<div class="profile-posts__item-image-wrapper"><img class="profile-posts__item-image" alt="Post image"></div>' : ''}
       </div>
-      <p class="profile-posts__item-body"></p>
-      ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
-      ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
-      ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<div class="profile-posts__item-image-wrapper"><img class="profile-posts__item-image" alt="Post image"></div>' : ''}
     `;
     const badge = item.querySelector('.ui-badge');
     if (badge instanceof HTMLElement) {
@@ -405,11 +407,41 @@ function setStatus(root, message, state = 'idle') {
   node.dataset.profilePostStatus = state;
 }
 
+function getPostPanel(root) {
+  return root?.closest?.('[data-profile-section-panel]');
+}
+
+function preparePostPanelForOverlay(root) {
+  const panel = getPostPanel(root);
+  if (!(panel instanceof HTMLElement)) return;
+  if (!panel.dataset.profilePostOverlayPreviousHidden) {
+    panel.dataset.profilePostOverlayPreviousHidden = panel.hidden ? 'true' : 'false';
+  }
+  if (panel.hidden) {
+    panel.hidden = false;
+  }
+}
+
+function restorePostPanelAfterOverlay(root) {
+  const panel = getPostPanel(root);
+  if (!(panel instanceof HTMLElement)) return;
+  if (panel.dataset.profilePostOverlayPreviousHidden === 'true') {
+    panel.hidden = true;
+  }
+  delete panel.dataset.profilePostOverlayPreviousHidden;
+}
+
 function setPostOverlayOpen(root, open) {
   const overlay = root.querySelector('[data-profile-post-overlay]');
   if (!(overlay instanceof HTMLElement)) return;
+  if (open) {
+    preparePostPanelForOverlay(root);
+  }
   overlay.hidden = !open;
   document.body?.classList.toggle('profile-posts-overlay-open', open);
+  if (!open) {
+    restorePostPanelAfterOverlay(root);
+  }
 }
 
 function setMoreDropdownOpen(button, open, postId = '') {
@@ -592,6 +624,9 @@ function bindPostForm() {
       syncPostCounter(root, policy);
       syncSubmitLabel(root);
       await renderPosts();
+      document.dispatchEvent(new CustomEvent('profile:feed-refresh-request', {
+        detail: { source: 'profile-posts', visibility }
+      }));
       setPostOverlayOpen(root, false);
       setStatus(root, editingPostId ? 'Post updated.' : (visibility === 'public' ? 'Post published to your public profile and feed.' : 'Private draft saved.'), 'success');
 
@@ -792,6 +827,9 @@ function bindPostForm() {
           void deleteFunction(postId)
             .then(async () => {
               await renderPosts();
+              document.dispatchEvent(new CustomEvent('profile:feed-refresh-request', {
+                detail: { source: 'profile-posts-delete' }
+              }));
               setStatus(root, 'Post deleted.', 'success');
             })
             .catch((error) => {

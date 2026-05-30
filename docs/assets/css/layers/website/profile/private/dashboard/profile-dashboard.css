@@ -11,6 +11,7 @@
 .profile-dashboard{
   display:grid;
   gap:var(--spacing-lg);
+  padding-inline:var(--profile-workspace-content-row-padding-inline);
 }
 
 .profile-dashboard__grid{

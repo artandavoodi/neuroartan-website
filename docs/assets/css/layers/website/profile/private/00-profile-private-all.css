@@ -32,6 +32,7 @@
 @import url('./media/profile-media-editor.css');
 @import url('./organization/profile-private-organization.css');
 @import url('./models/profile-private-models.css');
+@import url('./home/profile-home-panels.css');
 @import url('./posts/profile-posts.css');
 @import url('./settings/profile-private-settings.css');
 @import url('./status/profile-private-status.css');

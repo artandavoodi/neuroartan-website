@@ -86,7 +86,7 @@ body.profile-posts-overlay-open{
   justify-content:space-between;
   gap:var(--spacing-md);
   position:relative;
-  padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
+  padding:0;
 }
 
 .profile-posts__footer{
@@ -599,11 +599,15 @@ body.profile-posts-overlay-open{
   color:var(--text-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
+  padding:0;
+}
+
+.profile-posts__item-content-wrapper{
   padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-posts__item-image-wrapper{
-  padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
+  padding:0;
 }
 
 .profile-posts__item-image{

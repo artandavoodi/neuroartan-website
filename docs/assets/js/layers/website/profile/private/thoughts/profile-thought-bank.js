@@ -147,6 +147,9 @@ function createThoughtEntry(entry, taxonomy) {
   const article = document.createElement('article');
   article.className = 'profile-thought-stream__entry';
 
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'profile-thought-stream__entry-content-wrapper';
+
   const meta = document.createElement('div');
   meta.className = 'profile-thought-stream__entry-meta';
 
@@ -165,8 +168,10 @@ function createThoughtEntry(entry, taxonomy) {
   body.className = 'profile-thought-stream__entry-body';
   body.textContent = entry.text;
 
-  article.appendChild(meta);
-  article.appendChild(body);
+  contentWrapper.appendChild(meta);
+  contentWrapper.appendChild(body);
+
+  article.appendChild(contentWrapper);
 
   return article;
 }

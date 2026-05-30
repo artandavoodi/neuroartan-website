@@ -20,6 +20,7 @@
   --profile-workspace-sidebar-edge-padding:var(--spacing-md);
   --profile-workspace-right-toolbar-edge-padding:var(--spacing-md);
   --profile-workspace-content-inset:var(--site-shell-inline-padding-mobile);
+  --profile-workspace-content-row-padding-inline:var(--spacing-lg);
   display:grid;
   grid-template-columns:
     var(--profile-workspace-sidebar-expanded-width)

@@ -58,7 +58,7 @@
 
 .home-background-shell .home-hero-matte,
 .home-hero-matte{
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
   isolation: isolate;
@@ -72,6 +72,7 @@
   -webkit-backface-visibility: hidden;
   transform: translateZ(0);
   will-change: opacity, background, backdrop-filter;
+  border: none;
 
   background-color: rgb(var(--home-matte-rgb-dark));
   background:

@@ -5,6 +5,53 @@
 const DEFAULT_VALUE = 'all';
 
 const FILTER_CONTEXTS = Object.freeze({
+  feed: {
+    title: 'Feed Filters',
+    copy: 'Refine the home feed by source, visibility, and order.',
+    groups: [
+      {
+        key: 'source',
+        label: 'Source',
+        options: [
+          { value: 'all', label: 'All' },
+          { value: 'following', label: 'Following' },
+          { value: 'profiles', label: 'Profiles' }
+        ]
+      },
+      {
+        key: 'sort',
+        label: 'Sort',
+        options: [
+          { value: 'ranked', label: 'Ranked' },
+          { value: 'latest', label: 'Latest' }
+        ]
+      }
+    ]
+  },
+  notifications: {
+    title: 'Notification Filters',
+    copy: 'Refine notification history by read state and priority.',
+    groups: [
+      {
+        key: 'state',
+        label: 'State',
+        options: [
+          { value: 'all', label: 'All' },
+          { value: 'unread', label: 'Unread' },
+          { value: 'read', label: 'Read' }
+        ]
+      },
+      {
+        key: 'priority',
+        label: 'Priority',
+        options: [
+          { value: 'all', label: 'All' },
+          { value: 'normal', label: 'Normal' },
+          { value: 'low', label: 'Low' }
+        ]
+      }
+    ]
+  },
   posts: {
     title: 'Post Filters',
     copy: 'Refine your posts by route state, media, year, and order.',

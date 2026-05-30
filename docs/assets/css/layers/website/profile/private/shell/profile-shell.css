@@ -112,7 +112,7 @@
 }
 
 .profile-shell[data-profile-surface="private"]:is(
-  [data-profile-section="home"],
+  [data-profile-section="profile"],
   [data-profile-section="posts"],
   [data-profile-section="thoughts"],
   [data-profile-section="models"],

@@ -3,6 +3,10 @@
 ============================================================================= */
 
 .profile-right-toolbar{
+  --profile-right-toolbar-tooltip-size:var(--home-platform-shell-nav-text-size);
+  --profile-right-toolbar-tooltip-weight:var(--home-platform-shell-nav-text-weight);
+  --profile-right-toolbar-tooltip-line-height:var(--home-platform-shell-nav-text-line-height);
+  --profile-right-toolbar-tooltip-tracking:var(--home-platform-shell-nav-text-tracking);
   width:var(--size-full);
   min-width:var(--spacing-none);
   min-height:var(--size-full);
@@ -57,6 +61,7 @@
 }
 
 .profile-right-toolbar__nav-item{
+  position:relative;
   width:var(--size-full);
   min-height:var(--home-platform-shell-nav-item-min-height);
   display:flex;
@@ -74,6 +79,36 @@
   text-align:left;
   cursor:pointer;
   transition:var(--interaction-transition-control);
+}
+
+.profile-right-toolbar__nav-item::after{
+  content:attr(data-profile-right-toolbar-tooltip);
+  position:absolute;
+  top:50%;
+  right:calc(100% + var(--spacing-sm));
+  z-index:var(--z-raised);
+  transform:translateY(-50%);
+  width:max-content;
+  max-width:calc(12rem * var(--accessibility-density-scale));
+  padding:var(--spacing-xs) var(--spacing-sm);
+  border:var(--border-width-hairline) solid var(--border-color);
+  border-radius:var(--control-radius-pill);
+  background:var(--panel-surface-solid-unified);
+  color:var(--text-primary-color);
+  box-shadow:var(--shadow-soft);
+  font-size:var(--profile-right-toolbar-tooltip-size);
+  font-weight:var(--profile-right-toolbar-tooltip-weight);
+  line-height:var(--profile-right-toolbar-tooltip-line-height);
+  letter-spacing:var(--profile-right-toolbar-tooltip-tracking);
+  opacity:0;
+  pointer-events:none;
+  white-space:nowrap;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.profile-right-toolbar__nav-item:hover::after,
+.profile-right-toolbar__nav-item:focus-visible::after{
+  opacity:1;
 }
 
 .profile-right-toolbar__rail-toggle:hover,
@@ -190,6 +225,10 @@
   }
 
   .profile-right-toolbar__nav-text{
+    display:none;
+  }
+
+  .profile-right-toolbar__nav-item::after{
     display:none;
   }
 }

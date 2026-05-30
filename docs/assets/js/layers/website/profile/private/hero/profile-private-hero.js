@@ -12,25 +12,24 @@
    01) MODULE IDENTITY
 ============================================================================= */
 const MODULE_ID = 'profile-private-hero';
-const PROFILE_HOME_TAB_SECTIONS = new Set(['home', 'posts', 'thoughts', 'models', 'organizations']);
+const PROFILE_IDENTITY_TAB_SECTIONS = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
 let profileHeroLayoutFrame = 0;
 
 const PROFILE_CONTEXT_TAB_GROUPS = {
-  overview: {
-    label: 'Profile sections',
+  home: {
+    label: 'Home sections',
     tabs: [
-      { key: 'posts', label: 'Posts', section: 'posts' },
-      { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
-      { key: 'models', label: 'Models', section: 'models' },
-      { key: 'organizations', label: 'Organizations', section: 'organizations' }
+      { key: 'feed', label: 'Feed', section: 'feed' },
+      { key: 'notifications', label: 'Notifications', section: 'notifications' },
+      { key: 'messaging', label: 'Messaging', section: 'messaging' }
     ]
   },
-  content: {
+  profile: {
     label: 'Profile sections',
     tabs: [
       { key: 'posts', label: 'Posts', section: 'posts' },
       { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
-      { key: 'models', label: 'Models', section: 'models' },
+      { key: 'models', label: 'Model', section: 'models' },
       { key: 'organizations', label: 'Organizations', section: 'organizations' }
     ]
   },
@@ -62,6 +61,9 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
 
 const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   overview: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview.svg',
+  feed: '/registry/icons/public/assets/core/navigation/feed/feed.svg',
+  notifications: '/registry/icons/public/assets/core/system/notifications/notification.svg',
+  messaging: '/registry/icons/public/assets/core/communication/messaging/message.svg',
   posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
   models: '/registry/icons/public/assets/layers/website/profile/actions/models.svg',
@@ -123,11 +125,17 @@ function setImage(root, selector, src, alt = '') {
 
 function getTabGroupKey(navigationState = getProfileNavigationState()) {
   switch (navigationState.section) {
+    case 'home':
+    case 'feed':
+    case 'notifications':
+    case 'messaging':
+      return 'home';
+    case 'profile':
     case 'posts':
     case 'thoughts':
     case 'models':
     case 'organizations':
-      return 'content';
+      return 'profile';
     case 'settings':
       if (
         navigationState.settingsPane === 'identity'
@@ -139,16 +147,22 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
       return 'settings';
     case 'dashboard':
       return 'dashboard';
-    case 'home':
-      return 'overview';
     case 'overview':
     default:
-      return 'overview';
+      return 'profile';
   }
 }
 
 function getActiveTabKey(navigationState = getProfileNavigationState()) {
   switch (navigationState.section) {
+    case 'home':
+    case 'feed':
+      return 'feed';
+    case 'notifications':
+    case 'messaging':
+      return navigationState.section;
+    case 'profile':
+      return 'posts';
     case 'posts':
     case 'thoughts':
     case 'models':
@@ -158,8 +172,6 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
       return navigationState.settingsPane || 'identity';
     case 'dashboard':
       return navigationState.dashboardPane || 'overview';
-    case 'home':
-      return 'posts';
     case 'overview':
       return 'posts';
     default:
@@ -302,10 +314,10 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
   const root = getHeroRoot();
   if (!root) return;
 
-  const isHomeSection = PROFILE_HOME_TAB_SECTIONS.has(navigationState.section);
+  const isProfileIdentitySection = PROFILE_IDENTITY_TAB_SECTIONS.has(navigationState.section);
   const surface = root.querySelector('.profile-private-hero__surface');
   if (surface instanceof HTMLElement) {
-    surface.dataset.profileHeroVisible = isHomeSection ? 'true' : 'false';
+    surface.dataset.profileHeroVisible = isProfileIdentitySection ? 'true' : 'false';
   }
 
   const tabsRoot = root.querySelector('[data-profile-hero-tabs]');

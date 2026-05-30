@@ -55,10 +55,40 @@ function sidebarItems(root){
   return Array.from(root.querySelectorAll('[data-profile-nav-section]'));
 }
 
+function normalizeRoutePath(pathname = '') {
+  const normalized = String(pathname || '').replace(/\/+$/, '') || '/';
+  return normalized === '/feed' ? '/feed' : normalized;
+}
+
+function shouldUseDocumentRoute(route = '') {
+  if (!route) return false;
+
+  const nextUrl = new URL(route, window.location.origin);
+  return normalizeRoutePath(nextUrl.pathname) !== normalizeRoutePath(window.location.pathname);
+}
+
+function navigateToSidebarRoute(item) {
+  const route = item.dataset.profileNavRoute || '';
+  if (!route) return false;
+
+  if (shouldUseDocumentRoute(route)) {
+    window.location.href = route;
+    return true;
+  }
+
+  const nextUrl = new URL(route, window.location.origin);
+  if (nextUrl.hash && nextUrl.hash !== window.location.hash) {
+    window.history.pushState({}, '', `${window.location.pathname}${window.location.search}${nextUrl.hash}`);
+  }
+
+  return false;
+}
+
 function renderSidebar(root, state = getProfileNavigationState()){
   const editProfilePanes = new Set(['identity', 'route', 'privacy']);
   const settingsPanes = new Set(['password', 'verification']);
-  const homeSections = new Set(['posts', 'thoughts', 'models', 'organizations']);
+  const homeSections = new Set(['home', 'feed', 'notifications', 'messaging']);
+  const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
@@ -70,11 +100,13 @@ function renderSidebar(root, state = getProfileNavigationState()){
     if (link || searchTrigger) {
       active = false;
     } else if (section === 'home') {
-      active = homeSections.has(state.section) || state.section === 'home';
+      active = homeSections.has(state.section);
+    } else if (section === 'profile') {
+      active = profileSections.has(state.section)
+        || (state.section === 'settings' && editProfilePanes.has(state.settingsPane));
     } else if (section === 'settings') {
       active = state.section === 'settings' && (
-        pane === state.settingsPane || 
-        (pane === 'identity' && editProfilePanes.has(state.settingsPane)) ||
+        pane === state.settingsPane ||
         (pane === 'password' && settingsPanes.has(state.settingsPane))
       );
     } else if (section === 'dashboard') {
@@ -190,6 +222,10 @@ function bindSidebar(){
 
     if(item.dataset.profileNavLink){
       window.location.href = item.dataset.profileNavLink;
+      return;
+    }
+
+    if(navigateToSidebarRoute(item)){
       return;
     }
 

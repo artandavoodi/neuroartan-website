@@ -36,11 +36,18 @@
       </div>
 
       <nav class="profile-sidebar__nav" aria-label="Private profile workspace">
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="home" data-profile-nav-pane="">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="home" data-profile-nav-pane="" data-profile-nav-route="/feed/#home">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/primary/home.svg" alt="">
           </span>
           <span class="profile-sidebar__nav-text">Home</span>
+        </button>
+
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="profile" data-profile-nav-pane="" data-profile-nav-route="/profile.html#profile">
+          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="">
+          </span>
+          <span class="profile-sidebar__nav-text">Profile</span>
         </button>
 
         <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/">
@@ -57,35 +64,14 @@
           <span class="profile-sidebar__nav-text">Explore</span>
         </button>
 
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/feed/">
-          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/feed/feed.svg" alt="">
-          </span>
-          <span class="profile-sidebar__nav-text">Feed</span>
-        </button>
-
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-link="/notifications/">
-          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/notifications/notification.svg" alt="">
-          </span>
-          <span class="profile-sidebar__nav-text">Notifications</span>
-        </button>
-
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="dashboard" data-profile-nav-pane="">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="dashboard" data-profile-nav-pane="" data-profile-nav-route="/dashboard.html#dashboard/overview">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg" alt="">
           </span>
           <span class="profile-sidebar__nav-text">Dashboard</span>
         </button>
 
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="settings" data-profile-nav-pane="identity">
-          <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="">
-          </span>
-          <span class="profile-sidebar__nav-text">Edit Profile</span>
-        </button>
-
-        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="settings" data-profile-nav-pane="password">
+        <button class="profile-sidebar__nav-item" type="button" data-profile-nav-section="settings" data-profile-nav-pane="password" data-profile-nav-route="/settings.html#settings/password">
           <span class="profile-sidebar__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/settings/settings.svg" alt="">
           </span>

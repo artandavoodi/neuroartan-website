@@ -80,7 +80,7 @@
 .profile-settings__section{
   display:grid;
   gap:var(--spacing-md);
-  padding:var(--spacing-lg) var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+  padding:var(--spacing-lg) var(--profile-workspace-content-row-padding-inline);
 }
 
 .profile-settings__section-title{

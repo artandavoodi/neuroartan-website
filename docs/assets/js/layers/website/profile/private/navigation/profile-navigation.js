@@ -12,7 +12,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    02) CONSTANTS
    ============================================================================= */
 
-const VALID_SECTIONS = new Set(['home', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
+const VALID_SECTIONS = new Set(['home', 'feed', 'notifications', 'messaging', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
 
@@ -26,6 +26,15 @@ function normalizeSection(value) {
   switch (normalized) {
     case 'home':
       return 'home';
+    case 'feed':
+      return 'feed';
+    case 'notifications':
+      return 'notifications';
+    case 'messaging':
+      return 'messaging';
+    case 'profile':
+    case 'overview':
+      return 'profile';
     case 'posts':
       return 'posts';
     case 'thoughts':
@@ -77,11 +86,56 @@ function buildHashRoute(state = createDefaultState()) {
    ============================================================================= */
 
 function createDefaultState() {
+  const pathname = String(window.location.pathname || '').toLowerCase();
+  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'home' : 'profile';
+
   return buildNavigationState(
-    'home',
-    'identity',
+    section,
+    section === 'settings' ? 'password' : 'identity',
     'overview'
   );
+}
+
+function getRouteContext() {
+  const pathname = String(window.location.pathname || '').toLowerCase();
+  if (pathname.includes('/dashboard')) return 'dashboard';
+  if (pathname.includes('/settings')) return 'settings';
+  if (pathname.includes('/feed')) return 'home';
+  return 'profile';
+}
+
+function constrainStateToRoute(state) {
+  const routeContext = getRouteContext();
+  const homeSections = new Set(['home', 'feed', 'notifications', 'messaging']);
+  const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
+
+  if (routeContext === 'home' && !homeSections.has(state.section)) {
+    return createDefaultState();
+  }
+
+  if (routeContext === 'dashboard' && state.section !== 'dashboard') {
+    return createDefaultState();
+  }
+
+  if (routeContext === 'settings' && state.section !== 'settings') {
+    return createDefaultState();
+  }
+
+  if (routeContext === 'profile') {
+    if (homeSections.has(state.section) || state.section === 'dashboard') {
+      return createDefaultState();
+    }
+
+    if (state.section === 'settings' && !['identity', 'route', 'privacy'].includes(state.settingsPane)) {
+      return createDefaultState();
+    }
+
+    if (!profileSections.has(state.section) && state.section !== 'settings') {
+      return createDefaultState();
+    }
+  }
+
+  return state;
 }
 
 function parseHash() {
@@ -90,28 +144,28 @@ function parseHash() {
 
   if (rawHash.startsWith('settings/')) {
     const [, pane = 'identity'] = rawHash.split('/');
-    return buildNavigationState(
+    return constrainStateToRoute(buildNavigationState(
       'settings',
       pane,
       createDefaultState().dashboardPane
-    );
+    ));
   }
 
   if (rawHash.startsWith('dashboard/')) {
     const [, pane = 'overview'] = rawHash.split('/');
-    return buildNavigationState(
+    return constrainStateToRoute(buildNavigationState(
       'dashboard',
       createDefaultState().settingsPane,
       pane
-    );
+    ));
   }
 
   const section = normalizeSection(rawHash);
-  return buildNavigationState(
+  return constrainStateToRoute(buildNavigationState(
     section,
     section === 'settings' ? 'identity' : createDefaultState().settingsPane,
     section === 'dashboard' ? 'overview' : createDefaultState().dashboardPane
-  );
+  ));
 }
 
 function writeHash(state) {

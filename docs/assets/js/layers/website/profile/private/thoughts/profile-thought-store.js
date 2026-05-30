@@ -33,6 +33,7 @@ const STORE = (window.__NEUROARTAN_PROFILE_THOUGHT_STORE__ ||= {
   taxonomyPromise: null,
   runtimeState: null,
   state: null,
+  hydrateRequestId: 0,
   subscribers: new Set()
 });
 
@@ -244,10 +245,12 @@ export function subscribeProfileThoughtState(subscriber) {
 
 function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRuntimeState()) {
   STORE.runtimeState = runtimeState;
+  const requestId = STORE.hydrateRequestId + 1;
+  STORE.hydrateRequestId = requestId;
 
   listProfileThoughts()
-    .catch(() => [])
     .then((entries) => {
+      if (requestId !== STORE.hydrateRequestId) return;
       setThoughtState({
         runtimeState,
         entries,
@@ -257,6 +260,12 @@ function hydrateThoughtState(runtimeState = STORE.runtimeState || getProfileRunt
         submitStatus: 'idle',
         submitMessage: ''
       });
+    })
+    .catch((error) => {
+      if (requestId !== STORE.hydrateRequestId) return;
+      const code = normalizeString(error?.code || error?.message || '');
+      if (code === 'AUTH_REQUIRED') return;
+      console.error('[profile-thought-store] Failed to hydrate thoughts.', error);
     });
 }
 
@@ -322,6 +331,7 @@ export function submitProfileThought() {
         submitStatus: 'success',
         submitMessage: 'Thought saved to your private Thought Bank.'
       });
+      hydrateThoughtState(getProfileRuntimeState());
     })
     .catch((error) => {
       console.error('[profile-thought-store] Failed to save thought.', error);
@@ -343,6 +353,23 @@ export function submitProfileThought() {
 function bindRuntimeState() {
   subscribeProfileRuntime((runtimeState) => {
     hydrateThoughtState(runtimeState);
+  });
+
+  window.addEventListener('neuroartan:supabase-ready', () => {
+    hydrateThoughtState(STORE.runtimeState || getProfileRuntimeState());
+  });
+
+  document.addEventListener('account:profile-state-changed', (event) => {
+    const runtimeState = event instanceof CustomEvent
+      ? { ...(STORE.runtimeState || getProfileRuntimeState()), ...(event.detail || {}) }
+      : STORE.runtimeState || getProfileRuntimeState();
+    hydrateThoughtState(runtimeState);
+  });
+
+  document.addEventListener('profile:navigation-changed', (event) => {
+    const section = event instanceof CustomEvent ? event.detail?.section : '';
+    if (section !== 'thoughts') return;
+    hydrateThoughtState(STORE.runtimeState || getProfileRuntimeState());
   });
 }
 

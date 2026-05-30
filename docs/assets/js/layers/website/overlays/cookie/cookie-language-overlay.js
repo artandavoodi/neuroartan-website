@@ -70,7 +70,7 @@
   }
 
   /* =============================================================================
-     04) COUNTRY DATA HELPERS
+     04) LANGUAGE DATA HELPERS
   ============================================================================= */
   function normalizeLang(code = '') {
     const raw = String(code || '').trim().toLowerCase();
@@ -78,42 +78,62 @@
     return raw.split('-')[0] || 'en';
   }
 
+  function getSupportedLanguageConfigs() {
+    const api = window.NEUROARTAN_TRANSLATION || window.ARTAN_TRANSLATION || null;
+    const languages = typeof api?.getSupportedLanguages === 'function'
+      ? api.getSupportedLanguages()
+      : [];
+
+    const normalized = Array.isArray(languages)
+      ? languages.map((item) => {
+        const code = normalizeLang(item?.code || item);
+        if (!code) return null;
+        return {
+          code,
+          label: String(item?.label || code.toUpperCase()).trim(),
+          nativeLabel: String(item?.nativeLabel || item?.label || code.toUpperCase()).trim(),
+          direction: item?.direction === 'rtl' ? 'rtl' : 'ltr'
+        };
+      }).filter(Boolean)
+      : [];
+
+    return normalized.length
+      ? normalized
+      : [{ code: 'en', label: 'English', nativeLabel: 'English', direction: 'ltr' }];
+  }
+
+  function getSupportedLanguageCodes() {
+    return getSupportedLanguageConfigs().map((item) => item.code);
+  }
+
+  function resolveSupportedLanguage(code = '') {
+    const normalized = normalizeLang(code || 'en');
+    return getSupportedLanguageCodes().includes(normalized) ? normalized : 'en';
+  }
+
+  function normalizeSupportedLanguages(languages = []) {
+    const values = Array.isArray(languages) ? languages : [languages];
+    const normalized = values.map((value) => resolveSupportedLanguage(value)).filter(Boolean);
+    return Array.from(new Set(normalized.length ? normalized : ['en']));
+  }
+
   function getCountryData() {
-    const source = Array.isArray(window.ARTAN_COUNTRIES_DATA) ? window.ARTAN_COUNTRIES_DATA : [];
-    if (!source.length) return [];
-
-    const flat = source.flatMap((entry) => Array.isArray(entry?.countries) ? entry.countries : [entry]);
-
-    const normalized = flat.map((entry) => {
-      const code = String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim().toUpperCase();
-      const name = String(entry?.name || entry?.country || entry?.label || '').trim();
-      const languages = Array.isArray(entry?.languages)
-        ? entry.languages.map((value) => normalizeLang(value)).filter(Boolean)
-        : [];
-      const language = normalizeLang(entry?.language || entry?.primaryLanguage || languages[0] || 'en');
-
-      return { code, name, language, languages };
-    }).filter((entry) => entry.code && entry.name);
-
-    const seen = new Set();
-    return normalized.filter((entry) => {
-      if (seen.has(entry.code)) return false;
-      seen.add(entry.code);
-      return true;
-    });
+    return getSupportedLanguageConfigs().map((language) => ({
+      code: language.code.toUpperCase(),
+      name: language.nativeLabel || language.label || language.code.toUpperCase(),
+      language: language.code,
+      languages: [language.code],
+      direction: language.direction
+    }));
   }
 
   /* =============================================================================
      05) LABEL HELPERS
   ============================================================================= */
   function getLanguageLabel(languageCode = '') {
-    const normalized = normalizeLang(languageCode);
-    try {
-      const display = new Intl.DisplayNames([normalized], { type: 'language' });
-      return String(display.of(normalized) || normalized.toUpperCase()).trim();
-    } catch {
-      return normalized.toUpperCase();
-    }
+    const normalized = resolveSupportedLanguage(languageCode);
+    const config = getSupportedLanguageConfigs().find((item) => item.code === normalized);
+    return config?.nativeLabel || config?.label || normalized.toUpperCase();
   }
 
   function getCountryLabel(country) {
@@ -143,11 +163,11 @@
     const keys = ['neuroartan_language', 'neuroartan-language', 'artan_language', 'language'];
     for (const key of keys) {
       try {
-        const value = normalizeLang(window.localStorage.getItem(key) || '');
+      const value = resolveSupportedLanguage(window.localStorage.getItem(key) || '');
         if (value) return value;
       } catch {}
     }
-    return normalizeLang(document.documentElement.getAttribute('lang') || navigator.language || 'en');
+    return resolveSupportedLanguage(document.documentElement.getAttribute('lang') || navigator.language || 'en');
   }
 
   function syncStateFromStorage() {
@@ -180,12 +200,12 @@
 
     const countryCode = String(country.code || '').trim().toUpperCase();
     const countryName = getCountryLabel(country);
-    const languageCode = normalizeLang(country.language || state.selectedLanguage || 'en');
+    const languageCode = resolveSupportedLanguage(country.language || state.selectedLanguage || 'en');
     const languageLabel = getCountryLanguageLabel(country);
     const languageSet = Array.isArray(country.languages) && country.languages.length
-      ? country.languages.map((value) => normalizeLang(value)).filter(Boolean)
+      ? normalizeSupportedLanguages(country.languages)
       : [languageCode];
-    const isSelected = countryCode === state.selectedCountryCode;
+    const isSelected = languageCode === state.selectedLanguage;
 
     button.dataset.countryCode = countryCode;
     button.dataset.language = languageCode;
@@ -289,25 +309,18 @@
     if (!(button instanceof HTMLElement)) return;
 
     const countryCode = String(button.dataset.countryCode || '').trim().toUpperCase();
-    const language = normalizeLang(button.dataset.language || state.selectedLanguage || 'en');
+    const language = resolveSupportedLanguage(button.dataset.language || state.selectedLanguage || 'en');
     const languages = String(button.dataset.languages || language || 'en')
       .split(',')
-      .map((value) => normalizeLang(value))
+      .map((value) => resolveSupportedLanguage(value))
       .filter(Boolean);
     const countryName = String(button.dataset.countryName || '').trim();
 
-    if (!countryCode || !countryName) return;
+    if (!language) return;
 
-    state.selectedCountryCode = countryCode;
     state.selectedLanguage = language;
 
     try {
-      window.localStorage.setItem('neuroartan_country_code', countryCode);
-      window.localStorage.setItem('artan_country_code', countryCode);
-      window.localStorage.setItem('countryCode', countryCode);
-      window.localStorage.setItem('localeCountryCode', countryCode);
-      window.localStorage.setItem('neuroartan_country_label', countryName);
-      window.localStorage.setItem('artan_country_label', countryName);
       window.localStorage.setItem('neuroartan_language', language);
       window.localStorage.setItem('neuroartan-language', language);
       window.localStorage.setItem('artan_language', language);
@@ -316,7 +329,16 @@
     } catch {}
 
     const localeApi = window.NEUROARTAN_COUNTRY_LANGUAGE || window.ARTAN_COUNTRY_LANGUAGE || null;
-    if (localeApi && typeof localeApi.applyTranslation === 'function') {
+    if (localeApi && typeof localeApi.setLocalePreference === 'function') {
+      try {
+        await localeApi.setLocalePreference({
+          countryCode: window.NEUROARTAN_LOCALE?.countryCode || '',
+          countryLabel: window.NEUROARTAN_LOCALE?.countryLabel || '',
+          language,
+          languages
+        });
+      } catch {}
+    } else if (localeApi && typeof localeApi.applyTranslation === 'function') {
       try {
         await localeApi.applyTranslation(language);
       } catch {}
@@ -326,8 +348,8 @@
       detail: {
         code: countryCode,
         countryCode,
-        country: countryName,
-        name: countryName,
+        country: window.NEUROARTAN_LOCALE?.countryLabel || '',
+        name: window.NEUROARTAN_LOCALE?.countryLabel || '',
         language
       }
     }));

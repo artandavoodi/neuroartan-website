@@ -40,11 +40,14 @@
    03) LANGUAGE DROPDOWN SHELL
 ============================================================================= */
 .language-dropdown{
-  position:absolute;
-  bottom:calc(var(--size-full) + var(--space-3));
-  right:var(--spacing-none);
+  position:fixed;
+  right:var(--site-gutter);
+  bottom:calc(env(safe-area-inset-bottom, 0px) + var(--home-shell-footer-separator-offset, var(--space-8)));
   min-width:var(--control-width-min);
+  max-height:calc(100dvh - var(--home-shell-topbar-height, var(--space-16)) - var(--home-shell-footer-separator-offset, var(--space-8)));
   padding:var(--space-2);
+  overflow-y:auto;
+  overscroll-behavior:contain;
   background-color:var(--panel-surface-unified);
   border:var(--border-width-hairline) solid var(--panel-border-unified);
   border-radius:var(--panel-radius-unified);

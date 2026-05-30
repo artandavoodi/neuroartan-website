@@ -240,6 +240,10 @@ body.home-platform-shell-open .home-platform-shell{
   align-items:center;
 }
 
+.home-platform-shell__chrome-leading{
+  gap:var(--home-platform-shell-rail-toggle-margin-left);
+}
+
 .home-platform-shell__chrome-leading,
 .home-platform-shell__chrome-controls{
   justify-content:flex-start;
@@ -348,6 +352,10 @@ body.home-platform-shell-open .home-platform-shell{
 
 .home-platform-shell__back[hidden]{
   display:none !important;
+}
+
+.home-platform-shell[data-home-platform-destination="settings"][data-home-platform-subdestination="language"] .home-platform-shell__back:not([hidden]){
+  display:inline-flex;
 }
 
 .home-platform-shell__back-icon{

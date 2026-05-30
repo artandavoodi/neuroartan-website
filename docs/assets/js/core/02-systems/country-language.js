@@ -197,7 +197,9 @@
     try {
       const raw = getLS(STORAGE.LANGUAGES, LEGACY_STORAGE.LANGUAGES);
       const arr = raw ? JSON.parse(raw) : null;
-      return Array.isArray(arr) ? arr.map(normalizeLang).filter(Boolean) : null;
+      return Array.isArray(arr)
+        ? Array.from(new Set(arr.map((value) => resolveSupportedLanguage(value)).filter(Boolean)))
+        : null;
     } catch {
       return null;
     }
@@ -205,7 +207,9 @@
 
   const setStoredLanguages = (langs) => {
     try {
-      const arr = Array.isArray(langs) ? langs.map(normalizeLang).filter(Boolean) : null;
+      const arr = Array.isArray(langs)
+        ? langs.map((value) => resolveSupportedLanguage(value)).filter(Boolean)
+        : null;
       state.languages = (arr && arr.length) ? Array.from(new Set(arr)) : null;
       setLS(STORAGE.LANGUAGES, JSON.stringify(state.languages || []), LEGACY_STORAGE.LANGUAGES);
     } catch {
@@ -219,7 +223,7 @@
     if (!raw.trim()) return null;
     const arr = raw
       .split(',')
-      .map(s => normalizeLang(s))
+      .map(s => resolveSupportedLanguage(s))
       .filter(Boolean);
     return arr.length ? Array.from(new Set(arr)) : null;
   };
@@ -242,8 +246,10 @@
         ...entry,
         code: String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim().toUpperCase(),
         name: String(entry?.name || entry?.country || entry?.label || '').trim(),
-        language: normalizeLang(entry?.language || entry?.primaryLanguage || ''),
-        languages: Array.isArray(entry?.languages) ? entry.languages.map(normalizeLang).filter(Boolean) : []
+        language: resolveSupportedLanguage(entry?.language || entry?.primaryLanguage || ''),
+        languages: Array.isArray(entry?.languages)
+          ? Array.from(new Set(entry.languages.map((value) => resolveSupportedLanguage(value)).filter(Boolean)))
+          : []
       })).filter((entry) => entry.code || entry.name);
     }
 
@@ -253,8 +259,10 @@
         ...entry,
         code: String(entry?.code || entry?.countryCode || entry?.isoCode || '').trim().toUpperCase(),
         name: String(entry?.name || entry?.country || entry?.label || '').trim(),
-        language: normalizeLang(entry?.language || entry?.primaryLanguage || ''),
-        languages: Array.isArray(entry?.languages) ? entry.languages.map(normalizeLang).filter(Boolean) : []
+        language: resolveSupportedLanguage(entry?.language || entry?.primaryLanguage || ''),
+        languages: Array.isArray(entry?.languages)
+          ? Array.from(new Set(entry.languages.map((value) => resolveSupportedLanguage(value)).filter(Boolean)))
+          : []
       })).filter((entry) => entry.code || entry.name);
     });
   };
@@ -267,30 +275,41 @@
 
   const inferLanguageForCountry = (countryCode, fallback = DEFAULT_LANGUAGE) => {
     const rawFallback = String(fallback || '').trim();
-    const normalizedFallback = rawFallback ? normalizeLang(rawFallback) : '';
+    const normalizedFallback = rawFallback ? resolveSupportedLanguage(rawFallback) : '';
     const canonical = getCanonicalCountryByCode(countryCode);
 
     if (canonical) {
       if (Array.isArray(canonical.languages) && canonical.languages.length) {
+        const supportedCountryLanguages = canonical.languages
+          .map((value) => resolveSupportedLanguage(value))
+          .filter(Boolean);
+
+        if (supportedCountryLanguages.length) {
+          if (normalizedFallback && supportedCountryLanguages.includes(normalizedFallback)) {
+            return normalizedFallback;
+          }
+
+          return supportedCountryLanguages[0];
+        }
+
         if (normalizedFallback && canonical.languages.includes(normalizedFallback)) {
           return normalizedFallback;
         }
-
-        return canonical.languages[0];
       }
 
       if (canonical.language) {
-        if (normalizedFallback && canonical.language === normalizedFallback) {
+        const supportedLanguage = resolveSupportedLanguage(canonical.language);
+        if (supportedLanguage && normalizedFallback && supportedLanguage === normalizedFallback) {
           return normalizedFallback;
         }
 
-        return canonical.language;
+        if (supportedLanguage) return supportedLanguage;
       }
     }
 
     if (normalizedFallback) return normalizedFallback;
 
-    const browserLanguage = normalizeLang(navigator.language || '');
+    const browserLanguage = resolveSupportedLanguage(navigator.language || '');
     if (browserLanguage) return browserLanguage;
 
     return DEFAULT_LANGUAGE;
@@ -353,7 +372,7 @@
       (localeAPI && typeof localeAPI.getCurrentLanguage === 'function'
         ? localeAPI.getCurrentLanguage()
         : getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE)) || '';
-    const storedLanguage = rawStoredLanguage ? normalizeLang(rawStoredLanguage) : '';
+    const storedLanguage = rawStoredLanguage ? resolveSupportedLanguage(rawStoredLanguage) : '';
 
     const storedLabel = getLS(STORAGE.COUNTRY_LABEL, LEGACY_STORAGE.COUNTRY_LABEL) || '';
 
@@ -367,7 +386,9 @@
       }
     }
 
-    const availableLanguages = Array.isArray(state.languages) ? state.languages : [];
+    const availableLanguages = Array.isArray(state.languages)
+      ? state.languages.map((value) => resolveSupportedLanguage(value)).filter(Boolean)
+      : [];
     state.language = availableLanguages.includes(storedLanguage)
       ? storedLanguage
       : inferLanguageForCountry(state.countryCode, storedLanguage || DEFAULT_LANGUAGE);
@@ -402,11 +423,154 @@
     return api;
   };
 
+  const getSupportedLanguageConfigs = () => {
+    const localeApi = getLocaleAPI();
+    const languages = typeof localeApi?.getSupportedLanguages === 'function'
+      ? localeApi.getSupportedLanguages()
+      : [];
+
+    const normalized = Array.isArray(languages)
+      ? languages
+          .map((item) => {
+            const code = normalizeLang(item?.code || item);
+            if (!code) return null;
+            return {
+              code,
+              label: String(item?.label || code.toUpperCase()).trim(),
+              nativeLabel: String(item?.nativeLabel || item?.label || code.toUpperCase()).trim(),
+              direction: item?.direction === 'rtl' ? 'rtl' : 'ltr'
+            };
+          })
+          .filter(Boolean)
+      : [];
+
+    return normalized.length
+      ? normalized
+      : [{ code: DEFAULT_LANGUAGE, label: 'English', nativeLabel: 'English', direction: 'ltr' }];
+  };
+
+  const getSupportedLanguageCodes = () => {
+    return getSupportedLanguageConfigs().map((item) => item.code);
+  };
+
+  const getSupportedLanguageConfig = (language) => {
+    const normalized = normalizeLang(language || DEFAULT_LANGUAGE);
+    const configs = getSupportedLanguageConfigs();
+    return configs.find((item) => item.code === normalized)
+      || configs.find((item) => item.code === DEFAULT_LANGUAGE)
+      || configs[0]
+      || { code: DEFAULT_LANGUAGE, label: 'English', nativeLabel: 'English', direction: 'ltr' };
+  };
+
+  const resolveSupportedLanguage = (language) => {
+    const normalized = normalizeLang(language || DEFAULT_LANGUAGE);
+    const codes = getSupportedLanguageCodes();
+    return codes.includes(normalized) ? normalized : DEFAULT_LANGUAGE;
+  };
+
+  const syncLocalePreferenceToSupabase = async () => {
+    const supabase = window.neuroartanSupabase || window.NEUROARTAN_SUPABASE_CLIENT || null;
+    if (!supabase?.auth) return false;
+
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      const authUserId = String(data?.user?.id || '').trim();
+      if (!authUserId) return false;
+
+      const language = resolveSupportedLanguage(state.language || DEFAULT_LANGUAGE);
+      const direction = getSupportedLanguageConfig(language).direction;
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          preferred_language: language,
+          preferred_language_direction: direction,
+          locale_country_code: state.countryCode || null,
+          locale_country_label: state.countryLabel || null,
+          locale_languages: Array.isArray(state.languages) ? state.languages : [language]
+        })
+        .eq('auth_user_id', authUserId);
+
+      if (updateError) throw updateError;
+      return true;
+    } catch (error) {
+      console.warn('[country-language] Locale preference Supabase sync skipped.', error);
+      return false;
+    }
+  };
+
+  const hydrateLocalePreferenceFromSupabase = async () => {
+    const supabase = window.neuroartanSupabase || window.NEUROARTAN_SUPABASE_CLIENT || null;
+    if (!supabase?.auth) return false;
+
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+      const authUserId = String(data?.user?.id || '').trim();
+      if (!authUserId) return false;
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('preferred_language, preferred_language_direction, locale_country_code, locale_country_label, locale_languages')
+        .eq('auth_user_id', authUserId)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+      if (!profile) return false;
+
+      const language = resolveSupportedLanguage(profile.preferred_language || state.language || DEFAULT_LANGUAGE);
+      const languages = Array.isArray(profile.locale_languages)
+        ? profile.locale_languages.map((value) => resolveSupportedLanguage(value)).filter(Boolean)
+        : [language];
+
+      state.language = language;
+      state.languages = Array.from(new Set([...languages, language].filter(Boolean)));
+      if (profile.locale_country_code) state.countryCode = String(profile.locale_country_code).trim().toUpperCase();
+      if (profile.locale_country_label) state.countryLabel = String(profile.locale_country_label).trim();
+
+      setLS(STORAGE.LANGUAGE, state.language, LEGACY_STORAGE.LANGUAGE);
+      setLS(STORAGE.LANGUAGES, JSON.stringify(state.languages), LEGACY_STORAGE.LANGUAGES);
+      if (state.countryCode) setLS(STORAGE.COUNTRY_CODE, state.countryCode, LEGACY_STORAGE.COUNTRY_CODE);
+      if (state.countryLabel) setLS(STORAGE.COUNTRY_LABEL, state.countryLabel, LEGACY_STORAGE.COUNTRY_LABEL);
+
+      return true;
+    } catch (error) {
+      console.warn('[country-language] Locale preference Supabase hydration skipped.', error);
+      return false;
+    }
+  };
+
+  const setLocalePreference = async ({
+    countryCode = state.countryCode,
+    countryLabel = state.countryLabel,
+    language = state.language,
+    languages = state.languages
+  } = {}) => {
+    state.countryCode = String(countryCode || DEFAULT_COUNTRY_CODE).trim().toUpperCase();
+    state.language = resolveSupportedLanguage(language || DEFAULT_LANGUAGE);
+    state.countryLabel = String(countryLabel || nativeCountryName(state.countryCode, state.language) || '').trim();
+    setStoredLanguages(Array.isArray(languages) && languages.length ? languages : [state.language]);
+
+    setLS(STORAGE.COUNTRY_CODE, state.countryCode, LEGACY_STORAGE.COUNTRY_CODE);
+    setLS(STORAGE.COUNTRY_LABEL, state.countryLabel, LEGACY_STORAGE.COUNTRY_LABEL);
+    setLS(STORAGE.LANGUAGE, state.language, LEGACY_STORAGE.LANGUAGE);
+
+    setLabels();
+    buildLanguageDropdown(state.language, state.languages);
+    dispatchLocaleStateChanged();
+    await applyTranslation(state.language);
+    await syncLocalePreferenceToSupabase();
+    hydrateStateFromStorage();
+    setLabels();
+    buildLanguageDropdown(state.language, state.languages);
+  };
+
   /* =============================================================================
      10A) CANONICAL LOCALE DELEGATION
   ============================================================================= */
   const applyTranslation = async (lang) => {
-    const normalized = normalizeLang(lang);
+    const normalized = resolveSupportedLanguage(lang);
     const api = getLocaleAPI();
     const loadingReason = `locale:${normalized}`;
 
@@ -609,12 +773,26 @@
     else openLanguageDropdown();
   };
 
+  const ensureLanguageDropdownPortal = (dropdown) => {
+    if (!(dropdown instanceof HTMLElement)) {
+      return dropdown;
+    }
+
+    dropdown.dataset.footerLanguageDropdown = 'true';
+
+    if (dropdown.parentElement !== document.body) {
+      document.body.appendChild(dropdown);
+    }
+
+    return dropdown;
+  };
+
   let languageDocCloserBound = false;
   let localeStateEventsBound = false;
   let localeOpenRequestsBound = false;
 
   const buildLanguageDropdown = (primaryLang, availableLangs) => {
-    const dd = getFooterLanguageDropdown();
+    const dd = ensureLanguageDropdownPortal(getFooterLanguageDropdown());
     const toggle = getFooterLanguageToggle();
     if (!dd || !toggle) return;
 
@@ -622,18 +800,9 @@
     dd.setAttribute('aria-hidden', 'true');
     dd.classList.remove('visible');
 
-    const localeApi = getLocaleAPI();
-    const supportedLanguages = typeof localeApi?.getSupportedLanguages === 'function'
-      ? localeApi.getSupportedLanguages()
-      : null;
-    const supportedCodes = Array.isArray(supportedLanguages) && supportedLanguages.length
-      ? supportedLanguages.map((item) => normalizeLang(item?.code || item)).filter(Boolean)
-      : [];
-    const base = supportedCodes.length
-      ? supportedCodes
-      : (Array.isArray(availableLangs) && availableLangs.length
-        ? availableLangs.map(normalizeLang)
-        : [normalizeLang(primaryLang)]);
+    const supportedLanguages = getSupportedLanguageConfigs();
+    const supportedCodes = getSupportedLanguageCodes();
+    const base = supportedCodes.length ? supportedCodes : [resolveSupportedLanguage(primaryLang)];
 
     const langs = Array.from(new Set([
       ...base,
@@ -648,12 +817,10 @@
       btn.setAttribute('data-lang', code);
       btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       btn.classList.toggle('is-selected', isSelected);
-      const languageConfig = Array.isArray(supportedLanguages)
-        ? supportedLanguages.find((item) => normalizeLang(item?.code || item) === code)
-        : null;
+      const languageConfig = supportedLanguages.find((item) => item.code === code);
       btn.textContent = languageConfig?.nativeLabel || code.toUpperCase();
       btn.addEventListener('click', async () => {
-        state.language = code;
+        state.language = resolveSupportedLanguage(code);
         closeLanguageDropdown();
         setLS(STORAGE.LANGUAGE, state.language, LEGACY_STORAGE.LANGUAGE);
 
@@ -667,6 +834,7 @@
         dispatchLocaleStateChanged();
 
         await applyTranslation(code);
+        await syncLocalePreferenceToSupabase();
         hydrateStateFromStorage();
         setLabels();
         buildLanguageDropdown(state.language, state.languages);
@@ -705,7 +873,7 @@
   ============================================================================= */
 
   async function detectIP() {
-    const browserLanguage = normalizeLang(navigator.language || DEFAULT_LANGUAGE);
+    const browserLanguage = resolveSupportedLanguage(navigator.language || DEFAULT_LANGUAGE);
 
     const providers = [
       async () => {
@@ -748,7 +916,7 @@
         const code = String(result?.code || '').trim().toUpperCase();
         const rawLang = String(result?.lang || '').trim();
         const lang = rawLang
-          ? normalizeLang(rawLang.split(',')[0].trim())
+          ? resolveSupportedLanguage(rawLang.split(',')[0].trim())
           : '';
 
         if (/^[A-Z]{2}$/.test(code)) {
@@ -788,7 +956,7 @@
       let lang = DEFAULT_LANGUAGE;
       if (item.languages && typeof item.languages === 'object') {
         const firstKey = Object.keys(item.languages)[0];
-        if (firstKey) lang = normalizeLang(firstKey);
+        if (firstKey) lang = resolveSupportedLanguage(firstKey);
       }
 
       const out = { code, lang };
@@ -845,37 +1013,22 @@
       const datasetLangs = parseDatasetLanguages(btn);
 
       let code = attrCode ? String(attrCode).toUpperCase() : null;
-      let lang = attrLang ? normalizeLang(attrLang) : null;
+      let lang = attrLang ? resolveSupportedLanguage(attrLang) : null;
 
       if (!code || !lang) {
         const resolved = await resolveCountryFromName(selectedName);
         if (!code) code = resolved && resolved.code ? resolved.code : (state.countryCode || DEFAULT_COUNTRY_CODE);
-        if (!lang) lang = resolved && resolved.lang ? normalizeLang(resolved.lang) : DEFAULT_LANGUAGE;
+        if (!lang) lang = resolved && resolved.lang ? resolveSupportedLanguage(resolved.lang) : DEFAULT_LANGUAGE;
       }
-
-      state.countryCode = String(code || DEFAULT_COUNTRY_CODE).toUpperCase();
-      state.language = normalizeLang(lang || DEFAULT_LANGUAGE);
-      state.countryLabel = nativeCountryName(state.countryCode, state.language) || selectedLabel;
-
-      if (datasetLangs && datasetLangs.length) {
-        setStoredLanguages(datasetLangs);
-      } else {
-        setStoredLanguages([state.language]);
-      }
-
-      setLS(STORAGE.COUNTRY_CODE, state.countryCode, LEGACY_STORAGE.COUNTRY_CODE);
-      setLS(STORAGE.COUNTRY_LABEL, state.countryLabel, LEGACY_STORAGE.COUNTRY_LABEL);
-      setLS(STORAGE.LANGUAGE, state.language, LEGACY_STORAGE.LANGUAGE);
 
       closeCountryOverlay();
       closeLanguageDropdown();
-      setLabels();
-      buildLanguageDropdown(state.language, state.languages);
-      dispatchLocaleStateChanged();
-      await applyTranslation(state.language);
-      hydrateStateFromStorage();
-      setLabels();
-      buildLanguageDropdown(state.language, state.languages);
+      await setLocalePreference({
+        countryCode: code,
+        countryLabel: nativeCountryName(String(code || DEFAULT_COUNTRY_CODE).toUpperCase(), lang) || selectedLabel,
+        language: lang,
+        languages: datasetLangs && datasetLangs.length ? datasetLangs : [lang]
+      });
     }, { passive: true });
   };
 
@@ -931,7 +1084,13 @@
     buildLanguageDropdown,
     applyTranslation,
     detectIP,
-    resolveCountryFromName
+    resolveCountryFromName,
+    getSupportedLanguageConfigs,
+    getSupportedLanguageCodes,
+    resolveSupportedLanguage,
+    setLocalePreference,
+    syncLocalePreferenceToSupabase,
+    hydrateLocalePreferenceFromSupabase
   };
 
   window.ARTAN_COUNTRY_LANGUAGE = COUNTRY_LANGUAGE_API;
@@ -954,12 +1113,17 @@
 
   async function init() {
     hydrateStateFromStorage();
+    const hydratedFromSupabase = await hydrateLocalePreferenceFromSupabase();
+    if (hydratedFromSupabase) {
+      setLabels();
+      await applyTranslation(state.language);
+    }
     bindLocaleStateEvents();
     bindLocaleOpenRequests();
 
     const localeAPI = getLocaleAPI();
     const storedCountryCode = String(getLS(STORAGE.COUNTRY_CODE, LEGACY_STORAGE.COUNTRY_CODE) || '').trim().toUpperCase();
-    const storedLanguage = normalizeLang(
+    const storedLanguage = resolveSupportedLanguage(
       (localeAPI && typeof localeAPI.getCurrentLanguage === 'function'
         ? localeAPI.getCurrentLanguage()
         : getLS(STORAGE.LANGUAGE, LEGACY_STORAGE.LANGUAGE)) || ''
@@ -975,7 +1139,7 @@
       const ip = await detectIP();
 
       const code = (ip.code || DEFAULT_COUNTRY_CODE).toUpperCase();
-      const lang = inferLanguageForCountry(code, normalizeLang(ip.lang || DEFAULT_LANGUAGE));
+      const lang = inferLanguageForCountry(code, resolveSupportedLanguage(ip.lang || DEFAULT_LANGUAGE));
 
       state.countryCode = code;
       state.language = lang;

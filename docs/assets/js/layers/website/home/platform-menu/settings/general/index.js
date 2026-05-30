@@ -1,4 +1,5 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
+import { bindSettingsLocaleSync } from '../_shared/settings-locale.js';
 import {
   hydrateAccountLandingPreferenceFromSupabase,
   readAccountLandingPreference,
@@ -35,4 +36,5 @@ function bindLandingPreference(root) {
 export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   bindLandingPreference(root);
+  bindSettingsLocaleSync(root);
 }

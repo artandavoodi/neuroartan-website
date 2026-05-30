@@ -1,0 +1,5 @@
+@import url('../general/index.css');
+
+.home-platform-destination--settings-language{
+  width:var(--size-full);
+}

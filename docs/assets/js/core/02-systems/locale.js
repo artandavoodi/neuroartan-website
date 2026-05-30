@@ -43,7 +43,19 @@ window.NEUROARTAN_TRANSLATION = (() => {
   let supportedLanguages = [
     { code: 'en', label: 'English', nativeLabel: 'English', direction: 'ltr', source: true, enabled: true },
     { code: 'de', label: 'German', nativeLabel: 'Deutsch', direction: 'ltr', source: false, enabled: true },
-    { code: 'fa', label: 'Persian', nativeLabel: 'فارسی', direction: 'rtl', source: false, enabled: true }
+    { code: 'fa', label: 'Persian', nativeLabel: 'فارسی', direction: 'rtl', source: false, enabled: true },
+    { code: 'es', label: 'Spanish', nativeLabel: 'Español', direction: 'ltr', source: false, enabled: true },
+    { code: 'fr', label: 'French', nativeLabel: 'Français', direction: 'ltr', source: false, enabled: true },
+    { code: 'pt', label: 'Portuguese', nativeLabel: 'Português', direction: 'ltr', source: false, enabled: true },
+    { code: 'ar', label: 'Arabic', nativeLabel: 'العربية', direction: 'rtl', source: false, enabled: true },
+    { code: 'tr', label: 'Turkish', nativeLabel: 'Türkçe', direction: 'ltr', source: false, enabled: true },
+    { code: 'zh', label: 'Chinese', nativeLabel: '中文', direction: 'ltr', source: false, enabled: true },
+    { code: 'ja', label: 'Japanese', nativeLabel: '日本語', direction: 'ltr', source: false, enabled: true },
+    { code: 'ko', label: 'Korean', nativeLabel: '한국어', direction: 'ltr', source: false, enabled: true },
+    { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी', direction: 'ltr', source: false, enabled: true },
+    { code: 'ru', label: 'Russian', nativeLabel: 'Русский', direction: 'ltr', source: false, enabled: true },
+    { code: 'it', label: 'Italian', nativeLabel: 'Italiano', direction: 'ltr', source: false, enabled: true },
+    { code: 'nl', label: 'Dutch', nativeLabel: 'Nederlands', direction: 'ltr', source: false, enabled: true }
   ];
   const catalogCache = new Map();
   const keyCache = new Map();

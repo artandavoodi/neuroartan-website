@@ -373,7 +373,13 @@ body.cookie-consent-closing .cookie-consent{
 body.cookie-consent-open,
 body.cookie-consent-closing{
   overflow: hidden;
-  touch-action: none;
+}
+
+body.cookie-consent-open .cookie-consent-panel,
+body.cookie-consent-open .cookie-consent-body,
+body.cookie-consent-open .cookie-consent-language-surface,
+body.cookie-consent-open .cookie-language-overlay-regions{
+  touch-action: pan-y;
 }
 
 /* =============================================================================
@@ -507,6 +513,32 @@ body.cookie-consent-closing .cookie-consent-panel{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-none);
+}
+
+.cookie-consent-language-surface{
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+  overflow:hidden;
+}
+
+.cookie-consent-language-surface .cookie-consent-inner-surface-mount{
+  display:flex;
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+  overflow:hidden;
+}
+
+.cookie-consent-learning-surface{
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+  overflow:hidden;
+}
+
+.cookie-consent-learning-surface .cookie-consent-inner-surface-mount{
+  display:flex;
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+  overflow:hidden;
 }
 
 .cookie-consent-row,
@@ -736,7 +768,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 
 .cookie-consent-row:hover,
 .cookie-consent-row:focus-within{
-  border-color: var(--cookie-consent-row-hover);
+  border-color: var(--cookie-consent-row-border);
 }
 
 .cookie-consent-row-topline{

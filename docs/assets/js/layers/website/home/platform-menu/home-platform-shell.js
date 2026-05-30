@@ -202,15 +202,35 @@ function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobi
     root.setAttribute('data-home-platform-mobile-level', normalized);
   }
 
+  syncHomePlatformBackTrigger(normalized);
+}
+
+function shouldShowHomePlatformDesktopBack() {
+  return !isHomePlatformMobileView()
+    && HOME_PLATFORM_SHELL_STATE.activeDestination === 'settings'
+    && HOME_PLATFORM_SHELL_STATE.activeSubdestination === 'language';
+}
+
+function syncHomePlatformBackTrigger(level = HOME_PLATFORM_SHELL_STATE.mobileStackLevel) {
   const backTrigger = getHomePlatformShellBackTrigger();
   if (backTrigger) {
-    const canGoBack = normalized !== 'root';
+    const normalized = normalizeHomePlatformMobileStackLevel(level);
+    const mobileBack = isHomePlatformMobileView() && normalized !== 'root';
+    const desktopBack = shouldShowHomePlatformDesktopBack();
+    const canGoBack = mobileBack || desktopBack;
     const backTarget = normalized === 'content' && shouldRouteMobileDestinationDirectlyToContent(HOME_PLATFORM_SHELL_STATE.activeDestination)
       ? 'main navigation'
       : 'section navigation';
     backTrigger.hidden = !canGoBack;
     backTrigger.setAttribute('aria-hidden', canGoBack ? 'false' : 'true');
-    backTrigger.setAttribute('aria-label', normalized === 'content' ? `Back to ${backTarget}` : 'Back to main navigation');
+    backTrigger.setAttribute(
+      'aria-label',
+      desktopBack
+        ? 'Back to general settings'
+        : normalized === 'content'
+          ? `Back to ${backTarget}`
+          : 'Back to main navigation'
+    );
   }
 }
 
@@ -249,6 +269,19 @@ function navigateHomePlatformMobileBack() {
 
   if (HOME_PLATFORM_SHELL_STATE.mobileStackLevel === 'subnav') {
     setHomePlatformMobileStackLevel('root');
+    return true;
+  }
+
+  return false;
+}
+
+function navigateHomePlatformBack() {
+  if (isHomePlatformMobileView()) {
+    return navigateHomePlatformMobileBack();
+  }
+
+  if (shouldShowHomePlatformDesktopBack()) {
+    void setHomePlatformSubdestination('general');
     return true;
   }
 
@@ -446,6 +479,7 @@ function normalizeHomePlatformSubdestinations(value) {
         module: normalizeString(item?.module || ''),
         icon: normalizeString(item?.icon || ''),
         authVisible: normalizeString(item?.auth_visible || item?.authVisible || ''),
+        subnavVisible: item?.subnav_visible === false || item?.subnavVisible === false ? false : true,
       };
     })
     .filter(Boolean);
@@ -877,12 +911,13 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
   const titleNode = getHomePlatformShellSubrailTitle();
   const destinationConfig = getHomePlatformDestinationConfig(destination);
   const items = destinationConfig?.subdestinations || [];
+  const visibleItems = items.filter((item) => item.subnavVisible !== false);
 
   if (!subrail || !subnavRoot || !destinationConfig) {
     return;
   }
 
-  const hasSubnav = items.length > 1;
+  const hasSubnav = visibleItems.length > 1;
   subrail.hidden = !hasSubnav;
   subrail.setAttribute('aria-hidden', hasSubnav ? 'false' : 'true');
 
@@ -902,7 +937,7 @@ function renderHomePlatformShellSubnav(destination, subdestination) {
 
   const signedIn = hasSignedInAccount();
   const suppressMobileSubnavActiveState = isHomePlatformMobileView() && HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection;
-  items.forEach((item) => {
+  visibleItems.forEach((item) => {
     const button = document.createElement('button');
     const isActive = !suppressMobileSubnavActiveState && item.id === subdestination;
     button.type = 'button';
@@ -1140,6 +1175,7 @@ async function setHomePlatformDestination(destination, subdestination = '') {
 
   HOME_PLATFORM_SHELL_STATE.activeDestination = destination;
   HOME_PLATFORM_SHELL_STATE.activeSubdestination = nextSubdestination;
+  syncHomePlatformBackTrigger();
 
   syncHomePlatformShellNav(destination);
   renderHomePlatformShellSubnav(destination, nextSubdestination);
@@ -1436,7 +1472,7 @@ function bindHomePlatformShellEvents() {
     if (backTrigger) {
       event.preventDefault();
       event.stopPropagation();
-      navigateHomePlatformMobileBack();
+      navigateHomePlatformBack();
       return;
     }
 
@@ -1554,7 +1590,7 @@ function bindHomePlatformShellStaticControls() {
     backTrigger.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      navigateHomePlatformMobileBack();
+      navigateHomePlatformBack();
     });
   }
 

@@ -60,7 +60,8 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-width: var(--spacing-none);
   min-height: var(--spacing-none);
-  height: auto;
+  height: var(--size-full);
+  max-height: var(--size-full);
   margin: var(--spacing-none);
   padding: var(--spacing-none);
   overflow: hidden;
@@ -78,9 +79,9 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-width: var(--spacing-none);
   min-height: var(--spacing-none);
-  height: auto;
+  height: var(--size-full);
   max-width: none;
-  max-height: none;
+  max-height: var(--size-full);
   margin: var(--spacing-none);
   padding: var(--spacing-none);
   border: var(--spacing-none);
@@ -102,6 +103,7 @@ html[data-theme-effective="dark"]{
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -174,7 +176,7 @@ html[data-theme-effective="dark"]{
   .cookie-learning-overlay-panel{
     flex: 1 1 auto;
     min-height: var(--spacing-none);
-    height: auto;
+    height: var(--size-full);
     padding: var(--spacing-none);
   }
 

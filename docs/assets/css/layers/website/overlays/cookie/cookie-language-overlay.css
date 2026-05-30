@@ -37,7 +37,7 @@
   --cookie-language-overlay-sticky-toolbar-surface: transparent;
   --cookie-language-overlay-sticky-toolbar-divider:var(--panel-border-unified);
   --cookie-language-overlay-toolbar-padding-top:var(--layout-cookie-language-overlay-toolbar-padding-top);
-  --cookie-language-overlay-toolbar-padding-bottom: var(--cookie-language-overlay-search-to-list-gap);
+  --cookie-language-overlay-toolbar-padding-bottom: var(--spacing-none);
   --cookie-language-overlay-toolbar-gap:var(--layout-cookie-language-overlay-toolbar-gap);
   --cookie-language-overlay-search-to-list-gap:var(--layout-cookie-language-overlay-search-to-list-gap);
   --cookie-language-overlay-list-padding-top:var(--layout-cookie-language-overlay-list-padding-top);
@@ -97,7 +97,8 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-width: var(--spacing-none);
   min-height: var(--spacing-none);
-  height: auto;
+  height: var(--size-full);
+  max-height: var(--size-full);
   margin: var(--spacing-none);
   padding: var(--spacing-none);
   overflow: hidden;
@@ -118,9 +119,9 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-width: var(--spacing-none);
   min-height: var(--spacing-none);
-  height: auto;
+  height: var(--size-full);
   max-width: none;
-  max-height: none;
+  max-height: var(--size-full);
   margin: var(--spacing-none);
   padding: var(--spacing-none);
   overflow: hidden;
@@ -215,7 +216,7 @@ html[data-theme-effective="dark"]{
   width: var(--size-full);
   min-width: var(--spacing-none);
   min-height: var(--spacing-none);
-  height: auto;
+  height: var(--size-full);
   margin: var(--spacing-none);
   padding-top: var(--spacing-none);
   padding-right: var(--spacing-none);
@@ -225,6 +226,7 @@ html[data-theme-effective="dark"]{
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  touch-action: pan-y;
   scrollbar-gutter: auto;
   scrollbar-width: none;
   border-bottom: var(--spacing-none);
@@ -304,18 +306,15 @@ html[data-theme-effective="dark"]{
 }
 
 .cookie-language-overlay-country-copy span{
-  color: var(--cookie-language-overlay-country-copy);
-  font-size: var(--layout-cookie-language-overlay-country-subtitle-size);
-  font-weight: var(--layout-cookie-language-overlay-country-subtitle-weight);
-  letter-spacing: var(--layout-cookie-language-overlay-country-subtitle-tracking);
-  line-height: var(--layout-cookie-language-overlay-country-subtitle-line-height);
-  text-align: right;
-  white-space: nowrap;
-  flex-shrink: 0;
+  display:none;
 }
 
 .cookie-language-overlay-country-code{
   display: none;
+}
+
+.cookie-language-overlay-country-radio{
+  flex: 0 0 auto;
 }
 
 .cookie-language-overlay-country:hover,

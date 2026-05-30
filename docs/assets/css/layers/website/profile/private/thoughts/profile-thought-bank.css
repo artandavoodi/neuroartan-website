@@ -30,7 +30,7 @@
   justify-content:space-between;
   gap:var(--spacing-md);
   position:relative;
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-thought-bank__title{
@@ -63,7 +63,7 @@
   justify-content:space-between;
   gap:var(--spacing-md);
   position:relative;
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-thought-bank__empty,
@@ -77,7 +77,7 @@
   color:var(--text-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--spacing-lg) var(--spacing-none) var(--spacing-lg);
 }
 
 .profile-thought-bank__item .ui-badge{

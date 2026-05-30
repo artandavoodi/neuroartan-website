@@ -1,0 +1,121 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) ROOT TOKENS
+   03) OVERLAY SURFACE
+   04) BUTTON ELEMENTS
+   05) ICON ELEMENTS
+   06) RESPONSIVE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/layers/website/overlays/sidebar-icon-overlay/sidebar-icon-overlay.css */
+
+/* =============================================================================
+   02) ROOT TOKENS
+============================================================================= */
+:root{
+  --sidebar-icon-overlay-z-index: var(--z-overlay-modal);
+  --sidebar-icon-overlay-icon-size: var(--control-center-icon-size);
+  --sidebar-icon-overlay-inactive-opacity: var(--disabled-opacity);
+  --sidebar-icon-overlay-active-opacity: var(--opacity-full);
+}
+
+/* =============================================================================
+   03) OVERLAY SURFACE
+============================================================================= */
+.sidebar-icon-overlay{
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-lg);
+  pointer-events: none;
+  z-index: var(--sidebar-icon-overlay-z-index);
+  display: none;
+}
+
+/* =============================================================================
+   04) BUTTON ELEMENTS
+============================================================================= */
+.sidebar-icon-overlay__button{
+  pointer-events: auto;
+  background: transparent;
+  border: none;
+  padding: var(--spacing-none);
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sidebar-icon-overlay__button--left{
+  left: 0;
+}
+
+.sidebar-icon-overlay__button--right{
+  right: 0;
+}
+
+/* =============================================================================
+   05) ICON ELEMENTS
+============================================================================= */
+.sidebar-icon-overlay__icon{
+  width: var(--sidebar-icon-overlay-icon-size);
+  height: var(--sidebar-icon-overlay-icon-size);
+  object-fit: contain;
+  filter: var(--icon-image-filter);
+  color: var(--icon-color);
+  opacity: 1;
+  display: block;
+}
+
+.sidebar-icon-overlay__icon--left-inactive,
+.sidebar-icon-overlay__icon--right-inactive{
+  opacity: var(--sidebar-icon-overlay-inactive-opacity);
+}
+
+.sidebar-icon-overlay__icon--left-active,
+.sidebar-icon-overlay__icon--right-active{
+  opacity: var(--sidebar-icon-overlay-active-opacity);
+  display: none;
+}
+
+.sidebar-icon-overlay__button--left.active .sidebar-icon-overlay__icon--left-inactive,
+.sidebar-icon-overlay__button--right.active .sidebar-icon-overlay__icon--right-inactive{
+  display: none;
+}
+
+.sidebar-icon-overlay__button--left.active .sidebar-icon-overlay__icon--left-active,
+.sidebar-icon-overlay__button--right.active .sidebar-icon-overlay__icon--right-active{
+  display: block;
+}
+
+/* =============================================================================
+   06) RESPONSIVE
+============================================================================= */
+@media (max-width: 1024px){
+  .sidebar-icon-overlay{
+    display: flex;
+  }
+}
+
+@media (max-width: 768px){
+  .sidebar-icon-overlay{
+    padding: 0 var(--spacing-none);
+  }
+  
+  .sidebar-icon-overlay__button--left{
+    left: 0;
+  }
+  
+  .sidebar-icon-overlay__button--right{
+    right: 0;
+  }
+}

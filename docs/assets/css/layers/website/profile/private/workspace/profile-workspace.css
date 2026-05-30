@@ -107,3 +107,59 @@
     padding-inline:var(--spacing-none);
   }
 }
+
+/* Mobile/tablet sidebar visibility states */
+@media (max-width:1024px){
+  .profile-workspace__layout[data-sidebar-left-hidden="true"]{
+    grid-template-columns:
+      0
+      1fr
+      var(--profile-workspace-right-toolbar-compact-width) !important;
+  }
+
+  .profile-workspace__layout[data-sidebar-right-hidden="true"]{
+    grid-template-columns:
+      var(--profile-workspace-sidebar-compact-width)
+      1fr
+      0 !important;
+  }
+
+  .profile-workspace__layout[data-sidebar-left-hidden="true"][data-sidebar-right-hidden="true"]{
+    grid-template-columns:
+      0
+      1fr
+      0 !important;
+  }
+
+  /* When left is active and right is hidden - middle stretches to right edge */
+  .profile-workspace__layout:not([data-sidebar-left-hidden="true"])[data-sidebar-right-hidden="true"]{
+    grid-template-columns:
+      var(--profile-workspace-sidebar-compact-width)
+      1fr
+      0 !important;
+  }
+
+  /* When right is active and left is hidden - middle stretches to left edge */
+  .profile-workspace__layout[data-sidebar-left-hidden="true"]:not([data-sidebar-right-hidden="true"]){
+    grid-template-columns:
+      0
+      1fr
+      var(--profile-workspace-right-toolbar-compact-width) !important;
+  }
+
+  .profile-workspace__layout[data-sidebar-left-hidden="true"] > .profile-workspace__sidebar-mount{
+    padding-inline-end:var(--spacing-none);
+    border-right:0;
+    overflow:hidden;
+    visibility:hidden;
+    pointer-events:none;
+  }
+
+  .profile-workspace__layout[data-sidebar-right-hidden="true"] > .profile-workspace__right-toolbar-mount{
+    padding-inline-start:var(--spacing-none);
+    border-left:0;
+    overflow:hidden;
+    visibility:hidden;
+    pointer-events:none;
+  }
+}

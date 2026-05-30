@@ -344,7 +344,7 @@ function renderPostList(root) {
       <p class="profile-posts__item-body"></p>
       ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
       ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
-      ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<img class="profile-posts__item-image" alt="Post image">' : ''}
+      ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<div class="profile-posts__item-image-wrapper"><img class="profile-posts__item-image" alt="Post image"></div>' : ''}
     `;
     const badge = item.querySelector('.ui-badge');
     if (badge instanceof HTMLElement) {

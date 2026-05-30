@@ -142,6 +142,7 @@
    08) PROFILE SHELL RESPONSIVE STATES
    ============================================================================= */
 
+
 @media (max-width:820px){
   :root{
     --profile-shell-rail-width:var(--site-rail-width-mobile);

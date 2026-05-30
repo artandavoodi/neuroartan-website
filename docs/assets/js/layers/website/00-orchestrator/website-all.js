@@ -31,6 +31,7 @@ import '../navigation/00-navigation-all.js';
 import '../overlays/account/00-account-all.js';
 import '../overlays/announcement/00-announcement-all.js';
 import '../overlays/cookie/00-cookie-all.js';
+import '../overlays/sidebar-icon-overlay/00-sidebar-icon-overlay-all.js';
 
 /* =============================================================================
    04) WEBSITE LAYER AUTHORITIES · PROFILE

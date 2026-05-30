@@ -79,6 +79,8 @@
   width:var(--size-full);
   height:var(--size-full);
   display:block;
+  filter:var(--icon-image-filter);
+  color:var(--icon-color);
   transform:none;
   transition:none;
 }
@@ -148,6 +150,8 @@
   width:var(--size-full);
   height:var(--size-full);
   display:block;
+  filter:var(--icon-image-filter);
+  color:var(--icon-color);
   opacity:var(--nav-institutional-icon-opacity);
   transform:none;
 }

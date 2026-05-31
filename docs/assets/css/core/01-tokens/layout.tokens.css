@@ -100,6 +100,7 @@
   --site-shell-inline-padding-mobile:var(--site-mobile-gutter);
   --site-rail-width:calc(100% - (var(--site-gutter) * 2));
   --site-rail-width-mobile:calc(100% - (var(--site-mobile-gutter) * 2));
+  --layout-profile-workspace-content-padding-block:var(--spacing-xl);
 }
 
 /* =============================================================================

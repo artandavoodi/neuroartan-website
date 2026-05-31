@@ -44,6 +44,7 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
     tabs: [
       { key: 'protocol', label: 'Protocol', section: 'model-training', modelPane: 'protocol' },
       { key: 'datasets', label: 'Datasets', section: 'model-training', modelPane: 'datasets' },
+      { key: 'knowledge-base', label: 'Knowledge Base', section: 'model-training', modelPane: 'knowledge-base' },
       { key: 'provenance', label: 'Provenance', section: 'model-training', modelPane: 'provenance' },
       { key: 'evaluation', label: 'Evaluation', section: 'model-training', modelPane: 'evaluation' },
     ],
@@ -72,7 +73,7 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
   modelDiscovery: {
     label: 'Model discovery',
     tabs: [
-      { key: 'overview', label: 'Overview', section: 'model-discovery', modelPane: 'overview' },
+      { key: 'directory', label: 'Directory', section: 'model-discovery', modelPane: 'directory' },
       { key: 'trending', label: 'Trending', section: 'model-discovery', modelPane: 'trending' },
       { key: 'expertise', label: 'Expertise', section: 'model-discovery', modelPane: 'expertise' },
       { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation' },
@@ -110,6 +111,7 @@ export const MODEL_CONTEXT_TAB_ICONS = Object.freeze({
   voice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
   protocol: '/registry/icons/public/assets/core/actions/model-training-panel/model-training-panel.svg',
   datasets: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
+  'knowledge-base': '/registry/icons/public/assets/core/files/document/document.svg',
   provenance: '/registry/icons/public/assets/core/navigation/route/route.svg',
   evaluation: '/registry/icons/public/assets/core/actions/model-evaluation-panel/model-evaluation-panel.svg',
   behavior: '/registry/icons/public/assets/layers/website/settings/actions/response-behavior.svg',
@@ -123,8 +125,9 @@ export const MODEL_CONTEXT_TAB_ICONS = Object.freeze({
   blockers: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
   history: '/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg',
   trending: '/registry/icons/public/assets/core/system/analytics/chart-line.svg',
+  directory: '/registry/icons/public/assets/core/navigation/discovery/discover.svg',
   expertise: '/registry/icons/public/assets/core/cognition/graph/graph.svg',
-  reputation: '/registry/icons/public/assets/core/identity/trust/verified.svg',
+  reputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   monetization: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   preferences: '/registry/icons/public/assets/core/system/settings/settings.svg',
   provider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',

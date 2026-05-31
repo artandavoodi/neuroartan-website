@@ -33,6 +33,7 @@
 @import url('./organization/profile-private-organization.css');
 @import url('./models/profile-private-models.css');
 @import url('../../model/management/model-management.css');
+@import url('../../model/training/model-training-workspace.css');
 @import url('./home/profile-home-panels.css');
 @import url('./posts/profile-posts.css');
 @import url('./settings/profile-private-settings.css');

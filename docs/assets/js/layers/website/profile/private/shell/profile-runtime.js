@@ -528,6 +528,12 @@ function buildPublicProfileState(detail = {}) {
     routeOutcomeValue: buildPublicStateBadge(outcome),
     routeOutcomeCopy: buildPublicRouteCopy(outcome, normalizedUsername),
     visibilityState,
+    visibility: {
+      profileVisibility: visibilityState,
+      publicEnabled: publicProfile?.public_profile_enabled === true,
+      discoverable: publicProfile?.public_profile_discoverable === true,
+      routeStatus: outcome === 'found_renderable' ? 'ready' : outcome || 'pending'
+    },
     visibilityCopy: outcome === 'found_renderable'
       ? (publicProfile?.public_profile_discoverable ? 'Discoverable public route' : 'Direct route with limited discovery')
       : 'Public visibility is not currently renderable.',

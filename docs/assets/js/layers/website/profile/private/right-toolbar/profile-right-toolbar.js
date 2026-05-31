@@ -31,7 +31,7 @@ const ACTION_ICONS = Object.freeze({
   modelIdentity: '/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg',
   modelSettings: '/registry/icons/public/assets/core/system/settings/settings.svg',
   modelDiscovery: '/registry/icons/public/assets/core/navigation/discovery/discover.svg',
-  modelReputation: '/registry/icons/public/assets/core/identity/trust/verified.svg',
+  modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
@@ -81,6 +81,12 @@ const ACTIONS = Object.freeze({
     label: 'Model foundation',
     tooltip: 'Foundation',
     icon: ACTION_ICONS.modelIdentity
+  },
+  modelEditIdentity: {
+    id: 'model-edit-identity',
+    label: 'Edit model identity',
+    tooltip: 'Edit identity',
+    icon: ACTION_ICONS.edit
   },
   modelSources: {
     id: 'model-sources',
@@ -285,13 +291,14 @@ const CONTEXT_ACTIONS = Object.freeze({
 
 const MODEL_PANE_ACTIONS = Object.freeze({
   overview: ['modelIdentity', 'modelReadiness', 'modelChangelog'],
-  identity: ['modelIdentity', 'modelChangelog'],
+  identity: ['modelEditIdentity', 'modelChangelog'],
   consent: ['modelConsent', 'modelChangelog'],
   sources: ['modelSources', 'modelChangelog'],
   memory: ['modelMemory', 'modelChangelog'],
   voice: ['modelVoice', 'modelChangelog'],
   protocol: ['modelTraining', 'modelChangelog'],
   datasets: ['modelSources', 'filterModels', 'modelChangelog'],
+  'knowledge-base': ['modelSources', 'modelChangelog'],
   provenance: ['modelSources', 'modelRouting', 'modelChangelog'],
   evaluation: ['modelReadiness', 'modelChangelog'],
   behavior: ['modelPersonalization', 'modelChangelog'],
@@ -305,6 +312,7 @@ const MODEL_PANE_ACTIONS = Object.freeze({
   blockers: ['modelConsent', 'modelReadiness', 'modelChangelog'],
   history: ['modelChangelog'],
   trending: ['modelDiscovery', 'filterModels', 'modelChangelog'],
+  directory: ['modelDiscovery', 'filterModels', 'modelChangelog'],
   expertise: ['modelDiscovery', 'modelReputation', 'filterModels', 'modelChangelog'],
   reputation: ['modelReputation', 'filterModels', 'modelChangelog'],
   monetization: ['modelEconomy', 'modelReputation', 'modelChangelog'],
@@ -536,6 +544,11 @@ function requestProfileToolAction(action){
         detail: { section: 'model-foundation', modelPane: 'identity' }
       }));
       return;
+    case 'model-edit-identity':
+      document.dispatchEvent(new CustomEvent('model:identity-editor-open-request', {
+        detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
     case 'model-sources':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
         detail: { section: 'model-foundation', modelPane: 'sources' }
@@ -578,7 +591,7 @@ function requestProfileToolAction(action){
       return;
     case 'model-discovery':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'model-discovery', modelPane: 'overview' }
+        detail: { section: 'model-discovery', modelPane: 'directory' }
       }));
       return;
     case 'model-reputation':

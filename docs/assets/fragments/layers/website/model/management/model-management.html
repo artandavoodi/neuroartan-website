@@ -2,8 +2,8 @@
      01) CANONICAL PERSONAL MODEL MANAGEMENT
      02) MODEL SECTION VIEWS
 ============================================================================= -->
-<section class="model-management" data-model-management aria-labelledby="model-management-title">
-  <header class="model-management__header">
+<section class="model-management" data-model-management aria-label="Model management">
+  <header class="model-management__header" hidden>
     <p class="model-management__eyebrow">Canonical personal model</p>
     <h2 class="model-management__title" id="model-management-title">Model foundation</h2>
     <p class="model-management__copy" data-model-management-summary>
@@ -11,7 +11,7 @@
     </p>
   </header>
 
-  <div class="model-management__identity" aria-label="Model owner">
+  <div class="model-management__identity" aria-label="Model owner" hidden>
     <span class="model-management__label">Owner</span>
     <strong class="model-management__value" data-model-owner-name>Profile owner</strong>
     <span class="model-management__note" data-model-owner-handle>@username</span>
@@ -20,8 +20,8 @@
   <div class="model-management__sections">
     <article class="model-management__section" data-model-management-section="model-foundation">
       <section class="model-management__foundation-group" data-model-foundation-group="overview">
-        <h3 class="model-management__section-title">Foundation overview</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Foundation overview</h3>
+        <p class="model-management__section-copy" hidden>
           The foundation binds the owner profile, model identity, consent boundary, source substrate, memory, and voice readiness.
         </p>
         <dl class="model-management__card-grid">
@@ -57,10 +57,15 @@
       </section>
 
       <section class="model-management__foundation-group" data-model-foundation-group="identity" hidden>
-        <h3 class="model-management__section-title">Identity</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Identity</h3>
+        <p class="model-management__section-copy" hidden>
           The owner binding is fixed. The nickname can be adjusted without changing ownership, route identity, or the one-model policy.
         </p>
+        <div class="model-management__avatar-wrap">
+          <div class="model-management__avatar profile-private-hero__avatar" aria-hidden="true">
+            <img class="profile-private-hero__avatar-image" data-model-avatar-image alt="" aria-hidden="true" hidden>
+          </div>
+        </div>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -76,42 +81,117 @@
             </dt>
             <dd data-model-owner-id>Owner record pending</dd>
           </div>
-          <div class="model-management__card model-management__card--control">
+          <div class="model-management__card">
             <dt>
               <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg" alt="">
               Model nickname
             </dt>
-            <dd>
-              <input class="model-management__input" type="text" autocomplete="off" placeholder="Model nickname" data-model-foundation-field="modelNickname">
-            </dd>
+            <dd data-model-nickname>Not assigned</dd>
           </div>
           <div class="model-management__card">
             <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/software/api/api.svg" alt="">
-              API identity
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg" alt="">
+              Model ID
             </dt>
-            <dd data-model-api-identity>Private API identity pending</dd>
+            <dd data-model-id>Model record pending</dd>
           </div>
           <div class="model-management__card">
             <dt>
               <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/synced.svg" alt="">
-              Serial number
+              Registry ID
             </dt>
-            <dd data-model-serial-number>Serial pending</dd>
+            <dd data-model-registry-id>Registry record pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/synced.svg" alt="">
+              Private serial identity
+            </dt>
+            <dd data-model-private-serial-identity>Serial pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/user.svg" alt="">
+              Public serial identity
+            </dt>
+            <dd data-model-public-serial-identity>Public identity not enabled</dd>
           </div>
           <div class="model-management__card">
             <dt>
               <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/security/key.svg" alt="">
-              Birth number
+              Birth certificate ID
             </dt>
-            <dd data-model-birth-number>Birth record pending</dd>
+            <dd data-model-birth-certificate-id>Birth record pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/security/key.svg" alt="">
+              Birth date
+            </dt>
+            <dd data-model-birth-date>Birth date pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg" alt="">
+              Model type
+            </dt>
+            <dd data-model-type>Personal</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/status.svg" alt="">
+              Lifecycle
+            </dt>
+            <dd data-model-lifecycle-state>Created</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="">
+              Readiness
+            </dt>
+            <dd data-model-readiness-state>Uninitialized</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="">
+              Verification
+            </dt>
+            <dd data-model-verification-state>Unverified</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/status.svg" alt="">
+              Discoverability
+            </dt>
+            <dd data-model-discoverability-state>Unpublished</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/security/key.svg" alt="">
+              Privacy lock
+            </dt>
+            <dd data-model-privacy-lock-state>Private owner controlled</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/synced.svg" alt="">
+              Created
+            </dt>
+            <dd data-model-created-at>Creation date pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/synced.svg" alt="">
+              Updated
+            </dt>
+            <dd data-model-updated-at>Update date pending</dd>
           </div>
         </dl>
       </section>
 
       <section class="model-management__foundation-group" data-model-foundation-group="consent" hidden>
-        <h3 class="model-management__section-title">Consent</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Consent</h3>
+        <p class="model-management__section-copy" hidden>
           Source, memory, and voice use remain blocked until the owner grants explicit model consent.
         </p>
         <dl class="model-management__card-grid">
@@ -140,8 +220,8 @@
       </section>
 
       <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden>
-        <h3 class="model-management__section-title">Source</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Source</h3>
+        <p class="model-management__section-copy" hidden>
           Internal thoughts and external documents become model source material only through governed ingestion and provenance.
         </p>
         <dl class="model-management__card-grid">
@@ -177,8 +257,8 @@
       </section>
 
       <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden>
-        <h3 class="model-management__section-title">Memory</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Memory</h3>
+        <p class="model-management__section-copy" hidden>
           Memory keeps private continuity separate from public expression until the owner approves model context use.
         </p>
         <dl class="model-management__card-grid">
@@ -200,8 +280,8 @@
       </section>
 
       <section class="model-management__foundation-group" data-model-foundation-group="voice" hidden>
-        <h3 class="model-management__section-title">Voice</h3>
-        <p class="model-management__section-copy">
+        <h3 class="model-management__section-title" hidden>Voice</h3>
+        <p class="model-management__section-copy" hidden>
           Voice training prepares owner-representative speech with consent, sample provenance, verification, and activation gates.
         </p>
         <dl class="model-management__card-grid">
@@ -231,15 +311,79 @@
     </article>
 
     <article class="model-management__section" data-model-management-section="model-training" hidden>
-      <h3 class="model-management__section-title">Training protocol</h3>
-      <p class="model-management__section-copy">
-        Training is staged through source authorization, acquisition, normalization, retrieval preparation, readiness assessment, and runtime activation.
-      </p>
-      <ol class="model-management__timeline">
-        <li>Authorize owner-approved sources.</li>
-        <li>Ingest and preserve raw source provenance.</li>
-        <li>Normalize, segment, embed, and assess readiness.</li>
-      </ol>
+      <section class="model-management__training-group" data-model-training-group="protocol">
+        <h3 class="model-management__section-title">Training protocol</h3>
+        <p class="model-management__section-copy">
+          Training is staged through source authorization, acquisition, normalization, retrieval preparation, readiness assessment, and runtime activation.
+        </p>
+        <ol class="model-management__timeline">
+          <li>Authorize owner-approved sources.</li>
+          <li>Ingest and preserve raw source provenance.</li>
+          <li>Normalize, segment, embed, and assess readiness.</li>
+        </ol>
+        <button class="model-management__button" type="button" data-model-training-workspace-open>Open recipe workspace</button>
+      </section>
+
+      <section class="model-management__training-group" data-model-training-group="datasets" hidden>
+        <h3 class="model-management__section-title">Datasets</h3>
+        <p class="model-management__section-copy">
+          Attach owner-approved datasets to a training recipe. Each source remains separate until provenance and evaluation requirements are complete.
+        </p>
+        <dl class="model-management__card-grid">
+          <div class="model-management__card">
+            <dt>Connected sources</dt>
+            <dd>Profile, thoughts, documents</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>External datasets</dt>
+            <dd>Prepared for governed connections</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>Recipe workspace</dt>
+            <dd>Configure datasets before execution</dd>
+          </div>
+        </dl>
+        <button class="model-management__button" type="button" data-model-training-workspace-open>Configure training recipe</button>
+      </section>
+
+      <section class="model-management__training-group" data-model-training-group="knowledge-base" hidden>
+        <h3 class="model-management__section-title">Knowledge base</h3>
+        <p class="model-management__section-copy">
+          Add current owner-approved knowledge notes. Entries remain editable training inputs until they pass provenance review.
+        </p>
+        <form class="model-management__knowledge-form" data-model-knowledge-form>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Knowledge note</span>
+            <textarea class="model-management__input model-management__input--textarea" name="knowledge-note" placeholder="Add a current knowledge note" data-model-knowledge-input required></textarea>
+          </label>
+          <button class="model-management__button" type="submit">Add note</button>
+        </form>
+        <div class="model-management__knowledge-list" data-model-knowledge-list aria-live="polite"></div>
+      </section>
+
+      <section class="model-management__training-group" data-model-training-group="provenance" hidden>
+        <h3 class="model-management__section-title">Provenance</h3>
+        <p class="model-management__section-copy">
+          Review source origin, permission, transformation, and retrieval readiness before a recipe can execute.
+        </p>
+        <dl class="model-management__card-grid">
+          <div class="model-management__card"><dt>Origin</dt><dd>Source records stay attributable</dd></div>
+          <div class="model-management__card"><dt>Permission</dt><dd>Owner approval required</dd></div>
+          <div class="model-management__card"><dt>Transformation</dt><dd>Normalization remains traceable</dd></div>
+        </dl>
+      </section>
+
+      <section class="model-management__training-group" data-model-training-group="evaluation" hidden>
+        <h3 class="model-management__section-title">Evaluation</h3>
+        <p class="model-management__section-copy">
+          Review recipe readiness, source quality, and activation blockers before training execution.
+        </p>
+        <dl class="model-management__card-grid">
+          <div class="model-management__card"><dt>Recipe</dt><dd>Draft configuration required</dd></div>
+          <div class="model-management__card"><dt>Sources</dt><dd>Provenance review required</dd></div>
+          <div class="model-management__card"><dt>Execution</dt><dd>Backend runner not connected</dd></div>
+        </dl>
+      </section>
     </article>
 
     <article class="model-management__section" data-model-management-section="model-personalization" hidden>
@@ -267,7 +411,7 @@
             <label class="model-management__field">
               <span class="model-management__field-label">Risk tolerance</span>
               <span class="model-management__slider-row">
-                <input class="model-management__slider" type="range" min="0" max="100" step="1" data-model-personalization-field="riskTolerance">
+                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="riskTolerance">
                 <span class="model-management__slider-value" data-model-personalization-value="riskTolerance">25</span>
               </span>
             </label>
@@ -275,7 +419,7 @@
             <label class="model-management__field">
               <span class="model-management__field-label">Efficiency</span>
               <span class="model-management__slider-row">
-                <input class="model-management__slider" type="range" min="0" max="100" step="1" data-model-personalization-field="efficiencyPreference">
+                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="efficiencyPreference">
                 <span class="model-management__slider-value" data-model-personalization-value="efficiencyPreference">50</span>
               </span>
             </label>
@@ -408,7 +552,7 @@
             <label class="model-management__field">
               <span class="model-management__field-label">Humor</span>
               <span class="model-management__slider-row">
-                <input class="model-management__slider" type="range" min="0" max="100" step="1" data-model-personalization-field="senseOfHumor">
+                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="senseOfHumor">
                 <span class="model-management__slider-value" data-model-personalization-value="senseOfHumor">50</span>
               </span>
             </label>
@@ -416,7 +560,7 @@
             <label class="model-management__field">
               <span class="model-management__field-label">Creativity</span>
               <span class="model-management__slider-row">
-                <input class="model-management__slider" type="range" min="0" max="100" step="1" data-model-personalization-field="creativityLevel">
+                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="creativityLevel">
                 <span class="model-management__slider-value" data-model-personalization-value="creativityLevel">50</span>
               </span>
             </label>
@@ -541,24 +685,81 @@
     </article>
 
     <article class="model-management__section" data-model-management-section="model-discovery" hidden>
-      <h3 class="model-management__section-title">Discovery</h3>
-      <p class="model-management__section-copy">
-        Discovery prepares public model visibility without activating marketplace behavior before registry, authorization, reputation, and governance are ready.
-      </p>
-      <dl class="model-management__grid">
-        <div class="model-management__item">
-          <dt>Visibility</dt>
-          <dd>Private until approved</dd>
+      <section class="model-management__discovery-group" data-model-discovery-group="overview">
+        <h3 class="model-management__section-title">Discovery</h3>
+        <p class="model-management__section-copy">
+          Discovery prepares public model visibility without activating marketplace behavior before registry, authorization, reputation, and governance are ready.
+        </p>
+        <dl class="model-management__grid">
+          <div class="model-management__item"><dt>Visibility</dt><dd>Private until approved</dd></div>
+          <div class="model-management__item"><dt>Economy state</dt><dd>Eligibility separated from approval</dd></div>
+          <div class="model-management__item"><dt>Ranking inputs</dt><dd>Reputation, expertise, readiness</dd></div>
+        </dl>
+      </section>
+
+      <section class="model-management__discovery-group" data-model-discovery-group="directory" hidden>
+        <h3 class="model-management__section-title">Model directory</h3>
+        <p class="model-management__section-copy">
+          Browse registered continuity models through public registry projections and approved discovery signals.
+        </p>
+        <div class="model-management__directory-filters">
+          <label class="model-management__field">
+            <span class="model-management__field-label">Search</span>
+            <input class="model-management__input" type="search" placeholder="Search models" data-model-directory-filter="query">
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Verification</span>
+            <span class="model-management__select-wrap">
+              <select class="model-management__select" data-model-directory-filter="verification">
+                <option value="all">All models</option>
+                <option value="verified">Verified</option>
+                <option value="unverified">Not verified</option>
+              </select>
+              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+            </span>
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Trust</span>
+            <span class="model-management__select-wrap">
+              <select class="model-management__select" data-model-directory-filter="trust">
+                <option value="all">All trust states</option>
+              </select>
+              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+            </span>
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Expertise</span>
+            <span class="model-management__select-wrap">
+              <select class="model-management__select" data-model-directory-filter="expertise">
+                <option value="all">All expertise</option>
+              </select>
+              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+            </span>
+          </label>
         </div>
-        <div class="model-management__item">
-          <dt>Economy state</dt>
-          <dd>Eligibility separated from approval</dd>
-        </div>
-        <div class="model-management__item">
-          <dt>Ranking inputs</dt>
-          <dd>Reputation, expertise, readiness</dd>
-        </div>
-      </dl>
+        <p class="model-management__note" data-model-directory-status>Loading models</p>
+        <div class="model-management__directory-list" data-model-directory-list aria-live="polite"></div>
+      </section>
+
+      <section class="model-management__discovery-group" data-model-discovery-group="trending" hidden>
+        <h3 class="model-management__section-title">Trending</h3>
+        <p class="model-management__section-copy">Ranking signals remain separate from verification and trust approval.</p>
+      </section>
+
+      <section class="model-management__discovery-group" data-model-discovery-group="expertise" hidden>
+        <h3 class="model-management__section-title">Expertise</h3>
+        <p class="model-management__section-copy">Expertise is mapped from public, source-backed model capability signals.</p>
+      </section>
+
+      <section class="model-management__discovery-group" data-model-discovery-group="reputation" hidden>
+        <h3 class="model-management__section-title">Reputation</h3>
+        <p class="model-management__section-copy">Reputation remains distinct from verification, readiness, and monetization eligibility.</p>
+      </section>
+
+      <section class="model-management__discovery-group" data-model-discovery-group="monetization" hidden>
+        <h3 class="model-management__section-title">Monetization</h3>
+        <p class="model-management__section-copy">Eligibility stays separated from approval until economy governance is connected.</p>
+      </section>
     </article>
 
     <article class="model-management__section" data-model-management-section="model-settings" hidden>
@@ -576,6 +777,51 @@
           <dd>Private by default</dd>
         </div>
       </dl>
+    </article>
+  </div>
+
+  <div class="model-management__identity-overlay" data-model-identity-editor hidden>
+    <div class="model-management__identity-overlay-backdrop" aria-hidden="true"></div>
+    <article class="model-management__identity-dialog ui-card ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="model-identity-editor-title">
+      <header class="model-management__identity-dialog-header">
+        <h2 class="model-management__identity-dialog-title" id="model-identity-editor-title">Edit model identity</h2>
+        <button class="global-close-button" type="button" data-model-identity-editor-close aria-label="Close model identity editor">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <form class="model-management__identity-form" data-model-identity-editor-form>
+        <div class="model-management__avatar-wrap">
+          <div class="model-management__avatar profile-private-hero__avatar" aria-hidden="true">
+            <img class="profile-private-hero__avatar-image" data-model-avatar-image alt="" aria-hidden="true" hidden>
+          </div>
+          <button class="profile-private-hero__media-action profile-private-hero__media-action--avatar" type="button" data-model-avatar-edit aria-label="Change model avatar">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/camera/camera.svg" alt="" aria-hidden="true">
+          </button>
+        </div>
+        <label class="model-management__field">
+          <span class="model-management__field-label">Model nickname</span>
+          <input class="ui-field profile-settings__input" type="text" autocomplete="off" placeholder="Model nickname" data-model-identity-editor-field="modelNickname">
+        </label>
+        <label class="model-management__field">
+          <span class="model-management__field-label">Purpose description</span>
+          <textarea class="ui-field profile-settings__input model-management__input--textarea" placeholder="Describe this model's purpose" data-model-identity-editor-field="modelPurposeDescription"></textarea>
+        </label>
+        <label class="model-management__field">
+          <span class="model-management__field-label">Private owner notes</span>
+          <textarea class="ui-field profile-settings__input model-management__input--textarea" placeholder="Add private notes" data-model-identity-editor-field="privateNotes"></textarea>
+        </label>
+        <footer class="model-management__identity-actions">
+          <button class="ui-button ui-button--ghost" type="button" data-model-identity-editor-close>
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
+            <span>Cancel</span>
+          </button>
+          <button class="ui-button ui-button--secondary" type="submit">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+            <span>Save</span>
+          </button>
+        </footer>
+      </form>
     </article>
   </div>
 </section>

@@ -18,6 +18,7 @@ const saveProfileScope =
 const RUNTIME = (window.__NEUROARTAN_PROFILE_MEDIA_EDITOR__ ||= {
   initialized:false,
   open:false,
+  target:'profile',
   kind:'avatar',
   file:null,
   previewUrl:'',
@@ -32,6 +33,8 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_MEDIA_EDITOR__ ||= {
   dragOriginY:0,
   dragPointerId:null
 });
+
+const TARGET_ADAPTERS = new Map();
 
 const CROP_OUTPUT = Object.freeze({
   avatar:{
@@ -105,11 +108,28 @@ function setStatus(root, message = '', state = 'idle') {
 }
 
 function getCurrentImageUrl(kind = RUNTIME.kind) {
+  const adapter = TARGET_ADAPTERS.get(RUNTIME.target);
+  if (typeof adapter?.getCurrentImageUrl === 'function') {
+    return String(adapter.getCurrentImageUrl({ kind, target:RUNTIME.target }) || '').trim();
+  }
+
   const state = getProfileRuntimeState();
   if (kind === 'cover') {
     return state.coverDisplayUrl || state.coverUrl || state.defaultCoverUrl || '';
   }
   return state.avatarDisplayUrl || state.avatarUrl || state.defaultAvatarUrl || '';
+}
+
+function getActiveTargetAdapter() {
+  return TARGET_ADAPTERS.get(RUNTIME.target) || TARGET_ADAPTERS.get('profile');
+}
+
+function getEditorTitle() {
+  const adapter = getActiveTargetAdapter();
+  if (typeof adapter?.getTitle === 'function') {
+    return String(adapter.getTitle({ kind:RUNTIME.kind, target:RUNTIME.target }) || '').trim();
+  }
+  return RUNTIME.kind === 'cover' ? 'Edit Header Image' : 'Edit Profile Image';
 }
 
 function revokePreviewUrl() {
@@ -212,12 +232,19 @@ function renderEditor() {
 
   const title = root.querySelector('#profile-media-editor-title');
   if (title instanceof HTMLElement) {
-    title.textContent = RUNTIME.kind === 'cover' ? 'Edit Header Image' : 'Edit Profile Image';
+    title.textContent = getEditorTitle();
   }
 
   const image = root.querySelector('[data-profile-media-editor-image]');
   if (image instanceof HTMLImageElement) {
-    image.src = RUNTIME.previewUrl || getCurrentImageUrl(RUNTIME.kind);
+    const imageUrl = RUNTIME.previewUrl || getCurrentImageUrl(RUNTIME.kind);
+    if (imageUrl) {
+      image.src = imageUrl;
+      image.hidden = false;
+    } else {
+      image.hidden = true;
+      image.removeAttribute('src');
+    }
     image.alt = RUNTIME.kind === 'cover' ? 'Header image preview' : 'Profile image preview';
     image.style.setProperty('--profile-media-editor-image-zoom', String(RUNTIME.zoom));
     image.style.setProperty('--profile-media-editor-image-x', `${RUNTIME.panX}%`);
@@ -249,9 +276,10 @@ function renderEditor() {
   updateRangeProgress(root);
 }
 
-function openEditor(kind = 'avatar') {
+function openEditor(kind = 'avatar', target = 'profile') {
   revokePreviewUrl();
   RUNTIME.open = true;
+  RUNTIME.target = TARGET_ADAPTERS.has(target) ? target : 'profile';
   RUNTIME.kind = kind === 'cover' ? 'cover' : 'avatar';
   RUNTIME.file = null;
   resetEditorTransform();
@@ -449,13 +477,14 @@ async function createCroppedFile(file, kind = RUNTIME.kind, zoom = RUNTIME.zoom,
 async function saveEditorImage() {
   const root = getEditorRoot();
   const state = getProfileRuntimeState();
+  const adapter = getActiveTargetAdapter();
 
   if (!RUNTIME.file) {
     setStatus(root, 'Choose an image before saving.', 'error');
     return;
   }
 
-  if (state.viewerState !== 'authenticated' || !state.user) {
+  if (typeof adapter?.save !== 'function' && (state.viewerState !== 'authenticated' || !state.user)) {
     setStatus(root, 'Sign in before editing profile images.', 'error');
     return;
   }
@@ -474,21 +503,30 @@ async function saveEditorImage() {
       RUNTIME.filter
     );
 
-    await saveProfileScope({
-      scope:'media',
-      values:RUNTIME.kind === 'cover'
-        ? { cover_file:croppedFile }
-        : { avatar_file:croppedFile },
-      existingProfile:state.profile,
-      user:state.user
-    });
+    if (typeof adapter?.save === 'function') {
+      await adapter.save({
+        file:croppedFile,
+        kind:RUNTIME.kind,
+        target:RUNTIME.target
+      });
+    } else {
+      await saveProfileScope({
+        scope:'media',
+        values:RUNTIME.kind === 'cover'
+          ? { cover_file:croppedFile }
+          : { avatar_file:croppedFile },
+        existingProfile:state.profile,
+        user:state.user
+      });
+    }
 
     setStatus(root, 'Image saved.', 'success');
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
       detail:{
         source:'profile-media-editor',
         scope:'media',
-        kind:RUNTIME.kind
+        kind:RUNTIME.kind,
+        target:RUNTIME.target
       }
     }));
     closeEditor();
@@ -503,8 +541,9 @@ async function saveEditorImage() {
 async function resetEditorImage() {
   const root = getEditorRoot();
   const state = getProfileRuntimeState();
+  const adapter = getActiveTargetAdapter();
 
-  if (state.viewerState !== 'authenticated' || !state.user) {
+  if (typeof adapter?.reset !== 'function' && (state.viewerState !== 'authenticated' || !state.user)) {
     setStatus(root, 'Sign in before resetting profile images.', 'error');
     return;
   }
@@ -514,19 +553,27 @@ async function resetEditorImage() {
   startLoading(loadingReason);
 
   try {
-    await saveProfileScope({
-      scope:'media',
-      values:getResetMediaValues(RUNTIME.kind, state.profile || {}),
-      existingProfile:state.profile,
-      user:state.user
-    });
+    if (typeof adapter?.reset === 'function') {
+      await adapter.reset({
+        kind:RUNTIME.kind,
+        target:RUNTIME.target
+      });
+    } else {
+      await saveProfileScope({
+        scope:'media',
+        values:getResetMediaValues(RUNTIME.kind, state.profile || {}),
+        existingProfile:state.profile,
+        user:state.user
+      });
+    }
 
     setStatus(root, 'Image reset.', 'success');
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
       detail:{
         source:'profile-media-editor',
         scope:'media',
-        kind:RUNTIME.kind
+        kind:RUNTIME.kind,
+        target:RUNTIME.target
       }
     }));
     closeEditor();
@@ -547,7 +594,7 @@ function bindProfileMediaEditor() {
 
   document.addEventListener('profile:media-editor-open-request', (event) => {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
-    openEditor(detail.kind || 'avatar');
+    openEditor(detail.kind || 'avatar', detail.target || 'profile');
   });
 
   document.addEventListener('click', (event) => {
@@ -639,6 +686,12 @@ function bindProfileMediaEditor() {
       event.preventDefault();
     }
   });
+}
+
+export function registerProfileMediaEditorTarget(target, adapter = {}) {
+  const normalizedTarget = String(target || '').trim();
+  if (!normalizedTarget || normalizedTarget === 'profile') return;
+  TARGET_ADAPTERS.set(normalizedTarget, adapter && typeof adapter === 'object' ? adapter : {});
 }
 
 /* =============================================================================

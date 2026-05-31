@@ -737,7 +737,7 @@ function handleProfileShellAction(action) {
   }
 
   if (normalized === 'my-models') {
-    window.location.href = '/pages/models/index.html';
+    window.location.href = '/model/#model/discovery/directory';
     return;
   }
 

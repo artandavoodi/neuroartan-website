@@ -1,0 +1,82 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) SHARED SLIDER BASE
+   03) SHARED SLIDER TRACK
+   04) SHARED SLIDER THUMB
+   05) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/03-primitives/slider.css */
+
+/* =============================================================================
+   02) SHARED SLIDER BASE
+============================================================================= */
+.ui-slider{
+  flex:1;
+  width:var(--size-full);
+  min-width:0;
+  height:var(--slider-track-height);
+  border:0;
+  border-radius:var(--slider-track-radius);
+  background:transparent;
+  outline:none;
+  box-shadow:none;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+/* =============================================================================
+   03) SHARED SLIDER TRACK
+============================================================================= */
+.ui-slider::-webkit-slider-runnable-track{
+  height:var(--slider-track-height);
+  border-radius:var(--slider-track-radius);
+  background:var(--slider-track-bg);
+}
+
+.ui-slider::-moz-range-track{
+  height:var(--slider-track-height);
+  border-radius:var(--slider-track-radius);
+  background:var(--slider-track-bg);
+}
+
+/* =============================================================================
+   04) SHARED SLIDER THUMB
+============================================================================= */
+.ui-slider::-webkit-slider-thumb{
+  width:var(--slider-thumb-size);
+  height:var(--slider-thumb-size);
+  margin-top:calc((var(--slider-thumb-size) - var(--slider-track-height)) / -2);
+  border:var(--slider-thumb-border);
+  border-radius:var(--slider-thumb-radius);
+  background:var(--slider-thumb-bg);
+  box-shadow:none;
+  cursor:pointer;
+  transition:none;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.ui-slider::-moz-range-thumb{
+  width:var(--slider-thumb-size);
+  height:var(--slider-thumb-size);
+  border:var(--slider-thumb-border);
+  border-radius:var(--slider-thumb-radius);
+  background:var(--slider-thumb-bg);
+  box-shadow:none;
+  cursor:pointer;
+  transition:none;
+}
+
+.ui-slider::-webkit-slider-thumb:hover,
+.ui-slider::-moz-range-thumb:hover{
+  background:var(--slider-thumb-bg);
+}
+
+/* =============================================================================
+   05) END OF FILE
+============================================================================= */

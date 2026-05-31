@@ -27,6 +27,7 @@ import {
   normalizeString,
   normalizeUsername,
 } from '../account/identity/account-profile-identity.js';
+import { uploadProfileImage } from '../profile/profile-image-storage.js';
 
 /* =============================================================================
    03) CONSTANTS
@@ -150,6 +151,7 @@ function mapSupabaseModel(row = {}) {
     model_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     display_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     description: normalizeString(row.description || ''),
+    model_image_url: normalizeString(row.model_image_url || ''),
     creator_display_name: normalizeString(row.creator_display_name || ''),
     creator_username: normalizeUsername(row.creator_username || ''),
     model_visibility: normalizeString(row.model_visibility || 'private'),
@@ -225,15 +227,31 @@ function mapModelFoundationIdentity(records = {}, model = {}) {
 
   const privateIdentity = records.privateIdentity || {};
   const identityRegistry = records.identityRegistry || {};
+  const publicIdentity = records.publicIdentity || {};
   const birthCertificate = records.birthCertificate || {};
+  const lifecycle = records.lifecycle || {};
+  const dignitySecurity = records.dignitySecurity || {};
   const modelId = normalizeString(model.id || privateIdentity.model_id || identityRegistry.model_id || birthCertificate.model_id || '');
   return {
     modelId,
     modelNickname: normalizeString(privateIdentity.private_name || model.model_name || model.display_name || 'Canonical personal model'),
-    apiIdentity: normalizeString(identityRegistry.canonical_slug || model.model_slug || model.slug || 'Private API identity pending'),
-    serialNumber: buildModelFoundationSerial(modelId),
-    birthNumber: normalizeString(birthCertificate.id || model.birth_certificate_id || 'Birth record pending'),
+    modelPurposeDescription: normalizeString(model.description || ''),
+    privateNotes: normalizeString(privateIdentity.private_notes || ''),
+    registryId: normalizeString(identityRegistry.id || 'Registry record pending'),
+    privateSerialIdentity: buildModelFoundationSerial(modelId),
+    publicSerialIdentity: normalizeString(publicIdentity.id || 'Public identity not enabled'),
+    birthCertificateId: normalizeString(birthCertificate.id || model.birth_certificate_id || 'Birth record pending'),
+    birthDate: normalizeString(birthCertificate.created_at || model.created_at || ''),
+    modelType: 'Personal',
+    lifecycleState: normalizeString(lifecycle.current_state || model.lifecycle_state || 'created'),
+    readinessState: normalizeString(model.readiness_state || 'uninitialized'),
+    verificationState: normalizeString(model.verification_state || 'unverified'),
+    discoverabilityState: normalizeString(identityRegistry.discoverability_state || model.publication_state || 'unpublished'),
+    privacyLockState: normalizeString(dignitySecurity.identity_protection_state || 'private_owner_controlled'),
+    createdAt: normalizeString(model.created_at || ''),
+    updatedAt: normalizeString(privateIdentity.updated_at || model.updated_at || ''),
     ownerRecordPolicy: normalizeString(privateIdentity.owner_visibility || 'owner_only'),
+    modelAvatar: normalizeString(model.model_image_url || ''),
   };
 }
 
@@ -399,16 +417,25 @@ export async function readModelFoundationIdentity(modelId) {
     privateIdentityResult,
     identityRegistryResult,
     birthCertificateResult,
+    publicIdentityResult,
+    lifecycleResult,
+    dignitySecurityResult,
   ] = await Promise.all([
     supabase.from(MODEL_FOUNDATION_TABLES.privateIdentities).select('*').eq('model_id', normalizedModelId).maybeSingle(),
     supabase.from(MODEL_FOUNDATION_TABLES.identityRegistry).select('*').eq('model_id', normalizedModelId).maybeSingle(),
     supabase.from(MODEL_FOUNDATION_TABLES.birthCertificates).select('*').eq('model_id', normalizedModelId).maybeSingle(),
+    supabase.from(MODEL_FOUNDATION_TABLES.publicIdentities).select('*').eq('model_id', normalizedModelId).maybeSingle(),
+    supabase.from(MODEL_FOUNDATION_TABLES.lifecycle).select('*').eq('model_id', normalizedModelId).maybeSingle(),
+    supabase.from(MODEL_FOUNDATION_TABLES.dignitySecurity).select('*').eq('model_id', normalizedModelId).maybeSingle(),
   ]);
 
   const missingRelationError = [
     privateIdentityResult.error,
     identityRegistryResult.error,
     birthCertificateResult.error,
+    publicIdentityResult.error,
+    lifecycleResult.error,
+    dignitySecurityResult.error,
   ].find(isSupabaseRelationMissingError);
 
   if (missingRelationError) return mapModelFoundationIdentity({}, model);
@@ -417,6 +444,9 @@ export async function readModelFoundationIdentity(modelId) {
     privateIdentityResult.error,
     identityRegistryResult.error,
     birthCertificateResult.error,
+    publicIdentityResult.error,
+    lifecycleResult.error,
+    dignitySecurityResult.error,
   ].find(Boolean);
 
   if (blockingError) throw blockingError;
@@ -425,6 +455,9 @@ export async function readModelFoundationIdentity(modelId) {
     privateIdentity: privateIdentityResult.data,
     identityRegistry: identityRegistryResult.data,
     birthCertificate: birthCertificateResult.data,
+    publicIdentity: publicIdentityResult.data,
+    lifecycle: lifecycleResult.data,
+    dignitySecurity: dignitySecurityResult.data,
   }, model);
 }
 
@@ -438,6 +471,16 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
 
   const payload = buildModelFoundationPrivateIdentityPayload(normalizedModelId, values, model);
 
+  const { error: modelError } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      description: normalizeString(values.modelPurposeDescription || values.model_purpose_description || ''),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', normalizedModelId);
+
+  if (modelError) throw modelError;
+
   const { error } = await supabase
     .from(MODEL_FOUNDATION_TABLES.privateIdentities)
     .upsert(payload, { onConflict: 'model_id' })
@@ -450,6 +493,55 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
   }
 
   return readModelFoundationIdentity(normalizedModelId);
+}
+
+export async function saveOwnedCanonicalModelAvatar(file) {
+  const supabase = getSupabaseClient();
+  const model = await getOwnedCanonicalModel();
+  const user = await getCurrentSupabaseUser();
+  if (!supabase) throw new Error('MODEL_BACKEND_UNAVAILABLE');
+  if (!model?.id) throw new Error('CANONICAL_MODEL_REQUIRED');
+  if (!user?.id) throw new Error('AUTH_REQUIRED');
+
+  const uploaded = await uploadProfileImage({
+    file,
+    user,
+    kind:'model-avatar',
+    supabase
+  });
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      model_image_url:uploaded.publicUrl,
+      updated_at:new Date().toISOString()
+    })
+    .eq('id', model.id)
+    .select(MODEL_SELECT_FIELDS)
+    .single();
+
+  if (error) throw error;
+  return mapSupabaseModel(data);
+}
+
+export async function resetOwnedCanonicalModelAvatar() {
+  const supabase = getSupabaseClient();
+  const model = await getOwnedCanonicalModel();
+  if (!supabase) throw new Error('MODEL_BACKEND_UNAVAILABLE');
+  if (!model?.id) throw new Error('CANONICAL_MODEL_REQUIRED');
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      model_image_url:'',
+      updated_at:new Date().toISOString()
+    })
+    .eq('id', model.id)
+    .select(MODEL_SELECT_FIELDS)
+    .single();
+
+  if (error) throw error;
+  return mapSupabaseModel(data);
 }
 
 async function getModelById(modelId) {

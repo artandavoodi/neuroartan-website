@@ -36,6 +36,7 @@ import './back-button.js';
 import './cursor.js';
 import './drawers.js';
 import './hover.js';
+import './icon-interaction.js';
 import './icon-stroke.js';
 import './motion.js';
 import './overlays.js';

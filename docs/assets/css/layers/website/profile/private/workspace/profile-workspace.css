@@ -21,6 +21,7 @@
   --profile-workspace-right-toolbar-edge-padding:var(--spacing-md);
   --profile-workspace-content-inset:var(--site-shell-inline-padding-mobile);
   --profile-workspace-content-row-padding-inline:var(--spacing-lg);
+  --profile-workspace-content-padding-block:var(--layout-profile-workspace-content-padding-block);
   display:grid;
   grid-template-columns:
     var(--profile-workspace-sidebar-expanded-width)
@@ -71,15 +72,14 @@
 
 .profile-workspace__content-mount{
   min-width:var(--spacing-none);
-  padding-block-start:calc(var(--spacing-xl) * 2);
+  padding-block:var(--profile-workspace-content-padding-block);
 }
 
 .profile-workspace__content{
   display:grid;
   gap:var(--spacing-lg);
   padding-inline:var(--spacing-none);
-  padding-block-start:var(--spacing-none);
-  padding-block-end:var(--spacing-xl);
+  padding-block:var(--spacing-none);
 }
 
 .profile-workspace__panel[hidden]{

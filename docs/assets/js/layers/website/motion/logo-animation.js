@@ -2,15 +2,15 @@
  * Logo Intro Animation — ARTAN-style (CENTER POP → REVEAL)
  *
  * Behavior:
- * 1) New tab/session: show ONLY a centered logo overlay (no header/footer, no announcement/enter/essence).
+ * 1) First homepage visit in this browser: show ONLY a centered logo overlay (no header/footer, no announcement/enter/essence).
  * 2) Logo does a visible pop (scale up/down) while staying centered.
  * 3) Logo overlay fades out.
  * 4) Stage UI appears in its normal layout (logo in place + announcement + enter + essence).
  * 5) On ENTER: hide announcement + enter, reveal header/footer. Logo remains.
  *
- * Session rules:
- * - Normal refresh keeps current state.
- * - Closing the tab/new session re-runs the intro.
+ * Browser rules:
+ * - The logo intro is homepage-only.
+ * - The browser remembers completion until local site data is cleared.
  */
 
 (() => {
@@ -24,7 +24,7 @@
   const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
   const EASE_INOUT = "cubic-bezier(0.4, 0, 0.2, 1)";
 
-  // Run once per session (normal refresh keeps it done)
+  // Run the logo overlay once per browser until local site data is cleared.
   const INTRO_DONE_KEY = "artan_logo_intro_done_v4";
   const ENTERED_KEY = "artan_site_entered_v2";
 
@@ -146,6 +146,7 @@
   onReady(async () => {
     const body = document.body;
     if (!body || body.hasAttribute("data-disable-logo-intro")) return;
+    if (!body.classList.contains("home-page")) return;
 
     // Always start at top for the hero intro experience.
     // (Safe: only affects this tab/session; avoids landing mid-scroll.)
@@ -160,8 +161,8 @@
       return img;
     })();
 
-    // ===== Session gate =====
-    const introDone = sessionStorage.getItem(INTRO_DONE_KEY) === "1";
+    // ===== Browser gate =====
+    const introDone = localStorage.getItem(INTRO_DONE_KEY) === "1";
     const entered = sessionStorage.getItem(ENTERED_KEY) === "1";
 
     // SAFETY: never start in entered state unless this session explicitly entered.
@@ -561,7 +562,7 @@
 
     // Reduced motion: skip overlay pop; reveal stage content only.
     if (prefersReducedMotion()) {
-      sessionStorage.setItem(INTRO_DONE_KEY, "1");
+      localStorage.setItem(INTRO_DONE_KEY, "1");
       hideChrome();
       hideStageContent();
       setStageVideoMask({ opacity: 0.5, hard: true });
@@ -594,7 +595,7 @@
 
     await new Promise((r) => requestAnimationFrame(r));
 
-    sessionStorage.setItem(INTRO_DONE_KEY, "1");
+    localStorage.setItem(INTRO_DONE_KEY, "1");
 
     body.classList.add("intro-loading");
     setStageVideoMask({ opacity: 1, hard: true });

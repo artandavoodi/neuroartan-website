@@ -16,7 +16,7 @@ const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', '
 const VALID_SECTIONS = new Set(['home', 'feed', 'notifications', 'messaging', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings', ...MODEL_SECTIONS]);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
-const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'provenance', 'evaluation', 'behavior', 'language', 'emotion', 'response', 'memory', 'creativity', 'reflection', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
+const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'provenance', 'evaluation', 'behavior', 'language', 'emotion', 'response', 'memory', 'creativity', 'reflection', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';
@@ -94,6 +94,12 @@ function normalizeModelPane(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (normalized === 'source') return 'sources';
   return VALID_MODEL_PANES.has(normalized) ? normalized : 'overview';
+}
+
+function normalizeModelPaneForSection(section, value) {
+  const normalizedPane = normalizeModelPane(value);
+  if (section === 'model-discovery' && normalizedPane === 'overview') return 'directory';
+  return normalizedPane;
 }
 
 /* =============================================================================
@@ -215,11 +221,12 @@ function parseHash() {
 
   if (rawHash.startsWith('model/')) {
     const [, area = 'foundation', pane = 'overview'] = rawHash.split('/');
+    const section = normalizeSection(`model-${area}`);
     return constrainStateToRoute(buildNavigationState(
-      normalizeSection(`model-${area}`),
+      section,
       createDefaultState().settingsPane,
       createDefaultState().dashboardPane,
-      pane
+      normalizeModelPaneForSection(section, pane)
     ));
   }
 
@@ -264,7 +271,7 @@ function setState(nextState, options = {}) {
     ? normalizeDashboardPane(nextState?.dashboardPane || RUNTIME.state?.dashboardPane || 'overview')
     : normalizeDashboardPane(RUNTIME.state?.dashboardPane || nextState?.dashboardPane || 'overview');
   const modelPane = MODEL_SECTIONS.has(section)
-    ? normalizeModelPane(nextState?.modelPane || RUNTIME.state?.modelPane || 'overview')
+    ? normalizeModelPaneForSection(section, nextState?.modelPane || RUNTIME.state?.modelPane || 'overview')
     : normalizeModelPane(RUNTIME.state?.modelPane || nextState?.modelPane || 'overview');
 
   RUNTIME.state = buildNavigationState(

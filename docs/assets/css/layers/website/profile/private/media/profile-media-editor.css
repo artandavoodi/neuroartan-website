@@ -11,7 +11,7 @@
    01) PROFILE MEDIA EDITOR TOKENS
 ============================================================================= */
 :root{
-  --profile-media-editor-z-index:var(--z-overlay-control);
+  --profile-media-editor-z-index:var(--z-language-dropdown);
   --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
   --profile-media-editor-dialog-radius:var(--dialog-overlay-radius);
   --profile-media-editor-dialog-padding:var(--spacing-lg);
@@ -24,7 +24,7 @@
   --profile-media-editor-avatar-radius:var(--control-radius-pill);
   --profile-media-editor-cover-radius:var(--shape-card-radius);
   --profile-media-editor-status-min-height:var(--body-3-line-height);
-  --profile-media-editor-preview-bg:var(--control-surface);
+  --profile-media-editor-preview-bg:var(--color-primary1);
   --profile-media-editor-control-bg:var(--control-surface);
   --profile-media-editor-control-bg-hover:var(--control-surface-hover);
   --profile-media-editor-control-border:var(--control-border-unified);
@@ -343,63 +343,6 @@ body.profile-media-editor-open{
   height:var(--home-platform-shell-nav-icon-size);
   pointer-events:none;
   transform:translate(-50%, -50%);
-}
-
-.profile-media-editor__dialog .profile-media-editor__range{
-  width:100%;
-  height: var(--slider-track-height);
-  border:0;
-  border-radius:var(--slider-track-radius);
-  background: transparent;
-  outline:none;
-  box-shadow:none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-runnable-track {
-  height: var(--slider-track-height);
-  background: var(--slider-track-bg);
-  border-radius: var(--slider-track-radius);
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-moz-range-track {
-  height: var(--slider-track-height);
-  background: var(--slider-track-bg);
-  border-radius: var(--slider-track-radius);
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-thumb{
-  appearance:none;
-  -webkit-appearance:none;
-  width:var(--slider-thumb-size);
-  height:var(--slider-thumb-size);
-  border:var(--slider-thumb-border);
-  border-radius:var(--slider-thumb-radius);
-  background:var(--slider-thumb-bg);
-  cursor:pointer;
-  box-shadow:none;
-  transition:none;
-  margin-top: calc((var(--slider-thumb-size) - var(--slider-track-height)) / -2);
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-webkit-slider-thumb:hover{
-  background:var(--slider-thumb-bg);
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-moz-range-thumb{
-  width:var(--slider-thumb-size);
-  height:var(--slider-thumb-size);
-  border:var(--slider-thumb-border);
-  border-radius:var(--slider-thumb-radius);
-  background:var(--slider-thumb-bg);
-  cursor:pointer;
-  box-shadow:none;
-  transition:none;
-}
-
-.profile-media-editor__dialog .profile-media-editor__range::-moz-range-thumb:hover{
-  background:var(--slider-thumb-bg);
 }
 
 .profile-media-editor__select{

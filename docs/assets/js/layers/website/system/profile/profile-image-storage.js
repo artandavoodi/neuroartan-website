@@ -35,6 +35,8 @@ function normalizeStorageKind(kind = 'avatar') {
   const normalizedKind = normalizeString(kind || 'avatar').toLowerCase();
   if (normalizedKind === 'cover') return 'cover';
   if (normalizedKind === 'post') return 'post';
+  if (normalizedKind === 'assistant-avatar') return 'assistant-avatar';
+  if (normalizedKind === 'model-avatar') return 'model-avatar';
   return 'avatar';
 }
 

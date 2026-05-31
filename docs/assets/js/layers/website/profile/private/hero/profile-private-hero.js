@@ -208,10 +208,11 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
     case 'model-training':
     case 'model-personalization':
     case 'model-readiness':
-    case 'model-discovery':
     case 'model-runtime':
     case 'model-settings':
       return navigationState.modelPane || 'overview';
+    case 'model-discovery':
+      return navigationState.modelPane || 'directory';
     case 'overview':
       return 'posts';
     default:

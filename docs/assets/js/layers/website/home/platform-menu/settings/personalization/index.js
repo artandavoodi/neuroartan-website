@@ -1,4 +1,6 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
+import { registerProfileMediaEditorTarget } from '../../../../profile/private/media/profile-media-editor.js';
+import { uploadProfileImage } from '../../../../system/profile/profile-image-storage.js';
 
 const STORAGE_KEY = 'neuroartan.personalization-settings';
 
@@ -103,22 +105,79 @@ async function syncFromSupabase() {
       
       // Sync Supabase settings to localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(supabaseSettings));
+      renderAssistantAvatar(supabaseSettings);
     }
   } catch (error) {
     console.error('Failed to sync from Supabase:', error);
   }
 }
 
-function saveSettings(settings) {
+function saveSettings(settings, options = {}) {
   try {
     // Save all settings to localStorage immediately (primary storage)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    
-    // Sync to Supabase in background (secondary storage)
-    syncToSupabase(settings);
+
+    const syncPromise = syncToSupabase(settings);
+    if (options.awaitRemote === true) return syncPromise;
+
+    void syncPromise.catch((error) => {
+      console.error('Failed to sync personalization settings:', error);
+    });
+    return Promise.resolve();
   } catch (error) {
     console.error('Failed to save personalization settings:', error);
+    return Promise.reject(error);
   }
+}
+
+function renderAssistantAvatar(settings = {}) {
+  const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
+  if (!(avatarImage instanceof HTMLImageElement)) return;
+
+  const avatarUrl = String(settings.assistantAvatar || '').trim();
+  if (avatarUrl) {
+    avatarImage.src = avatarUrl;
+    avatarImage.hidden = false;
+    return;
+  }
+
+  avatarImage.hidden = true;
+  avatarImage.removeAttribute('src');
+}
+
+async function getAuthenticatedUser() {
+  if (!window.neuroartanSupabase?.auth) return null;
+  const { data, error } = await window.neuroartanSupabase.auth.getUser();
+  if (error) throw error;
+  return data?.user || null;
+}
+
+function registerAssistantAvatarEditor(settings) {
+  registerProfileMediaEditorTarget('assistant', {
+    getTitle: () => 'Edit ICOS Avatar',
+    getCurrentImageUrl: () => settings.assistantAvatar || '',
+    save: async ({ file }) => {
+      const user = await getAuthenticatedUser();
+      if (!user) throw new Error('AUTH_REQUIRED');
+
+      const uploaded = await uploadProfileImage({
+        file,
+        user,
+        kind:'assistant-avatar'
+      });
+
+      settings.assistantAvatar = uploaded.publicUrl;
+      settings.assistantAvatarStoragePath = uploaded.storagePath;
+      await saveSettings(settings, { awaitRemote:true });
+      renderAssistantAvatar(settings);
+    },
+    reset: async () => {
+      settings.assistantAvatar = '';
+      settings.assistantAvatarStoragePath = '';
+      await saveSettings(settings, { awaitRemote:true });
+      renderAssistantAvatar(settings);
+    }
+  });
 }
 
 async function syncToSupabase(settings) {
@@ -128,7 +187,7 @@ async function syncToSupabase(settings) {
     const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
     if (!user) return;
 
-    await window.neuroartanSupabase
+    const { error } = await window.neuroartanSupabase
       .from('profiles')
       .update({
         assistant_name: settings.assistantName,
@@ -141,8 +200,11 @@ async function syncToSupabase(settings) {
         risk_tolerance: settings.riskTolerance
       })
       .eq('auth_user_id', user.id);
+
+    if (error) throw error;
   } catch (error) {
     console.error('Failed to sync to Supabase:', error);
+    throw error;
   }
 }
 
@@ -150,8 +212,6 @@ function initializeForm(settings) {
   // ICOS Assistant Identity fields
   const assistantNameInput = document.querySelector('[data-home-platform-field="assistant-name"]');
   const assistantDescriptionTextarea = document.querySelector('[data-home-platform-field="assistant-description"]');
-  const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
-  const avatarPlaceholder = document.querySelector('[data-home-platform-avatar-placeholder]');
   
   if (assistantNameInput) assistantNameInput.value = settings.assistantName || '';
   if (assistantDescriptionTextarea) assistantDescriptionTextarea.value = settings.assistantDescription || '';
@@ -159,12 +219,7 @@ function initializeForm(settings) {
   // Update character counter for description
   updateCharacterCounter(assistantDescriptionTextarea);
   
-  // Initialize avatar display
-  if (settings.assistantAvatar && avatarImage && avatarPlaceholder) {
-    avatarImage.src = settings.assistantAvatar;
-    avatarImage.hidden = false;
-    avatarPlaceholder.hidden = true;
-  }
+  renderAssistantAvatar(settings);
   
   // Thought Pattern fields
   const languageStyleSelect = document.querySelector('[data-home-platform-field="language-style"]');
@@ -478,79 +533,15 @@ function setupEventListeners(settings) {
   
   // Change assistant avatar button
   const changeAvatarButton = document.querySelector('[data-home-platform-action="change-avatar"]');
-  const avatarInput = document.querySelector('[data-home-platform-avatar-input]');
-  const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
-  const avatarPlaceholder = document.querySelector('[data-home-platform-avatar-placeholder]');
-  
-  if (changeAvatarButton && avatarInput) {
+  if (changeAvatarButton) {
     changeAvatarButton.addEventListener('click', () => {
-      avatarInput.click();
-    });
-  }
-  
-  if (avatarInput) {
-    avatarInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        try {
-          // Upload to Supabase storage
-          if (window.neuroartanSupabase) {
-            const { data: { user } } = await window.neuroartanSupabase.auth.getUser();
-            if (user) {
-              const fileExt = file.name.split('.').pop();
-              const fileName = `${user.id}/assistant-avatar-${Date.now()}.${fileExt}`;
-              
-              const { data: uploadData, error: uploadError } = await window.neuroartanSupabase
-                .storage
-                .from('profile-media')
-                .upload(fileName, file, {
-                  cacheControl: '3600',
-                  upsert: false
-                });
-              
-              if (uploadError) {
-                console.error('Avatar upload error:', uploadError);
-                return;
-              }
-              
-              // Get public URL
-              const { data: { publicUrl } } = window.neuroartanSupabase
-                .storage
-                .from('profile-media')
-                .getPublicUrl(fileName);
-              
-              settings.assistantAvatar = publicUrl;
-              settings.assistantAvatarStoragePath = fileName;
-              await saveSettings(settings);
-              
-              // Update avatar display
-              if (avatarImage && avatarPlaceholder) {
-                avatarImage.src = publicUrl;
-                avatarImage.hidden = false;
-                avatarPlaceholder.hidden = true;
-              }
-            }
-          } else {
-            // Fallback to base64 for localStorage
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const imageDataUrl = event.target.result;
-              settings.assistantAvatar = imageDataUrl;
-              saveSettings(settings);
-              
-              // Update avatar display
-              if (avatarImage && avatarPlaceholder) {
-                avatarImage.src = imageDataUrl;
-                avatarImage.hidden = false;
-                avatarPlaceholder.hidden = true;
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-        } catch (error) {
-          console.error('Avatar upload failed:', error);
+      document.dispatchEvent(new CustomEvent('profile:media-editor-open-request', {
+        detail:{
+          source:'home-platform-personalization',
+          target:'assistant',
+          kind:'avatar'
         }
-      }
+      }));
     });
   }
 }
@@ -559,7 +550,9 @@ export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   
   const settings = loadSettings();
+  registerAssistantAvatarEditor(settings);
   initializeForm(settings);
+  void syncFromSupabase();
   setupEventListeners(settings);
   
   // Sync from Supabase when ready (background operation)
@@ -567,4 +560,3 @@ export function mountHomePlatformDestination(root, options = {}) {
     syncFromSupabase();
   });
 }
-

@@ -1,0 +1,155 @@
+:root{
+  --model-training-workspace-z-index:var(--z-overlay-control);
+  --model-training-workspace-backdrop:var(--glass-overlay-backdrop-bg);
+  --model-training-workspace-surface:var(--panel-surface-dropdown-unified);
+  --model-training-workspace-rail-width:var(--layout-home-platform-subrail-width);
+}
+
+html.model-training-workspace-open,
+body.model-training-workspace-open{
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+
+.model-training-workspace[hidden]{
+  display:none;
+}
+
+.model-training-workspace{
+  position:fixed;
+  inset:var(--spacing-none);
+  z-index:var(--model-training-workspace-z-index);
+  display:grid;
+}
+
+.model-training-workspace__backdrop{
+  position:absolute;
+  inset:var(--spacing-none);
+  background:var(--model-training-workspace-backdrop);
+  backdrop-filter:blur(var(--glass-overlay-backdrop-blur));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur));
+}
+
+.model-training-workspace__surface{
+  position:relative;
+  z-index:var(--z-base);
+  display:grid;
+  grid-template-rows:auto minmax(0, 1fr);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  background:var(--model-training-workspace-surface);
+}
+
+.model-training-workspace__header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-md);
+  padding:var(--site-shell-inline-padding);
+  border-block-end:var(--border-width-hairline) solid var(--border-color);
+}
+
+.model-training-workspace__eyebrow,
+.model-training-workspace__title,
+.model-training-workspace__copy,
+.model-training-workspace__section-title{
+  margin:var(--spacing-none);
+}
+
+.model-training-workspace__eyebrow{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  text-transform:uppercase;
+}
+
+.model-training-workspace__title,
+.model-training-workspace__section-title{
+  color:var(--text-primary-color);
+  font-size:var(--headline-5-size);
+  line-height:var(--headline-5-line-height);
+}
+
+.model-training-workspace__copy,
+.model-training-workspace__status{
+  color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
+.model-training-workspace__layout{
+  display:grid;
+  grid-template-columns:var(--model-training-workspace-rail-width) minmax(0, 1fr);
+  min-height:var(--spacing-none);
+}
+
+.model-training-workspace__rail{
+  display:grid;
+  align-content:start;
+  gap:var(--spacing-xs);
+  padding:var(--site-shell-inline-padding);
+  border-inline-end:var(--border-width-hairline) solid var(--border-color);
+}
+
+.model-training-workspace__rail-item{
+  min-height:var(--button-height-md);
+  border:var(--spacing-none);
+  background:transparent;
+  color:var(--text-secondary-color);
+  text-align:start;
+}
+
+.model-training-workspace__rail-item.is-active{
+  color:var(--text-primary-color);
+}
+
+.model-training-workspace__content,
+.model-training-workspace__pane{
+  display:grid;
+  align-content:start;
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+}
+
+.model-training-workspace__content{
+  padding:var(--site-shell-inline-padding);
+  overflow:auto;
+}
+
+.model-training-workspace__pane[hidden]{
+  display:none;
+}
+
+.model-training-workspace__grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(var(--data-grid-column-min), 1fr));
+  gap:var(--data-grid-gap);
+}
+
+.model-training-workspace__check{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  min-height:var(--input-height-md);
+  color:var(--text-primary-color);
+}
+
+.model-training-workspace__actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:var(--spacing-sm);
+  padding-block-start:var(--spacing-lg);
+}
+
+@media (max-width:760px){
+  .model-training-workspace__layout{
+    grid-template-columns:minmax(0, 1fr);
+  }
+
+  .model-training-workspace__rail{
+    display:flex;
+    overflow:auto;
+    border-inline-end:var(--spacing-none);
+    border-block-end:var(--border-width-hairline) solid var(--border-color);
+  }
+}

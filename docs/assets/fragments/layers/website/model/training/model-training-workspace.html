@@ -1,0 +1,97 @@
+<!-- =============================================================================
+     01) MODEL TRAINING WORKSPACE
+============================================================================= -->
+<section class="model-training-workspace" data-model-training-workspace aria-hidden="true" hidden>
+  <div class="model-training-workspace__backdrop" aria-hidden="true"></div>
+
+  <article class="model-training-workspace__surface" role="dialog" aria-modal="true" aria-labelledby="model-training-workspace-title">
+    <header class="model-training-workspace__header">
+      <div>
+        <p class="model-training-workspace__eyebrow">Model training</p>
+        <h2 class="model-training-workspace__title" id="model-training-workspace-title">Recipe workspace</h2>
+      </div>
+      <button class="global-close-button" type="button" data-model-training-workspace-close aria-label="Close recipe workspace">
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
+    </header>
+
+    <div class="model-training-workspace__layout">
+      <nav class="model-training-workspace__rail" aria-label="Training recipe sections">
+        <button class="model-training-workspace__rail-item is-active" type="button" data-model-training-workspace-pane="recipe">Recipe</button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="sources">Sources</button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="execution">Execution</button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="readiness">Readiness</button>
+      </nav>
+
+      <form class="model-training-workspace__content" data-model-training-workspace-form>
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="recipe">
+          <h3 class="model-training-workspace__section-title">Recipe</h3>
+          <p class="model-training-workspace__copy">Define the reusable training draft before any execution request is submitted.</p>
+          <div class="model-training-workspace__grid">
+            <label class="model-management__field">
+              <span class="model-management__field-label">Recipe name</span>
+              <input class="model-management__input" name="recipeName" type="text" placeholder="Model foundation recipe" required>
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Base model</span>
+              <input class="model-management__input" name="baseModel" type="text" placeholder="Select a base model" required>
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Training method</span>
+              <span class="model-management__select-wrap">
+                <select class="model-management__select" name="trainingMethod">
+                  <option value="supervised">Supervised fine-tuning</option>
+                  <option value="preference">Preference alignment</option>
+                  <option value="retrieval">Retrieval preparation</option>
+                </select>
+                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="sources" hidden>
+          <h3 class="model-training-workspace__section-title">Sources</h3>
+          <p class="model-training-workspace__copy">Select governed sources. Dataset attachment remains separate from provenance approval.</p>
+          <div class="model-training-workspace__grid">
+            <label class="model-training-workspace__check"><input name="sourceProfile" type="checkbox" checked> <span>Profile foundation</span></label>
+            <label class="model-training-workspace__check"><input name="sourceThoughts" type="checkbox"> <span>Thought bank</span></label>
+            <label class="model-training-workspace__check"><input name="sourceDocuments" type="checkbox"> <span>Documents</span></label>
+            <label class="model-training-workspace__check"><input name="sourceKnowledge" type="checkbox"> <span>Knowledge base</span></label>
+          </div>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="execution" hidden>
+          <h3 class="model-training-workspace__section-title">Execution</h3>
+          <p class="model-training-workspace__copy">Prepare runtime parameters for the future governed training runner.</p>
+          <div class="model-training-workspace__grid">
+            <label class="model-management__field">
+              <span class="model-management__field-label">Epochs</span>
+              <input class="model-management__input" name="epochs" type="number" min="1" value="1">
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Learning rate</span>
+              <input class="model-management__input" name="learningRate" type="text" value="0.0002">
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Context length</span>
+              <input class="model-management__input" name="contextLength" type="number" min="1" value="2048">
+            </label>
+          </div>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="readiness" hidden>
+          <h3 class="model-training-workspace__section-title">Readiness</h3>
+          <p class="model-training-workspace__copy">Saving creates a recipe draft only. Execution remains unavailable until a governed training runner is connected.</p>
+          <div class="model-training-workspace__status" data-model-training-workspace-status aria-live="polite">Draft not saved</div>
+        </section>
+
+        <footer class="model-training-workspace__actions">
+          <button class="ui-button ui-button--ghost" type="button" data-model-training-workspace-close>Cancel</button>
+          <button class="ui-button ui-button--secondary" type="submit">Save recipe draft</button>
+        </footer>
+      </form>
+    </div>
+  </article>
+</section>

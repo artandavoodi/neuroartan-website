@@ -7,11 +7,13 @@
 .profile-home-panel__stream{
   display:grid;
   gap:var(--spacing-none);
+  min-width:0;
 }
 
 .profile-home-panel__item{
   display:grid;
   gap:var(--spacing-md);
+  min-width:0;
   padding:var(--spacing-lg) var(--profile-workspace-content-row-padding-inline);
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
@@ -21,6 +23,7 @@
   align-items:center;
   justify-content:space-between;
   gap:var(--spacing-md);
+  min-width:0;
 }
 
 .profile-home-panel__item-avatar{
@@ -43,6 +46,7 @@
 .profile-home-panel__item-meta{
   display:grid;
   gap:var(--spacing-2xs);
+  min-width:0;
   margin-right:auto;
   color:var(--text-secondary-color);
   font-size:var(--body-3-size);
@@ -78,6 +82,7 @@
 .profile-home-panel__item-image{
   display:block;
   width:100%;
+  max-width:100%;
   max-height:calc(28rem * var(--accessibility-density-scale));
   object-fit:cover;
   border:var(--border-width-hairline) solid var(--border-color);

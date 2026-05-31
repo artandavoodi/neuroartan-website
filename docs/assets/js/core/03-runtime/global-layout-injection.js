@@ -80,6 +80,7 @@ const FRAGMENT_PATHS = {
   'profile-private-organization': assetPath('/assets/fragments/layers/website/profile/private/organization/profile-private-organization.html'),
   'profile-private-models': assetPath('/assets/fragments/layers/website/profile/private/models/profile-private-models.html'),
   'model-management': assetPath('/assets/fragments/layers/website/model/management/model-management.html'),
+  'model-training-workspace': assetPath('/assets/fragments/layers/website/model/training/model-training-workspace.html'),
   'profile-private-settings': assetPath('/assets/fragments/layers/website/profile/private/settings/profile-private-settings.html'),
   'profile-private-status': assetPath('/assets/fragments/layers/website/profile/private/status/profile-private-status.html'),
   'profile-public-menu': assetPath('/assets/fragments/layers/website/profile/public/profile-menu.html'),

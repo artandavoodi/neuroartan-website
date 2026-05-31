@@ -6,8 +6,9 @@
    04) ICON BUTTON HOVER / FOCUS STATES
    05) ICON SIZE UTILITIES
    06) GENERIC ICON THEME UTILITIES
-   07) GENERIC HOVER HELPERS
-   08) END OF FILE
+   07) ICON INTERACTION LOCK
+   08) GENERIC HOVER HELPERS
+   09) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -132,6 +133,10 @@ svg.ui-icon-theme-aware-accent,
   color:var(--icon-color-accent);
 }
 
+img[src$="/core/identity/trust/verified.svg"]{
+  filter:none !important;
+}
+
 .ui-icon-mask,
 .ui-icon-mask::before,
 .ui-icon-mask::after,
@@ -140,7 +145,30 @@ svg.ui-icon-theme-aware-accent,
 }
 
 /* =============================================================================
-   07) GENERIC HOVER HELPERS
+   07) ICON INTERACTION LOCK
+============================================================================= */
+img[src^="/registry/icons/"],
+img[src*="/registry/icons/"],
+img.ui-icon-theme-aware,
+img.ui-icon-theme-aware-muted,
+img.ui-icon-theme-aware-accent,
+.ui-icon-theme-aware img,
+.ui-icon-theme-aware-muted img,
+.ui-icon-theme-aware-accent img,
+.ui-icon-button img,
+[data-ui-icon] img,
+svg.ui-icon-theme-aware,
+svg.ui-icon-theme-aware-muted,
+svg.ui-icon-theme-aware-accent,
+.inline-stroke-icon__svg,
+[data-ui-icon] svg{
+  -webkit-user-drag:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+/* =============================================================================
+   08) GENERIC HOVER HELPERS
 ============================================================================= */
 .ui-hover-lift:hover{
   transform:none;
@@ -155,5 +183,5 @@ svg.ui-icon-theme-aware-accent,
 }
 
 /* =============================================================================
-   08) END OF FILE
+   09) END OF FILE
 ============================================================================= */

@@ -6,7 +6,7 @@
    fill="none"
    version="1.1"
    id="svg2"
-   sodipodi:docname="settings.svg"
+   sodipodi:docname="platform-menue-workspace-developer-mode.svg"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -31,6 +31,23 @@
        apply_with_radius="true"
        only_selected="false"
        hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1-5-4-1-1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
   </defs>
   <sodipodi:namedview
      id="namedview2"
@@ -42,19 +59,27 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="12.033361"
-     inkscape:cx="10.429339"
+     inkscape:cx="10.512441"
      inkscape:cy="5.5263031"
      inkscape:window-width="1472"
-     inkscape:window-height="868"
+     inkscape:window-height="840"
      inkscape:window-x="0"
      inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
-  <ellipse
-     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
-     id="path1"
-     cx="12"
-     cy="12"
-     rx="8.9488192"
-     ry="8.9488211" />
+  <path
+     d="m 55.317578,-30.041622 3.085786,-3.085786 a 2,2 90 0 0 0,-2.828428 l -3.085786,-3.085786"
+     stroke="currentColor"
+     stroke-width="1.03442"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path1-5-8-1-4"
+     inkscape:path-effect="#path-effect1-5-4-1-1"
+     inkscape:original-d="m 55.317578,-30.041622 4.5,-4.5 -4.5,-4.5"
+     transform="matrix(1.2599148,0,0,1.1536098,-66.621724,51.828287)"
+     style="fill:none;stroke-width:0.829469;stroke-dasharray:none" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:79.1;paint-order:stroke fill markers"
+     d="M 11.478962,17.188954 H 20.94882"
+     id="path1" />
 </svg>

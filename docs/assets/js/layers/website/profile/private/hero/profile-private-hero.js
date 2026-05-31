@@ -387,6 +387,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
       if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
       if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
       if (tabConfig.modelPane) button.dataset.profileTabModelPane = tabConfig.modelPane;
+      if (tabConfig.key === 'reputation' || tabConfig.key === 'monetization') button.dataset.authState = 'user';
       const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
       if (iconPath) {
         const iconWrap = document.createElement('span');

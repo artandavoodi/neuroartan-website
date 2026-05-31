@@ -5,15 +5,15 @@
    04) INITIALIZATION
    ============================================================================= */
 
-import { getProfileNavigationState, subscribeProfileNavigation } from '../navigation/profile-navigation.js';
-import { getProfileRuntimeState, subscribeProfileRuntime } from '../shell/profile-runtime.js';
+import { getProfileNavigationState, subscribeProfileNavigation } from '../../profile/private/navigation/profile-navigation.js';
+import { getProfileRuntimeState, subscribeProfileRuntime } from '../../profile/private/shell/profile-runtime.js';
 import {
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
   readModelPersonalizationPreferences,
   saveModelFoundationIdentity,
   saveModelPersonalizationPreferences
-} from '../../../system/model/model-store.js';
+} from '../../system/model/model-store.js';
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
@@ -246,7 +246,7 @@ const PANE_LABELS = Object.freeze({
 });
 
 function modelManagementRoots() {
-  return Array.from(document.querySelectorAll('[data-profile-model-management]'));
+  return Array.from(document.querySelectorAll('[data-model-management]'));
 }
 
 function setText(root, selector, value) {
@@ -330,7 +330,7 @@ function updateModelFoundationIdentity(nextPatch = {}, options = {}) {
   writeStoredModelFoundationIdentity(modelFoundationIdentity);
   renderAllModelFoundationIdentityControls();
 
-  document.dispatchEvent(new CustomEvent('profile:model-foundation-identity-updated', {
+  document.dispatchEvent(new CustomEvent('model:foundation-identity-updated', {
     detail: {
       identity: { ...modelFoundationIdentity },
       source: options.source || 'model-management'
@@ -391,7 +391,7 @@ function updateModelPersonalizationPreferences(nextPatch = {}, options = {}) {
   writeStoredModelPersonalizationPreferences(modelPersonalizationPreferences);
   renderAllModelPersonalizationControls();
 
-  document.dispatchEvent(new CustomEvent('profile:model-personalization-preferences-updated', {
+  document.dispatchEvent(new CustomEvent('model:personalization-preferences-updated', {
     detail: {
       preferences: { ...modelPersonalizationPreferences },
       source: options.source || 'model-management'
@@ -439,9 +439,9 @@ function renderModelFoundationGroups(root, navigationState = getProfileNavigatio
   if (!(root instanceof HTMLElement)) return;
 
   const visibleGroup = getVisibleModelFoundationGroup(navigationState);
-  root.querySelectorAll('[data-profile-model-foundation-group]').forEach((group) => {
+  root.querySelectorAll('[data-model-foundation-group]').forEach((group) => {
     if (!(group instanceof HTMLElement)) return;
-    group.hidden = group.dataset.profileModelFoundationGroup !== visibleGroup;
+    group.hidden = group.dataset.modelFoundationGroup !== visibleGroup;
   });
 }
 
@@ -450,16 +450,16 @@ function renderModelFoundationIdentityControls(root) {
 
   const identity = normalizeModelFoundationIdentity(modelFoundationIdentity);
 
-  root.querySelectorAll('[data-profile-model-foundation-field]').forEach((control) => {
+  root.querySelectorAll('[data-model-foundation-field]').forEach((control) => {
     if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement || control instanceof HTMLSelectElement)) return;
-    const field = control.dataset.profileModelFoundationField;
+    const field = control.dataset.modelFoundationField;
     if (!field) return;
     control.value = String(identity[field] || '');
   });
 
-  setText(root, '[data-profile-model-api-identity]', identity.apiIdentity);
-  setText(root, '[data-profile-model-serial-number]', identity.serialNumber);
-  setText(root, '[data-profile-model-birth-number]', identity.birthNumber);
+  setText(root, '[data-model-api-identity]', identity.apiIdentity);
+  setText(root, '[data-model-serial-number]', identity.serialNumber);
+  setText(root, '[data-model-birth-number]', identity.birthNumber);
 }
 
 function renderAllModelFoundationIdentityControls() {
@@ -486,14 +486,14 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
   if (!(root instanceof HTMLElement)) return;
 
   const visibleGroup = getVisibleModelPersonalizationGroup(navigationState);
-  root.querySelectorAll('[data-profile-model-personalization-group]').forEach((group) => {
+  root.querySelectorAll('[data-model-personalization-group]').forEach((group) => {
     if (!(group instanceof HTMLElement)) return;
-    group.hidden = group.dataset.profileModelPersonalizationGroup !== visibleGroup;
+    group.hidden = group.dataset.modelPersonalizationGroup !== visibleGroup;
   });
 
-  root.querySelectorAll('[data-profile-model-personalization-field]').forEach((control) => {
+  root.querySelectorAll('[data-model-personalization-field]').forEach((control) => {
     if (!(control instanceof HTMLElement)) return;
-    const field = control.dataset.profileModelPersonalizationField;
+    const field = control.dataset.modelPersonalizationField;
     const value = getModelPersonalizationValue(field);
 
     if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement) {
@@ -501,9 +501,9 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     }
   });
 
-  root.querySelectorAll('[data-profile-model-personalization-value]').forEach((valueNode) => {
+  root.querySelectorAll('[data-model-personalization-value]').forEach((valueNode) => {
     if (!(valueNode instanceof HTMLElement)) return;
-    const field = valueNode.dataset.profileModelPersonalizationValue;
+    const field = valueNode.dataset.modelPersonalizationValue;
     valueNode.textContent = String(getModelPersonalizationValue(field) ?? '');
   });
 }
@@ -526,21 +526,21 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   const username = String(runtimeState.username?.normalized || profile.username || '').trim();
   const profileComplete = runtimeState.profileComplete === true || profile.profile_complete === true || runtimeState.completion?.complete === true;
 
-  root.dataset.profileModelSection = section;
-  root.dataset.profileModelPane = navigationState.modelPane || 'overview';
-  setText(root, '[data-profile-model-owner-name]', displayName || 'Profile owner');
-  setText(root, '[data-profile-model-owner-handle]', username ? `@${username}` : '@username');
-  setText(root, '[data-profile-model-owner-id]', profile.id || profile.auth_user_id || 'Owner record pending');
-  setText(root, '#profile-model-management-title', paneCopy.title === 'Overview' ? sectionCopy.title : paneCopy.title);
-  setText(root, '[data-profile-model-management-summary]', paneCopy.summary || sectionCopy.summary);
-  setText(root, '[data-profile-model-status]', profileComplete ? 'Foundation active' : 'Foundation incomplete');
-  setText(root, '[data-profile-model-profile-link]', username ? `Profile linked to @${username}` : 'Profile route pending');
-  setText(root, '[data-profile-model-readiness]', profileComplete ? 'Preparing' : 'Blocked by profile foundation');
-  setText(root, '[data-profile-model-readiness-state]', profileComplete ? 'Preparing' : 'Not ready');
+  root.dataset.modelSection = section;
+  root.dataset.modelPane = navigationState.modelPane || 'overview';
+  setText(root, '[data-model-owner-name]', displayName || 'Profile owner');
+  setText(root, '[data-model-owner-handle]', username ? `@${username}` : '@username');
+  setText(root, '[data-model-owner-id]', profile.id || profile.auth_user_id || 'Owner record pending');
+  setText(root, '#model-management-title', paneCopy.title === 'Overview' ? sectionCopy.title : paneCopy.title);
+  setText(root, '[data-model-management-summary]', paneCopy.summary || sectionCopy.summary);
+  setText(root, '[data-model-status]', profileComplete ? 'Foundation active' : 'Foundation incomplete');
+  setText(root, '[data-model-profile-link]', username ? `Profile linked to @${username}` : 'Profile route pending');
+  setText(root, '[data-model-readiness]', profileComplete ? 'Preparing' : 'Blocked by profile foundation');
+  setText(root, '[data-model-readiness-state]', profileComplete ? 'Preparing' : 'Not ready');
 
-  root.querySelectorAll('[data-profile-model-management-section]').forEach((panel) => {
+  root.querySelectorAll('[data-model-management-section]').forEach((panel) => {
     if (!(panel instanceof HTMLElement)) return;
-    panel.hidden = panel.dataset.profileModelManagementSection !== section;
+    panel.hidden = panel.dataset.modelManagementSection !== section;
   });
 
   renderModelFoundationGroups(root, navigationState);
@@ -549,20 +549,20 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
 }
 
 function handleModelFoundationInput(event) {
-  const control = event.target?.closest?.('[data-profile-model-foundation-field]');
+  const control = event.target?.closest?.('[data-model-foundation-field]');
   if (!(control instanceof HTMLElement)) return;
 
-  const field = control.dataset.profileModelFoundationField;
+  const field = control.dataset.modelFoundationField;
   if (!field) return;
 
   updateModelFoundationIdentity({ [field]: control.value });
 }
 
 function handleModelPersonalizationInput(event) {
-  const control = event.target?.closest?.('[data-profile-model-personalization-field]');
+  const control = event.target?.closest?.('[data-model-personalization-field]');
   if (!(control instanceof HTMLElement)) return;
 
-  const field = control.dataset.profileModelPersonalizationField;
+  const field = control.dataset.modelPersonalizationField;
   if (!field) return;
 
   const rawValue = control instanceof HTMLInputElement && control.type === 'range'
@@ -590,7 +590,7 @@ function initModelManagement() {
   document.addEventListener('change', handleModelFoundationInput);
 
   document.addEventListener('fragment:mounted', (event) => {
-    if (event?.detail?.name !== 'profile-private-model-management') return;
+    if (event?.detail?.name !== 'model-management') return;
     renderAllModelManagement();
   });
 }

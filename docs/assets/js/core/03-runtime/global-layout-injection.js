@@ -79,7 +79,7 @@ const FRAGMENT_PATHS = {
   'profile-private-media': assetPath('/assets/fragments/layers/website/profile/private/media/profile-private-media.html'),
   'profile-private-organization': assetPath('/assets/fragments/layers/website/profile/private/organization/profile-private-organization.html'),
   'profile-private-models': assetPath('/assets/fragments/layers/website/profile/private/models/profile-private-models.html'),
-  'profile-private-model-management': assetPath('/assets/fragments/layers/website/profile/private/model-management/profile-model-management.html'),
+  'model-management': assetPath('/assets/fragments/layers/website/model/management/model-management.html'),
   'profile-private-settings': assetPath('/assets/fragments/layers/website/profile/private/settings/profile-private-settings.html'),
   'profile-private-status': assetPath('/assets/fragments/layers/website/profile/private/status/profile-private-status.html'),
   'profile-public-menu': assetPath('/assets/fragments/layers/website/profile/public/profile-menu.html'),

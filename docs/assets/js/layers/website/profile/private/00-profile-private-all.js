@@ -32,7 +32,7 @@ import './media/profile-private-media.js';
 import './media/profile-media-editor.js';
 import './organization/profile-private-organization.js';
 import './models/profile-private-models.js';
-import './model-management/profile-model-management.js';
+import '../../model/management/model-management.js';
 import './home/profile-home-panels.js';
 import './posts/profile-posts.js';
 import './settings/profile-private-settings.js';

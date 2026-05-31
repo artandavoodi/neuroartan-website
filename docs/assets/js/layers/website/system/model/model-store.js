@@ -38,6 +38,8 @@ const TRAINING_RECORDS_TABLE = 'model_training_records';
 const RETRIEVAL_RECORDS_TABLE = 'model_retrieval_records';
 const RUNTIME_ROUTES_TABLE = 'model_runtime_routes';
 const ACTIVE_MODEL_PREFERENCES_TABLE = 'active_model_preferences';
+const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferences';
+const MODEL_FOUNDATION_IDENTITY_TABLE = 'model_foundation_identity';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -93,6 +95,8 @@ export function getModelStoreBackendState() {
     retrievalRecordsTable: RETRIEVAL_RECORDS_TABLE,
     runtimeRoutesTable: RUNTIME_ROUTES_TABLE,
     activeModelPreferencesTable: ACTIVE_MODEL_PREFERENCES_TABLE,
+    modelPersonalizationPreferencesTable: MODEL_PERSONALIZATION_PREFERENCES_TABLE,
+    modelFoundationIdentityTable: MODEL_FOUNDATION_IDENTITY_TABLE,
     migrationStatus: 'supabase_canonical_model_foundation',
   };
 }
@@ -144,6 +148,89 @@ function mapSupabaseModel(row = {}) {
     verification_state: normalizeString(row.foundation_state || 'private_foundation_created'),
     training_state: normalizeString(row.readiness_state || 'not_ready'),
     release_version: normalizeString(row.foundation_state || 'private_foundation_created'),
+  };
+}
+
+function normalizePreferenceNumber(value, fallback) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  return Math.max(0, Math.min(100, Math.round(numeric)));
+}
+
+function mapModelPersonalizationPreferences(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    languageStyle: normalizeString(row.language_style || 'balanced'),
+    directnessLevel: normalizeString(row.directness_level || 'nuanced'),
+    emotionalTone: normalizeString(row.emotional_tone || 'neutral'),
+    responseLength: normalizeString(row.response_length || 'balanced'),
+    explanationDepth: normalizeString(row.explanation_depth || 'standard'),
+    memoryRetention: normalizeString(row.memory_retention || 'session'),
+    continuityDepth: normalizeString(row.continuity_depth || 'moderate'),
+    emotionalWeighting: normalizeString(row.emotional_weighting || 'balanced'),
+    empathyLevel: normalizeString(row.empathy_level || 'moderate'),
+    reflectionFrequency: normalizeString(row.reflection_frequency || 'never'),
+    reflectionDepth: normalizeString(row.reflection_depth || 'moderate'),
+    senseOfHumor: normalizePreferenceNumber(row.sense_of_humor, 50),
+    efficiencyPreference: normalizePreferenceNumber(row.efficiency_preference, 50),
+    creativityLevel: normalizePreferenceNumber(row.creativity_level, 50),
+    riskTolerance: normalizePreferenceNumber(row.risk_tolerance, 25),
+  };
+}
+
+function buildModelPersonalizationPreferencesPayload(modelId, preferences = {}) {
+  return {
+    model_id: normalizeString(modelId),
+    language_style: normalizeString(preferences.languageStyle || 'balanced'),
+    directness_level: normalizeString(preferences.directnessLevel || 'nuanced'),
+    emotional_tone: normalizeString(preferences.emotionalTone || 'neutral'),
+    response_length: normalizeString(preferences.responseLength || 'balanced'),
+    explanation_depth: normalizeString(preferences.explanationDepth || 'standard'),
+    memory_retention: normalizeString(preferences.memoryRetention || 'session'),
+    continuity_depth: normalizeString(preferences.continuityDepth || 'moderate'),
+    emotional_weighting: normalizeString(preferences.emotionalWeighting || 'balanced'),
+    empathy_level: normalizeString(preferences.empathyLevel || 'moderate'),
+    reflection_frequency: normalizeString(preferences.reflectionFrequency || 'never'),
+    reflection_depth: normalizeString(preferences.reflectionDepth || 'moderate'),
+    sense_of_humor: normalizePreferenceNumber(preferences.senseOfHumor, 50),
+    efficiency_preference: normalizePreferenceNumber(preferences.efficiencyPreference, 50),
+    creativity_level: normalizePreferenceNumber(preferences.creativityLevel, 50),
+    risk_tolerance: normalizePreferenceNumber(preferences.riskTolerance, 25),
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function buildModelFoundationSerial(modelId = '') {
+  const normalizedModelId = normalizeString(modelId);
+  const serialSeed = normalizedModelId ? normalizedModelId.slice(0, 8).toUpperCase() : 'PENDING';
+  return `NA-MODEL-${serialSeed}`;
+}
+
+function mapModelFoundationIdentity(row = {}, model = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  const modelId = normalizeString(row.model_id || model.id || '');
+  return {
+    modelId,
+    modelNickname: normalizeString(row.model_nickname || model.model_name || model.display_name || 'Canonical personal model'),
+    apiIdentity: normalizeString(row.api_identity || model.slug || model.model_slug || 'Private API identity pending'),
+    serialNumber: normalizeString(row.serial_number || buildModelFoundationSerial(modelId)),
+    birthNumber: normalizeString(row.birth_number || model.birth_certificate_id || 'Birth record pending'),
+    ownerRecordPolicy: normalizeString(row.owner_record_policy || 'fixed_owner_binding'),
+  };
+}
+
+function buildModelFoundationIdentityPayload(modelId, values = {}, model = {}) {
+  const normalizedModelId = normalizeString(modelId);
+  return {
+    model_id: normalizedModelId,
+    model_nickname: normalizeString(values.modelNickname || values.model_nickname || model.model_name || model.display_name || 'Canonical personal model'),
+    api_identity: normalizeString(values.apiIdentity || values.api_identity || model.slug || model.model_slug || 'private_model_api_identity_pending'),
+    serial_number: normalizeString(values.serialNumber || values.serial_number || buildModelFoundationSerial(normalizedModelId)),
+    birth_number: normalizeString(values.birthNumber || values.birth_number || model.birth_certificate_id || 'birth_record_pending'),
+    owner_record_policy: 'fixed_owner_binding',
+    updated_at: new Date().toISOString(),
   };
 }
 
@@ -237,6 +324,111 @@ export async function listOwnedModels() {
   }
 
   return Array.isArray(data) ? data.map(mapSupabaseModel).filter(Boolean) : [];
+}
+
+export async function getOwnedCanonicalModel() {
+  const ownedModels = await listOwnedModels();
+  return ownedModels[0] || null;
+}
+
+export async function readModelPersonalizationPreferences(modelId) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_PERSONALIZATION_PREFERENCES_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelPersonalizationPreferences(data);
+}
+
+export async function saveModelPersonalizationPreferences(modelId, preferences = {}) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const payload = buildModelPersonalizationPreferencesPayload(normalizedModelId, preferences);
+
+  const { data, error } = await supabase
+    .from(MODEL_PERSONALIZATION_PREFERENCES_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelPersonalizationPreferences(data || payload);
+}
+
+export async function readModelFoundationIdentity(modelId) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_FOUNDATION_IDENTITY_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelFoundationIdentity(data);
+}
+
+export async function saveModelFoundationIdentity(modelId, values = {}) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const model = await getModelById(normalizedModelId);
+  const payload = buildModelFoundationIdentityPayload(normalizedModelId, values, model || {});
+
+  const { data, error } = await supabase
+    .from(MODEL_FOUNDATION_IDENTITY_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelFoundationIdentity(data || payload, model || {});
+}
+
+async function getModelById(modelId) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .select(MODEL_SELECT_FIELDS)
+    .eq('id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapSupabaseModel(data);
 }
 
 export async function listPublishedModels() {

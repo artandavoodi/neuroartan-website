@@ -2,18 +2,20 @@
    00. FILE INDEX
    01. STAGE SETTINGS CONSTANTS
    02. STAGE SETTINGS STATE
-   03. STAGE SETTINGS DOM HELPERS
-   04. STAGE SETTINGS MODE RESOLUTION
-   05. STAGE SETTINGS APPLICATION
-   06. STAGE SETTINGS EVENTS
-   07. STAGE SETTINGS INITIALIZATION
-   08. STAGE SETTINGS FRAGMENT OBSERVER
+   03. STAGE SETTINGS AUTH STATE
+   04. STAGE SETTINGS DOM HELPERS
+   05. STAGE SETTINGS MODE RESOLUTION
+   06. STAGE SETTINGS APPLICATION
+   07. STAGE SETTINGS EVENTS
+   08. STAGE SETTINGS INITIALIZATION
+   09. STAGE SETTINGS FRAGMENT OBSERVER
    ========================================================= */
 
 /* =========================================================
    01. STAGE SETTINGS CONSTANTS
    ========================================================= */
 const STAGE_SETTINGS_STORAGE_KEY = 'neuroartan.home.interactionSettings.stage';
+const STAGE_SETTINGS_CONFIGURED_KEY = '__configuredKeys';
 
 const STAGE_SETTINGS_DEFAULTS = Object.freeze({
   stageMode: 'standard',
@@ -62,20 +64,65 @@ const STAGE_SETTING_LABELS = Object.freeze({
 /* =========================================================
    02. STAGE SETTINGS STATE
    ========================================================= */
+const STAGE_SETTINGS_CONFIGURED_KEYS = new Set();
+
+let STAGE_SETTINGS_AUTH_SIGNED_IN = document.body?.getAttribute('data-auth-state') === 'signed-in';
+let STAGE_SETTINGS_AUTH_EVENTS_BOUND = false;
+let STAGE_SETTINGS_SUPABASE_AUTH_BOUND = false;
+
+function resolveFooterDefault(){
+  return STAGE_SETTINGS_AUTH_SIGNED_IN ? 'disabled' : 'enabled';
+}
+
+function createStageSettingsDefaults(){
+  return {
+    ...STAGE_SETTINGS_DEFAULTS,
+    stageFooter: resolveFooterDefault(),
+  };
+}
+
+function normalizeConfiguredStageKeys(parsed){
+  if (Array.isArray(parsed?.[STAGE_SETTINGS_CONFIGURED_KEY])){
+    return parsed[STAGE_SETTINGS_CONFIGURED_KEY].filter((key) => key in STAGE_SETTINGS_DEFAULTS);
+  }
+
+  return Object.keys(parsed || {}).filter((key) => key in STAGE_SETTINGS_DEFAULTS && key !== 'stageFooter');
+}
+
 function readStoredStageSettings(){
   try{
     const stored = window.localStorage.getItem(STAGE_SETTINGS_STORAGE_KEY);
-    if (!stored) return { ...STAGE_SETTINGS_DEFAULTS };
+    if (!stored) return createStageSettingsDefaults();
+
     const parsed = JSON.parse(stored);
-    return { ...STAGE_SETTINGS_DEFAULTS, ...parsed };
+    const configuredKeys = normalizeConfiguredStageKeys(parsed);
+    const nextState = { ...createStageSettingsDefaults() };
+
+    STAGE_SETTINGS_CONFIGURED_KEYS.clear();
+    configuredKeys.forEach((key) => {
+      if (!(key in STAGE_SETTINGS_DEFAULTS)) return;
+      STAGE_SETTINGS_CONFIGURED_KEYS.add(key);
+      nextState[key] = parsed[key];
+    });
+
+    Object.keys(STAGE_SETTINGS_DEFAULTS).forEach((key) => {
+      if (key === 'stageFooter') return;
+      if (!(key in parsed)) return;
+      nextState[key] = parsed[key];
+    });
+
+    return nextState;
   }catch(error){
-    return { ...STAGE_SETTINGS_DEFAULTS };
+    return createStageSettingsDefaults();
   }
 }
 
 function writeStoredStageSettings(nextState){
   try{
-    window.localStorage.setItem(STAGE_SETTINGS_STORAGE_KEY, JSON.stringify(nextState));
+    window.localStorage.setItem(STAGE_SETTINGS_STORAGE_KEY, JSON.stringify({
+      ...nextState,
+      [STAGE_SETTINGS_CONFIGURED_KEY]: Array.from(STAGE_SETTINGS_CONFIGURED_KEYS),
+    }));
   }catch(error){
     /* Storage failure must not break the homepage runtime. */
   }
@@ -85,7 +132,74 @@ const STAGE_SETTINGS_STATE = readStoredStageSettings();
 let STAGE_SETTINGS_DEVELOPER_MODE_ACTIVE = document.documentElement?.dataset?.homeDeveloperMode === 'active';
 
 /* =========================================================
-   03. STAGE SETTINGS DOM HELPERS
+   03. STAGE SETTINGS AUTH STATE
+   ========================================================= */
+function getStageSupabaseClient(){
+  return window.neuroartanSupabase || window.NEUROARTAN_SUPABASE_CLIENT || null;
+}
+
+function hasStageFooterUserPreference(){
+  return STAGE_SETTINGS_CONFIGURED_KEYS.has('stageFooter');
+}
+
+function setStageAuthState(signedIn){
+  STAGE_SETTINGS_AUTH_SIGNED_IN = Boolean(signedIn);
+
+  if (hasStageFooterUserPreference()) return;
+
+  STAGE_SETTINGS_STATE.stageFooter = resolveFooterDefault();
+  applyStageSettings();
+}
+
+async function syncStageAuthState(){
+  const supabase = getStageSupabaseClient();
+  if (!supabase?.auth || typeof supabase.auth.getSession !== 'function') return;
+
+  try{
+    const { data } = await supabase.auth.getSession();
+    setStageAuthState(Boolean(data?.session?.user));
+  }catch(error){
+    setStageAuthState(false);
+  }
+}
+
+function bindStageSupabaseAuth(){
+  const supabase = getStageSupabaseClient();
+  if (!supabase?.auth || STAGE_SETTINGS_SUPABASE_AUTH_BOUND) return;
+
+  STAGE_SETTINGS_SUPABASE_AUTH_BOUND = true;
+
+  if (typeof supabase.auth.onAuthStateChange === 'function'){
+    supabase.auth.onAuthStateChange((event, session) => {
+      setStageAuthState(Boolean(session?.user));
+    });
+  }
+
+  void syncStageAuthState();
+}
+
+function bindStageAuthEvents(){
+  if (STAGE_SETTINGS_AUTH_EVENTS_BOUND) return;
+
+  STAGE_SETTINGS_AUTH_EVENTS_BOUND = true;
+
+  window.addEventListener('neuroartan:supabase-ready', () => {
+    bindStageSupabaseAuth();
+  });
+
+  document.addEventListener('account:profile-state-changed', () => {
+    setStageAuthState(true);
+  });
+
+  document.addEventListener('account:profile-signed-out', () => {
+    setStageAuthState(false);
+  });
+
+  bindStageSupabaseAuth();
+}
+
+/* =========================================================
+   04. STAGE SETTINGS DOM HELPERS
    ========================================================= */
 function getStageSection(){
   return document.querySelector('[data-home-interaction-settings-section="stage"]');
@@ -264,6 +378,7 @@ function updateStageSetting(control){
     ? normalizeToggleValue(STAGE_SETTINGS_STATE[key])
     : declaredValue;
 
+  STAGE_SETTINGS_CONFIGURED_KEYS.add(key);
   writeStoredStageSettings(STAGE_SETTINGS_STATE);
   applyStageSettings();
 }
@@ -294,6 +409,7 @@ function bindStageDeveloperModeEvents(){
    07. STAGE SETTINGS INITIALIZATION
    ========================================================= */
 function initializeStageSettings(){
+  bindStageAuthEvents();
   bindStageDeveloperModeEvents();
   const section = getStageSection();
   if (!section){

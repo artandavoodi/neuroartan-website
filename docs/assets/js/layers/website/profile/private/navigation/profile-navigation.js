@@ -12,9 +12,11 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    02) CONSTANTS
    ============================================================================= */
 
-const VALID_SECTIONS = new Set(['home', 'feed', 'notifications', 'messaging', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings']);
+const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', 'model-personalization', 'model-sources', 'model-memory', 'model-voice', 'model-readiness', 'model-runtime', 'model-discovery', 'model-settings']);
+const VALID_SECTIONS = new Set(['home', 'feed', 'notifications', 'messaging', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings', ...MODEL_SECTIONS]);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
+const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'provenance', 'evaluation', 'behavior', 'language', 'emotion', 'response', 'memory', 'creativity', 'reflection', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';
@@ -28,6 +30,37 @@ function normalizeSection(value) {
       return 'home';
     case 'feed':
       return 'feed';
+    case 'model':
+    case 'model-foundation':
+    case 'foundation':
+      return 'model-foundation';
+    case 'model-training':
+    case 'training':
+      return 'model-training';
+    case 'model-personalization':
+    case 'personalization':
+      return 'model-personalization';
+    case 'model-sources':
+    case 'sources':
+      return 'model-sources';
+    case 'model-memory':
+    case 'memory':
+      return 'model-memory';
+    case 'model-voice':
+    case 'voice':
+      return 'model-voice';
+    case 'model-readiness':
+    case 'readiness':
+      return 'model-readiness';
+    case 'model-runtime':
+    case 'runtime':
+      return 'model-runtime';
+    case 'model-discovery':
+    case 'discovery':
+      return 'model-discovery';
+    case 'model-settings':
+    case 'model-setting':
+      return 'model-settings';
     case 'notifications':
       return 'notifications';
     case 'messaging':
@@ -57,19 +90,31 @@ function normalizeDashboardPane(value) {
   return VALID_DASHBOARD_PANES.has(normalized) ? normalized : 'overview';
 }
 
+function normalizeModelPane(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'source') return 'sources';
+  return VALID_MODEL_PANES.has(normalized) ? normalized : 'overview';
+}
+
 /* =============================================================================
    02A) ROUTE RESOLUTION
    ============================================================================= */
 
-function buildNavigationState(section = 'overview', settingsPane = 'identity', dashboardPane = 'overview') {
+function buildNavigationState(section = 'overview', settingsPane = 'identity', dashboardPane = 'overview', modelPane = 'overview') {
   return {
     section: normalizeSection(section),
     settingsPane: normalizeSettingsPane(settingsPane),
-    dashboardPane: normalizeDashboardPane(dashboardPane)
+    dashboardPane: normalizeDashboardPane(dashboardPane),
+    modelPane: normalizeModelPane(modelPane)
   };
 }
 
 function buildHashRoute(state = createDefaultState()) {
+  if (MODEL_SECTIONS.has(state.section)) {
+    const modelArea = state.section === 'model' ? 'foundation' : state.section.replace(/^model-/, '');
+    return `#model/${modelArea}/${state.modelPane || 'overview'}`;
+  }
+
   if (state.section === 'settings') {
     return `#settings/${state.settingsPane}`;
   }
@@ -87,11 +132,12 @@ function buildHashRoute(state = createDefaultState()) {
 
 function createDefaultState() {
   const pathname = String(window.location.pathname || '').toLowerCase();
-  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'home' : 'profile';
+  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'home' : pathname.includes('/model') ? 'model-foundation' : 'profile';
 
   return buildNavigationState(
     section,
     section === 'settings' ? 'password' : 'identity',
+    'overview',
     'overview'
   );
 }
@@ -101,6 +147,7 @@ function getRouteContext() {
   if (pathname.includes('/dashboard')) return 'dashboard';
   if (pathname.includes('/settings')) return 'settings';
   if (pathname.includes('/feed')) return 'home';
+  if (pathname.includes('/model')) return 'model';
   return 'profile';
 }
 
@@ -121,8 +168,12 @@ function constrainStateToRoute(state) {
     return createDefaultState();
   }
 
+  if (routeContext === 'model' && !MODEL_SECTIONS.has(state.section)) {
+    return createDefaultState();
+  }
+
   if (routeContext === 'profile') {
-    if (homeSections.has(state.section) || state.section === 'dashboard') {
+    if (homeSections.has(state.section) || state.section === 'dashboard' || MODEL_SECTIONS.has(state.section)) {
       return createDefaultState();
     }
 
@@ -147,7 +198,8 @@ function parseHash() {
     return constrainStateToRoute(buildNavigationState(
       'settings',
       pane,
-      createDefaultState().dashboardPane
+      createDefaultState().dashboardPane,
+      createDefaultState().modelPane
     ));
   }
 
@@ -156,6 +208,17 @@ function parseHash() {
     return constrainStateToRoute(buildNavigationState(
       'dashboard',
       createDefaultState().settingsPane,
+      pane,
+      createDefaultState().modelPane
+    ));
+  }
+
+  if (rawHash.startsWith('model/')) {
+    const [, area = 'foundation', pane = 'overview'] = rawHash.split('/');
+    return constrainStateToRoute(buildNavigationState(
+      normalizeSection(`model-${area}`),
+      createDefaultState().settingsPane,
+      createDefaultState().dashboardPane,
       pane
     ));
   }
@@ -164,7 +227,8 @@ function parseHash() {
   return constrainStateToRoute(buildNavigationState(
     section,
     section === 'settings' ? 'identity' : createDefaultState().settingsPane,
-    section === 'dashboard' ? 'overview' : createDefaultState().dashboardPane
+    section === 'dashboard' ? 'overview' : createDefaultState().dashboardPane,
+    MODEL_SECTIONS.has(section) ? 'overview' : createDefaultState().modelPane
   ));
 }
 
@@ -199,11 +263,15 @@ function setState(nextState, options = {}) {
   const dashboardPane = section === 'dashboard'
     ? normalizeDashboardPane(nextState?.dashboardPane || RUNTIME.state?.dashboardPane || 'overview')
     : normalizeDashboardPane(RUNTIME.state?.dashboardPane || nextState?.dashboardPane || 'overview');
+  const modelPane = MODEL_SECTIONS.has(section)
+    ? normalizeModelPane(nextState?.modelPane || RUNTIME.state?.modelPane || 'overview')
+    : normalizeModelPane(RUNTIME.state?.modelPane || nextState?.modelPane || 'overview');
 
   RUNTIME.state = buildNavigationState(
     section,
     settingsPane,
-    dashboardPane
+    dashboardPane,
+    modelPane
   );
 
   if (options.writeHash !== false) {
@@ -260,7 +328,8 @@ function initProfileNavigation() {
     setState({
       section: detail.section,
       settingsPane: detail.settingsPane,
-      dashboardPane: detail.dashboardPane
+      dashboardPane: detail.dashboardPane,
+      modelPane: detail.modelPane
     });
   });
 }

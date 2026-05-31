@@ -9,6 +9,7 @@ import {
 
 const PROFILE_SIDEBAR_RAIL_STORAGE_KEY = 'neuroartan.profile.sidebar.rail';
 const PROFILE_SIDEBAR_RAIL_COOKIE_KEY = 'neuroartan_profile_sidebar_rail';
+const MODEL_SECTIONS = new Set(['model-foundation', 'model-training', 'model-personalization', 'model-sources', 'model-memory', 'model-voice', 'model-readiness', 'model-runtime', 'model-discovery', 'model-settings']);
 
 function sidebarRoots(){
   return Array.from(document.querySelectorAll('[data-profile-private-sidebar]'));
@@ -84,11 +85,22 @@ function navigateToSidebarRoute(item) {
   return false;
 }
 
+function isModelRoute() {
+  return String(window.location.pathname || '').toLowerCase().includes('/model');
+}
+
 function renderSidebar(root, state = getProfileNavigationState()){
   const editProfilePanes = new Set(['identity', 'route', 'privacy']);
   const settingsPanes = new Set(['password', 'verification']);
   const homeSections = new Set(['home', 'feed', 'notifications', 'messaging']);
   const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
+  const primaryNav = root.querySelector('[data-profile-sidebar-primary-nav]');
+  const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
+  const useModelNav = isModelRoute();
+
+  if (primaryNav instanceof HTMLElement) primaryNav.hidden = useModelNav;
+  if (modelNav instanceof HTMLElement) modelNav.hidden = !useModelNav;
+
   sidebarItems(root).forEach((item) => {
     const section = item.dataset.profileNavSection || '';
     const pane = item.dataset.profileNavPane || '';
@@ -99,6 +111,8 @@ function renderSidebar(root, state = getProfileNavigationState()){
     
     if (link || searchTrigger) {
       active = false;
+    } else if (MODEL_SECTIONS.has(section)) {
+      active = useModelNav ? state.section === section : MODEL_SECTIONS.has(state.section);
     } else if (section === 'home') {
       active = homeSections.has(state.section);
     } else if (section === 'profile') {
@@ -232,7 +246,8 @@ function bindSidebar(){
     document.dispatchEvent(new CustomEvent('profile:navigate-request', {
       detail: {
         section: item.dataset.profileNavSection || 'home',
-        settingsPane: item.dataset.profileNavPane || 'identity'
+        settingsPane: item.dataset.profileNavPane || 'identity',
+        modelPane: item.dataset.profileNavModelPane || undefined
       }
     }));
   });

@@ -94,6 +94,16 @@
   padding-bottom:var(--home-platform-shell-rail-padding-bottom);
 }
 
+body.model-page [data-profile-sidebar-primary-nav],
+body:not(.model-page) [data-profile-sidebar-model-nav],
+.profile-sidebar__nav[hidden]{
+  display:none !important;
+}
+
+body.model-page [data-profile-sidebar-model-nav]:not([hidden]){
+  display:flex;
+}
+
 .profile-sidebar__nav-item{
   width:var(--size-full);
   min-height:var(--home-platform-shell-nav-item-min-height);

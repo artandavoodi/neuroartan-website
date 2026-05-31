@@ -71,7 +71,17 @@ function renderPrivateSections(root, state, navigationState) {
 
   const effectiveSectionMap = {
     home: 'feed',
-    profile: 'posts'
+    profile: 'posts',
+    'model-foundation': 'model-management',
+    'model-training': 'model-management',
+    'model-personalization': 'model-management',
+    'model-sources': 'model-management',
+    'model-memory': 'model-management',
+    'model-voice': 'model-management',
+    'model-readiness': 'model-management',
+    'model-runtime': 'model-management',
+    'model-discovery': 'model-management',
+    'model-settings': 'model-management'
   };
   const effectiveSection = effectiveSectionMap[navigationState.section] || navigationState.section;
 

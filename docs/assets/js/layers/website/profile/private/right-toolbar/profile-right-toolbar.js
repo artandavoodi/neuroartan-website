@@ -24,6 +24,15 @@ const ACTION_ICONS = Object.freeze({
   modelTraining: '/registry/icons/public/assets/core/actions/model-training-panel/model-training-panel.svg',
   modelInteraction: '/registry/icons/public/assets/core/actions/model-next-action-panel/model-next-action-panel.svg',
   modelReadiness: '/registry/icons/public/assets/core/actions/model-evaluation-panel/model-evaluation-panel.svg',
+  modelSources: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
+  modelPersonalization: '/registry/icons/public/assets/core/system/personalization/customize.svg',
+  modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
+  modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
+  modelIdentity: '/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg',
+  modelSettings: '/registry/icons/public/assets/core/system/settings/settings.svg',
+  modelDiscovery: '/registry/icons/public/assets/core/navigation/discovery/discover.svg',
+  modelReputation: '/registry/icons/public/assets/core/identity/trust/verified.svg',
+  modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
   dashboard: '/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg',
@@ -66,6 +75,84 @@ const ACTIONS = Object.freeze({
     label: 'Model readiness',
     tooltip: 'Readiness',
     icon: ACTION_ICONS.modelReadiness
+  },
+  modelIdentity: {
+    id: 'model-identity',
+    label: 'Model foundation',
+    tooltip: 'Foundation',
+    icon: ACTION_ICONS.modelIdentity
+  },
+  modelSources: {
+    id: 'model-sources',
+    label: 'Model sources',
+    tooltip: 'Sources',
+    icon: ACTION_ICONS.modelSources
+  },
+  modelMemory: {
+    id: 'model-memory',
+    label: 'Model memory',
+    tooltip: 'Memory',
+    icon: ACTION_ICONS.thoughtMemory
+  },
+  modelPersonalization: {
+    id: 'model-personalization',
+    label: 'Model personalization',
+    tooltip: 'Personalization',
+    icon: ACTION_ICONS.modelPersonalization
+  },
+  modelVoice: {
+    id: 'model-voice',
+    label: 'Voice training',
+    tooltip: 'Voice',
+    icon: ACTION_ICONS.modelVoice
+  },
+  modelProvider: {
+    id: 'model-provider',
+    label: 'Runtime provider',
+    tooltip: 'Runtime',
+    icon: ACTION_ICONS.modelProvider
+  },
+  modelChangelog: {
+    id: 'model-changelog',
+    label: 'Model changelog',
+    tooltip: 'Changelog',
+    icon: ACTION_ICONS.changelog
+  },
+  modelConsent: {
+    id: 'model-consent',
+    label: 'Consent controls',
+    tooltip: 'Consent',
+    icon: ACTION_ICONS.visibility
+  },
+  modelRouting: {
+    id: 'model-routing',
+    label: 'Model routing',
+    tooltip: 'Routing',
+    icon: ACTION_ICONS.route
+  },
+  modelPreferences: {
+    id: 'model-preferences',
+    label: 'Model preferences',
+    tooltip: 'Preferences',
+    icon: ACTION_ICONS.modelSettings
+  },
+  modelDiscovery: {
+    id: 'model-discovery',
+    label: 'Model discovery',
+    tooltip: 'Discovery',
+    icon: ACTION_ICONS.modelDiscovery
+  },
+  modelReputation: {
+    id: 'model-reputation',
+    label: 'Model reputation',
+    tooltip: 'Reputation',
+    icon: ACTION_ICONS.modelReputation
+  },
+  modelEconomy: {
+    id: 'model-economy',
+    label: 'Model economy',
+    tooltip: 'Economy',
+    icon: ACTION_ICONS.modelEconomy
   },
   filterPosts: {
     id: 'filter-posts',
@@ -181,9 +268,61 @@ const CONTEXT_ACTIONS = Object.freeze({
   posts: ['editProfile', 'createPost', 'filterPosts'],
   thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
   models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
+  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelChangelog'],
+  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelChangelog'],
+  'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelChangelog'],
+  'model-sources': ['modelSources', 'filterModels', 'modelChangelog'],
+  'model-memory': ['modelMemory', 'modelChangelog'],
+  'model-voice': ['modelVoice', 'modelChangelog'],
+  'model-readiness': ['modelReadiness', 'filterModels', 'modelChangelog'],
+  'model-runtime': ['modelProvider', 'modelChangelog'],
+  'model-discovery': ['modelDiscovery', 'modelReputation', 'modelEconomy', 'filterModels', 'modelChangelog'],
+  'model-settings': ['modelProvider', 'modelChangelog'],
   organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
+});
+
+const MODEL_PANE_ACTIONS = Object.freeze({
+  overview: ['modelIdentity', 'modelReadiness', 'modelChangelog'],
+  identity: ['modelIdentity', 'modelChangelog'],
+  consent: ['modelConsent', 'modelChangelog'],
+  sources: ['modelSources', 'modelChangelog'],
+  memory: ['modelMemory', 'modelChangelog'],
+  voice: ['modelVoice', 'modelChangelog'],
+  protocol: ['modelTraining', 'modelChangelog'],
+  datasets: ['modelSources', 'filterModels', 'modelChangelog'],
+  provenance: ['modelSources', 'modelRouting', 'modelChangelog'],
+  evaluation: ['modelReadiness', 'modelChangelog'],
+  behavior: ['modelPersonalization', 'modelChangelog'],
+  language: ['modelPersonalization', 'modelVoice', 'modelChangelog'],
+  emotion: ['modelPersonalization', 'modelChangelog'],
+  response: ['modelPersonalization', 'modelChangelog'],
+  creativity: ['modelPersonalization', 'modelChangelog'],
+  reflection: ['modelPersonalization', 'modelChangelog'],
+  state: ['modelReadiness', 'filterDashboard', 'modelChangelog'],
+  checks: ['modelReadiness', 'modelChangelog'],
+  blockers: ['modelConsent', 'modelReadiness', 'modelChangelog'],
+  history: ['modelChangelog'],
+  trending: ['modelDiscovery', 'filterModels', 'modelChangelog'],
+  expertise: ['modelDiscovery', 'modelReputation', 'filterModels', 'modelChangelog'],
+  reputation: ['modelReputation', 'filterModels', 'modelChangelog'],
+  monetization: ['modelEconomy', 'modelReputation', 'modelChangelog'],
+  preferences: ['modelPreferences', 'modelChangelog'],
+  provider: ['modelProvider', 'modelChangelog'],
+  routing: ['modelRouting', 'modelChangelog'],
+  visibility: ['modelConsent', 'modelChangelog'],
+  changelog: ['modelChangelog']
+});
+
+const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
+  behavior: ['modelPersonalization', 'modelChangelog'],
+  language: ['modelPersonalization', 'modelVoice', 'modelChangelog'],
+  emotion: ['modelPersonalization', 'modelChangelog'],
+  response: ['modelPersonalization', 'modelChangelog'],
+  memory: ['modelPersonalization', 'modelMemory', 'modelChangelog'],
+  creativity: ['modelPersonalization', 'modelChangelog'],
+  reflection: ['modelPersonalization', 'modelChangelog']
 });
 
 function toolbarRoots(){
@@ -191,6 +330,14 @@ function toolbarRoots(){
 }
 
 function resolveActionKeys(state = getProfileNavigationState()){
+  if (state.section === 'model-personalization' && MODEL_PERSONALIZATION_PANE_ACTIONS[state.modelPane]) {
+    return MODEL_PERSONALIZATION_PANE_ACTIONS[state.modelPane];
+  }
+
+  if (String(state.section || '').startsWith('model-') && MODEL_PANE_ACTIONS[state.modelPane]) {
+    return MODEL_PANE_ACTIONS[state.modelPane];
+  }
+
   return CONTEXT_ACTIONS[state.section] || CONTEXT_ACTIONS.home;
 }
 
@@ -375,12 +522,85 @@ function requestProfileToolAction(action){
       }));
       return;
     case 'model-training':
-    case 'model-interaction':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-training', modelPane: 'protocol' }
+      }));
+      return;
     case 'model-readiness':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-readiness', modelPane: 'state' }
+      }));
+      return;
+    case 'model-identity':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'identity' }
+      }));
+      return;
+    case 'model-sources':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'sources' }
+      }));
+      return;
+    case 'model-memory':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'memory' }
+      }));
+      return;
+    case 'model-personalization':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-personalization', modelPane: 'behavior' }
+      }));
+      return;
+    case 'model-voice':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'voice' }
+      }));
+      return;
+    case 'model-provider':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-settings', modelPane: 'provider' }
+      }));
+      return;
+    case 'model-consent':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'consent' }
+      }));
+      return;
+    case 'model-routing':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-settings', modelPane: 'routing' }
+      }));
+      return;
+    case 'model-preferences':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-settings', modelPane: 'preferences' }
+      }));
+      return;
+    case 'model-discovery':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-discovery', modelPane: 'overview' }
+      }));
+      return;
+    case 'model-reputation':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-discovery', modelPane: 'reputation' }
+      }));
+      return;
+    case 'model-economy':
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-discovery', modelPane: 'monetization' }
+      }));
+      return;
+    case 'model-interaction':
     case 'thought-memory':
     case 'create-organization':
       document.dispatchEvent(new CustomEvent('profile:right-toolbar-action-request', {
         detail: { action, source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-changelog':
+      document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+        detail: { context: 'modelChangelog', source: 'profile-right-toolbar' }
       }));
       return;
     case 'filter-posts':

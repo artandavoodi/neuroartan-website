@@ -59,6 +59,9 @@ import {
   createPrivateBaselineProfile
 } from '../../profile/profile-save.js';
 import {
+  ensureOwnedCanonicalModel
+} from '../../model/model-store.js';
+import {
   suggestAccountUsernames,
   suggestAvailableAccountUsernames
 } from '../username/account-username-suggestions.js';
@@ -1743,6 +1746,7 @@ import {
           policy,
           supabase
         });
+        await ensureOwnedCanonicalModel();
 
         emitUsernameStatus({
           state: 'available',
@@ -1844,6 +1848,11 @@ import {
 
       if (isProfileComplete(profile)) {
         emitProfileState(user, profile);
+        try {
+          await ensureOwnedCanonicalModel();
+        } catch (error) {
+          console.error('Canonical model reconciliation failed:', error);
+        }
         await maybeRedirectAfterCompleteProfile(user);
         clearOnboardingContext();
         clearPendingProfileState();

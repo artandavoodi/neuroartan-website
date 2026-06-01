@@ -5,10 +5,7 @@
   "description": "Search verified Neuroartan continuity models by trust state, public readiness, creator context, and interaction route.",
   "default_primary_filter": "all",
   "default_sort": "trust",
-  "featured_model_ids": [
-    "artan-davoodi",
-    "neuroartan-institution"
-  ],
+  "featured_model_ids": [],
   "filters": {
     "primary": [
       { "id": "all", "label": "All" },

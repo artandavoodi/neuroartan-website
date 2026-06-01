@@ -106,6 +106,10 @@
   --home-search-shell-result-action-weight:var(--layout-home-search-result-action-weight);
   --home-search-shell-result-action-tracking:var(--layout-home-search-result-action-tracking);
   --home-search-shell-result-action-line-height:var(--layout-home-search-result-action-line-height);
+  --home-search-shell-result-tooltip-size:var(--home-platform-shell-nav-text-size);
+  --home-search-shell-result-tooltip-weight:var(--home-platform-shell-nav-text-weight);
+  --home-search-shell-result-tooltip-line-height:var(--home-platform-shell-nav-text-line-height);
+  --home-search-shell-result-tooltip-tracking:var(--home-platform-shell-nav-text-tracking);
   --home-search-shell-light-border:var(--layout-home-search-light-border);
   --home-search-shell-dark-border:var(--layout-home-search-dark-border);
   --home-search-shell-mobile-padding-x-fallback:var(--layout-home-search-mobile-padding-x-fallback);
@@ -439,10 +443,6 @@ body.home-search-shell-open{
   box-sizing:border-box;
 }
 
-.home-search-shell__loading-state .ui-loader-circle{
-  color:var(--loader-circle-color);
-}
-
 .home-search-shell__result-card{
   display:flex;
   flex-direction:column;
@@ -524,6 +524,10 @@ body.home-search-shell-open{
   background:var(--surface-soft-bg);
 }
 
+.home-search-shell__result-avatar--model{
+  background:var(--avatar-bg);
+}
+
 .home-search-shell__result-avatar-image{
   display:block;
   width:100%;
@@ -537,6 +541,12 @@ body.home-search-shell-open{
   height:58%;
   object-fit:contain;
   filter:var(--icon-image-filter, none);
+}
+
+.home-search-shell__result-avatar-fallback--model{
+  width:var(--home-search-shell-full);
+  height:var(--home-search-shell-full);
+  filter:none;
 }
 
 .home-search-shell__identity-result{
@@ -694,6 +704,7 @@ body.home-search-shell-open{
 .home-search-shell__result-icon-action{
   -webkit-appearance:none;
   appearance:none;
+  position:relative;
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -710,6 +721,41 @@ body.home-search-shell-open{
   transition:
     color var(--home-search-shell-voice-motion) var(--interaction-ease-standard),
     opacity var(--home-search-shell-voice-motion) var(--interaction-ease-standard);
+}
+
+.home-search-shell__result-icon-action::after{
+  content:attr(data-home-search-tooltip);
+  position:absolute;
+  top:50%;
+  right:calc(100% + var(--spacing-sm));
+  z-index:var(--z-raised);
+  transform:translateY(-50%) translateX(var(--spacing-xs));
+  width:max-content;
+  padding:calc(4px * var(--accessibility-density-scale)) var(--spacing-xs);
+  border:0;
+  border-radius:var(--control-radius-composer);
+  background-color:var(--hover-overlay-bg);
+  color:var(--hover-overlay-text);
+  box-shadow:0 calc(2px * var(--accessibility-density-scale)) calc(8px * var(--accessibility-density-scale)) var(--hover-overlay-shadow);
+  font-size:var(--home-search-shell-result-tooltip-size);
+  font-weight:var(--home-search-shell-result-tooltip-weight);
+  line-height:var(--home-search-shell-result-tooltip-line-height);
+  letter-spacing:var(--home-search-shell-result-tooltip-tracking);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  white-space:nowrap;
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.home-search-shell__result-icon-action:hover::after,
+.home-search-shell__result-icon-action:focus-visible::after{
+  transform:translateY(-50%) translateX(0);
+  opacity:1;
+  visibility:visible;
 }
 
 .home-search-shell__result-icon-action:hover,
@@ -836,6 +882,10 @@ html[data-theme-effective="dark"] .home-search-shell__input-row{
     color var(--products-local-nav-motion-fast) var(--interaction-ease-standard),
     opacity var(--products-local-nav-motion-fast) var(--interaction-ease-standard),
     transform var(--products-local-nav-motion-fast) var(--interaction-ease-standard);
+}
+
+.home-search-shell__scope-tab[hidden]{
+  display:none;
 }
 
 .home-search-shell__scope-tab::after{

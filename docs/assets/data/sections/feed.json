@@ -19,10 +19,7 @@
     "description": "Publish from your public profile.",
     "placeholder": "What is happening?"
   },
-  "featured_model_ids": [
-    "artan-davoodi",
-    "neuroartan-institution"
-  ],
+  "featured_model_ids": [],
   "empty_state": {
     "title": "No public feed posts are published yet",
     "copy": "Posts published from public profiles will appear here."

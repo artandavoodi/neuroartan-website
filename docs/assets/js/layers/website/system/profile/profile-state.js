@@ -62,7 +62,7 @@ function getProfileStateBackendState() {
     profilesTable: SUPABASE_PROFILES_TABLE,
     profileIdentityBackendState: getProfileIdentityBackendState(),
     publicModelRegistryBackendState: getPublicModelRegistryBackendState(),
-    migrationStatus: 'transitional_public_profile_resolution_continuity'
+    migrationStatus: 'supabase_canonical_public_profile_resolution'
   };
 }
 
@@ -123,9 +123,9 @@ async function resolveSupabasePublicProfileByUsername(route, policy) {
    05) STATE HELPERS
 ============================================================================= */
 /*
- * Public-profile resolution must prefer the live canonical account backend,
- * then fall back only to the governed public registry projection when no live
- * renderable profile is available.
+ * Public-profile resolution is owned exclusively by the live canonical profile
+ * backend. The public model registry may enrich a resolved profile, but it must
+ * never create or revive a profile route.
  */
 function buildBaseState(route = getPublicRouteState()) {
   return {
@@ -154,63 +154,6 @@ function buildErrorState(route, reason, errorMessage = '') {
     error: normalizeString(errorMessage)
   };
 }
-
-async function buildRegistryResolutionState(route) {
-  const baseState = buildBaseState(route);
-
-  try {
-    await loadPublicModelRegistry();
-  } catch (_) {
-    return {
-      ...baseState,
-      outcome: 'not_found',
-      reason: 'PUBLIC_MODEL_REGISTRY_UNAVAILABLE'
-    };
-  }
-
-  const model = getPublicModelByUsername(route.normalizedUsername || route.routeCandidate);
-  const publicProfile = model?.public_profile && typeof model.public_profile === 'object'
-    ? { ...model.public_profile }
-    : null;
-
-  if (!publicProfile) {
-    return {
-      ...baseState,
-      outcome: 'not_found',
-      reason: 'PUBLIC_MODEL_NOT_FOUND'
-    };
-  }
-
-  const routeStatus = normalizeString(publicProfile.public_route_status || 'ready').toLowerCase();
-  const publicEnabled = publicProfile.public_profile_enabled === true;
-  const publicVisibility = normalizeString(publicProfile.public_profile_visibility || '').toLowerCase();
-  const renderable = publicEnabled
-    && !['hidden', 'private', 'owner_only', 'internal'].includes(publicVisibility)
-    && ['ready', 'renderable', 'active'].includes(routeStatus || 'ready');
-
-  return {
-    ...baseState,
-    backendState: RUNTIME.backendState || getProfileStateBackendState(),
-    outcome: renderable
-      ? 'found_renderable'
-      : publicEnabled
-        ? 'reserved_but_not_ready'
-        : 'reserved_but_disabled',
-    publicProfile: {
-      ...publicProfile,
-      public_profile_visibility: normalizeString(publicProfile.public_profile_visibility || (publicEnabled ? 'public' : 'private')).toLowerCase(),
-      public_route_path: normalizeString(publicProfile.public_route_path || route.publicRoutePath),
-      public_route_canonical_url: normalizeString(publicProfile.public_route_canonical_url || route.publicRouteUrl)
-    },
-    model: model || null,
-    creator: model?.creator || null,
-    reason: renderable ? '' : 'PUBLIC_ROUTE_NOT_PUBLISHED'
-  };
-}
-
-/* =============================================================================
-   05A) RESOLUTION NORMALIZATION
-============================================================================= */
 
 function buildRenderableState(baseState, resolution, model = null, creator = null) {
   return {
@@ -341,7 +284,16 @@ async function resolveStateForRoute(route) {
       return;
     }
 
-    setState(await buildRegistryResolutionState(route));
+    setState(buildResolutionState(
+      {
+        ...baseState,
+        route
+      },
+      supabaseResolution || {
+        outcome: 'not_found',
+        reason: 'PUBLIC_PROFILE_NOT_FOUND'
+      }
+    ));
     return;
   } catch (error) {
     if (requestId !== RUNTIME.requestId) return;

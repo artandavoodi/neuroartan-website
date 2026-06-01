@@ -60,7 +60,7 @@ function getProfileRouterBackendState() {
     profilesTable: SUPABASE_PROFILES_TABLE,
     profileIdentityBackendState: getProfileIdentityBackendState(),
     publicModelRegistryBackendState: getPublicModelRegistryBackendState(),
-    migrationStatus: 'transitional_static_public_route_resolution'
+    migrationStatus: 'supabase_canonical_public_route_resolution'
   };
 }
 
@@ -115,16 +115,7 @@ function createDefaultRouteState() {
 /*
  * Transitional rule:
  * Public-route resolution below must preserve policy-restricted usernames as
- * restricted unless canonical backend truth explicitly authorizes them. Static
- * registry projection must not revive restricted usernames into live route
- * candidates.
- */
-/*
- * Transitional scope note:
- * This router currently determines candidate public-route ownership through
- * local policy validation, canonical Supabase-backed profile truth where
- * available, and only then public-registry projection fallback. Static/public
- * projection must never outrank backend-native route truth.
+ * restricted unless canonical backend truth explicitly authorizes them.
  */
 function decodePathSegment(segment) {
   try {

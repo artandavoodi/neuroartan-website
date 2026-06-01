@@ -208,23 +208,6 @@
       ]
     },
     {
-      "id": "artan_davoodi",
-      "label": "Artan Davoodi",
-      "type": "profile",
-      "path": "",
-      "keywords": [
-        "artan",
-        "founder",
-        "davoodi",
-        "continuity model",
-        "public profile"
-      ],
-      "scope": "profiles",
-      "kind": "profile",
-      "photo_url": "/assets/images/layers/website/sections/legacy/profile-era/Artan Davoodi Profile.jpeg",
-      "username": "artan"
-    },
-    {
       "id": "continuity_models",
       "label": "Continuity Models",
       "type": "profiles",

@@ -251,7 +251,7 @@ function renderHomeInteractionActiveModel() {
   const nodes = getHomeInteractionPanelNodes();
   const activeModelState = getActiveModelState();
   const activeModel = activeModelState.activeModel;
-  const activeEngineLabel = activeModel?.engine?.label || activeModel?.display_name || activeModel?.search_title || 'Neuroartan Institution';
+  const activeEngineLabel = activeModel?.engine?.label || activeModel?.display_name || activeModel?.search_title || 'No active model';
   const promptLabel = `Interact with ${activeEngineLabel}`;
 
   if (nodes.activeModel) {

@@ -398,13 +398,16 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Directness</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="directnessLevel">
-                  <option value="nuanced">Nuanced</option>
-                  <option value="direct">Direct</option>
-                  <option value="diplomatic">Diplomatic</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="directnessLevel">Nuanced</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="directnessLevel" aria-label="Select directness">
+                    <option value="nuanced">Nuanced</option>
+                    <option value="direct">Direct</option>
+                    <option value="diplomatic">Diplomatic</option>
+                  </select>
+                </span>
               </span>
             </label>
 
@@ -431,14 +434,17 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Language style</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="languageStyle">
-                  <option value="balanced">Balanced</option>
-                  <option value="formal">Formal</option>
-                  <option value="professional">Professional</option>
-                  <option value="casual">Casual</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="languageStyle">Balanced</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="languageStyle" aria-label="Select language style">
+                    <option value="balanced">Balanced</option>
+                    <option value="formal">Formal</option>
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -449,38 +455,47 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Tone</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="emotionalTone">
-                  <option value="neutral">Neutral</option>
-                  <option value="warm">Warm</option>
-                  <option value="empathetic">Empathetic</option>
-                  <option value="analytical">Analytical</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="emotionalTone">Neutral</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="emotionalTone" aria-label="Select emotional tone">
+                    <option value="neutral">Neutral</option>
+                    <option value="warm">Warm</option>
+                    <option value="empathetic">Empathetic</option>
+                    <option value="analytical">Analytical</option>
+                  </select>
+                </span>
               </span>
             </label>
 
             <label class="model-management__field">
               <span class="model-management__field-label">Empathy</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="empathyLevel">
-                  <option value="moderate">Moderate</option>
-                  <option value="low">Low</option>
-                  <option value="high">High</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="empathyLevel">Moderate</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="empathyLevel" aria-label="Select empathy level">
+                    <option value="moderate">Moderate</option>
+                    <option value="low">Low</option>
+                    <option value="high">High</option>
+                  </select>
+                </span>
               </span>
             </label>
 
             <label class="model-management__field">
               <span class="model-management__field-label">Emotional weighting</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="emotionalWeighting">
-                  <option value="balanced">Balanced</option>
-                  <option value="minimal">Minimal</option>
-                  <option value="sensitive">Sensitive</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="emotionalWeighting">Balanced</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="emotionalWeighting" aria-label="Select emotional weighting">
+                    <option value="balanced">Balanced</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="sensitive">Sensitive</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -491,26 +506,32 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Length</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="responseLength">
-                  <option value="balanced">Balanced</option>
-                  <option value="concise">Concise</option>
-                  <option value="detailed">Detailed</option>
-                  <option value="comprehensive">Comprehensive</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="responseLength">Balanced</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseLength" aria-label="Select response length">
+                    <option value="balanced">Balanced</option>
+                    <option value="concise">Concise</option>
+                    <option value="detailed">Detailed</option>
+                    <option value="comprehensive">Comprehensive</option>
+                  </select>
+                </span>
               </span>
             </label>
 
             <label class="model-management__field">
               <span class="model-management__field-label">Explanation depth</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="explanationDepth">
-                  <option value="standard">Standard</option>
-                  <option value="minimal">Minimal</option>
-                  <option value="thorough">Thorough</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="explanationDepth">Standard</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="explanationDepth" aria-label="Select explanation depth">
+                    <option value="standard">Standard</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="thorough">Thorough</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -521,26 +542,32 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Retention period</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="memoryRetention">
-                  <option value="session">Session</option>
-                  <option value="week">Week</option>
-                  <option value="month">Month</option>
-                  <option value="indefinite">Indefinite</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="memoryRetention">Session</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="memoryRetention" aria-label="Select memory retention period">
+                    <option value="session">Session</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="indefinite">Indefinite</option>
+                  </select>
+                </span>
               </span>
             </label>
 
             <label class="model-management__field">
               <span class="model-management__field-label">Continuity depth</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="continuityDepth">
-                  <option value="moderate">Moderate</option>
-                  <option value="shallow">Shallow</option>
-                  <option value="deep">Deep</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="continuityDepth">Moderate</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="continuityDepth" aria-label="Select continuity depth">
+                    <option value="moderate">Moderate</option>
+                    <option value="shallow">Shallow</option>
+                    <option value="deep">Deep</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -572,26 +599,32 @@
           <div class="model-management__control-grid">
             <label class="model-management__field">
               <span class="model-management__field-label">Frequency</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="reflectionFrequency">
-                  <option value="never">Never</option>
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="reflectionFrequency">Never</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reflectionFrequency" aria-label="Select reflection frequency">
+                    <option value="never">Never</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </span>
               </span>
             </label>
 
             <label class="model-management__field">
               <span class="model-management__field-label">Depth</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" data-model-personalization-field="reflectionDepth">
-                  <option value="moderate">Moderate</option>
-                  <option value="surface">Surface</option>
-                  <option value="deep">Deep</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="reflectionDepth">Moderate</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reflectionDepth" aria-label="Select reflection depth">
+                    <option value="moderate">Moderate</option>
+                    <option value="surface">Surface</option>
+                    <option value="deep">Deep</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -698,44 +731,38 @@
       </section>
 
       <section class="model-management__discovery-group" data-model-discovery-group="directory" hidden>
-        <h3 class="model-management__section-title">Model directory</h3>
-        <p class="model-management__section-copy">
-          Browse registered continuity models through public registry projections and approved discovery signals.
-        </p>
-        <div class="model-management__directory-filters">
-          <label class="model-management__field">
-            <span class="model-management__field-label">Search</span>
-            <input class="model-management__input" type="search" placeholder="Search models" data-model-directory-filter="query">
-          </label>
-          <label class="model-management__field">
-            <span class="model-management__field-label">Verification</span>
-            <span class="model-management__select-wrap">
-              <select class="model-management__select" data-model-directory-filter="verification">
-                <option value="all">All models</option>
-                <option value="verified">Verified</option>
-                <option value="unverified">Not verified</option>
-              </select>
-              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-            </span>
-          </label>
-          <label class="model-management__field">
-            <span class="model-management__field-label">Trust</span>
-            <span class="model-management__select-wrap">
-              <select class="model-management__select" data-model-directory-filter="trust">
-                <option value="all">All trust states</option>
-              </select>
-              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-            </span>
-          </label>
-          <label class="model-management__field">
-            <span class="model-management__field-label">Expertise</span>
-            <span class="model-management__select-wrap">
-              <select class="model-management__select" data-model-directory-filter="expertise">
-                <option value="all">All expertise</option>
-              </select>
-              <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-            </span>
-          </label>
+        <div class="model-management__directory-controls">
+          <div class="model-management__directory-filters">
+            <label class="model-management__field">
+              <span class="model-management__field-label">Verification</span>
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-directory-filter-label="verification">All models</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-directory-filter="verification" aria-label="Filter models by verification">
+                    <option value="all">All models</option>
+                    <option value="verified">Verified</option>
+                    <option value="unverified">Not verified</option>
+                  </select>
+                </span>
+              </span>
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Expertise</span>
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-directory-filter-label="expertise">All expertise</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-directory-filter="expertise" aria-label="Filter models by expertise">
+                    <option value="all">All expertise</option>
+                  </select>
+                </span>
+              </span>
+            </label>
+          </div>
+          <button class="ui-icon-button model-management__directory-search-button" type="button" data-model-directory-search-open aria-label="Search models">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+          </button>
         </div>
         <p class="model-management__note" data-model-directory-status>Loading models</p>
         <div class="model-management__directory-list" data-model-directory-list aria-live="polite"></div>
@@ -821,6 +848,7 @@
             <span>Save</span>
           </button>
         </footer>
+        <div class="profile-settings__status model-management__identity-status" data-model-identity-editor-status aria-live="polite"></div>
       </form>
     </article>
   </div>

@@ -35,7 +35,7 @@ const SUPABASE_MODELS_TABLE = 'models';
 const ACTIVE_MODEL_RUNTIME = (window.__NEUROARTAN_ACTIVE_MODEL__ ||= {
   initialized: false,
   backendState: null,
-  activeModelId: 'gemini-2.5-flash',
+  activeModelId: '',
   activeModel: null,
   subscribers: new Set()
 });

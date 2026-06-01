@@ -73,6 +73,16 @@ const MODEL_SELECT_FIELDS = [
   'updated_at',
 ].join(', ');
 
+const MODEL_PUBLIC_IDENTITY_SELECT_FIELDS = [
+  'model_id',
+  'public_display_name',
+  'public_avatar_url',
+  'public_visibility',
+  'public_visibility_state',
+  'public_identity_state',
+  'display_name',
+].join(', ');
+
 const MODEL_FOUNDATION_TABLES = Object.freeze({
   birthCertificates: 'model_birth_certificates',
   identityRegistry: 'model_identity_registry',
@@ -111,6 +121,40 @@ export function getModelStoreBackendState() {
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
     migrationStatus: 'supabase_canonical_model_foundation',
   };
+}
+
+async function resolveSupabaseClient(timeoutMs = 4000) {
+  const currentClient = getSupabaseClient();
+  if (currentClient) return currentClient;
+  if (typeof window === 'undefined') return null;
+
+  return new Promise((resolve) => {
+    let settled = false;
+    let timeoutId = null;
+
+    const cleanup = () => {
+      window.removeEventListener('neuroartan:supabase-ready', handleReady);
+      window.removeEventListener('neuroartan:supabase-error', handleUnavailable);
+      window.removeEventListener('neuroartan:supabase-missing-config', handleUnavailable);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+
+    const finish = (client = null) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(client || getSupabaseClient() || null);
+    };
+
+    const handleReady = () => finish(getSupabaseClient());
+    const handleUnavailable = () => finish(null);
+
+    window.addEventListener('neuroartan:supabase-ready', handleReady, { once: true });
+    window.addEventListener('neuroartan:supabase-error', handleUnavailable, { once: true });
+    window.addEventListener('neuroartan:supabase-missing-config', handleUnavailable, { once: true });
+
+    timeoutId = window.setTimeout(() => finish(null), timeoutMs);
+  });
 }
 
 export function isSupabaseRelationMissingError(error) {
@@ -222,6 +266,28 @@ function buildModelFoundationSerial(modelId = '') {
   return `NA-MODEL-${serialSeed}`;
 }
 
+function resolveModelIdentityDisplayName(values = {}, model = {}) {
+  return normalizeString(
+    values.modelNickname
+    || values.model_nickname
+    || values.nickname
+    || values.private_name
+    || model.model_name
+    || model.display_name
+    || model.creator_display_name
+    || 'Canonical personal model'
+  );
+}
+
+function dispatchModelProjectionUpdated(modelId) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('neuroartan:model-public-registry-invalidated', {
+    detail: {
+      modelId: normalizeString(modelId)
+    }
+  }));
+}
+
 function mapModelFoundationIdentity(records = {}, model = {}) {
   if (!model || typeof model !== 'object') return null;
 
@@ -232,13 +298,14 @@ function mapModelFoundationIdentity(records = {}, model = {}) {
   const lifecycle = records.lifecycle || {};
   const dignitySecurity = records.dignitySecurity || {};
   const modelId = normalizeString(model.id || privateIdentity.model_id || identityRegistry.model_id || birthCertificate.model_id || '');
+  const publicDisplayName = normalizeString(publicIdentity.public_display_name || publicIdentity.display_name || '');
   return {
     modelId,
-    modelNickname: normalizeString(privateIdentity.private_name || model.model_name || model.display_name || 'Canonical personal model'),
+    modelNickname: normalizeString(privateIdentity.private_name || publicDisplayName || model.model_name || model.display_name || 'Canonical personal model'),
     modelPurposeDescription: normalizeString(model.description || ''),
     privateNotes: normalizeString(privateIdentity.private_notes || ''),
     registryId: normalizeString(identityRegistry.id || 'Registry record pending'),
-    privateSerialIdentity: buildModelFoundationSerial(modelId),
+    privateSerialIdentity: normalizeString(privateIdentity.id || model.private_identity_id || buildModelFoundationSerial(modelId)),
     publicSerialIdentity: normalizeString(publicIdentity.id || 'Public identity not enabled'),
     birthCertificateId: normalizeString(birthCertificate.id || model.birth_certificate_id || 'Birth record pending'),
     birthDate: normalizeString(birthCertificate.created_at || model.created_at || ''),
@@ -260,7 +327,7 @@ function buildModelFoundationPrivateIdentityPayload(modelId, values = {}, model 
   return {
     model_id: normalizedModelId,
     private_identity_state: 'active',
-    private_name: normalizeString(values.modelNickname || values.model_nickname || model.model_name || model.display_name || 'Canonical personal model'),
+    private_name: resolveModelIdentityDisplayName(values, model),
     private_notes: normalizeString(values.privateNotes || values.private_notes || ''),
     owner_visibility: 'owner_only',
     source_boundary: 'private_foundation_only',
@@ -363,6 +430,88 @@ export async function listOwnedModels() {
 export async function getOwnedCanonicalModel() {
   const ownedModels = await listOwnedModels();
   return ownedModels[0] || null;
+}
+
+async function setOwnedCanonicalModelActivePreference(supabase, model, profile, source = 'profile_birth') {
+  const ownerAuthUserId = normalizeString(model?.owner_auth_user_id || profile?.auth_user_id || '');
+  const profileId = normalizeString(model?.profile_id || profile?.id || '');
+  const modelId = normalizeString(model?.id || '');
+
+  if (!supabase || !ownerAuthUserId || !profileId || !modelId) {
+    return model;
+  }
+
+  const { error } = await supabase
+    .from(ACTIVE_MODEL_PREFERENCES_TABLE)
+    .upsert({
+      auth_user_id: ownerAuthUserId,
+      profile_id: profileId,
+      model_id: modelId,
+      source: normalizeString(source || 'profile_birth'),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'auth_user_id' });
+
+  if (error) throw error;
+  return model;
+}
+
+export async function ensureOwnedCanonicalModel(values = {}) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+
+  const profile = await getCurrentCanonicalProfile();
+  if (!profile?.id) {
+    const error = new Error('PROFILE_COMPLETE_REQUIRED');
+    error.code = 'PROFILE_COMPLETE_REQUIRED';
+    throw error;
+  }
+
+  const existingModel = await getOwnedCanonicalModel();
+  if (existingModel?.id) {
+    return setOwnedCanonicalModelActivePreference(supabase, existingModel, profile, 'profile_reconciliation');
+  }
+
+  const username = normalizeUsername(
+    values.model_slug
+    || values.slug
+    || profile.username
+    || profile.username_lower
+    || profile.username_normalized
+    || profile.public_username
+    || ''
+  );
+  const displayName = normalizeString(
+    values.model_name
+    || values.name
+    || profile.display_name
+    || profile.public_display_name
+    || [profile.first_name, profile.last_name].filter(Boolean).join(' ')
+    || username
+  );
+
+  try {
+    const model = await createOwnedModel({
+      ...values,
+      model_slug: username,
+      slug: username,
+      model_name: displayName,
+      creator_display_name: displayName,
+      creator_username: username,
+    });
+
+    return setOwnedCanonicalModelActivePreference(supabase, model, profile, 'profile_birth');
+  } catch (error) {
+    if (normalizeString(error?.code || error?.message) !== 'CANONICAL_MODEL_ALREADY_EXISTS') {
+      throw error;
+    }
+
+    const model = await getOwnedCanonicalModel();
+    return setOwnedCanonicalModelActivePreference(supabase, model, profile, 'profile_reconciliation');
+  }
 }
 
 export async function readModelPersonalizationPreferences(modelId) {
@@ -470,11 +619,19 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
   if (!model) return null;
 
   const payload = buildModelFoundationPrivateIdentityPayload(normalizedModelId, values, model);
+  const modelDisplayName = resolveModelIdentityDisplayName(values, model);
+  const modelPurposeDescription = normalizeString(
+    values.modelPurposeDescription
+    || values.model_purpose_description
+    || model.description
+    || ''
+  );
 
   const { error: modelError } = await supabase
     .from(MODELS_TABLE)
     .update({
-      description: normalizeString(values.modelPurposeDescription || values.model_purpose_description || ''),
+      model_name: modelDisplayName,
+      description: modelPurposeDescription,
       updated_at: new Date().toISOString(),
     })
     .eq('id', normalizedModelId);
@@ -492,6 +649,26 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
     throw error;
   }
 
+  const { error: publicIdentityError } = await supabase
+    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
+    .upsert({
+      model_id: normalizedModelId,
+      public_display_name: modelDisplayName,
+      display_name: modelDisplayName,
+      public_slug: model.model_slug || model.slug || '',
+      public_description: modelPurposeDescription,
+      public_visibility: model.model_visibility || 'private',
+      public_visibility_state: model.model_visibility || 'private',
+      public_identity_state: model.publication_state === 'published' ? 'published' : 'not_published',
+      public_avatar_url: model.model_image_url || '',
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'model_id' });
+
+  if (publicIdentityError && !isSupabaseRelationMissingError(publicIdentityError)) {
+    throw publicIdentityError;
+  }
+
+  dispatchModelProjectionUpdated(normalizedModelId);
   return readModelFoundationIdentity(normalizedModelId);
 }
 
@@ -521,6 +698,20 @@ export async function saveOwnedCanonicalModelAvatar(file) {
     .single();
 
   if (error) throw error;
+
+  const { error: publicIdentityError } = await supabase
+    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
+    .update({
+      public_avatar_url: uploaded.publicUrl,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('model_id', model.id);
+
+  if (publicIdentityError && !isSupabaseRelationMissingError(publicIdentityError)) {
+    throw publicIdentityError;
+  }
+
+  dispatchModelProjectionUpdated(model.id);
   return mapSupabaseModel(data);
 }
 
@@ -541,6 +732,20 @@ export async function resetOwnedCanonicalModelAvatar() {
     .single();
 
   if (error) throw error;
+
+  const { error: publicIdentityError } = await supabase
+    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
+    .update({
+      public_avatar_url: '',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('model_id', model.id);
+
+  if (publicIdentityError && !isSupabaseRelationMissingError(publicIdentityError)) {
+    throw publicIdentityError;
+  }
+
+  dispatchModelProjectionUpdated(model.id);
   return mapSupabaseModel(data);
 }
 
@@ -564,7 +769,7 @@ async function getModelById(modelId) {
 }
 
 export async function listPublishedModels() {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   if (!supabase) return [];
 
   const { data, error } = await supabase
@@ -579,7 +784,46 @@ export async function listPublishedModels() {
     throw error;
   }
 
-  return Array.isArray(data) ? data.map(mapSupabaseModel).filter(Boolean) : [];
+  const models = Array.isArray(data) ? data.map(mapSupabaseModel).filter(Boolean) : [];
+  if (!models.length) return [];
+
+  const modelIds = models.map((model) => model.id).filter(Boolean);
+  const publicIdentityResult = await supabase
+    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
+    .select(MODEL_PUBLIC_IDENTITY_SELECT_FIELDS)
+    .in('model_id', modelIds);
+
+  if (publicIdentityResult.error && !isSupabaseRelationMissingError(publicIdentityResult.error)) {
+    throw publicIdentityResult.error;
+  }
+
+  const publicIdentityByModel = new Map(
+    (Array.isArray(publicIdentityResult.data) ? publicIdentityResult.data : [])
+      .map((identity) => [normalizeString(identity.model_id), identity])
+  );
+
+  return models.map((model) => {
+    const publicIdentity = publicIdentityByModel.get(model.id) || {};
+    const displayName = normalizeString(
+      publicIdentity.public_display_name
+      || publicIdentity.display_name
+      || model.model_name
+      || model.creator_display_name
+    );
+    const avatarUrl = normalizeString(publicIdentity.public_avatar_url || model.model_image_url || '');
+
+    return {
+      ...model,
+      model_name: displayName || model.model_name,
+      display_name: displayName || model.display_name,
+      search_title: displayName || model.search_title,
+      public_display_name: normalizeString(publicIdentity.public_display_name || displayName),
+      model_image_url: avatarUrl,
+      public_avatar_url: avatarUrl,
+      public_identity_state: normalizeString(publicIdentity.public_identity_state || ''),
+      public_visibility: normalizeString(publicIdentity.public_visibility || publicIdentity.public_visibility_state || model.model_visibility || ''),
+    };
+  });
 }
 
 /* =============================================================================
@@ -834,6 +1078,8 @@ export async function createOwnedModel(values = {}) {
     model_slug: modelSlug,
     model_name: modelName,
     description: normalizeString(values.description || ''),
+    creator_display_name: normalizeString(values.creator_display_name || modelName),
+    creator_username: normalizeUsername(values.creator_username || modelSlug),
     model_visibility: normalizeString(values.model_visibility || 'private'),
     lifecycle_state: normalizeString(values.lifecycle_state || values.model_status || 'draft'),
     readiness_state: normalizeString(values.readiness_state || 'not_ready'),

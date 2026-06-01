@@ -48,6 +48,7 @@ const HOME_SEARCH_SHELL_STATE = {
   query: '',
   mode: 'search',
   scope: 'all',
+  presentation: 'default',
   filtersOpen: false,
   filters: {
     type: 'all',
@@ -231,6 +232,7 @@ function syncHomeSearchScopeChrome() {
   if (!root) return;
 
   const scope = normalizeHomeSearchScope(HOME_SEARCH_SHELL_STATE.scope);
+  const modelDirectoryPresentation = HOME_SEARCH_SHELL_STATE.presentation === 'model-directory';
   const input = root.querySelector('#home-search-shell-input');
   const tabs = root.querySelectorAll('[data-home-search-scope]');
 
@@ -241,7 +243,9 @@ function syncHomeSearchScopeChrome() {
   }
 
   tabs.forEach((tab) => {
-    const active = normalizeHomeSearchScope(tab.getAttribute('data-home-search-scope') || 'all') === scope;
+    const tabScope = normalizeHomeSearchScope(tab.getAttribute('data-home-search-scope') || 'all');
+    const active = tabScope === scope;
+    tab.hidden = modelDirectoryPresentation && tabScope !== 'models';
     tab.classList.toggle('home-search-shell__scope-tab--active', active);
     tab.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
@@ -313,7 +317,6 @@ function handleHomeSearchScopeSelection(scope = 'all') {
 const HOME_SEARCH_SHELL_INDEX_SOURCES = Object.freeze({
   routeIndex: '/assets/data/search/route-index.json',
   contentIndex: '/assets/data/search/content-index.json',
-  entityIndex: '/assets/data/search/entity-index.json',
 });
 
 const HOME_SEARCH_PROFILE_SELECT_FIELDS = [
@@ -456,9 +459,10 @@ function mapSupabaseProfileSearchEntry(profile = {}, currentAuthUserId = '') {
   );
   const ownProfile = currentAuthUserId && normalizeHomeSearchQuery(profile.auth_user_id || '') === currentAuthUserId;
   const publicEnabled = profile.public_profile_enabled === true;
+  const discoverable = profile.public_profile_discoverable === true;
   const searchVisible = profile.profile_search_visible !== false;
 
-  if (!username || (!ownProfile && !searchVisible)) {
+  if (!username || (!ownProfile && !(publicEnabled && discoverable && searchVisible))) {
     return null;
   }
 
@@ -622,12 +626,8 @@ function getActiveModelLabel() {
 }
 
 function isVerifiedHomeSearchModel(model = {}) {
-  const trust = [
-    model.trust_classification,
-    ...(Array.isArray(model.reliability_signals) ? model.reliability_signals : [])
-  ].join(' ');
-
-  return /verified|governed|self-authored/i.test(trust);
+  const state = normalizeHomeSearchQuery(model.verification_state || model.trust_label || '').toLowerCase();
+  return state === 'verified' || state === 'approved';
 }
 
 function buildIndexedEntry(entry = {}, {
@@ -783,7 +783,7 @@ function buildModelSearchEntries() {
     key: `model:${model.id}`,
     kind: 'model',
     title: model.display_name || model.search_title || 'Continuity Model',
-    eyebrow: 'Continuity model',
+    eyebrow: '',
     summary: normalizeHomeSearchQuery(model.description || ''),
     href: normalizeHomeSearchQuery(model.page_route || '/pages/profiles/index.html'),
     publicRoute: normalizeHomeSearchQuery(model.public_profile?.public_route_path || ''),
@@ -879,20 +879,15 @@ async function ensureHomeSearchData() {
       loadPublicModelRegistry(),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.routeIndex).catch(() => ({ routes: [] })),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.contentIndex).catch(() => ({ entries: [] })),
-      fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.entityIndex).catch(() => ({ entities: [] })),
       fetchSupabaseProfileSearchEntries()
     ])
-      .then(([, routeIndex, contentIndex, entityIndex, supabaseProfiles]) => {
+      .then(([, routeIndex, contentIndex, supabaseProfiles]) => {
         HOME_SEARCH_SHELL_STATE.indexedEntries = [
           ...normalizeHomeSearchArray(routeIndex, 'routes')
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'route', kind: 'route' }))
             .filter(Boolean),
           ...normalizeHomeSearchArray(contentIndex, 'entries')
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'content', kind: 'content' }))
-            .filter(Boolean),
-          ...normalizeHomeSearchArray(entityIndex, 'entities')
-            .filter((entry) => entry?.kind === 'profile' || entry?.type === 'profile' || entry?.scope === 'profiles')
-            .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'profile', kind: 'profile', scope: 'profiles' }))
             .filter(Boolean),
           ...(Array.isArray(supabaseProfiles) ? supabaseProfiles : [])
         ];
@@ -922,6 +917,14 @@ document.addEventListener('account:profile-refresh-request', () => {
   HOME_SEARCH_SHELL_STATE.indexedEntries = [];
 });
 
+window.addEventListener('neuroartan:model-public-registry-invalidated', () => {
+  HOME_SEARCH_SHELL_STATE.dataReady = false;
+  HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+  if (HOME_SEARCH_SHELL_STATE.isOpen) {
+    void ensureHomeSearchData().then(() => renderHomeSearchShell());
+  }
+});
+
 /* =========================================================
    05. SEARCH RENDER HELPERS
    ========================================================= */
@@ -933,10 +936,12 @@ function renderHomeSearchResultAvatar(entry = {}) {
 
   const avatarMarkup = entry.avatarUrl
     ? `<img class="home-search-shell__result-avatar-image" src="${escapeHomeSearchHtml(entry.avatarUrl)}" alt="">`
-    : `<img class="home-search-shell__result-avatar-fallback ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="">`;
+    : entry.kind === 'model'
+      ? '<span class="home-search-shell__result-avatar-fallback home-search-shell__result-avatar-fallback--model"></span>'
+      : '<img class="home-search-shell__result-avatar-fallback ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="">';
 
   return `
-    <span class="home-search-shell__result-avatar" aria-hidden="true">
+    <span class="home-search-shell__result-avatar${entry.kind === 'model' ? ' home-search-shell__result-avatar--model' : ''}" aria-hidden="true">
       ${avatarMarkup}
     </span>
   `;
@@ -985,23 +990,17 @@ function renderDefaultHomeModelResults() {
         <article class="home-search-shell__result-card">
           <div class="home-search-shell__model-result-layout">
             <div class="home-search-shell__model-result-content">
-              <div class="home-search-shell__result-meta">
-                <span class="home-search-shell__result-route">${escapeHomeSearchHtml(entry.eyebrow)}</span>
-                ${entry.queryLabel ? `<span class="home-search-shell__result-query">${escapeHomeSearchHtml(entry.queryLabel)}</span>` : ''}
-              </div>
               <div class="home-search-shell__result-title-row">
                 ${renderHomeSearchResultAvatar(entry)}
                 ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
                 ${renderVerificationBadge(entry)}
               </div>
-              <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
-              ${renderResultChips(entry.keywords)}
             </div>
             <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-              ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}" title="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}">
+              ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}">
                 <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
               </button>` : ''}
-              ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" aria-label="View profile" title="View profile">
+              ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
                 <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
               </a>` : ''}
             </div>
@@ -1018,33 +1017,36 @@ function renderDefaultHomeSearchResults() {
   const activeModelDescription = normalizeHomeSearchQuery(
     activeModel?.description || 'Search public models, select the active interaction engine, or move directly into a published public surface.'
   );
-  const quickLinks = applyHomeSearchFilters(filterHomeSearchEntriesByScope(buildHomeSearchEntries(), HOME_SEARCH_SHELL_STATE.scope)).filter((entry) => entry.kind === 'surface').slice(0, 4);
+  const defaultSurfaceKeys = new Set([
+    'surface:leadership',
+    'surface:careers'
+  ]);
+  const quickLinks = applyHomeSearchFilters(filterHomeSearchEntriesByScope(buildHomeSearchEntries(), HOME_SEARCH_SHELL_STATE.scope))
+    .filter((entry) => defaultSurfaceKeys.has(entry.key));
 
   return `
     <div class="home-search-shell__result-list">
       <article class="home-search-shell__result-card">
-        <div class="home-search-shell__result-meta">
-          <span class="home-search-shell__result-route">Active interaction engine</span>
-          <span class="home-search-shell__result-query">${escapeHomeSearchHtml(activeModelLabel)}</span>
-        </div>
-        <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(activeModel?.display_name || activeModelLabel)}</h3>
-        <p class="home-search-shell__result-body">${escapeHomeSearchHtml(activeModelDescription)}</p>
-        ${renderResultChips([
-          activeModel?.model_maturity || '',
-          activeModel?.availability || '',
-          activeModel?.engine?.preferred_route?.replaceAll('-', ' ') || ''
-        ])}
-        <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-          ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(activeModel.public_profile.public_route_path)}" aria-label="View profile" title="View profile">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
-          </a>` : ''}
+        <div class="home-search-shell__model-result-layout">
+          <div class="home-search-shell__model-result-content">
+            <div class="home-search-shell__result-meta">
+              <span class="home-search-shell__result-route">Active interaction engine</span>
+              <span class="home-search-shell__result-query">${escapeHomeSearchHtml(activeModelLabel)}</span>
+            </div>
+            <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(activeModel?.display_name || activeModelLabel)}</h3>
+            <p class="home-search-shell__result-body">${escapeHomeSearchHtml(activeModelDescription)}</p>
+          </div>
+          <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
+            ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(activeModel.public_profile.public_route_path)}" data-home-search-tooltip="View profile" aria-label="View profile">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
+            </a>` : ''}
+          </div>
         </div>
       </article>
 
       ${quickLinks.map((entry) => `
         <article class="home-search-shell__result-card">
           ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
-          <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary)}</p>
         </article>
       `).join('')}
     </div>
@@ -1052,7 +1054,9 @@ function renderDefaultHomeSearchResults() {
 }
 
 function renderQueryHomeSearchResults(query) {
-  const matches = applyHomeSearchFilters(filterHomeSearchEntriesByScope(buildHomeSearchEntries(), HOME_SEARCH_SHELL_STATE.scope))
+  const modelDirectoryPresentation = HOME_SEARCH_SHELL_STATE.presentation === 'model-directory';
+  const sourceEntries = modelDirectoryPresentation ? buildModelSearchEntries() : buildHomeSearchEntries();
+  const matches = applyHomeSearchFilters(filterHomeSearchEntriesByScope(sourceEntries, HOME_SEARCH_SHELL_STATE.scope))
     .map((entry) => ({
       ...entry,
       score: scoreHomeSearchMatch(query, entry)
@@ -1076,7 +1080,29 @@ function renderQueryHomeSearchResults(query) {
     <div class="home-search-shell__result-list">
       ${matches.map((entry) => `
         <article class="home-search-shell__result-card">
-          ${['profile', 'model'].includes(entry.kind) ? `
+          ${entry.kind === 'model' ? `
+            <div class="home-search-shell__model-result-layout">
+              <div class="home-search-shell__model-result-content">
+                <div class="home-search-shell__identity-result">
+                  ${renderHomeSearchResultAvatar(entry)}
+                  <div class="home-search-shell__identity-result-copy">
+                    <div class="home-search-shell__result-title-row">
+                      ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
+                      ${renderVerificationBadge(entry)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
+                ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
+                </button>` : ''}
+                ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
+                </a>` : ''}
+              </div>
+            </div>
+          ` : entry.kind === 'profile' ? `
             <div class="home-search-shell__identity-result">
               ${renderHomeSearchResultAvatar(entry)}
               <div class="home-search-shell__identity-result-copy">
@@ -1084,33 +1110,15 @@ function renderQueryHomeSearchResults(query) {
                   ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
                   ${renderVerificationBadge(entry)}
                 </div>
-                ${entry.username ? `<p class="home-search-shell__identity-result-handle">@${escapeHomeSearchHtml(entry.username.replace(/^@/, ''))}</p>` : entry.queryLabel ? `<p class="home-search-shell__identity-result-handle">${escapeHomeSearchHtml(entry.queryLabel)}</p>` : ''}
+                ${entry.kind === 'profile' && entry.username ? `<p class="home-search-shell__identity-result-handle">@${escapeHomeSearchHtml(entry.username.replace(/^@/, ''))}</p>` : ''}
               </div>
             </div>
-            ${entry.kind === 'model' ? `
-              <div class="home-search-shell__model-result-layout">
-                <div class="home-search-shell__model-result-content">
-                  <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Available Neuroartan continuity model.')}</p>
-                  ${renderResultChips(entry.keywords)}
-                </div>
-                <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-                  ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}" title="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact'}">
-                    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
-                  </button>` : ''}
-                  ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" aria-label="View profile" title="View profile">
-                    <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
-                  </a>` : ''}
-                </div>
-              </div>
-            ` : ''}
           ` : `
             <div class="home-search-shell__result-title-row">
               ${renderHomeSearchResultAvatar(entry)}
               ${entry.href ? `<h3 class="home-search-shell__result-title"><a class="home-search-shell__result-title-link" href="${escapeHomeSearchHtml(entry.href)}">${escapeHomeSearchHtml(entry.title)}</a></h3>` : `<h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(entry.title)}</h3>`}
               ${renderVerificationBadge(entry)}
             </div>
-            <p class="home-search-shell__result-body">${escapeHomeSearchHtml(entry.summary || 'Published Neuroartan surface.')}</p>
-            ${renderResultChips(entry.keywords)}
             <div class="home-search-shell__result-actions">
               ${entry.kind === 'model' && entry.href ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.href)}">Open model</a>` : ''}
               ${entry.publicRoute ? `<a class="home-search-shell__result-link" href="${escapeHomeSearchHtml(entry.publicRoute)}">Open public route</a>` : ''}
@@ -1144,8 +1152,8 @@ function renderHomeSearchShell() {
   if (!HOME_SEARCH_SHELL_STATE.dataReady && HOME_SEARCH_SHELL_STATE.loadingPromise) {
     syncHomeSearchRailAskAction(false);
     nodes.results.innerHTML = `
-      <div class="home-search-shell__loading-state" id="home-search-shell-loading-state" role="status" aria-live="polite" aria-label="Loading search results">
-        <span class="ui-loader-circle ui-loader-circle--lg" aria-hidden="true"></span>
+      <div class="home-search-shell__loading-state ui-loading-inline" id="home-search-shell-loading-state" role="status" aria-live="polite" aria-label="Loading search results">
+        <span class="ui-loading-inline__spinner" aria-hidden="true"></span>
       </div>
     `;
     return;
@@ -1225,6 +1233,7 @@ function openHomeSearchShell(options = {}) {
   HOME_SEARCH_SHELL_STATE.isOpen = true;
   HOME_SEARCH_SHELL_STATE.scope = normalizeHomeSearchScope(options.scope || 'all');
   HOME_SEARCH_SHELL_STATE.mode = options.mode === 'models' || options.focus === 'models' ? 'models' : 'search';
+  HOME_SEARCH_SHELL_STATE.presentation = options.source === 'model-directory' ? 'model-directory' : 'default';
 
   dispatchHomeSearchEvent('neuroartan:cookie-consent-close-requested', {
     source: 'home-search-shell',
@@ -1258,6 +1267,7 @@ function closeHomeSearchShell() {
 
   HOME_SEARCH_SHELL_STATE.isOpen = false;
   HOME_SEARCH_SHELL_STATE.mode = 'search';
+  HOME_SEARCH_SHELL_STATE.presentation = 'default';
   HOME_SEARCH_SHELL_STATE.filtersOpen = false;
   nodes.shell.hidden = true;
   document.documentElement.classList.remove('home-search-shell-open');
@@ -1282,8 +1292,8 @@ function bindHomeSearchShell() {
     openHomeSearchShell(event?.detail || {});
   });
 
-  document.addEventListener('neuroartan:home-model-selector-open-requested', () => {
-    openHomeSearchShell({ mode: 'models', focus: 'models', scope: 'models' });
+  document.addEventListener('neuroartan:home-model-selector-open-requested', (event) => {
+    openHomeSearchShell({ mode: 'models', focus: 'models', scope: 'models', ...(event?.detail || {}) });
   });
 
   document.addEventListener('neuroartan:home-search-shell-close-requested', () => {

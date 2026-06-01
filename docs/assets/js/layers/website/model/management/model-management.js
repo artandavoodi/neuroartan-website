@@ -8,6 +8,7 @@
 import { getProfileNavigationState, subscribeProfileNavigation } from '../../profile/private/navigation/profile-navigation.js';
 import { getProfileRuntimeState, subscribeProfileRuntime } from '../../profile/private/shell/profile-runtime.js';
 import {
+  ensureOwnedCanonicalModel,
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
   readModelPersonalizationPreferences,
@@ -110,9 +111,7 @@ let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
 let publicModelDirectoryLoading = false;
 const modelDirectoryFilters = {
-  query: '',
   verification: 'all',
-  trust: 'all',
   expertise: 'all'
 };
 
@@ -440,10 +439,9 @@ function updateModelFoundationIdentity(nextPatch = {}, options = {}) {
 
 async function hydrateModelFoundationIdentityFromBackend() {
   if (modelFoundationIdentityBackendLoaded) return;
-  modelFoundationIdentityBackendLoaded = true;
 
   try {
-    const model = await getOwnedCanonicalModel();
+    const model = await ensureOwnedCanonicalModel().catch(() => getOwnedCanonicalModel());
     if (!model?.id) return;
 
     const identity = await readModelFoundationIdentity(model.id);
@@ -471,9 +469,15 @@ async function hydrateModelFoundationIdentityFromBackend() {
       source: 'model-management-backend',
       sync: false
     });
+    modelFoundationIdentityBackendLoaded = true;
   } catch (error) {
     console.warn('[Neuroartan][Model] Foundation identity hydration skipped.', error);
   }
+}
+
+function retryModelFoundationIdentityHydration() {
+  modelFoundationIdentityBackendLoaded = false;
+  void hydrateModelFoundationIdentityFromBackend();
 }
 
 function getModelPersonalizationValue(field) {
@@ -601,20 +605,19 @@ function populateDirectoryFilter(select, values, currentValue) {
 }
 
 function getFilteredPublicModels() {
-  const query = modelDirectoryFilters.query.toLowerCase();
-
   return publicModelDirectory.filter((model) => {
     const verificationState = String(model.verification_state || 'unverified').toLowerCase();
-    const trustLabel = String(model.trust_label || verificationState).trim();
     const expertiseTags = getModelExpertiseTags(model);
-    const searchBlob = String(model.search_blob || '').toLowerCase();
 
-    if (query && !searchBlob.includes(query)) return false;
     if (modelDirectoryFilters.verification !== 'all' && verificationState !== modelDirectoryFilters.verification) return false;
-    if (modelDirectoryFilters.trust !== 'all' && trustLabel !== modelDirectoryFilters.trust) return false;
     if (modelDirectoryFilters.expertise !== 'all' && !expertiseTags.includes(modelDirectoryFilters.expertise)) return false;
     return true;
   });
+}
+
+function isModelVerified(model = {}) {
+  const state = String(model.verification_state || model.trust_label || '').trim().toLowerCase();
+  return state === 'verified' || state === 'approved';
 }
 
 function createDirectoryCard(model = {}) {
@@ -638,23 +641,17 @@ function createDirectoryCard(model = {}) {
   title.className = 'model-management__directory-title';
   title.textContent = model.display_name || 'Continuity model';
 
-  const owner = document.createElement('span');
-  owner.className = 'model-management__note';
-  owner.textContent = model.username ? `@${model.username}` : 'Public owner route pending';
+  if (isModelVerified(model)) {
+    const verified = document.createElement('img');
+    verified.className = 'model-management__directory-verified';
+    verified.src = '/registry/icons/public/assets/core/identity/trust/verified.svg';
+    verified.alt = 'Verified';
+    verified.loading = 'lazy';
+    verified.decoding = 'async';
+    title.append(verified);
+  }
 
-  const summary = document.createElement('span');
-  summary.className = 'model-management__note';
-  summary.textContent = model.description || 'Public model summary pending';
-
-  const signals = document.createElement('span');
-  signals.className = 'model-management__directory-signals';
-  signals.textContent = [
-    model.verification_state || 'unverified',
-    model.trust_label || 'trust pending',
-    model.readiness_state || 'readiness pending'
-  ].join(' · ');
-
-  content.append(title, owner, summary, signals);
+  content.append(title);
   article.append(avatar, content);
   return article;
 }
@@ -666,10 +663,9 @@ function renderModelDirectory(root) {
   const status = root.querySelector('[data-model-directory-status]');
   if (!(list instanceof HTMLElement)) return;
 
-  const trustValues = Array.from(new Set(publicModelDirectory.map((model) => String(model.trust_label || '').trim()).filter(Boolean))).sort();
   const expertiseValues = Array.from(new Set(publicModelDirectory.flatMap(getModelExpertiseTags))).sort();
-  populateDirectoryFilter(root.querySelector('[data-model-directory-filter="trust"]'), trustValues, modelDirectoryFilters.trust);
   populateDirectoryFilter(root.querySelector('[data-model-directory-filter="expertise"]'), expertiseValues, modelDirectoryFilters.expertise);
+  syncDirectoryFilterLabels(root);
 
   list.replaceChildren();
   if (!publicModelDirectoryLoaded) {
@@ -691,6 +687,18 @@ function renderModelDirectory(root) {
   }
 
   list.append(...models.map(createDirectoryCard));
+}
+
+function syncDirectoryFilterLabels(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  root.querySelectorAll('[data-model-directory-filter]').forEach((select) => {
+    if (!(select instanceof HTMLSelectElement)) return;
+    const field = select.dataset.modelDirectoryFilter;
+    const label = field ? root.querySelector(`[data-model-directory-filter-label="${field}"]`) : null;
+    if (!(label instanceof HTMLElement)) return;
+    label.textContent = select.selectedOptions[0]?.textContent || '';
+  });
 }
 
 function renderModelKnowledgeBase(root) {
@@ -742,6 +750,13 @@ async function hydratePublicModelDirectory() {
     publicModelDirectoryLoading = false;
     renderAllModelManagement();
   }
+}
+
+function invalidateModelDirectoryProjection() {
+  publicModelDirectory = [];
+  publicModelDirectoryLoaded = false;
+  publicModelDirectoryLoading = false;
+  void hydratePublicModelDirectory();
 }
 
 function renderModelFoundationIdentityControls(root) {
@@ -822,6 +837,14 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement) {
       control.value = String(value ?? '');
     }
+  });
+
+  root.querySelectorAll('[data-model-personalization-label]').forEach((label) => {
+    if (!(label instanceof HTMLElement)) return;
+    const field = label.dataset.modelPersonalizationLabel;
+    const select = field ? root.querySelector(`[data-model-personalization-field="${field}"]`) : null;
+    if (!(select instanceof HTMLSelectElement)) return;
+    label.textContent = select.selectedOptions[0]?.textContent || '';
   });
 
   root.querySelectorAll('[data-model-personalization-value]').forEach((valueNode) => {
@@ -969,7 +992,7 @@ function handleModelIdentityEditorClick(event) {
   setModelIdentityEditorOpen(false);
 }
 
-function handleModelIdentityEditorSubmit(event) {
+async function handleModelIdentityEditorSubmit(event) {
   const form = event.target?.closest?.('[data-model-identity-editor-form]');
   if (!(form instanceof HTMLFormElement)) return;
 
@@ -977,12 +1000,35 @@ function handleModelIdentityEditorSubmit(event) {
   const nickname = form.querySelector('[data-model-identity-editor-field="modelNickname"]');
   const purposeDescription = form.querySelector('[data-model-identity-editor-field="modelPurposeDescription"]');
   const privateNotes = form.querySelector('[data-model-identity-editor-field="privateNotes"]');
-  updateModelFoundationIdentity({
+  const nextIdentity = {
     modelNickname: nickname instanceof HTMLInputElement ? nickname.value.trim() : '',
     modelPurposeDescription: purposeDescription instanceof HTMLTextAreaElement ? purposeDescription.value.trim() : '',
     privateNotes: privateNotes instanceof HTMLTextAreaElement ? privateNotes.value.trim() : ''
+  };
+
+  updateModelFoundationIdentity(nextIdentity, {
+    source: 'model-identity-editor',
+    sync: false
   });
-  setModelIdentityEditorOpen(false);
+
+  try {
+    const model = await getOwnedCanonicalModel();
+    if (model?.id) {
+      const savedIdentity = await saveModelFoundationIdentity(model.id, {
+        ...modelFoundationIdentity,
+        ...nextIdentity
+      });
+      if (savedIdentity) {
+        updateModelFoundationIdentity(savedIdentity, {
+          source: 'model-identity-editor',
+          sync: false
+        });
+      }
+    }
+    setModelIdentityEditorOpen(false);
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Foundation identity save failed.', error);
+  }
 }
 
 function handleModelIdentityEditorKeydown(event) {
@@ -1000,6 +1046,15 @@ function handleModelDirectoryFilter(event) {
 
   modelDirectoryFilters[field] = String(control.value || '').trim();
   renderAllModelManagement();
+}
+
+function handleModelDirectorySearchOpen(event) {
+  const trigger = event.target?.closest?.('[data-model-directory-search-open]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  document.dispatchEvent(new CustomEvent('neuroartan:home-model-selector-open-requested', {
+    detail:{ source:'model-directory' }
+  }));
 }
 
 function handleModelKnowledgeSubmit(event) {
@@ -1057,12 +1112,17 @@ function initModelManagement() {
   document.addEventListener('click', handleModelAvatarClick);
   document.addEventListener('input', handleModelDirectoryFilter);
   document.addEventListener('change', handleModelDirectoryFilter);
+  document.addEventListener('click', handleModelDirectorySearchOpen);
   document.addEventListener('submit', handleModelKnowledgeSubmit);
   document.addEventListener('click', handleModelKnowledgeRemove);
   document.addEventListener('model:identity-editor-open-request', handleModelIdentityEditorRequest);
   document.addEventListener('click', handleModelIdentityEditorClick);
   document.addEventListener('submit', handleModelIdentityEditorSubmit);
   document.addEventListener('keydown', handleModelIdentityEditorKeydown);
+  window.addEventListener('neuroartan:model-public-registry-invalidated', invalidateModelDirectoryProjection);
+  window.addEventListener('neuroartan:supabase-ready', retryModelFoundationIdentityHydration);
+  document.addEventListener('account:profile-state-changed', retryModelFoundationIdentityHydration);
+  document.addEventListener('account:profile-refresh-request', retryModelFoundationIdentityHydration);
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'model-management') return;

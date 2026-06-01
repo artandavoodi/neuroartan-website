@@ -359,7 +359,7 @@
   --layout-home-search-input-row-opacity:0.9;
   --layout-home-search-input-row-border:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
   --layout-home-search-input-row-border-focus:color-mix(in srgb, var(--text-primary-color) 24%, transparent);
-  --layout-home-search-icon-size:calc(1.38rem * var(--accessibility-icon-scale));
+  --layout-home-search-icon-size:var(--layout-home-platform-nav-icon-size);
   --layout-home-search-icon-opacity:0.82;
   --layout-home-search-voice-motion:180ms;
   --layout-home-search-input-size:1.88rem;

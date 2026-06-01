@@ -62,6 +62,9 @@
   --menu-border:rgba(255,255,255,0.18);
   --menu-sep:rgba(255,255,255,0.14);
 
+  --hover-overlay-bg:var(--color-white);
+  --hover-overlay-text:var(--color-black);
+
   --theme-accent-color:var(--link-color);
   --theme-accent-hover-color:var(--link-hover-color);
   --theme-custom-bg-color:var(--bg-color);
@@ -164,6 +167,9 @@ html[data-theme="custom"][data-theme-effective="light"]{
   --menu-surface-strong:rgba(255,255,255,0.88);
   --menu-border:rgba(0,0,0,0.14);
   --menu-sep:rgba(0,0,0,0.12);
+
+  --hover-overlay-bg:var(--color-black);
+  --hover-overlay-text:var(--color-white);
 }
 
 /* =============================================================================

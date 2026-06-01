@@ -22,6 +22,26 @@ export const MODEL_TAB_SECTIONS = new Set([
 
 export const MODEL_DASHBOARD_SECTIONS = new Set(['model-readiness']);
 export const MODEL_SETTINGS_SECTIONS = new Set(['model-settings', 'model-runtime']);
+export const PUBLIC_MODEL_DISCOVERY_PANES = new Set(['directory', 'trending', 'expertise']);
+
+export function isPublicModelNavigation(section = '', modelPane = '') {
+  return section === 'model-discovery' && PUBLIC_MODEL_DISCOVERY_PANES.has(modelPane);
+}
+
+export function constrainModelNavigationForViewer(section = '', modelPane = '', authenticated = false) {
+  if (authenticated || isPublicModelNavigation(section, modelPane)) {
+    return { section, modelPane };
+  }
+
+  return {
+    section: 'model-discovery',
+    modelPane: 'directory'
+  };
+}
+
+export function getVisibleModelContextTabs(tabs = [], authenticated = false) {
+  return tabs.filter((tab) => authenticated || tab.authState !== 'user');
+}
 
 /* =============================================================================
    02) MODEL TAB GROUPS
@@ -76,8 +96,8 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
       { key: 'directory', label: 'Directory', section: 'model-discovery', modelPane: 'directory' },
       { key: 'trending', label: 'Trending', section: 'model-discovery', modelPane: 'trending' },
       { key: 'expertise', label: 'Expertise', section: 'model-discovery', modelPane: 'expertise' },
-      { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation' },
-      { key: 'monetization', label: 'Monetization', section: 'model-discovery', modelPane: 'monetization' },
+      { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation', authState: 'user' },
+      { key: 'monetization', label: 'Monetization', section: 'model-discovery', modelPane: 'monetization', authState: 'user' },
     ],
   },
   modelSettings: {

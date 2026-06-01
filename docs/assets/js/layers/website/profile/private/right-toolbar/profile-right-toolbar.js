@@ -6,6 +6,10 @@ import {
   getProfileNavigationState,
   subscribeProfileNavigation
 } from '../navigation/profile-navigation.js';
+import {
+  getProfileRuntimeState,
+  subscribeProfileRuntime
+} from '../shell/profile-runtime.js';
 
 const PROFILE_RIGHT_TOOLBAR_RAIL_STORAGE_KEY = 'neuroartan.profile.rightToolbar.rail';
 const PROFILE_RIGHT_TOOLBAR_RAIL_COOKIE_KEY = 'neuroartan_profile_right_toolbar_rail';
@@ -62,85 +66,99 @@ const ACTIONS = Object.freeze({
     id: 'model-training',
     label: 'Model training',
     tooltip: 'Training',
-    icon: ACTION_ICONS.modelTraining
+    icon: ACTION_ICONS.modelTraining,
+    authState: 'user'
   },
   modelInteraction: {
     id: 'model-interaction',
     label: 'Model interaction',
     tooltip: 'Interaction',
-    icon: ACTION_ICONS.modelInteraction
+    icon: ACTION_ICONS.modelInteraction,
+    authState: 'user'
   },
   modelReadiness: {
     id: 'model-readiness',
     label: 'Model readiness',
     tooltip: 'Readiness',
-    icon: ACTION_ICONS.modelReadiness
+    icon: ACTION_ICONS.modelReadiness,
+    authState: 'user'
   },
   modelIdentity: {
     id: 'model-identity',
     label: 'Model foundation',
     tooltip: 'Foundation',
-    icon: ACTION_ICONS.modelIdentity
+    icon: ACTION_ICONS.modelIdentity,
+    authState: 'user'
   },
   modelEditIdentity: {
     id: 'model-edit-identity',
     label: 'Edit model identity',
     tooltip: 'Edit identity',
-    icon: ACTION_ICONS.edit
+    icon: ACTION_ICONS.edit,
+    authState: 'user'
   },
   modelSources: {
     id: 'model-sources',
     label: 'Model sources',
     tooltip: 'Sources',
-    icon: ACTION_ICONS.modelSources
+    icon: ACTION_ICONS.modelSources,
+    authState: 'user'
   },
   modelMemory: {
     id: 'model-memory',
     label: 'Model memory',
     tooltip: 'Memory',
-    icon: ACTION_ICONS.thoughtMemory
+    icon: ACTION_ICONS.thoughtMemory,
+    authState: 'user'
   },
   modelPersonalization: {
     id: 'model-personalization',
     label: 'Model personalization',
     tooltip: 'Personalization',
-    icon: ACTION_ICONS.modelPersonalization
+    icon: ACTION_ICONS.modelPersonalization,
+    authState: 'user'
   },
   modelVoice: {
     id: 'model-voice',
     label: 'Voice training',
     tooltip: 'Voice',
-    icon: ACTION_ICONS.modelVoice
+    icon: ACTION_ICONS.modelVoice,
+    authState: 'user'
   },
   modelProvider: {
     id: 'model-provider',
     label: 'Runtime provider',
     tooltip: 'Runtime',
-    icon: ACTION_ICONS.modelProvider
+    icon: ACTION_ICONS.modelProvider,
+    authState: 'user'
   },
   modelChangelog: {
     id: 'model-changelog',
     label: 'Model changelog',
     tooltip: 'Changelog',
-    icon: ACTION_ICONS.changelog
+    icon: ACTION_ICONS.changelog,
+    authState: 'user'
   },
   modelConsent: {
     id: 'model-consent',
     label: 'Consent controls',
     tooltip: 'Consent',
-    icon: ACTION_ICONS.visibility
+    icon: ACTION_ICONS.visibility,
+    authState: 'user'
   },
   modelRouting: {
     id: 'model-routing',
     label: 'Model routing',
     tooltip: 'Routing',
-    icon: ACTION_ICONS.route
+    icon: ACTION_ICONS.route,
+    authState: 'user'
   },
   modelPreferences: {
     id: 'model-preferences',
     label: 'Model preferences',
     tooltip: 'Preferences',
-    icon: ACTION_ICONS.modelSettings
+    icon: ACTION_ICONS.modelSettings,
+    authState: 'user'
   },
   modelDiscovery: {
     id: 'model-discovery',
@@ -152,13 +170,15 @@ const ACTIONS = Object.freeze({
     id: 'model-reputation',
     label: 'Model reputation',
     tooltip: 'Reputation',
-    icon: ACTION_ICONS.modelReputation
+    icon: ACTION_ICONS.modelReputation,
+    authState: 'user'
   },
   modelEconomy: {
     id: 'model-economy',
     label: 'Model economy',
     tooltip: 'Economy',
-    icon: ACTION_ICONS.modelEconomy
+    icon: ACTION_ICONS.modelEconomy,
+    authState: 'user'
   },
   filterPosts: {
     id: 'filter-posts',
@@ -372,7 +392,11 @@ function renderToolbarActions(root, state = getProfileNavigationState()){
   const nav = root.querySelector('[data-profile-right-toolbar-actions]');
   if (!(nav instanceof HTMLElement)) return;
 
-  const actionKeys = resolveActionKeys(state);
+  const authenticated = getProfileRuntimeState().viewerState === 'authenticated';
+  const actionKeys = resolveActionKeys(state).filter((key) => {
+    const action = ACTIONS[key];
+    return action && (authenticated || action.authState !== 'user');
+  });
   nav.replaceChildren();
   root.style.setProperty('--profile-right-toolbar-action-count', String(Math.max(actionKeys.length, 1)));
   root.style.setProperty('--profile-right-toolbar-gap-count', String(Math.max(actionKeys.length - 1, 0)));
@@ -761,6 +785,10 @@ export function initProfileRightToolbar(){
 
 subscribeProfileNavigation((state) => {
   toolbarRoots().forEach((root) => renderToolbarActions(root, state));
+});
+
+subscribeProfileRuntime(() => {
+  toolbarRoots().forEach((root) => renderToolbarActions(root, getProfileNavigationState()));
 });
 
 document.addEventListener('fragment:mounted', (event) => {

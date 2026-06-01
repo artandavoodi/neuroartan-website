@@ -253,8 +253,9 @@ function buildUsernameState(profile = null) {
   };
 }
 
-function buildPrivateProfileState(user = null, profile = null) {
+function buildPrivateProfileState(user = null, profile = null, options = {}) {
   const viewerState = user ? 'authenticated' : 'guest';
+  const authResolved = options.authResolved === true;
   const completion = buildCompletionState(profile);
   const username = buildUsernameState(profile);
   const visibility = buildVisibilityState(profile, Boolean(username.normalized));
@@ -303,6 +304,7 @@ function buildPrivateProfileState(user = null, profile = null) {
   return {
     surface: 'private',
     viewerState,
+    authResolved,
     stateKey,
     profile,
     user,
@@ -595,7 +597,7 @@ function shouldApplyPrivateState() {
 function getDefaultState() {
   return resolveInitialSurface() === 'public'
     ? buildPublicProfileState({ outcome: 'loading' })
-    : buildPrivateProfileState(null, null);
+    : buildPrivateProfileState(null, null, { authResolved:false });
 }
 
 /* =============================================================================
@@ -609,7 +611,8 @@ function resolveRuntimeState(detail = {}) {
 
   return buildPrivateProfileState(
     detail.user || null,
-    detail.profile || null
+    detail.profile || null,
+    { authResolved:detail.authResolved === true }
   );
 }
 
@@ -884,12 +887,12 @@ function bindProfileStateEvents() {
   document.addEventListener('account:profile-state-changed', (event) => {
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
     if (!shouldApplyPrivateState()) return;
-    refreshRuntimeState(detail);
+    refreshRuntimeState({ ...detail, authResolved:true });
   });
 
   document.addEventListener('account:profile-signed-out', () => {
     if (!shouldApplyPrivateState()) return;
-    refreshRuntimeState({});
+    refreshRuntimeState({ authResolved:true });
   });
 
   document.addEventListener('profile:public-state-changed', (event) => {

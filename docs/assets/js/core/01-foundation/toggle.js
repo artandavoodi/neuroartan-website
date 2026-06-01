@@ -43,12 +43,20 @@ const TOGGLE_THUMB_SELECTOR = [
 const TOGGLE_STORAGE_KEY = 'neuroartan.toggle.state';
 
 let toggleObserver = null;
+let homepageThemeTogglePolicyBound = false;
 
 const HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP = Object.freeze({
   'breathing-circle': 'homepageThemeBreathingCircle',
   'cinematic-background': 'homepageThemeCinematicBackground',
   'hero-shader': 'homepageThemeHeroShader',
   'matte-atmosphere': 'homepageThemeMatteAtmosphere'
+});
+
+const HOMEPAGE_THEME_TOGGLE_DEFAULT_MAP = Object.freeze({
+  'breathing-circle': false,
+  'cinematic-background': false,
+  'hero-shader': true,
+  'matte-atmosphere': true
 });
 
 /* =============================================================================
@@ -94,6 +102,16 @@ function getStoredToggleValue(toggle) {
   if (!(storageId in state)) return null;
 
   return Boolean(state[storageId]);
+}
+
+function readToggleDefault(toggle) {
+  if (!isToggleRoot(toggle)) return false;
+
+  const value = String(toggle.getAttribute('data-toggle-default') || '').trim().toLowerCase();
+  if (value === 'on' || value === 'true') return true;
+  if (value === 'off' || value === 'false') return false;
+
+  return readToggleChecked(toggle);
 }
 
 /* =============================================================================
@@ -157,7 +175,7 @@ function normalizeToggle(toggle) {
   }
 
   const storedValue = getStoredToggleValue(toggle);
-  syncToggleState(toggle, storedValue === null ? readToggleChecked(toggle) : storedValue, {
+  syncToggleState(toggle, storedValue === null ? readToggleDefault(toggle) : storedValue, {
     emit: true,
     persist: false,
     source: storedValue === null ? 'init' : 'storage-restore'
@@ -171,7 +189,7 @@ function setHomepageThemeToggleAttribute(key, checked) {
   const attributeName = HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP[key];
   if (!attributeName) return;
 
-  const attributeValue = checked ? 'true' : 'false';
+  const attributeValue = isHomepageVisualLayerAllowed() && checked ? 'true' : 'false';
   const kebabAttribute = `data-${attributeName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)}`;
 
   document.documentElement.dataset[attributeName] = attributeValue;
@@ -179,6 +197,39 @@ function setHomepageThemeToggleAttribute(key, checked) {
   if (document.body) {
     document.body.setAttribute(kebabAttribute, attributeValue);
   }
+}
+
+function normalizeHomepageTheme(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+
+  if (normalized === 'color') return 'custom';
+  if (normalized === 'factory' || normalized === 'default' || normalized === 'company-default') return 'company';
+
+  return normalized;
+}
+
+function isHomepageVisualLayerAllowed() {
+  const themeApi = window.NeuroartanTheme;
+
+  if (themeApi && typeof themeApi.getThemeStateDetail === 'function') {
+    return themeApi.getThemeStateDetail().cinematicAllowed === true;
+  }
+
+  const theme = normalizeHomepageTheme(document.documentElement.getAttribute('data-theme'));
+  return theme === 'company' || theme === 'custom';
+}
+
+function getHomepageThemeTogglePreference(key, storedState = readStoredToggleState()) {
+  const storageId = `homepage-theme:${key}`;
+  if (storageId in storedState) return Boolean(storedState[storageId]);
+
+  const toggle = document.querySelector(
+    `[data-toggle-scope="homepage-theme"][data-toggle-key="${key}"]`
+  );
+
+  return toggle instanceof HTMLElement
+    ? readToggleDefault(toggle)
+    : Boolean(HOMEPAGE_THEME_TOGGLE_DEFAULT_MAP[key]);
 }
 
 function syncHomepageThemeToggleAttribute(toggle, checked) {
@@ -197,8 +248,7 @@ function syncHomepageThemeToggleAttributesFromStorage() {
   const restored = {};
 
   Object.keys(HOMEPAGE_THEME_TOGGLE_ATTRIBUTE_MAP).forEach((key) => {
-    const storageId = `homepage-theme:${key}`;
-    const checked = storageId in storedState ? Boolean(storedState[storageId]) : false;
+    const checked = getHomepageThemeTogglePreference(key, storedState);
     restored[key] = checked;
     setHomepageThemeToggleAttribute(key, checked);
   });
@@ -216,6 +266,15 @@ function syncHomepageThemeToggleAttributesFromStorage() {
       restored
     }
   }));
+}
+
+function bindHomepageThemeTogglePolicy() {
+  if (homepageThemeTogglePolicyBound) return;
+  homepageThemeTogglePolicyBound = true;
+
+  document.addEventListener('neuroartan:theme-changed', () => {
+    syncHomepageThemeToggleAttributesFromStorage();
+  });
 }
 
 function syncHomepageThemeToggleAttributesWhenBodyReady() {
@@ -324,6 +383,7 @@ function bindToggleInteraction(root = document) {
    08) TOGGLE INITIALIZATION
 ============================================================================= */
 function initTogglePrimitive(root = document) {
+  bindHomepageThemeTogglePolicy();
   syncHomepageThemeToggleAttributesWhenBodyReady();
   getNormalizedToggles(root).forEach(normalizeToggle);
   bindToggleInteraction(document);
@@ -366,14 +426,17 @@ window.NeuroartanToggle = Object.freeze({
   TOGGLE_TRACK_SELECTOR,
   TOGGLE_THUMB_SELECTOR,
   TOGGLE_STORAGE_KEY,
+  HOMEPAGE_THEME_TOGGLE_DEFAULT_MAP,
   getToggleStorageId,
   readStoredToggleState,
   writeStoredToggleState,
   getStoredToggleValue,
+  readToggleDefault,
   setHomepageThemeToggleAttribute,
   syncHomepageThemeToggleAttribute,
   syncHomepageThemeToggleAttributesFromStorage,
   syncHomepageThemeToggleAttributesWhenBodyReady,
+  bindHomepageThemeTogglePolicy,
   getNormalizedToggles,
   isToggleRoot,
   getToggleTrack,

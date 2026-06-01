@@ -34,7 +34,6 @@ const ICON_INTERACTION_SELECTOR = [
   'svg.ui-icon-theme-aware',
   'svg.ui-icon-theme-aware-muted',
   'svg.ui-icon-theme-aware-accent',
-  '.inline-stroke-icon__svg',
   '[data-ui-icon] svg',
 ].join(',');
 

@@ -91,7 +91,8 @@ function normalizeHomeSettingsTheme(theme) {
   const normalized = String(theme || '').trim().toLowerCase();
 
   if (normalized === 'color') return 'custom';
-  if (normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
+  if (normalized === 'factory' || normalized === 'default' || normalized === 'company-default') return 'company';
+  if (normalized === 'company' || normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
     return normalized;
   }
 
@@ -114,13 +115,13 @@ function resolveHomeSettingsThemeDetail(theme) {
 
   return {
     theme: normalized,
-    themeLabel: normalized === 'system' ? 'System' : normalized === 'custom' ? 'Custom' : normalized === 'dark' ? 'Dark' : 'Light',
+    themeLabel: normalized === 'company' ? 'Company Default' : normalized === 'system' ? 'System' : normalized === 'custom' ? 'Custom' : normalized === 'dark' ? 'Dark' : 'Light',
     themeSummary: '',
     effectiveTheme: document.documentElement?.getAttribute('data-theme-effective') || 'dark',
     contrast: document.documentElement?.getAttribute('data-theme-contrast') || 'standard',
     palette: document.documentElement?.getAttribute('data-theme-palette') || 'neuroartan',
     tokens: {},
-    cinematicAllowed: normalized === 'custom',
+    cinematicAllowed: normalized === 'company' || normalized === 'custom',
     monoSolidRequired: normalized === 'dark' || normalized === 'light',
   };
 }

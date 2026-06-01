@@ -13,7 +13,8 @@ import {
   MODEL_CONTEXT_TAB_ICONS,
   MODEL_DASHBOARD_SECTIONS,
   MODEL_SETTINGS_SECTIONS,
-  MODEL_TAB_SECTIONS
+  MODEL_TAB_SECTIONS,
+  getVisibleModelContextTabs
 } from '../../../model/navigation/model-tab-registry.js';
 
 /* =============================================================================
@@ -371,14 +372,16 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
 
   const group = getCurrentTabGroup(navigationState);
   const activeTab = getActiveTabKey(navigationState);
-  const nextSignature = `${getTabGroupKey(navigationState)}:${activeTab}`;
+  const authenticated = getProfileRuntimeState().viewerState === 'authenticated';
+  const visibleTabs = getVisibleModelContextTabs(group.tabs, authenticated);
+  const nextSignature = `${getTabGroupKey(navigationState)}:${activeTab}:${authenticated ? 'user' : 'guest'}`;
 
   tabsRoot.setAttribute('aria-label', group.label);
   if (tabsRoot.dataset.profileHeroTabsSignature !== nextSignature) {
     tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
     tabsRoot.replaceChildren();
 
-    group.tabs.forEach((tabConfig) => {
+    visibleTabs.forEach((tabConfig) => {
       const button = document.createElement('button');
       button.className = 'profile-private-hero__tab';
       button.type = 'button';
@@ -387,7 +390,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
       if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
       if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
       if (tabConfig.modelPane) button.dataset.profileTabModelPane = tabConfig.modelPane;
-      if (tabConfig.key === 'reputation' || tabConfig.key === 'monetization') button.dataset.authState = 'user';
+      if (tabConfig.authState) button.dataset.authState = tabConfig.authState;
       const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
       if (iconPath) {
         const iconWrap = document.createElement('span');

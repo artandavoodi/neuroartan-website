@@ -53,7 +53,7 @@
 }
 
 body.home-page{
-  background-color: rgb(var(--home-matte-rgb-dark));
+  background-color: var(--bg-color);
   overscroll-behavior: none;
 }
 

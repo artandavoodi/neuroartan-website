@@ -6,6 +6,10 @@ import {
   getProfileNavigationState,
   subscribeProfileNavigation
 } from '../navigation/profile-navigation.js';
+import {
+  getProfileRuntimeState,
+  subscribeProfileRuntime
+} from '../shell/profile-runtime.js';
 
 const PROFILE_SIDEBAR_RAIL_STORAGE_KEY = 'neuroartan.profile.sidebar.rail';
 const PROFILE_SIDEBAR_RAIL_COOKIE_KEY = 'neuroartan_profile_sidebar_rail';
@@ -97,6 +101,7 @@ function renderSidebar(root, state = getProfileNavigationState()){
   const primaryNav = root.querySelector('[data-profile-sidebar-primary-nav]');
   const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
   const useModelNav = isModelRoute();
+  const authenticated = getProfileRuntimeState().viewerState === 'authenticated';
 
   if (primaryNav instanceof HTMLElement) primaryNav.hidden = useModelNav;
   if (modelNav instanceof HTMLElement) modelNav.hidden = !useModelNav;
@@ -106,6 +111,8 @@ function renderSidebar(root, state = getProfileNavigationState()){
     const pane = item.dataset.profileNavPane || '';
     const link = item.dataset.profileNavLink || '';
     const searchTrigger = item.dataset.profileSearchTrigger || '';
+
+    item.hidden = item.dataset.authState === 'user' && !authenticated;
     
     let active = false;
     
@@ -224,7 +231,7 @@ function bindSidebar(){
     }
 
     const item = event.target.closest('[data-profile-private-sidebar] [data-profile-nav-section], [data-profile-private-sidebar] [data-profile-nav-link], [data-profile-private-sidebar] [data-profile-search-trigger]');
-    if(!item) return;
+    if(!item || item.hidden) return;
 
     if(item.dataset.profileSearchTrigger){
       event.preventDefault();
@@ -279,6 +286,10 @@ export function initProfileSidebar(){
 
 subscribeProfileNavigation((state) => {
   sidebarRoots().forEach((root) => renderSidebar(root, state));
+});
+
+subscribeProfileRuntime(() => {
+  sidebarRoots().forEach((root) => renderSidebar(root, getProfileNavigationState()));
 });
 
 document.addEventListener('fragment:mounted', (event) => {

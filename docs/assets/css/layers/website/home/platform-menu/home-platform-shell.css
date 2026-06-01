@@ -637,8 +637,7 @@ body[data-auth-state="signed-in"] [data-profile-auth-visible="signed-out"]{
 }
 
 
-.home-platform-shell__nav-svg,
-.home-platform-shell .inline-stroke-icon__svg{
+.home-platform-shell__nav-svg{
   display:block;
   width:var(--size-full);
   height:var(--size-full);

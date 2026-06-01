@@ -245,7 +245,7 @@ function renderEditor() {
       image.hidden = true;
       image.removeAttribute('src');
     }
-    image.alt = RUNTIME.kind === 'cover' ? 'Header image preview' : 'Profile image preview';
+    image.alt = '';
     image.style.setProperty('--profile-media-editor-image-zoom', String(RUNTIME.zoom));
     image.style.setProperty('--profile-media-editor-image-x', `${RUNTIME.panX}%`);
     image.style.setProperty('--profile-media-editor-image-y', `${RUNTIME.panY}%`);

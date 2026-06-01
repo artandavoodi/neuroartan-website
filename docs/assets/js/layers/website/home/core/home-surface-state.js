@@ -80,7 +80,8 @@ function normalizeThemeValue(value) {
   const normalized = normalizeString(value).toLowerCase();
 
   if (normalized === 'color') return 'custom';
-  if (normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
+  if (normalized === 'factory' || normalized === 'default' || normalized === 'company-default') return 'company';
+  if (normalized === 'company' || normalized === 'system' || normalized === 'custom' || normalized === 'dark' || normalized === 'light') {
     return normalized;
   }
 
@@ -201,13 +202,13 @@ function readThemeDetailFromRuntime() {
 
   return {
     theme,
-    themeLabel: theme === 'system' ? 'System' : theme === 'custom' ? 'Custom' : theme === 'dark' ? 'Dark' : 'Light',
+    themeLabel: theme === 'company' ? 'Company Default' : theme === 'system' ? 'System' : theme === 'custom' ? 'Custom' : theme === 'dark' ? 'Dark' : 'Light',
     themeSummary: '',
     effectiveTheme: document.documentElement?.getAttribute('data-theme-effective') || 'dark',
     contrast: document.documentElement?.getAttribute('data-theme-contrast') || 'standard',
     palette: document.documentElement?.getAttribute('data-theme-palette') || 'neuroartan',
     tokens: {},
-    cinematicAllowed: theme === 'custom',
+    cinematicAllowed: theme === 'company' || theme === 'custom',
     monoSolidRequired: theme === 'dark' || theme === 'light',
   };
 }
@@ -309,13 +310,13 @@ function syncThemeState(value = null) {
   HOME_SURFACE_STATE.themeDetail = {
     ...runtimeDetail,
     theme: normalizedTheme,
-    themeLabel: runtimeDetail.themeLabel || (normalizedTheme === 'system' ? 'System' : normalizedTheme === 'custom' ? 'Custom' : normalizedTheme === 'dark' ? 'Dark' : 'Light'),
+    themeLabel: runtimeDetail.themeLabel || (normalizedTheme === 'company' ? 'Company Default' : normalizedTheme === 'system' ? 'System' : normalizedTheme === 'custom' ? 'Custom' : normalizedTheme === 'dark' ? 'Dark' : 'Light'),
     effectiveTheme: runtimeDetail.effectiveTheme || document.documentElement?.getAttribute('data-theme-effective') || 'dark',
     contrast: runtimeDetail.contrast || document.documentElement?.getAttribute('data-theme-contrast') || 'standard',
     palette: runtimeDetail.palette || document.documentElement?.getAttribute('data-theme-palette') || 'neuroartan',
     tokens: runtimeDetail.tokens || {},
-    cinematicAllowed: normalizedTheme === 'custom',
-    monoSolidRequired: normalizedTheme === 'dark' || normalizedTheme === 'light',
+    cinematicAllowed: runtimeDetail.cinematicAllowed === true,
+    monoSolidRequired: runtimeDetail.monoSolidRequired === true,
   };
 }
 

@@ -2,6 +2,14 @@
    01) MODULE STATE
    ============================================================================= */
 
+import {
+  constrainModelNavigationForViewer
+} from '../../../model/navigation/model-tab-registry.js';
+import {
+  getProfileRuntimeState,
+  subscribeProfileRuntime
+} from '../shell/profile-runtime.js';
+
 const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
   initialized: false,
   state: null,
@@ -138,13 +146,13 @@ function buildHashRoute(state = createDefaultState()) {
 
 function createDefaultState() {
   const pathname = String(window.location.pathname || '').toLowerCase();
-  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'home' : pathname.includes('/model') ? 'model-foundation' : 'profile';
+  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'home' : pathname.includes('/model') ? 'model-discovery' : 'profile';
 
   return buildNavigationState(
     section,
     section === 'settings' ? 'password' : 'identity',
     'overview',
-    'overview'
+    section === 'model-discovery' ? 'directory' : 'overview'
   );
 }
 
@@ -193,6 +201,32 @@ function constrainStateToRoute(state) {
   }
 
   return state;
+}
+
+function constrainStateToViewer(state, runtimeState = getProfileRuntimeState()) {
+  if (getRouteContext() !== 'model' || !MODEL_SECTIONS.has(state.section)) {
+    return state;
+  }
+
+  const constrainedModelState = constrainModelNavigationForViewer(
+    state.section,
+    state.modelPane,
+    runtimeState.viewerState === 'authenticated'
+  );
+
+  if (
+    constrainedModelState.section === state.section
+    && constrainedModelState.modelPane === state.modelPane
+  ) {
+    return state;
+  }
+
+  return buildNavigationState(
+    constrainedModelState.section,
+    state.settingsPane,
+    state.dashboardPane,
+    constrainedModelState.modelPane
+  );
 }
 
 function parseHash() {
@@ -274,12 +308,12 @@ function setState(nextState, options = {}) {
     ? normalizeModelPaneForSection(section, nextState?.modelPane || RUNTIME.state?.modelPane || 'overview')
     : normalizeModelPane(RUNTIME.state?.modelPane || nextState?.modelPane || 'overview');
 
-  RUNTIME.state = buildNavigationState(
+  RUNTIME.state = constrainStateToViewer(buildNavigationState(
     section,
     settingsPane,
     dashboardPane,
     modelPane
-  );
+  ));
 
   if (options.writeHash !== false) {
     writeHash(RUNTIME.state);
@@ -325,7 +359,7 @@ function initProfileNavigation() {
 
   window.addEventListener('hashchange', () => {
     if (!isPrivateProfileSurface()) return;
-    setState(parseHash(), { writeHash: false });
+    setState(parseHash());
   });
 
   document.addEventListener('profile:navigate-request', (event) => {
@@ -337,6 +371,14 @@ function initProfileNavigation() {
       settingsPane: detail.settingsPane,
       dashboardPane: detail.dashboardPane,
       modelPane: detail.modelPane
+    });
+  });
+
+  subscribeProfileRuntime((runtimeState) => {
+    if (!isPrivateProfileSurface() || getRouteContext() !== 'model') return;
+
+    setState(parseHash(), {
+      writeHash: runtimeState.authResolved === true
     });
   });
 }

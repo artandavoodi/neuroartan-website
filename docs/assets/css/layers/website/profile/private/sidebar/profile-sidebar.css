@@ -124,6 +124,10 @@ body.model-page [data-profile-sidebar-model-nav]:not([hidden]){
   cursor:pointer;
 }
 
+.profile-sidebar__nav-item[hidden]{
+  display:none !important;
+}
+
 .profile-sidebar__nav-item:hover,
 .profile-sidebar__nav-item:focus-visible,
 .profile-sidebar__nav-item:active{

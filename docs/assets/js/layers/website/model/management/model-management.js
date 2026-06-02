@@ -18,11 +18,20 @@ import {
   saveModelPersonalizationPreferences
 } from '../../system/model/model-store.js';
 import { getPublicModels, loadPublicModelRegistry } from '../../system/model/public-model-registry.js';
+import {
+  createModelKnowledgeEntry,
+  createModelLogicRecord,
+  listModelKnowledgeEntries,
+  listModelLogicRecords,
+  removeModelKnowledgeEntry,
+  removeModelLogicRecord
+} from '../../system/model/model-training-store.js';
 import { registerProfileMediaEditorTarget } from '../../profile/private/media/profile-media-editor.js';
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
 const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-base';
+const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
 
 const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   languageStyle: 'balanced',
@@ -65,6 +74,7 @@ const MODEL_TRAINING_PANE_GROUPS = Object.freeze({
   protocol: 'protocol',
   datasets: 'datasets',
   'knowledge-base': 'knowledge-base',
+  logics: 'logics',
   provenance: 'provenance',
   evaluation: 'evaluation'
 });
@@ -107,6 +117,8 @@ let modelFoundationIdentity = loadStoredModelFoundationIdentity();
 let modelFoundationIdentityBackendLoaded = false;
 let modelFoundationIdentityBackendSaveTimer = 0;
 let modelKnowledgeBaseEntries = loadStoredModelKnowledgeBaseEntries();
+let modelLogicRecords = loadStoredModelLogicRecords();
+let modelTrainingSubstrateBackendLoaded = false;
 let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
 let publicModelDirectoryLoading = false;
@@ -207,6 +219,10 @@ const PANE_LABELS = Object.freeze({
   'knowledge-base': {
     title: 'Knowledge Base',
     summary: 'Maintain current owner-approved knowledge notes as editable training inputs before provenance review.'
+  },
+  logics: {
+    title: 'Logics',
+    summary: 'Maintain owner-authored natural-language logic records as private training inputs before provenance review.'
   },
   provenance: {
     title: 'Provenance',
@@ -395,7 +411,70 @@ function writeStoredModelKnowledgeBaseEntries() {
   try {
     window.localStorage?.setItem(MODEL_KNOWLEDGE_BASE_STORAGE_KEY, JSON.stringify(modelKnowledgeBaseEntries));
   } catch (error) {
-    /* Local persistence is an enhancement until the governed knowledge backend is connected. */
+    /* Local persistence remains a resilience fallback for the Supabase-owned substrate. */
+  }
+}
+
+function loadStoredModelLogicRecords() {
+  try {
+    const parsed = JSON.parse(window.localStorage?.getItem(MODEL_LOGIC_RECORDS_STORAGE_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === 'object') : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function writeStoredModelLogicRecords() {
+  try {
+    window.localStorage?.setItem(MODEL_LOGIC_RECORDS_STORAGE_KEY, JSON.stringify(modelLogicRecords));
+  } catch (error) {
+    /* Local persistence remains a resilience fallback for the Supabase-owned substrate. */
+  }
+}
+
+function setTrainingSubstrateStatus(message = '', state = 'idle') {
+  modelManagementRoots().forEach((root) => {
+    root.querySelectorAll('[data-model-training-substrate-status]').forEach((status) => {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = message;
+      status.dataset.modelTrainingSubstrateStatus = state;
+    });
+  });
+}
+
+function formatTrainingSubstrateError(error) {
+  const code = String(error?.code || error?.message || '').trim();
+  if (code === 'MODEL_TRAINING_SCHEMA_REQUIRED') {
+    return 'Training schema migration required before these records can save.';
+  }
+  return code ? `Training record could not be saved: ${code}` : 'Training record could not be saved.';
+}
+
+async function hydrateTrainingSubstrateFromBackend() {
+  if (modelTrainingSubstrateBackendLoaded) return;
+
+  try {
+    const [knowledgeEntries, logicRecords] = await Promise.all([
+      listModelKnowledgeEntries(),
+      listModelLogicRecords()
+    ]);
+    modelKnowledgeBaseEntries = knowledgeEntries.map((entry) => ({
+      id: entry.id,
+      text: entry.source_content || entry.source_title || '',
+      createdAt: entry.created_at
+    }));
+    modelLogicRecords = logicRecords.map((entry) => ({
+      id: entry.id,
+      title: entry.logic_title || '',
+      text: entry.logic_body || '',
+      createdAt: entry.created_at
+    }));
+    modelTrainingSubstrateBackendLoaded = true;
+    writeStoredModelKnowledgeBaseEntries();
+    writeStoredModelLogicRecords();
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
 }
 
@@ -735,6 +814,44 @@ function renderModelKnowledgeBase(root) {
   });
 }
 
+function renderModelLogicRecords(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const list = root.querySelector('[data-model-logic-list]');
+  if (!(list instanceof HTMLElement)) return;
+
+  list.replaceChildren();
+  if (!modelLogicRecords.length) {
+    const empty = document.createElement('p');
+    empty.className = 'model-management__note';
+    empty.textContent = 'No model logics added.';
+    list.append(empty);
+    return;
+  }
+
+  modelLogicRecords.forEach((entry) => {
+    const item = document.createElement('article');
+    item.className = 'model-management__knowledge-item';
+
+    const title = document.createElement('strong');
+    title.className = 'model-management__directory-title';
+    title.textContent = entry.title;
+
+    const text = document.createElement('p');
+    text.className = 'model-management__note';
+    text.textContent = entry.text;
+
+    const remove = document.createElement('button');
+    remove.className = 'model-management__text-button';
+    remove.type = 'button';
+    remove.dataset.modelLogicRemove = entry.id;
+    remove.textContent = 'Remove';
+
+    item.append(title, text, remove);
+    list.append(item);
+  });
+}
+
 async function hydratePublicModelDirectory() {
   if (publicModelDirectoryLoaded || publicModelDirectoryLoading) return;
   publicModelDirectoryLoading = true;
@@ -895,6 +1012,7 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   renderModelFoundationIdentityControls(root);
   renderModelPersonalizationControls(root, navigationState);
   renderModelKnowledgeBase(root);
+  renderModelLogicRecords(root);
   renderModelDirectory(root);
 }
 
@@ -1106,7 +1224,7 @@ function handleModelDirectorySearchOpen(event) {
   }));
 }
 
-function handleModelKnowledgeSubmit(event) {
+async function handleModelKnowledgeSubmit(event) {
   const form = event.target?.closest?.('[data-model-knowledge-form]');
   if (!(form instanceof HTMLFormElement)) return;
 
@@ -1117,27 +1235,86 @@ function handleModelKnowledgeSubmit(event) {
   const text = String(input.value || '').trim();
   if (!text) return;
 
-  modelKnowledgeBaseEntries = [
-    ...modelKnowledgeBaseEntries,
-    {
-      id: window.crypto?.randomUUID?.() || `${Date.now()}`,
-      text,
-      createdAt: new Date().toISOString()
-    }
-  ];
-  writeStoredModelKnowledgeBaseEntries();
-  input.value = '';
-  renderAllModelManagement();
+  try {
+    const entry = await createModelKnowledgeEntry(text);
+    modelKnowledgeBaseEntries = [
+      {
+        id: entry.id,
+        text: entry.source_content || entry.source_title || text,
+        createdAt: entry.created_at
+      },
+      ...modelKnowledgeBaseEntries
+    ];
+    writeStoredModelKnowledgeBaseEntries();
+    input.value = '';
+    setTrainingSubstrateStatus('Knowledge note saved to Supabase.', 'saved');
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
 }
 
-function handleModelKnowledgeRemove(event) {
+async function handleModelKnowledgeRemove(event) {
   const trigger = event.target?.closest?.('[data-model-knowledge-remove]');
   if (!(trigger instanceof HTMLElement)) return;
 
   const entryId = trigger.dataset.modelKnowledgeRemove;
-  modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
-  writeStoredModelKnowledgeBaseEntries();
-  renderAllModelManagement();
+  try {
+    await removeModelKnowledgeEntry(entryId);
+    modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
+    writeStoredModelKnowledgeBaseEntries();
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+async function handleModelLogicSubmit(event) {
+  const form = event.target?.closest?.('[data-model-logic-form]');
+  if (!(form instanceof HTMLFormElement)) return;
+  event.preventDefault();
+
+  const title = form.querySelector('[data-model-logic-title]');
+  const input = form.querySelector('[data-model-logic-input]');
+  if (!(title instanceof HTMLInputElement) || !(input instanceof HTMLTextAreaElement)) return;
+  if (!title.value.trim() || !input.value.trim()) return;
+
+  try {
+    const entry = await createModelLogicRecord({
+      logicTitle: title.value,
+      logicBody: input.value
+    });
+    modelLogicRecords = [
+      {
+        id: entry.id,
+        title: entry.logic_title || title.value,
+        text: entry.logic_body || input.value,
+        createdAt: entry.created_at
+      },
+      ...modelLogicRecords
+    ];
+    writeStoredModelLogicRecords();
+    form.reset();
+    setTrainingSubstrateStatus('Model logic saved to Supabase.', 'saved');
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+async function handleModelLogicRemove(event) {
+  const trigger = event.target?.closest?.('[data-model-logic-remove]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  const entryId = trigger.dataset.modelLogicRemove;
+  try {
+    await removeModelLogicRecord(entryId);
+    modelLogicRecords = modelLogicRecords.filter((entry) => entry.id !== entryId);
+    writeStoredModelLogicRecords();
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
 }
 
 function renderAllModelManagement() {
@@ -1152,6 +1329,7 @@ function initModelManagement() {
   void hydrateModelFoundationIdentityFromBackend();
   void hydrateModelPersonalizationFromBackend();
   void hydratePublicModelDirectory();
+  void hydrateTrainingSubstrateFromBackend();
   subscribeProfileRuntime(renderAllModelManagement);
   subscribeProfileNavigation(renderAllModelManagement);
   document.addEventListener('input', handleModelPersonalizationInput);
@@ -1164,12 +1342,15 @@ function initModelManagement() {
   document.addEventListener('click', handleModelDirectorySearchOpen);
   document.addEventListener('submit', handleModelKnowledgeSubmit);
   document.addEventListener('click', handleModelKnowledgeRemove);
+  document.addEventListener('submit', handleModelLogicSubmit);
+  document.addEventListener('click', handleModelLogicRemove);
   document.addEventListener('model:identity-editor-open-request', handleModelIdentityEditorRequest);
   document.addEventListener('click', handleModelIdentityEditorClick);
   document.addEventListener('submit', handleModelIdentityEditorSubmit);
   document.addEventListener('keydown', handleModelIdentityEditorKeydown);
   window.addEventListener('neuroartan:model-public-registry-invalidated', invalidateModelDirectoryProjection);
   window.addEventListener('neuroartan:supabase-ready', retryModelFoundationIdentityHydration);
+  window.addEventListener('neuroartan:supabase-ready', hydrateTrainingSubstrateFromBackend);
   document.addEventListener('account:profile-state-changed', retryModelFoundationIdentityHydration);
   document.addEventListener('account:profile-refresh-request', retryModelFoundationIdentityHydration);
 

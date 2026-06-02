@@ -18,13 +18,26 @@
 
     <div class="model-training-workspace__layout">
       <nav class="model-training-workspace__rail" aria-label="Training recipe sections">
-        <button class="model-training-workspace__rail-item is-active" type="button" data-model-training-workspace-pane="recipe">Recipe</button>
-        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="sources">Sources</button>
-        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="execution">Execution</button>
-        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="readiness">Readiness</button>
+        <button class="model-training-workspace__rail-item is-active" type="button" data-model-training-workspace-pane="recipe">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/recipe.svg" alt="">
+          Recipe
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="sources">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/sources.svg" alt="">
+          Sources
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="execution">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/execution.svg" alt="">
+          Execution
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="readiness">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/readiness.svg" alt="">
+          Readiness
+        </button>
       </nav>
 
       <form class="model-training-workspace__content" data-model-training-workspace-form>
+        <input name="recipeId" type="hidden">
         <section class="model-training-workspace__pane" data-model-training-workspace-panel="recipe">
           <h3 class="model-training-workspace__section-title">Recipe</h3>
           <p class="model-training-workspace__copy">Define the reusable training draft before any execution request is submitted.</p>
@@ -34,16 +47,27 @@
               <input class="model-management__input" name="recipeName" type="text" placeholder="Model foundation recipe" required>
             </label>
             <label class="model-management__field">
-              <span class="model-management__field-label">Base model</span>
-              <input class="model-management__input" name="baseModel" type="text" placeholder="Select a base model" required>
+              <span class="model-management__field-label">Base model provider</span>
+              <span class="model-management__select-wrap">
+                <select class="model-management__select" name="baseModelProvider">
+                  <option value="model_registry">Model registry</option>
+                  <option value="external_registry">External registry</option>
+                  <option value="local_runtime">Local runtime</option>
+                </select>
+                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              </span>
+            </label>
+            <label class="model-management__field">
+              <span class="model-management__field-label">Base model reference</span>
+              <input class="model-management__input" name="baseModel" type="text" placeholder="Repository ID or runtime reference" required>
             </label>
             <label class="model-management__field">
               <span class="model-management__field-label">Training method</span>
               <span class="model-management__select-wrap">
                 <select class="model-management__select" name="trainingMethod">
-                  <option value="supervised">Supervised fine-tuning</option>
-                  <option value="preference">Preference alignment</option>
-                  <option value="retrieval">Retrieval preparation</option>
+                  <option value="supervised_fine_tuning">Supervised fine-tuning</option>
+                  <option value="preference_alignment">Preference alignment</option>
+                  <option value="retrieval_preparation">Retrieval preparation</option>
                 </select>
                 <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
               </span>
@@ -60,6 +84,41 @@
             <label class="model-training-workspace__check"><input name="sourceDocuments" type="checkbox"> <span>Documents</span></label>
             <label class="model-training-workspace__check"><input name="sourceKnowledge" type="checkbox"> <span>Knowledge base</span></label>
           </div>
+          <section class="model-training-workspace__source-editor" aria-label="Attach external training source">
+            <h4 class="model-training-workspace__section-title">External source</h4>
+            <div class="model-training-workspace__grid">
+              <label class="model-management__field">
+                <span class="model-management__field-label">Source type</span>
+                <span class="model-management__select-wrap">
+                  <select class="model-management__select" name="externalSourceKind">
+                    <option value="dataset_registry">Dataset registry</option>
+                    <option value="external_url">External URL</option>
+                    <option value="document_upload">Document upload</option>
+                    <option value="sql_upload">SQL upload</option>
+                    <option value="spreadsheet_upload">Spreadsheet upload</option>
+                  </select>
+                  <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                </span>
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Source label</span>
+                <input class="model-management__input" name="externalSourceLabel" type="text" placeholder="Source label">
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Repository, URL, or connection reference</span>
+                <input class="model-management__input" name="externalSourceReference" type="text" placeholder="Dataset ID, URL, or connection reference">
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Optional file</span>
+                <input class="model-management__input" name="externalSourceFile" type="file" accept=".pdf,.txt,.md,.json,.csv,.tsv,.xlsx,.xls,.sql">
+              </label>
+            </div>
+            <button class="model-management__button" type="button" data-model-training-source-add>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/add-external-source.svg" alt="">
+              Attach source
+            </button>
+            <div class="model-training-workspace__source-list" data-model-training-source-list aria-live="polite"></div>
+          </section>
         </section>
 
         <section class="model-training-workspace__pane" data-model-training-workspace-panel="execution" hidden>
@@ -83,13 +142,36 @@
 
         <section class="model-training-workspace__pane" data-model-training-workspace-panel="readiness" hidden>
           <h3 class="model-training-workspace__section-title">Readiness</h3>
-          <p class="model-training-workspace__copy">Saving creates a recipe draft only. Execution remains unavailable until a governed training runner is connected.</p>
+          <p class="model-training-workspace__copy">Review the connected training graph and queue the approved recipe when its required stages are ready.</p>
+          <section class="model-training-workspace__board-shell" data-model-training-board-shell aria-label="Training recipe kitchen">
+            <div class="model-training-workspace__board-toolbar">
+              <span class="model-training-workspace__board-title">Training graph</span>
+              <button class="model-training-workspace__board-expand" type="button" data-model-training-board-expand aria-label="Expand training graph">
+                <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/expand-collapse/expand.svg" alt="">
+              </button>
+              <button class="model-training-workspace__board-close global-close-button" type="button" data-model-training-board-close aria-label="Close expanded training graph" hidden>
+                <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+                <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="model-training-workspace__board" data-model-training-board aria-label="Training recipe graph"></div>
+          </section>
           <div class="model-training-workspace__status" data-model-training-workspace-status aria-live="polite">Draft not saved</div>
+          <button class="ui-button ui-button--secondary" type="button" data-model-training-run-request>
+            <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/run.svg" alt="">
+            Run
+          </button>
         </section>
 
-        <footer class="model-training-workspace__actions">
-          <button class="ui-button ui-button--ghost" type="button" data-model-training-workspace-close>Cancel</button>
-          <button class="ui-button ui-button--secondary" type="submit">Save recipe draft</button>
+        <footer class="model-training-workspace__actions" data-model-training-workspace-actions>
+          <button class="ui-button ui-button--ghost" type="button" data-model-training-workspace-close>
+            <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/cancel.svg" alt="">
+            Cancel
+          </button>
+          <button class="ui-button ui-button--secondary" type="submit">
+            <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/save-recipe-draft.svg" alt="">
+            Save recipe draft
+          </button>
         </footer>
       </form>
     </div>

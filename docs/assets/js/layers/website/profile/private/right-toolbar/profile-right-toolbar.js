@@ -319,6 +319,7 @@ const MODEL_PANE_ACTIONS = Object.freeze({
   protocol: ['modelTraining', 'modelChangelog'],
   datasets: ['modelSources', 'filterModels', 'modelChangelog'],
   'knowledge-base': ['modelSources', 'modelChangelog'],
+  logics: ['modelSources', 'modelChangelog'],
   provenance: ['modelSources', 'modelRouting', 'modelChangelog'],
   evaluation: ['modelReadiness', 'modelChangelog'],
   behavior: ['modelPersonalization', 'modelChangelog'],

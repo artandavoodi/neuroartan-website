@@ -468,6 +468,7 @@ function buildPublicProfileState(detail = {}) {
   const legacyState = normalizeString(model?.legacy_state || '');
   const modelMaturity = normalizeString(model?.model_maturity || '');
   const verification = resolveApprovedProfileVerification(publicProfile || {});
+  const completion = buildCompletionState(null);
   const verificationVisible = outcome === 'found_renderable' && verification.verified;
   const visibilityState = publicProfile?.public_profile_enabled === true
     ? capitalizeWords(publicProfile?.public_profile_visibility || 'Public')
@@ -483,6 +484,7 @@ function buildPublicProfileState(detail = {}) {
   return {
     surface: 'public',
     viewerState: 'public',
+    completion,
     stateKey: outcome || 'idle',
     routeOutcome: outcome,
     profileId: normalizeString(publicProfile?.id || ''),

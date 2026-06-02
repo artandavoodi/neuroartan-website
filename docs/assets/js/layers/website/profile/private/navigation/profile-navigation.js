@@ -24,7 +24,7 @@ const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', '
 const VALID_SECTIONS = new Set(['home', 'feed', 'notifications', 'messaging', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings', ...MODEL_SECTIONS]);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
-const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'provenance', 'evaluation', 'behavior', 'language', 'emotion', 'response', 'memory', 'creativity', 'reflection', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
+const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'logics', 'provenance', 'evaluation', 'behavior', 'language', 'emotion', 'response', 'memory', 'creativity', 'reflection', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';

@@ -76,6 +76,13 @@
   font-weight:var(--font-weight-heading-soft);
 }
 
+.model-management__section-title,
+.model-management__button{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
 .model-management__identity,
 .model-management__section{
   padding-block:var(--spacing-lg);

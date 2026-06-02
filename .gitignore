@@ -5,3 +5,5 @@ development/__pycache__/
 .env.*
 !.env.example
 .aider*
+.DS_Store
+**/.DS_Store

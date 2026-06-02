@@ -30,3 +30,104 @@
   align-items:center;
   gap:var(--spacing-sm);
 }
+
+/* =============================================================================
+   SYSTEM INFORMATION ROWS
+============================================================================= */
+.home-platform-theme__action-copy{
+  align-items:flex-start;
+  text-align:left;
+}
+
+.home-platform-theme__action-row .home-platform-theme__action-label{
+  color:var(--text-secondary-color);
+  opacity:var(--text-secondary-opacity);
+}
+
+/* =============================================================================
+   SYSTEM INFORMATION
+============================================================================= */
+.more-system-information,
+.more-system-information .home-platform-theme__section-header{
+  text-align:center;
+}
+
+.more-system-information__identity{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:var(--spacing-xs);
+  padding-block:var(--spacing-sm) var(--spacing-lg);
+}
+
+.more-system-information__brand-symbol{
+  display:block;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  object-fit:contain;
+  margin-bottom:var(--spacing-sm);
+}
+
+.more-system-information__brand-wordmark{
+  display:block;
+  width:auto;
+  height:var(--nav-institutional-brand-wordmark-height);
+  object-fit:contain;
+}
+
+.more-system-information__copyright{
+  margin:var(--spacing-none);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.more-system-information__progress{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-xs);
+  padding-top:var(--spacing-sm);
+}
+
+.more-system-information__progress-meter{
+  appearance:none;
+  width:var(--size-full);
+  height:var(--data-progress-height-sm);
+  border:var(--spacing-none);
+  border-radius:var(--data-progress-radius);
+  overflow:hidden;
+  background:var(--data-progress-track-bg);
+}
+
+.more-system-information__progress-meter::-webkit-progress-bar{
+  background:var(--data-progress-track-bg);
+}
+
+.more-system-information__progress-meter::-webkit-progress-value{
+  background:var(--data-progress-fill-bg);
+}
+
+.more-system-information__progress-meter::-moz-progress-bar{
+  background:var(--data-progress-fill-bg);
+}
+
+/* =============================================================================
+   MOBILE RESPONSIVE
+============================================================================= */
+@media (max-width: 720px){
+  .home-platform-theme__action-row{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:var(--spacing-xs);
+  }
+
+  .home-platform-theme__action-row .home-platform-theme__action-label{
+    align-self:flex-start;
+  }
+
+  .more-system-information .home-platform-theme__action-row,
+  .more-system-information .home-platform-theme__action-row .home-platform-theme__action-label{
+    align-items:center;
+    align-self:center;
+  }
+}

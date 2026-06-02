@@ -388,11 +388,18 @@ function resolveSettingsChangelogArea(state = getProfileNavigationState()){
   }
 }
 
+function resolveModelChangelogArea(state = getProfileNavigationState()){
+  const section = String(state?.section || 'model-foundation').replace(/^model-/, '') || 'foundation';
+  const pane = String(state?.modelPane || 'overview') || 'overview';
+  return `model.${section}.${pane}`;
+}
+
 function renderToolbarActions(root, state = getProfileNavigationState()){
   const nav = root.querySelector('[data-profile-right-toolbar-actions]');
   if (!(nav instanceof HTMLElement)) return;
 
-  const authenticated = getProfileRuntimeState().viewerState === 'authenticated';
+  const runtimeState = getProfileRuntimeState();
+  const authenticated = runtimeState.viewerState === 'authenticated' || runtimeState.authResolved !== true;
   const actionKeys = resolveActionKeys(state).filter((key) => {
     const action = ACTIONS[key];
     return action && (authenticated || action.authState !== 'user');
@@ -637,7 +644,13 @@ function requestProfileToolAction(action){
       return;
     case 'model-changelog':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
-        detail: { context: 'modelChangelog', source: 'profile-right-toolbar' }
+        detail: {
+          context: 'modelChangelog',
+          source: 'profile-right-toolbar',
+          filters: {
+            area: resolveModelChangelogArea()
+          }
+        }
       }));
       return;
     case 'filter-posts':

@@ -419,4 +419,30 @@ export function mountSettingsCategory(root, options = {}) {
       toggleSection(toggleButton);
     });
   });
+
+  bindPermissionToggleListeners(root);
+}
+
+function bindPermissionToggleListeners(root) {
+  root.addEventListener('neuroartan:toggle-changed', (event) => {
+    const detail = event.detail;
+    if (!detail || detail.scope !== 'permissions') return;
+
+    const toggleKey = detail.key;
+    const isChecked = detail.checked;
+
+    if (isChecked) {
+      switch (toggleKey) {
+        case 'permission-notifications':
+          void requestBrowserPermission(root, 'notifications');
+          break;
+        case 'permission-microphone':
+          void requestBrowserPermission(root, 'microphone');
+          break;
+        case 'permission-camera':
+          void requestBrowserPermission(root, 'camera');
+          break;
+      }
+    }
+  });
 }

@@ -151,6 +151,14 @@
           "module": "/assets/js/layers/website/home/platform-menu/settings/general/index.js"
         },
         {
+          "id": "notifications",
+          "label": "Notifications",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-notifications.svg",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/notifications/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/notifications/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/notifications/index.js"
+        },
+        {
           "id": "language",
           "label": "Language",
           "icon": "/registry/icons/public/assets/core/navigation/language/language.svg",

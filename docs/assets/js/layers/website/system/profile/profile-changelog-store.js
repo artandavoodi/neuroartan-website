@@ -61,6 +61,27 @@ function saveLocalEvent(event) {
   return event;
 }
 
+function resolveRangeStart(range = 'all') {
+  const normalizedRange = normalizeString(range || 'all').toLowerCase();
+  if (!normalizedRange || normalizedRange === 'all') return '';
+
+  const now = new Date();
+  if (normalizedRange === 'today') {
+    now.setHours(0, 0, 0, 0);
+    return now.toISOString();
+  }
+
+  const days = normalizedRange === '7d'
+    ? 7
+    : normalizedRange === '30d'
+      ? 30
+      : 0;
+
+  if (!days) return '';
+  now.setDate(now.getDate() - days);
+  return now.toISOString();
+}
+
 export async function recordProfileChangelogEvent(event = {}) {
   const user = await getCurrentUser().catch(() => null);
   const payload = normalizeEvent(event, user);
@@ -91,7 +112,9 @@ export async function listProfileChangelogEvents(filters = {}) {
   const user = await getCurrentUser().catch(() => null);
   const ownerId = normalizeString(user?.id || user?.uid || '');
   const area = normalizeString(filters.area || 'all');
+  const rangeStart = resolveRangeStart(filters.range);
   const supabase = getSupabaseClient();
+  let backendEvents = [];
 
   if (supabase && ownerId) {
     try {
@@ -106,9 +129,13 @@ export async function listProfileChangelogEvents(filters = {}) {
         query = query.eq('event_area', area);
       }
 
+      if (rangeStart) {
+        query = query.gte('created_at', rangeStart);
+      }
+
       const { data, error } = await query;
       if (error) throw error;
-      return Array.isArray(data) ? data.map((entry) => normalizeEvent(entry, user)) : [];
+      backendEvents = Array.isArray(data) ? data : [];
     } catch (error) {
       if (!isRelationMissing(error)) {
         console.warn('[profile-changelog-store] Supabase changelog read failed.', error);
@@ -116,9 +143,16 @@ export async function listProfileChangelogEvents(filters = {}) {
     }
   }
 
-  return readLocalEvents()
+  const eventsById = new Map();
+  [...backendEvents, ...readLocalEvents()]
     .map((entry) => normalizeEvent(entry, user))
+    .filter((entry) => !ownerId || !entry.owner_auth_user_id || entry.owner_auth_user_id === ownerId)
+    .forEach((entry) => {
+      eventsById.set(entry.id, entry);
+    });
+
+  return Array.from(eventsById.values())
     .filter((entry) => !area || area === 'all' || entry.event_area === area)
+    .filter((entry) => !rangeStart || String(entry.created_at) >= rangeStart)
     .sort((left, right) => String(right.created_at).localeCompare(String(left.created_at)));
 }
-

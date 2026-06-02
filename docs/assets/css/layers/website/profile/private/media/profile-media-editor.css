@@ -356,12 +356,12 @@ body.profile-media-editor-open{
   border:var(--border-width-hairline) solid transparent;
   border-radius:var(--spacing-none);
   background:transparent;
-  color:var(--text-primary-color);
+  color:var(--ui-dropdown-icon-only-color);
+  -webkit-text-fill-color:var(--ui-dropdown-icon-only-color);
   font:inherit;
-  opacity:0;
   cursor:pointer;
-  z-index:1;
-  color-scheme:light dark;
+  z-index:var(--ui-dropdown-icon-only-z-index);
+  color-scheme:inherit;
 }
 
 .profile-media-editor__select:hover,

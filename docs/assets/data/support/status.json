@@ -1,0 +1,39 @@
+{
+  "platform": {
+    "name": "Neuroartan",
+    "version": "v1.0.0",
+    "build": {
+      "state": "in-development",
+      "label": "In development",
+      "current_phase": "Foundation integration",
+      "phase_position": 1,
+      "phase_count": 4,
+      "phases": [
+        {
+          "id": "foundation-integration",
+          "label": "Foundation integration",
+          "state": "active"
+        },
+        {
+          "id": "model-training",
+          "label": "Model training",
+          "state": "planned"
+        },
+        {
+          "id": "runtime-validation",
+          "label": "Runtime validation",
+          "state": "planned"
+        },
+        {
+          "id": "release-readiness",
+          "label": "Release readiness",
+          "state": "planned"
+        }
+      ]
+    },
+    "copyright": {
+      "holder": "Neuroartan",
+      "start_year": 2026
+    }
+  }
+}

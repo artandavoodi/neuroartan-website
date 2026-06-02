@@ -431,9 +431,8 @@
   width:var(--size-full);
   height:var(--size-full);
   min-height:var(--spacing-none);
-  opacity:0;
   cursor:pointer;
-  z-index:1;
+  z-index:var(--ui-dropdown-icon-only-z-index);
 }
 
 .profile-settings__textarea{

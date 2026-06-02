@@ -1,3 +1,5 @@
+import { refreshAccountProfileState } from '../../system/account/profile/account-profile-state.js';
+
 /* =========================================================
    00. FILE INDEX
    01. MODULE STATE
@@ -12,6 +14,9 @@
 /* =========================================================
    01. MODULE STATE
    ========================================================= */
+
+const HOME_AUTH_VISUAL_HINT_STORAGE_KEY = 'neuroartan.account.authVisualHint';
+let homeAuthHydrationLoading = false;
 
 const HOME_SURFACE_STATE = {
   isBound: false,
@@ -35,6 +40,8 @@ const HOME_SURFACE_STATE = {
   },
   account: {
     signedIn: false,
+    visualSignedInHint: readHomeAuthVisualHint(),
+    authResolved: false,
     user: null,
     profile: null,
     profileComplete: false,
@@ -74,6 +81,37 @@ const HOME_SURFACE_STATE = {
 
 function normalizeString(value) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function readHomeAuthVisualHint() {
+  try {
+    return window.localStorage.getItem(HOME_AUTH_VISUAL_HINT_STORAGE_KEY) === 'signed-in';
+  } catch {
+    return false;
+  }
+}
+
+function writeHomeAuthVisualHint(signedIn) {
+  try {
+    if (signedIn) {
+      window.localStorage.setItem(HOME_AUTH_VISUAL_HINT_STORAGE_KEY, 'signed-in');
+      return;
+    }
+
+    window.localStorage.removeItem(HOME_AUTH_VISUAL_HINT_STORAGE_KEY);
+  } catch {}
+}
+
+function setHomeAuthHydrationLoading(active) {
+  if (homeAuthHydrationLoading === active) return;
+  homeAuthHydrationLoading = active;
+  document.dispatchEvent(new CustomEvent(active ? 'neuroartan:loading-start' : 'neuroartan:loading-stop', {
+    detail: {
+      reason: 'home-auth-hydration',
+      source: 'home-surface-state',
+      blocking: false,
+    },
+  }));
 }
 
 function normalizeThemeValue(value) {
@@ -245,6 +283,8 @@ function cloneHomeSurfaceState() {
     },
     account: {
       signedIn: HOME_SURFACE_STATE.account.signedIn,
+      visualSignedInHint: HOME_SURFACE_STATE.account.visualSignedInHint,
+      authResolved: HOME_SURFACE_STATE.account.authResolved,
       user: HOME_SURFACE_STATE.account.user ? { ...HOME_SURFACE_STATE.account.user } : null,
       profile: HOME_SURFACE_STATE.account.profile ? { ...HOME_SURFACE_STATE.account.profile } : null,
       profileComplete: HOME_SURFACE_STATE.account.profileComplete,
@@ -325,8 +365,11 @@ function syncLocaleState(detail = null) {
 }
 
 function syncSignedOutAccountState() {
+  writeHomeAuthVisualHint(false);
   HOME_SURFACE_STATE.account = {
     signedIn: false,
+    visualSignedInHint: false,
+    authResolved: true,
     user: null,
     profile: null,
     profileComplete: false,
@@ -341,8 +384,14 @@ function syncSignedInAccountState(detail = null) {
     ? false
     : !!(detail?.profileComplete || detail?.profile?.profile_complete || profile?.username);
 
+  if (user) {
+    writeHomeAuthVisualHint(true);
+  }
+
   HOME_SURFACE_STATE.account = {
     signedIn: !!user,
+    visualSignedInHint: !!user || readHomeAuthVisualHint(),
+    authResolved: !!user,
     user,
     profile,
     profileComplete,
@@ -442,12 +491,28 @@ function bindHomeSurfaceStateEvents() {
 
   document.addEventListener('account:profile-state-changed', (event) => {
     syncSignedInAccountState(event?.detail || null);
+    setHomeAuthHydrationLoading(false);
     emitHomeSurfaceState();
   });
 
   document.addEventListener('account:profile-signed-out', () => {
     syncSignedOutAccountState();
+    setHomeAuthHydrationLoading(false);
     emitHomeSurfaceState();
+  });
+
+  window.addEventListener('neuroartan:supabase-ready', () => {
+    void refreshAccountProfileState().catch((error) => {
+      console.error('[home-surface-state] Account profile refresh failed.', error);
+    });
+  });
+
+  ['neuroartan:supabase-error', 'neuroartan:supabase-missing-config'].forEach((eventName) => {
+    window.addEventListener(eventName, () => {
+      syncSignedOutAccountState();
+      setHomeAuthHydrationLoading(false);
+      emitHomeSurfaceState();
+    });
   });
 
   document.addEventListener('neuroartan:home-stage-voice-mode', (event) => {
@@ -497,7 +562,15 @@ function bootHomeSurfaceState() {
   syncSignedInAccountState();
   syncCommunicationState();
   bindHomeSurfaceStateEvents();
+  if (!HOME_SURFACE_STATE.account.authResolved) {
+    setHomeAuthHydrationLoading(true);
+  }
   emitHomeSurfaceState();
+  if (window.neuroartanSupabase) {
+    void refreshAccountProfileState().catch((error) => {
+      console.error('[home-surface-state] Account profile refresh failed.', error);
+    });
+  }
 }
 
 if (document.readyState === 'loading') {

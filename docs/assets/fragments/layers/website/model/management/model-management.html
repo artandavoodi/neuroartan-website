@@ -24,43 +24,6 @@
         <p class="model-management__section-copy" hidden>
           The foundation binds the owner profile, model identity, consent boundary, source substrate, memory, and voice readiness.
         </p>
-        <dl class="model-management__card-grid">
-          <div class="model-management__card">
-            <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/status.svg" alt="">
-              Model status
-            </dt>
-            <dd data-model-status>Foundation pending</dd>
-          </div>
-          <div class="model-management__card">
-            <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/profile/actions/model-profile-link-panel.svg" alt="">
-              Profile link
-            </dt>
-            <dd data-model-profile-link>Profile record pending</dd>
-          </div>
-          <div class="model-management__card">
-            <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="">
-              Readiness
-            </dt>
-            <dd data-model-readiness>Preparing</dd>
-          </div>
-          <div class="model-management__card">
-            <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/security/key.svg" alt="">
-              Birth certificate
-            </dt>
-            <dd data-model-birth-number>Assigned after foundation sync</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section class="model-management__foundation-group" data-model-foundation-group="identity" hidden>
-        <h3 class="model-management__section-title" hidden>Identity</h3>
-        <p class="model-management__section-copy" hidden>
-          The owner binding is fixed. The nickname can be adjusted without changing ownership, route identity, or the one-model policy.
-        </p>
         <div class="model-management__avatar-wrap">
           <div class="model-management__avatar profile-private-hero__avatar" aria-hidden="true">
             <img class="profile-private-hero__avatar-image" data-model-avatar-image alt="" aria-hidden="true" hidden>
@@ -87,6 +50,20 @@
               Model nickname
             </dt>
             <dd data-model-nickname>Not assigned</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/status/status.svg" alt="">
+              Model status
+            </dt>
+            <dd data-model-status>Foundation pending</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/profile/actions/model-profile-link-panel.svg" alt="">
+              Profile link
+            </dt>
+            <dd data-model-profile-link>Profile record pending</dd>
           </div>
           <div class="model-management__card">
             <dt>
@@ -187,13 +164,6 @@
             <dd data-model-updated-at>Update date pending</dd>
           </div>
         </dl>
-      </section>
-
-      <section class="model-management__foundation-group" data-model-foundation-group="consent" hidden>
-        <h3 class="model-management__section-title" hidden>Consent</h3>
-        <p class="model-management__section-copy" hidden>
-          Source, memory, and voice use remain blocked until the owner grants explicit model consent.
-        </p>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -217,13 +187,6 @@
             <dd>Voice training remains inactive until verified</dd>
           </div>
         </dl>
-      </section>
-
-      <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden>
-        <h3 class="model-management__section-title" hidden>Source</h3>
-        <p class="model-management__section-copy" hidden>
-          Internal thoughts and external documents become model source material only through governed ingestion and provenance.
-        </p>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -254,13 +217,6 @@
             <dd>User-authored logic records are stored as owner-defined reasoning material</dd>
           </div>
         </dl>
-      </section>
-
-      <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden>
-        <h3 class="model-management__section-title" hidden>Memory</h3>
-        <p class="model-management__section-copy" hidden>
-          Memory keeps private continuity separate from public expression until the owner approves model context use.
-        </p>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -277,13 +233,6 @@
             <dd>Prepared after source provenance and consent are complete</dd>
           </div>
         </dl>
-      </section>
-
-      <section class="model-management__foundation-group" data-model-foundation-group="voice" hidden>
-        <h3 class="model-management__section-title" hidden>Voice</h3>
-        <p class="model-management__section-copy" hidden>
-          Voice training prepares owner-representative speech with consent, sample provenance, verification, and activation gates.
-        </p>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -308,6 +257,12 @@
           </div>
         </dl>
       </section>
+
+      <section class="model-management__foundation-group" data-model-foundation-group="identity" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="consent" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="voice" hidden></section>
     </article>
 
     <article class="model-management__section" data-model-management-section="model-training" hidden>

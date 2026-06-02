@@ -68,6 +68,13 @@ select{
   text-transform:none;
 }
 
+button{
+  -webkit-appearance:none;
+  appearance:none;
+  border:0;
+  background:transparent;
+}
+
 textarea{
   resize:none;
 }

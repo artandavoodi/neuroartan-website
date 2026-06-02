@@ -29,6 +29,7 @@ import {
    03) CONSTANTS
 ============================================================================= */
 const FEED_POSTS_TABLE = 'feed_posts';
+const PROFILES_TABLE = 'profiles';
 
 const FEED_POST_SELECT_FIELDS = [
   'id',
@@ -96,19 +97,42 @@ function getUserId(user) {
   return normalizeString(user?.id || user?.uid || '');
 }
 
-function mapFeedPost(row = {}, currentUserId = '') {
+function mapFeedPost(row = {}, currentUserId = '', canonicalProfile = null) {
   if (!row || typeof row !== 'object') return null;
-  return buildRenderableFeedPost(row, currentUserId);
+  return buildRenderableFeedPost(row, currentUserId, canonicalProfile);
 }
 
 /* =============================================================================
    04A) PAYLOAD NORMALIZATION
 ============================================================================= */
 
-function buildRenderableFeedPost(row = {}, currentUserId = '') {
+function buildRenderableFeedPost(row = {}, currentUserId = '', canonicalProfile = null) {
   const ownerAuthUserId = normalizeString(row.owner_auth_user_id || '');
-  const displayName = normalizeString(row.author_display_name || row.author_username || 'Neuroartan profile');
-  const username = normalizeUsername(row.author_username || '');
+  const profile = canonicalProfile && typeof canonicalProfile === 'object'
+    ? canonicalProfile
+    : {};
+  const displayName = normalizeString(
+    profile.public_display_name
+    || profile.display_name
+    || row.author_display_name
+    || row.author_username
+    || 'Neuroartan profile'
+  );
+  const username = normalizeUsername(
+    profile.username
+    || profile.username_lower
+    || profile.username_normalized
+    || profile.public_username
+    || row.author_username
+    || ''
+  );
+  const avatar = normalizeString(
+    profile.public_avatar_url
+    || profile.avatar_url
+    || profile.photo_url
+    || row.author_avatar_url
+    || ''
+  );
 
   return {
     id: normalizeString(row.id),
@@ -119,7 +143,7 @@ function buildRenderableFeedPost(row = {}, currentUserId = '') {
     entityType: 'Profile',
     entityLabel: displayName,
     username,
-    avatar: normalizeString(row.author_avatar_url || ''),
+    avatar,
     imageUrl: normalizeString(row.post_image_url || ''),
     image: normalizeString(row.post_image_url || ''),
     postImageUrl: normalizeString(row.post_image_url || ''),
@@ -139,6 +163,29 @@ function buildRenderableFeedPost(row = {}, currentUserId = '') {
     source: 'supabase-feed-post',
     createdAt: row.created_at || '',
   };
+}
+
+async function getCanonicalFeedAuthorProfiles(supabase, rows = []) {
+  const profileIds = [...new Set(
+    rows.map((row) => normalizeString(row?.profile_id || '')).filter(Boolean)
+  )];
+  if (!supabase || !profileIds.length) return new Map();
+
+  const { data, error } = await supabase
+    .from(PROFILES_TABLE)
+    .select('*')
+    .in('id', profileIds);
+
+  if (error) {
+    console.warn('[feed-store] Canonical profile author projection unavailable.', error);
+    return new Map();
+  }
+
+  return new Map(
+    (Array.isArray(data) ? data : [])
+      .map((profile) => [normalizeString(profile.id || ''), profile])
+      .filter(([profileId]) => profileId)
+  );
 }
 
 function buildFeedInsertPayload(profile = {}, user = {}, values = {}) {
@@ -235,7 +282,9 @@ export async function getFeedPostById(feedPostId) {
     throw error;
   }
 
-  return data ? mapFeedPost(data, currentUserId) : null;
+  if (!data) return null;
+  const profileById = await getCanonicalFeedAuthorProfiles(supabase, [data]);
+  return mapFeedPost(data, currentUserId, profileById.get(normalizeString(data.profile_id || '')));
 }
 
 export async function listFeedPosts() {
@@ -268,9 +317,11 @@ export async function listFeedPosts() {
     throw error;
   }
 
-  return Array.isArray(data)
-    ? data.map((row) => mapFeedPost(row, currentUserId)).filter(Boolean)
-    : [];
+  if (!Array.isArray(data)) return [];
+  const profileById = await getCanonicalFeedAuthorProfiles(supabase, data);
+  return data
+    .map((row) => mapFeedPost(row, currentUserId, profileById.get(normalizeString(row.profile_id || ''))))
+    .filter(Boolean);
 }
 
 /* =============================================================================

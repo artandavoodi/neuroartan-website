@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   assistantName: '',
   assistantDescription: '',
   assistantAvatar: '',
+  assistantAvatarStoragePath: '',
   
   // Thought Patterns
   languageStyle: 'balanced',
@@ -44,6 +45,22 @@ const DEFAULT_SETTINGS = {
   riskTolerance: 50
 };
 
+function normalizeOwnedAssistantAvatar(settings = {}) {
+  const nextSettings = {
+    ...DEFAULT_SETTINGS,
+    ...settings
+  };
+  const assistantAvatarStoragePath = String(nextSettings.assistantAvatarStoragePath || '').trim();
+
+  return {
+    ...nextSettings,
+    assistantAvatar: assistantAvatarStoragePath
+      ? String(nextSettings.assistantAvatar || '').trim()
+      : '',
+    assistantAvatarStoragePath
+  };
+}
+
 function loadSettings() {
   try {
     // Load from localStorage first (primary storage)
@@ -52,14 +69,14 @@ function loadSettings() {
       const parsed = JSON.parse(stored);
       
       // Migration: map old field names to new field names
-      const migrated = {
+      const migrated = normalizeOwnedAssistantAvatar({
         ...DEFAULT_SETTINGS,
         ...parsed,
         // Migrate machineName -> assistantName
         assistantName: parsed.assistantName || parsed.machineName || '',
         // Migrate machineDescription -> assistantDescription
         assistantDescription: parsed.assistantDescription || parsed.machineDescription || ''
-      };
+      });
       
       // Clean up old field names
       delete migrated.machineName;
@@ -73,7 +90,7 @@ function loadSettings() {
   } catch (error) {
     console.error('Failed to load personalization settings:', error);
   }
-  return { ...DEFAULT_SETTINGS };
+  return normalizeOwnedAssistantAvatar(DEFAULT_SETTINGS);
 }
 
 async function syncFromSupabase() {
@@ -91,7 +108,7 @@ async function syncFromSupabase() {
     
     if (profile) {
       const currentSettings = loadSettings();
-      const supabaseSettings = {
+      const supabaseSettings = normalizeOwnedAssistantAvatar({
         ...currentSettings,
         assistantName: profile.assistant_name || '',
         assistantDescription: profile.assistant_description || '',
@@ -101,7 +118,7 @@ async function syncFromSupabase() {
         efficiencyPreference: profile.efficiency_preference || 50,
         creativityLevel: profile.creativity_level || 50,
         riskTolerance: profile.risk_tolerance || 50
-      };
+      });
       
       // Sync Supabase settings to localStorage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(supabaseSettings));
@@ -114,10 +131,12 @@ async function syncFromSupabase() {
 
 function saveSettings(settings, options = {}) {
   try {
-    // Save all settings to localStorage immediately (primary storage)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    const ownedSettings = normalizeOwnedAssistantAvatar(settings);
 
-    const syncPromise = syncToSupabase(settings);
+    // Save all settings to localStorage immediately (primary storage)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ownedSettings));
+
+    const syncPromise = syncToSupabase(ownedSettings);
     if (options.awaitRemote === true) return syncPromise;
 
     void syncPromise.catch((error) => {
@@ -134,7 +153,7 @@ function renderAssistantAvatar(settings = {}) {
   const avatarImage = document.querySelector('[data-home-platform-avatar-image]');
   if (!(avatarImage instanceof HTMLImageElement)) return;
 
-  const avatarUrl = String(settings.assistantAvatar || '').trim();
+  const avatarUrl = normalizeOwnedAssistantAvatar(settings).assistantAvatar;
   if (avatarUrl) {
     avatarImage.src = avatarUrl;
     avatarImage.hidden = false;

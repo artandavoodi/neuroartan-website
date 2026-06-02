@@ -228,6 +228,22 @@ const FILTER_CONTEXTS = Object.freeze({
         ]
       }
     ]
+  },
+  modelChangelog: {
+    title: 'Model Changelog',
+    copy: 'Review changes recorded for the active model area.',
+    groups: [
+      {
+        key: 'range',
+        label: 'Range',
+        options: [
+          { value: 'all', label: 'All time' },
+          { value: 'today', label: 'Today' },
+          { value: '7d', label: '7 days' },
+          { value: '30d', label: '30 days' }
+        ]
+      }
+    ]
   }
 });
 
@@ -264,6 +280,10 @@ function normalizeFilters(context, filters = {}) {
       ? 'private'
       : allowed.has(value) ? value : defaults[group.key];
   });
+
+  if (normalizedContext === 'modelChangelog') {
+    defaults.area = String(filters?.area || '').trim() || 'model';
+  }
 
   return defaults;
 }
@@ -362,7 +382,7 @@ function renderOverlay(context = STORE.context) {
     groupsRoot.appendChild(section);
   });
 
-  if (normalizedContext === 'settingsChangelog') {
+  if (normalizedContext === 'settingsChangelog' || normalizedContext === 'modelChangelog') {
     const ledger = document.createElement('section');
     ledger.className = 'profile-filter-overlay__ledger';
     ledger.setAttribute('aria-live', 'polite');

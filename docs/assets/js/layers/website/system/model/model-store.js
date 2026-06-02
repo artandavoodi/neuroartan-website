@@ -28,6 +28,7 @@ import {
   normalizeUsername,
 } from '../account/identity/account-profile-identity.js';
 import { uploadProfileImage } from '../profile/profile-image-storage.js';
+import { recordProfileChangelogEvent } from '../profile/profile-changelog-store.js';
 
 /* =============================================================================
    03) CONSTANTS
@@ -74,13 +75,7 @@ const MODEL_SELECT_FIELDS = [
 ].join(', ');
 
 const MODEL_PUBLIC_IDENTITY_SELECT_FIELDS = [
-  'model_id',
-  'public_display_name',
-  'public_avatar_url',
-  'public_visibility',
-  'public_visibility_state',
-  'public_identity_state',
-  'display_name',
+  '*',
 ].join(', ');
 
 const MODEL_FOUNDATION_TABLES = Object.freeze({
@@ -100,6 +95,30 @@ const MODEL_FOUNDATION_TABLES = Object.freeze({
   impersonationReview: 'model_impersonation_review_state',
   modelIdentityAntiAbuse: 'model_identity_anti_abuse_state',
   restrictionReviewAppeal: 'model_restriction_review_appeal_state',
+});
+
+const MODEL_IDENTITY_CHANGE_FIELDS = Object.freeze({
+  modelNickname: 'Model nickname',
+  modelPurposeDescription: 'Model purpose',
+  privateNotes: 'Private notes',
+});
+
+const MODEL_PERSONALIZATION_CHANGE_FIELDS = Object.freeze({
+  languageStyle: 'Language style',
+  directnessLevel: 'Directness',
+  emotionalTone: 'Emotional tone',
+  responseLength: 'Response length',
+  explanationDepth: 'Explanation depth',
+  memoryRetention: 'Memory retention',
+  continuityDepth: 'Continuity depth',
+  emotionalWeighting: 'Emotional weighting',
+  empathyLevel: 'Empathy level',
+  reflectionFrequency: 'Reflection frequency',
+  reflectionDepth: 'Reflection depth',
+  senseOfHumor: 'Sense of humor',
+  efficiencyPreference: 'Efficiency',
+  creativityLevel: 'Creativity',
+  riskTolerance: 'Risk tolerance',
 });
 
 /* =============================================================================
@@ -161,6 +180,13 @@ export function isSupabaseRelationMissingError(error) {
   const code = normalizeString(error?.code || '').toUpperCase();
   const message = normalizeString(error?.message || '').toLowerCase();
   return code === '42P01' || message.includes('does not exist');
+}
+
+function isSupabaseColumnMissingError(error) {
+  const code = normalizeString(error?.code || '').toUpperCase();
+  const message = normalizeString(error?.message || '').toLowerCase();
+  const details = normalizeString(error?.details || '').toLowerCase();
+  return code === '42703' || message.includes('column') || details.includes('column');
 }
 
 export async function getCurrentSupabaseUser() {
@@ -279,6 +305,42 @@ function resolveModelIdentityDisplayName(values = {}, model = {}) {
   );
 }
 
+function getChangedModelFields(before = {}, after = {}, labels = {}) {
+  return Object.keys(labels).filter((field) => (
+    normalizeString(before?.[field] ?? '') !== normalizeString(after?.[field] ?? '')
+  ));
+}
+
+async function recordChangedModelFields(model = {}, changedFields = [], labels = {}, options = {}) {
+  await Promise.all(changedFields.map((field) => {
+    const label = labels[field];
+    if (!label) return null;
+
+    return recordModelChangelogEvent(model, {
+      area: options.area,
+      action: `${field}_changed`,
+      title: `${label} changed`,
+      detail: `${label} was updated.`,
+      metadata: {
+        changed_field: field,
+        changed_field_label: label,
+      },
+    });
+  }));
+}
+
+async function recordModelChangelogEvent(model = {}, event = {}) {
+  if (!event?.title) return null;
+  return recordProfileChangelogEvent({
+    ...event,
+    profile_id: normalizeString(model.profile_id || ''),
+    metadata: {
+      model_id: normalizeString(model.id || ''),
+      ...(event.metadata || {}),
+    },
+  });
+}
+
 function dispatchModelProjectionUpdated(modelId) {
   if (typeof window === 'undefined') return;
   window.dispatchEvent(new CustomEvent('neuroartan:model-public-registry-invalidated', {
@@ -326,6 +388,7 @@ function buildModelFoundationPrivateIdentityPayload(modelId, values = {}, model 
   const normalizedModelId = normalizeString(modelId);
   return {
     model_id: normalizedModelId,
+    profile_id: normalizeString(model.profile_id || '') || undefined,
     private_identity_state: 'active',
     private_name: resolveModelIdentityDisplayName(values, model),
     private_notes: normalizeString(values.privateNotes || values.private_notes || ''),
@@ -333,6 +396,91 @@ function buildModelFoundationPrivateIdentityPayload(modelId, values = {}, model 
     source_boundary: 'private_foundation_only',
     updated_at: new Date().toISOString(),
   };
+}
+
+async function upsertModelPrivateIdentity(supabase, payload = {}) {
+  const tryUpsert = async (nextPayload) => {
+    const compactPayload = Object.fromEntries(
+      Object.entries(nextPayload).filter(([, value]) => value !== undefined)
+    );
+    return supabase
+      .from(MODEL_FOUNDATION_TABLES.privateIdentities)
+      .upsert(compactPayload, { onConflict: 'model_id' })
+      .select('id')
+      .maybeSingle();
+  };
+
+  const result = await tryUpsert(payload);
+  if (!result.error || !isSupabaseColumnMissingError(result.error)) {
+    return result;
+  }
+
+  const compatibilityPayload = { ...payload };
+  delete compatibilityPayload.profile_id;
+  return tryUpsert(compatibilityPayload);
+}
+
+async function upsertModelPublicIdentityProjection(supabase, payload = {}) {
+  const tryUpsert = async (nextPayload) => {
+    const compactPayload = Object.fromEntries(
+      Object.entries(nextPayload).filter(([, value]) => value !== undefined)
+    );
+    return supabase
+      .from(MODEL_FOUNDATION_TABLES.publicIdentities)
+      .upsert(compactPayload, { onConflict: 'model_id' });
+  };
+
+  const { error } = await tryUpsert(payload);
+
+  if (!error || isSupabaseRelationMissingError(error)) {
+    return error || null;
+  }
+
+  if (!isSupabaseColumnMissingError(error)) {
+    throw error;
+  }
+
+  const canonicalPayload = {
+    model_id: payload.model_id,
+    profile_id: payload.profile_id,
+    public_display_name: payload.public_display_name,
+    public_slug: payload.public_slug,
+    public_description: payload.public_description,
+    public_avatar_url: payload.public_avatar_url,
+    public_visibility: payload.public_visibility,
+    public_identity_state: payload.public_identity_state,
+    updated_at: payload.updated_at,
+  };
+
+  const { error: canonicalError } = await tryUpsert(canonicalPayload);
+
+  if (!canonicalError || isSupabaseRelationMissingError(canonicalError)) {
+    return canonicalError || null;
+  }
+
+  if (!isSupabaseColumnMissingError(canonicalError)) {
+    throw canonicalError;
+  }
+
+  const legacyPayload = {
+    model_id: payload.model_id,
+    profile_id: payload.profile_id,
+    display_name: payload.public_display_name || payload.display_name,
+    public_slug: payload.public_slug,
+    public_description: payload.public_description,
+    public_avatar_url: payload.public_avatar_url,
+    public_visibility_state: payload.public_visibility || payload.public_visibility_state,
+    public_profile_enabled: payload.public_visibility === 'public',
+    updated_at: payload.updated_at,
+  };
+
+  const { error: legacyError } = await tryUpsert(legacyPayload);
+
+  if (legacyError && !isSupabaseRelationMissingError(legacyError)) {
+    throw legacyError;
+  }
+
+  return legacyError || null;
 }
 
 /* =============================================================================
@@ -538,6 +686,8 @@ export async function saveModelPersonalizationPreferences(modelId, preferences =
   const normalizedModelId = normalizeString(modelId);
   if (!supabase || !normalizedModelId) return null;
 
+  const model = await getModelById(normalizedModelId);
+  const previousPreferences = await readModelPersonalizationPreferences(normalizedModelId).catch(() => null);
   const payload = buildModelPersonalizationPreferencesPayload(normalizedModelId, preferences);
 
   const { data, error } = await supabase
@@ -551,7 +701,15 @@ export async function saveModelPersonalizationPreferences(modelId, preferences =
     throw error;
   }
 
-  return mapModelPersonalizationPreferences(data || payload);
+  const savedPreferences = mapModelPersonalizationPreferences(data || payload);
+  const changedFields = getChangedModelFields(previousPreferences || {}, savedPreferences || {}, MODEL_PERSONALIZATION_CHANGE_FIELDS);
+  if (model?.id && changedFields.length) {
+    await recordChangedModelFields(model, changedFields, MODEL_PERSONALIZATION_CHANGE_FIELDS, {
+      area: 'model.personalization.preferences',
+    });
+  }
+
+  return savedPreferences;
 }
 
 export async function readModelFoundationIdentity(modelId) {
@@ -618,13 +776,14 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
   const model = await getModelById(normalizedModelId);
   if (!model) return null;
 
+  const previousIdentity = await readModelFoundationIdentity(normalizedModelId).catch(() => null);
   const payload = buildModelFoundationPrivateIdentityPayload(normalizedModelId, values, model);
   const modelDisplayName = resolveModelIdentityDisplayName(values, model);
   const modelPurposeDescription = normalizeString(
     values.modelPurposeDescription
-    || values.model_purpose_description
-    || model.description
-    || ''
+    ?? values.model_purpose_description
+    ?? model.description
+    ?? ''
   );
 
   const { error: modelError } = await supabase
@@ -638,38 +797,37 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
 
   if (modelError) throw modelError;
 
-  const { error } = await supabase
-    .from(MODEL_FOUNDATION_TABLES.privateIdentities)
-    .upsert(payload, { onConflict: 'model_id' })
-    .select('id')
-    .maybeSingle();
+  const { error } = await upsertModelPrivateIdentity(supabase, payload);
 
   if (error) {
     if (isSupabaseRelationMissingError(error)) return null;
     throw error;
   }
 
-  const { error: publicIdentityError } = await supabase
-    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
-    .upsert({
-      model_id: normalizedModelId,
-      public_display_name: modelDisplayName,
-      display_name: modelDisplayName,
-      public_slug: model.model_slug || model.slug || '',
-      public_description: modelPurposeDescription,
-      public_visibility: model.model_visibility || 'private',
-      public_visibility_state: model.model_visibility || 'private',
-      public_identity_state: model.publication_state === 'published' ? 'published' : 'not_published',
-      public_avatar_url: model.model_image_url || '',
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'model_id' });
-
-  if (publicIdentityError && !isSupabaseRelationMissingError(publicIdentityError)) {
-    throw publicIdentityError;
-  }
+  await upsertModelPublicIdentityProjection(supabase, {
+    model_id: normalizedModelId,
+    profile_id: model.profile_id || undefined,
+    public_display_name: modelDisplayName,
+    display_name: modelDisplayName,
+    public_slug: model.model_slug || model.slug || '',
+    public_description: modelPurposeDescription,
+    public_visibility: model.model_visibility || 'private',
+    public_visibility_state: model.model_visibility || 'private',
+    public_identity_state: model.publication_state === 'published' ? 'published' : 'not_published',
+    public_avatar_url: model.model_image_url || '',
+    updated_at: new Date().toISOString(),
+  });
 
   dispatchModelProjectionUpdated(normalizedModelId);
-  return readModelFoundationIdentity(normalizedModelId);
+  const savedIdentity = await readModelFoundationIdentity(normalizedModelId);
+  const changedFields = getChangedModelFields(previousIdentity || {}, savedIdentity || {}, MODEL_IDENTITY_CHANGE_FIELDS);
+  if (changedFields.length) {
+    await recordChangedModelFields(model, changedFields, MODEL_IDENTITY_CHANGE_FIELDS, {
+      area: 'model.foundation.identity',
+    });
+  }
+
+  return savedIdentity;
 }
 
 export async function saveOwnedCanonicalModelAvatar(file) {
@@ -711,6 +869,12 @@ export async function saveOwnedCanonicalModelAvatar(file) {
     throw publicIdentityError;
   }
 
+  await recordModelChangelogEvent(model, {
+    area: 'model.foundation.identity',
+    action: 'model_avatar_changed',
+    title: 'Model avatar changed',
+    detail: 'Model avatar was updated.',
+  });
   dispatchModelProjectionUpdated(model.id);
   return mapSupabaseModel(data);
 }
@@ -745,6 +909,12 @@ export async function resetOwnedCanonicalModelAvatar() {
     throw publicIdentityError;
   }
 
+  await recordModelChangelogEvent(model, {
+    area: 'model.foundation.identity',
+    action: 'model_avatar_reset',
+    title: 'Model avatar reset',
+    detail: 'Model avatar was reset to the default state.',
+  });
   dispatchModelProjectionUpdated(model.id);
   return mapSupabaseModel(data);
 }

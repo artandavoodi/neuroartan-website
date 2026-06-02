@@ -600,6 +600,10 @@ body[data-auth-state="signed-in"] [data-profile-auth-visible="signed-out"]{
   display:none !important;
 }
 
+body[data-auth-state="resolving"] [data-profile-auth-visible]{
+  display:none !important;
+}
+
 
 .home-platform-shell__nav-icon{
   display:inline-flex;

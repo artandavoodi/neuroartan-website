@@ -135,27 +135,42 @@
       </div>
     </section>
 
-    <section class="home-platform-theme__section" aria-labelledby="more-system">
+    <section class="home-platform-theme__section more-system-information" aria-labelledby="more-system" data-more-system-information>
       <div class="home-platform-theme__section-header" data-home-platform-theme-section-static>
         <h2 class="home-platform-theme__section-title" id="more-system">System Information</h2>
       </div>
 
-      <div class="home-platform-theme__action-list">
+      <div class="more-system-information__identity">
+        <img
+          class="more-system-information__brand-symbol ui-icon-theme-aware"
+          src="/registry/icons/public/assets/core/identity/brand/neuroartan/logo-plain.svg"
+          alt=""
+          aria-hidden="true">
+        <img
+          class="more-system-information__brand-wordmark ui-icon-theme-aware"
+          src="/registry/icons/public/assets/core/identity/brand/neuroartan/logo-typo.svg"
+          alt="Neuroartan">
+        <p class="more-system-information__copyright" data-more-system-copyright>© 2026 Neuroartan. All rights reserved.</p>
+      </div>
+
+      <div class="home-platform-theme__action-list more-system-information__details">
         <div class="home-platform-theme__action-row">
           <div class="home-platform-theme__action-copy">
             <p class="home-platform-theme__action-title">Version</p>
-            <p class="home-platform-theme__action-title">Current platform version</p>
           </div>
-          <span class="home-platform-theme__action-label">v1.0.0</span>
+          <span class="home-platform-theme__action-label" data-more-system-version>v1.0.0</span>
         </div>
 
         <div class="home-platform-theme__action-row">
           <div class="home-platform-theme__action-copy">
             <p class="home-platform-theme__action-title">Build</p>
-            <p class="home-platform-theme__action-title">Build information</p>
           </div>
-          <span class="home-platform-theme__action-label">Stable</span>
+          <span class="home-platform-theme__action-label" data-more-system-build-label>In development</span>
         </div>
+      </div>
+
+      <div class="more-system-information__progress" data-more-system-build-progress>
+        <progress class="more-system-information__progress-meter" max="4" value="1" data-more-system-progress-meter aria-label="Platform build progress"></progress>
       </div>
     </section>
   </div>

@@ -40,6 +40,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   mountedRoot: null,
   mountedModule: null,
   mountedCleanup: null,
+  didRestorePersistedState: false,
 };
 
 /* =============================================================================
@@ -59,6 +60,7 @@ const HOME_PLATFORM_DESTINATIONS = new Set([
 
 const HOME_PLATFORM_CONFIG_URL = '/assets/data/platform/home-platform-shell.json';
 const HOME_PLATFORM_RAIL_STORAGE_KEY = 'neuroartan.home.platformShell.railMode';
+const HOME_PLATFORM_STATE_STORAGE_KEY = 'neuroartan.home.platformShell.state';
 const HOME_PLATFORM_HASH_PREFIX = '#home-platform-';
 const HOME_PLATFORM_MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
 const HOME_PLATFORM_MOBILE_TOUCH_LOCK_MS = 180;
@@ -139,6 +141,69 @@ function getRenderedHomePlatformDestination() {
 function isHomePlatformMobileView() {
   return HOME_PLATFORM_MOBILE_QUERY.matches;
 }
+
+function normalizeHomePlatformShellStorageState(state = {}) {
+  const destination = normalizeString(state.destination);
+
+  return {
+    isOpen: state.isOpen === true,
+    destination: HOME_PLATFORM_DESTINATIONS.has(destination) ? destination : 'home',
+    subdestination: normalizeString(state.subdestination),
+    mobileStackLevel: normalizeHomePlatformMobileStackLevel(state.mobileStackLevel),
+  };
+}
+
+function readHomePlatformShellStorageState() {
+  try {
+    return normalizeHomePlatformShellStorageState(
+      JSON.parse(window.localStorage.getItem(HOME_PLATFORM_STATE_STORAGE_KEY) || '{}')
+    );
+  } catch {
+    return normalizeHomePlatformShellStorageState();
+  }
+}
+
+function writeHomePlatformShellStorageState(state = {}) {
+  try {
+    window.localStorage.setItem(
+      HOME_PLATFORM_STATE_STORAGE_KEY,
+      JSON.stringify(normalizeHomePlatformShellStorageState(state))
+    );
+  } catch {}
+}
+
+function persistHomePlatformShellStorageState(overrides = {}) {
+  const root = getHomePlatformShellRoot();
+  const current = readHomePlatformShellStorageState();
+
+  writeHomePlatformShellStorageState({
+    ...current,
+    isOpen: root ? !root.hidden : current.isOpen,
+    destination: HOME_PLATFORM_SHELL_STATE.activeDestination,
+    subdestination: HOME_PLATFORM_SHELL_STATE.activeSubdestination,
+    mobileStackLevel: HOME_PLATFORM_SHELL_STATE.mobileStackLevel,
+    ...overrides,
+  });
+}
+
+function clearHomePlatformShellStorageState() {
+  try {
+    window.localStorage.removeItem(HOME_PLATFORM_STATE_STORAGE_KEY);
+  } catch {}
+}
+
+function clearHomePlatformShellHash() {
+  if (!window.location.hash.startsWith(HOME_PLATFORM_HASH_PREFIX)) {
+    return;
+  }
+
+  window.history.replaceState(
+    window.history.state,
+    '',
+    `${window.location.pathname}${window.location.search}`
+  );
+}
+
 /* =============================================================================
 08) MOBILE STACK HELPERS
 ============================================================================= */
@@ -203,6 +268,10 @@ function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobi
   }
 
   syncHomePlatformBackTrigger(normalized);
+
+  if (root && !root.hidden) {
+    persistHomePlatformShellStorageState();
+  }
 }
 
 function shouldShowHomePlatformDesktopBack() {
@@ -355,15 +424,25 @@ function hasSignedInAccount() {
   return !!HOME_PLATFORM_SHELL_STATE.snapshot?.account?.signedIn;
 }
 
+function resolveHomePlatformShellAuthState() {
+  const account = HOME_PLATFORM_SHELL_STATE.snapshot?.account || {};
+
+  if (account.authResolved === true) {
+    return account.signedIn ? 'signed-in' : 'signed-out';
+  }
+
+  return account.visualSignedInHint ? 'signed-in' : 'resolving';
+}
+
 function syncHomePlatformShellAuthState() {
   const shellRoot = getHomePlatformShellRoot();
   if (!shellRoot) return;
 
-  const signedIn = hasSignedInAccount();
-  shellRoot.setAttribute('data-home-platform-shell-auth-state', signedIn ? 'signed-in' : 'signed-out');
+  const authState = resolveHomePlatformShellAuthState();
+  shellRoot.setAttribute('data-home-platform-shell-auth-state', authState);
 
   // Set global auth state on body for global auth visibility system
-  document.body.setAttribute('data-auth-state', signedIn ? 'signed-in' : 'signed-out');
+  document.body.setAttribute('data-auth-state', authState);
 }
 
 function hasCompletedProfile() {
@@ -1181,6 +1260,11 @@ async function setHomePlatformDestination(destination, subdestination = '') {
   renderHomePlatformShellSubnav(destination, nextSubdestination);
   await renderHomePlatformShellContent(destination, nextSubdestination);
 
+  const root = getHomePlatformShellRoot();
+  if (root && !root.hidden) {
+    persistHomePlatformShellStorageState();
+  }
+
   document.dispatchEvent(new CustomEvent('home:platform-shell-destination-changed', {
     detail: {
       destination,
@@ -1214,11 +1298,35 @@ async function routeHomePlatformHash(hashValue = window.location.hash) {
 
   const root = getHomePlatformShellRoot();
   if (root?.hidden) {
-    openHomePlatformShell(resolvedRoute.destination);
+    openHomePlatformShell(
+      resolvedRoute.destination,
+      resolvedRoute.subdestination,
+      { mobileStackLevel: isHomePlatformMobileView() ? 'content' : 'root' }
+    );
   }
 
   await setHomePlatformDestination(resolvedRoute.destination, resolvedRoute.subdestination);
   return true;
+}
+
+async function restoreHomePlatformShellStorageState() {
+  if (HOME_PLATFORM_SHELL_STATE.didRestorePersistedState) {
+    return false;
+  }
+
+  HOME_PLATFORM_SHELL_STATE.didRestorePersistedState = true;
+
+  const storedState = readHomePlatformShellStorageState();
+  if (storedState.isOpen) {
+    openHomePlatformShell(
+      storedState.destination,
+      storedState.subdestination,
+      { mobileStackLevel: storedState.mobileStackLevel }
+    );
+    return true;
+  }
+
+  return routeHomePlatformHash();
 }
 
 /* =============================================================================
@@ -1228,7 +1336,11 @@ function closeConflictingHomeChrome() {
   getHomePlatformShellChromeRoots().forEach(hideRoot);
 }
 
-function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDestination) {
+function openHomePlatformShell(
+  destination = HOME_PLATFORM_SHELL_STATE.activeDestination,
+  subdestination = '',
+  { mobileStackLevel = 'root' } = {}
+) {
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
@@ -1239,6 +1351,12 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   root.hidden = false;
   root.setAttribute('aria-hidden', 'false');
   document.body.classList.add('home-platform-shell-open');
+  writeHomePlatformShellStorageState({
+    isOpen: true,
+    destination,
+    subdestination,
+    mobileStackLevel,
+  });
 
   if (isHomePlatformMobileView()) {
     HOME_PLATFORM_SHELL_STATE.railMode = 'expanded';
@@ -1252,14 +1370,23 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
 
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
 
-  void setHomePlatformDestination(destination).then(() => {
+  void setHomePlatformDestination(destination, subdestination).then(() => {
     if (HOME_PLATFORM_SHELL_STATE.shellSession !== shellSession || root.hidden) {
       return;
     }
 
-    if (isHomePlatformMobileView() && HOME_PLATFORM_SHELL_STATE.mobileAwaitingSelection) {
-      syncHomePlatformShellNav('');
+    if (isHomePlatformMobileView()) {
+      const restoredMobileStackLevel = normalizeHomePlatformMobileStackLevel(mobileStackLevel);
+      HOME_PLATFORM_SHELL_STATE.mobileAwaitingSelection = restoredMobileStackLevel === 'root';
+      HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection = restoredMobileStackLevel === 'subnav';
+      syncHomePlatformMobileStackLevel(restoredMobileStackLevel);
+
+      if (HOME_PLATFORM_SHELL_STATE.mobileAwaitingSelection) {
+        syncHomePlatformShellNav('');
+      }
     }
+
+    persistHomePlatformShellStorageState();
 
     document.dispatchEvent(new CustomEvent('home:platform-shell-opened', {
       detail: {
@@ -1270,7 +1397,7 @@ function openHomePlatformShell(destination = HOME_PLATFORM_SHELL_STATE.activeDes
   });
 }
 
-function closeHomePlatformShell() {
+function closeHomePlatformShell({ clearPersistedState = false } = {}) {
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
@@ -1285,6 +1412,10 @@ function closeHomePlatformShell() {
   HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection = false;
   resetHomePlatformMobileStackLevel();
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
+  if (clearPersistedState) {
+    clearHomePlatformShellStorageState();
+    clearHomePlatformShellHash();
+  }
   document.dispatchEvent(new CustomEvent('neuroartan:home-topbar-reset-triggers'));
   document.dispatchEvent(new CustomEvent('home:platform-shell-closed'));
 }
@@ -1303,7 +1434,7 @@ function toggleHomePlatformShell(destination = 'home') {
     return;
   }
 
-  closeHomePlatformShell();
+  closeHomePlatformShell({ clearPersistedState: true });
 }
 
 /* =============================================================================
@@ -1464,7 +1595,7 @@ function bindHomePlatformShellEvents() {
     const closeTrigger = eventTarget.closest('[data-home-platform-shell-close]');
     if (closeTrigger) {
       event.preventDefault();
-      closeHomePlatformShell();
+      closeHomePlatformShell({ clearPersistedState: true });
       return;
     }
 
@@ -1536,16 +1667,13 @@ function bindHomePlatformShellEvents() {
     if (event.key !== 'Escape') return;
     const root = getHomePlatformShellRoot();
     if (!root || root.hidden) return;
-    closeHomePlatformShell();
+    closeHomePlatformShell({ clearPersistedState: true });
   });
 
   document.addEventListener('home:platform-shell-open-request', (event) => {
     const destination = event?.detail?.destination || 'home';
     const subdestination = event?.detail?.subdestination || '';
-    openHomePlatformShell(destination);
-    if (subdestination) {
-      void setHomePlatformDestination(destination, subdestination);
-    }
+    openHomePlatformShell(destination, subdestination);
   });
 
   document.addEventListener('home:platform-shell-close-request', () => {
@@ -1580,7 +1708,7 @@ function bindHomePlatformShellStaticControls() {
     closeTrigger.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      closeHomePlatformShell();
+      closeHomePlatformShell({ clearPersistedState: true });
     });
   }
 
@@ -1633,7 +1761,11 @@ function bootHomePlatformShell() {
     },
   }));
 
-  void ensureHomePlatformConfig().then(() => {
+  void ensureHomePlatformConfig().then(async () => {
+    if (await restoreHomePlatformShellStorageState()) {
+      return;
+    }
+
     syncHomePlatformShellNav(HOME_PLATFORM_SHELL_STATE.activeDestination);
     renderHomePlatformShellSubnav(
       HOME_PLATFORM_SHELL_STATE.activeDestination,

@@ -967,6 +967,9 @@ function setModelIdentityEditorOpen(open) {
   editor.hidden = !open;
   editor.setAttribute('aria-hidden', open ? 'false' : 'true');
   document.body?.classList.toggle('model-management-identity-editor-open', open);
+  if (!open) {
+    setModelIdentityEditorStatus('', 'idle');
+  }
 
   if (!open) return;
 
@@ -981,6 +984,41 @@ function setModelIdentityEditorOpen(open) {
   const nickname = editor.querySelector('[data-model-identity-editor-field="modelNickname"]');
   if (nickname instanceof HTMLInputElement) nickname.focus();
 }
+
+function setModelIdentityEditorStatus(message = '', state = 'idle') {
+  const editor = document.querySelector('[data-model-identity-editor]');
+  if (!(editor instanceof HTMLElement)) return;
+
+  const status = editor.querySelector('[data-model-identity-editor-status]');
+  if (status instanceof HTMLElement) {
+    status.textContent = message;
+    status.dataset.modelIdentityEditorState = state;
+  }
+}
+
+function setModelIdentityEditorSaving(saving) {
+  const editor = document.querySelector('[data-model-identity-editor]');
+  if (!(editor instanceof HTMLElement)) return;
+
+  editor.querySelectorAll('button, input, textarea').forEach((control) => {
+    if (!(control instanceof HTMLButtonElement || control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)) return;
+    if (control.matches('[data-model-identity-editor-close]')) {
+      control.disabled = saving === true;
+      return;
+    }
+    control.disabled = saving === true;
+  });
+}
+
+function formatModelIdentitySaveError(error) {
+  const message = String(error?.message || error?.details || error?.code || '').trim();
+  if (!message) {
+    return 'Model identity could not be saved. Check the model identity Supabase tables and policies.';
+  }
+
+  return `Model identity could not be saved: ${message}`;
+}
+
 
 function handleModelIdentityEditorRequest() {
   setModelIdentityEditorOpen(true);
@@ -997,6 +1035,8 @@ async function handleModelIdentityEditorSubmit(event) {
   if (!(form instanceof HTMLFormElement)) return;
 
   event.preventDefault();
+  setModelIdentityEditorSaving(true);
+  setModelIdentityEditorStatus('Saving model identity...', 'saving');
   const nickname = form.querySelector('[data-model-identity-editor-field="modelNickname"]');
   const purposeDescription = form.querySelector('[data-model-identity-editor-field="modelPurposeDescription"]');
   const privateNotes = form.querySelector('[data-model-identity-editor-field="privateNotes"]');
@@ -1012,22 +1052,31 @@ async function handleModelIdentityEditorSubmit(event) {
   });
 
   try {
-    const model = await getOwnedCanonicalModel();
-    if (model?.id) {
-      const savedIdentity = await saveModelFoundationIdentity(model.id, {
-        ...modelFoundationIdentity,
-        ...nextIdentity
-      });
-      if (savedIdentity) {
-        updateModelFoundationIdentity(savedIdentity, {
-          source: 'model-identity-editor',
-          sync: false
-        });
-      }
+    const model = await ensureOwnedCanonicalModel();
+    if (!model?.id) {
+      throw new Error('CANONICAL_MODEL_REQUIRED');
     }
-    setModelIdentityEditorOpen(false);
+
+    const savedIdentity = await saveModelFoundationIdentity(model.id, {
+      ...modelFoundationIdentity,
+      ...nextIdentity
+    });
+
+    if (!savedIdentity) {
+      throw new Error('MODEL_IDENTITY_SAVE_UNCONFIRMED');
+    }
+
+    updateModelFoundationIdentity(savedIdentity, {
+      source: 'model-identity-editor',
+      sync: false
+    });
+    modelFoundationIdentityBackendLoaded = true;
+    setModelIdentityEditorStatus('Model identity saved.', 'success');
   } catch (error) {
     console.warn('[Neuroartan][Model] Foundation identity save failed.', error);
+    setModelIdentityEditorStatus(formatModelIdentitySaveError(error), 'error');
+  } finally {
+    setModelIdentityEditorSaving(false);
   }
 }
 

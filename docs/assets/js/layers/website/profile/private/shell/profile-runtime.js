@@ -38,6 +38,9 @@ import {
 import {
   resolveApprovedProfileVerification
 } from '../../../system/profile/profile-verification.js';
+import {
+  refreshAccountProfileState
+} from '../../../system/account/profile/account-profile-state.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -900,6 +903,18 @@ function bindProfileStateEvents() {
     if (!shouldApplyPublicState(detail)) return;
     refreshRuntimeState(detail);
   });
+
+  const refreshPrivateAccountState = () => {
+    if (!shouldApplyPrivateState()) return;
+    void refreshAccountProfileState().catch((error) => {
+      console.error('[profile-runtime] Account profile refresh failed.', error);
+    });
+  };
+
+  window.addEventListener('neuroartan:supabase-ready', refreshPrivateAccountState);
+  if (window.neuroartanSupabase) {
+    refreshPrivateAccountState();
+  }
 }
 
 function bindProfileMediaDisplayResolver() {

@@ -208,6 +208,10 @@ function constrainStateToViewer(state, runtimeState = getProfileRuntimeState()) 
     return state;
   }
 
+  if (runtimeState.authResolved !== true) {
+    return state;
+  }
+
   const constrainedModelState = constrainModelNavigationForViewer(
     state.section,
     state.modelPane,

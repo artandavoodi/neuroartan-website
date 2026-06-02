@@ -226,10 +226,10 @@
   border:var(--border-width-hairline) solid transparent;
   border-radius:var(--spacing-none);
   background:transparent;
-  color:var(--text-primary-color);
-  opacity:0;
+  color:var(--ui-dropdown-icon-only-color);
+  -webkit-text-fill-color:var(--ui-dropdown-icon-only-color);
   cursor:pointer;
-  z-index:1;
+  z-index:var(--ui-dropdown-icon-only-z-index);
 }
 
 .profile-thought-composer__select:hover,

@@ -32,16 +32,10 @@
   let mountEventsBound = false;
   const activeReasons = new Set();
   const reasonTimers = new Map();
-  let showTimer = null;
   let visible = false;
-  let visibleSince = 0;
-  let hideTimer = null;
   let initialLoadBound = false;
   let introObserver = null;
 
-  const SHOW_DELAY_MS = 180;
-  const MIN_VISIBLE_MS = 180;
-  const FINAL_PAINT_SETTLE_MS = 80;
   const DEFAULT_REASON_TIMEOUT_MS = 4500;
   const INITIAL_LOAD_TIMEOUT_MS = 6000;
   const INITIAL_LOAD_SETTLE_TIMEOUT_MS = 4500;
@@ -84,7 +78,6 @@
     if (!overlay) return;
 
     visible = state;
-    visibleSince = state ? Date.now() : 0;
     overlay.classList.toggle('is-active', state);
     overlay.setAttribute('aria-hidden', state ? 'false' : 'true');
 
@@ -100,18 +93,6 @@
   /* =============================================================================
      05) TIMER HELPERS
   ============================================================================= */
-  const clearShowTimer = () => {
-    if (!showTimer) return;
-    window.clearTimeout(showTimer);
-    showTimer = null;
-  };
-
-  const clearHideTimer = () => {
-    if (!hideTimer) return;
-    window.clearTimeout(hideTimer);
-    hideTimer = null;
-  };
-
   const clearReasonTimer = (reason) => {
     const normalizedReason = normalizeReason(reason);
     const timer = reasonTimers.get(normalizedReason);
@@ -158,23 +139,13 @@
      06) OVERLAY CONTROL
   ============================================================================= */
   const hideAfterSynchronizedPaint = () => {
-    const elapsed = visible ? Date.now() - visibleSince : 0;
-    const remainingVisibleTime = Math.max(0, MIN_VISIBLE_MS - elapsed);
-
-    clearHideTimer();
-    hideTimer = window.setTimeout(() => {
-      hideTimer = null;
-
+    window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          window.setTimeout(() => {
-            if (activeReasons.size === 0 && visible) {
-              setVisible(false);
-            }
-          }, FINAL_PAINT_SETTLE_MS);
-        });
+        if (activeReasons.size === 0 && visible) {
+          setVisible(false);
+        }
       });
-    }, remainingVisibleTime);
+    });
   };
 
   const updateVisibility = () => {
@@ -184,11 +155,7 @@
     const introActive = isLogoIntroActive();
 
     if (shouldShow) {
-      clearHideTimer();
-
       if (introActive) {
-        clearShowTimer();
-
         if (visible) {
           setVisible(false);
         }
@@ -197,18 +164,9 @@
       }
 
       if (visible) return;
-      if (showTimer) return;
-
-      showTimer = window.setTimeout(() => {
-        showTimer = null;
-        if (activeReasons.size > 0 && !isLogoIntroActive()) {
-          setVisible(true);
-        }
-      }, SHOW_DELAY_MS);
+      setVisible(true);
       return;
     }
-
-    clearShowTimer();
 
     if (visible) {
       hideAfterSynchronizedPaint();
@@ -252,8 +210,6 @@
   const clear = () => {
     activeReasons.clear();
     clearReasonTimers();
-    clearShowTimer();
-    clearHideTimer();
 
     if (visible) {
       setVisible(false);
@@ -349,10 +305,7 @@
       overlay = getOverlayNode();
       if (!overlay) return;
 
-      clearShowTimer();
-      clearHideTimer();
       visible = overlay.classList.contains('is-active');
-      visibleSince = visible ? Date.now() : 0;
       overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
     });
 
@@ -389,7 +342,6 @@
     if (!overlay) return;
 
     visible = overlay.classList.contains('is-active');
-    visibleSince = visible ? Date.now() : 0;
     overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
 
     bindInitialLoad();

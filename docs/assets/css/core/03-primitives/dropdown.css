@@ -29,10 +29,15 @@
   --ui-dropdown-font-size:var(--control-font-size);
   --ui-dropdown-font-weight:var(--control-font-weight);
   --ui-dropdown-line-height:var(--control-line-height);
-  --ui-dropdown-icon-size:16px;
+  --ui-dropdown-icon-size:var(--icon-size-sm);
   --ui-dropdown-icon-gap:var(--spacing-sm);
   --ui-dropdown-transition:var(--interaction-transition-control);
   --ui-dropdown-icon-filter:var(--icon-image-filter);
+  --ui-dropdown-option-bg:var(--bg-color);
+  --ui-dropdown-option-color:var(--text-color);
+  --ui-dropdown-icon-only-color:transparent;
+  --ui-dropdown-icon-only-opacity:var(--state-opacity-idle);
+  --ui-dropdown-icon-only-z-index:var(--z-base);
   --ui-inline-dropdown-gap:var(--spacing-sm);
   --ui-inline-dropdown-label-size:var(--control-font-size);
   --ui-inline-dropdown-label-weight:var(--control-font-weight);
@@ -59,6 +64,7 @@
   cursor:var(--interactive-cursor);
   transition:var(--ui-dropdown-transition);
   position:relative;
+  color-scheme:inherit;
 }
 
 /* =============================================================================
@@ -74,6 +80,13 @@
 
 .ui-dropdown:focus-visible{
   box-shadow:none;
+}
+
+.ui-dropdown option,
+.ui-dropdown optgroup{
+  background:var(--ui-dropdown-option-bg);
+  color:var(--ui-dropdown-option-color);
+  -webkit-text-fill-color:var(--ui-dropdown-option-color);
 }
 
 .ui-inline-dropdown,
@@ -126,9 +139,23 @@
   border-color:transparent;
   border-radius:0;
   background:transparent;
-  opacity:0;
+  color:var(--ui-dropdown-icon-only-color);
+  -webkit-text-fill-color:var(--ui-dropdown-icon-only-color);
+  opacity:var(--ui-dropdown-icon-only-opacity);
   cursor:var(--interactive-cursor);
-  z-index:1;
+  z-index:var(--ui-dropdown-icon-only-z-index);
+}
+
+.ui-dropdown--icon-only:hover,
+.ui-dropdown--icon-only:focus-visible{
+  color:var(--ui-dropdown-icon-only-color);
+  -webkit-text-fill-color:var(--ui-dropdown-icon-only-color);
+}
+
+.ui-dropdown--icon-only option,
+.ui-dropdown--icon-only optgroup{
+  color:var(--ui-dropdown-option-color);
+  -webkit-text-fill-color:var(--ui-dropdown-option-color);
 }
 
 /* =============================================================================

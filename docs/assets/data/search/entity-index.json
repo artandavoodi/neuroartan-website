@@ -208,19 +208,6 @@
       ]
     },
     {
-      "id": "continuity_models",
-      "label": "Continuity Models",
-      "type": "profiles",
-      "path": "/pages/profiles/index.html",
-      "keywords": [
-        "profiles",
-        "continuity models",
-        "public routes",
-        "identity",
-        "model search"
-      ]
-    },
-    {
       "id": "leadership",
       "label": "Leadership",
       "type": "institutional",

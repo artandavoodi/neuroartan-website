@@ -85,8 +85,7 @@ const FILTER_CONTEXTS = Object.freeze({
         label: 'Year',
         options: [
           { value: 'all', label: 'Any' },
-          { value: '2026', label: '2026' },
-          { value: '2025', label: '2025' }
+          { value: '2026', label: '2026' }
         ]
       },
       {
@@ -126,8 +125,7 @@ const FILTER_CONTEXTS = Object.freeze({
         label: 'Year',
         options: [
           { value: 'all', label: 'Any' },
-          { value: '2026', label: '2026' },
-          { value: '2025', label: '2025' }
+          { value: '2026', label: '2026' }
         ]
       },
       {
@@ -142,25 +140,43 @@ const FILTER_CONTEXTS = Object.freeze({
   },
   models: {
     title: 'Model Filters',
-    copy: 'Refine owned and saved model records by state, scope, and year.',
+    copy: 'Refine owned and saved model records by trust, state, scope, expertise, and year.',
     groups: [
+      {
+        key: 'trust',
+        label: 'Trust',
+        options: [
+          { value: 'all', label: 'Any' },
+          { value: 'verified', label: 'Verified' },
+          { value: 'not-verified', label: 'Not Verified' }
+        ]
+      },
       {
         key: 'state',
         label: 'State',
         options: [
-          { value: 'all', label: 'All' },
+          { value: 'all', label: 'Any' },
           { value: 'ready', label: 'Ready' },
-          { value: 'training', label: 'Training' },
-          { value: 'draft', label: 'Draft' }
+          { value: 'training', label: 'Training' }
         ]
       },
       {
         key: 'scope',
         label: 'Scope',
         options: [
-          { value: 'all', label: 'All' },
-          { value: 'owned', label: 'Owned' },
-          { value: 'saved', label: 'Saved' }
+          { value: 'all', label: 'Any' },
+          { value: 'saved', label: 'Saved' },
+          { value: 'hired', label: 'Hired' },
+          { value: 'deployed', label: 'Deployed' }
+        ]
+      },
+      {
+        key: 'expertise',
+        label: 'Expertise',
+        options: [
+          { value: 'all', label: 'Any' },
+          { value: 'personal', label: 'Personal' },
+          { value: 'expert', label: 'Expert' }
         ]
       },
       {
@@ -168,8 +184,7 @@ const FILTER_CONTEXTS = Object.freeze({
         label: 'Year',
         options: [
           { value: 'all', label: 'Any' },
-          { value: '2026', label: '2026' },
-          { value: '2025', label: '2025' }
+          { value: '2026', label: '2026' }
         ]
       }
     ]
@@ -345,11 +360,9 @@ function renderOverlay(context = STORE.context) {
   const state = getProfileFilterState(normalizedContext);
   const groupsRoot = root.querySelector('[data-profile-filter-groups]');
   const title = root.querySelector('[data-profile-filter-title]');
-  const copy = root.querySelector('[data-profile-filter-copy]');
 
   root.dataset.profileFilterContext = normalizedContext;
   if (title instanceof HTMLElement) title.textContent = definition.title;
-  if (copy instanceof HTMLElement) copy.textContent = definition.copy;
   if (!(groupsRoot instanceof HTMLElement)) return;
 
   clearNode(groupsRoot);
@@ -366,16 +379,39 @@ function renderOverlay(context = STORE.context) {
     const options = document.createElement('div');
     options.className = 'profile-filter-overlay__options';
 
-    group.options.forEach((option) => {
-      const button = document.createElement('button');
-      button.className = 'profile-filter-overlay__chip';
-      button.type = 'button';
-      button.dataset.profileFilterOption = group.key;
-      button.dataset.profileFilterValue = option.value;
-      button.setAttribute('aria-pressed', state.filters[group.key] === option.value ? 'true' : 'false');
-      button.textContent = option.label;
-      options.appendChild(button);
-    });
+    if (group.key === 'year') {
+      const select = document.createElement('select');
+      select.className = 'profile-filter-overlay__select';
+      select.dataset.profileFilterOption = group.key;
+      select.setAttribute('aria-label', group.label);
+
+      group.options.forEach((option) => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.label;
+        if (state.filters[group.key] === option.value) {
+          optionElement.selected = true;
+        }
+        select.appendChild(optionElement);
+      });
+
+      select.addEventListener('change', () => {
+        updateFilter(normalizedContext, group.key, select.value);
+      });
+
+      options.appendChild(select);
+    } else {
+      group.options.forEach((option) => {
+        const button = document.createElement('button');
+        button.className = 'profile-filter-overlay__chip';
+        button.type = 'button';
+        button.dataset.profileFilterOption = group.key;
+        button.dataset.profileFilterValue = option.value;
+        button.setAttribute('aria-pressed', state.filters[group.key] === option.value ? 'true' : 'false');
+        button.textContent = option.label;
+        options.appendChild(button);
+      });
+    }
 
     section.appendChild(label);
     section.appendChild(options);

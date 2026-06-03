@@ -87,28 +87,33 @@
   top:50%;
   right:calc(100% + var(--spacing-sm));
   z-index:var(--z-raised);
-  transform:translateY(-50%);
+  transform:translateY(-50%) translateX(var(--spacing-xs));
   width:max-content;
-  max-width:calc(12rem * var(--accessibility-density-scale));
-  padding:var(--spacing-xs) var(--spacing-sm);
-  border:var(--border-width-hairline) solid var(--border-color);
-  border-radius:var(--control-radius-pill);
-  background:var(--panel-surface-solid-unified);
-  color:var(--text-primary-color);
-  box-shadow:var(--shadow-soft);
-  font-size:var(--profile-right-toolbar-tooltip-size);
-  font-weight:var(--profile-right-toolbar-tooltip-weight);
-  line-height:var(--profile-right-toolbar-tooltip-line-height);
-  letter-spacing:var(--profile-right-toolbar-tooltip-tracking);
+  padding:calc(4px * var(--accessibility-density-scale)) var(--spacing-xs);
+  border:0;
+  border-radius:var(--control-radius-composer);
+  background-color:var(--hover-overlay-bg);
+  color:var(--hover-overlay-text);
+  box-shadow:0 calc(2px * var(--accessibility-density-scale)) calc(8px * var(--accessibility-density-scale)) var(--hover-overlay-shadow);
+  font-size:var(--home-search-shell-result-tooltip-size);
+  font-weight:var(--home-search-shell-result-tooltip-weight);
+  line-height:var(--home-search-shell-result-tooltip-line-height);
+  letter-spacing:var(--home-search-shell-result-tooltip-tracking);
   opacity:0;
+  visibility:hidden;
   pointer-events:none;
   white-space:nowrap;
-  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
 }
 
 .profile-right-toolbar__nav-item:hover::after,
 .profile-right-toolbar__nav-item:focus-visible::after{
+  transform:translateY(-50%) translateX(0);
   opacity:1;
+  visibility:visible;
 }
 
 .profile-right-toolbar__rail-toggle:hover,

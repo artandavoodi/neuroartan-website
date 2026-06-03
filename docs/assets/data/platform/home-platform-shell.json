@@ -110,20 +110,11 @@
       "subdestinations": [
         {
           "id": "overview",
-          "label": "Overview",
-          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-overview.svg",
+          "label": "Account Control",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-account-control.svg",
           "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/overview.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/overview.css",
           "module": "/assets/js/layers/website/home/platform-menu/profile/overview.js"
-        },
-        {
-          "id": "account-control",
-          "label": "Account Control",
-          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/profile/platform-menue-profile-account-control.svg",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/profile/account-control.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/profile/account-control.css",
-          "module": "/assets/js/layers/website/home/platform-menu/profile/account-control.js",
-          "auth_visible": "signed-in"
         },
         {
           "id": "subscription",

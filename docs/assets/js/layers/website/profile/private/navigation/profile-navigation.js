@@ -191,7 +191,7 @@ function constrainStateToRoute(state) {
       return createDefaultState();
     }
 
-    if (state.section === 'settings' && !['identity', 'route', 'privacy'].includes(state.settingsPane)) {
+    if (state.section === 'settings' && !['identity', 'route', 'privacy', 'password', 'verification'].includes(state.settingsPane)) {
       return createDefaultState();
     }
 

@@ -15,6 +15,14 @@
   height:var(--spacing-3xl);
 }
 
+.home-platform-destination--profile-overview .home-platform-theme__action-row .home-platform-theme__action-label{
+  color:var(--text-primary-color) !important;
+  font-size:var(--headline-5-size) !important;
+  font-weight:var(--headline-5-weight) !important;
+  line-height:var(--headline-5-line-height) !important;
+  opacity:1 !important;
+}
+
 .home-platform-destination--profile-overview .home-platform-theme__action-list:first-child{
   flex-direction:row;
   align-items:center;

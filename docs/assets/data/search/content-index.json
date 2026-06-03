@@ -234,13 +234,6 @@
       "keywords": ["about", "neuroartan", "company", "product direction"]
     },
     {
-      "id": "profiles",
-      "title": "Continuity Models",
-      "path": "/pages/profiles/index.html",
-      "scope": "profiles",
-      "keywords": ["profiles", "continuity models", "public routes", "identity", "searchable models"]
-    },
-    {
       "id": "leadership",
       "title": "Leadership",
       "path": "/pages/company/leadership/index.html",

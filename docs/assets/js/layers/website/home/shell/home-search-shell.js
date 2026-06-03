@@ -52,10 +52,12 @@ const HOME_SEARCH_SHELL_STATE = {
   filtersOpen: false,
   filters: {
     type: 'all',
-    area: 'all',
-    action: 'all',
-    trust: 'all',
     year: 'all',
+    modelTrust: 'all',
+    modelState: 'all',
+    modelScope: 'all',
+    modelExpertise: 'all',
+    modelYear: 'all',
   },
   dataReady: false,
   loadingPromise: null,
@@ -65,10 +67,12 @@ const HOME_SEARCH_SHELL_STATE = {
 
 const HOME_SEARCH_DEFAULT_FILTERS = Object.freeze({
   type: 'all',
-  area: 'all',
-  action: 'all',
-  trust: 'all',
   year: 'all',
+  modelTrust: 'all',
+  modelState: 'all',
+  modelScope: 'all',
+  modelExpertise: 'all',
+  modelYear: 'all',
 });
 
 const HOME_SEARCH_SHELL_SCOPES = Object.freeze([
@@ -191,33 +195,51 @@ function resolveHomeSearchFilterAction(entry = {}) {
 function matchesHomeSearchFilters(entry = {}) {
   const filters = HOME_SEARCH_SHELL_STATE.filters || {};
   const typeFilter = normalizeHomeSearchFilterValue(filters.type);
-  const areaFilter = normalizeHomeSearchFilterValue(filters.area);
-  const actionFilter = normalizeHomeSearchFilterValue(filters.action);
-  const trustFilter = normalizeHomeSearchFilterValue(filters.trust);
   const yearFilter = normalizeHomeSearchFilterValue(filters.year);
 
   if (typeFilter !== 'all' && resolveHomeSearchFilterType(entry) !== typeFilter) {
     return false;
   }
 
-  if (areaFilter !== 'all' && resolveHomeSearchEntryScope(entry) !== areaFilter) {
-    return false;
-  }
-
-  if (actionFilter !== 'all') {
-    const entryAction = resolveHomeSearchFilterAction(entry);
-    const actionMatched = actionFilter === entryAction || (actionFilter === 'open' && normalizeHomeSearchQuery(entry.href));
-    if (!actionMatched) {
-      return false;
-    }
-  }
-
-  if (trustFilter === 'verified' && !entry.verified) {
-    return false;
-  }
-
   if (yearFilter !== 'all' && resolveHomeSearchYear(entry.year) !== yearFilter) {
     return false;
+  }
+
+  // Model-specific filters (only apply when type is 'model')
+  if (typeFilter === 'model' || typeFilter === 'all') {
+    const modelTrustFilter = normalizeHomeSearchFilterValue(filters.modelTrust);
+    const modelStateFilter = normalizeHomeSearchFilterValue(filters.modelState);
+    const modelScopeFilter = normalizeHomeSearchFilterValue(filters.modelScope);
+    const modelExpertiseFilter = normalizeHomeSearchFilterValue(filters.modelExpertise);
+    const modelYearFilter = normalizeHomeSearchFilterValue(filters.modelYear);
+
+    // Only apply model filters if entry is a model
+    if (resolveHomeSearchFilterType(entry) === 'model') {
+      if (modelTrustFilter !== 'all') {
+        if (modelTrustFilter === 'verified' && !entry.verified) {
+          return false;
+        }
+        if (modelTrustFilter === 'not-verified' && entry.verified) {
+          return false;
+        }
+      }
+
+      if (modelStateFilter !== 'all' && entry.modelState !== modelStateFilter) {
+        return false;
+      }
+
+      if (modelScopeFilter !== 'all' && entry.modelScope !== modelScopeFilter) {
+        return false;
+      }
+
+      if (modelExpertiseFilter !== 'all' && entry.modelExpertise !== modelExpertiseFilter) {
+        return false;
+      }
+
+      if (modelYearFilter !== 'all' && resolveHomeSearchYear(entry.year) !== modelYearFilter) {
+        return false;
+      }
+    }
   }
 
   return true;
@@ -235,6 +257,7 @@ function syncHomeSearchScopeChrome() {
   const modelDirectoryPresentation = HOME_SEARCH_SHELL_STATE.presentation === 'model-directory';
   const input = root.querySelector('#home-search-shell-input');
   const tabs = root.querySelectorAll('[data-home-search-scope]');
+  const filterPanel = root.querySelector('[data-home-search-filter-panel]');
 
   if (input instanceof HTMLInputElement) {
     input.placeholder = scope === 'all'
@@ -249,6 +272,12 @@ function syncHomeSearchScopeChrome() {
     tab.classList.toggle('home-search-shell__scope-tab--active', active);
     tab.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
+
+  // Update filter panel data-filter-type based on scope
+  if (filterPanel instanceof HTMLElement) {
+    const filterType = scope === 'models' ? 'model' : 'all';
+    filterPanel.setAttribute('data-filter-type', filterType);
+  }
 
   syncHomeSearchClearButton();
   syncHomeSearchFilterChrome();
@@ -278,6 +307,11 @@ function syncHomeSearchFilterChrome() {
 
   if (filterPanel instanceof HTMLElement) {
     filterPanel.hidden = !HOME_SEARCH_SHELL_STATE.filtersOpen;
+    // Set data-filter-type based on scope (models) or type filter
+    const scope = normalizeHomeSearchScope(HOME_SEARCH_SHELL_STATE.scope);
+    const typeFilter = normalizeHomeSearchFilterValue(HOME_SEARCH_SHELL_STATE.filters?.type) || 'all';
+    const filterType = scope === 'models' ? 'model' : typeFilter;
+    filterPanel.setAttribute('data-filter-type', filterType);
   }
 
   filterChips.forEach((chip) => {
@@ -286,6 +320,15 @@ function syncHomeSearchFilterChrome() {
     const active = normalizeHomeSearchFilterValue(HOME_SEARCH_SHELL_STATE.filters?.[key]) === value;
     chip.classList.toggle('home-search-shell__filter-chip--active', active);
     chip.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  const filterSelects = root.querySelectorAll('[data-home-search-filter-option]');
+  filterSelects.forEach((select) => {
+    if (select.tagName === 'SELECT') {
+      const key = normalizeHomeSearchFilterValue(select.getAttribute('data-home-search-filter-option') || '');
+      const currentValue = normalizeHomeSearchFilterValue(HOME_SEARCH_SHELL_STATE.filters?.[key]) || 'all';
+      select.value = currentValue;
+    }
   });
 }
 
@@ -696,22 +739,6 @@ function buildIndexedEntry(entry = {}, {
 function buildCuratedSurfaceEntries() {
   return [
     {
-      key: 'surface:profiles',
-      kind: 'surface',
-      title: 'Continuity Models',
-      eyebrow: 'Profiles',
-      summary: 'Search searchable public continuity models, public routes, and guided training signals.',
-      href: '/pages/profiles/index.html',
-      publicRoute: '',
-      activateModelId: '',
-      queryLabel: '',
-      filterType: 'page',
-      year: '',
-      verified: false,
-      keywords: ['profiles', 'continuity models', 'public routes', 'model search'],
-      scoreTokens: 'continuity models profiles public routes model search'
-    },
-    {
       key: 'surface:leadership',
       kind: 'surface',
       title: 'Leadership',
@@ -997,7 +1024,7 @@ function renderDefaultHomeModelResults() {
               </div>
             </div>
             <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-              ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}">
+              ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="Interact on Stage" type="button" aria-label="Interact on Stage">
                 <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
               </button>` : ''}
               ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
@@ -1029,10 +1056,6 @@ function renderDefaultHomeSearchResults() {
       <article class="home-search-shell__result-card">
         <div class="home-search-shell__model-result-layout">
           <div class="home-search-shell__model-result-content">
-            <div class="home-search-shell__result-meta">
-              <span class="home-search-shell__result-route">Active interaction engine</span>
-              <span class="home-search-shell__result-query">${escapeHomeSearchHtml(activeModelLabel)}</span>
-            </div>
             <h3 class="home-search-shell__result-title">${escapeHomeSearchHtml(activeModel?.display_name || activeModelLabel)}</h3>
             <p class="home-search-shell__result-body">${escapeHomeSearchHtml(activeModelDescription)}</p>
           </div>
@@ -1068,9 +1091,9 @@ function renderQueryHomeSearchResults(query) {
   if (!matches.length) {
     return `
       <div class="home-search-shell__empty-state" id="home-search-shell-empty-state">
-        <p class="home-search-shell__empty-title">No direct surface matched this query</p>
+        <p class="home-search-shell__empty-title">No results found</p>
         <p class="home-search-shell__empty-text">
-          Search public models, published routes, institutional sections, and platform surfaces. If you want interpretation rather than navigation, ask ${escapeHomeSearchHtml(getActiveModelLabel())} directly.
+          Search models, profiles, and content across the platform.
         </p>
       </div>
     `;
@@ -1094,7 +1117,7 @@ function renderQueryHomeSearchResults(query) {
                 </div>
               </div>
               <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-                ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}" type="button" aria-label="${entry.activateModelId === getActiveModelState().activeModelId ? 'Interacting on Homepage' : 'Interact on Homepage'}">
+                ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="Interact on Stage" type="button" aria-label="Interact on Stage">
                   <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
                 </button>` : ''}
                 ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
@@ -1300,6 +1323,25 @@ function bindHomeSearchShell() {
     closeHomeSearchShell();
   });
 
+  document.addEventListener('change', (event) => {
+    const root = getLiveSearchShellRoot();
+    if (!root) return;
+
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!root.contains(target)) return;
+
+    if (target.matches('select[data-home-search-filter-option]')) {
+      const key = normalizeHomeSearchFilterValue(target.getAttribute('data-home-search-filter-option') || '');
+      const value = normalizeHomeSearchFilterValue(target.value || '');
+
+      if (Object.prototype.hasOwnProperty.call(HOME_SEARCH_SHELL_STATE.filters, key)) {
+        HOME_SEARCH_SHELL_STATE.filters[key] = value;
+        renderHomeSearchShell();
+      }
+    }
+  });
+
   document.addEventListener('click', (event) => {
     const root = getLiveSearchShellRoot();
     if (!root) return;
@@ -1311,7 +1353,7 @@ function bindHomeSearchShell() {
       '#home-search-shell [data-home-search-filter], ' +
       '#home-search-shell [data-home-search-filter-close], ' +
       '#home-search-shell [data-home-search-filter-reset], ' +
-      '#home-search-shell [data-home-search-filter-option], ' +
+      '#home-search-shell button[data-home-search-filter-option], ' +
       '#home-search-shell [data-home-search-close="true"], ' +
       '#home-search-shell [data-home-search-scope], ' +
       '#home-search-shell [data-home-search-result-action], ' +
@@ -1357,13 +1399,23 @@ function bindHomeSearchShell() {
       return;
     }
 
-    if (target.matches('[data-home-search-filter-option]')) {
+    if (target.matches('button[data-home-search-filter-option]')) {
       event.preventDefault();
       const key = normalizeHomeSearchFilterValue(target.getAttribute('data-home-search-filter-option') || '');
       const value = normalizeHomeSearchFilterValue(target.getAttribute('data-home-search-filter-value') || '');
 
       if (Object.prototype.hasOwnProperty.call(HOME_SEARCH_SHELL_STATE.filters, key)) {
         HOME_SEARCH_SHELL_STATE.filters[key] = value;
+        // If type filter changed, update filter panel data-filter-type
+        if (key === 'type') {
+          const root = getLiveSearchShellRoot();
+          if (root) {
+            const filterPanel = root.querySelector('[data-home-search-filter-panel]');
+            if (filterPanel instanceof HTMLElement) {
+              filterPanel.setAttribute('data-filter-type', value);
+            }
+          }
+        }
         renderHomeSearchShell();
       }
       return;

@@ -74,12 +74,14 @@ export function routeProfileMenuAction(action) {
     case 'public-route':
       navigateToPublicProfileRoute();
       return;
-    case 'preferences':
-      navigateToProfileHash('#settings/visibility');
-      return;
     case 'change-password':
     case 'password':
-      navigateToProfileHash('#settings/password');
+      closeProfileMenu();
+      window.location.href = '/profile.html#settings/password';
+      return;
+    case 'preferences':
+      closeProfileMenu();
+      window.location.href = '/profile.html#settings/privacy';
       return;
     case 'account-control':
       openProfileSubdestination('account-control');

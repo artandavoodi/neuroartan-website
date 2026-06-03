@@ -145,6 +145,10 @@
   align-items:center;
   gap:var(--spacing-sm);
   margin:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--headline-5-size);
+  font-weight:var(--headline-5-weight);
+  line-height:var(--headline-5-line-height);
 }
 
 .home-platform-theme__action-icon{

@@ -8,18 +8,18 @@
     <header class="profile-filter-overlay__header">
       <div>
         <h2 class="profile-filter-overlay__title" id="profile-filter-overlay-title" data-profile-filter-title>Filters</h2>
-        <p class="profile-filter-overlay__copy" data-profile-filter-copy></p>
       </div>
-      <button class="profile-filter-overlay__close global-close-button" type="button" data-profile-filter-close aria-label="Close filters">
-        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-      </button>
+      <div class="profile-filter-overlay__header-actions">
+        <button class="profile-filter-overlay__reset" type="button" data-profile-filter-reset aria-label="Reset filters">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/reset/reset.svg" alt="" width="16" height="16">
+        </button>
+        <button class="profile-filter-overlay__close global-close-button" type="button" data-profile-filter-close aria-label="Close filters">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </div>
     </header>
 
     <div class="profile-filter-overlay__groups" data-profile-filter-groups></div>
-
-    <footer class="profile-filter-overlay__footer">
-      <button class="profile-filter-overlay__reset" type="button" data-profile-filter-reset>Reset</button>
-    </footer>
   </article>
 </section>

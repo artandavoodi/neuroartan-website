@@ -219,10 +219,10 @@
 ============================================================================= */
 .home-interaction-settings-panel{
   position:fixed;
-  top:var(--home-interaction-settings-panel-top);
-  right:var(--home-interaction-settings-panel-inline);
-  bottom:var(--home-interaction-settings-panel-bottom);
-  left:var(--home-interaction-settings-panel-inline);
+  top:var(--spacing-none);
+  left:var(--spacing-none);
+  right:var(--spacing-none);
+  bottom:var(--spacing-none);
   z-index:var(--home-interaction-settings-panel-z-index);
   display:flex;
   justify-content:center;
@@ -245,12 +245,12 @@
   grid-template-rows:auto minmax(0, 1fr);
   gap:var(--home-interaction-settings-panel-gap);
   width:var(--size-full);
-  max-width:var(--home-interaction-settings-panel-width);
+  max-width:var(--size-full);
   height:var(--size-full);
-  max-height:var(--home-interaction-settings-panel-height);
+  max-height:var(--size-full);
   padding:var(--spacing-none);
   border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-border);
-  border-radius:var(--home-interaction-settings-panel-radius);
+  border-radius:var(--spacing-none);
   background:var(--home-interaction-settings-panel-surface);
   box-shadow:var(--home-interaction-settings-panel-shadow);
   backdrop-filter:blur(var(--home-interaction-settings-panel-blur)) saturate(var(--home-interaction-settings-panel-saturate));
@@ -264,27 +264,97 @@
    04) HEADER / ACTIVE DESCRIPTION
 ============================================================================= */
 .home-interaction-settings-panel__header{
+  position:relative;
+  z-index:3;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:var(--home-interaction-settings-header-gap);
-  padding:var(--home-interaction-settings-header-padding-y) var(--home-interaction-settings-panel-inner-padding-inline);
+  min-height:var(--home-platform-shell-chrome-min-height);
+  padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
   border-bottom:var(--border-width-hairline) solid var(--home-interaction-settings-panel-header-separator);
-  position:relative;
-  z-index:2;
+  background:var(--home-platform-shell-inner-surface);
+}
+
+.home-interaction-settings-panel__chrome-leading,
+.home-interaction-settings-panel__chrome-trailing{
+  display:inline-flex;
+  align-items:center;
+}
+
+.home-interaction-settings-panel__chrome-leading{
+  gap:var(--home-platform-shell-rail-toggle-margin-left);
+  justify-content:flex-start;
+}
+
+.home-interaction-settings-panel__chrome-trailing{
+  justify-content:flex-end;
+}
+
+.home-interaction-settings-panel__rail-toggle{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-rail-toggle-size);
+  height:var(--home-platform-shell-rail-toggle-size);
+  margin-left:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--home-platform-shell-chrome-toggle-color);
+  opacity:var(--home-platform-shell-nav-opacity);
+  transition:none;
+}
+
+.home-interaction-settings-panel__rail-toggle:hover,
+.home-interaction-settings-panel__rail-toggle:focus-visible{
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+}
+
+.home-interaction-settings-panel__rail-toggle[aria-pressed="true"]{
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+}
+
+.home-interaction-settings-panel__rail-toggle-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-rail-toggle-icon-size);
+  height:var(--home-platform-shell-rail-toggle-icon-size);
+  flex:0 0 auto;
+  transform:none;
+  transition:none;
+}
+
+.home-interaction-settings-panel__rail-toggle-icon img{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+  object-fit:contain;
+  object-position:center;
+  filter:var(--icon-image-filter, none);
 }
 
 .home-interaction-settings-panel__close{
-  position:relative;
-  z-index:3;
   flex:0 0 auto;
-  pointer-events:auto;
-  transform:none;
+  margin-inline-end:var(--global-close-button-optical-end-offset);
 }
 
-.home-interaction-settings-panel__close:hover,
-.home-interaction-settings-panel__close:focus-visible{
+.home-interaction-settings-panel__close.global-close-button{
+  color:var(--global-close-button-color);
+}
+
+.home-interaction-settings-panel__close.global-close-button:hover,
+.home-interaction-settings-panel__close.global-close-button:focus-visible{
+  color:var(--global-close-button-hover-color);
   transform:none;
+  outline:none;
 }
 
 .home-interaction-settings-panel__title-block{
@@ -431,30 +501,73 @@
    05) PANEL BODY
 ============================================================================= */
 .home-interaction-settings-panel__body{
-  display:grid;
-  grid-template-columns:var(--home-interaction-settings-panel-nav-width) minmax(0, 1fr);
-  gap:var(--spacing-none);
+  flex:1 1 auto;
   min-height:var(--spacing-none);
+  max-width:var(--size-full);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:
+    var(--home-platform-shell-rail-width)
+    minmax(var(--spacing-none), 1fr);
+  padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
+  background:var(--home-platform-shell-inner-surface);
   margin-top:calc(-1 * var(--home-interaction-settings-panel-gap));
 }
 
 /* =============================================================================
-   06) NAVIGATION
+   06) RAIL MODE STATES
+============================================================================= */
+.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__body{
+  grid-template-columns:
+    var(--home-platform-shell-rail-compact-width)
+    minmax(var(--spacing-none), 1fr);
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__nav-inner{
+  padding-right:var(--home-platform-shell-rail-padding-right);
+  padding-left:var(--home-platform-shell-rail-padding-left);
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__nav-label{
+  display:none;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail-toggle-icon img{
+  content:url("/registry/icons/public/assets/core/navigation/rail/rail-expand.svg");
+}
+
+/* =============================================================================
+   07) NAVIGATION
 ============================================================================= */
 .home-interaction-settings-panel__nav{
+  position:relative;
+  z-index:2;
   display:flex;
   flex-direction:column;
-  gap:var(--home-interaction-settings-nav-gap);
+  min-width:var(--spacing-none);
   min-height:var(--spacing-none);
-  padding:calc(var(--home-interaction-settings-panel-inner-padding-top) + var(--home-interaction-settings-panel-gap)) var(--home-interaction-settings-panel-nav-padding-inline-end) var(--home-interaction-settings-panel-inner-padding-top) var(--home-interaction-settings-panel-nav-padding-inline-start);
-  border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-nav-border);
-  border-right:var(--border-width-hairline) solid var(--home-interaction-settings-panel-separator);
-  box-sizing:border-box;
-  border-radius:var(--spacing-none);
-  background:var(--home-interaction-settings-panel-nav-bg);
-  overflow:auto;
+  overflow:hidden;
+  background:var(--home-platform-shell-inner-surface);
+  border-right:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  pointer-events:auto;
+}
+
+.home-interaction-settings-panel__nav-inner{
+  flex:1 1 auto;
+  height:var(--size-full);
+  min-height:var(--spacing-none);
+  overflow-x:hidden;
+  overflow-y:auto;
   overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
+  padding:var(--home-platform-shell-column-padding-top) var(--home-platform-shell-column-padding-right) var(--home-platform-shell-column-padding-bottom) var(--home-platform-shell-rail-padding-left);
+}
+
+.home-interaction-settings-panel__nav-inner .home-platform-shell__nav{
+  display:flex;
+  flex-direction:column;
+  gap:var(--home-platform-shell-nav-gap);
 }
 
 .home-interaction-settings-panel__nav::-webkit-scrollbar{
@@ -510,18 +623,30 @@
 }
 
 /* =============================================================================
-   07) CONTENT SURFACE
+   08) CONTENT
 ============================================================================= */
 .home-interaction-settings-panel__content{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
   min-width:var(--spacing-none);
   min-height:var(--spacing-none);
-  padding:calc(var(--home-interaction-settings-panel-inner-padding-top) + var(--home-interaction-settings-panel-gap)) var(--home-interaction-settings-panel-content-padding-inline-end) var(--home-interaction-settings-panel-inner-padding-top) var(--home-interaction-settings-panel-content-padding-inline-start);
-  border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--spacing-none);
-  background:var(--home-interaction-settings-panel-content-bg);
-  overflow:auto;
+  overflow:hidden;
+  background:var(--home-platform-shell-inner-surface);
+  pointer-events:auto;
+}
+
+.home-interaction-settings-panel__content-inner{
+  flex:1 1 auto;
+  height:var(--size-full);
+  min-height:var(--spacing-none);
+  overflow-x:hidden;
+  overflow-y:auto;
   overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
+  padding:var(--home-platform-shell-column-padding-top) var(--home-platform-shell-column-padding-right) var(--home-platform-shell-column-padding-bottom) var(--home-platform-shell-content-padding-left);
 }
 
 .home-interaction-settings-panel__content::-webkit-scrollbar{
@@ -1058,10 +1183,10 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
 
 @media (max-width:760px){
   .home-interaction-settings-panel{
-    top:var(--site-shell-inline-padding-mobile);
-    right:var(--site-shell-inline-padding-mobile);
-    bottom:calc(var(--site-shell-inline-padding-mobile) + env(safe-area-inset-bottom, var(--spacing-none)));
-    left:var(--site-shell-inline-padding-mobile);
+    top:var(--spacing-none);
+    right:var(--spacing-none);
+    bottom:var(--spacing-none);
+    left:var(--spacing-none);
   }
 
   .home-interaction-settings-panel__surface{
@@ -1079,32 +1204,21 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
     scrollbar-width:none;
     overflow-y:hidden;
     white-space:nowrap;
+    border-right:var(--spacing-none);
+    border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
+  }
+
+  .home-interaction-settings-panel__nav-inner{
+    padding:var(--home-platform-shell-mobile-rail-inner-padding-y) var(--home-platform-shell-mobile-nav-item-padding-x);
+  }
+
+  .home-interaction-settings-panel__nav-inner .home-platform-shell__nav{
+    flex-direction:row;
+    gap:var(--home-platform-shell-mobile-nav-gap);
   }
 
   .home-interaction-settings-panel__nav-item{
     width:auto;
     min-width:max-content;
-  }
-
-  .home-interaction-settings-panel__title-block{
-    display:grid;
-    gap:var(--home-interaction-settings-title-block-gap);
-    align-items:start;
-    min-height:auto;
-    padding-left:var(--spacing-none);
-  }
-
-  .home-interaction-settings-panel__active-description{
-    padding-left:var(--spacing-none);
-    max-width:none;
-    min-height:auto;
-  }
-
-  .home-interaction-settings-panel__title{
-    white-space:normal;
-  }
-
-  .home-interaction-settings-panel__active-description::before{
-    display:none;
   }
 }

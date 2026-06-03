@@ -1,139 +1,159 @@
 <!-- =============================================================================
      00) FILE INDEX
      01) INTERACTION SETTINGS ROOT
-     02) INTERACTION SETTINGS HEADER / ACTIVE DESCRIPTION
-     03) INTERACTION SETTINGS BODY
-     04) INTERACTION SETTINGS NAVIGATION
-     05) INTERACTION SETTINGS SECTION INCLUDES
+     02) INTERACTION SETTINGS CHROME
+     03) INTERACTION SETTINGS MAIN GRID
+     04) LEFT NAVIGATION RAIL
+     05) PRIMARY NAVIGATION
+     06) RIGHT CONTENT SURFACE
 ============================================================================= -->
 
 <!-- =============================================================================
      01) INTERACTION SETTINGS ROOT
 ============================================================================= -->
-<section class="home-interaction-settings-panel" id="home-interaction-settings-panel" data-home-interaction-settings-state="closed" data-home-interaction-settings-active-section="overview" hidden aria-hidden="true" aria-label="Homepage interaction settings">
-  <div class="home-interaction-settings-panel__surface" role="dialog" aria-modal="false" aria-labelledby="home-interaction-settings-panel-title">
-    <!-- =============================================================================
-         02) INTERACTION SETTINGS HEADER
-    ============================================================================= -->
-    <header class="home-interaction-settings-panel__header">
-      <div class="home-interaction-settings-panel__chrome-leading">
-        <button class="home-interaction-settings-panel__rail-toggle" type="button" data-home-interaction-settings-rail-toggle="true" aria-label="Toggle navigation rail" aria-pressed="false">
-          <span class="home-interaction-settings-panel__rail-toggle-icon" aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/rail/rail-collapse.svg" alt="">
-          </span>
-        </button>
-      </div>
-      <div class="home-interaction-settings-panel__chrome-trailing">
-        <button class="global-close-button home-interaction-settings-panel__close" type="button" data-home-interaction-settings-close="true" aria-label="Close interaction settings">
-          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-        </button>
-      </div>
-    </header>
-
-    <!-- =============================================================================
-         03) INTERACTION SETTINGS BODY
-    ============================================================================= -->
-    <div class="home-interaction-settings-panel__body">
-      <!-- =============================================================================
-           04) INTERACTION SETTINGS NAVIGATION
-      ============================================================================= -->
-      <nav class="home-interaction-settings-panel__nav" aria-label="Interaction settings sections">
-        <div class="home-interaction-settings-panel__nav-inner">
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="overview" aria-selected="true" data-home-interaction-settings-description="Unified view of the current interaction state">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/overview/overview.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Overview</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="workspace" aria-selected="false" data-home-interaction-settings-description="Active workspace, projects, tools, and agent context">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/productivity/workspace/workspace.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Workspace</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="model" aria-selected="false" data-home-interaction-settings-description="Select and tune the model used for interaction">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/cognition/model/model.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Model</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="response" aria-selected="false" data-home-interaction-settings-description="Shape how answers are structured, styled, and delivered">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/interface/response/response.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Response</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="voice" aria-selected="false" data-home-interaction-settings-description="Control voice input, transcription, and spoken interaction">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/voice.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Voice</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="memory" aria-selected="false" data-home-interaction-settings-description="Manage project memory, continuity, and context retention">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/cognition/memory/memory.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Memory</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="session" aria-selected="false" data-home-interaction-settings-description="Control the current session state and temporary context">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/session/session.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Session</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="stage" aria-selected="false" data-home-interaction-settings-description="Adjust the visual interaction environment">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/stage/stage.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Stage</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="developer" aria-selected="false" data-home-interaction-settings-description="Configure agent execution, runtime access, and code workflows">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/developer/developer.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Developer</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="changelog" aria-selected="false" data-home-interaction-settings-description="Track agent actions, changes, approvals, and release history">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Changelog</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="privacy" aria-selected="false" data-home-interaction-settings-description="Control data, consent, retention, and visibility boundaries">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Privacy</span>
-          </button>
-          <button class="home-platform-shell__nav-item home-interaction-settings-panel__nav-item" type="button" data-home-interaction-settings-tab="accessibility" aria-selected="false" data-home-interaction-settings-description="Adapt motion, contrast, keyboard, and reading support">
-            <span class="home-platform-shell__nav-icon home-interaction-settings-panel__nav-icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/accessibility/accessibility.svg" alt="">
-            </span>
-            <span class="home-platform-shell__nav-label home-interaction-settings-panel__nav-label">Accessibility</span>
-          </button>
-        </div>
-      </nav>
-
-      <!-- =============================================================================
-           05) INTERACTION SETTINGS SECTION INCLUDES
-      ============================================================================= -->
-      <div class="home-interaction-settings-panel__content">
-        <div class="home-interaction-settings-panel__content-inner">
-          <div id="home-interaction-settings-overview-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="overview" data-include="home-interaction-settings-overview"></div>
-          <div id="home-interaction-settings-workspace-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="workspace" data-include="home-interaction-settings-workspace" hidden></div>
-          <div id="home-interaction-settings-model-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="model" data-include="home-interaction-settings-model" hidden></div>
-          <div id="home-interaction-settings-response-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="response" data-include="home-interaction-settings-response" hidden></div>
-          <div id="home-interaction-settings-voice-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="voice" data-include="home-interaction-settings-voice" hidden></div>
-          <div id="home-interaction-settings-memory-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="memory" data-include="home-interaction-settings-memory" hidden></div>
-          <div id="home-interaction-settings-session-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="session" data-include="home-interaction-settings-session" hidden></div>
-          <div id="home-interaction-settings-stage-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="stage" data-include="home-interaction-settings-stage" hidden></div>
-          <div id="home-interaction-settings-developer-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="developer" data-include="home-interaction-settings-developer" hidden></div>
-          <div id="home-interaction-settings-changelog-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="changelog" data-include="home-interaction-settings-changelog" hidden></div>
-          <div id="home-interaction-settings-privacy-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="privacy" data-include="home-interaction-settings-privacy" hidden></div>
-          <div id="home-interaction-settings-accessibility-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="accessibility" data-include="home-interaction-settings-accessibility" hidden></div>
-        </div>
-      </div>
+<section class="home-interaction-settings-panel" id="home-interaction-settings-panel" hidden aria-hidden="true" aria-label="Interaction settings">
+  <!-- =============================================================================
+       02) INTERACTION SETTINGS CHROME
+  ============================================================================= -->
+  <div class="home-interaction-settings-panel__chrome">
+    <div class="home-interaction-settings-panel__chrome-leading">
+      <button
+        type="button"
+        class="home-interaction-settings-panel__rail-toggle"
+        id="home-interaction-settings-panel-rail-toggle"
+        aria-label="Toggle navigation rail"
+        aria-selected="false"
+        data-home-interaction-settings-rail-toggle
+      >
+        <span class="home-interaction-settings-panel__rail-toggle-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true">
+          <img
+            class="ui-icon-theme-aware"
+            src="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg"
+            alt=""
+            data-home-interaction-settings-rail-toggle-icon
+            data-home-interaction-settings-rail-icon-expanded="/registry/icons/public/assets/core/navigation/panel/panel-left-activated.svg"
+            data-home-interaction-settings-rail-icon-collapsed="/registry/icons/public/assets/core/navigation/panel/panel-left-deactivated.svg">
+        </span>
+      </button>
     </div>
+    <div class="home-interaction-settings-panel__chrome-trailing">
+      <button
+        type="button"
+        class="global-close-button home-interaction-settings-panel__close"
+        id="home-interaction-settings-panel-close"
+        aria-label="Close interaction settings"
+        data-home-interaction-settings-close="true"
+      >
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================================================================
+       03) INTERACTION SETTINGS MAIN GRID
+  ============================================================================= -->
+  <div class="home-interaction-settings-panel__main">
+    <!-- ======================================================================
+    04) LEFT NAVIGATION RAIL
+    ======================================================================= -->
+    <aside class="home-interaction-settings-panel__rail" aria-label="Interaction settings navigation">
+      <div class="home-interaction-settings-panel__rail-inner">
+        <!-- ================================================================
+        05) PRIMARY NAVIGATION
+        ================================================================= -->
+        <div class="home-interaction-settings-panel__group" data-home-interaction-settings-rail-group="primary">
+          <nav class="home-interaction-settings-panel__nav" aria-label="Primary interaction settings navigation">
+            <button type="button" class="home-interaction-settings-panel__nav-item is-active" data-home-interaction-settings-destination="overview" aria-pressed="true" id="home-interaction-settings-panel-nav-overview">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/overview/overview.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Overview</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="workspace" aria-pressed="false" id="home-interaction-settings-panel-nav-workspace">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/productivity/workspace/workspace.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Workspace</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="model" aria-pressed="false" id="home-interaction-settings-panel-nav-model">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/cognition/model/model.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Model</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="response" aria-pressed="false" id="home-interaction-settings-panel-nav-response">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/interface/response/response.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Response</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="voice" aria-pressed="false" id="home-interaction-settings-panel-nav-voice">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/voice.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Voice</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="memory" aria-pressed="false" id="home-interaction-settings-panel-nav-memory">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/cognition/memory/memory.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Memory</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="session" aria-pressed="false" id="home-interaction-settings-panel-nav-session">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/session/session.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Session</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="stage" aria-pressed="false" id="home-interaction-settings-panel-nav-stage">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/system/stage/stage.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Stage</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="developer" aria-pressed="false" id="home-interaction-settings-panel-nav-developer">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/developer/developer.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Developer</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="changelog" aria-pressed="false" id="home-interaction-settings-panel-nav-changelog">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Changelog</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="privacy" aria-pressed="false" id="home-interaction-settings-panel-nav-privacy">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Privacy</span>
+            </button>
+            <button type="button" class="home-interaction-settings-panel__nav-item" data-home-interaction-settings-destination="accessibility" aria-pressed="false" id="home-interaction-settings-panel-nav-accessibility">
+              <span class="home-interaction-settings-panel__nav-icon inline-stroke-icon" data-inline-stroke-icon aria-hidden="true"><img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/settings/accessibility/accessibility.svg" alt=""></span>
+              <span class="home-interaction-settings-panel__nav-text">Accessibility</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+    07) MIDDLE NAVIGATION LAYER
+    ======================================================================= -->
+    <aside class="home-interaction-settings-panel__subrail" aria-label="Section-local navigation" hidden>
+      <div class="home-interaction-settings-panel__subrail-inner">
+        <div class="home-interaction-settings-panel__subrail-header">
+          <p class="home-interaction-settings-panel__subrail-label" data-home-interaction-settings-subrail-label>Overview</p>
+        </div>
+
+        <nav class="home-interaction-settings-panel__subnav" id="home-interaction-settings-panel-subnav" data-home-interaction-settings-subnav-root aria-label="Section-local navigation"></nav>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+    08) RIGHT CONTENT SURFACE
+    ======================================================================= -->
+    <section class="home-interaction-settings-panel__content" aria-label="Interaction settings content">
+      <div class="home-interaction-settings-panel__content-header">
+        <p class="home-interaction-settings-panel__content-eyebrow" data-home-interaction-settings-content-eyebrow>Overview</p>
+        <h2 class="home-interaction-settings-panel__content-title" data-home-interaction-settings-content-title>Overview</h2>
+        <p class="home-interaction-settings-panel__content-copy" data-home-interaction-settings-content-copy></p>
+      </div>
+
+      <div class="home-interaction-settings-panel__content-inner" id="home-interaction-settings-panel-content" data-home-interaction-settings-content-root>
+        <div id="home-interaction-settings-overview-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="overview" data-include="home-interaction-settings-overview"></div>
+        <div id="home-interaction-settings-workspace-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="workspace" data-include="home-interaction-settings-workspace" hidden></div>
+        <div id="home-interaction-settings-model-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="model" data-include="home-interaction-settings-model" hidden></div>
+        <div id="home-interaction-settings-response-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="response" data-include="home-interaction-settings-response" hidden></div>
+        <div id="home-interaction-settings-voice-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="voice" data-include="home-interaction-settings-voice" hidden></div>
+        <div id="home-interaction-settings-memory-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="memory" data-include="home-interaction-settings-memory" hidden></div>
+        <div id="home-interaction-settings-session-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="session" data-include="home-interaction-settings-session" hidden></div>
+        <div id="home-interaction-settings-stage-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="stage" data-include="home-interaction-settings-stage" hidden></div>
+        <div id="home-interaction-settings-developer-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="developer" data-include="home-interaction-settings-developer" hidden></div>
+        <div id="home-interaction-settings-changelog-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="changelog" data-include="home-interaction-settings-changelog" hidden></div>
+        <div id="home-interaction-settings-privacy-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="privacy" data-include="home-interaction-settings-privacy" hidden></div>
+        <div id="home-interaction-settings-accessibility-mount" class="home-interaction-settings-panel__section-mount" data-home-interaction-settings-section-mount="accessibility" data-include="home-interaction-settings-accessibility" hidden></div>
+      </div>
+    </section>
   </div>
 </section>

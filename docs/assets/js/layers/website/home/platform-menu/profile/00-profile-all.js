@@ -1,3 +1,4 @@
+import '../../../../../subscription-client.js';
 /* =========================================================
    00. FILE INDEX
    01. PROFILE AUTHORITY IMPORTS

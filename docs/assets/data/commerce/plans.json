@@ -14,16 +14,16 @@
     {
       "id": "individual",
       "label": "Individual",
-      "status_label": "Provider pending",
+      "status_label": "Active",
       "summary": "Personal model, archive, and advanced continuity controls.",
       "billing_interval": "monthly",
-      "price_id": null,
-      "enabled": false
+      "price_id": "price_1TeEU0RKuBPicdj2muWPuLGT",
+      "enabled": true
     },
     {
       "id": "studio",
       "label": "Studio",
-      "status_label": "Provider pending",
+      "status_label": "Pending",
       "summary": "Creator, model, and publishing workspace for professional use.",
       "billing_interval": "monthly",
       "price_id": null,

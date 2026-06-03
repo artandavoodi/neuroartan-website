@@ -1,0 +1,5 @@
+@import url('../00-interaction-settings-all.css');
+
+.home-interaction-settings-destination--developer{
+  width:var(--size-full);
+}

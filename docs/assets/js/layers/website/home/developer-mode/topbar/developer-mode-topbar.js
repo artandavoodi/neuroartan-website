@@ -4,15 +4,22 @@
    02) END OF FILE
 ============================================================================= */
 
+import { subscribeHomeSurfaceState } from '../../core/home-surface-state.js';
+
 /* =============================================================================
    01) DEVELOPER MODE TOPBAR
 ============================================================================= */
 (() => {
   'use strict';
 
+  const TOPBAR_STATE = {
+    snapshot: null,
+  };
+
   const TOPBAR_SELECTORS = {
     root: '.home-dashboard-topbar',
     settingsTrigger: '[data-home-developer-mode-settings-trigger]',
+    profileTrigger: '[data-home-topbar-profile-trigger]',
   };
 
   const TOPBAR_EVENTS = {
@@ -28,6 +35,11 @@
   function getSettingsTrigger(root = document) {
     const topbar = getTopbarRoot(root);
     return topbar?.querySelector(TOPBAR_SELECTORS.settingsTrigger) || null;
+  }
+
+  function getProfileTrigger(root = document) {
+    const topbar = getTopbarRoot(root);
+    return topbar?.querySelector(TOPBAR_SELECTORS.profileTrigger) || null;
   }
 
   function dispatchTopbarEvent(type, detail = {}) {
@@ -48,6 +60,29 @@
     });
   }
 
+  function handleProfileTriggerClick(event) {
+    event.preventDefault();
+    const snapshot = TOPBAR_STATE.snapshot || {};
+
+    if (!snapshot?.account?.signedIn) {
+      // User is not signed in, redirect to sign in
+      dispatchTopbarEvent('account:entry-request', {
+        surface: 'sign-in',
+      });
+      return;
+    }
+
+    // User is signed in, open profile
+    dispatchTopbarEvent('home:platform-shell-open-request', {
+      destination: 'profile',
+      source: 'developer-mode-topbar',
+    });
+  }
+
+  function renderDeveloperModeTopbar(snapshot) {
+    TOPBAR_STATE.snapshot = snapshot;
+  }
+
   function bindTopbarSettingsTrigger(root = document) {
     const topbar = getTopbarRoot(root);
     if (!topbar) return;
@@ -58,6 +93,18 @@
 
     settingsTrigger.dataset.developerModeSettingsTriggerBound = 'true';
     settingsTrigger.addEventListener('click', handleSettingsTriggerClick);
+  }
+
+  function bindTopbarProfileTrigger(root = document) {
+    const topbar = getTopbarRoot(root);
+    if (!topbar) return;
+
+    const profileTrigger = getProfileTrigger(root);
+    if (!(profileTrigger instanceof HTMLElement)) return;
+    if (profileTrigger.dataset.developerModeProfileTriggerBound === 'true') return;
+
+    profileTrigger.dataset.developerModeProfileTriggerBound = 'true';
+    profileTrigger.addEventListener('click', handleProfileTriggerClick);
   }
 
   function registerSettingsAuthority() {
@@ -83,6 +130,8 @@
 
   function initDeveloperModeTopbar(root = document) {
     bindTopbarSettingsTrigger(root);
+    bindTopbarProfileTrigger(root);
+    subscribeHomeSurfaceState(renderDeveloperModeTopbar);
   }
 
   document.addEventListener('DOMContentLoaded', () => {

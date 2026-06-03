@@ -2,7 +2,7 @@
   "schema": "neuroartan.commerce.subscriptions.v1",
   "provider": {
     "name": "stripe",
-    "connected": false,
+    "connected": true,
     "customer_portal_endpoint": "/api/billing/create-portal-session",
     "checkout_session_endpoint": "/api/billing/create-checkout-session",
     "webhook_endpoint": "/api/billing/stripe-webhook"

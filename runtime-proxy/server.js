@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import billingRouter from '../server/api/billing.mjs';
+import billingRouter from '../server/api/billing.mjs';
 
 import express from 'express';
 import cors from 'cors';
@@ -8,6 +10,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/billing', billingRouter);
+app.use('/api/billing', billingRouter);
 
 app.post('/api/runtime/gemini', async (req, res) => {
   console.log('[RUNTIME REQUEST]', JSON.stringify(req.body, null, 2));

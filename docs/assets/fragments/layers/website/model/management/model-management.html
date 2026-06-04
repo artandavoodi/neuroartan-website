@@ -549,6 +549,182 @@
               </span>
             </label>
           </div>
+
+          <div class="model-management__audience-groups" aria-label="Relationship response controls">
+            <section class="model-management__audience-group" aria-label="Public response controls">
+              <h5 class="model-management__audience-title">Public</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Openness</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseOpenness">
+                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseOpenness">50</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Directness</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseDirectness">
+                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseDirectness">50</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Humor</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseHumor">
+                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseHumor">35</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" aria-label="Friends response controls">
+              <h5 class="model-management__audience-title">Friends</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Warmth</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseWarmth">
+                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseWarmth">65</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Detail</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseDetail">
+                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseDetail">50</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Humor</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseHumor">
+                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseHumor">55</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" aria-label="Followers response controls">
+              <h5 class="model-management__audience-title">Followers</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Clarity</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseClarity">
+                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseClarity">70</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Efficiency</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseEfficiency">
+                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseEfficiency">60</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Openness</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseOpenness">
+                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseOpenness">45</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" aria-label="Mutual response controls">
+              <h5 class="model-management__audience-title">Mutuals</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Trust depth</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseTrustDepth">
+                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseTrustDepth">60</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Explanation depth</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseExplanationDepth">
+                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseExplanationDepth">55</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Directness</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseDirectness">
+                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseDirectness">55</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" aria-label="Family response controls">
+              <h5 class="model-management__audience-title">Family</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Warmth</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseWarmth">
+                    <span class="model-management__slider-value" data-model-personalization-value="familyResponseWarmth">75</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Privacy guard</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponsePrivacyGuard">
+                    <span class="model-management__slider-value" data-model-personalization-value="familyResponsePrivacyGuard">80</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Humor</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseHumor">
+                    <span class="model-management__slider-value" data-model-personalization-value="familyResponseHumor">60</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" aria-label="Subscribers response controls">
+              <h5 class="model-management__audience-title">Subscribers</h5>
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Priority</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponsePriority">
+                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponsePriority">65</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Detail</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseDetail">
+                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponseDetail">65</span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Professional tone</span>
+                  <span class="model-management__slider-row">
+                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseProfessionalTone">
+                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponseProfessionalTone">75</span>
+                  </span>
+                </label>
+              </div>
+            </section>
+          </div>
         </section>
 
         <section class="model-management__control-group" data-model-personalization-group="memory" hidden>

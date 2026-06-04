@@ -167,6 +167,30 @@ function toggleHomeInteractionSettingsRailMode() {
   saveHomeInteractionSettingsRailMode(nextMode);
 }
 
+function setHomeInteractionSettingsSessionExpanded(expanded = false) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  if (!(nodes.root instanceof HTMLElement)) return;
+
+  const normalized = expanded === true;
+  nodes.root.dataset.homeInteractionSessionExpanded = normalized ? 'true' : 'false';
+
+  nodes.root.querySelectorAll('[data-home-interaction-session-expand]').forEach((control) => {
+    if (!(control instanceof HTMLElement)) return;
+    control.setAttribute('aria-pressed', normalized ? 'true' : 'false');
+  });
+
+  nodes.root.querySelectorAll('[data-home-interaction-session-expand-label]').forEach((label) => {
+    if (!(label instanceof HTMLElement)) return;
+    label.textContent = normalized ? 'Return to settings navigation' : 'Expand session workspace';
+  });
+}
+
+function toggleHomeInteractionSettingsSessionExpanded() {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  const expanded = nodes.root?.dataset.homeInteractionSessionExpanded === 'true';
+  setHomeInteractionSettingsSessionExpanded(!expanded);
+}
+
 /* =========================================================
    04. CONFIG HELPERS
    ========================================================= */
@@ -204,6 +228,7 @@ function normalizeHomeInteractionSettingsConfig(raw = {}) {
 
       return {
         id,
+        label: normalizeString(item?.label || id),
         eyebrow: normalizeString(item?.eyebrow || item?.label || id),
         defaultSubdestination: normalizeString(item?.default_subdestination || item?.defaultSubdestination || ''),
         subdestinations: normalizeHomeInteractionSettingsSubdestinations(item?.subdestinations),
@@ -214,6 +239,18 @@ function normalizeHomeInteractionSettingsConfig(raw = {}) {
 
 function getHomeInteractionSettingsDestinationConfig(destination) {
   return HOME_INTERACTION_SETTINGS_SHELL_STATE.config.find((item) => item.id === destination) || null;
+}
+
+function getHomeInteractionSettingsParentConfig(destination) {
+  const normalized = normalizeHomeInteractionSettingsSection(destination);
+  return HOME_INTERACTION_SETTINGS_SHELL_STATE.config.find((item) => (
+    item.id === normalized
+    || item.subdestinations.some((subdestination) => subdestination.id === normalized)
+  )) || null;
+}
+
+function getHomeInteractionSettingsPrimaryDestination(destination) {
+  return getHomeInteractionSettingsParentConfig(destination)?.id || normalizeHomeInteractionSettingsSection(destination);
 }
 
 function getHomeInteractionSettingsSubdestinationConfig(destination, subdestination) {
@@ -296,12 +333,18 @@ function setHomeInteractionSettingsActiveDescription(nodes, activeSection) {
    ========================================================= */
 function setHomeInteractionSettingsSection(section) {
   const nodes = getHomeInteractionSettingsShellNodes();
-  const activeSection = normalizeHomeInteractionSettingsSection(section);
+  const requestedSection = normalizeHomeInteractionSettingsSection(section);
+  const requestedConfig = getHomeInteractionSettingsDestinationConfig(requestedSection);
+  const activeSection = requestedConfig?.subdestinations?.length
+    ? normalizeHomeInteractionSettingsSection(resolveDefaultSubdestination(requestedSection))
+    : requestedSection;
+  const primarySection = getHomeInteractionSettingsPrimaryDestination(activeSection);
 
   HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection = activeSection;
 
   if (nodes.root) {
     nodes.root.dataset.homeInteractionSettingsActiveSection = activeSection;
+    nodes.root.dataset.homeInteractionSettingsPrimarySection = primarySection;
   }
 
   setHomeInteractionSettingsActiveDescription(nodes, activeSection);
@@ -312,7 +355,7 @@ function setHomeInteractionSettingsSection(section) {
   setHomeInteractionSettingsNestedBackState(false);
 
   nodes.navItems.forEach((item) => {
-    const isActive = item.dataset.homeInteractionSettingsDestination === activeSection;
+    const isActive = item.dataset.homeInteractionSettingsDestination === primarySection;
     item.classList.toggle('is-active', isActive);
     item.setAttribute('aria-pressed', String(isActive));
   });
@@ -325,8 +368,7 @@ function setHomeInteractionSettingsSection(section) {
     mount.setAttribute('aria-hidden', String(!isActive));
   });
 
-  // Update content header
-  updateHomeInteractionSettingsContentHeader(nodes, activeSection);
+  renderHomeInteractionSettingsSubnavigation(nodes, activeSection);
 }
 
 function updateHomeInteractionSettingsContentHeader(nodes, activeSection) {
@@ -352,6 +394,64 @@ function updateHomeInteractionSettingsContentHeader(nodes, activeSection) {
   if (nodes.subnav) {
     nodes.subnav.innerHTML = '';
   }
+}
+
+function createHomeInteractionSettingsSubnavIcon(path) {
+  const iconWrap = document.createElement('span');
+  iconWrap.className = 'home-interaction-settings-panel__nav-icon inline-stroke-icon';
+  iconWrap.dataset.inlineStrokeIcon = '';
+  iconWrap.setAttribute('aria-hidden', 'true');
+
+  const icon = document.createElement('img');
+  icon.className = 'ui-icon-theme-aware';
+  icon.src = path;
+  icon.alt = '';
+  icon.setAttribute('aria-hidden', 'true');
+  iconWrap.appendChild(icon);
+
+  return iconWrap;
+}
+
+function renderHomeInteractionSettingsSubnavigation(nodes, activeSection) {
+  const parentConfig = getHomeInteractionSettingsParentConfig(activeSection);
+  const subdestinations = parentConfig?.subdestinations || [];
+  const hasSubnavigation = subdestinations.length > 0;
+
+  if (nodes.subrail) {
+    nodes.subrail.hidden = !hasSubnavigation;
+    nodes.subrail.setAttribute('aria-hidden', String(!hasSubnavigation));
+  }
+
+  if (nodes.subrailLabel) {
+    nodes.subrailLabel.textContent = parentConfig?.label || '';
+  }
+
+  if (!nodes.subnav) return;
+
+  nodes.subnav.replaceChildren();
+
+  if (!hasSubnavigation) return;
+
+  subdestinations.forEach((subdestination) => {
+    const button = document.createElement('button');
+    const label = document.createElement('span');
+    const isActive = subdestination.id === activeSection;
+
+    button.type = 'button';
+    button.className = 'home-interaction-settings-panel__subnav-item';
+    button.dataset.homeInteractionSettingsDestination = subdestination.id;
+    button.setAttribute('aria-pressed', String(isActive));
+    button.classList.toggle('is-active', isActive);
+
+    if (subdestination.icon) {
+      button.appendChild(createHomeInteractionSettingsSubnavIcon(subdestination.icon));
+    }
+
+    label.className = 'home-interaction-settings-panel__nav-text';
+    label.textContent = subdestination.label || subdestination.id;
+    button.appendChild(label);
+    nodes.subnav.appendChild(button);
+  });
 }
 
 /* =========================================================
@@ -640,6 +740,7 @@ function closeHomeInteractionSettingsPanel() {
 
   if (!nodes.root) return;
 
+  setHomeInteractionSettingsSessionExpanded(false);
   nodes.root.dataset.homeInteractionSettingsState = 'closed';
   nodes.root.hidden = true;
   nodes.root.setAttribute('aria-hidden', 'true');
@@ -695,6 +796,15 @@ function handleHomeInteractionSettingsShellClick(event) {
     event.preventDefault();
     event.stopPropagation();
     toggleHomeInteractionSettingsRailMode();
+    return true;
+  }
+
+  const sessionExpandTrigger = target.closest('[data-home-interaction-session-expand]');
+
+  if (sessionExpandTrigger) {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleHomeInteractionSettingsSessionExpanded();
     return true;
   }
 

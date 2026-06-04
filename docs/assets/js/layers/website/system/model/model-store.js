@@ -119,6 +119,28 @@ const MODEL_PERSONALIZATION_CHANGE_FIELDS = Object.freeze({
   efficiencyPreference: 'Efficiency',
   creativityLevel: 'Creativity',
   riskTolerance: 'Risk tolerance',
+  responseAudienceRules: 'Audience response rules',
+});
+
+const MODEL_RESPONSE_AUDIENCE_FIELDS = Object.freeze({
+  publicResponseOpenness: ['public', 'openness'],
+  publicResponseDirectness: ['public', 'directness'],
+  publicResponseHumor: ['public', 'humor'],
+  friendsResponseWarmth: ['friends', 'warmth'],
+  friendsResponseDetail: ['friends', 'detail'],
+  friendsResponseHumor: ['friends', 'humor'],
+  followersResponseClarity: ['followers', 'clarity'],
+  followersResponseEfficiency: ['followers', 'efficiency'],
+  followersResponseOpenness: ['followers', 'openness'],
+  mutualResponseTrustDepth: ['mutuals', 'trustDepth'],
+  mutualResponseExplanationDepth: ['mutuals', 'explanationDepth'],
+  mutualResponseDirectness: ['mutuals', 'directness'],
+  familyResponseWarmth: ['family', 'warmth'],
+  familyResponsePrivacyGuard: ['family', 'privacyGuard'],
+  familyResponseHumor: ['family', 'humor'],
+  subscriberResponsePriority: ['subscribers', 'priority'],
+  subscriberResponseDetail: ['subscribers', 'detail'],
+  subscriberResponseProfessionalTone: ['subscribers', 'professionalTone'],
 });
 
 /* =============================================================================
@@ -242,8 +264,33 @@ function normalizePreferenceNumber(value, fallback) {
   return Math.max(0, Math.min(100, Math.round(numeric)));
 }
 
+function normalizeResponseAudienceRules(value = {}) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function flattenResponseAudienceRules(rules = {}) {
+  const normalizedRules = normalizeResponseAudienceRules(rules);
+  return Object.entries(MODEL_RESPONSE_AUDIENCE_FIELDS).reduce((result, [field, path]) => {
+    const [audience, key] = path;
+    const fallback = field.includes('PrivacyGuard') || field.includes('ProfessionalTone') ? 75 : 50;
+    result[field] = normalizePreferenceNumber(normalizedRules?.[audience]?.[key], fallback);
+    return result;
+  }, {});
+}
+
+function buildResponseAudienceRules(preferences = {}) {
+  return Object.entries(MODEL_RESPONSE_AUDIENCE_FIELDS).reduce((rules, [field, path]) => {
+    const [audience, key] = path;
+    rules[audience] ||= {};
+    rules[audience][key] = normalizePreferenceNumber(preferences[field], 50);
+    return rules;
+  }, {});
+}
+
 function mapModelPersonalizationPreferences(row = {}) {
   if (!row || typeof row !== 'object') return null;
+
+  const responseAudienceRules = normalizeResponseAudienceRules(row.response_audience_rules);
 
   return {
     languageStyle: normalizeString(row.language_style || 'balanced'),
@@ -261,6 +308,8 @@ function mapModelPersonalizationPreferences(row = {}) {
     efficiencyPreference: normalizePreferenceNumber(row.efficiency_preference, 50),
     creativityLevel: normalizePreferenceNumber(row.creativity_level, 50),
     riskTolerance: normalizePreferenceNumber(row.risk_tolerance, 25),
+    responseAudienceRules,
+    ...flattenResponseAudienceRules(responseAudienceRules),
   };
 }
 
@@ -282,6 +331,7 @@ function buildModelPersonalizationPreferencesPayload(modelId, preferences = {}) 
     efficiency_preference: normalizePreferenceNumber(preferences.efficiencyPreference, 50),
     creativity_level: normalizePreferenceNumber(preferences.creativityLevel, 50),
     risk_tolerance: normalizePreferenceNumber(preferences.riskTolerance, 25),
+    response_audience_rules: buildResponseAudienceRules(preferences),
     updated_at: new Date().toISOString(),
   };
 }
@@ -690,18 +740,33 @@ export async function saveModelPersonalizationPreferences(modelId, preferences =
   const previousPreferences = await readModelPersonalizationPreferences(normalizedModelId).catch(() => null);
   const payload = buildModelPersonalizationPreferencesPayload(normalizedModelId, preferences);
 
-  const { data, error } = await supabase
+  let payloadForSave = payload;
+  let { data, error } = await supabase
     .from(MODEL_PERSONALIZATION_PREFERENCES_TABLE)
-    .upsert(payload, { onConflict: 'model_id' })
+    .upsert(payloadForSave, { onConflict: 'model_id' })
     .select('*')
     .maybeSingle();
+
+  if (error && isSupabaseColumnMissingError(error)) {
+    payloadForSave = { ...payload };
+    delete payloadForSave.response_audience_rules;
+
+    const fallbackResult = await supabase
+      .from(MODEL_PERSONALIZATION_PREFERENCES_TABLE)
+      .upsert(payloadForSave, { onConflict: 'model_id' })
+      .select('*')
+      .maybeSingle();
+
+    data = fallbackResult.data;
+    error = fallbackResult.error;
+  }
 
   if (error) {
     if (isSupabaseRelationMissingError(error)) return null;
     throw error;
   }
 
-  const savedPreferences = mapModelPersonalizationPreferences(data || payload);
+  const savedPreferences = mapModelPersonalizationPreferences(data || payloadForSave);
   const changedFields = getChangedModelFields(previousPreferences || {}, savedPreferences || {}, MODEL_PERSONALIZATION_CHANGE_FIELDS);
   if (model?.id && changedFields.length) {
     await recordChangedModelFields(model, changedFields, MODEL_PERSONALIZATION_CHANGE_FIELDS, {

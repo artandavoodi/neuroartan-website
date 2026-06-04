@@ -373,7 +373,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
   const group = getCurrentTabGroup(navigationState);
   const activeTab = getActiveTabKey(navigationState);
   const runtimeState = getProfileRuntimeState();
-  const authenticated = runtimeState.viewerState === 'authenticated' || runtimeState.authResolved !== true;
+  const authenticated = runtimeState.viewerState === 'authenticated';
   const visibleTabs = getVisibleModelContextTabs(group.tabs, authenticated);
   const nextSignature = `${getTabGroupKey(navigationState)}:${activeTab}:${authenticated ? 'user' : 'guest'}`;
 

@@ -102,7 +102,7 @@ function renderSidebar(root, state = getProfileNavigationState()){
   const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
   const useModelNav = isModelRoute();
   const runtimeState = getProfileRuntimeState();
-  const authenticated = runtimeState.viewerState === 'authenticated' || runtimeState.authResolved !== true;
+  const authenticated = runtimeState.viewerState === 'authenticated';
 
   if (primaryNav instanceof HTMLElement) primaryNav.hidden = useModelNav;
   if (modelNav instanceof HTMLElement) modelNav.hidden = !useModelNav;

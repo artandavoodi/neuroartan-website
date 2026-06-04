@@ -1,47 +1,52 @@
 <!-- =============================================================================
      00) FILE INDEX
      01) OVERVIEW SECTION ROOT
-     02) OVERVIEW SYSTEM STATUS
+     02) OVERVIEW SESSION MANAGEMENT
 ============================================================================= -->
 
 <!-- =============================================================================
      01) OVERVIEW SECTION ROOT
 ============================================================================= -->
 <section class="home-interaction-settings-destination home-interaction-settings-destination--overview" data-home-interaction-settings-destination="overview" aria-label="Overview">
-  <!-- =============================================================================
-       02) OVERVIEW SYSTEM STATUS
-  ============================================================================= -->
-  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-overview-systems-title">
-    <h3 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-overview-systems-title">Systems</h3>
-
-    <div class="home-interaction-settings-panel__section-group" aria-label="Control center overview">
-      <div class="home-interaction-settings-panel__toggle-row" aria-label="Model routing status">
-        <span>
-          <span class="home-interaction-settings-panel__option-label">Model routing</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare local, cloud, and automatic model selection</span>
-        </span>
+  <div class="home-interaction-settings-destination__surface home-interaction-settings-theme" data-home-interaction-settings-destination-surface>
+    <!-- =============================================================================
+         02) OVERVIEW SESSION MANAGEMENT
+    ============================================================================= -->
+    <section class="home-interaction-settings-theme__section" aria-labelledby="home-interaction-settings-overview-sessions-title" data-home-interaction-settings-theme-section>
+      <div class="home-interaction-settings-theme__section-header">
+        <h2 class="home-interaction-settings-theme__section-title" id="home-interaction-settings-overview-sessions-title">Session management</h2>
       </div>
+      <div class="home-interaction-settings-theme__section-content" data-home-interaction-settings-theme-section-content>
+        <div class="home-interaction-settings-theme__toggle-list">
+          <div class="home-interaction-settings-theme__toggle-row" aria-label="Current session status">
+            <span>
+              <span class="home-interaction-settings-theme__toggle-label">Current session</span>
+              <span class="home-interaction-settings-theme__toggle-description" data-home-interaction-session-current>Waiting for interaction</span>
+            </span>
+          </div>
 
-      <div class="home-interaction-settings-panel__toggle-row" aria-label="Chat history status">
-        <span>
-          <span class="home-interaction-settings-panel__option-label">Chat history</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare saved sessions, rename, archive, and retrieval</span>
-        </span>
+          <div class="home-interaction-settings-theme__toggle-row" aria-label="Chat history status">
+            <span>
+              <span class="home-interaction-settings-theme__toggle-label">Chat history</span>
+              <span class="home-interaction-settings-theme__toggle-description" data-home-interaction-session-history>0 saved sessions</span>
+            </span>
+          </div>
+
+          <div class="home-interaction-settings-theme__toggle-row" aria-label="Recent session status">
+            <span>
+              <span class="home-interaction-settings-theme__toggle-label">Recent entries</span>
+              <span class="home-interaction-settings-theme__toggle-description" data-home-interaction-session-recent>No recent entries in this browser</span>
+            </span>
+          </div>
+
+          <button class="home-interaction-settings-theme__toggle-row home-interaction-settings-theme__toggle-row--button" type="button" data-home-interaction-session-expand aria-pressed="false">
+            <span>
+              <span class="home-interaction-settings-theme__toggle-label" data-home-interaction-session-expand-label>Expand session workspace</span>
+              <span class="home-interaction-settings-theme__toggle-description">Use the full interaction settings surface</span>
+            </span>
+          </button>
+        </div>
       </div>
-
-      <div
-        class="home-interaction-settings-panel__toggle-row"
-        data-include="runtime-provider-settings"
-        aria-label="Runtime provider settings">
-      </div>
-
-
-      <div class="home-interaction-settings-panel__toggle-row" aria-label="Stage control status">
-        <span>
-          <span class="home-interaction-settings-panel__option-label">Stage control</span>
-          <span class="home-interaction-settings-panel__option-description">Control the interactive text, circle, response, and motion layers</span>
-        </span>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </section>

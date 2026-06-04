@@ -61,6 +61,19 @@ function syncHomeInteractionResponsePanel() {
   }
 }
 
+function dispatchHomeInteractionResponseUpdated() {
+  const response = normalizeHomeInteractionResponse(HOME_INTERACTION_RESPONSE_PANEL_STATE.response);
+  if (!response) return;
+
+  document.dispatchEvent(new CustomEvent('neuroartan:home-interaction-response-updated', {
+    detail: {
+      response,
+      state: HOME_INTERACTION_RESPONSE_PANEL_STATE.state,
+      source: 'home-interaction-response-panel',
+    },
+  }));
+}
+
 function clearHomeInteractionResponsePanel() {
   HOME_INTERACTION_RESPONSE_PANEL_STATE.response = '';
   HOME_INTERACTION_RESPONSE_PANEL_STATE.state = 'idle';
@@ -120,6 +133,7 @@ export function setHomeInteractionResponseContent(value = '') {
   HOME_INTERACTION_RESPONSE_PANEL_STATE.response = typeof value === 'string' ? value.trim() : '';
   HOME_INTERACTION_RESPONSE_PANEL_STATE.state = HOME_INTERACTION_RESPONSE_PANEL_STATE.response ? 'responding' : 'idle';
   syncHomeInteractionResponsePanel();
+  dispatchHomeInteractionResponseUpdated();
 }
 
 export function setHomeInteractionResponseState(value = 'idle') {

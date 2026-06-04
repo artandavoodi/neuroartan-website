@@ -195,6 +195,26 @@
   min-width:0;
 }
 
+.model-management__audience-groups{
+  display:grid;
+  gap:var(--spacing-lg);
+  min-width:0;
+}
+
+.model-management__audience-group{
+  display:grid;
+  gap:var(--spacing-md);
+  min-width:0;
+}
+
+.model-management__audience-title{
+  margin:0;
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  font-weight:var(--font-weight-heading-soft);
+}
+
 .model-management__field{
   display:grid;
   gap:var(--spacing-xs);

@@ -400,7 +400,7 @@ function renderToolbarActions(root, state = getProfileNavigationState()){
   if (!(nav instanceof HTMLElement)) return;
 
   const runtimeState = getProfileRuntimeState();
-  const authenticated = runtimeState.viewerState === 'authenticated' || runtimeState.authResolved !== true;
+  const authenticated = runtimeState.viewerState === 'authenticated';
   const actionKeys = resolveActionKeys(state).filter((key) => {
     const action = ACTIONS[key];
     return action && (authenticated || action.authState !== 'user');

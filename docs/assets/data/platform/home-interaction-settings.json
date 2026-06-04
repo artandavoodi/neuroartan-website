@@ -26,6 +26,59 @@
       "module": "/assets/js/layers/website/home/interaction-settings/model.js"
     },
     {
+      "id": "settings",
+      "label": "Settings",
+      "icon": "/registry/icons/public/assets/core/interface/settings/settings.svg",
+      "default_subdestination": "response",
+      "subdestinations": [
+        {
+          "id": "response",
+          "label": "Response",
+          "icon": "/registry/icons/public/assets/core/interface/response/response.svg"
+        },
+        {
+          "id": "voice",
+          "label": "Voice",
+          "icon": "/registry/icons/public/assets/core/media/audio/voice.svg"
+        },
+        {
+          "id": "memory",
+          "label": "Memory",
+          "icon": "/registry/icons/public/assets/core/cognition/memory/memory.svg"
+        },
+        {
+          "id": "session",
+          "label": "Session",
+          "icon": "/registry/icons/public/assets/core/identity/session/session.svg"
+        },
+        {
+          "id": "stage",
+          "label": "Stage",
+          "icon": "/registry/icons/public/assets/core/system/stage/stage.svg"
+        },
+        {
+          "id": "developer",
+          "label": "Developer",
+          "icon": "/registry/icons/public/assets/layers/website/settings/developer/developer.svg"
+        },
+        {
+          "id": "changelog",
+          "label": "Changelog",
+          "icon": "/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg"
+        },
+        {
+          "id": "privacy",
+          "label": "Privacy",
+          "icon": "/registry/icons/public/assets/core/legal/privacy/privacy.svg"
+        },
+        {
+          "id": "accessibility",
+          "label": "Accessibility",
+          "icon": "/registry/icons/public/assets/layers/website/settings/accessibility/accessibility.svg"
+        }
+      ]
+    },
+    {
       "id": "response",
       "label": "Response",
       "icon": "/registry/icons/public/assets/core/interface/response/response.svg",

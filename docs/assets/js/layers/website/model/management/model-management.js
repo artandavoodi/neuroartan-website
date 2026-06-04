@@ -27,6 +27,10 @@ import {
   removeModelLogicRecord
 } from '../../system/model/model-training-store.js';
 import { registerProfileMediaEditorTarget } from '../../profile/private/media/profile-media-editor.js';
+import {
+  constrainModelNavigationForViewer,
+  isPublicModelNavigation
+} from '../navigation/model-tab-registry.js';
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
@@ -39,6 +43,7 @@ const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   emotionalTone: 'neutral',
   responseLength: 'balanced',
   explanationDepth: 'standard',
+  responseAudienceScope: 'general',
   memoryRetention: 'session',
   continuityDepth: 'moderate',
   emotionalWeighting: 'balanced',
@@ -48,7 +53,25 @@ const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   senseOfHumor: 50,
   efficiencyPreference: 50,
   creativityLevel: 50,
-  riskTolerance: 25
+  riskTolerance: 25,
+  publicResponseOpenness: 50,
+  publicResponseDirectness: 50,
+  publicResponseHumor: 35,
+  friendsResponseWarmth: 65,
+  friendsResponseDetail: 50,
+  friendsResponseHumor: 55,
+  followersResponseClarity: 70,
+  followersResponseEfficiency: 60,
+  followersResponseOpenness: 45,
+  mutualResponseTrustDepth: 60,
+  mutualResponseExplanationDepth: 55,
+  mutualResponseDirectness: 55,
+  familyResponseWarmth: 75,
+  familyResponsePrivacyGuard: 80,
+  familyResponseHumor: 60,
+  subscriberResponsePriority: 65,
+  subscriberResponseDetail: 65,
+  subscriberResponseProfessionalTone: 75
 });
 
 const MODEL_PERSONALIZATION_PANE_GROUPS = Object.freeze({
@@ -620,6 +643,60 @@ function getActiveModelSection(navigationState = getProfileNavigationState()) {
   return MODEL_SECTIONS.has(navigationState.section) ? navigationState.section : 'model-foundation';
 }
 
+function getSafeModelManagementNavigationState(runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
+  const section = getActiveModelSection(navigationState);
+  const modelPane = navigationState.modelPane || 'overview';
+  const authenticated = runtimeState.viewerState === 'authenticated';
+  const constrained = constrainModelNavigationForViewer(section, modelPane, authenticated);
+
+  return {
+    ...navigationState,
+    section: constrained.section,
+    modelPane: constrained.section === 'model-discovery' && constrained.modelPane === 'overview'
+      ? 'directory'
+      : constrained.modelPane
+  };
+}
+
+function isModelManagementHydrationPending(runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
+  const section = getActiveModelSection(navigationState);
+  const modelPane = navigationState.modelPane || 'overview';
+  return runtimeState.authResolved !== true && !isPublicModelNavigation(section, modelPane);
+}
+
+function ensureModelManagementLoadingNode(root) {
+  if (!(root instanceof HTMLElement)) return null;
+
+  let loading = root.querySelector('[data-model-management-loading]');
+  if (loading instanceof HTMLElement) return loading;
+
+  loading = document.createElement('div');
+  loading.className = 'model-management__loading ui-loading-inline';
+  loading.dataset.modelManagementLoading = 'true';
+  loading.setAttribute('role', 'status');
+  loading.setAttribute('aria-live', 'polite');
+  loading.setAttribute('aria-label', 'Loading model workspace');
+  loading.innerHTML = '<span class="ui-loading-inline__spinner" aria-hidden="true"></span>';
+
+  const sections = root.querySelector('.model-management__sections');
+  if (sections instanceof HTMLElement) {
+    sections.before(loading);
+  } else {
+    root.append(loading);
+  }
+
+  return loading;
+}
+
+function setModelManagementLoading(root, loading) {
+  const loadingNode = ensureModelManagementLoadingNode(root);
+  if (loadingNode instanceof HTMLElement) {
+    loadingNode.hidden = !loading;
+  }
+  root.dataset.modelHydrationState = loading ? 'resolving' : 'ready';
+  root.setAttribute('aria-busy', loading ? 'true' : 'false');
+}
+
 function getVisibleModelPersonalizationGroup(navigationState = getProfileNavigationState()) {
   return MODEL_PERSONALIZATION_PANE_GROUPS[navigationState.modelPane] || 'behavior';
 }
@@ -969,6 +1046,12 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     const field = valueNode.dataset.modelPersonalizationValue;
     valueNode.textContent = String(getModelPersonalizationValue(field) ?? '');
   });
+
+  const responseAudienceScope = String(getModelPersonalizationValue('responseAudienceScope') || 'general');
+  root.querySelectorAll('[data-model-response-audience-panel]').forEach((panel) => {
+    if (!(panel instanceof HTMLElement)) return;
+    panel.hidden = panel.dataset.modelResponseAudiencePanel !== responseAudienceScope;
+  });
 }
 
 function renderAllModelPersonalizationControls() {
@@ -979,10 +1062,24 @@ function renderAllModelPersonalizationControls() {
 function renderModelManagement(root, runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
   if (!(root instanceof HTMLElement)) return;
 
-  const section = getActiveModelSection(navigationState);
+  if (isModelManagementHydrationPending(runtimeState, navigationState)) {
+    const section = getActiveModelSection(navigationState);
+    root.dataset.modelSection = section;
+    root.dataset.modelPane = navigationState.modelPane || 'overview';
+    setModelManagementLoading(root, true);
+    root.querySelectorAll('[data-model-management-section]').forEach((panel) => {
+      if (panel instanceof HTMLElement) panel.hidden = true;
+    });
+    return;
+  }
+
+  setModelManagementLoading(root, false);
+
+  const safeNavigationState = getSafeModelManagementNavigationState(runtimeState, navigationState);
+  const section = getActiveModelSection(safeNavigationState);
   const sectionCopy = SECTION_LABELS[section] || SECTION_LABELS['model-foundation'];
-  const paneCopy = getModelPersonalizationPaneCopy(navigationState)
-    || PANE_LABELS[navigationState.modelPane]
+  const paneCopy = getModelPersonalizationPaneCopy(safeNavigationState)
+    || PANE_LABELS[safeNavigationState.modelPane]
     || PANE_LABELS.overview;
   const profile = runtimeState.profile || {};
   const displayName = String(runtimeState.displayName || profile.display_name || '').trim();
@@ -990,7 +1087,7 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   const profileComplete = runtimeState.profileComplete === true || profile.profile_complete === true || runtimeState.completion?.complete === true;
 
   root.dataset.modelSection = section;
-  root.dataset.modelPane = navigationState.modelPane || 'overview';
+  root.dataset.modelPane = safeNavigationState.modelPane || 'overview';
   setText(root, '[data-model-owner-name]', displayName || 'Profile owner');
   setText(root, '[data-model-owner-handle]', username ? `@${username}` : '@username');
   setText(root, '[data-model-owner-id]', profile.id || profile.auth_user_id || 'Owner record pending');
@@ -1006,11 +1103,11 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
     panel.hidden = panel.dataset.modelManagementSection !== section;
   });
 
-  renderModelFoundationGroups(root, navigationState);
-  renderModelTrainingGroups(root, navigationState);
-  renderModelDiscoveryGroups(root, navigationState);
+  renderModelFoundationGroups(root, safeNavigationState);
+  renderModelTrainingGroups(root, safeNavigationState);
+  renderModelDiscoveryGroups(root, safeNavigationState);
   renderModelFoundationIdentityControls(root);
-  renderModelPersonalizationControls(root, navigationState);
+  renderModelPersonalizationControls(root, safeNavigationState);
   renderModelKnowledgeBase(root);
   renderModelLogicRecords(root);
   renderModelDirectory(root);

@@ -184,6 +184,19 @@
   display:none;
 }
 
+.model-management__loading[hidden],
+.model-management__audience-group[hidden]{
+  display:none;
+}
+
+.model-management__loading{
+  min-height:var(--control-height-lg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-secondary-color);
+}
+
 .model-management__control-title{
   margin:0;
 }

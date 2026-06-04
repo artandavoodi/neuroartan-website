@@ -119,7 +119,24 @@ const MODEL_PERSONALIZATION_CHANGE_FIELDS = Object.freeze({
   efficiencyPreference: 'Efficiency',
   creativityLevel: 'Creativity',
   riskTolerance: 'Risk tolerance',
-  responseAudienceRules: 'Audience response rules',
+  publicResponseOpenness: 'Public response openness',
+  publicResponseDirectness: 'Public response directness',
+  publicResponseHumor: 'Public response humor',
+  friendsResponseWarmth: 'Friends response warmth',
+  friendsResponseDetail: 'Friends response detail',
+  friendsResponseHumor: 'Friends response humor',
+  followersResponseClarity: 'Followers response clarity',
+  followersResponseEfficiency: 'Followers response efficiency',
+  followersResponseOpenness: 'Followers response openness',
+  mutualResponseTrustDepth: 'Mutual response trust depth',
+  mutualResponseExplanationDepth: 'Mutual response explanation depth',
+  mutualResponseDirectness: 'Mutual response directness',
+  familyResponseWarmth: 'Family response warmth',
+  familyResponsePrivacyGuard: 'Family response privacy guard',
+  familyResponseHumor: 'Family response humor',
+  subscriberResponsePriority: 'Subscriber response priority',
+  subscriberResponseDetail: 'Subscriber response detail',
+  subscriberResponseProfessionalTone: 'Subscriber response professional tone',
 });
 
 const MODEL_RESPONSE_AUDIENCE_FIELDS = Object.freeze({
@@ -141,6 +158,27 @@ const MODEL_RESPONSE_AUDIENCE_FIELDS = Object.freeze({
   subscriberResponsePriority: ['subscribers', 'priority'],
   subscriberResponseDetail: ['subscribers', 'detail'],
   subscriberResponseProfessionalTone: ['subscribers', 'professionalTone'],
+});
+
+const MODEL_RESPONSE_AUDIENCE_DEFAULTS = Object.freeze({
+  publicResponseOpenness: 50,
+  publicResponseDirectness: 50,
+  publicResponseHumor: 35,
+  friendsResponseWarmth: 65,
+  friendsResponseDetail: 50,
+  friendsResponseHumor: 55,
+  followersResponseClarity: 70,
+  followersResponseEfficiency: 60,
+  followersResponseOpenness: 45,
+  mutualResponseTrustDepth: 60,
+  mutualResponseExplanationDepth: 55,
+  mutualResponseDirectness: 55,
+  familyResponseWarmth: 75,
+  familyResponsePrivacyGuard: 80,
+  familyResponseHumor: 60,
+  subscriberResponsePriority: 65,
+  subscriberResponseDetail: 65,
+  subscriberResponseProfessionalTone: 75,
 });
 
 /* =============================================================================
@@ -272,7 +310,7 @@ function flattenResponseAudienceRules(rules = {}) {
   const normalizedRules = normalizeResponseAudienceRules(rules);
   return Object.entries(MODEL_RESPONSE_AUDIENCE_FIELDS).reduce((result, [field, path]) => {
     const [audience, key] = path;
-    const fallback = field.includes('PrivacyGuard') || field.includes('ProfessionalTone') ? 75 : 50;
+    const fallback = MODEL_RESPONSE_AUDIENCE_DEFAULTS[field] ?? 50;
     result[field] = normalizePreferenceNumber(normalizedRules?.[audience]?.[key], fallback);
     return result;
   }, {});
@@ -282,7 +320,7 @@ function buildResponseAudienceRules(preferences = {}) {
   return Object.entries(MODEL_RESPONSE_AUDIENCE_FIELDS).reduce((rules, [field, path]) => {
     const [audience, key] = path;
     rules[audience] ||= {};
-    rules[audience][key] = normalizePreferenceNumber(preferences[field], 50);
+    rules[audience][key] = normalizePreferenceNumber(preferences[field], MODEL_RESPONSE_AUDIENCE_DEFAULTS[field] ?? 50);
     return rules;
   }, {});
 }

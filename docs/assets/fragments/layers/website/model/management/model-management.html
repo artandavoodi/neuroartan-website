@@ -402,9 +402,6 @@
 
     <article class="model-management__section" data-model-management-section="model-personalization" hidden>
       <h3 class="model-management__section-title">Personalization</h3>
-      <p class="model-management__section-copy">
-        These controls tune the owner model itself. They do not change ICOS, interface language, or machine interaction preferences.
-      </p>
 
       <div class="model-management__control-groups">
         <section class="model-management__control-group" data-model-personalization-group="behavior">
@@ -519,31 +516,19 @@
           <h4 class="model-management__control-title">Response</h4>
           <div class="model-management__control-grid">
             <label class="model-management__field">
-              <span class="model-management__field-label">Length</span>
+              <span class="model-management__field-label">Relationship</span>
               <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="responseLength">Balanced</span>
+                <span class="ui-inline-dropdown__value" data-model-personalization-label="responseAudienceScope">General</span>
                 <span class="ui-inline-dropdown__icon-wrapper">
                   <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseLength" aria-label="Select response length">
-                    <option value="balanced">Balanced</option>
-                    <option value="concise">Concise</option>
-                    <option value="detailed">Detailed</option>
-                    <option value="comprehensive">Comprehensive</option>
-                  </select>
-                </span>
-              </span>
-            </label>
-
-            <label class="model-management__field">
-              <span class="model-management__field-label">Explanation depth</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="explanationDepth">Standard</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="explanationDepth" aria-label="Select explanation depth">
-                    <option value="standard">Standard</option>
-                    <option value="minimal">Minimal</option>
-                    <option value="thorough">Thorough</option>
+                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseAudienceScope" aria-label="Select response relationship">
+                    <option value="general">General</option>
+                    <option value="public">Public</option>
+                    <option value="friends">Friends</option>
+                    <option value="followers">Followers</option>
+                    <option value="mutuals">Mutuals</option>
+                    <option value="family">Family</option>
+                    <option value="subscribers">Subscribers</option>
                   </select>
                 </span>
               </span>
@@ -551,8 +536,42 @@
           </div>
 
           <div class="model-management__audience-groups" aria-label="Relationship response controls">
-            <section class="model-management__audience-group" aria-label="Public response controls">
-              <h5 class="model-management__audience-title">Public</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="general" aria-label="General response controls">
+              <div class="model-management__control-grid">
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Length</span>
+                  <span class="ui-inline-dropdown">
+                    <span class="ui-inline-dropdown__value" data-model-personalization-label="responseLength">Balanced</span>
+                    <span class="ui-inline-dropdown__icon-wrapper">
+                      <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                      <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseLength" aria-label="Select response length">
+                    <option value="balanced">Balanced</option>
+                    <option value="concise">Concise</option>
+                    <option value="detailed">Detailed</option>
+                    <option value="comprehensive">Comprehensive</option>
+                      </select>
+                    </span>
+                  </span>
+                </label>
+
+                <label class="model-management__field">
+                  <span class="model-management__field-label">Explanation depth</span>
+                  <span class="ui-inline-dropdown">
+                    <span class="ui-inline-dropdown__value" data-model-personalization-label="explanationDepth">Standard</span>
+                    <span class="ui-inline-dropdown__icon-wrapper">
+                      <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                      <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="explanationDepth" aria-label="Select explanation depth">
+                    <option value="standard">Standard</option>
+                    <option value="minimal">Minimal</option>
+                    <option value="thorough">Thorough</option>
+                      </select>
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="model-management__audience-group" data-model-response-audience-panel="public" aria-label="Public response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Openness</span>
@@ -580,8 +599,7 @@
               </div>
             </section>
 
-            <section class="model-management__audience-group" aria-label="Friends response controls">
-              <h5 class="model-management__audience-title">Friends</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="friends" aria-label="Friends response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Warmth</span>
@@ -609,8 +627,7 @@
               </div>
             </section>
 
-            <section class="model-management__audience-group" aria-label="Followers response controls">
-              <h5 class="model-management__audience-title">Followers</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="followers" aria-label="Followers response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Clarity</span>
@@ -638,8 +655,7 @@
               </div>
             </section>
 
-            <section class="model-management__audience-group" aria-label="Mutual response controls">
-              <h5 class="model-management__audience-title">Mutuals</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="mutuals" aria-label="Mutual response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Trust depth</span>
@@ -667,8 +683,7 @@
               </div>
             </section>
 
-            <section class="model-management__audience-group" aria-label="Family response controls">
-              <h5 class="model-management__audience-title">Family</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="family" aria-label="Family response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Warmth</span>
@@ -696,8 +711,7 @@
               </div>
             </section>
 
-            <section class="model-management__audience-group" aria-label="Subscribers response controls">
-              <h5 class="model-management__audience-title">Subscribers</h5>
+            <section class="model-management__audience-group" data-model-response-audience-panel="subscribers" aria-label="Subscribers response controls" hidden>
               <div class="model-management__control-grid">
                 <label class="model-management__field">
                   <span class="model-management__field-label">Priority</span>

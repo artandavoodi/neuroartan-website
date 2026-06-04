@@ -37,6 +37,7 @@ const ACTION_ICONS = Object.freeze({
   modelDiscovery: '/registry/icons/public/assets/core/navigation/discovery/discover.svg',
   modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
+  modelLearn: '/registry/icons/public/assets/layers/website/model/actions/learn.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
   dashboard: '/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg',
@@ -137,6 +138,13 @@ const ACTIONS = Object.freeze({
     label: 'Model changelog',
     tooltip: 'Changelog',
     icon: ACTION_ICONS.changelog,
+    authState: 'user'
+  },
+  modelLearn: {
+    id: 'model-learn',
+    label: 'Learn',
+    tooltip: 'Learn',
+    icon: ACTION_ICONS.modelLearn,
     authState: 'user'
   },
   modelConsent: {
@@ -294,64 +302,64 @@ const CONTEXT_ACTIONS = Object.freeze({
   posts: ['editProfile', 'createPost', 'filterPosts'],
   thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
   models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
-  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelChangelog'],
-  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelChangelog'],
-  'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelChangelog'],
-  'model-sources': ['modelSources', 'filterModels', 'modelChangelog'],
-  'model-memory': ['modelMemory', 'modelChangelog'],
-  'model-voice': ['modelVoice', 'modelChangelog'],
-  'model-readiness': ['modelReadiness', 'filterModels', 'modelChangelog'],
-  'model-runtime': ['modelProvider', 'modelChangelog'],
-  'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelChangelog'],
-  'model-settings': ['modelProvider', 'modelChangelog'],
+  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelLearn', 'modelChangelog'],
+  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelLearn', 'modelChangelog'],
+  'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelLearn', 'modelChangelog'],
+  'model-sources': ['modelSources', 'filterModels', 'modelLearn', 'modelChangelog'],
+  'model-memory': ['modelMemory', 'modelLearn', 'modelChangelog'],
+  'model-voice': ['modelVoice', 'modelLearn', 'modelChangelog'],
+  'model-readiness': ['modelReadiness', 'filterModels', 'modelLearn', 'modelChangelog'],
+  'model-runtime': ['modelProvider', 'modelLearn', 'modelChangelog'],
+  'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelChangelog'],
+  'model-settings': ['modelProvider', 'modelLearn', 'modelChangelog'],
   organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
 });
 
 const MODEL_PANE_ACTIONS = Object.freeze({
-  overview: ['modelIdentity', 'modelReadiness', 'modelChangelog'],
-  identity: ['modelEditIdentity', 'modelChangelog'],
-  consent: ['modelConsent', 'modelChangelog'],
-  sources: ['modelSources', 'modelChangelog'],
-  memory: ['modelMemory', 'modelChangelog'],
-  voice: ['modelVoice', 'modelChangelog'],
-  protocol: ['modelTraining', 'modelChangelog'],
-  datasets: ['modelSources', 'filterModels', 'modelChangelog'],
-  'knowledge-base': ['modelSources', 'modelChangelog'],
-  logics: ['modelSources', 'modelChangelog'],
-  provenance: ['modelSources', 'modelRouting', 'modelChangelog'],
-  evaluation: ['modelReadiness', 'modelChangelog'],
-  behavior: ['modelPersonalization', 'modelChangelog'],
-  language: ['modelPersonalization', 'modelVoice', 'modelChangelog'],
-  emotion: ['modelPersonalization', 'modelChangelog'],
-  response: ['modelPersonalization', 'modelChangelog'],
-  creativity: ['modelPersonalization', 'modelChangelog'],
-  reflection: ['modelPersonalization', 'modelChangelog'],
-  state: ['modelReadiness', 'filterDashboard', 'modelChangelog'],
-  checks: ['modelReadiness', 'modelChangelog'],
-  blockers: ['modelConsent', 'modelReadiness', 'modelChangelog'],
-  history: ['modelChangelog'],
-  trending: ['filterModels', 'modelChangelog'],
-  directory: ['filterModels', 'modelChangelog'],
-  expertise: ['filterModels', 'modelChangelog'],
-  reputation: ['filterModels', 'modelChangelog'],
-  monetization: ['modelChangelog'],
-  preferences: ['modelPreferences', 'modelChangelog'],
-  provider: ['modelProvider', 'modelChangelog'],
-  routing: ['modelRouting', 'modelChangelog'],
-  visibility: ['modelConsent', 'modelChangelog'],
-  changelog: ['modelChangelog']
+  overview: ['modelIdentity', 'modelReadiness', 'modelLearn', 'modelChangelog'],
+  identity: ['modelEditIdentity', 'modelLearn', 'modelChangelog'],
+  consent: ['modelConsent', 'modelLearn', 'modelChangelog'],
+  sources: ['modelSources', 'modelLearn', 'modelChangelog'],
+  memory: ['modelMemory', 'modelLearn', 'modelChangelog'],
+  voice: ['modelVoice', 'modelLearn', 'modelChangelog'],
+  protocol: ['modelTraining', 'modelLearn', 'modelChangelog'],
+  datasets: ['modelSources', 'filterModels', 'modelLearn', 'modelChangelog'],
+  'knowledge-base': ['modelSources', 'modelLearn', 'modelChangelog'],
+  logics: ['modelSources', 'modelLearn', 'modelChangelog'],
+  provenance: ['modelSources', 'modelRouting', 'modelLearn', 'modelChangelog'],
+  evaluation: ['modelReadiness', 'modelLearn', 'modelChangelog'],
+  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  language: ['modelPersonalization', 'modelVoice', 'modelLearn', 'modelChangelog'],
+  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  response: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  creativity: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  reflection: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  state: ['modelReadiness', 'filterDashboard', 'modelLearn', 'modelChangelog'],
+  checks: ['modelReadiness', 'modelLearn', 'modelChangelog'],
+  blockers: ['modelConsent', 'modelReadiness', 'modelLearn', 'modelChangelog'],
+  history: ['modelLearn', 'modelChangelog'],
+  trending: ['filterModels', 'modelLearn', 'modelChangelog'],
+  directory: ['filterModels', 'modelLearn', 'modelChangelog'],
+  expertise: ['filterModels', 'modelLearn', 'modelChangelog'],
+  reputation: ['filterModels', 'modelLearn', 'modelChangelog'],
+  monetization: ['modelLearn', 'modelChangelog'],
+  preferences: ['modelPreferences', 'modelLearn', 'modelChangelog'],
+  provider: ['modelProvider', 'modelLearn', 'modelChangelog'],
+  routing: ['modelRouting', 'modelLearn', 'modelChangelog'],
+  visibility: ['modelConsent', 'modelLearn', 'modelChangelog'],
+  changelog: ['modelLearn', 'modelChangelog']
 });
 
 const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
-  behavior: ['modelPersonalization', 'modelChangelog'],
-  language: ['modelPersonalization', 'modelVoice', 'modelChangelog'],
-  emotion: ['modelPersonalization', 'modelChangelog'],
-  response: ['modelPersonalization', 'modelChangelog'],
-  memory: ['modelPersonalization', 'modelMemory', 'modelChangelog'],
-  creativity: ['modelPersonalization', 'modelChangelog'],
-  reflection: ['modelPersonalization', 'modelChangelog']
+  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  language: ['modelPersonalization', 'modelVoice', 'modelLearn', 'modelChangelog'],
+  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  response: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  memory: ['modelPersonalization', 'modelMemory', 'modelLearn', 'modelChangelog'],
+  creativity: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  reflection: ['modelPersonalization', 'modelLearn', 'modelChangelog']
 });
 
 function toolbarRoots(){
@@ -395,12 +403,35 @@ function resolveModelChangelogArea(state = getProfileNavigationState()){
   return `model.${section}.${pane}`;
 }
 
+function resolveModelLearnFilters(state = getProfileNavigationState()) {
+  const filters = {
+    section: state.section,
+    modelPane: state.modelPane
+  };
+
+  if (state.section === 'model-personalization' && state.modelPane === 'response') {
+    const relationshipSelect = document.querySelector('[data-model-personalization-field="responseAudienceScope"]');
+    if (relationshipSelect instanceof HTMLSelectElement) {
+      filters.responseAudience = relationshipSelect.value || 'general';
+    }
+  }
+
+  return filters;
+}
+
 function renderToolbarActions(root, state = getProfileNavigationState()){
   const nav = root.querySelector('[data-profile-right-toolbar-actions]');
   if (!(nav instanceof HTMLElement)) return;
 
   const runtimeState = getProfileRuntimeState();
+  const authPending = runtimeState.authResolved !== true;
   const authenticated = runtimeState.viewerState === 'authenticated';
+  if (authPending) {
+    root.dataset.profileRightToolbarAuthState = 'resolving';
+    return;
+  }
+
+  root.dataset.profileRightToolbarAuthState = 'ready';
   const actionKeys = resolveActionKeys(state).filter((key) => {
     const action = ACTIONS[key];
     return action && (authenticated || action.authState !== 'user');
@@ -653,6 +684,18 @@ function requestProfileToolAction(action){
           }
         }
       }));
+      return;
+    case 'model-learn':
+      {
+        const state = getProfileNavigationState();
+        document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+          detail: {
+            context: 'modelLearn',
+            source: 'profile-right-toolbar',
+            filters: resolveModelLearnFilters(state)
+          }
+        }));
+      }
       return;
     case 'filter-posts':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {

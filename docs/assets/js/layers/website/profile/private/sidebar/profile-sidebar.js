@@ -102,6 +102,7 @@ function renderSidebar(root, state = getProfileNavigationState()){
   const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
   const useModelNav = isModelRoute();
   const runtimeState = getProfileRuntimeState();
+  const authPending = runtimeState.authResolved !== true;
   const authenticated = runtimeState.viewerState === 'authenticated';
 
   if (primaryNav instanceof HTMLElement) primaryNav.hidden = useModelNav;
@@ -113,7 +114,9 @@ function renderSidebar(root, state = getProfileNavigationState()){
     const link = item.dataset.profileNavLink || '';
     const searchTrigger = item.dataset.profileSearchTrigger || '';
 
-    item.hidden = item.dataset.authState === 'user' && !authenticated;
+    if (!authPending) {
+      item.hidden = item.dataset.authState === 'user' && !authenticated;
+    }
     
     let active = false;
     

@@ -139,8 +139,8 @@
   --home-interaction-settings-nested-navigation-divider-color:var(--home-interaction-settings-panel-border);
   --home-interaction-settings-nested-navigation-divider-height:calc(var(--home-interaction-settings-nested-navigation-control-size) * 0.58);
   --home-interaction-settings-arrow-icon-size:var(--layout-interaction-settings-arrow-icon-size, calc(((var(--global-close-button-size, var(--close-control-size)) + var(--global-close-button-line-width, var(--close-control-line-width))) / 2) * 0.45));
-  --home-interaction-settings-nested-navigation-control-size:var(--global-close-button-size, var(--close-control-size));
-  --home-interaction-settings-nested-navigation-icon-size:var(--home-interaction-settings-arrow-icon-size);
+  --home-interaction-settings-nested-navigation-control-size:var(--home-platform-shell-rail-toggle-size);
+  --home-interaction-settings-nested-navigation-icon-size:var(--home-platform-shell-rail-toggle-icon-size);
   --home-interaction-settings-nested-navigation-color:var(--home-interaction-settings-panel-nav-color);
   --home-interaction-settings-nested-navigation-color-hover:var(--home-interaction-settings-panel-nav-hover-color);
   --home-interaction-settings-nested-navigation-opacity:var(--home-interaction-settings-panel-nav-opacity);
@@ -406,29 +406,6 @@
 }
 
 
-.home-interaction-settings-panel__nested-navigation{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  align-self:center;
-  gap:var(--home-interaction-settings-nested-navigation-gap);
-  flex:0 0 auto;
-  margin-top:auto;
-  margin-right:var(--spacing-none);
-  margin-bottom:auto;
-  margin-left:var(--spacing-none);
-  padding:var(--home-interaction-settings-nested-navigation-padding);
-  border:var(--border-width-hairline) solid var(--home-interaction-settings-nested-navigation-border);
-  border-radius:var(--home-interaction-settings-nested-navigation-radius);
-  background:var(--home-interaction-settings-nested-navigation-bg);
-  color:var(--home-interaction-settings-nested-navigation-color);
-  overflow:hidden;
-}
-
-.home-interaction-settings-panel__nested-navigation[hidden]{
-  display:none;
-}
-
 .home-interaction-settings-panel__nested-back,
 .home-interaction-settings-panel__nested-next{
   -webkit-appearance:none;
@@ -442,15 +419,20 @@
   height:var(--home-interaction-settings-nested-navigation-control-size);
   margin:var(--spacing-none);
   padding:var(--spacing-none);
-  border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
   background:transparent;
   color:var(--home-interaction-settings-nested-navigation-color);
   opacity:var(--home-interaction-settings-nested-navigation-opacity);
   outline:none;
   text-decoration:none;
   transform:none;
-  transition:var(--interaction-transition-control);
+  transition:none;
+}
+
+.home-interaction-settings-panel__nested-back[hidden],
+.home-interaction-settings-panel__nested-next[hidden]{
+  display:none;
 }
 
 .home-interaction-settings-panel__nested-back:hover,
@@ -473,19 +455,62 @@
 }
 
 .home-interaction-settings-panel__nested-navigation-icon{
-  display:block;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   width:var(--home-interaction-settings-nested-navigation-icon-size);
   height:var(--home-interaction-settings-nested-navigation-icon-size);
+  flex:0 0 auto;
+  object-fit:contain;
+  object-position:center;
 }
 
-.home-interaction-settings-panel__nested-navigation-divider{
-  display:block;
-  align-self:center;
-  flex:0 0 var(--border-width-hairline);
-  width:var(--border-width-hairline);
-  height:var(--home-interaction-settings-nested-navigation-divider-height);
-  background:var(--home-interaction-settings-nested-navigation-divider-color);
-  opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+.home-interaction-settings-panel__nav-expand{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:var(--home-interaction-settings-nested-navigation-control-size);
+  height:var(--home-interaction-settings-nested-navigation-control-size);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--home-interaction-settings-nested-navigation-color);
+  opacity:var(--home-interaction-settings-nested-navigation-opacity);
+  outline:none;
+  text-decoration:none;
+  transform:none;
+  transition:none;
+}
+
+.home-interaction-settings-panel__nav-expand:hover,
+.home-interaction-settings-panel__nav-expand:focus-visible{
+  color:var(--home-interaction-settings-nested-navigation-color-hover);
+  opacity:var(--home-interaction-settings-nested-navigation-opacity-hover);
+}
+
+.home-interaction-settings-panel__nav-expand:focus-visible{
+  outline:var(--focus-ring-width, calc(1px * var(--accessibility-density-scale))) solid color-mix(in srgb, var(--color-primary1) 72%, transparent);
+  outline-offset:var(--focus-ring-offset, var(--spacing-xs));
+}
+
+.home-interaction-settings-panel__nav-expand-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-interaction-settings-nested-navigation-icon-size);
+  height:var(--home-interaction-settings-nested-navigation-icon-size);
+  flex:0 0 auto;
+  object-fit:contain;
+  object-position:center;
+}
+
+.home-interaction-settings-panel__nav-expand[hidden]{
+  display:none;
 }
 
 /* =============================================================================
@@ -523,12 +548,38 @@
   grid-column:3;
 }
 
+/* =============================================================================
+   07) SUBRAIL EXPANDED STATE
+============================================================================= */
+.home-interaction-settings-panel[data-home-interaction-settings-subrail="expanded"] .home-interaction-settings-panel__main{
+  grid-template-columns:
+    0
+    0
+    minmax(var(--spacing-none), 1fr);
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-subrail="expanded"] .home-interaction-settings-panel__rail-toggle{
+  display:none;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-subrail="expanded"] .home-interaction-settings-panel__rail{
+  display:none !important;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-subrail="expanded"] .home-interaction-settings-panel__subrail{
+  display:none !important;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-subrail="expanded"] .home-interaction-settings-panel__content{
+  grid-column:1 / span 3;
+}
+
 .home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail-inner{
   padding-right:var(--home-platform-shell-rail-padding-right);
   padding-left:var(--home-platform-shell-rail-padding-left);
 }
 
-.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__nav-text{
+.home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__nav-text{
   display:none;
 }
 
@@ -1401,30 +1452,79 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
   }
 }
 
+@media (max-width:1024px){
+  .home-interaction-settings-panel__nav-expand{
+    display:none !important;
+  }
+
+  .home-interaction-settings-panel__main{
+    grid-template-columns:
+      minmax(var(--home-platform-shell-tablet-rail-min), var(--home-platform-shell-tablet-rail-max))
+      minmax(var(--home-platform-shell-tablet-subrail-min), var(--home-platform-shell-tablet-subrail-max))
+      minmax(var(--spacing-none), 1fr);
+  }
+}
+
 @media (max-width:760px){
   .home-interaction-settings-panel{
     top:var(--spacing-none);
     right:var(--spacing-none);
     bottom:var(--spacing-none);
     left:var(--spacing-none);
+    --home-platform-shell-inline-padding:var(--site-shell-inline-padding-mobile);
   }
 
   .home-interaction-settings-panel__main{
-    grid-template-columns:var(--grid-column-single);
-    grid-template-rows:auto minmax(0, 1fr);
+    display:block;
+    position:relative;
+    padding:var(--spacing-none) var(--home-platform-shell-inline-padding);
+    overflow:hidden;
   }
 
-  .home-interaction-settings-panel__rail{
-    flex-direction:row;
-    overflow-x:auto;
-    scrollbar-width:none;
-    overflow-y:hidden;
-    white-space:nowrap;
+  .home-interaction-settings-panel__rail,
+  .home-interaction-settings-panel__subrail,
+  .home-interaction-settings-panel__content{
+    position:absolute;
+    inset:var(--spacing-none) var(--home-platform-shell-inline-padding);
+    display:flex;
+    flex-direction:column;
+    width:auto;
+    min-width:var(--spacing-none);
+    max-width:none;
+    max-height:none;
     border-right:var(--spacing-none);
-    border-bottom:var(--border-width-hairline) solid var(--home-platform-shell-border);
+    border-bottom:var(--spacing-none);
+    background:var(--home-platform-shell-inner-surface);
+    opacity:var(--overlay-opacity-closed);
+    visibility:hidden;
+    pointer-events:none;
+    transform:none;
   }
 
-  .home-interaction-settings-panel__rail-inner{
+  .home-interaction-settings-panel[data-home-interaction-settings-mobile-level="root"] .home-interaction-settings-panel__rail,
+  .home-interaction-settings-panel[data-home-interaction-settings-mobile-level="subnav"] .home-interaction-settings-panel__subrail,
+  .home-interaction-settings-panel[data-home-interaction-settings-mobile-level="content"] .home-interaction-settings-panel__content{
+    opacity:var(--overlay-opacity-open);
+    visibility:visible;
+    pointer-events:auto;
+  }
+
+  .home-interaction-settings-panel[data-home-interaction-settings-touch-locked] .home-interaction-settings-panel__rail,
+  .home-interaction-settings-panel[data-home-interaction-settings-touch-locked] .home-interaction-settings-panel__subrail,
+  .home-interaction-settings-panel[data-home-interaction-settings-touch-locked] .home-interaction-settings-panel__content{
+    pointer-events:none;
+  }
+
+  .home-interaction-settings-panel__subrail{
+    height:auto;
+    min-height:var(--spacing-none);
+    max-height:none;
+    overflow:hidden;
+  }
+
+  .home-interaction-settings-panel__rail-inner,
+  .home-interaction-settings-panel__subrail-inner,
+  .home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail-inner{
     height:var(--size-full);
     width:var(--size-full);
     min-width:var(--spacing-none);
@@ -1434,7 +1534,15 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
     scrollbar-width:none;
   }
 
-  .home-interaction-settings-panel__rail-inner::-webkit-scrollbar{
+  .home-interaction-settings-panel__subrail-inner{
+    height:var(--size-full);
+    min-height:var(--spacing-none);
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+
+  .home-interaction-settings-panel__rail-inner::-webkit-scrollbar,
+  .home-interaction-settings-panel__subrail-inner::-webkit-scrollbar{
     display:none;
     width:0;
     height:0;
@@ -1452,6 +1560,10 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
     display:none;
   }
 
+  .home-interaction-settings-panel__nested-back:not([hidden]){
+    display:inline-flex;
+  }
+
   .home-interaction-settings-panel__group + .home-interaction-settings-panel__group{
     margin-top:var(--spacing-none);
     padding-top:var(--spacing-none);
@@ -1463,14 +1575,14 @@ body[data-home-stage-contrast="high"] .home-stage-interactive-text{
     display:none;
   }
 
-  .home-interaction-settings-panel__rail[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__group-label,
-  .home-interaction-settings-panel__rail[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__nav-text,
-  .home-interaction-settings-panel__rail[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__nav-indicator{
+  .home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__group-label,
+  .home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__nav-text,
+  .home-interaction-settings-panel[data-home-interaction-settings-rail="collapsed"] .home-interaction-settings-panel__rail .home-interaction-settings-panel__nav-indicator{
     display:none;
   }
 
   .home-interaction-settings-panel__nav{
-    flex-direction:row;
+    flex-direction:column;
     align-items:stretch;
     width:var(--size-full);
     min-width:var(--spacing-none);

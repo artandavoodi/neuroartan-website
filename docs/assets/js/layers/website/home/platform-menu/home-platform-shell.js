@@ -25,6 +25,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   activeSubdestination: '',
   snapshot: null,
   railMode: 'expanded',
+  subrailExpanded: false,
   config: [],
   configPromise: null,
   fragmentCache: new Map(),
@@ -124,6 +125,10 @@ function getHomePlatformShellBackTrigger() {
   return document.querySelector('#home-platform-shell [data-home-platform-shell-back]');
 }
 
+function getHomePlatformShellNavExpandTrigger() {
+  return document.querySelector('#home-platform-shell [data-home-platform-nav-expand]');
+}
+
 function getHomePlatformShellNavItems() {
   return Array.from(document.querySelectorAll('#home-platform-shell .home-platform-shell__nav-item[data-home-platform-destination]'));
 }
@@ -144,12 +149,14 @@ function isHomePlatformMobileView() {
 
 function normalizeHomePlatformShellStorageState(state = {}) {
   const destination = normalizeString(state.destination);
+  const hasSubrailExpanded = Object.prototype.hasOwnProperty.call(state, 'subrailExpanded');
 
   return {
     isOpen: state.isOpen === true,
     destination: HOME_PLATFORM_DESTINATIONS.has(destination) ? destination : 'home',
     subdestination: normalizeString(state.subdestination),
     mobileStackLevel: normalizeHomePlatformMobileStackLevel(state.mobileStackLevel),
+    subrailExpanded: hasSubrailExpanded ? state.subrailExpanded === true : false,
   };
 }
 
@@ -182,6 +189,7 @@ function persistHomePlatformShellStorageState(overrides = {}) {
     destination: HOME_PLATFORM_SHELL_STATE.activeDestination,
     subdestination: HOME_PLATFORM_SHELL_STATE.activeSubdestination,
     mobileStackLevel: HOME_PLATFORM_SHELL_STATE.mobileStackLevel,
+    subrailExpanded: HOME_PLATFORM_SHELL_STATE.subrailExpanded,
     ...overrides,
   });
 }
@@ -1223,6 +1231,45 @@ function toggleHomePlatformRailMode() {
   setHomePlatformRailMode(nextMode);
 }
 
+function syncHomePlatformSubrailExpanded(expanded = HOME_PLATFORM_SHELL_STATE.subrailExpanded, destination = HOME_PLATFORM_SHELL_STATE.activeDestination, options = {}) {
+  const root = getHomePlatformShellRoot();
+  if (!root) return;
+
+  const normalizedDestination = HOME_PLATFORM_DESTINATIONS.has(destination) ? destination : 'home';
+  const normalized = expanded === true && normalizedDestination === 'home';
+  const expandControl = getHomePlatformShellNavExpandTrigger();
+
+  HOME_PLATFORM_SHELL_STATE.subrailExpanded = normalized;
+  root.setAttribute('data-home-platform-subrail', normalized ? 'expanded' : 'normal');
+
+  if (expandControl) {
+    const isHomeDestination = normalizedDestination === 'home';
+    const expandIcon = expandControl.querySelector('[data-home-platform-nav-expand-icon]');
+    if (expandIcon) {
+      const expandedIcon = expandIcon.getAttribute('data-home-platform-nav-expand-icon-expanded');
+      const collapsedIcon = expandIcon.getAttribute('data-home-platform-nav-expand-icon-collapsed');
+      expandIcon.src = normalized ? expandedIcon : collapsedIcon;
+    }
+
+    expandControl.hidden = !isHomeDestination;
+    expandControl.setAttribute('aria-hidden', String(!isHomeDestination));
+    expandControl.setAttribute('aria-pressed', String(normalized));
+    expandControl.setAttribute('aria-label', normalized ? 'Collapse home' : 'Expand home');
+  }
+
+  if (options.persist !== false) {
+    persistHomePlatformShellStorageState();
+  }
+}
+
+function toggleHomePlatformSubrailExpanded(destination = HOME_PLATFORM_SHELL_STATE.activeDestination) {
+  const root = getHomePlatformShellRoot();
+  if (!root) return;
+
+  const currentState = root.getAttribute('data-home-platform-subrail') === 'expanded';
+  syncHomePlatformSubrailExpanded(!currentState, destination);
+}
+
 /* =============================================================================
 09) SHELL STATE HELPERS
 ============================================================================= */
@@ -1259,6 +1306,11 @@ async function setHomePlatformDestination(destination, subdestination = '') {
   syncHomePlatformShellNav(destination);
   renderHomePlatformShellSubnav(destination, nextSubdestination);
   await renderHomePlatformShellContent(destination, nextSubdestination);
+  syncHomePlatformSubrailExpanded(
+    HOME_PLATFORM_SHELL_STATE.subrailExpanded && destination === 'home',
+    destination,
+    { persist: false }
+  );
 
   const root = getHomePlatformShellRoot();
   if (root && !root.hidden) {
@@ -1318,6 +1370,7 @@ async function restoreHomePlatformShellStorageState() {
 
   const storedState = readHomePlatformShellStorageState();
   if (storedState.isOpen) {
+    HOME_PLATFORM_SHELL_STATE.subrailExpanded = storedState.subrailExpanded;
     openHomePlatformShell(
       storedState.destination,
       storedState.subdestination,
@@ -1356,6 +1409,7 @@ function openHomePlatformShell(
     destination,
     subdestination,
     mobileStackLevel,
+    subrailExpanded: HOME_PLATFORM_SHELL_STATE.subrailExpanded && destination === 'home',
   });
 
   if (isHomePlatformMobileView()) {
@@ -1369,6 +1423,11 @@ function openHomePlatformShell(
   }
 
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
+  syncHomePlatformSubrailExpanded(
+    HOME_PLATFORM_SHELL_STATE.subrailExpanded && destination === 'home',
+    destination,
+    { persist: false }
+  );
 
   void setHomePlatformDestination(destination, subdestination).then(() => {
     if (HOME_PLATFORM_SHELL_STATE.shellSession !== shellSession || root.hidden) {
@@ -1408,6 +1467,8 @@ function closeHomePlatformShell({ clearPersistedState = false } = {}) {
   document.documentElement.classList.remove('home-platform-shell-open');
   root.removeAttribute('data-home-platform-destination');
   root.removeAttribute('data-home-platform-subdestination');
+  root.setAttribute('data-home-platform-subrail', 'normal');
+  HOME_PLATFORM_SHELL_STATE.subrailExpanded = false;
   HOME_PLATFORM_SHELL_STATE.mobileAwaitingSelection = false;
   HOME_PLATFORM_SHELL_STATE.mobileAwaitingSubselection = false;
   resetHomePlatformMobileStackLevel();
@@ -1611,6 +1672,14 @@ function bindHomePlatformShellEvents() {
     if (railToggleTrigger) {
       event.preventDefault();
       toggleHomePlatformRailMode();
+      return;
+    }
+
+    const navExpandTrigger = eventTarget.closest('[data-home-platform-nav-expand]');
+    if (navExpandTrigger) {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleHomePlatformSubrailExpanded(navExpandTrigger.getAttribute('data-home-platform-nav-expand') || 'home');
       return;
     }
 

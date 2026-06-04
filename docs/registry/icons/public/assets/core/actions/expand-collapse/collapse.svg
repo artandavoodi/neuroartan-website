@@ -13,7 +13,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs1" />
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
   <sodipodi:namedview
      id="namedview1"
      pagecolor="#505050"
@@ -24,7 +59,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="8.822109"
-     inkscape:cx="14.395651"
+     inkscape:cx="14.452327"
      inkscape:cy="21.706828"
      inkscape:window-width="1472"
      inkscape:window-height="868"
@@ -33,19 +68,23 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
   <path
-     d="M 3.1761811,9.732731 9.8730644,9.8730631 9.7327328,3.1761817"
+     d="M 3.1761811,9.732731 8.8732839,9.8521129 A 0.95895058,0.95895058 135 0 0 9.8521142,8.8732826 L 9.7327328,3.1761817"
      stroke="currentColor"
      stroke-width="1.25"
      stroke-linecap="round"
      stroke-linejoin="round"
      id="path1"
-     style="stroke:#000000" />
+     style="stroke:#000000"
+     inkscape:path-effect="#path-effect1"
+     inkscape:original-d="M 3.1761811,9.732731 9.8730644,9.8730631 9.7327328,3.1761817" />
   <path
-     d="m 20.823819,14.26727 -6.696882,-0.140332 0.140331,6.696881"
+     d="m 20.823819,14.26727 -5.697101,-0.119382 a 0.95895067,0.95895067 135 0 0 -0.978831,0.978831 l 0.119381,5.6971"
      stroke="currentColor"
      stroke-width="1.25"
      stroke-linecap="round"
      stroke-linejoin="round"
      id="path1-0"
-     style="stroke:#000000" />
+     style="stroke:#000000"
+     inkscape:path-effect="#path-effect2"
+     inkscape:original-d="m 20.823819,14.26727 -6.696882,-0.140332 0.140331,6.696881" />
 </svg>

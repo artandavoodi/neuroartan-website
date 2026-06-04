@@ -449,7 +449,7 @@
   --layout-home-platform-chrome-blur:8px;
   --layout-home-platform-chrome-saturate:120%;
   --layout-home-platform-rail-toggle-size:1.25rem;
-  --layout-home-platform-rail-toggle-margin-left:0.7rem;
+  --layout-home-platform-rail-toggle-margin-left:var(--spacing-lg);
   --layout-home-platform-rail-toggle-icon-size:calc(1.05rem * var(--accessibility-icon-scale));
   --layout-home-platform-rail-width:18rem;
   --layout-home-platform-subrail-width:15rem;

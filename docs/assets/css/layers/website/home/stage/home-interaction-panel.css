@@ -164,15 +164,11 @@
     box-shadow var(--home-interaction-panel-motion-fast) var(--interaction-ease-standard);
 }
 
-.home-interaction-panel{
-  
-}
-
 .home-interaction-panel:focus-within,
 .home-interaction-panel[data-home-interaction-mode="listening"],
 .home-interaction-panel[data-home-interaction-mode="thinking"],
 .home-interaction-panel[data-home-interaction-mode="responding"]{
-  border-color:var(--home-interaction-panel-border-active);
+  border-color:var(--home-interaction-panel-border);
 }
 
 /* =============================================================================
@@ -392,7 +388,6 @@
 }
 
 .home-interaction-panel__attach,
-.home-interaction-panel__settings,
 .home-interaction-panel__voice{
   width:var(--home-interaction-panel-control-size);
   min-width:var(--home-interaction-panel-control-size);
@@ -405,21 +400,44 @@
   color:var(--home-interaction-panel-control-text);
 }
 
+.home-interaction-panel__settings{
+  width:var(--home-interaction-panel-control-size);
+  min-width:var(--home-interaction-panel-control-size);
+  height:var(--home-interaction-panel-control-size);
+  min-height:var(--home-interaction-panel-control-size);
+  padding:var(--spacing-none);
+  border:none;
+  border-radius:0;
+  background:transparent;
+  color:var(--home-interaction-panel-control-text);
+  transition:none;
+}
+
 .home-interaction-panel__attach:hover,
 .home-interaction-panel__attach:focus-visible,
-.home-interaction-panel__settings:hover,
-.home-interaction-panel__settings:focus-visible,
-.home-interaction-panel__settings[aria-expanded="true"],
 .home-interaction-panel__voice:hover,
 .home-interaction-panel__voice:focus-visible,
 .home-interaction-panel__voice[data-voice-active="true"],
 .home-interaction-panel__model-button:hover,
-.home-interaction-panel__model-button:focus-visible,
-.home-interaction-panel__continuity:hover,
-.home-interaction-panel__continuity:focus-visible{
+.home-interaction-panel__model-button:focus-visible{
   border-color:var(--home-interaction-panel-control-border-hover);
   background:var(--home-interaction-panel-control-bg-hover);
   color:var(--home-interaction-panel-control-text-hover);
+}
+
+.home-interaction-panel__settings:hover,
+.home-interaction-panel__settings:focus-visible,
+.home-interaction-panel__settings[aria-expanded="true"]{
+  border:none;
+  background:transparent;
+  color:var(--home-interaction-panel-control-text);
+}
+
+.home-interaction-panel__continuity:hover,
+.home-interaction-panel__continuity:focus-visible{
+  border:none;
+  background:transparent;
+  color:var(--home-interaction-panel-control-text);
 }
 
 .home-interaction-panel__attach-icon,
@@ -470,6 +488,13 @@
   animation: spin 1s linear infinite;
 }
 
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"]:hover .home-interaction-panel__continuity-icon img,
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="listening"]:hover .home-interaction-panel__continuity-icon img,
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="responding"]:hover .home-interaction-panel__continuity-icon img{
+  animation: none;
+  content: url('/registry/icons/public/assets/core/media/transport/stop.svg');
+}
+
 /* =============================================================================
    09) MODEL AND SETTINGS CONTROLS
 ============================================================================= */
@@ -503,18 +528,6 @@
 .home-interaction-panel__model-chevron{
   flex:0 0 auto;
   color:var(--home-interaction-panel-model-chevron);
-}
-
-.home-interaction-panel__settings{
-  width:var(--home-interaction-panel-control-size);
-  min-width:var(--home-interaction-panel-control-size);
-  height:var(--home-interaction-panel-control-size);
-  min-height:var(--home-interaction-panel-control-size);
-  padding:var(--spacing-none);
-  border:var(--border-width-hairline) solid var(--home-interaction-panel-control-border);
-  border-radius:var(--control-radius-pill);
-  background:var(--home-interaction-panel-control-bg);
-  color:var(--home-interaction-panel-control-text);
 }
 
 /* =============================================================================
@@ -634,10 +647,10 @@
   height:var(--home-interaction-panel-control-size);
   min-height:var(--home-interaction-panel-control-size);
   padding:0;
-  border:var(--border-width-hairline) solid var(--home-interaction-panel-submit-border);
-  border-radius:50%;
-  background:var(--home-interaction-panel-submit-bg);
-  color:var(--home-interaction-panel-submit-text);
+  border:none;
+  border-radius:0;
+  background:transparent;
+  color:var(--home-interaction-panel-control-text);
   gap:var(--home-interaction-panel-submit-gap);
   font-size:var(--home-interaction-panel-submit-size);
   font-weight:var(--home-interaction-panel-submit-weight);
@@ -654,11 +667,11 @@
 
 .home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"],
 .home-interaction-panel__continuity[data-home-interaction-submit-intent="listening"]{
-  background:var(--home-interaction-panel-control-thinking-bg);
+  background:transparent;
 }
 
 .home-interaction-panel__continuity[data-home-interaction-submit-intent="reset"]{
-  background:var(--home-interaction-panel-control-responding-bg);
+  background:transparent;
 }
 
 .home-interaction-panel[data-home-interaction-mode="thinking"] .home-interaction-panel__continuity-label::after{

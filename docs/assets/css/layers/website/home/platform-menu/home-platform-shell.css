@@ -354,6 +354,50 @@ body.home-platform-shell-open .home-platform-shell{
   display:none !important;
 }
 
+.home-platform-shell__nav-expand{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:var(--home-platform-shell-rail-toggle-size);
+  height:var(--home-platform-shell-rail-toggle-size);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--home-platform-shell-chrome-toggle-color);
+  opacity:var(--home-platform-shell-nav-opacity);
+  outline:none;
+  text-decoration:none;
+  transform:none;
+  transition:none;
+}
+
+.home-platform-shell__nav-expand:hover,
+.home-platform-shell__nav-expand:focus-visible{
+  color:var(--home-platform-shell-chrome-toggle-hover-color);
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+  outline:none;
+}
+
+.home-platform-shell__nav-expand-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-platform-shell-rail-toggle-icon-size);
+  height:var(--home-platform-shell-rail-toggle-icon-size);
+  flex:0 0 auto;
+  object-fit:contain;
+  object-position:center;
+}
+
+.home-platform-shell__nav-expand[hidden]{
+  display:none;
+}
+
 .home-platform-shell[data-home-platform-destination="settings"][data-home-platform-subdestination="language"] .home-platform-shell__back:not([hidden]){
   display:inline-flex;
 }
@@ -423,6 +467,26 @@ body.home-platform-shell-open .home-platform-shell{
 
 .home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__subrail[hidden] + .home-platform-shell__content{
   grid-column:2 / -1;
+}
+
+.home-platform-shell[data-home-platform-subrail="expanded"] .home-platform-shell__main{
+  grid-template-columns:
+    0
+    0
+    minmax(var(--spacing-none), 1fr);
+}
+
+.home-platform-shell[data-home-platform-subrail="expanded"] .home-platform-shell__rail-toggle{
+  display:none;
+}
+
+.home-platform-shell[data-home-platform-subrail="expanded"] .home-platform-shell__rail,
+.home-platform-shell[data-home-platform-subrail="expanded"] .home-platform-shell__subrail{
+  display:none !important;
+}
+
+.home-platform-shell[data-home-platform-subrail="expanded"] .home-platform-shell__content{
+  grid-column:1 / span 3;
 }
 
 /* =============================================================================
@@ -1009,6 +1073,10 @@ body.home-platform-shell-open .home-platform-shell{
 13) RESPONSIVE STATES
 ============================================================================= */
 @media (max-width: 1024px){
+  .home-platform-shell__nav-expand{
+    display:none !important;
+  }
+
   .home-platform-shell__main{
     grid-template-columns:
       minmax(var(--home-platform-shell-tablet-rail-min), var(--home-platform-shell-tablet-rail-max))

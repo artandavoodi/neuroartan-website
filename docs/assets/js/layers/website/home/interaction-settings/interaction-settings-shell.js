@@ -25,9 +25,15 @@ const HOME_INTERACTION_SETTINGS_SHELL_STATE = {
   activeSection: 'overview',
   activeNestedPanel: '',
   nestedPanelParentSection: '',
+  hasNestedBack: false,
   config: [],
   configPromise: null,
   railMode: 'expanded',
+  subrailExpanded: false,
+  mobileStackLevel: 'root',
+  mobileTouchLockTimer: null,
+  didRestorePersistedState: false,
+  isRestoringFromStorage: false,
 };
 
 const HOME_INTERACTION_SETTINGS_NESTED_PANEL_PATHS = {
@@ -42,6 +48,10 @@ const HOME_INTERACTION_SETTINGS_NESTED_PANEL_PATHS = {
    ========================================================= */
 const HOME_INTERACTION_SETTINGS_CONFIG_URL = '/assets/data/platform/home-interaction-settings.json';
 const HOME_INTERACTION_SETTINGS_RAIL_STORAGE_KEY = 'neuroartan.home.interactionSettings.railMode';
+const HOME_INTERACTION_SETTINGS_SUBRAIL_STORAGE_KEY = 'neuroartan.home.interactionSettings.subrailExpanded';
+const HOME_INTERACTION_SETTINGS_STATE_STORAGE_KEY = 'neuroartan.home.interactionSettings.state';
+const HOME_INTERACTION_SETTINGS_MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
+const HOME_INTERACTION_SETTINGS_MOBILE_TOUCH_LOCK_MS = 180;
 
 /* =========================================================
    03. DOM HELPERS
@@ -88,6 +98,95 @@ function normalizeHomeInteractionSettingsRailMode(value) {
   return value === 'collapsed' ? 'collapsed' : 'expanded';
 }
 
+function normalizeHomeInteractionSettingsSubrailExpanded(value) {
+  return value === true || value === 'true' || value === 'expanded';
+}
+
+function normalizeHomeInteractionSettingsMobileStackLevel(level) {
+  if (level === 'subnav' || level === 'content') {
+    return level;
+  }
+
+  return 'root';
+}
+
+function normalizeHomeInteractionSettingsStorageState(state = {}) {
+  const hasSubrailExpanded = Object.prototype.hasOwnProperty.call(state, 'subrailExpanded');
+
+  return {
+    isOpen: state.isOpen === true,
+    section: normalizeHomeInteractionSettingsSection(state.section),
+    railMode: normalizeHomeInteractionSettingsRailMode(state.railMode),
+    subrailExpanded: hasSubrailExpanded
+      ? normalizeHomeInteractionSettingsSubrailExpanded(state.subrailExpanded)
+      : loadHomeInteractionSettingsSubrailExpanded(),
+    mobileStackLevel: normalizeHomeInteractionSettingsMobileStackLevel(state.mobileStackLevel),
+  };
+}
+
+function readHomeInteractionSettingsStorageState() {
+  try {
+    return normalizeHomeInteractionSettingsStorageState(
+      JSON.parse(window.localStorage.getItem(HOME_INTERACTION_SETTINGS_STATE_STORAGE_KEY) || '{}')
+    );
+  } catch {
+    return normalizeHomeInteractionSettingsStorageState();
+  }
+}
+
+function writeHomeInteractionSettingsStorageState(state = {}) {
+  try {
+    window.localStorage.setItem(
+      HOME_INTERACTION_SETTINGS_STATE_STORAGE_KEY,
+      JSON.stringify(normalizeHomeInteractionSettingsStorageState(state))
+    );
+  } catch {}
+}
+
+function persistHomeInteractionSettingsStorageState(overrides = {}) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  const current = readHomeInteractionSettingsStorageState();
+
+  writeHomeInteractionSettingsStorageState({
+    ...current,
+    isOpen: nodes.root ? !nodes.root.hidden : current.isOpen,
+    section: HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection,
+    railMode: HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode,
+    subrailExpanded: HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded,
+    mobileStackLevel: HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel,
+    ...overrides,
+  });
+}
+
+function clearHomeInteractionSettingsStorageState() {
+  try {
+    window.localStorage.removeItem(HOME_INTERACTION_SETTINGS_STATE_STORAGE_KEY);
+  } catch {}
+}
+
+async function restoreHomeInteractionSettingsStorageState() {
+  if (HOME_INTERACTION_SETTINGS_SHELL_STATE.didRestorePersistedState) {
+    return false;
+  }
+
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.didRestorePersistedState = true;
+
+  const storedState = readHomeInteractionSettingsStorageState();
+  if (storedState.isOpen) {
+    if (storedState.railMode) {
+      HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode = storedState.railMode;
+    }
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded = storedState.subrailExpanded;
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel = storedState.mobileStackLevel;
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.isRestoringFromStorage = true;
+    await openHomeInteractionSettingsPanel(storedState.section);
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.isRestoringFromStorage = false;
+    return true;
+  }
+
+  return false;
+}
+
 function loadHomeInteractionSettingsRailMode() {
   try {
     return normalizeHomeInteractionSettingsRailMode(window.localStorage.getItem(HOME_INTERACTION_SETTINGS_RAIL_STORAGE_KEY));
@@ -102,6 +201,137 @@ function saveHomeInteractionSettingsRailMode(mode) {
   } catch (_error) {
     /* Intentionally empty: rail mode persistence is best-effort only. */
   }
+}
+
+function loadHomeInteractionSettingsSubrailExpanded() {
+  try {
+    return normalizeHomeInteractionSettingsSubrailExpanded(
+      window.localStorage.getItem(HOME_INTERACTION_SETTINGS_SUBRAIL_STORAGE_KEY)
+    );
+  } catch (_error) {
+    return false;
+  }
+}
+
+function saveHomeInteractionSettingsSubrailExpanded(expanded) {
+  try {
+    window.localStorage.setItem(
+      HOME_INTERACTION_SETTINGS_SUBRAIL_STORAGE_KEY,
+      normalizeHomeInteractionSettingsSubrailExpanded(expanded) ? 'true' : 'false'
+    );
+  } catch (_error) {
+    /* Intentionally empty: subrail expansion persistence is best-effort only. */
+  }
+}
+
+function isHomeInteractionSettingsMobileView() {
+  return HOME_INTERACTION_SETTINGS_MOBILE_QUERY.matches;
+}
+
+function setHomeInteractionSettingsMobileTouchLock(isLocked) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+
+  if (nodes.root) {
+    nodes.root.toggleAttribute('data-home-interaction-settings-touch-locked', isLocked);
+  }
+}
+
+function clearHomeInteractionSettingsMobileTouchLock() {
+  if (HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileTouchLockTimer) {
+    window.clearTimeout(HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileTouchLockTimer);
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileTouchLockTimer = null;
+  }
+
+  setHomeInteractionSettingsMobileTouchLock(false);
+}
+
+function lockHomeInteractionSettingsMobileTouchCycle() {
+  if (!isHomeInteractionSettingsMobileView()) {
+    return;
+  }
+
+  clearHomeInteractionSettingsMobileTouchLock();
+  setHomeInteractionSettingsMobileTouchLock(true);
+
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileTouchLockTimer = window.setTimeout(() => {
+    clearHomeInteractionSettingsMobileTouchLock();
+  }, HOME_INTERACTION_SETTINGS_MOBILE_TOUCH_LOCK_MS);
+}
+
+function isHomeInteractionSettingsMobileTouchLocked() {
+  return !!getHomeInteractionSettingsShellNodes().root?.hasAttribute('data-home-interaction-settings-touch-locked');
+}
+
+function hasHomeInteractionSettingsSubnavigation(section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) {
+  const parentConfig = getHomeInteractionSettingsParentConfig(section);
+  return (parentConfig?.subdestinations || []).length > 0;
+}
+
+function shouldRouteHomeInteractionSettingsMobileSectionDirectlyToContent(section) {
+  const config = getHomeInteractionSettingsDestinationConfig(section);
+  return !(config?.subdestinations || []).length;
+}
+
+function syncHomeInteractionSettingsMobileStackLevel(level = HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  const normalized = normalizeHomeInteractionSettingsMobileStackLevel(level);
+  const previous = HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel;
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel = normalized;
+
+  if (isHomeInteractionSettingsMobileView() && normalized !== previous) {
+    lockHomeInteractionSettingsMobileTouchCycle();
+  }
+
+  if (nodes.root) {
+    nodes.root.setAttribute('data-home-interaction-settings-mobile-level', normalized);
+  }
+
+  syncHomeInteractionSettingsBackControls();
+
+  if (nodes.root && !nodes.root.hidden) {
+    persistHomeInteractionSettingsStorageState();
+  }
+}
+
+function setHomeInteractionSettingsMobileStackLevel(level) {
+  syncHomeInteractionSettingsMobileStackLevel(level);
+}
+
+function resetHomeInteractionSettingsMobileStackLevel() {
+  clearHomeInteractionSettingsMobileTouchLock();
+  syncHomeInteractionSettingsMobileStackLevel('root');
+}
+
+function advanceHomeInteractionSettingsMobileStackLevel(level) {
+  if (!isHomeInteractionSettingsMobileView()) {
+    return;
+  }
+
+  setHomeInteractionSettingsMobileStackLevel(level);
+}
+
+function navigateHomeInteractionSettingsMobileBack() {
+  if (!isHomeInteractionSettingsMobileView()) {
+    return false;
+  }
+
+  if (isHomeInteractionSettingsMobileTouchLocked()) {
+    return true;
+  }
+
+  if (HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel === 'content') {
+    setHomeInteractionSettingsMobileStackLevel(
+      hasHomeInteractionSettingsSubnavigation(HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) ? 'subnav' : 'root'
+    );
+    return true;
+  }
+
+  if (HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel === 'subnav') {
+    setHomeInteractionSettingsMobileStackLevel('root');
+    return true;
+  }
+
+  return false;
 }
 
 function getHomeInteractionSettingsActiveMount(nodes) {
@@ -158,6 +388,9 @@ function syncHomeInteractionSettingsRailMode(mode = HOME_INTERACTION_SETTINGS_SH
       }));
     }
   }
+
+  saveHomeInteractionSettingsRailMode(normalized);
+  persistHomeInteractionSettingsStorageState();
 }
 
 function toggleHomeInteractionSettingsRailMode() {
@@ -331,7 +564,7 @@ function setHomeInteractionSettingsActiveDescription(nodes, activeSection) {
 /* =========================================================
    06. SECTION NAVIGATION
    ========================================================= */
-function setHomeInteractionSettingsSection(section) {
+async function setHomeInteractionSettingsSection(section) {
   const nodes = getHomeInteractionSettingsShellNodes();
   const requestedSection = normalizeHomeInteractionSettingsSection(section);
   const requestedConfig = getHomeInteractionSettingsDestinationConfig(requestedSection);
@@ -339,6 +572,7 @@ function setHomeInteractionSettingsSection(section) {
     ? normalizeHomeInteractionSettingsSection(resolveDefaultSubdestination(requestedSection))
     : requestedSection;
   const primarySection = getHomeInteractionSettingsPrimaryDestination(activeSection);
+  const previousSection = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection;
 
   HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection = activeSection;
 
@@ -353,6 +587,12 @@ function setHomeInteractionSettingsSection(section) {
   HOME_INTERACTION_SETTINGS_SHELL_STATE.nestedPanelParentSection = '';
   if (nodes.root) delete nodes.root.dataset.homeInteractionSettingsNestedPanel;
   setHomeInteractionSettingsNestedBackState(false);
+
+  if (!HOME_INTERACTION_SETTINGS_SHELL_STATE.isRestoringFromStorage) {
+    if (previousSection && previousSection !== activeSection) {
+      syncHomeInteractionSettingsSubrailExpanded(false, activeSection, { persist: false });
+    }
+  }
 
   nodes.navItems.forEach((item) => {
     const isActive = item.dataset.homeInteractionSettingsDestination === primarySection;
@@ -369,6 +609,23 @@ function setHomeInteractionSettingsSection(section) {
   });
 
   renderHomeInteractionSettingsSubnavigation(nodes, activeSection);
+  syncHomeInteractionSettingsMobileStackLevel(HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel);
+
+  const expandControl = nodes.root?.querySelector?.('[data-home-interaction-settings-nav-expand]');
+  if (expandControl) {
+    expandControl.hidden = activeSection !== 'overview';
+    expandControl.setAttribute('aria-hidden', String(activeSection !== 'overview'));
+  }
+
+  syncHomeInteractionSettingsSubrailExpanded(
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded && activeSection === 'overview',
+    activeSection,
+    { persist: false }
+  );
+
+  if (nodes.root && !nodes.root.hidden) {
+    persistHomeInteractionSettingsStorageState();
+  }
 }
 
 function updateHomeInteractionSettingsContentHeader(nodes, activeSection) {
@@ -469,30 +726,21 @@ function ensureHomeInteractionSettingsNestedBackControl(nodes) {
 
   if (existingControl) return existingControl;
 
-  const navigationControl = document.createElement('div');
   const previousControl = document.createElement('button');
   const previousIcon = document.createElement('img');
-  const navigationDivider = document.createElement('span');
   const nextControl = document.createElement('button');
   const nextIcon = document.createElement('img');
-
-  navigationControl.className = 'home-interaction-settings-panel__nested-navigation';
-  navigationControl.dataset.homeInteractionSettingsNestedNavigation = 'true';
-  navigationControl.hidden = true;
-  navigationControl.setAttribute('aria-hidden', 'true');
 
   previousControl.type = 'button';
   previousControl.className = 'home-interaction-settings-panel__nested-back';
   previousControl.dataset.homeInteractionSettingsNestedBack = 'true';
   previousControl.setAttribute('aria-label', 'Previous');
+  previousControl.hidden = true;
 
   previousIcon.className = 'ui-icon-theme-aware home-interaction-settings-panel__nested-navigation-icon';
-  previousIcon.src = '/registry/icons/public/assets/core/navigation/direction/left.svg';
+  previousIcon.src = '/registry/icons/public/assets/core/navigation/direction/back.svg';
   previousIcon.alt = '';
   previousIcon.setAttribute('aria-hidden', 'true');
-
-  navigationDivider.className = 'home-interaction-settings-panel__nested-navigation-divider';
-  navigationDivider.setAttribute('aria-hidden', 'true');
 
   nextControl.type = 'button';
   nextControl.className = 'home-interaction-settings-panel__nested-next';
@@ -500,6 +748,7 @@ function ensureHomeInteractionSettingsNestedBackControl(nodes) {
   nextControl.setAttribute('aria-label', 'Next');
   nextControl.disabled = true;
   nextControl.setAttribute('aria-disabled', 'true');
+  nextControl.hidden = true;
 
   nextIcon.className = 'ui-icon-theme-aware home-interaction-settings-panel__nested-navigation-icon';
   nextIcon.src = '/registry/icons/public/assets/core/navigation/direction/right.svg';
@@ -508,26 +757,85 @@ function ensureHomeInteractionSettingsNestedBackControl(nodes) {
 
   previousControl.appendChild(previousIcon);
   nextControl.appendChild(nextIcon);
-  navigationControl.append(previousControl, navigationDivider, nextControl);
 
-  if (nodes.panelTitle) {
-    nodes.panelTitle.insertAdjacentElement('afterend', navigationControl);
+  const chromeLeading = nodes.root.querySelector('.home-interaction-settings-panel__chrome-leading');
+  if (chromeLeading) {
+    chromeLeading.appendChild(previousControl);
+    chromeLeading.appendChild(nextControl);
   } else {
-    nodes.panelHeader.appendChild(navigationControl);
+    nodes.panelHeader.appendChild(previousControl);
+    nodes.panelHeader.appendChild(nextControl);
   }
 
   return previousControl;
 }
 
 function setHomeInteractionSettingsNestedBackState(isVisible) {
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.hasNestedBack = isVisible === true;
+  syncHomeInteractionSettingsBackControls();
+}
+
+function syncHomeInteractionSettingsBackControls() {
   const nodes = getHomeInteractionSettingsShellNodes();
   const backControl = ensureHomeInteractionSettingsNestedBackControl(nodes);
-  const navigationControl = nodes.root?.querySelector?.('[data-home-interaction-settings-nested-navigation]') ?? null;
+  const nextControl = nodes.root?.querySelector?.('[data-home-interaction-settings-nested-next]') ?? null;
 
-  if (!backControl || !navigationControl) return;
+  if (!backControl || !nextControl) return;
 
-  navigationControl.hidden = !isVisible;
-  navigationControl.setAttribute('aria-hidden', String(!isVisible));
+  const hasNestedBack = HOME_INTERACTION_SETTINGS_SHELL_STATE.hasNestedBack === true;
+  const hasMobileBack = isHomeInteractionSettingsMobileView()
+    && HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel !== 'root';
+  const canGoBack = hasNestedBack || hasMobileBack;
+
+  backControl.hidden = !canGoBack;
+  backControl.setAttribute('aria-hidden', String(!canGoBack));
+  backControl.setAttribute(
+    'aria-label',
+    hasNestedBack
+      ? 'Back'
+      : HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel === 'content'
+        ? 'Back to section navigation'
+        : 'Back to main navigation'
+  );
+
+  nextControl.hidden = !hasNestedBack;
+  nextControl.setAttribute('aria-hidden', String(!hasNestedBack));
+}
+
+function syncHomeInteractionSettingsSubrailExpanded(expanded = false, section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection, options = {}) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  if (!nodes.root) return;
+
+  const normalized = expanded === true;
+  const activeSection = normalizeHomeInteractionSettingsSection(section);
+
+  nodes.root.setAttribute('data-home-interaction-settings-subrail', normalized ? 'expanded' : 'normal');
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded = normalized;
+  saveHomeInteractionSettingsSubrailExpanded(normalized);
+
+  nodes.root.querySelectorAll('[data-home-interaction-settings-nav-expand]').forEach((expandControl) => {
+    const expandIcon = expandControl.querySelector('[data-home-interaction-settings-nav-expand-icon]');
+    if (expandIcon) {
+      const expandedIcon = expandIcon.getAttribute('data-home-interaction-settings-nav-expand-icon-expanded');
+      const collapsedIcon = expandIcon.getAttribute('data-home-interaction-settings-nav-expand-icon-collapsed');
+      expandIcon.src = normalized ? expandedIcon : collapsedIcon;
+    }
+
+    expandControl.setAttribute('aria-pressed', String(normalized));
+    expandControl.setAttribute('aria-label', normalized ? `Collapse ${activeSection}` : `Expand ${activeSection}`);
+  });
+
+  if (options.persist !== false) {
+    persistHomeInteractionSettingsStorageState();
+  }
+}
+
+function toggleHomeInteractionSettingsSubrailExpand(section) {
+  const nodes = getHomeInteractionSettingsShellNodes();
+  if (!nodes.root) return;
+
+  const currentState = nodes.root.getAttribute('data-home-interaction-settings-subrail') === 'expanded';
+  syncHomeInteractionSettingsSubrailExpanded(!currentState, section);
 }
 
 async function loadHomeInteractionSettingsFragmentIntoMount(fragmentKey, mount) {
@@ -567,6 +875,8 @@ async function openHomeInteractionSettingsNestedPanel(fragmentKey) {
   HOME_INTERACTION_SETTINGS_SHELL_STATE.activeNestedPanel = normalizedKey;
   HOME_INTERACTION_SETTINGS_SHELL_STATE.nestedPanelParentSection = parentSection;
   nodes.root.dataset.homeInteractionSettingsNestedPanel = normalizedKey;
+
+  // Only show navigation buttons when nested panel is open
   setHomeInteractionSettingsNestedBackState(true);
 
   return true;
@@ -709,7 +1019,7 @@ function closeBlockingGlobalOverlaysForInteractionSettings() {
   }));
 }
 
-function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) {
+async function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection) {
   const nodes = getHomeInteractionSettingsShellNodes();
 
   if (!nodes.root) return;
@@ -726,13 +1036,33 @@ function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTINGS_SH
   document.querySelectorAll('[data-home-interaction-settings-open], [data-home-interaction-settings-trigger], [data-home-topbar-action="interaction-settings"], [data-home-action="interaction-settings"]').forEach((trigger) => {
     trigger.setAttribute('aria-expanded', 'true');
   });
-  setHomeInteractionSettingsSection(section);
 
   setHomeInteractionSettingsNestedBackState(false);
 
-  // Initialize rail mode
-  const savedRailMode = loadHomeInteractionSettingsRailMode();
-  syncHomeInteractionSettingsRailMode(savedRailMode);
+  if (isHomeInteractionSettingsMobileView()) {
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode = 'expanded';
+    syncHomeInteractionSettingsRailMode('expanded');
+    if (HOME_INTERACTION_SETTINGS_SHELL_STATE.isRestoringFromStorage) {
+      syncHomeInteractionSettingsMobileStackLevel(HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel);
+    } else {
+      resetHomeInteractionSettingsMobileStackLevel();
+    }
+  } else {
+    const savedRailMode = loadHomeInteractionSettingsRailMode();
+    syncHomeInteractionSettingsRailMode(savedRailMode);
+    syncHomeInteractionSettingsMobileStackLevel('root');
+  }
+
+  // Set section after rail mode is initialized
+  await setHomeInteractionSettingsSection(section);
+
+  writeHomeInteractionSettingsStorageState({
+    isOpen: true,
+    section: HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection,
+    railMode: HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode,
+    subrailExpanded: HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded,
+    mobileStackLevel: HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel,
+  });
 }
 
 function closeHomeInteractionSettingsPanel() {
@@ -741,6 +1071,8 @@ function closeHomeInteractionSettingsPanel() {
   if (!nodes.root) return;
 
   setHomeInteractionSettingsSessionExpanded(false);
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.hasNestedBack = false;
+  resetHomeInteractionSettingsMobileStackLevel();
   nodes.root.dataset.homeInteractionSettingsState = 'closed';
   nodes.root.hidden = true;
   nodes.root.setAttribute('aria-hidden', 'true');
@@ -756,6 +1088,14 @@ function closeHomeInteractionSettingsPanel() {
       source: 'home-interaction-settings-shell',
     },
   }));
+
+  writeHomeInteractionSettingsStorageState({
+    isOpen: false,
+    section: HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection,
+    railMode: HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode,
+    subrailExpanded: HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded,
+    mobileStackLevel: HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel,
+  });
 }
 
 function bindHomeInteractionSettingsShell() {
@@ -813,7 +1153,20 @@ function handleHomeInteractionSettingsShellClick(event) {
   if (nestedBackControl) {
     event.preventDefault();
     event.stopPropagation();
+    if (!HOME_INTERACTION_SETTINGS_SHELL_STATE.activeNestedPanel && navigateHomeInteractionSettingsMobileBack()) {
+      return true;
+    }
     closeHomeInteractionSettingsNestedPanel();
+    return true;
+  }
+
+  const navExpandControl = target.closest('[data-home-interaction-settings-nav-expand]');
+
+  if (navExpandControl) {
+    event.preventDefault();
+    event.stopPropagation();
+    const section = navExpandControl.dataset.homeInteractionSettingsNavExpand;
+    toggleHomeInteractionSettingsSubrailExpand(section);
     return true;
   }
 
@@ -831,7 +1184,15 @@ function handleHomeInteractionSettingsShellClick(event) {
   if (navItem) {
     event.preventDefault();
     event.stopPropagation();
-    setHomeInteractionSettingsSection(navItem.dataset.homeInteractionSettingsDestination);
+    const section = navItem.dataset.homeInteractionSettingsDestination;
+    const isSubnavItem = navItem.classList.contains('home-interaction-settings-panel__subnav-item');
+    void setHomeInteractionSettingsSection(section).then(() => {
+      advanceHomeInteractionSettingsMobileStackLevel(
+        isSubnavItem || shouldRouteHomeInteractionSettingsMobileSectionDirectlyToContent(section)
+          ? 'content'
+          : 'subnav'
+      );
+    });
 
     return true;
   }
@@ -940,7 +1301,25 @@ async function bootHomeInteractionSettingsShell() {
 
   await ensureHomeInteractionSettingsConfig();
 
+  // Restore open state if panel was previously open
+  if (await restoreHomeInteractionSettingsStorageState()) {
+    return;
+  }
+
+  // Load saved state for section and rail mode (only if panel wasn't open)
+  const savedState = readHomeInteractionSettingsStorageState();
+  if (savedState.section) {
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection = savedState.section;
+  }
+  if (savedState.railMode) {
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode = savedState.railMode;
+  }
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded = savedState.subrailExpanded;
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel = savedState.mobileStackLevel;
+
   setHomeInteractionSettingsSection(HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection);
+  syncHomeInteractionSettingsRailMode(HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode);
+  syncHomeInteractionSettingsMobileStackLevel(HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel);
 
 }
 

@@ -498,6 +498,17 @@ function setupEventListeners(settings) {
     });
   }
   
+function updateHomePlatformDropdownValue(fieldId, value) {
+  const dropdownValue = document.querySelector(`[data-home-platform-dropdown-value="${fieldId}"]`);
+  if (!(dropdownValue instanceof HTMLElement)) return;
+  
+  const select = document.querySelector(`[data-home-platform-field="${fieldId}"]`);
+  if (!(select instanceof HTMLSelectElement)) return;
+  
+  const selectedOption = select.options[select.selectedIndex];
+  dropdownValue.textContent = selectedOption?.text || value;
+}
+
   // Thought Pattern fields
   const languageStyleSelect = document.querySelector('[data-home-platform-field="language-style"]');
   const directnessLevelSelect = document.querySelector('[data-home-platform-field="directness-level"]');
@@ -506,6 +517,7 @@ function setupEventListeners(settings) {
   if (languageStyleSelect) {
     languageStyleSelect.addEventListener('change', (e) => {
       settings.languageStyle = e.target.value;
+      updateHomePlatformDropdownValue('language-style', settings.languageStyle);
       saveSettings(settings);
     });
   }
@@ -513,6 +525,7 @@ function setupEventListeners(settings) {
   if (directnessLevelSelect) {
     directnessLevelSelect.addEventListener('change', (e) => {
       settings.directnessLevel = e.target.value;
+      updateHomePlatformDropdownValue('directness-level', settings.directnessLevel);
       saveSettings(settings);
     });
   }
@@ -520,6 +533,7 @@ function setupEventListeners(settings) {
   if (emotionalToneSelect) {
     emotionalToneSelect.addEventListener('change', (e) => {
       settings.emotionalTone = e.target.value;
+      updateHomePlatformDropdownValue('emotional-tone', settings.emotionalTone);
       saveSettings(settings);
     });
   }
@@ -531,6 +545,7 @@ function setupEventListeners(settings) {
   if (responseLengthSelect) {
     responseLengthSelect.addEventListener('change', (e) => {
       settings.responseLength = e.target.value;
+      updateHomePlatformDropdownValue('response-length', settings.responseLength);
       saveSettings(settings);
     });
   }
@@ -538,6 +553,7 @@ function setupEventListeners(settings) {
   if (explanationDepthSelect) {
     explanationDepthSelect.addEventListener('change', (e) => {
       settings.explanationDepth = e.target.value;
+      updateHomePlatformDropdownValue('explanation-depth', settings.explanationDepth);
       saveSettings(settings);
     });
   }
@@ -549,6 +565,7 @@ function setupEventListeners(settings) {
   if (memoryRetentionSelect) {
     memoryRetentionSelect.addEventListener('change', (e) => {
       settings.memoryRetention = e.target.value;
+      updateHomePlatformDropdownValue('memory-retention', settings.memoryRetention);
       saveSettings(settings);
     });
   }
@@ -556,6 +573,7 @@ function setupEventListeners(settings) {
   if (continuityDepthSelect) {
     continuityDepthSelect.addEventListener('change', (e) => {
       settings.continuityDepth = e.target.value;
+      updateHomePlatformDropdownValue('continuity-depth', settings.continuityDepth);
       saveSettings(settings);
     });
   }
@@ -567,6 +585,7 @@ function setupEventListeners(settings) {
   if (emotionalWeightingSelect) {
     emotionalWeightingSelect.addEventListener('change', (e) => {
       settings.emotionalWeighting = e.target.value;
+      updateHomePlatformDropdownValue('emotional-weighting', settings.emotionalWeighting);
       saveSettings(settings);
     });
   }
@@ -574,6 +593,7 @@ function setupEventListeners(settings) {
   if (empathyLevelSelect) {
     empathyLevelSelect.addEventListener('change', (e) => {
       settings.empathyLevel = e.target.value;
+      updateHomePlatformDropdownValue('empathy-level', settings.empathyLevel);
       saveSettings(settings);
     });
   }
@@ -585,6 +605,7 @@ function setupEventListeners(settings) {
   if (reflectionFrequencySelect) {
     reflectionFrequencySelect.addEventListener('change', (e) => {
       settings.reflectionFrequency = e.target.value;
+      updateHomePlatformDropdownValue('reflection-frequency', settings.reflectionFrequency);
       saveSettings(settings);
     });
   }
@@ -592,6 +613,7 @@ function setupEventListeners(settings) {
   if (reflectionDepthSelect) {
     reflectionDepthSelect.addEventListener('change', (e) => {
       settings.reflectionDepth = e.target.value;
+      updateHomePlatformDropdownValue('reflection-depth', settings.reflectionDepth);
       saveSettings(settings);
     });
   }

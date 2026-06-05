@@ -270,12 +270,35 @@ function setProfileSettingsToggleDisabled(root, name, disabled) {
   setControlDisabled(toggle, disabled);
 }
 
+function scheduleStatusMessageAutoDismiss(node) {
+  if (!(node instanceof HTMLElement)) return;
+  const autoDismissDuration = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--status-message-auto-dismiss-duration'), 10) || 3000;
+
+  window.setTimeout(() => {
+    node.dataset.statusMessageActive = '';
+  }, autoDismissDuration);
+}
+
+function applySharedStatusMessage(node, message = '', state = 'idle') {
+  if (!(node instanceof HTMLElement)) return;
+
+  node.setAttribute('data-status-message', '');
+  node.textContent = message || '';
+
+  if (message && state !== 'idle') {
+    node.dataset.statusMessageActive = 'true';
+    scheduleStatusMessageAutoDismiss(node);
+  } else {
+    node.dataset.statusMessageActive = '';
+  }
+}
+
 function renderStatus(root, scope, saveState) {
   const state = saveState?.[scope] || { status: 'idle', message: '' };
   root.querySelectorAll(`[data-profile-save-status="${scope}"]`).forEach((node) => {
     if (!(node instanceof HTMLElement)) return;
     node.dataset.profileSaveState = state.status || 'idle';
-    node.textContent = state.message || '';
+    applySharedStatusMessage(node, state.message || '', state.status || 'idle');
   });
 }
 
@@ -304,8 +327,8 @@ function clearPasswordRecoveryState() {
 function setPasswordStatus(root, message, state = 'idle') {
   const node = root.querySelector('[data-profile-password-status]');
   if (!(node instanceof HTMLElement)) return;
-  node.textContent = message || '';
   node.dataset.profilePasswordState = state;
+  applySharedStatusMessage(node, message || '', state);
 }
 
 function setVerificationStatus(root, message, state = 'idle') {

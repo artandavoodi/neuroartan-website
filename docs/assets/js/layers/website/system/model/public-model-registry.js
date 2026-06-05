@@ -42,6 +42,7 @@ export function invalidatePublicModelRegistry() {
 
 if (typeof window !== 'undefined') {
   window.addEventListener('neuroartan:model-public-registry-invalidated', invalidatePublicModelRegistry);
+  window.addEventListener('neuroartan:supabase-ready', invalidatePublicModelRegistry);
 }
 
 /* =============================================================================

@@ -250,17 +250,28 @@ function bindModeOptions(root) {
     });
   });
 
+function updateHomePlatformDropdownValue(fieldId, value) {
+  const dropdownValue = document.querySelector(`[data-home-platform-dropdown-value="${fieldId}"]`);
+  if (!(dropdownValue instanceof HTMLElement)) return;
+  
+  const select = document.querySelector(`[data-home-platform-field="${fieldId}"]`);
+  if (!(select instanceof HTMLSelectElement)) return;
+  
+  const selectedOption = select.options[select.selectedIndex];
+  dropdownValue.textContent = selectedOption?.text || value;
+}
+
   const paletteSelect = root.querySelector(PALETTE_SELECT_SELECTOR);
   const paletteLabel = root.querySelector('.home-platform-theme__dropdown-label');
 
-  if (paletteSelect instanceof HTMLSelectElement && paletteLabel instanceof HTMLElement) {
+  if (paletteSelect instanceof HTMLSelectElement) {
     if (paletteSelect.dataset.homePlatformPaletteSelectBound !== 'true') {
       paletteSelect.dataset.homePlatformPaletteSelectBound = 'true';
 
       paletteSelect.addEventListener('change', () => {
         const selectedOption = paletteSelect.options[paletteSelect.selectedIndex];
         if (selectedOption) {
-          paletteLabel.textContent = selectedOption.text;
+          updateHomePlatformDropdownValue('palette', selectedOption.text);
         }
       });
     }
@@ -321,7 +332,6 @@ function bindModeOptions(root) {
 function bindDropdownTrigger(root) {
   const trigger = root.querySelector(DROPDOWN_TRIGGER_SELECTOR);
   const select = root.querySelector(PALETTE_SELECT_SELECTOR);
-  const label = root.querySelector('.home-platform-theme__dropdown-label');
 
   if (!(trigger instanceof HTMLElement) || !(select instanceof HTMLSelectElement)) return;
   if (trigger.dataset.homePlatformDropdownTriggerBound === 'true') return;
@@ -336,9 +346,12 @@ function bindDropdownTrigger(root) {
     }
   });
 
-  if (select instanceof HTMLSelectElement && label instanceof HTMLElement) {
+  if (select instanceof HTMLSelectElement) {
     select.addEventListener('change', () => {
-      label.textContent = select.options[select.selectedIndex]?.text || 'Neuroartan';
+      const selectedOption = select.options[select.selectedIndex];
+      if (selectedOption) {
+        updateHomePlatformDropdownValue('palette', selectedOption.text || 'Neuroartan');
+      }
     });
   }
 }

@@ -62,40 +62,10 @@
   line-height:var(--body-2-line-height);
 }
 
-.model-management__note,
-[data-status-message]{
+.model-management__note:not([data-status-message]){
   color:var(--text-secondary-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
-  visibility:var(--status-message-visibility);
-  position:var(--status-message-position);
-  inset:var(--status-message-inset);
-  left:var(--status-message-left);
-  right:var(--status-message-right);
-  margin:var(--status-message-margin);
-  max-width:var(--status-message-max-width);
-  opacity:var(--status-message-opacity);
-  transform:var(--status-message-transform);
-  z-index:var(--status-message-z-index);
-  background:var(--status-message-bg);
-  background-color:color-mix(in srgb, var(--status-message-bg) calc(var(--status-message-bg-opacity) * 100%), transparent);
-  padding:var(--status-message-padding);
-  border-radius:var(--status-message-radius);
-  box-shadow:var(--status-message-shadow);
-  font-size:var(--status-message-font-size);
-  line-height:var(--status-message-line-height);
-  font-weight:var(--status-message-font-weight);
-  text-align:center;
-  transition:
-    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
-    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
-    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
-}
-
-[data-status-message-active="true"]{
-  visibility:visible;
-  opacity:1;
-  transform:translateY(0);
 }
 
 .model-management__timeline,
@@ -248,7 +218,7 @@
 
 .model-management__control-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(var(--data-grid-column-min), 1fr));
+  grid-template-columns:1fr;
   gap:var(--data-grid-gap);
   min-width:0;
 }
@@ -321,6 +291,11 @@
   display:grid;
   gap:var(--spacing-xs);
   min-width:0;
+}
+
+.model-management__field:has(.ui-inline-dropdown){
+  grid-template-columns:1fr auto;
+  gap:var(--spacing-md);
 }
 
 .model-management__field-label{

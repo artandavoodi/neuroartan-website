@@ -29,7 +29,7 @@
   --ui-dropdown-font-size:var(--control-font-size);
   --ui-dropdown-font-weight:var(--control-font-weight);
   --ui-dropdown-line-height:var(--control-line-height);
-  --ui-dropdown-icon-size:var(--icon-size-sm);
+  --ui-dropdown-icon-size:var(--icon-size-xs);
   --ui-dropdown-icon-gap:var(--spacing-sm);
   --ui-dropdown-transition:var(--interaction-transition-control);
   --ui-dropdown-icon-filter:var(--icon-image-filter);

@@ -252,7 +252,7 @@ function isSupabaseColumnMissingError(error) {
 }
 
 export async function getCurrentSupabaseUser() {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   if (!supabase) return null;
 
   const { data, error } = await supabase.auth.getSession();
@@ -630,17 +630,31 @@ export async function getCurrentCanonicalProfile() {
     authUserId: userId,
   });
 
+  return isUsableModelOwnerProfile(profile) ? profile : null;
+}
+
+async function getCurrentModelOwnerProfile() {
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+  if (!userId) return null;
+
+  const profile = await getSupabaseProfileByAuthUserId({
+    authUserId: userId,
+  });
+
+  return isUsableModelOwnerProfile(profile, { requireComplete:false }) ? profile : null;
+}
+
+function isUsableModelOwnerProfile(profile = null, options = {}) {
   if (!profile) return null;
 
   const profileExists = profile.profile_exists === true;
-  const profileComplete = isCanonicalProfileComplete(profile);
   const username = normalizeUsername(profile.username || profile.username_lower || profile.public_username || '');
 
-  if (!profileExists || !profileComplete || !username) {
-    return null;
-  }
+  if (!profileExists || !username) return false;
+  if (options.requireComplete === false) return true;
 
-  return profile;
+  return isCanonicalProfileComplete(profile);
 }
 
 function isCanonicalProfileComplete(profile = null) {
@@ -689,8 +703,8 @@ export async function getModelBySlug(modelSlug) {
 }
 
 export async function listOwnedModels() {
-  const supabase = getSupabaseClient();
-  const profile = await getCurrentCanonicalProfile();
+  const supabase = await resolveSupabaseClient();
+  const profile = await getCurrentModelOwnerProfile();
 
   if (!supabase || !profile?.id) {
     return [];
@@ -711,6 +725,26 @@ export async function listOwnedModels() {
 }
 
 export async function getOwnedCanonicalModel() {
+  const supabase = await resolveSupabaseClient();
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+
+  if (supabase && userId) {
+    const { data, error } = await supabase
+      .from(ACTIVE_MODEL_PREFERENCES_TABLE)
+      .select('model_id')
+      .eq('auth_user_id', userId)
+      .maybeSingle();
+
+    if (error && !isSupabaseRelationMissingError(error)) throw error;
+
+    const activeModel = data?.model_id
+      ? await getModelById(data.model_id)
+      : null;
+
+    if (activeModel?.id) return activeModel;
+  }
+
   const ownedModels = await listOwnedModels();
   return ownedModels[0] || null;
 }
@@ -798,7 +832,7 @@ export async function ensureOwnedCanonicalModel(values = {}) {
 }
 
 export async function readModelPersonalizationPreferences(modelId) {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
   if (!supabase || !normalizedModelId) return null;
 
@@ -817,9 +851,18 @@ export async function readModelPersonalizationPreferences(modelId) {
 }
 
 export async function saveModelPersonalizationPreferences(modelId, preferences = {}) {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
-  if (!supabase || !normalizedModelId) return null;
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+  if (!normalizedModelId) {
+    const error = new Error('MODEL_ID_REQUIRED');
+    error.code = 'MODEL_ID_REQUIRED';
+    throw error;
+  }
 
   const model = await getModelById(normalizedModelId);
   const previousPreferences = await readModelPersonalizationPreferences(normalizedModelId).catch(() => null);
@@ -863,7 +906,7 @@ export async function saveModelPersonalizationPreferences(modelId, preferences =
 }
 
 export async function readModelVisibilityPreferences(modelId) {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
   if (!supabase || !normalizedModelId) return null;
 
@@ -885,9 +928,18 @@ export async function readModelVisibilityPreferences(modelId) {
 }
 
 export async function saveModelVisibilityPreferences(modelId, preferences = {}) {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
-  if (!supabase || !normalizedModelId) return null;
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+  if (!normalizedModelId) {
+    const error = new Error('MODEL_ID_REQUIRED');
+    error.code = 'MODEL_ID_REQUIRED';
+    throw error;
+  }
 
   const model = await getModelById(normalizedModelId);
   if (!model) return null;
@@ -1188,7 +1240,7 @@ export async function resetOwnedCanonicalModelAvatar() {
 }
 
 async function getModelById(modelId) {
-  const supabase = getSupabaseClient();
+  const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
   if (!supabase || !normalizedModelId) return null;
 
@@ -1226,10 +1278,32 @@ export async function listPublishedModels() {
   if (!models.length) return [];
 
   const modelIds = models.map((model) => model.id).filter(Boolean);
+  const visibilityResult = await supabase
+    .from(MODEL_VISIBILITY_PREFERENCES_TABLE)
+    .select('model_id, public_visible')
+    .in('model_id', modelIds);
+
+  if (visibilityResult.error && !isSupabaseRelationMissingError(visibilityResult.error)) {
+    console.warn('[Neuroartan][Model] Visibility preference projection unavailable for published models.', visibilityResult.error);
+  }
+
+  const visibilityByModel = new Map(
+    (!visibilityResult.error && Array.isArray(visibilityResult.data) ? visibilityResult.data : [])
+      .map((preference) => [normalizeString(preference.model_id), preference])
+  );
+
+  const discoverableModels = models.filter((model) => {
+    const preference = visibilityByModel.get(model.id);
+    return !preference || preference.public_visible === true;
+  });
+
+  if (!discoverableModels.length) return [];
+
+  const discoverableModelIds = discoverableModels.map((model) => model.id).filter(Boolean);
   const publicIdentityResult = await supabase
     .from(MODEL_FOUNDATION_TABLES.publicIdentities)
     .select(MODEL_PUBLIC_IDENTITY_SELECT_FIELDS)
-    .in('model_id', modelIds);
+    .in('model_id', discoverableModelIds);
 
   if (publicIdentityResult.error && !isSupabaseRelationMissingError(publicIdentityResult.error)) {
     console.warn('[Neuroartan][Model] Public identity projection unavailable for published models.', publicIdentityResult.error);
@@ -1240,7 +1314,7 @@ export async function listPublishedModels() {
       .map((identity) => [normalizeString(identity.model_id), identity])
   );
 
-  return models.map((model) => {
+  return discoverableModels.map((model) => {
     const publicIdentity = publicIdentityByModel.get(model.id) || {};
     const displayName = normalizeString(
       publicIdentity.public_display_name

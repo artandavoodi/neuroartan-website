@@ -132,3 +132,18 @@
   opacity:var(--state-opacity-disabled);
   cursor:not-allowed;
 }
+
+/* Dropdown value */
+.home-platform-theme__dropdown-value {
+  color: var(--ui-dropdown-color);
+  font-size: var(--ui-inline-dropdown-label-size);
+  font-weight: var(--ui-inline-dropdown-label-weight);
+  line-height: var(--ui-inline-dropdown-label-line-height);
+}
+
+/* Dropdown container layout */
+.home-platform-theme__dropdown-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-md);
+}

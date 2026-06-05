@@ -293,3 +293,11 @@
   flex-direction: column;
   gap: var(--spacing-md);
 }
+
+/* Dropdown value */
+.home-platform-theme__dropdown-value {
+  color: var(--ui-dropdown-color);
+  font-size: var(--ui-inline-dropdown-label-size);
+  font-weight: var(--ui-inline-dropdown-label-weight);
+  line-height: var(--ui-inline-dropdown-label-line-height);
+}

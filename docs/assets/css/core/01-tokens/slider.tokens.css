@@ -41,6 +41,10 @@
   --slider-value-centered-padding: var(--spacing-xl);
   --slider-value-centered-radius: var(--shape-card-radius);
   --slider-value-centered-shadow: var(--shadow-lg);
+  --slider-value-centered-color: var(--text-color);
+  --slider-value-centered-halo-size: clamp(5rem, 12vw, 7rem);
+  --slider-value-centered-halo-bg: color-mix(in srgb, var(--bg-color) 86%, var(--text-color) 14%);
+  --slider-value-centered-halo-filter: none;
   --slider-value-centered-font-size: var(--headline-1-size);
   --slider-value-centered-line-height: var(--headline-1-line-height);
   --slider-value-centered-font-weight: var(--font-weight-body);

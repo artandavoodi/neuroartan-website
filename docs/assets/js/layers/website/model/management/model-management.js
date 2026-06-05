@@ -504,6 +504,7 @@ function setTrainingSubstrateStatus(message = '', state = 'idle') {
   modelManagementRoots().forEach((root) => {
     root.querySelectorAll('[data-model-training-substrate-status]').forEach((status) => {
       if (!(status instanceof HTMLElement)) return;
+      status.setAttribute('data-status-message', '');
       status.textContent = message;
       status.dataset.modelTrainingSubstrateStatus = state;
       
@@ -645,8 +646,17 @@ function scheduleModelPersonalizationBackendSave() {
   modelPersonalizationBackendSaveTimer = window.setTimeout(async () => {
     try {
       const model = await getOwnedCanonicalModel();
-      if (!model?.id) return;
-      await saveModelPersonalizationPreferences(model.id, modelPersonalizationPreferences);
+      if (!model?.id) {
+        const error = new Error('MODEL_RECORD_UNAVAILABLE');
+        error.code = 'MODEL_RECORD_UNAVAILABLE';
+        throw error;
+      }
+      const preferences = await saveModelPersonalizationPreferences(model.id, modelPersonalizationPreferences);
+      if (!preferences) {
+        const error = new Error('MODEL_PERSONALIZATION_NOT_SAVED');
+        error.code = 'MODEL_PERSONALIZATION_NOT_SAVED';
+        throw error;
+      }
       setModelPersonalizationStatus('Model personalization saved.', 'success');
     } catch (error) {
       setModelPersonalizationStatus(formatModelPersonalizationError(error), 'error');
@@ -1273,6 +1283,7 @@ function setModelVisibilityStatus(message = '', state = 'idle') {
   modelManagementRoots().forEach((root) => {
     root.querySelectorAll('[data-model-visibility-status]').forEach((status) => {
       if (!(status instanceof HTMLElement)) return;
+      status.setAttribute('data-status-message', '');
       status.textContent = message;
       status.dataset.modelVisibilityStatus = state;
       
@@ -1290,6 +1301,7 @@ function setModelPersonalizationStatus(message = '', state = 'idle') {
   modelManagementRoots().forEach((root) => {
     root.querySelectorAll('[data-model-personalization-status]').forEach((status) => {
       if (!(status instanceof HTMLElement)) return;
+      status.setAttribute('data-status-message', '');
       status.textContent = message;
       status.dataset.modelPersonalizationStatus = state;
       
@@ -1310,6 +1322,12 @@ function formatModelPersonalizationError(error) {
   }
   if (code === '42501') {
     return 'Model personalization could not be saved because the Supabase policy blocked this owner.';
+  }
+  if (code === 'MODEL_BACKEND_UNAVAILABLE') {
+    return 'Model personalization could not be saved because Supabase is not available.';
+  }
+  if (code === 'MODEL_RECORD_UNAVAILABLE' || code === 'MODEL_ID_REQUIRED') {
+    return 'Model personalization could not be saved because the active model record is unavailable.';
   }
   return code ? `Model personalization could not be saved: ${code}` : 'Model personalization could not be saved.';
 }
@@ -1485,6 +1503,7 @@ function setModelIdentityEditorStatus(message = '', state = 'idle') {
 
   const status = editor.querySelector('[data-model-identity-editor-status]');
   if (status instanceof HTMLElement) {
+    status.setAttribute('data-status-message', '');
     status.textContent = message;
     status.dataset.modelIdentityEditorState = state;
     
@@ -1817,6 +1836,7 @@ function initModelManagement() {
   document.addEventListener('input', handleModelSliderInput);
   window.addEventListener('neuroartan:model-public-registry-invalidated', invalidateModelDirectoryProjection);
   window.addEventListener('neuroartan:supabase-ready', () => {
+    invalidateModelDirectoryProjection();
     retryModelFoundationIdentityHydration();
     hydrateModelOwnerDataFromBackend();
   });

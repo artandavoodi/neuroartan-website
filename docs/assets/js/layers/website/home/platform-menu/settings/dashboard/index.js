@@ -222,6 +222,18 @@ function updatePriorityDisplay(root, config) {
   });
 }
 
+// Update dropdown value display
+function updateHomePlatformDropdownValue(fieldId, value) {
+  const dropdownValue = document.querySelector(`[data-home-platform-dropdown-value="${fieldId}"]`);
+  if (!(dropdownValue instanceof HTMLElement)) return;
+
+  const select = document.querySelector(`[data-home-platform-field="${fieldId}"]`);
+  if (!(select instanceof HTMLSelectElement)) return;
+
+  const selectedOption = select.options[select.selectedIndex];
+  dropdownValue.textContent = selectedOption?.text || value;
+}
+
 // Initialize dropdown controls
 function initDropdownControls(root) {
   const retentionSelect = root.querySelector('#analytics-retention');
@@ -235,6 +247,7 @@ function initDropdownControls(root) {
     retentionSelect.addEventListener('change', (e) => {
       config.analytics.retention = e.target.value;
       saveDashboardConfig(config);
+      updateHomePlatformDropdownValue('analytics-retention', e.target.value);
       dispatchDashboardEvent('analytics:changed', { retention: e.target.value });
     });
   }
@@ -244,6 +257,7 @@ function initDropdownControls(root) {
     frequencySelect.addEventListener('change', (e) => {
       config.analytics.frequency = e.target.value;
       saveDashboardConfig(config);
+      updateHomePlatformDropdownValue('analytics-frequency', e.target.value);
       dispatchDashboardEvent('analytics:changed', { frequency: e.target.value });
     });
   }
@@ -253,6 +267,7 @@ function initDropdownControls(root) {
     modelViewSelect.addEventListener('change', (e) => {
       config.model.defaultView = e.target.value;
       saveDashboardConfig(config);
+      updateHomePlatformDropdownValue('model-default-view', e.target.value);
       dispatchDashboardEvent('model:changed', { defaultView: e.target.value });
     });
   }

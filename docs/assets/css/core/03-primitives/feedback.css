@@ -1,7 +1,7 @@
 /* =============================================================================
    00) FILE INDEX
    01) MODULE IDENTITY
-   02) FEEDBACK PRIMITIVE GOVERNANCE NOTE
+   02) SHARED STATUS MESSAGE
    03) RESERVED FOR CANONICAL EXTRACTION
    04) END OF FILE
 ============================================================================= */
@@ -12,12 +12,41 @@
 /* /website/docs/assets/css/core/03-primitives/feedback.css */
 
 /* =============================================================================
-   02) FEEDBACK PRIMITIVE GOVERNANCE NOTE
+   02) SHARED STATUS MESSAGE
 ============================================================================= */
-/* This file is intentionally scaffolded only.
-   Canonical feedback styling must be extracted from approved live consumers.
-   No new visual behavior, spacing, hover logic, or color invention is permitted here.
-   Future work must preserve the current live style exactly and only modularize/tokenize it. */
+[data-status-message]{
+  color:var(--text-secondary-color);
+  font-size:var(--status-message-font-size);
+  line-height:var(--status-message-line-height);
+  font-weight:var(--status-message-font-weight);
+  visibility:var(--status-message-visibility);
+  position:var(--status-message-position);
+  inset:var(--status-message-inset);
+  left:var(--status-message-left);
+  right:var(--status-message-right);
+  margin:var(--status-message-margin);
+  max-width:var(--status-message-max-width);
+  width:max-content;
+  opacity:var(--status-message-opacity);
+  transform:var(--status-message-transform);
+  z-index:var(--status-message-z-index);
+  background:var(--status-message-bg);
+  background-color:color-mix(in srgb, var(--status-message-bg) calc(var(--status-message-bg-opacity) * 100%), transparent);
+  padding:var(--status-message-padding);
+  border-radius:var(--status-message-radius);
+  box-shadow:var(--status-message-shadow);
+  text-align:center;
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+[data-status-message-active="true"]{
+  visibility:visible;
+  opacity:1;
+  transform:translateY(0);
+}
 
 /* =============================================================================
    03) RESERVED FOR CANONICAL EXTRACTION

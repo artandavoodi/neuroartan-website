@@ -105,26 +105,32 @@
       </div>
       <div class="home-platform-theme__dropdown-container">
         <span class="home-platform-theme__dropdown-label">Data retention period</span>
-        <div class="home-platform-theme__dropdown-icon-wrapper">
-          <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-          <select class="ui-dropdown ui-dropdown--icon-only" id="analytics-retention" data-home-dashboard-field="analytics-retention" aria-label="Analytics data retention period">
-            <option value="7days" selected>7 days</option>
-            <option value="30days">30 days</option>
-            <option value="90days">90 days</option>
-            <option value="indefinite">Indefinite</option>
-          </select>
-        </div>
+        <span class="ui-inline-dropdown">
+          <span class="home-platform-theme__dropdown-value" data-home-platform-dropdown-value="analytics-retention">7 days</span>
+          <span class="home-platform-theme__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select class="ui-dropdown ui-dropdown--icon-only" id="analytics-retention" data-home-dashboard-field="analytics-retention" data-home-platform-field="analytics-retention" aria-label="Analytics data retention period">
+              <option value="7days" selected>7 days</option>
+              <option value="30days">30 days</option>
+              <option value="90days">90 days</option>
+              <option value="indefinite">Indefinite</option>
+            </select>
+          </span>
+        </span>
       </div>
       <div class="home-platform-theme__dropdown-container">
         <span class="home-platform-theme__dropdown-label">Update frequency</span>
-        <div class="home-platform-theme__dropdown-icon-wrapper">
-          <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-          <select class="ui-dropdown ui-dropdown--icon-only" id="analytics-frequency" data-home-dashboard-field="analytics-frequency" aria-label="Analytics update frequency">
-            <option value="realtime" selected>Real-time</option>
-            <option value="hourly">Hourly</option>
-            <option value="daily">Daily</option>
-          </select>
-        </div>
+        <span class="ui-inline-dropdown">
+          <span class="home-platform-theme__dropdown-value" data-home-platform-dropdown-value="analytics-frequency">Real-time</span>
+          <span class="home-platform-theme__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select class="ui-dropdown ui-dropdown--icon-only" id="analytics-frequency" data-home-dashboard-field="analytics-frequency" data-home-platform-field="analytics-frequency" aria-label="Analytics update frequency">
+              <option value="realtime" selected>Real-time</option>
+              <option value="hourly">Hourly</option>
+              <option value="daily">Daily</option>
+            </select>
+          </span>
+        </span>
       </div>
       </div>
     </section>
@@ -225,15 +231,18 @@
       </div>
       <div class="home-platform-theme__dropdown-container">
         <span class="home-platform-theme__dropdown-label">Default model view</span>
-        <div class="home-platform-theme__dropdown-icon-wrapper">
-          <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-          <select class="ui-dropdown ui-dropdown--icon-only" id="model-default-view" data-home-dashboard-field="model-default-view" aria-label="Default model view">
-            <option value="overview" selected>Overview</option>
-            <option value="configuration">Configuration</option>
-            <option value="testing">Testing</option>
-            <option value="deployment">Deployment</option>
-          </select>
-        </div>
+        <span class="ui-inline-dropdown">
+          <span class="home-platform-theme__dropdown-value" data-home-platform-dropdown-value="model-default-view">Overview</span>
+          <span class="home-platform-theme__dropdown-icon-wrapper">
+            <img class="ui-icon-theme-aware home-platform-theme__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+            <select class="ui-dropdown ui-dropdown--icon-only" id="model-default-view" data-home-dashboard-field="model-default-view" data-home-platform-field="model-default-view" aria-label="Default model view">
+              <option value="overview" selected>Overview</option>
+              <option value="configuration">Configuration</option>
+              <option value="testing">Testing</option>
+              <option value="deployment">Deployment</option>
+            </select>
+          </span>
+        </span>
       </div>
       </div>
     </section>

@@ -4,7 +4,8 @@
    02) SHARED SLIDER BASE
    03) SHARED SLIDER TRACK
    04) SHARED SLIDER THUMB
-   05) END OF FILE
+   05) SHARED SLIDER VALUE DISPLAY
+   06) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -78,5 +79,28 @@
 }
 
 /* =============================================================================
-   05) END OF FILE
+   05) SHARED SLIDER VALUE DISPLAY
+============================================================================= */
+[data-slider-value-state="centered"]{
+  color:var(--slider-value-centered-color);
+  isolation:isolate;
+}
+
+[data-slider-value-state="centered"]::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  z-index:-1;
+  width:var(--slider-value-centered-halo-size);
+  height:var(--slider-value-centered-halo-size);
+  border-radius:50%;
+  background:var(--slider-value-centered-halo-bg);
+  filter:var(--slider-value-centered-halo-filter);
+  pointer-events:none;
+  transform:translate(-50%, -50%);
+}
+
+/* =============================================================================
+   06) END OF FILE
 ============================================================================= */

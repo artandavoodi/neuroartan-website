@@ -60,11 +60,11 @@ function requestMicrophone(root, source) {
   const microphone = document.querySelector('#stage-microphone-button');
   if (microphone instanceof HTMLButtonElement) {
     microphone.click();
-    setStatus(root, 'Voice input requested through the homepage microphone runtime.', 'ok');
+    setStatus(root, 'Voice input requested through the homepage microphone runtime', 'ok');
     return;
   }
 
-  setStatus(root, 'No microphone control is mounted on this surface.', 'warning');
+  setStatus(root, 'No microphone control is mounted on this surface', 'warning');
   emit('neuroartan:voice-input-requested', { source });
 }
 
@@ -73,26 +73,26 @@ async function requestBrowserPermission(root, name) {
     if (name === 'microphone' && navigator.mediaDevices?.getUserMedia) {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach((track) => track.stop());
-      setStatus(root, 'Microphone permission is available for this browser session.', 'ok');
+      setStatus(root, 'Microphone permission is available for this browser session', 'ok');
       return;
     }
 
     if (name === 'camera' && navigator.mediaDevices?.getUserMedia) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       stream.getTracks().forEach((track) => track.stop());
-      setStatus(root, 'Camera permission is available for this browser session.', 'ok');
+      setStatus(root, 'Camera permission is available for this browser session', 'ok');
       return;
     }
 
     if (name === 'notifications' && 'Notification' in window) {
       const result = await Notification.requestPermission();
-      setStatus(root, `Notification permission: ${result}.`, result === 'granted' ? 'ok' : 'warning');
+      setStatus(root, `Notification permission: ${result}`, result === 'granted' ? 'ok' : 'warning');
       return;
     }
 
-    setStatus(root, `${name} permission is not exposed by this browser runtime.`, 'warning');
+    setStatus(root, `${name} permission is not exposed by this browser runtime`, 'warning');
   } catch (error) {
-    setStatus(root, `${name} permission request failed: ${error?.message || 'blocked'}.`, 'error');
+    setStatus(root, `${name} permission request failed: ${error?.message || 'blocked'}`, 'error');
   }
 }
 
@@ -100,13 +100,13 @@ async function requestFileScope(root) {
   try {
     if (typeof window.showDirectoryPicker === 'function') {
       const directory = await window.showDirectoryPicker();
-      setStatus(root, `Filesystem scope selected: ${directory.name}.`, 'ok');
+      setStatus(root, `Filesystem scope selected: ${directory.name}`, 'ok');
       return;
     }
 
-    setStatus(root, 'Directory selection is not available in this browser runtime.', 'warning');
+    setStatus(root, 'Directory selection is not available in this browser runtime', 'warning');
   } catch (error) {
-    setStatus(root, `Filesystem scope request stopped: ${error?.message || 'cancelled'}.`, 'warning');
+    setStatus(root, `Filesystem scope request stopped: ${error?.message || 'cancelled'}`, 'warning');
   }
 }
 
@@ -133,7 +133,7 @@ function exportLocalSettings(root) {
   };
 
   downloadTextFile('neuroartan-settings-export.json', JSON.stringify(payload, null, 2));
-  setStatus(root, 'Settings export created from the live browser runtime.', 'ok');
+  setStatus(root, 'Settings export created from the live browser runtime', 'ok');
 }
 
 function clearLocalPreferences(root) {
@@ -144,7 +144,7 @@ function clearLocalPreferences(root) {
     .filter((key) => key.startsWith('neuroartan'))
     .forEach((key) => window.localStorage.removeItem(key));
 
-  setStatus(root, 'Local Neuroartan website preferences were cleared. Reload to rehydrate defaults.', 'ok');
+  setStatus(root, 'Local Neuroartan website preferences were cleared', 'ok');
 }
 
 function syncRuntimeProviderFields(root) {
@@ -182,7 +182,7 @@ function bindRuntimeProviderFields(root) {
     providerInput.addEventListener('change', () => {
       setRuntimeProviderState({ activeProvider: providerInput.value });
       syncRuntimeProviderFields(root);
-      setStatus(root, `Active provider saved: ${providerInput.value}.`, 'ok');
+      setStatus(root, `Active provider saved: ${providerInput.value}`, 'ok');
     });
   }
 
@@ -190,7 +190,7 @@ function bindRuntimeProviderFields(root) {
     modelInput.dataset.settingsRuntimeBound = 'true';
     modelInput.addEventListener('change', () => {
       setRuntimeProviderState({ activeModel: modelInput.value.trim() });
-      setStatus(root, `Active model saved: ${modelInput.value.trim() || 'not set'}.`, 'ok');
+      setStatus(root, `Active model saved: ${modelInput.value.trim() || 'not set'}`, 'ok');
     });
   }
 
@@ -199,7 +199,7 @@ function bindRuntimeProviderFields(root) {
     apiKeyInput.addEventListener('change', () => {
       const provider = providerInput instanceof HTMLSelectElement ? providerInput.value : getRuntimeProviderState().activeProvider || 'gemini';
       window.localStorage.setItem(`neuroartan-provider-${provider}-key`, apiKeyInput.value.trim());
-      setStatus(root, `${provider} credential saved in local browser storage.`, 'ok');
+      setStatus(root, `${provider} credential saved in local browser storage`, 'ok');
     });
   }
 
@@ -207,7 +207,7 @@ function bindRuntimeProviderFields(root) {
     serverUrlInput.dataset.settingsRuntimeBound = 'true';
     serverUrlInput.addEventListener('change', () => {
       setRuntimeProviderState({ serverUrl: serverUrlInput.value.trim() });
-      setStatus(root, `Server URL saved: ${serverUrlInput.value.trim() || 'not set'}.`, 'ok');
+      setStatus(root, `Server URL saved: ${serverUrlInput.value.trim() || 'not set'}`, 'ok');
     });
   }
 }
@@ -228,34 +228,34 @@ async function scanLocalModels(root) {
       : [];
 
     if (!models.length) {
-      setStatus(root, 'LM Studio responded, but no local models were returned.', 'warning');
+      setStatus(root, 'LM Studio responded, but no local models were returned', 'warning');
       return;
     }
 
     setRuntimeProviderState({ activeProvider: 'local', activeModel: models[0] });
     syncRuntimeProviderFields(root);
-    setStatus(root, `LM Studio connected. ${models.length} model${models.length === 1 ? '' : 's'} found. Active: ${models[0]}.`, 'ok');
+    setStatus(root, `LM Studio connected. ${models.length} model${models.length === 1 ? '' : 's'} found. Active: ${models[0]}`, 'ok');
   } catch (error) {
-    setStatus(root, `LM Studio unavailable at http://localhost:1234/v1/models (${error?.message || 'connection failed'}).`, 'warning');
+    setStatus(root, `LM Studio unavailable at http://localhost:1234/v1/models (${error?.message || 'connection failed'})`, 'warning');
   }
 }
 
 function applyMotionPreference(root, enabled) {
   window.localStorage.setItem('neuroartan-accessibility-motion', enabled ? 'enabled' : 'reduced');
   document.documentElement.dataset.motionPreference = enabled ? 'enabled' : 'reduced';
-  setStatus(root, enabled ? 'Motion preference saved as enabled.' : 'Reduced motion preference saved.', 'ok');
+  setStatus(root, enabled ? 'Motion preference saved as enabled' : 'Reduced motion preference saved', 'ok');
 }
 
 function testVoiceOutput(root) {
   if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-    setStatus(root, 'Speech synthesis is not available in this browser runtime.', 'warning');
+    setStatus(root, 'Speech synthesis is not available in this browser runtime', 'warning');
     return;
   }
 
-  const utterance = new SpeechSynthesisUtterance('Neuroartan voice output is available.');
+  const utterance = new SpeechSynthesisUtterance('Neuroartan voice output is available');
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
-  setStatus(root, 'Voice output test sent to the browser speech runtime.', 'ok');
+  setStatus(root, 'Voice output test sent to the browser speech runtime', 'ok');
 }
 
 function toggleSection(toggleButton) {
@@ -320,26 +320,26 @@ async function handleAction(root, action, options = {}) {
       return;
     case 'reset-rail':
       window.localStorage.removeItem('neuroartan.home.platformShell.railMode');
-      setStatus(root, 'Platform rail preference reset. Reopen the menu to see the default state.', 'ok');
+      setStatus(root, 'Platform rail preference reset', 'ok');
       return;
     case 'country-language':
       requestCountryLanguage(source);
-      setStatus(root, 'Language and country selector requested.', 'ok');
+      setStatus(root, 'Language and country selector requested', 'ok');
       return;
     case 'cookie-settings':
       requestCookieSettings(source);
-      setStatus(root, 'Cookie and privacy settings requested.', 'ok');
+      setStatus(root, 'Cookie and privacy settings requested', 'ok');
       return;
     case 'account-entry':
       requestAccountEntry(source);
-      setStatus(root, 'Account entry requested.', 'ok');
+      setStatus(root, 'Account entry requested', 'ok');
       return;
     case 'public-profile':
       window.location.href = buildPublicProfilePath(getSnapshot(options)?.account?.profile?.username || '') || '/profile.html';
       return;
     case 'sign-out':
       emit('account:sign-out-request', { source });
-      setStatus(root, 'Sign-out requested from the account runtime.', 'ok');
+      setStatus(root, 'Sign-out requested from the account runtime', 'ok');
       return;
     case 'voice-input':
       requestMicrophone(root, source);
@@ -367,11 +367,11 @@ async function handleAction(root, action, options = {}) {
       return;
     case 'contrast-high':
       window.NeuroartanTheme?.setThemeContrast?.('high');
-      setStatus(root, 'High contrast applied through the global theme runtime.', 'ok');
+      setStatus(root, 'High contrast applied through the global theme runtime', 'ok');
       return;
     case 'contrast-standard':
       window.NeuroartanTheme?.setThemeContrast?.('standard');
-      setStatus(root, 'Standard contrast applied through the global theme runtime.', 'ok');
+      setStatus(root, 'Standard contrast applied through the global theme runtime', 'ok');
       return;
     case 'motion-reduced':
       applyMotionPreference(root, false);
@@ -384,11 +384,11 @@ async function handleAction(root, action, options = {}) {
       return;
     case 'save-runtime':
       syncRuntimeProviderFields(root);
-      setStatus(root, 'Runtime state saved in the active browser runtime.', 'ok');
+      setStatus(root, 'Runtime state saved in the active browser runtime', 'ok');
       return;
     default:
       emit('neuroartan:settings-action-requested', { source, action });
-      setStatus(root, 'This setting has an operational event route, but no browser-local owner is mounted yet.', 'warning');
+      setStatus(root, 'This setting has an operational event route, but no browser-local owner is mounted yet', 'warning');
   }
 }
 

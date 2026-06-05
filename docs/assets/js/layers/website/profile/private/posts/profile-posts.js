@@ -560,7 +560,7 @@ function bindPostForm() {
     event.preventDefault();
     const state = getProfileRuntimeState();
     if (state.viewerState !== 'authenticated') {
-      setStatus(root, 'Sign in to create posts.', 'error');
+      setStatus(root, 'Sign in to create posts', 'error');
       return;
     }
 
@@ -572,22 +572,19 @@ function bindPostForm() {
     const editingPostId = normalizeString(STORE.editingPostId || '');
 
     if (!body) {
-      setStatus(root, 'Write a post before publishing.', 'error');
+      setStatus(root, 'Write a post before publishing', 'error');
       return;
     }
 
     if (body.length > limit) {
-      setStatus(root, `Posts can be up to ${limit} characters. Shorten this post before publishing.`, 'error');
+      setStatus(root, `Posts can be up to ${limit} characters`, 'error');
       return;
     }
-
-    setStatus(root, editingPostId ? 'Saving post update...' : (visibility === 'public' ? 'Publishing post to the public feed...' : 'Saving private draft...'), 'saving');
 
     try {
       if (visibility === 'public') {
         let imageUpload = null;
         if (STORE.selectedMediaFile instanceof File) {
-          setStatus(root, 'Uploading media to profile storage...', 'saving');
           imageUpload = await uploadProfileImage({
             file: STORE.selectedMediaFile,
             user: state.profile,
@@ -636,14 +633,14 @@ function bindPostForm() {
         detail: { source: 'profile-posts', visibility }
       }));
       setPostOverlayOpen(root, false);
-      setStatus(root, editingPostId ? 'Post updated.' : (visibility === 'public' ? 'Post published to your public profile and feed.' : 'Private draft saved.'), 'success');
+      setStatus(root, editingPostId ? 'Post updated' : (visibility === 'public' ? 'Post published to your public profile and feed' : 'Private draft saved'), 'success');
 
       if (!editingPostId && visibility === 'public') {
         document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
           detail: {
             id: `profile-post-published-${Date.now()}`,
             title: 'Profile post published',
-            body: 'Your post is now connected to the public feed.',
+            body: 'Your post is now connected to the public feed',
             source: 'profile',
             priority: 'normal',
             href: '/feed/'
@@ -653,18 +650,18 @@ function bindPostForm() {
     } catch (error) {
       const code = normalizeString(error?.code || error?.message || '');
       const message = code === 'FEED_BACKEND_UNAVAILABLE'
-        ? 'Feed storage is not configured. Connect the Supabase feed_posts table before publishing.'
+        ? 'Feed storage is not configured'
         : code === 'PROFILE_POSTS_BACKEND_UNAVAILABLE'
-          ? 'Private post storage is not configured. Connect the Supabase profile_posts table before saving drafts.'
+          ? 'Private post storage is not configured'
         : code === 'PROFILE_POSTS_TABLE_MISSING'
-          ? 'Private post storage table is missing. Create the profile_posts table in Supabase before saving drafts.'
+          ? 'Private post storage table is missing'
         : code === 'PROFILE_REQUIRED'
-          ? 'Create and save your profile before publishing posts.'
+          ? 'Create and save your profile before publishing posts'
         : code === 'AUTH_REQUIRED'
-            ? 'Sign in before publishing posts.'
+            ? 'Sign in before publishing posts'
             : code === 'FEED_POST_MEDIA_COLUMNS_REQUIRED'
-              ? 'Image posts require media columns on feed_posts. Add them in Supabase before publishing image posts.'
-              : 'Unable to save this post. Check Supabase configuration and policies.';
+              ? 'Image posts require media columns on feed_posts'
+              : 'Unable to save this post';
       setStatus(root, message, 'error');
     }
   });
@@ -755,7 +752,7 @@ function bindPostForm() {
       event.preventDefault();
       const controller = ensurePostSpeechController(root);
       if (!controller.supported) {
-        setStatus(root, 'Voice dictation requires browser speech recognition support.', 'error');
+        setStatus(root, 'Voice dictation requires browser speech recognition support', 'error');
         return;
       }
       if (controller.isListening()) {
@@ -814,7 +811,7 @@ function bindPostForm() {
             syncSubmitLabel(root);
             setPostOverlayOpen(root, true);
             textarea?.focus();
-            setStatus(root, 'Editing post.', 'idle');
+            setStatus(root, 'Editing post', 'idle');
           }
         }
       }
@@ -830,7 +827,6 @@ function bindPostForm() {
         setMoreDropdownOpen(activeButton, false);
         const post = STORE.posts.find((entry) => entry.id === postId);
         if (post) {
-          setStatus(root, 'Deleting post...', 'saving');
           const deleteFunction = post.visibility === 'private' ? deletePrivateProfilePost : deleteFeedPost;
           void deleteFunction(postId)
             .then(async () => {
@@ -838,11 +834,11 @@ function bindPostForm() {
               document.dispatchEvent(new CustomEvent('profile:feed-refresh-request', {
                 detail: { source: 'profile-posts-delete' }
               }));
-              setStatus(root, 'Post deleted.', 'success');
+              setStatus(root, 'Post deleted', 'success');
             })
             .catch((error) => {
               console.error('[profile-posts] Delete failed.', error);
-              setStatus(root, 'Unable to delete this post. Check Supabase policies.', 'error');
+              setStatus(root, 'Unable to delete this post', 'error');
             });
         }
       }

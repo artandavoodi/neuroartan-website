@@ -73,13 +73,11 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
   modelPersonalization: {
     label: 'Model personalization',
     tabs: [
-      { key: 'behavior', label: 'Behavior', section: 'model-personalization', modelPane: 'behavior' },
-      { key: 'language', label: 'Language', section: 'model-personalization', modelPane: 'language' },
-      { key: 'emotion', label: 'Emotion', section: 'model-personalization', modelPane: 'emotion' },
-      { key: 'response', label: 'Response', section: 'model-personalization', modelPane: 'response' },
+      { key: 'cognition', label: 'Cognition', section: 'model-personalization', modelPane: 'cognition' },
+      { key: 'communication', label: 'Communication', section: 'model-personalization', modelPane: 'communication' },
       { key: 'memory', label: 'Memory', section: 'model-personalization', modelPane: 'memory' },
-      { key: 'creativity', label: 'Creativity', section: 'model-personalization', modelPane: 'creativity' },
-      { key: 'reflection', label: 'Reflection', section: 'model-personalization', modelPane: 'reflection' },
+      { key: 'emotion', label: 'Emotion', section: 'model-personalization', modelPane: 'emotion' },
+      { key: 'behavior', label: 'Behavior', section: 'model-personalization', modelPane: 'behavior' },
     ],
   },
   modelDashboard: {
@@ -139,6 +137,10 @@ export const MODEL_CONTEXT_TAB_ICONS = Object.freeze({
   provenance: '/registry/icons/public/assets/layers/website/model/tabs/provenance.svg',
   evaluation: '/registry/icons/public/assets/layers/website/model/tabs/evaluation.svg',
   behavior: '/registry/icons/public/assets/layers/website/model/tabs/behavior.svg',
+  communication: '/registry/icons/public/assets/core/communication/messaging/message.svg',
+  cognition: '/registry/icons/public/assets/core/cognition/cognition/cognition.svg',
+  'social-context': '/registry/icons/public/assets/core/identity/profile/users.svg',
+  'safety-boundaries': '/registry/icons/public/assets/core/identity/security/security.svg',
   language: '/registry/icons/public/assets/layers/website/model/tabs/language.svg',
   emotion: '/registry/icons/public/assets/layers/website/model/tabs/emotion.svg',
   response: '/registry/icons/public/assets/layers/website/model/tabs/response.svg',

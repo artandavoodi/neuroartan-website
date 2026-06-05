@@ -62,11 +62,13 @@
   line-height:var(--body-2-line-height);
 }
 
+
 .model-management__note:not([data-status-message]){
   color:var(--text-secondary-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
 }
+
 
 .model-management__timeline,
 .model-management__slider-value{
@@ -195,7 +197,8 @@
 
 .model-management__control-group[hidden],
 .model-management__settings-group[hidden],
-.model-management__visibility-panel[hidden]{
+.model-management__visibility-panel[hidden],
+[data-model-response-audience-panel][hidden]{
   display:none;
 }
 

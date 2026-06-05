@@ -535,14 +535,14 @@ function formatChangedProfileFieldsDetail(changedFields = []) {
   const labels = changedFields.map((field) => field.label).filter(Boolean);
 
   if (labels.length === 1) {
-    return `${labels[0]} was updated.`;
+    return `${labels[0]} was updated`;
   }
 
   if (labels.length === 2) {
-    return `${labels[0]} and ${labels[1]} were updated.`;
+    return `${labels[0]} and ${labels[1]} were updated`;
   }
 
-  return `${labels[0]}, ${labels[1]}, and ${labels.length - 2} more fields were updated.`;
+  return `${labels[0]}, ${labels[1]}, and ${labels.length - 2} more fields were updated`;
 }
 
 function buildProfileChangelogEvent(scope, values = {}, existingProfile = null, user = null, formData = null, savedProfile = null) {
@@ -656,29 +656,29 @@ function resolveProfileSaveErrorCode(error) {
 function messageForProfileSaveError(code) {
   switch (code) {
     case 'PROFILE_STORE_UNAVAILABLE':
-      return 'Profile storage is not available right now.';
+      return 'Profile storage is not available right now';
     case 'PROFILE_SAVE_BLOCKED':
-      return 'Profile save is blocked by backend access policy right now.';
+      return 'Profile save is blocked by backend access policy right now';
     case 'API_KEY_HTTP_REFERRER_BLOCKED':
-      return 'Authentication is blocked for this local origin. Verify the approved redirect and origin configuration.';
+      return 'Authentication is blocked for this local origin';
     case 'USERNAME_CHANGE_LOCKED':
-      return 'Username changes are locked once a canonical handle has been claimed.';
+      return 'Username changes are locked once a canonical handle has been claimed';
     case 'USERNAME_TAKEN':
-      return 'That username is already reserved by another profile.';
+      return 'That username is already reserved by another profile';
     case 'USERNAME_REQUIRED':
-      return 'Choose a username before enabling the public route.';
+      return 'Choose a username before enabling the public route';
     case 'INVALID_DATE_OF_BIRTH':
-      return 'Enter a valid date of birth.';
+      return 'Enter a valid date of birth';
     case 'USER_INELIGIBLE':
-      return 'The supplied date of birth does not meet the current eligibility requirement.';
+      return 'The supplied date of birth does not meet the current eligibility requirement';
     case 'AUTH_REQUIRED':
-      return 'Sign in before editing the private profile surface.';
+      return 'Sign in before editing the private profile surface';
     case 'PROFILE_IMAGE_STORAGE_UNAVAILABLE':
-      return 'Profile image storage is not configured for this environment.';
+      return 'Profile image storage is not configured for this environment';
     case 'PROFILE_IMAGE_UPLOAD_FAILED':
-      return 'Profile image upload failed. Review the storage bucket and access policy.';
+      return 'Profile image upload failed';
     default:
-      return 'Profile settings could not be saved right now.';
+      return 'Profile settings could not be saved right now';
   }
 }
 
@@ -855,11 +855,6 @@ async function handleSaveRequest(form) {
 
   const submittedFormData = getFormDataSnapshot(form);
 
-  setScopeState(scope, {
-    status: 'saving',
-    code: '',
-    message: 'Saving changes…'
-  });
 
   try {
     const supabase = getSupabaseClient();
@@ -902,7 +897,7 @@ async function handleSaveRequest(form) {
     setScopeState(scope, {
       status: 'success',
       code: '',
-      message: 'Profile settings saved.'
+      message: 'Profile settings saved'
     });
 
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {

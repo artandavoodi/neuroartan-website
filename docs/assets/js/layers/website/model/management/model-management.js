@@ -42,25 +42,55 @@ const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-ba
 const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
 
 const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
-  languageStyle: 'balanced',
-  directnessLevel: 'nuanced',
-  emotionalTone: 'neutral',
-  responseLength: 'balanced',
-  explanationDepth: 'standard',
-  responseAudienceScope: 'general',
-  memoryRetention: 'session',
-  continuityDepth: 'moderate',
-  emotionalWeighting: 'balanced',
-  empathyLevel: 'moderate',
-  reflectionFrequency: 'never',
-  reflectionDepth: 'moderate',
-  senseOfHumor: 50,
-  efficiencyPreference: 50,
+  reasoningDepth: 'balanced',
+  analyticalMode: 'systems',
+  evidenceThreshold: 70,
+  abstractionLevel: 65,
+  synthesisStrength: 70,
+  attentionFocus: 'balanced',
+  detailSensitivity: 70,
+  distractionResistance: 65,
+  priorityDetection: 75,
+  cognitiveFlexibility: 60,
+  perspectiveShifting: 65,
+  alternativeGeneration: 65,
   creativityLevel: 50,
-  riskTolerance: 25,
+  senseOfHumor: 50,
+  metaphorUse: 55,
+  noveltyTolerance: 55,
+  imaginationMode: 'precise',
+  reflectionFrequency: 'sometimes',
+  reflectionDepth: 60,
+  selfCorrectionStrength: 70,
+  uncertaintyAwareness: 75,
+  patternDetection: 70,
+  contradictionDetection: 70,
+  processingMode: 65,
+  planningHorizon: 'strategic',
+  complexityTolerance: 70,
+
+  directnessLevel: 65,
+  diplomacyLevel: 70,
+  tactLevel: 70,
+  assertivenessLevel: 55,
+  conflictStyle: 'diplomatic',
+  languageStyle: 'neutral',
+  vocabularyLevel: 'standard',
+  communicationRegister: 'professional',
+  multilingualBehavior: 'mirror-input',
+  responseLength: 'standard',
+  explanationDepth: 55,
+  structurePreference: 'tables',
+  clarificationThreshold: 35,
+  compressionLevel: 65,
+  audienceAdaptation: 'professional',
+  relationshipDistance: 60,
+  boundaryAwareSpeech: 75,
+  publicFacingRestraint: 80,
+  responseAudienceScope: 'public',
   publicResponseOpenness: 50,
   publicResponseDirectness: 50,
-  publicResponseHumor: 35,
+  publicResponseRestraint: 80,
   friendsResponseWarmth: 65,
   friendsResponseDetail: 50,
   friendsResponseHumor: 55,
@@ -75,17 +105,64 @@ const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   familyResponseHumor: 60,
   subscriberResponsePriority: 65,
   subscriberResponseDetail: 65,
-  subscriberResponseProfessionalTone: 75
+  subscriberResponseProfessionalTone: 75,
+
+  memoryRetention: 'session',
+  forgettingMode: 'relevance-based',
+  decaySensitivity: 45,
+  continuityDepth: 60,
+  recallPriority: 'important',
+  contextWeighting: 70,
+  personalHistoryInfluence: 70,
+  sourceConfidenceThreshold: 75,
+  narrativeContinuity: 70,
+  identityContinuity: 75,
+  lifeEventSensitivity: 65,
+  sensitiveMemoryHandling: 'ask',
+  memoryCitationBehavior: false,
+  recallPermissionStrictness: 80,
+
+  emotionalTone: 'neutral',
+  warmthLevel: 55,
+  emotionalIntensity: 45,
+  empathyLevel: 60,
+  cognitiveEmpathy: 70,
+  affectiveEmpathy: 55,
+  validationStyle: 'reflective',
+  emotionalRegulation: 75,
+  calmnessLevel: 70,
+  deescalationStrength: 70,
+  distressSensitivity: 65,
+  emotionalMirroring: 55,
+  moodAdaptation: 'adapt-lightly',
+  sentimentSensitivity: 65,
+  emotionalWeighting: 50,
+
+  riskTolerance: 25,
+  efficiencyPreference: 50,
+  initiativeLevel: 45,
+  autonomyLevel: 'suggest',
+  decisivenessLevel: 60,
+  restraintLevel: 65,
+  cautionLevel: 70,
+  errorAvoidance: 75,
+  escalationThreshold: 70,
+  boundaryStrictness: 75,
+  consentSensitivity: 85,
+  privacyStrictness: 85,
+  refusalStyle: 'diplomatic',
+  vulnerabilityHandling: 'protective',
+  consistencyLevel: 75,
+  ruleAdherence: 80,
+  taskPersistence: 70
 });
 
 const MODEL_PERSONALIZATION_PANE_GROUPS = Object.freeze({
-  behavior: 'behavior',
-  language: 'language',
-  emotion: 'emotion',
-  response: 'response',
+  cognition: 'cognition',
+  communication: 'communication',
   memory: 'memory',
-  creativity: 'creativity',
-  reflection: 'reflection'
+  emotion: 'emotion',
+  behavior: 'behavior'
 });
 
 const MODEL_FOUNDATION_PANE_GROUPS = Object.freeze({
@@ -273,29 +350,21 @@ const PANE_LABELS = Object.freeze({
     title: 'Evaluation',
     summary: 'Assess whether the model is safe, useful, and sufficiently prepared for the next readiness state.'
   },
-  behavior: {
-    title: 'Behavior',
-    summary: 'Tune the model’s directness, risk posture, efficiency, and owner-representative behavior.'
+  cognition: {
+    title: 'Cognition',
+    summary: 'Tune the model’s reasoning, attention, abstraction, creativity, reflection, and problem-solving mode.'
   },
-  language: {
-    title: 'Language',
-    summary: 'Set the model’s speaking style without changing the user interface language or ICOS assistant preferences.'
+  communication: {
+    title: 'Communication',
+    summary: 'Tune the model’s language, directness, diplomacy, response style, and audience adaptation.'
   },
   emotion: {
     title: 'Emotion',
-    summary: 'Control emotional tone, empathy, and emotional weighting for the model’s public and staged interactions.'
+    summary: 'Tune the model’s empathy, warmth, emotional sensitivity, mirroring, and affect regulation.'
   },
-  response: {
-    title: 'Response',
-    summary: 'Control response length, explanation depth, pacing, and clarity for the model itself.'
-  },
-  creativity: {
-    title: 'Creativity',
-    summary: 'Tune humor, creativity, and exploratory tolerance for model responses.'
-  },
-  reflection: {
-    title: 'Reflection',
-    summary: 'Set how often the model reflects, reviews, and updates behavior from owner-approved context.'
+  behavior: {
+    title: 'Behavior',
+    summary: 'Tune the model’s risk posture, efficiency, autonomy, restraint, boundaries, and action style.'
   },
   state: {
     title: 'State',
@@ -657,7 +726,7 @@ function scheduleModelPersonalizationBackendSave() {
         error.code = 'MODEL_PERSONALIZATION_NOT_SAVED';
         throw error;
       }
-      setModelPersonalizationStatus('Model personalization saved.', 'success');
+      setModelPersonalizationStatus('Model personalization saved', 'success');
     } catch (error) {
       setModelPersonalizationStatus(formatModelPersonalizationError(error), 'error');
       console.warn('[Neuroartan][Model] Personalization preference sync skipped.', error);
@@ -681,7 +750,6 @@ function updateModelPersonalizationPreferences(nextPatch = {}, options = {}) {
   }));
 
   if (options.sync !== false) {
-    setModelPersonalizationStatus('Saving personalization...', 'saving');
     scheduleModelPersonalizationBackendSave();
   }
 }
@@ -853,7 +921,7 @@ function setModelManagementLoading(root, loading) {
 }
 
 function getVisibleModelPersonalizationGroup(navigationState = getProfileNavigationState()) {
-  return MODEL_PERSONALIZATION_PANE_GROUPS[navigationState.modelPane] || 'behavior';
+  return MODEL_PERSONALIZATION_PANE_GROUPS[navigationState.modelPane] || 'cognition';
 }
 
 function getVisibleModelFoundationGroup(navigationState = getProfileNavigationState()) {
@@ -1219,10 +1287,28 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     valueNode.textContent = String(getModelPersonalizationValue(field) ?? '');
   });
 
-  const responseAudienceScope = String(getModelPersonalizationValue('responseAudienceScope') || 'general');
+  root.querySelectorAll('[data-model-personalization-toggle]').forEach((toggle) => {
+    if (!(toggle instanceof HTMLButtonElement)) return;
+    const field = toggle.dataset.modelPersonalizationToggle;
+    if (!field) return;
+    const checked = getModelPersonalizationValue(field) === true;
+    toggle.setAttribute('aria-checked', checked ? 'true' : 'false');
+    toggle.dataset.toggleState = checked ? 'on' : 'off';
+    const label = toggle.querySelector('.na-toggle__label');
+    if (label instanceof HTMLElement) label.textContent = checked ? 'On' : 'Off';
+  });
+
+  const responseAudienceScope = String(getModelPersonalizationValue('responseAudienceScope') || 'public');
   root.querySelectorAll('[data-model-response-audience-panel]').forEach((panel) => {
     if (!(panel instanceof HTMLElement)) return;
-    panel.hidden = panel.dataset.modelResponseAudiencePanel !== responseAudienceScope;
+    const active = panel.dataset.modelResponseAudiencePanel === responseAudienceScope;
+    panel.hidden = !active;
+    panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+    panel.toggleAttribute('inert', !active);
+    panel.querySelectorAll('input, select, textarea, button').forEach((control) => {
+      if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement || control instanceof HTMLButtonElement)) return;
+      control.disabled = !active;
+    });
   });
 }
 
@@ -1400,6 +1486,20 @@ function handleModelFoundationInput(event) {
 }
 
 function handleModelPersonalizationInput(event) {
+  if (event.type === 'click') {
+    const toggle = event.target?.closest?.('[data-model-personalization-toggle]');
+    if (!(toggle instanceof HTMLButtonElement)) return;
+
+    const field = toggle.dataset.modelPersonalizationToggle;
+    if (!field) return;
+
+    const nextValue = toggle.getAttribute('aria-checked') !== 'true';
+    if (getModelPersonalizationValue(field) === nextValue) return;
+
+    updateModelPersonalizationPreferences({ [field]: nextValue });
+    return;
+  }
+
   const control = event.target?.closest?.('[data-model-personalization-field]');
   if (!(control instanceof HTMLElement)) return;
 
@@ -1409,6 +1509,8 @@ function handleModelPersonalizationInput(event) {
   const rawValue = control instanceof HTMLInputElement && control.type === 'range'
     ? Number(control.value)
     : control.value;
+
+  if (getModelPersonalizationValue(field) === rawValue) return;
 
   updateModelPersonalizationPreferences({ [field]: rawValue });
 }
@@ -1811,6 +1913,7 @@ function initModelManagement() {
   subscribeProfileNavigation(renderAllModelManagement);
   document.addEventListener('input', handleModelPersonalizationInput);
   document.addEventListener('change', handleModelPersonalizationInput);
+  document.addEventListener('click', handleModelPersonalizationInput);
   document.addEventListener('change', handleModelVisibilityInput);
   document.addEventListener('click', handleModelVisibilityInput);
   document.addEventListener('input', handleModelFoundationInput);

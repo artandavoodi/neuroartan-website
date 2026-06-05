@@ -311,7 +311,7 @@ export function submitProfileThought() {
     setThoughtState({
       ...state,
       submitStatus: 'error',
-      submitMessage: 'Authenticate to activate the thought composer.'
+      submitMessage: 'Authenticate to activate the thought composer'
     });
     return false;
   }
@@ -320,16 +320,10 @@ export function submitProfileThought() {
     setThoughtState({
       ...state,
       submitStatus: 'error',
-      submitMessage: 'Write a thought before saving it to your private Thought Bank.'
+      submitMessage: 'Write a thought before saving it to your private Thought Bank'
     });
     return false;
   }
-
-  setThoughtState({
-    ...state,
-    submitStatus: 'submitting',
-    submitMessage: 'Saving private thought...'
-  });
 
   createProfileThought({
     text,
@@ -343,7 +337,7 @@ export function submitProfileThought() {
         entries,
         composerText: '',
         submitStatus: 'success',
-        submitMessage: 'Thought saved to your private Thought Bank.'
+        submitMessage: 'Thought saved to your private Thought Bank'
       });
       hydrateThoughtState(getProfileRuntimeState());
     })

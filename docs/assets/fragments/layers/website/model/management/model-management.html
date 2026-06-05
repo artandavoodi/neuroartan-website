@@ -404,435 +404,239 @@
       <h3 class="model-management__section-title">Personalization</h3>
 
       <div class="model-management__control-groups">
-        <section class="model-management__control-group" data-model-personalization-group="behavior">
-          <h4 class="model-management__control-title">Behavior</h4>
+        <section class="model-management__control-group" data-model-personalization-group="cognition">
+          <h4 class="model-management__control-title">Reasoning</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Directness</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="directnessLevel">Nuanced</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="directnessLevel" aria-label="Select directness">
-                    <option value="nuanced">Nuanced</option>
-                    <option value="direct">Direct</option>
-                    <option value="diplomatic">Diplomatic</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Reasoning depth</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="reasoningDepth">Balanced</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reasoningDepth" aria-label="Select reasoning depth"><option value="fast">Fast</option><option value="balanced">Balanced</option><option value="deep">Deep</option><option value="strategic">Strategic</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Analytical mode</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="analyticalMode">Systems</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="analyticalMode" aria-label="Select analytical mode"><option value="practical">Practical</option><option value="conceptual">Conceptual</option><option value="systems">Systems</option><option value="research">Research</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Evidence threshold</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="evidenceThreshold"><span class="model-management__slider-value" data-model-personalization-value="evidenceThreshold">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Abstraction level</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="abstractionLevel"><span class="model-management__slider-value" data-model-personalization-value="abstractionLevel">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Synthesis strength</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="synthesisStrength"><span class="model-management__slider-value" data-model-personalization-value="synthesisStrength">70</span></span></label>
+          </div>
 
-            <label class="model-management__field">
-              <span class="model-management__field-label">Risk tolerance</span>
-              <span class="model-management__slider-row">
-                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="riskTolerance">
-                <span class="model-management__slider-value" data-model-personalization-value="riskTolerance">25</span>
-              </span>
-            </label>
+          <h4 class="model-management__control-title">Attention</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Attention focus</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="attentionFocus">Balanced</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="attentionFocus" aria-label="Select attention focus"><option value="broad">Broad</option><option value="balanced">Balanced</option><option value="narrow">Narrow</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Detail sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="detailSensitivity"><span class="model-management__slider-value" data-model-personalization-value="detailSensitivity">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Distraction resistance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="distractionResistance"><span class="model-management__slider-value" data-model-personalization-value="distractionResistance">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Priority detection</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="priorityDetection"><span class="model-management__slider-value" data-model-personalization-value="priorityDetection">75</span></span></label>
+          </div>
 
-            <label class="model-management__field">
-              <span class="model-management__field-label">Efficiency</span>
-              <span class="model-management__slider-row">
-                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="efficiencyPreference">
-                <span class="model-management__slider-value" data-model-personalization-value="efficiencyPreference">50</span>
-              </span>
-            </label>
+          <h4 class="model-management__control-title">Cognitive flexibility</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Flexibility</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="cognitiveFlexibility"><span class="model-management__slider-value" data-model-personalization-value="cognitiveFlexibility">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Perspective shifting</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="perspectiveShifting"><span class="model-management__slider-value" data-model-personalization-value="perspectiveShifting">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Alternative generation</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="alternativeGeneration"><span class="model-management__slider-value" data-model-personalization-value="alternativeGeneration">65</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Creativity</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Creativity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="creativityLevel"><span class="model-management__slider-value" data-model-personalization-value="creativityLevel">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Humor</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="senseOfHumor"><span class="model-management__slider-value" data-model-personalization-value="senseOfHumor">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Metaphor use</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="metaphorUse"><span class="model-management__slider-value" data-model-personalization-value="metaphorUse">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Novelty tolerance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="noveltyTolerance"><span class="model-management__slider-value" data-model-personalization-value="noveltyTolerance">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Imagination mode</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="imaginationMode">Precise</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="imaginationMode" aria-label="Select imagination mode"><option value="precise">Precise</option><option value="poetic">Poetic</option><option value="exploratory">Exploratory</option><option value="visionary">Visionary</option></select></span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Reflection</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Reflection frequency</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="reflectionFrequency">Sometimes</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reflectionFrequency" aria-label="Select reflection frequency"><option value="rare">Rare</option><option value="sometimes">Sometimes</option><option value="often">Often</option><option value="continuous">Continuous</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Reflection depth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="reflectionDepth"><span class="model-management__slider-value" data-model-personalization-value="reflectionDepth">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Self-correction strength</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="selfCorrectionStrength"><span class="model-management__slider-value" data-model-personalization-value="selfCorrectionStrength">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Uncertainty awareness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="uncertaintyAwareness"><span class="model-management__slider-value" data-model-personalization-value="uncertaintyAwareness">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Pattern detection</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="patternDetection"><span class="model-management__slider-value" data-model-personalization-value="patternDetection">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Contradiction detection</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="contradictionDetection"><span class="model-management__slider-value" data-model-personalization-value="contradictionDetection">70</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Decision cognition</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Processing mode</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="processingMode"><span class="model-management__slider-value" data-model-personalization-value="processingMode">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Planning horizon</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="planningHorizon">Strategic</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="planningHorizon" aria-label="Select planning horizon"><option value="immediate">Immediate</option><option value="short-term">Short-term</option><option value="long-term">Long-term</option><option value="strategic">Strategic</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Complexity tolerance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="complexityTolerance"><span class="model-management__slider-value" data-model-personalization-value="complexityTolerance">70</span></span></label>
           </div>
         </section>
 
-        <section class="model-management__control-group" data-model-personalization-group="language" hidden>
+        <section class="model-management__control-group" data-model-personalization-group="communication" hidden>
+          <h4 class="model-management__control-title">Delivery</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Directness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="directnessLevel"><span class="model-management__slider-value" data-model-personalization-value="directnessLevel">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Diplomacy</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="diplomacyLevel"><span class="model-management__slider-value" data-model-personalization-value="diplomacyLevel">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Tact</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="tactLevel"><span class="model-management__slider-value" data-model-personalization-value="tactLevel">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Assertiveness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="assertivenessLevel"><span class="model-management__slider-value" data-model-personalization-value="assertivenessLevel">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Conflict style</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="conflictStyle">Diplomatic</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="conflictStyle" aria-label="Select conflict style"><option value="avoidant">Avoidant</option><option value="neutral">Neutral</option><option value="diplomatic">Diplomatic</option><option value="direct">Direct</option></select></span></span></label>
+          </div>
+
           <h4 class="model-management__control-title">Language</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Language style</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="languageStyle">Balanced</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="languageStyle" aria-label="Select language style">
-                    <option value="balanced">Balanced</option>
-                    <option value="formal">Formal</option>
-                    <option value="professional">Professional</option>
-                    <option value="casual">Casual</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Language style</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="languageStyle">Neutral</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="languageStyle" aria-label="Select language style"><option value="simple">Simple</option><option value="neutral">Neutral</option><option value="formal">Formal</option><option value="institutional">Institutional</option><option value="poetic">Poetic</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Vocabulary level</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="vocabularyLevel">Standard</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="vocabularyLevel" aria-label="Select vocabulary level"><option value="plain">Plain</option><option value="standard">Standard</option><option value="advanced">Advanced</option><option value="expert">Expert</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Register</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="communicationRegister">Professional</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="communicationRegister" aria-label="Select communication register"><option value="casual">Casual</option><option value="neutral">Neutral</option><option value="professional">Professional</option><option value="institutional">Institutional</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Multilingual behavior</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="multilingualBehavior">Mirror input</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="multilingualBehavior" aria-label="Select multilingual behavior"><option value="user-language">User language</option><option value="mirror-input">Mirror input</option><option value="ask">Ask</option><option value="translate">Translate</option></select></span></span></label>
           </div>
-        </section>
 
-        <section class="model-management__control-group" data-model-personalization-group="emotion" hidden>
-          <h4 class="model-management__control-title">Emotion</h4>
+          <h4 class="model-management__control-title">Response style</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Tone</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="emotionalTone">Neutral</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="emotionalTone" aria-label="Select emotional tone">
-                    <option value="neutral">Neutral</option>
-                    <option value="warm">Warm</option>
-                    <option value="empathetic">Empathetic</option>
-                    <option value="analytical">Analytical</option>
-                  </select>
-                </span>
-              </span>
-            </label>
-
-            <label class="model-management__field">
-              <span class="model-management__field-label">Empathy</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="empathyLevel">Moderate</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="empathyLevel" aria-label="Select empathy level">
-                    <option value="moderate">Moderate</option>
-                    <option value="low">Low</option>
-                    <option value="high">High</option>
-                  </select>
-                </span>
-              </span>
-            </label>
-
-            <label class="model-management__field">
-              <span class="model-management__field-label">Emotional weighting</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="emotionalWeighting">Balanced</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="emotionalWeighting" aria-label="Select emotional weighting">
-                    <option value="balanced">Balanced</option>
-                    <option value="minimal">Minimal</option>
-                    <option value="sensitive">Sensitive</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Response length</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="responseLength">Standard</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseLength" aria-label="Select response length"><option value="minimal">Minimal</option><option value="short">Short</option><option value="standard">Standard</option><option value="detailed">Detailed</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Explanation depth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="explanationDepth"><span class="model-management__slider-value" data-model-personalization-value="explanationDepth">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Structure preference</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="structurePreference">Tables</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="structurePreference" aria-label="Select structure preference"><option value="plain">Plain</option><option value="bullets">Bullets</option><option value="tables">Tables</option><option value="institutional">Institutional</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Clarification threshold</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="clarificationThreshold"><span class="model-management__slider-value" data-model-personalization-value="clarificationThreshold">35</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Compression level</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="compressionLevel"><span class="model-management__slider-value" data-model-personalization-value="compressionLevel">65</span></span></label>
           </div>
-        </section>
 
-        <section class="model-management__control-group" data-model-personalization-group="response" hidden>
-          <h4 class="model-management__control-title">Response</h4>
+          <h4 class="model-management__control-title">Social context</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Relationship</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="responseAudienceScope">General</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseAudienceScope" aria-label="Select response relationship">
-                    <option value="general">General</option>
-                    <option value="public">Public</option>
-                    <option value="friends">Friends</option>
-                    <option value="followers">Followers</option>
-                    <option value="mutuals">Mutuals</option>
-                    <option value="family">Family</option>
-                    <option value="subscribers">Subscribers</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Audience adaptation</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="audienceAdaptation">Professional</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="audienceAdaptation" aria-label="Select audience adaptation"><option value="private">Private</option><option value="public">Public</option><option value="professional">Professional</option><option value="family">Family</option><option value="friends">Friends</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Relationship distance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="relationshipDistance"><span class="model-management__slider-value" data-model-personalization-value="relationshipDistance">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Boundary-aware speech</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="boundaryAwareSpeech"><span class="model-management__slider-value" data-model-personalization-value="boundaryAwareSpeech">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Public-facing restraint</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicFacingRestraint"><span class="model-management__slider-value" data-model-personalization-value="publicFacingRestraint">80</span></span></label>
           </div>
 
-          <div class="model-management__audience-groups" aria-label="Relationship response controls">
-            <section class="model-management__audience-group" data-model-response-audience-panel="general" aria-label="General response controls">
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Length</span>
-                  <span class="ui-inline-dropdown">
-                    <span class="ui-inline-dropdown__value" data-model-personalization-label="responseLength">Balanced</span>
-                    <span class="ui-inline-dropdown__icon-wrapper">
-                      <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                      <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseLength" aria-label="Select response length">
-                    <option value="balanced">Balanced</option>
-                    <option value="concise">Concise</option>
-                    <option value="detailed">Detailed</option>
-                    <option value="comprehensive">Comprehensive</option>
-                      </select>
-                    </span>
-                  </span>
-                </label>
+          <h4 class="model-management__control-title">Audience-specific response</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Audience profile</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="responseAudienceScope">Public</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="responseAudienceScope" aria-label="Select response audience"><option value="public">Public</option><option value="friends">Friends</option><option value="followers">Followers</option><option value="mutual">Mutuals</option><option value="family">Family</option><option value="subscribers">Subscribers</option></select></span></span></label>
+          </div>
 
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Explanation depth</span>
-                  <span class="ui-inline-dropdown">
-                    <span class="ui-inline-dropdown__value" data-model-personalization-label="explanationDepth">Standard</span>
-                    <span class="ui-inline-dropdown__icon-wrapper">
-                      <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                      <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="explanationDepth" aria-label="Select explanation depth">
-                    <option value="standard">Standard</option>
-                    <option value="minimal">Minimal</option>
-                    <option value="thorough">Thorough</option>
-                      </select>
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </section>
+          <div class="model-management__control-grid" data-model-response-audience-panel="public">
+            <label class="model-management__field"><span class="model-management__field-label">Public openness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseOpenness"><span class="model-management__slider-value" data-model-personalization-value="publicResponseOpenness">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Public directness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseDirectness"><span class="model-management__slider-value" data-model-personalization-value="publicResponseDirectness">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Public restraint</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseRestraint"><span class="model-management__slider-value" data-model-personalization-value="publicResponseRestraint">80</span></span></label>
+          </div>
 
-            <section class="model-management__audience-group" data-model-response-audience-panel="public" aria-label="Public response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Openness</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseOpenness">
-                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseOpenness">50</span>
-                  </span>
-                </label>
+          <div class="model-management__control-grid" data-model-response-audience-panel="friends" hidden>
+            <label class="model-management__field"><span class="model-management__field-label">Friends warmth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseWarmth"><span class="model-management__slider-value" data-model-personalization-value="friendsResponseWarmth">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Friends detail</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseDetail"><span class="model-management__slider-value" data-model-personalization-value="friendsResponseDetail">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Friends humor</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseHumor"><span class="model-management__slider-value" data-model-personalization-value="friendsResponseHumor">55</span></span></label>
+          </div>
 
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Directness</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseDirectness">
-                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseDirectness">50</span>
-                  </span>
-                </label>
+          <div class="model-management__control-grid" data-model-response-audience-panel="followers" hidden>
+            <label class="model-management__field"><span class="model-management__field-label">Followers clarity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseClarity"><span class="model-management__slider-value" data-model-personalization-value="followersResponseClarity">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Followers efficiency</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseEfficiency"><span class="model-management__slider-value" data-model-personalization-value="followersResponseEfficiency">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Followers openness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseOpenness"><span class="model-management__slider-value" data-model-personalization-value="followersResponseOpenness">45</span></span></label>
+          </div>
 
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Humor</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="publicResponseHumor">
-                    <span class="model-management__slider-value" data-model-personalization-value="publicResponseHumor">35</span>
-                  </span>
-                </label>
-              </div>
-            </section>
+          <div class="model-management__control-grid" data-model-response-audience-panel="mutual" hidden>
+            <label class="model-management__field"><span class="model-management__field-label">Mutual trust depth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseTrustDepth"><span class="model-management__slider-value" data-model-personalization-value="mutualResponseTrustDepth">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Mutual explanation depth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseExplanationDepth"><span class="model-management__slider-value" data-model-personalization-value="mutualResponseExplanationDepth">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Mutual directness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseDirectness"><span class="model-management__slider-value" data-model-personalization-value="mutualResponseDirectness">55</span></span></label>
+          </div>
 
-            <section class="model-management__audience-group" data-model-response-audience-panel="friends" aria-label="Friends response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Warmth</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseWarmth">
-                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseWarmth">65</span>
-                  </span>
-                </label>
+          <div class="model-management__control-grid" data-model-response-audience-panel="family" hidden>
+            <label class="model-management__field"><span class="model-management__field-label">Family warmth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseWarmth"><span class="model-management__slider-value" data-model-personalization-value="familyResponseWarmth">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Family privacy guard</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponsePrivacyGuard"><span class="model-management__slider-value" data-model-personalization-value="familyResponsePrivacyGuard">80</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Family humor</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseHumor"><span class="model-management__slider-value" data-model-personalization-value="familyResponseHumor">60</span></span></label>
+          </div>
 
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Detail</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseDetail">
-                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseDetail">50</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Humor</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="friendsResponseHumor">
-                    <span class="model-management__slider-value" data-model-personalization-value="friendsResponseHumor">55</span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section class="model-management__audience-group" data-model-response-audience-panel="followers" aria-label="Followers response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Clarity</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseClarity">
-                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseClarity">70</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Efficiency</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseEfficiency">
-                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseEfficiency">60</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Openness</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="followersResponseOpenness">
-                    <span class="model-management__slider-value" data-model-personalization-value="followersResponseOpenness">45</span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section class="model-management__audience-group" data-model-response-audience-panel="mutuals" aria-label="Mutual response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Trust depth</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseTrustDepth">
-                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseTrustDepth">60</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Explanation depth</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseExplanationDepth">
-                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseExplanationDepth">55</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Directness</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="mutualResponseDirectness">
-                    <span class="model-management__slider-value" data-model-personalization-value="mutualResponseDirectness">55</span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section class="model-management__audience-group" data-model-response-audience-panel="family" aria-label="Family response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Warmth</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseWarmth">
-                    <span class="model-management__slider-value" data-model-personalization-value="familyResponseWarmth">75</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Privacy guard</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponsePrivacyGuard">
-                    <span class="model-management__slider-value" data-model-personalization-value="familyResponsePrivacyGuard">80</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Humor</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="familyResponseHumor">
-                    <span class="model-management__slider-value" data-model-personalization-value="familyResponseHumor">60</span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section class="model-management__audience-group" data-model-response-audience-panel="subscribers" aria-label="Subscribers response controls" hidden>
-              <div class="model-management__control-grid">
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Priority</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponsePriority">
-                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponsePriority">65</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Detail</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseDetail">
-                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponseDetail">65</span>
-                  </span>
-                </label>
-
-                <label class="model-management__field">
-                  <span class="model-management__field-label">Professional tone</span>
-                  <span class="model-management__slider-row">
-                    <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseProfessionalTone">
-                    <span class="model-management__slider-value" data-model-personalization-value="subscriberResponseProfessionalTone">75</span>
-                  </span>
-                </label>
-              </div>
-            </section>
+          <div class="model-management__control-grid" data-model-response-audience-panel="subscribers" hidden>
+            <label class="model-management__field"><span class="model-management__field-label">Subscriber priority</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponsePriority"><span class="model-management__slider-value" data-model-personalization-value="subscriberResponsePriority">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Subscriber detail</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseDetail"><span class="model-management__slider-value" data-model-personalization-value="subscriberResponseDetail">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Subscriber professional tone</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="subscriberResponseProfessionalTone"><span class="model-management__slider-value" data-model-personalization-value="subscriberResponseProfessionalTone">75</span></span></label>
           </div>
         </section>
 
         <section class="model-management__control-group" data-model-personalization-group="memory" hidden>
-          <h4 class="model-management__control-title">Memory</h4>
+          <h4 class="model-management__control-title">Retention</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Retention period</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="memoryRetention">Session</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="memoryRetention" aria-label="Select memory retention period">
-                    <option value="session">Session</option>
-                    <option value="week">Week</option>
-                    <option value="month">Month</option>
-                    <option value="indefinite">Indefinite</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Retention period</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="memoryRetention">Session</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="memoryRetention" aria-label="Select memory retention period"><option value="session">Session</option><option value="short">Short</option><option value="long">Long</option><option value="permanent">Permanent</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Forgetting mode</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="forgettingMode">Relevance-based</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="forgettingMode" aria-label="Select forgetting mode"><option value="manual">Manual</option><option value="time-based">Time-based</option><option value="relevance-based">Relevance-based</option><option value="consent-based">Consent-based</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Decay sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="decaySensitivity"><span class="model-management__slider-value" data-model-personalization-value="decaySensitivity">45</span></span></label>
+          </div>
 
-            <label class="model-management__field">
-              <span class="model-management__field-label">Continuity depth</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="continuityDepth">Moderate</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="continuityDepth" aria-label="Select continuity depth">
-                    <option value="moderate">Moderate</option>
-                    <option value="shallow">Shallow</option>
-                    <option value="deep">Deep</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+          <h4 class="model-management__control-title">Recall</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Continuity depth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="continuityDepth"><span class="model-management__slider-value" data-model-personalization-value="continuityDepth">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Recall priority</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="recallPriority">Important</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="recallPriority" aria-label="Select recall priority"><option value="recent">Recent</option><option value="important">Important</option><option value="emotional">Emotional</option><option value="repeated">Repeated</option><option value="strategic">Strategic</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Context weighting</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="contextWeighting"><span class="model-management__slider-value" data-model-personalization-value="contextWeighting">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Personal-history influence</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="personalHistoryInfluence"><span class="model-management__slider-value" data-model-personalization-value="personalHistoryInfluence">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Source confidence threshold</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="sourceConfidenceThreshold"><span class="model-management__slider-value" data-model-personalization-value="sourceConfidenceThreshold">75</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Autobiographical continuity</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Narrative continuity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="narrativeContinuity"><span class="model-management__slider-value" data-model-personalization-value="narrativeContinuity">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Identity continuity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="identityContinuity"><span class="model-management__slider-value" data-model-personalization-value="identityContinuity">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Life-event sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="lifeEventSensitivity"><span class="model-management__slider-value" data-model-personalization-value="lifeEventSensitivity">65</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Memory safety</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Sensitive memory handling</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="sensitiveMemoryHandling">Ask</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="sensitiveMemoryHandling" aria-label="Select sensitive memory handling"><option value="avoid">Avoid</option><option value="ask">Ask</option><option value="use-carefully">Use carefully</option><option value="full-use">Full use</option></select></span></span></label>
+            <div class="model-management__toggle-row"><div class="model-management__toggle-copy"><strong class="model-management__toggle-title">Memory citation behavior</strong><span class="model-management__toggle-caption">Show when a response depends on remembered context.</span></div><button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-personalization-toggle="memoryCitationBehavior" aria-label="Toggle memory citation behavior"><span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span><span class="na-toggle__label" hidden>Off</span></button></div>
+            <label class="model-management__field"><span class="model-management__field-label">Recall permission strictness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="recallPermissionStrictness"><span class="model-management__slider-value" data-model-personalization-value="recallPermissionStrictness">80</span></span></label>
           </div>
         </section>
 
-        <section class="model-management__control-group" data-model-personalization-group="creativity" hidden>
-          <h4 class="model-management__control-title">Creativity</h4>
+        <section class="model-management__control-group" data-model-personalization-group="emotion" hidden>
+          <h4 class="model-management__control-title">Tone</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Humor</span>
-              <span class="model-management__slider-row">
-                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="senseOfHumor">
-                <span class="model-management__slider-value" data-model-personalization-value="senseOfHumor">50</span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Tone</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="emotionalTone">Neutral</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="emotionalTone" aria-label="Select emotional tone"><option value="neutral">Neutral</option><option value="warm">Warm</option><option value="calm">Calm</option><option value="formal">Formal</option><option value="encouraging">Encouraging</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Warmth</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="warmthLevel"><span class="model-management__slider-value" data-model-personalization-value="warmthLevel">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Emotional intensity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="emotionalIntensity"><span class="model-management__slider-value" data-model-personalization-value="emotionalIntensity">45</span></span></label>
+          </div>
 
-            <label class="model-management__field">
-              <span class="model-management__field-label">Creativity</span>
-              <span class="model-management__slider-row">
-                <input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="creativityLevel">
-                <span class="model-management__slider-value" data-model-personalization-value="creativityLevel">50</span>
-              </span>
-            </label>
+          <h4 class="model-management__control-title">Empathy</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Empathy</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="empathyLevel"><span class="model-management__slider-value" data-model-personalization-value="empathyLevel">60</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Cognitive empathy</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="cognitiveEmpathy"><span class="model-management__slider-value" data-model-personalization-value="cognitiveEmpathy">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Affective empathy</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="affectiveEmpathy"><span class="model-management__slider-value" data-model-personalization-value="affectiveEmpathy">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Validation style</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="validationStyle">Reflective</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="validationStyle" aria-label="Select validation style"><option value="minimal">Minimal</option><option value="reflective">Reflective</option><option value="supportive">Supportive</option><option value="stabilizing">Stabilizing</option></select></span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Regulation</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Emotional regulation</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="emotionalRegulation"><span class="model-management__slider-value" data-model-personalization-value="emotionalRegulation">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Calmness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="calmnessLevel"><span class="model-management__slider-value" data-model-personalization-value="calmnessLevel">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">De-escalation strength</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="deescalationStrength"><span class="model-management__slider-value" data-model-personalization-value="deescalationStrength">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Distress sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="distressSensitivity"><span class="model-management__slider-value" data-model-personalization-value="distressSensitivity">65</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Mirroring</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Emotional mirroring</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="emotionalMirroring"><span class="model-management__slider-value" data-model-personalization-value="emotionalMirroring">55</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Mood adaptation</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="moodAdaptation">Adapt lightly</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="moodAdaptation" aria-label="Select mood adaptation"><option value="ignore">Ignore</option><option value="notice">Notice</option><option value="adapt-lightly">Adapt lightly</option><option value="adapt-strongly">Adapt strongly</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Sentiment sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="sentimentSensitivity"><span class="model-management__slider-value" data-model-personalization-value="sentimentSensitivity">65</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Weighting</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Emotional weighting</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="emotionalWeighting"><span class="model-management__slider-value" data-model-personalization-value="emotionalWeighting">50</span></span></label>
           </div>
         </section>
 
-        <section class="model-management__control-group" data-model-personalization-group="reflection" hidden>
-          <h4 class="model-management__control-title">Reflection</h4>
+        <section class="model-management__control-group" data-model-personalization-group="behavior" hidden>
+          <h4 class="model-management__control-title">Action posture</h4>
           <div class="model-management__control-grid">
-            <label class="model-management__field">
-              <span class="model-management__field-label">Frequency</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="reflectionFrequency">Never</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reflectionFrequency" aria-label="Select reflection frequency">
-                    <option value="never">Never</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+            <label class="model-management__field"><span class="model-management__field-label">Risk tolerance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="riskTolerance"><span class="model-management__slider-value" data-model-personalization-value="riskTolerance">25</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Efficiency</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="efficiencyPreference"><span class="model-management__slider-value" data-model-personalization-value="efficiencyPreference">50</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Initiative</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="initiativeLevel"><span class="model-management__slider-value" data-model-personalization-value="initiativeLevel">45</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Autonomy</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="autonomyLevel">Suggest</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="autonomyLevel" aria-label="Select autonomy level"><option value="ask-first">Ask first</option><option value="suggest">Suggest</option><option value="execute-when-clear">Execute when clear</option><option value="autonomous">Autonomous</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Decisiveness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="decisivenessLevel"><span class="model-management__slider-value" data-model-personalization-value="decisivenessLevel">60</span></span></label>
+          </div>
 
-            <label class="model-management__field">
-              <span class="model-management__field-label">Depth</span>
-              <span class="ui-inline-dropdown">
-                <span class="ui-inline-dropdown__value" data-model-personalization-label="reflectionDepth">Moderate</span>
-                <span class="ui-inline-dropdown__icon-wrapper">
-                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                  <select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="reflectionDepth" aria-label="Select reflection depth">
-                    <option value="moderate">Moderate</option>
-                    <option value="surface">Surface</option>
-                    <option value="deep">Deep</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+          <h4 class="model-management__control-title">Restraint</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Restraint</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="restraintLevel"><span class="model-management__slider-value" data-model-personalization-value="restraintLevel">65</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Caution</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="cautionLevel"><span class="model-management__slider-value" data-model-personalization-value="cautionLevel">70</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Error avoidance</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="errorAvoidance"><span class="model-management__slider-value" data-model-personalization-value="errorAvoidance">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Escalation threshold</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="escalationThreshold"><span class="model-management__slider-value" data-model-personalization-value="escalationThreshold">70</span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Boundaries</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Boundary strictness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="boundaryStrictness"><span class="model-management__slider-value" data-model-personalization-value="boundaryStrictness">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Consent sensitivity</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="consentSensitivity"><span class="model-management__slider-value" data-model-personalization-value="consentSensitivity">85</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Privacy strictness</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="privacyStrictness"><span class="model-management__slider-value" data-model-personalization-value="privacyStrictness">85</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Refusal style</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="refusalStyle">Diplomatic</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="refusalStyle" aria-label="Select refusal style"><option value="brief">Brief</option><option value="diplomatic">Diplomatic</option><option value="educational">Educational</option><option value="firm">Firm</option></select></span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Vulnerability handling</span><span class="ui-inline-dropdown"><span class="ui-inline-dropdown__value" data-model-personalization-label="vulnerabilityHandling">Protective</span><span class="ui-inline-dropdown__icon-wrapper"><img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt=""><select class="ui-dropdown ui-dropdown--icon-only" data-model-personalization-field="vulnerabilityHandling" aria-label="Select vulnerability handling"><option value="neutral">Neutral</option><option value="gentle">Gentle</option><option value="protective">Protective</option><option value="escalate">Escalate</option></select></span></span></label>
+          </div>
+
+          <h4 class="model-management__control-title">Reliability</h4>
+          <div class="model-management__control-grid">
+            <label class="model-management__field"><span class="model-management__field-label">Consistency</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="consistencyLevel"><span class="model-management__slider-value" data-model-personalization-value="consistencyLevel">75</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Rule adherence</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="ruleAdherence"><span class="model-management__slider-value" data-model-personalization-value="ruleAdherence">80</span></span></label>
+            <label class="model-management__field"><span class="model-management__field-label">Task persistence</span><span class="model-management__slider-row"><input class="model-management__slider ui-slider" type="range" min="0" max="100" step="1" data-model-personalization-field="taskPersistence"><span class="model-management__slider-value" data-model-personalization-value="taskPersistence">70</span></span></label>
           </div>
         </section>
+
       </div>
       <p class="model-management__note" data-model-personalization-status aria-live="polite"></p>
     </article>

@@ -446,17 +446,17 @@ async function handlePasswordChangeSubmit(form) {
   setPasswordStatus(root, '', 'idle');
 
   if (!currentPassword && !recoveryActive) {
-    setPasswordStatus(root, 'Enter your current password.', 'error');
+    setPasswordStatus(root, 'Enter your current password', 'error');
     return;
   }
 
   if (!newPassword) {
-    setPasswordStatus(root, 'Enter a new password.', 'error');
+    setPasswordStatus(root, 'Enter a new password', 'error');
     return;
   }
 
   if (newPassword !== confirmPassword) {
-    setPasswordStatus(root, 'Passwords do not match.', 'error');
+    setPasswordStatus(root, 'Passwords do not match', 'error');
     return;
   }
 
@@ -467,7 +467,6 @@ async function handlePasswordChangeSubmit(form) {
     return;
   }
 
-  setPasswordStatus(root, 'Updating password...', 'saving');
 
   try {
     const supabase = getSupabaseClient();
@@ -505,17 +504,17 @@ async function handlePasswordChangeSubmit(form) {
 
     clearPasswordRecoveryState();
     form.reset();
-    setPasswordStatus(root, 'Password updated.', 'success');
+    setPasswordStatus(root, 'Password updated', 'success');
     void recordProfileChangelogEvent({
       area: 'security',
       action: 'password_changed',
       title: 'Password changed',
-      detail: 'The account password was updated from profile settings.'
+      detail: 'The account password was updated from profile settings'
     });
   } catch (error) {
     const message = normalizeString(error?.message || '').toLowerCase().includes('invalid login')
-      ? 'Current password is not correct.'
-      : 'Password could not be updated. Verify the account session and try again.';
+      ? 'Current password is not correct'
+      : 'Password could not be updated';
     setPasswordStatus(root, message, 'error');
     console.error('[profile-settings] Password update failed.', error);
   }
@@ -531,17 +530,17 @@ async function renderVerificationState(root, state = getProfileRuntimeState()) {
     const verificationState = await getProfileVerificationState(state.profile);
     const latestStatus = verificationState.latestRequest?.request_status || '';
     const message = state.verification?.verified === true
-      ? 'This profile is verified. The public badge is controlled by the backend verification state.'
+      ? 'This profile is verified'
       : latestStatus
-        ? `Latest request status: ${latestStatus}.`
+        ? `Latest request status: ${latestStatus}`
         : verificationState.tableAvailable
-          ? 'No verification request has been submitted yet.'
-          : 'Verification request storage requires the Supabase profile_verification_requests table.';
+          ? 'No verification request has been submitted yet'
+          : 'Verification request storage requires the Supabase profile_verification_requests table';
 
     setVerificationStatus(root, message, verificationState.tableAvailable ? 'ready' : 'error');
   } catch (error) {
     console.error('[profile-settings] Verification state failed.', error);
-    setVerificationStatus(root, 'Verification state could not be loaded.', 'error');
+    setVerificationStatus(root, 'Verification state could not be loaded', 'error');
   }
 }
 
@@ -565,27 +564,26 @@ function initProfileSettings() {
     if (!(root instanceof HTMLElement)) return;
 
     const formData = new FormData(form);
-    setVerificationStatus(root, 'Submitting verification request...', 'saving');
 
     try {
       await requestProfileVerification({
         request_note: formData.get('request_note') || ''
       });
       form.reset();
-      setVerificationStatus(root, 'Verification request submitted for review.', 'success');
+      setVerificationStatus(root, 'Verification request submitted for review', 'success');
       void recordProfileChangelogEvent({
         area: 'verification',
         action: 'verification_requested',
         title: 'Verification requested',
-        detail: 'A profile verification request was submitted.'
+        detail: 'A profile verification request was submitted'
       });
     } catch (error) {
       const code = String(error?.code || error?.message || '').trim();
       const message = code === 'PROFILE_VERIFICATION_BACKEND_UNAVAILABLE'
-        ? 'Verification storage is not configured. Connect Supabase first.'
+        ? 'Verification storage is not configured'
         : code === 'PROFILE_REQUIRED'
-          ? 'Create and save your profile before requesting verification.'
-          : 'Verification request could not be submitted. Check the Supabase verification table and policies.';
+          ? 'Create and save your profile before requesting verification'
+          : 'Verification request could not be submitted';
       setVerificationStatus(root, message, 'error');
     }
   });

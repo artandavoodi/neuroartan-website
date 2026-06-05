@@ -202,12 +202,12 @@ function saveSettings(settings, options = {}) {
     });
     
     // Show status message
-    setHomePlatformStatus('Personalization settings saved.', 'success');
+    setHomePlatformStatus('Personalization settings saved', 'success');
     
     return Promise.resolve();
   } catch (error) {
     console.error('Failed to save personalization settings:', error);
-    setHomePlatformStatus('Failed to save personalization settings.', 'error');
+    setHomePlatformStatus('Failed to save personalization settings', 'error');
     return Promise.reject(error);
   }
 }

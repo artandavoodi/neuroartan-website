@@ -401,7 +401,7 @@ function buildPublicRouteCopy(outcome, username) {
     case 'not_found':
       return `No public profile currently resolves for @${username || 'username'}.`;
     case 'error':
-      return 'The public route could not be resolved right now.';
+      return 'The public route could not be resolved right now';
     case 'loading':
       return 'Resolving canonical company-domain route.';
     default:

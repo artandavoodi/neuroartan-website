@@ -322,7 +322,6 @@ const MODEL_PANE_ACTIONS = Object.freeze({
   identity: ['modelEditIdentity', 'modelLearn', 'modelChangelog'],
   consent: ['modelConsent', 'modelLearn', 'modelChangelog'],
   sources: ['modelSources', 'modelLearn', 'modelChangelog'],
-  memory: ['modelMemory', 'modelLearn', 'modelChangelog'],
   voice: ['modelVoice', 'modelLearn', 'modelChangelog'],
   protocol: ['modelTraining', 'modelLearn', 'modelChangelog'],
   datasets: ['modelSources', 'filterModels', 'modelLearn', 'modelChangelog'],
@@ -330,12 +329,11 @@ const MODEL_PANE_ACTIONS = Object.freeze({
   logics: ['modelSources', 'modelLearn', 'modelChangelog'],
   provenance: ['modelSources', 'modelRouting', 'modelLearn', 'modelChangelog'],
   evaluation: ['modelReadiness', 'modelLearn', 'modelChangelog'],
-  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  language: ['modelPersonalization', 'modelVoice', 'modelLearn', 'modelChangelog'],
+  cognition: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  communication: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  memory: ['modelMemory', 'modelLearn', 'modelChangelog'],
   emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  response: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  creativity: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  reflection: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
   state: ['modelReadiness', 'filterDashboard', 'modelLearn', 'modelChangelog'],
   checks: ['modelReadiness', 'modelLearn', 'modelChangelog'],
   blockers: ['modelConsent', 'modelReadiness', 'modelLearn', 'modelChangelog'],
@@ -353,13 +351,11 @@ const MODEL_PANE_ACTIONS = Object.freeze({
 });
 
 const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
-  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  language: ['modelPersonalization', 'modelVoice', 'modelLearn', 'modelChangelog'],
-  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  response: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  cognition: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  communication: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
   memory: ['modelPersonalization', 'modelMemory', 'modelLearn', 'modelChangelog'],
-  creativity: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  reflection: ['modelPersonalization', 'modelLearn', 'modelChangelog']
+  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
+  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog']
 });
 
 function toolbarRoots(){
@@ -624,7 +620,7 @@ function requestProfileToolAction(action){
       return;
     case 'model-personalization':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'model-personalization', modelPane: 'behavior' }
+        detail: { section: 'model-personalization', modelPane: 'cognition' }
       }));
       return;
     case 'model-voice':

@@ -285,7 +285,7 @@ function openEditor(kind = 'avatar', target = 'profile') {
   resetEditorTransform();
   setEditorOpenState(true);
   renderEditor();
-  setStatus(getEditorRoot(), 'Choose an image, adjust the preview, then save.', 'idle');
+  setStatus(getEditorRoot(), 'Choose an image, adjust the preview, then save', 'idle');
 }
 
 function closeEditor() {
@@ -301,7 +301,7 @@ function handleFileSelection(file) {
   const root = getEditorRoot();
   if (!(file instanceof File) || !file.type.startsWith('image/')) {
     RUNTIME.file = null;
-    setStatus(root, 'Choose a valid image file.', 'error');
+    setStatus(root, 'Choose a valid image file', 'error');
     renderEditor();
     return;
   }
@@ -310,7 +310,7 @@ function handleFileSelection(file) {
   RUNTIME.file = file;
   RUNTIME.previewUrl = URL.createObjectURL(file);
   resetEditorTransform();
-  setStatus(root, 'Image ready for saving.', 'ready');
+  setStatus(root, 'Image ready for saving', 'ready');
   renderEditor();
 }
 
@@ -318,7 +318,7 @@ function recenterEditorImage() {
   RUNTIME.panX = 0;
   RUNTIME.panY = 0;
   renderEditor();
-  setStatus(getEditorRoot(), 'Image centered.', 'ready');
+  setStatus(getEditorRoot(), 'Image centered', 'ready');
 }
 
 function selectEditorFilter(filterKey = 'original') {
@@ -480,17 +480,16 @@ async function saveEditorImage() {
   const adapter = getActiveTargetAdapter();
 
   if (!RUNTIME.file) {
-    setStatus(root, 'Choose an image before saving.', 'error');
+    setStatus(root, 'Choose an image before saving', 'error');
     return;
   }
 
   if (typeof adapter?.save !== 'function' && (state.viewerState !== 'authenticated' || !state.user)) {
-    setStatus(root, 'Sign in before editing profile images.', 'error');
+    setStatus(root, 'Sign in before editing profile images', 'error');
     return;
   }
 
   const loadingReason = createLoadingReason('save');
-  setStatus(root, 'Saving image...', 'saving');
   startLoading(loadingReason);
 
   try {
@@ -520,7 +519,7 @@ async function saveEditorImage() {
       });
     }
 
-    setStatus(root, 'Image saved.', 'success');
+    setStatus(root, 'Image saved', 'success');
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
       detail:{
         source:'profile-media-editor',
@@ -532,7 +531,7 @@ async function saveEditorImage() {
     closeEditor();
   } catch (error) {
     console.error('[profile-media-editor] Save failed.', error);
-    setStatus(root, 'Image could not be saved. Check profile media storage.', 'error');
+    setStatus(root, 'Image could not be saved', 'error');
   } finally {
     stopLoading(loadingReason);
   }
@@ -544,12 +543,11 @@ async function resetEditorImage() {
   const adapter = getActiveTargetAdapter();
 
   if (typeof adapter?.reset !== 'function' && (state.viewerState !== 'authenticated' || !state.user)) {
-    setStatus(root, 'Sign in before resetting profile images.', 'error');
+    setStatus(root, 'Sign in before resetting profile images', 'error');
     return;
   }
 
   const loadingReason = createLoadingReason('reset');
-  setStatus(root, 'Resetting image...', 'saving');
   startLoading(loadingReason);
 
   try {
@@ -567,7 +565,7 @@ async function resetEditorImage() {
       });
     }
 
-    setStatus(root, 'Image reset.', 'success');
+    setStatus(root, 'Image reset', 'success');
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
       detail:{
         source:'profile-media-editor',
@@ -579,7 +577,7 @@ async function resetEditorImage() {
     closeEditor();
   } catch (error) {
     console.error('[profile-media-editor] Reset failed.', error);
-    setStatus(root, 'Image could not be reset. Check profile media storage.', 'error');
+    setStatus(root, 'Image could not be reset', 'error');
   } finally {
     stopLoading(loadingReason);
   }

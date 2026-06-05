@@ -156,8 +156,6 @@
   opacity:var(--slider-value-centered-opacity);
   transform:var(--slider-value-centered-transform);
   z-index:var(--slider-value-centered-z-index);
-  background:var(--slider-value-centered-bg);
-  background-color:color-mix(in srgb, var(--slider-value-centered-bg) calc(var(--slider-value-centered-bg-opacity) * 100%), transparent);
   padding:var(--slider-value-centered-padding);
   border-radius:var(--slider-value-centered-radius);
   box-shadow:var(--slider-value-centered-shadow);

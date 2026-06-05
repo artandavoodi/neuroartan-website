@@ -10,14 +10,6 @@
       "module": "/assets/js/layers/website/home/interaction-settings/sections/overview.js"
     },
     {
-      "id": "workspace",
-      "label": "Conversations",
-      "icon": "/registry/icons/public/assets/core/productivity/workspace/workspace.svg",
-      "fragment": "/assets/fragments/layers/website/home/interaction-settings/workspace/workspace.html",
-      "stylesheet": "/assets/css/layers/website/home/interaction-settings/workspace/workspace.css",
-      "module": "/assets/js/layers/website/home/interaction-settings/sections/workspace.js"
-    },
-    {
       "id": "model",
       "label": "Model",
       "icon": "/registry/icons/public/assets/core/cognition/model/model.svg",
@@ -45,6 +37,14 @@
           "id": "memory",
           "label": "Memory",
           "icon": "/registry/icons/public/assets/core/cognition/memory/memory.svg"
+        },
+        {
+          "id": "workspace",
+          "label": "Conversations",
+          "icon": "/registry/icons/public/assets/core/productivity/workspace/workspace.svg",
+          "fragment": "/assets/fragments/layers/website/home/interaction-settings/workspace/workspace.html",
+          "stylesheet": "/assets/css/layers/website/home/interaction-settings/workspace/workspace.css",
+          "module": "/assets/js/layers/website/home/interaction-settings/sections/workspace.js"
         },
         {
           "id": "session",

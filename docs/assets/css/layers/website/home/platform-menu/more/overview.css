@@ -92,7 +92,7 @@
 .more-system-information__progress-meter{
   appearance:none;
   width:var(--size-full);
-  height:var(--data-progress-height-sm);
+  height:calc(1px * var(--accessibility-density-scale));
   border:var(--spacing-none);
   border-radius:var(--data-progress-radius);
   overflow:hidden;

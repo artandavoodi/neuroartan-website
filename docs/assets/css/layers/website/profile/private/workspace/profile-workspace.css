@@ -157,7 +157,7 @@
   }
 
   .profile-workspace__layout[data-sidebar-right-hidden="true"] > .profile-workspace__right-toolbar-mount{
-    padding-inline-start:var(--spacing-none);
+    padding-inline-end:var(--spacing-none);
     border-left:0;
     overflow:hidden;
     visibility:hidden;

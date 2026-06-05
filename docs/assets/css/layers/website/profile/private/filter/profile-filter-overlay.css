@@ -207,26 +207,23 @@
 
 .profile-filter-overlay__learn-link{
   width:max-content;
-  min-height:var(--control-height-sm);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:var(--spacing-none) var(--control-padding-x-sm);
+  display:inline;
+  padding:var(--spacing-none);
   border:none;
-  border-radius:var(--shape-control-radius);
-  background:var(--control-surface);
-  color:var(--control-text-unified);
+  border-radius:0;
+  background:transparent;
+  color:var(--text-primary-color);
   font-size:var(--website-local-nav-link-font-size);
   font-weight:var(--control-font-weight);
   line-height:var(--control-line-height);
   text-decoration:none;
-  transition:var(--interaction-transition-control);
+  transition:none;
 }
 
 .profile-filter-overlay__learn-link:hover,
 .profile-filter-overlay__learn-link:focus-visible{
-  background:var(--control-surface-hover);
-  color:var(--control-text-hover-unified);
+  background:transparent;
+  color:var(--text-primary-color);
   outline:none;
 }
 

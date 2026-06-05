@@ -127,10 +127,11 @@ export async function refreshAccountProfileState(options = {}) {
             user:state.user,
             profile:state.profile,
             profileComplete:state.profileComplete,
+            authResolved:true,
             source:MODULE_ID
           }
         }
-      : { detail:{ source:MODULE_ID, reason:state.reason } }
+      : { detail:{ source:MODULE_ID, reason:state.reason, authResolved:true } }
   ));
 
   return state;

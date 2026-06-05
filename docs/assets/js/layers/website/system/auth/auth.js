@@ -182,10 +182,25 @@
   ============================================================================= */
   function handleSignedOutState() {
     updateSignedOutSurface();
+    document.dispatchEvent(new CustomEvent('account:profile-signed-out', {
+      detail: {
+        source: 'system-auth',
+        authResolved: true
+      }
+    }));
   }
 
   function handleSignedInState(user) {
     updateProfileSurface(user, null, null);
+    document.dispatchEvent(new CustomEvent('account:profile-state-changed', {
+      detail: {
+        source: 'system-auth',
+        user,
+        profile: null,
+        profileComplete: false,
+        authResolved: true
+      }
+    }));
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request'));
   }
 

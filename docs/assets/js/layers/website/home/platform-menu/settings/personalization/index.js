@@ -2,6 +2,64 @@ import { mountSettingsCategory } from '../_shared/settings-category.js';
 import { registerProfileMediaEditorTarget } from '../../../../profile/private/media/profile-media-editor.js';
 import { uploadProfileImage } from '../../../../system/profile/profile-image-storage.js';
 
+function handleHomePlatformSliderInteractionStart(event) {
+  const slider = event.target?.closest?.('.home-platform-theme__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderWrapper = slider.closest?.('.home-platform-theme__slider-wrapper');
+  if (!(sliderWrapper instanceof HTMLElement)) return;
+
+  const sliderValue = sliderWrapper.querySelector?.('.home-platform-theme__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.dataset.sliderValueState = 'centered';
+  sliderValue.dataset.sliderValueActive = 'true';
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dimmed-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dimmed-filter)');
+}
+
+function handleHomePlatformSliderInteractionEnd(event) {
+  const slider = event.target?.closest?.('.home-platform-theme__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderWrapper = slider.closest?.('.home-platform-theme__slider-wrapper');
+  if (!(sliderWrapper instanceof HTMLElement)) return;
+
+  const sliderValue = sliderWrapper.querySelector?.('.home-platform-theme__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.dataset.sliderValueState = '';
+  sliderValue.dataset.sliderValueActive = '';
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dim-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dim-filter)');
+}
+
+function handleHomePlatformSliderGlobalMouseUp(event) {
+  document.querySelectorAll('.home-platform-theme__slider-value[data-slider-value-state="centered"]').forEach((sliderValue) => {
+    if (!(sliderValue instanceof HTMLElement)) return;
+    sliderValue.dataset.sliderValueState = '';
+    sliderValue.dataset.sliderValueActive = '';
+  });
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dim-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dim-filter)');
+}
+
+function handleHomePlatformSliderInput(event) {
+  const slider = event.target?.closest?.('.home-platform-theme__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderWrapper = slider.closest?.('.home-platform-theme__slider-wrapper');
+  if (!(sliderWrapper instanceof HTMLElement)) return;
+
+  const sliderValue = sliderWrapper.querySelector?.('.home-platform-theme__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.textContent = slider.value;
+}
+
 const STORAGE_KEY = 'neuroartan.personalization-settings';
 
 const DEFAULT_SETTINGS = {
@@ -142,11 +200,46 @@ function saveSettings(settings, options = {}) {
     void syncPromise.catch((error) => {
       console.error('Failed to sync personalization settings:', error);
     });
+    
+    // Show status message
+    setHomePlatformStatus('Personalization settings saved.', 'success');
+    
     return Promise.resolve();
   } catch (error) {
     console.error('Failed to save personalization settings:', error);
+    setHomePlatformStatus('Failed to save personalization settings.', 'error');
     return Promise.reject(error);
   }
+}
+
+function setHomePlatformStatus(message = '', state = 'idle') {
+  const statusMessage = document.querySelector('.home-platform-theme__status-message');
+  if (!(statusMessage instanceof HTMLElement)) return;
+  
+  statusMessage.textContent = message;
+  
+  if (message && state !== 'idle') {
+    statusMessage.dataset.statusMessageActive = 'true';
+    handleHomePlatformStatusAutoDismiss();
+  } else {
+    statusMessage.dataset.statusMessageActive = '';
+  }
+}
+
+function handleHomePlatformStatusAutoDismiss() {
+  const autoDismissDuration = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--status-message-auto-dismiss-duration')) || 3000;
+  
+  const statusMessage = document.querySelector('.home-platform-theme__status-message');
+  if (!(statusMessage instanceof HTMLElement)) return;
+  
+  if (!statusMessage.textContent.trim()) {
+    statusMessage.dataset.statusMessageActive = '';
+    return;
+  }
+  
+  window.setTimeout(() => {
+    statusMessage.dataset.statusMessageActive = '';
+  }, autoDismissDuration);
 }
 
 function renderAssistantAvatar(settings = {}) {
@@ -355,7 +448,7 @@ function updateCharacterCounter(textarea) {
 function updateSliderValue(sliderId, value) {
   const valueDisplay = document.querySelector(`[data-home-platform-slider-value="${sliderId}"]`);
   if (valueDisplay) {
-    valueDisplay.textContent = `${value}%`;
+    valueDisplay.textContent = `${value}`;
   }
 }
 
@@ -515,6 +608,8 @@ function setupEventListeners(settings) {
       updateSliderValue('sense-of-humor', settings.senseOfHumor);
       saveSettings(settings);
     });
+    senseOfHumorSlider.addEventListener('mousedown', handleHomePlatformSliderInteractionStart);
+    senseOfHumorSlider.addEventListener('touchstart', handleHomePlatformSliderInteractionStart);
   }
   
   if (efficiencyPreferenceSlider) {
@@ -523,6 +618,8 @@ function setupEventListeners(settings) {
       updateSliderValue('efficiency-preference', settings.efficiencyPreference);
       saveSettings(settings);
     });
+    efficiencyPreferenceSlider.addEventListener('mousedown', handleHomePlatformSliderInteractionStart);
+    efficiencyPreferenceSlider.addEventListener('touchstart', handleHomePlatformSliderInteractionStart);
   }
   
   if (creativityLevelSlider) {
@@ -531,6 +628,8 @@ function setupEventListeners(settings) {
       updateSliderValue('creativity-level', settings.creativityLevel);
       saveSettings(settings);
     });
+    creativityLevelSlider.addEventListener('mousedown', handleHomePlatformSliderInteractionStart);
+    creativityLevelSlider.addEventListener('touchstart', handleHomePlatformSliderInteractionStart);
   }
   
   if (riskToleranceSlider) {
@@ -539,7 +638,16 @@ function setupEventListeners(settings) {
       updateSliderValue('risk-tolerance', settings.riskTolerance);
       saveSettings(settings);
     });
+    riskToleranceSlider.addEventListener('mousedown', handleHomePlatformSliderInteractionStart);
+    riskToleranceSlider.addEventListener('touchstart', handleHomePlatformSliderInteractionStart);
   }
+  
+  // Global slider interaction handlers
+  document.addEventListener('mouseup', handleHomePlatformSliderInteractionEnd);
+  document.addEventListener('touchend', handleHomePlatformSliderInteractionEnd);
+  document.addEventListener('mouseup', handleHomePlatformSliderGlobalMouseUp);
+  document.addEventListener('touchend', handleHomePlatformSliderGlobalMouseUp);
+  document.addEventListener('input', handleHomePlatformSliderInput);
   
   // Voice training button (placeholder for future backend integration)
   const startVoiceTrainingButton = document.querySelector('[data-home-platform-action="start-voice-training"]');

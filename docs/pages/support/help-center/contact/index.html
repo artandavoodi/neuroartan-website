@@ -1,0 +1,231 @@
+<!-- =============================================================================
+     00) FILE INDEX
+     01) BASIC META
+     02) OPEN GRAPH
+     03) TWITTER CARD
+     04) STRUCTURED DATA
+     05) FONTS
+     06) GLOBAL LOADING OVERLAY
+     07) CUSTOM CURSOR
+     08) HIDDEN SITE NAME
+     09) MAIN CONTENT
+     09A) HEADER CONTROLS
+     09B) INSTITUTIONAL MENU MOUNT
+     09C) SECONDARY MENU MOUNT
+     09D) ACCOUNT DRAWER MOUNT
+     09E) SIGN-IN DRAWER MOUNT
+     09F) SIGN-UP DRAWER MOUNT
+     09G) APPLE PROVIDER SHEET MOUNT
+     09H) GOOGLE PROVIDER SHEET MOUNT
+     09I) EMAIL AUTH DRAWER MOUNT
+     09J) PHONE AUTH DRAWER MOUNT
+     09K) AUTH FLOW MOUNT
+     09L) PROFILE SHELL MOUNT
+     10) CONTACT HERO
+     11) CONTACT FORM
+     12) INSTITUTIONAL LINKS MOUNT
+     13) FOOTER MOUNT
+     14) COUNTRY OVERLAY MOUNT
+     14A) COOKIE CONSENT MOUNT
+     15) CORE SCRIPT
+============================================================================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- =============================================================================
+         01) BASIC META
+    ============================================================================= -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Support | Neuroartan</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="https://studio.neuroartan.com/registry/icons/public/assets/layers/website/app/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://studio.neuroartan.com/registry/icons/public/assets/layers/website/app/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://studio.neuroartan.com/registry/icons/public/assets/layers/website/app/touch/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="https://studio.neuroartan.com/registry/icons/public/assets/layers/website/app/favicon/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/core/00-orchestrator/core.css">
+    <meta name="description" content="Contact Neuroartan support for assistance with ICOS, platform issues, or general inquiries.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="canonical" href="https://neuroartan.com/pages/support/help-center/contact/index.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="site-body contact-page">
+    <!-- =============================================================================
+         06) GLOBAL LOADING OVERLAY
+    ============================================================================= -->
+    <div id="global-loading-overlay" class="loading-overlay" aria-hidden="true" aria-live="polite">
+        <div class="loading-overlay__backdrop"></div>
+        <div class="loading-overlay__surface" role="status" aria-label="Loading">
+            <div class="loading-overlay__spinner" aria-hidden="true"></div>
+            <p class="loading-overlay__label">Loading</p>
+        </div>
+    </div>
+
+    <!-- =============================================================================
+         07) CUSTOM CURSOR
+    ============================================================================= -->
+    <div class="custom-cursor"></div>
+
+    <!-- =============================================================================
+         08) HIDDEN SITE NAME
+    ============================================================================= -->
+    <h1 style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Contact Support | Neuroartan</h1>
+
+    <!-- =============================================================================
+         09) MAIN CONTENT
+    ============================================================================= -->
+    <main id="site-main">
+        <!-- =============================================================================
+             09A) HEADER CONTROLS
+        ============================================================================= -->
+        <header id="header-controls" class="site-header">
+            <button id="menu-button" aria-label="Open secondary navigation">
+                <span class="line line-top"></span>
+                <span class="line line-bottom"></span>
+            </button>
+        </header>
+
+        <!-- =============================================================================
+             09B) INSTITUTIONAL MENU MOUNT
+        ============================================================================= -->
+        <div id="institutional-menu-mount" data-include="institutional-menu" data-page-context="support"></div>
+
+        <!-- =============================================================================
+             09C) SECONDARY MENU MOUNT
+        ============================================================================= -->
+        <div id="menu-mount" data-include="menu" data-page-context="support"></div>
+
+        <!-- =============================================================================
+             09D) ACCOUNT DRAWER MOUNT
+        ============================================================================= -->
+        <div id="account-drawer-mount" data-include="account-drawer"></div>
+
+        <!-- =============================================================================
+             09E) SIGN-IN DRAWER MOUNT
+        ============================================================================= -->
+        <div id="account-sign-in-drawer-mount" data-include="account-sign-in-drawer"></div>
+
+        <!-- =============================================================================
+             09F) SIGN-UP DRAWER MOUNT
+        ============================================================================= -->
+        <div id="account-sign-up-drawer-mount" data-include="account-sign-up-drawer"></div>
+
+        <!-- =============================================================================
+             09G) APPLE PROVIDER SHEET MOUNT
+        ============================================================================= -->
+        <div id="account-provider-apple-sheet-mount" data-include="account-provider-apple-sheet"></div>
+
+        <!-- =============================================================================
+             09H) GOOGLE PROVIDER SHEET MOUNT
+        ============================================================================= -->
+        <div id="account-provider-google-sheet-mount" data-include="account-provider-google-sheet"></div>
+
+        <!-- =============================================================================
+             09I) EMAIL AUTH DRAWER MOUNT
+        ============================================================================= -->
+        <div id="account-email-auth-drawer-mount" data-include="account-email-auth-drawer"></div>
+
+        <!-- =============================================================================
+             09J) PHONE AUTH DRAWER MOUNT
+        ============================================================================= -->
+        <div id="account-phone-auth-drawer-mount" data-include="account-phone-auth-drawer"></div>
+
+        <!-- =============================================================================
+             09K) AUTH FLOW MOUNT
+        ============================================================================= -->
+        <div id="auth-flow-mount" data-auth-state="guest" data-auth-surface="entry" data-auth-providers="apple google email phone" aria-hidden="true"></div>
+
+        <!-- =============================================================================
+             09L) PROFILE SHELL MOUNT
+        ============================================================================= -->
+        <div id="profile-shell-mount" data-profile-state="empty" data-profile-visibility="private" aria-hidden="true"></div>
+
+        <!-- =============================================================================
+             10) CONTACT HERO
+        ============================================================================= -->
+        <section class="contact-hero" data-contact-hero>
+            <div class="contact-hero__surface">
+                <div class="contact-hero__content">
+                    <h2 class="contact-hero__title">Contact Support</h2>
+                    <p class="contact-hero__description">Get help with ICOS, platform issues, or general inquiries.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================================
+             11) CONTACT FORM
+        ============================================================================= -->
+        <section class="contact-form" data-contact-form>
+            <div class="contact-form__surface">
+                <div class="contact-form__content">
+                    <h3 class="contact-form__title">Send us a message</h3>
+                    <p class="contact-form__description">Fill out the form below and our team will get back to you within 24-48 hours.</p>
+                    
+                    <form class="contact-form__form" data-contact-form-form>
+                        <div class="contact-form__field">
+                            <label for="contact-name" class="contact-form__label">Name</label>
+                            <input type="text" id="contact-name" name="name" class="contact-form__input" required>
+                        </div>
+                        
+                        <div class="contact-form__field">
+                            <label for="contact-email" class="contact-form__label">Email</label>
+                            <input type="email" id="contact-email" name="email" class="contact-form__input" required>
+                        </div>
+                        
+                        <div class="contact-form__field">
+                            <label for="contact-subject" class="contact-form__label">Subject</label>
+                            <select id="contact-subject" name="subject" class="contact-form__select" required>
+                                <option value="">Select a topic</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="billing">Billing & Account</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="contact-form__field">
+                            <label for="contact-message" class="contact-form__label">Message</label>
+                            <textarea id="contact-message" name="message" class="contact-form__textarea" rows="6" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="contact-form__submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================================
+             12) INSTITUTIONAL LINKS MOUNT
+        ============================================================================= -->
+        <div id="institutional-links-mount" data-include="institutional-links"></div>
+    </main>
+
+    <!-- =============================================================================
+         13) FOOTER MOUNT
+    ============================================================================= -->
+    <div id="footer-mount" data-include="footer"></div>
+
+    <!-- =============================================================================
+         14) SCROLL TO TOP MOUNT
+    ============================================================================= -->
+    <div id="scroll-to-top-mount" data-include="scroll-to-top"></div>
+
+    <!-- =============================================================================
+         14A) COUNTRY OVERLAY MOUNT
+    ============================================================================= -->
+    <div id="country-overlay-mount" data-include="country-overlay"></div>
+
+    <!-- =============================================================================
+         14B) COOKIE CONSENT MOUNT
+    ============================================================================= -->
+    <div id="cookie-consent-mount" data-include="cookie-consent" data-consent-state="pending" data-consent-surface="banner" aria-hidden="true"></div>
+
+    <!-- =============================================================================
+         15) CORE SCRIPT
+    ============================================================================= -->
+    <script type="module" src="/assets/js/core/00-orchestrator/core.js"></script>
+</body>
+</html>

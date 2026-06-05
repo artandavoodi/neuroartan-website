@@ -64,11 +64,23 @@ function openAccountEntry() {
   }));
 }
 
+function isSignedIn() {
+  return getHomeSurfaceState()?.account?.signedIn === true;
+}
+
+function requireSignedIn() {
+  if (isSignedIn()) return true;
+  openAccountEntry();
+  closeProfileMenu();
+  return false;
+}
+
 export function routeProfileMenuAction(action) {
   const normalized = normalizeString(action);
 
   switch (normalized) {
     case 'edit-profile':
+      if (!requireSignedIn()) return;
       navigateToProfileHash('#settings/identity');
       return;
     case 'public-route':
@@ -76,10 +88,12 @@ export function routeProfileMenuAction(action) {
       return;
     case 'change-password':
     case 'password':
+      if (!requireSignedIn()) return;
       closeProfileMenu();
       window.location.href = '/profile.html#settings/password';
       return;
     case 'preferences':
+      if (!requireSignedIn()) return;
       closeProfileMenu();
       window.location.href = '/profile.html#settings/privacy';
       return;

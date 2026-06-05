@@ -3,13 +3,14 @@
    00A. ROOT TOKENS
    01. PAGE ROOT
    02. PAGE SHELL
-   03. OPTIONAL VISUAL LAYER
-   04. TYPOGRAPHY
-   05. ACTIONS LAYOUT
-   06. ACTIONS WIDTH RULES
-   07. RESPONSIVE — TABLET
-   08. CANONICAL LAYOUT HARDENING
-   09. RESPONSIVE — MOBILE
+   03. PAGE WRAPPER
+   04. OPTIONAL VISUAL LAYER
+   05. TYPOGRAPHY
+   06. ACTIONS LAYOUT
+   07. ACTIONS WIDTH RULES
+   08. RESPONSIVE — TABLET
+   09. CANONICAL LAYOUT HARDENING
+   10. RESPONSIVE — MOBILE
    ========================================================= */
 
 /* =========================================================
@@ -80,6 +81,17 @@
   padding: var(--error404-page-padding-y) var(--error404-page-padding-x);
   box-sizing: border-box;
   background: transparent;
+}
+
+/* =========================================================
+   03. PAGE WRAPPER
+   ========================================================= */
+.page-404-wrapper {
+  width: 100%;
+  max-width: var(--error404-shell-max-width);
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .error404-shell {
@@ -249,12 +261,16 @@
    ========================================================= */
 
 /* =========================================================
-   07. RESPONSIVE — TABLET
+   08. RESPONSIVE — TABLET
    ========================================================= */
 @media (max-width: 900px) {
   :root{
     --error404-shell-padding-y: calc(48px * var(--accessibility-density-scale));
     --error404-shell-padding-x: calc(32px * var(--accessibility-density-scale));
+  }
+
+  .page-404-wrapper {
+    padding: 0 var(--error404-page-padding-x);
   }
 
   .error404-title {
@@ -277,7 +293,7 @@ body.page-404 .error404-shell {
 }
 
 /* =========================================================
-   09. RESPONSIVE — MOBILE
+   10. RESPONSIVE — MOBILE
    ========================================================= */
 @media (max-width: 640px) {
   :root{
@@ -286,6 +302,10 @@ body.page-404 .error404-shell {
     --error404-shell-padding-y: calc(36px * var(--accessibility-density-scale));
     --error404-shell-padding-x: calc(24px * var(--accessibility-density-scale));
     --error404-shell-radius: calc(22px * var(--accessibility-density-scale));
+  }
+
+  .page-404-wrapper {
+    padding: 0 var(--error404-page-padding-x);
   }
 
   .error404-title {
@@ -299,7 +319,7 @@ body.page-404 .error404-shell {
 
   .error404,
   .page-404-content {
-    padding:calc(24px * var(--accessibility-density-scale)) calc(16px * var(--accessibility-density-scale));
+    padding:var(--error404-page-padding-y) var(--error404-page-padding-x);
   }
 
   .error404-actions .ui-button {

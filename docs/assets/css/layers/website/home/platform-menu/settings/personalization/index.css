@@ -128,12 +128,51 @@
   gap: var(--spacing-md);
 }
 
-.home-platform-theme__slider-value {
-  font-size: var(--control-font-size);
-  font-weight: var(--control-font-weight);
-  color: var(--text-color);
-  min-width: var(--spacing-xl);
-  text-align: right;
+.home-platform-theme__slider-value{
+  display:none;
+  font-size:var(--control-font-size);
+  font-weight:var(--control-font-weight);
+  color:var(--text-color);
+  min-width:var(--spacing-xl);
+  text-align:right;
+  visibility:var(--slider-value-visibility);
+  opacity:var(--slider-value-opacity);
+  transform:var(--slider-value-transform);
+  z-index:var(--slider-value-z-index);
+  background:var(--slider-value-bg);
+  padding:var(--slider-value-padding);
+  border-radius:var(--slider-value-radius);
+  box-shadow:var(--slider-value-shadow);
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.home-platform-theme__slider-value[data-slider-value-state="centered"]{
+  visibility:var(--slider-value-centered-visibility);
+  position:var(--slider-value-centered-position);
+  inset:var(--slider-value-centered-inset);
+  opacity:var(--slider-value-centered-opacity);
+  transform:var(--slider-value-centered-transform);
+  z-index:var(--slider-value-centered-z-index);
+  background:var(--slider-value-centered-bg);
+  background-color:color-mix(in srgb, var(--slider-value-centered-bg) calc(var(--slider-value-centered-bg-opacity) * 100%), transparent);
+  padding:var(--slider-value-centered-padding);
+  border-radius:var(--slider-value-centered-radius);
+  box-shadow:var(--slider-value-centered-shadow);
+  display:grid;
+  place-items:center;
+  font-size:var(--slider-value-centered-font-size);
+  line-height:var(--slider-value-centered-line-height);
+  font-weight:var(--slider-value-centered-font-weight);
+  text-align:center;
+}
+
+.home-platform-theme__slider-value[data-slider-value-state="centered"][data-slider-value-active="true"]{
+  visibility:visible;
+  opacity:1;
+  transform:scale(1);
 }
 
 .home-platform-theme__slider-caption {

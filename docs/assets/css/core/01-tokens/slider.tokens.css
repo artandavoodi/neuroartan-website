@@ -17,4 +17,60 @@
   --slider-thumb-radius: 50%;
   --slider-thumb-bg: var(--color-primary1);
   --slider-thumb-border: none;
+  
+  /* Slider Value Display */
+  --slider-value-visibility: hidden;
+  --slider-value-position: inline;
+  --slider-value-opacity: 1;
+  --slider-value-transform: none;
+  --slider-value-z-index: auto;
+  --slider-value-bg: transparent;
+  --slider-value-padding: 0;
+  --slider-value-radius: 0;
+  --slider-value-shadow: none;
+  
+  /* Slider Value Centered Display State */
+  --slider-value-centered-visibility: hidden;
+  --slider-value-centered-position: fixed;
+  --slider-value-centered-inset: 0;
+  --slider-value-centered-opacity: 0;
+  --slider-value-centered-transform: scale(0.9);
+  --slider-value-centered-z-index: var(--z-raised);
+  --slider-value-centered-bg: var(--panel-surface-solid-unified);
+  --slider-value-centered-bg-opacity: 0;
+  --slider-value-centered-padding: var(--spacing-xl);
+  --slider-value-centered-radius: var(--shape-card-radius);
+  --slider-value-centered-shadow: var(--shadow-lg);
+  --slider-value-centered-font-size: var(--headline-1-size);
+  --slider-value-centered-line-height: var(--headline-1-line-height);
+  --slider-value-centered-font-weight: var(--font-weight-body);
+  
+  /* Viewport Dimming State */
+  --viewport-dim-opacity: 1;
+  --viewport-dim-filter: none;
+  
+  /* Viewport Dimmed State */
+  --viewport-dimmed-opacity: 0.3;
+  --viewport-dimmed-filter: blur(2px);
+  
+  /* Status Message Display */
+  --status-message-visibility: hidden;
+  --status-message-position: fixed;
+  --status-message-inset: auto auto var(--spacing-xl) 0;
+  --status-message-left: 0;
+  --status-message-right: 0;
+  --status-message-margin: 0 auto;
+  --status-message-max-width: fit-content;
+  --status-message-opacity: 0;
+  --status-message-transform: translateY(1rem);
+  --status-message-z-index: var(--z-raised);
+  --status-message-bg: var(--panel-surface-solid-unified);
+  --status-message-bg-opacity: 0.95;
+  --status-message-padding: var(--spacing-md) var(--spacing-lg);
+  --status-message-radius: var(--shape-card-radius);
+  --status-message-shadow: var(--shadow-lg);
+  --status-message-font-size: var(--body-2-size);
+  --status-message-line-height: var(--body-2-line-height);
+  --status-message-font-weight: var(--font-weight-body);
+  --status-message-auto-dismiss-duration: 3000;
 }

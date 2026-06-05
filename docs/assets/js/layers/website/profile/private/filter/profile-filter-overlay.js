@@ -356,6 +356,11 @@ const MODEL_LEARN_CONTENT = Object.freeze({
   directory: {
     title: 'Directory',
     copy: 'Directory shows public model registry projections and discovery filters. Private owner-only model controls stay hidden when the viewer is not authenticated.'
+  },
+  visibility: {
+    title: 'Model visibility',
+    copy: 'Visibility controls who can discover and navigate the owner model. Public discovery is available to signed-out viewers when enabled; relationship-specific visibility prepares the friend, follower, mutual, family, and subscriber permission layer.',
+    docsHref: 'https://docs.neuroartan.com/products/model-training/'
   }
 });
 

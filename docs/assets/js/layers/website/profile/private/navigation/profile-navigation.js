@@ -3,7 +3,8 @@
    ============================================================================= */
 
 import {
-  constrainModelNavigationForViewer
+  constrainModelNavigationForViewer,
+  isPublicModelNavigation
 } from '../../../model/navigation/model-tab-registry.js';
 import {
   getProfileRuntimeState,
@@ -233,6 +234,33 @@ function constrainStateToViewer(state, runtimeState = getProfileRuntimeState()) 
   );
 }
 
+function shouldRequestModelAuthentication(state = parseHash(), runtimeState = getProfileRuntimeState()) {
+  if (getRouteContext() !== 'model') return false;
+  if (!MODEL_SECTIONS.has(state.section)) return false;
+  if (runtimeState.authResolved !== true) return false;
+  if (runtimeState.viewerState === 'authenticated') return false;
+
+  return !isPublicModelNavigation(state.section, state.modelPane || 'overview');
+}
+
+function requestModelAuthentication() {
+  document.dispatchEvent(new CustomEvent('account-sign-in-drawer:open-request', {
+    detail: {
+      source: 'model-navigation',
+      reason: 'private-model-route'
+    }
+  }));
+
+  document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+    detail: {
+      source: 'model-navigation',
+      state: 'guest',
+      surface: 'sign-in',
+      reason: 'private-model-route'
+    }
+  }));
+}
+
 function parseHash() {
   const rawHash = String(window.location.hash || '').replace(/^#/, '').trim();
   if (!rawHash) return createDefaultState();
@@ -381,7 +409,12 @@ function initProfileNavigation() {
   subscribeProfileRuntime((runtimeState) => {
     if (!isPrivateProfileSurface() || getRouteContext() !== 'model') return;
 
-    setState(parseHash(), {
+    const requestedState = parseHash();
+    if (shouldRequestModelAuthentication(requestedState, runtimeState)) {
+      requestModelAuthentication();
+    }
+
+    setState(requestedState, {
       writeHash: runtimeState.authResolved === true
     });
   });

@@ -56,8 +56,48 @@
 }
 
 .model-management__copy,
-.model-management__section-copy,
+.model-management__section-copy{
+  color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
 .model-management__note,
+[data-status-message]{
+  color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  visibility:var(--status-message-visibility);
+  position:var(--status-message-position);
+  inset:var(--status-message-inset);
+  left:var(--status-message-left);
+  right:var(--status-message-right);
+  margin:var(--status-message-margin);
+  max-width:var(--status-message-max-width);
+  opacity:var(--status-message-opacity);
+  transform:var(--status-message-transform);
+  z-index:var(--status-message-z-index);
+  background:var(--status-message-bg);
+  background-color:color-mix(in srgb, var(--status-message-bg) calc(var(--status-message-bg-opacity) * 100%), transparent);
+  padding:var(--status-message-padding);
+  border-radius:var(--status-message-radius);
+  box-shadow:var(--status-message-shadow);
+  font-size:var(--status-message-font-size);
+  line-height:var(--status-message-line-height);
+  font-weight:var(--status-message-font-weight);
+  text-align:center;
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+[data-status-message-active="true"]{
+  visibility:visible;
+  opacity:1;
+  transform:translateY(0);
+}
+
 .model-management__timeline,
 .model-management__slider-value{
   color:var(--text-secondary-color);
@@ -65,18 +105,20 @@
   line-height:var(--body-2-line-height);
 }
 
+.model-management__section-title{
+  display:none;
+}
+
 .model-management__value,
-.model-management__section-title,
+.model-management__control-title,
 .model-management__item dd,
-.model-management__card dd,
-.model-management__control-title{
+.model-management__card dd{
   color:var(--text-primary-color);
   font-size:var(--body-1-size);
   line-height:var(--body-1-line-height);
   font-weight:var(--font-weight-heading-soft);
 }
 
-.model-management__section-title,
 .model-management__button{
   display:flex;
   align-items:center;
@@ -174,13 +216,16 @@
 }
 
 .model-management__control-groups,
-.model-management__control-group{
+.model-management__control-group,
+.model-management__settings-group{
   display:grid;
   gap:var(--spacing-lg);
   min-width:0;
 }
 
-.model-management__control-group[hidden]{
+.model-management__control-group[hidden],
+.model-management__settings-group[hidden],
+.model-management__visibility-panel[hidden]{
   display:none;
 }
 
@@ -220,6 +265,50 @@
   min-width:0;
 }
 
+.model-management__visibility-panels{
+  display:grid;
+  gap:var(--spacing-lg);
+  min-width:0;
+}
+
+.model-management__visibility-panel{
+  display:grid;
+  gap:var(--spacing-md);
+  min-width:0;
+}
+
+.model-management__toggle-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--spacing-lg);
+  min-width:0;
+  padding-block:var(--spacing-md);
+}
+
+.model-management__toggle-copy{
+  display:grid;
+  gap:var(--spacing-xs);
+  min-width:0;
+}
+
+.model-management__toggle-title{
+  color:var(--text-primary-color);
+  font-size:var(--body-1-size);
+  line-height:var(--body-1-line-height);
+  font-weight:var(--font-weight-heading-soft);
+}
+
+.model-management__toggle-caption{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.model-management__toggle-row .na-toggle{
+  flex:0 0 auto;
+}
+
 .model-management__audience-title{
   margin:0;
   color:var(--text-primary-color);
@@ -238,12 +327,13 @@
   color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
+  margin-block:var(--spacing-sm);
 }
 
 .model-management__slider-row{
   display:flex;
   align-items:center;
-  gap:var(--spacing-sm);
+  gap:var(--spacing-md);
   min-width:0;
 }
 
@@ -270,9 +360,48 @@
 }
 
 .model-management__slider-value{
+  display:none;
   min-width:var(--control-height-md);
   color:var(--text-primary-color);
   text-align:end;
+  visibility:var(--slider-value-visibility);
+  opacity:var(--slider-value-opacity);
+  transform:var(--slider-value-transform);
+  z-index:var(--slider-value-z-index);
+  background:var(--slider-value-bg);
+  padding:var(--slider-value-padding);
+  border-radius:var(--slider-value-radius);
+  box-shadow:var(--slider-value-shadow);
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-management__slider-value[data-slider-value-state="centered"]{
+  visibility:var(--slider-value-centered-visibility);
+  position:var(--slider-value-centered-position);
+  inset:var(--slider-value-centered-inset);
+  opacity:var(--slider-value-centered-opacity);
+  transform:var(--slider-value-centered-transform);
+  z-index:var(--slider-value-centered-z-index);
+  background:var(--slider-value-centered-bg);
+  background-color:color-mix(in srgb, var(--slider-value-centered-bg) calc(var(--slider-value-centered-bg-opacity) * 100%), transparent);
+  padding:var(--slider-value-centered-padding);
+  border-radius:var(--slider-value-centered-radius);
+  box-shadow:var(--slider-value-centered-shadow);
+  display:grid;
+  place-items:center;
+  font-size:var(--slider-value-centered-font-size);
+  line-height:var(--slider-value-centered-line-height);
+  font-weight:var(--slider-value-centered-font-weight);
+  text-align:center;
+}
+
+.model-management__slider-value[data-slider-value-state="centered"][data-slider-value-active="true"]{
+  visibility:visible;
+  opacity:1;
+  transform:scale(1);
 }
 
 .model-management__button,
@@ -508,7 +637,8 @@ body.model-management-identity-editor-open{
   }
 
   .model-management__directory-controls,
-  .model-management__directory-filters{
+  .model-management__directory-filters,
+  .model-management__toggle-row{
     align-items:flex-start;
     flex-direction:column;
   }

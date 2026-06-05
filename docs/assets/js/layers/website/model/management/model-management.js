@@ -12,11 +12,14 @@ import {
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
   readModelPersonalizationPreferences,
+  readModelVisibilityPreferences,
   resetOwnedCanonicalModelAvatar,
   saveModelFoundationIdentity,
   saveOwnedCanonicalModelAvatar,
-  saveModelPersonalizationPreferences
+  saveModelPersonalizationPreferences,
+  saveModelVisibilityPreferences
 } from '../../system/model/model-store.js';
+import { refreshAccountProfileState } from '../../system/account/profile/account-profile-state.js';
 import { getPublicModels, loadPublicModelRegistry } from '../../system/model/public-model-registry.js';
 import {
   createModelKnowledgeEntry,
@@ -34,6 +37,7 @@ import {
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
+const MODEL_VISIBILITY_PREFERENCES_STORAGE_KEY = 'neuroartan.model.visibility.preferences';
 const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-base';
 const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
 
@@ -133,15 +137,29 @@ const MODEL_FOUNDATION_IDENTITY_DEFAULTS = Object.freeze({
   ownerRecordPolicy: 'fixed_owner_binding'
 });
 
+const MODEL_VISIBILITY_DEFAULTS = Object.freeze({
+  visibilityScope: 'general',
+  publicVisible: false,
+  friendsVisible: false,
+  followersVisible: false,
+  mutualsVisible: false,
+  familyVisible: false,
+  subscribersVisible: false
+});
+
 let modelPersonalizationPreferences = loadStoredModelPersonalizationPreferences();
 let modelPersonalizationBackendLoaded = false;
 let modelPersonalizationBackendSaveTimer = 0;
 let modelFoundationIdentity = loadStoredModelFoundationIdentity();
 let modelFoundationIdentityBackendLoaded = false;
 let modelFoundationIdentityBackendSaveTimer = 0;
+let modelVisibilityPreferences = loadStoredModelVisibilityPreferences();
+let modelVisibilityBackendLoaded = false;
+let modelVisibilityBackendSaveTimer = 0;
 let modelKnowledgeBaseEntries = loadStoredModelKnowledgeBaseEntries();
 let modelLogicRecords = loadStoredModelLogicRecords();
 let modelTrainingSubstrateBackendLoaded = false;
+let modelAuthResolutionTimer = 0;
 let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
 let publicModelDirectoryLoading = false;
@@ -401,6 +419,33 @@ function writeStoredModelFoundationIdentity(identity) {
   }
 }
 
+function normalizeModelVisibilityPreferences(value = {}) {
+  return {
+    ...MODEL_VISIBILITY_DEFAULTS,
+    ...(value && typeof value === 'object' ? value : {})
+  };
+}
+
+function loadStoredModelVisibilityPreferences() {
+  try {
+    const parsed = JSON.parse(window.localStorage?.getItem(MODEL_VISIBILITY_PREFERENCES_STORAGE_KEY) || '{}');
+    return normalizeModelVisibilityPreferences(parsed);
+  } catch (error) {
+    return normalizeModelVisibilityPreferences();
+  }
+}
+
+function writeStoredModelVisibilityPreferences(preferences) {
+  try {
+    window.localStorage?.setItem(
+      MODEL_VISIBILITY_PREFERENCES_STORAGE_KEY,
+      JSON.stringify(normalizeModelVisibilityPreferences(preferences))
+    );
+  } catch (error) {
+    /* Local persistence is an enhancement; Supabase sync remains canonical. */
+  }
+}
+
 function formatModelIdentityState(value = '') {
   const normalizedValue = String(value || '').trim();
   if (!normalizedValue) return '';
@@ -461,6 +506,13 @@ function setTrainingSubstrateStatus(message = '', state = 'idle') {
       if (!(status instanceof HTMLElement)) return;
       status.textContent = message;
       status.dataset.modelTrainingSubstrateStatus = state;
+      
+      if (message && state !== 'idle') {
+        status.dataset.statusMessageActive = 'true';
+        handleStatusMessageAutoDismiss();
+      } else {
+        status.dataset.statusMessageActive = '';
+      }
     });
   });
 }
@@ -474,6 +526,7 @@ function formatTrainingSubstrateError(error) {
 }
 
 async function hydrateTrainingSubstrateFromBackend() {
+  if (!isModelOwnerAuthenticated()) return;
   if (modelTrainingSubstrateBackendLoaded) return;
 
   try {
@@ -540,6 +593,7 @@ function updateModelFoundationIdentity(nextPatch = {}, options = {}) {
 }
 
 async function hydrateModelFoundationIdentityFromBackend() {
+  if (!isModelOwnerAuthenticated()) return;
   if (modelFoundationIdentityBackendLoaded) return;
 
   try {
@@ -593,7 +647,9 @@ function scheduleModelPersonalizationBackendSave() {
       const model = await getOwnedCanonicalModel();
       if (!model?.id) return;
       await saveModelPersonalizationPreferences(model.id, modelPersonalizationPreferences);
+      setModelPersonalizationStatus('Model personalization saved.', 'success');
     } catch (error) {
+      setModelPersonalizationStatus(formatModelPersonalizationError(error), 'error');
       console.warn('[Neuroartan][Model] Personalization preference sync skipped.', error);
     }
   }, 350);
@@ -615,11 +671,13 @@ function updateModelPersonalizationPreferences(nextPatch = {}, options = {}) {
   }));
 
   if (options.sync !== false) {
+    setModelPersonalizationStatus('Saving personalization...', 'saving');
     scheduleModelPersonalizationBackendSave();
   }
 }
 
 async function hydrateModelPersonalizationFromBackend() {
+  if (!isModelOwnerAuthenticated()) return;
   if (modelPersonalizationBackendLoaded) return;
   modelPersonalizationBackendLoaded = true;
 
@@ -636,6 +694,62 @@ async function hydrateModelPersonalizationFromBackend() {
     });
   } catch (error) {
     console.warn('[Neuroartan][Model] Personalization preference hydration skipped.', error);
+  }
+}
+
+function scheduleModelVisibilityBackendSave() {
+  window.clearTimeout(modelVisibilityBackendSaveTimer);
+  modelVisibilityBackendSaveTimer = window.setTimeout(async () => {
+    try {
+      const model = await getOwnedCanonicalModel();
+      if (!model?.id) return;
+      const preferences = await saveModelVisibilityPreferences(model.id, modelVisibilityPreferences);
+      if (!preferences) return;
+      updateModelVisibilityPreferences(preferences, {
+        source: 'model-management-backend',
+        sync: false
+      });
+      setModelVisibilityStatus('Model visibility saved.', 'success');
+      invalidateModelDirectoryProjection();
+    } catch (error) {
+      setModelVisibilityStatus('Model visibility could not be saved.', 'error');
+      console.warn('[Neuroartan][Model] Visibility preference sync skipped.', error);
+    }
+  }, 350);
+}
+
+function updateModelVisibilityPreferences(nextPatch = {}, options = {}) {
+  modelVisibilityPreferences = normalizeModelVisibilityPreferences({
+    ...modelVisibilityPreferences,
+    ...nextPatch
+  });
+  writeStoredModelVisibilityPreferences(modelVisibilityPreferences);
+  renderAllModelVisibilityControls();
+
+  if (options.sync !== false) {
+    setModelVisibilityStatus('Saving visibility...', 'saving');
+    scheduleModelVisibilityBackendSave();
+  }
+}
+
+async function hydrateModelVisibilityFromBackend() {
+  if (!isModelOwnerAuthenticated()) return;
+  if (modelVisibilityBackendLoaded) return;
+  modelVisibilityBackendLoaded = true;
+
+  try {
+    const model = await getOwnedCanonicalModel();
+    if (!model?.id) return;
+
+    const preferences = await readModelVisibilityPreferences(model.id);
+    if (!preferences) return;
+
+    updateModelVisibilityPreferences(preferences, {
+      source: 'model-management-backend',
+      sync: false
+    });
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Visibility preference hydration skipped.', error);
   }
 }
 
@@ -662,6 +776,37 @@ function isModelManagementHydrationPending(runtimeState = getProfileRuntimeState
   const section = getActiveModelSection(navigationState);
   const modelPane = navigationState.modelPane || 'overview';
   return runtimeState.authResolved !== true && !isPublicModelNavigation(section, modelPane);
+}
+
+function isModelOwnerAuthenticated(runtimeState = getProfileRuntimeState()) {
+  return runtimeState.authResolved === true && runtimeState.viewerState === 'authenticated';
+}
+
+function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
+  if (!isModelOwnerAuthenticated(runtimeState)) return;
+
+  void hydrateModelFoundationIdentityFromBackend();
+  void hydrateModelPersonalizationFromBackend();
+  void hydrateModelVisibilityFromBackend();
+  void hydrateTrainingSubstrateFromBackend();
+}
+
+function requestModelAuthResolution() {
+  window.clearTimeout(modelAuthResolutionTimer);
+  modelAuthResolutionTimer = window.setTimeout(() => {
+    const runtimeState = getProfileRuntimeState();
+    if (runtimeState.authResolved === true) return;
+
+    void refreshAccountProfileState().catch((error) => {
+      document.dispatchEvent(new CustomEvent('account:profile-signed-out', {
+        detail: {
+          source: 'model-management-auth-resolution',
+          authResolved: true,
+          reason: error?.code || error?.message || 'ACCOUNT_PROFILE_STATE_UNAVAILABLE'
+        }
+      }));
+    });
+  }, 600);
 }
 
 function ensureModelManagementLoadingNode(root) {
@@ -713,6 +858,13 @@ function getVisibleModelDiscoveryGroup(navigationState = getProfileNavigationSta
   return MODEL_DISCOVERY_PANE_GROUPS[navigationState.modelPane] || 'overview';
 }
 
+function getVisibleModelSettingsGroup(navigationState = getProfileNavigationState()) {
+  const pane = String(navigationState.modelPane || 'preferences').trim();
+  return ['preferences', 'provider', 'routing', 'visibility', 'changelog'].includes(pane)
+    ? pane
+    : 'preferences';
+}
+
 function renderModelFoundationGroups(root, navigationState = getProfileNavigationState()) {
   if (!(root instanceof HTMLElement)) return;
 
@@ -740,6 +892,16 @@ function renderModelDiscoveryGroups(root, navigationState = getProfileNavigation
   root.querySelectorAll('[data-model-discovery-group]').forEach((group) => {
     if (!(group instanceof HTMLElement)) return;
     group.hidden = group.dataset.modelDiscoveryGroup !== visibleGroup;
+  });
+}
+
+function renderModelSettingsGroups(root, navigationState = getProfileNavigationState()) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const visibleGroup = getVisibleModelSettingsGroup(navigationState);
+  root.querySelectorAll('[data-model-settings-group]').forEach((group) => {
+    if (!(group instanceof HTMLElement)) return;
+    group.hidden = group.dataset.modelSettingsGroup !== visibleGroup;
   });
 }
 
@@ -1059,6 +1221,99 @@ function renderAllModelPersonalizationControls() {
   modelManagementRoots().forEach((root) => renderModelPersonalizationControls(root, navigationState));
 }
 
+function renderModelVisibilityControls(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const preferences = normalizeModelVisibilityPreferences(modelVisibilityPreferences);
+  const activeScope = String(preferences.visibilityScope || 'general').trim() || 'general';
+
+  root.querySelectorAll('[data-model-visibility-field]').forEach((control) => {
+    if (!(control instanceof HTMLSelectElement)) return;
+    const field = control.dataset.modelVisibilityField;
+    if (!field) return;
+    control.value = String(preferences[field] || MODEL_VISIBILITY_DEFAULTS[field] || '');
+  });
+
+  root.querySelectorAll('[data-model-visibility-label]').forEach((label) => {
+    if (!(label instanceof HTMLElement)) return;
+    const field = label.dataset.modelVisibilityLabel;
+    const select = field ? root.querySelector(`[data-model-visibility-field="${field}"]`) : null;
+    if (!(select instanceof HTMLSelectElement)) return;
+    label.textContent = select.selectedOptions[0]?.textContent || '';
+  });
+
+  root.querySelectorAll('[data-model-visibility-panel]').forEach((panel) => {
+    if (!(panel instanceof HTMLElement)) return;
+    panel.hidden = panel.dataset.modelVisibilityPanel !== activeScope;
+  });
+
+  root.querySelectorAll('[data-model-visibility-toggle]').forEach((toggle) => {
+    if (!(toggle instanceof HTMLButtonElement)) return;
+    const field = toggle.dataset.modelVisibilityToggle;
+    const checked = preferences[field] === true;
+    toggle.setAttribute('aria-checked', checked ? 'true' : 'false');
+    toggle.dataset.toggleState = checked ? 'on' : 'off';
+    const label = toggle.querySelector('.na-toggle__label');
+    if (label instanceof HTMLElement) label.textContent = checked ? 'On' : 'Off';
+  });
+
+  const stateCopy = root.querySelector('[data-model-visibility-state-copy]');
+  if (stateCopy instanceof HTMLElement) {
+    stateCopy.textContent = preferences.publicVisible
+      ? 'Visible in public model discovery'
+      : 'Hidden from public model discovery';
+  }
+}
+
+function renderAllModelVisibilityControls() {
+  modelManagementRoots().forEach(renderModelVisibilityControls);
+}
+
+function setModelVisibilityStatus(message = '', state = 'idle') {
+  modelManagementRoots().forEach((root) => {
+    root.querySelectorAll('[data-model-visibility-status]').forEach((status) => {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = message;
+      status.dataset.modelVisibilityStatus = state;
+      
+      if (message && state !== 'idle') {
+        status.dataset.statusMessageActive = 'true';
+        handleStatusMessageAutoDismiss();
+      } else {
+        status.dataset.statusMessageActive = '';
+      }
+    });
+  });
+}
+
+function setModelPersonalizationStatus(message = '', state = 'idle') {
+  modelManagementRoots().forEach((root) => {
+    root.querySelectorAll('[data-model-personalization-status]').forEach((status) => {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = message;
+      status.dataset.modelPersonalizationStatus = state;
+      
+      if (message && state !== 'idle') {
+        status.dataset.statusMessageActive = 'true';
+        handleStatusMessageAutoDismiss();
+      } else {
+        status.dataset.statusMessageActive = '';
+      }
+    });
+  });
+}
+
+function formatModelPersonalizationError(error) {
+  const code = String(error?.code || error?.message || '').trim();
+  if (code === '42703') {
+    return 'Model personalization schema update required before these controls can save.';
+  }
+  if (code === '42501') {
+    return 'Model personalization could not be saved because the Supabase policy blocked this owner.';
+  }
+  return code ? `Model personalization could not be saved: ${code}` : 'Model personalization could not be saved.';
+}
+
 function renderModelManagement(root, runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
   if (!(root instanceof HTMLElement)) return;
 
@@ -1070,6 +1325,7 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
     root.querySelectorAll('[data-model-management-section]').forEach((panel) => {
       if (panel instanceof HTMLElement) panel.hidden = true;
     });
+    requestModelAuthResolution();
     return;
   }
 
@@ -1106,8 +1362,10 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   renderModelFoundationGroups(root, safeNavigationState);
   renderModelTrainingGroups(root, safeNavigationState);
   renderModelDiscoveryGroups(root, safeNavigationState);
+  renderModelSettingsGroups(root, safeNavigationState);
   renderModelFoundationIdentityControls(root);
   renderModelPersonalizationControls(root, safeNavigationState);
+  renderModelVisibilityControls(root);
   renderModelKnowledgeBase(root);
   renderModelLogicRecords(root);
   renderModelDirectory(root);
@@ -1135,6 +1393,27 @@ function handleModelPersonalizationInput(event) {
     : control.value;
 
   updateModelPersonalizationPreferences({ [field]: rawValue });
+}
+
+function handleModelVisibilityInput(event) {
+  const select = event.target?.closest?.('[data-model-visibility-field]');
+  if (event.type === 'change' && select instanceof HTMLSelectElement) {
+    const field = select.dataset.modelVisibilityField;
+    if (!field) return;
+    updateModelVisibilityPreferences({ [field]: select.value });
+    return;
+  }
+
+  if (event.type !== 'click') return;
+  const toggle = event.target?.closest?.('[data-model-visibility-toggle]');
+  if (!(toggle instanceof HTMLButtonElement)) return;
+
+  const field = toggle.dataset.modelVisibilityToggle;
+  if (!field) return;
+
+  updateModelVisibilityPreferences({
+    [field]: toggle.getAttribute('aria-checked') !== 'true'
+  });
 }
 
 function registerModelAvatarEditor() {
@@ -1208,6 +1487,13 @@ function setModelIdentityEditorStatus(message = '', state = 'idle') {
   if (status instanceof HTMLElement) {
     status.textContent = message;
     status.dataset.modelIdentityEditorState = state;
+    
+    if (message && state !== 'idle') {
+      status.dataset.statusMessageActive = 'true';
+      handleStatusMessageAutoDismiss();
+    } else {
+      status.dataset.statusMessageActive = '';
+    }
   }
 }
 
@@ -1420,17 +1706,94 @@ function renderAllModelManagement() {
   modelManagementRoots().forEach((root) => renderModelManagement(root, runtimeState, navigationState));
 }
 
+function handleModelSliderInteractionStart(event) {
+  const slider = event.target?.closest?.('.model-management__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderRow = slider.closest?.('.model-management__slider-row');
+  if (!(sliderRow instanceof HTMLElement)) return;
+
+  const sliderValue = sliderRow.querySelector?.('.model-management__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.dataset.sliderValueState = 'centered';
+  sliderValue.dataset.sliderValueActive = 'true';
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dimmed-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dimmed-filter)');
+}
+
+function handleModelSliderInteractionEnd(event) {
+  const slider = event.target?.closest?.('.model-management__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderRow = slider.closest?.('.model-management__slider-row');
+  if (!(sliderRow instanceof HTMLElement)) return;
+
+  const sliderValue = sliderRow.querySelector?.('.model-management__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.dataset.sliderValueState = '';
+  sliderValue.dataset.sliderValueActive = '';
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dim-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dim-filter)');
+}
+
+function handleModelSliderInput(event) {
+  const slider = event.target?.closest?.('.model-management__slider');
+  if (!(slider instanceof HTMLInputElement)) return;
+
+  const sliderRow = slider.closest?.('.model-management__slider-row');
+  if (!(sliderRow instanceof HTMLElement)) return;
+
+  const sliderValue = sliderRow.querySelector?.('.model-management__slider-value');
+  if (!(sliderValue instanceof HTMLElement)) return;
+
+  sliderValue.textContent = slider.value;
+}
+
+function handleModelSliderGlobalMouseUp(event) {
+  document.querySelectorAll('.model-management__slider-value[data-slider-value-state="centered"]').forEach((sliderValue) => {
+    if (!(sliderValue instanceof HTMLElement)) return;
+    sliderValue.dataset.sliderValueState = '';
+    sliderValue.dataset.sliderValueActive = '';
+  });
+  
+  document.body.style.setProperty('--viewport-dim-opacity', 'var(--viewport-dim-opacity)');
+  document.body.style.setProperty('--viewport-dim-filter', 'var(--viewport-dim-filter)');
+}
+
+function handleStatusMessageAutoDismiss() {
+  const autoDismissDuration = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--status-message-auto-dismiss-duration')) || 3000;
+  
+  document.querySelectorAll('.model-management__note[data-status-message-active="true"]').forEach((note) => {
+    if (!(note instanceof HTMLElement)) return;
+    if (!note.textContent.trim()) {
+      note.dataset.statusMessageActive = '';
+      return;
+    }
+    
+    window.setTimeout(() => {
+      note.dataset.statusMessageActive = '';
+    }, autoDismissDuration);
+  });
+}
+
 function initModelManagement() {
   registerModelAvatarEditor();
   renderAllModelManagement();
-  void hydrateModelFoundationIdentityFromBackend();
-  void hydrateModelPersonalizationFromBackend();
   void hydratePublicModelDirectory();
-  void hydrateTrainingSubstrateFromBackend();
-  subscribeProfileRuntime(renderAllModelManagement);
+  hydrateModelOwnerDataFromBackend();
+  subscribeProfileRuntime((runtimeState) => {
+    renderAllModelManagement();
+    hydrateModelOwnerDataFromBackend(runtimeState);
+  });
   subscribeProfileNavigation(renderAllModelManagement);
   document.addEventListener('input', handleModelPersonalizationInput);
   document.addEventListener('change', handleModelPersonalizationInput);
+  document.addEventListener('change', handleModelVisibilityInput);
+  document.addEventListener('click', handleModelVisibilityInput);
   document.addEventListener('input', handleModelFoundationInput);
   document.addEventListener('change', handleModelFoundationInput);
   document.addEventListener('click', handleModelAvatarClick);
@@ -1445,11 +1808,26 @@ function initModelManagement() {
   document.addEventListener('click', handleModelIdentityEditorClick);
   document.addEventListener('submit', handleModelIdentityEditorSubmit);
   document.addEventListener('keydown', handleModelIdentityEditorKeydown);
+  document.addEventListener('mousedown', handleModelSliderInteractionStart);
+  document.addEventListener('touchstart', handleModelSliderInteractionStart);
+  document.addEventListener('mouseup', handleModelSliderInteractionEnd);
+  document.addEventListener('touchend', handleModelSliderInteractionEnd);
+  document.addEventListener('mouseup', handleModelSliderGlobalMouseUp);
+  document.addEventListener('touchend', handleModelSliderGlobalMouseUp);
+  document.addEventListener('input', handleModelSliderInput);
   window.addEventListener('neuroartan:model-public-registry-invalidated', invalidateModelDirectoryProjection);
-  window.addEventListener('neuroartan:supabase-ready', retryModelFoundationIdentityHydration);
-  window.addEventListener('neuroartan:supabase-ready', hydrateTrainingSubstrateFromBackend);
-  document.addEventListener('account:profile-state-changed', retryModelFoundationIdentityHydration);
-  document.addEventListener('account:profile-refresh-request', retryModelFoundationIdentityHydration);
+  window.addEventListener('neuroartan:supabase-ready', () => {
+    retryModelFoundationIdentityHydration();
+    hydrateModelOwnerDataFromBackend();
+  });
+  document.addEventListener('account:profile-state-changed', () => {
+    retryModelFoundationIdentityHydration();
+    hydrateModelOwnerDataFromBackend();
+  });
+  document.addEventListener('account:profile-refresh-request', () => {
+    retryModelFoundationIdentityHydration();
+    hydrateModelOwnerDataFromBackend();
+  });
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'model-management') return;

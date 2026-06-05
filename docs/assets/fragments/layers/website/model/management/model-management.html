@@ -834,6 +834,7 @@
           </div>
         </section>
       </div>
+      <p class="model-management__note" data-model-personalization-status aria-live="polite"></p>
     </article>
 
     <article class="model-management__section" data-model-management-section="model-sources" hidden>
@@ -980,20 +981,159 @@
     </article>
 
     <article class="model-management__section" data-model-management-section="model-settings" hidden>
-      <h3 class="model-management__section-title">Model settings</h3>
-      <p class="model-management__section-copy">
-        Settings keep the personal model governed by owner preferences, provider routing, visibility boundaries, and change history.
-      </p>
-      <dl class="model-management__grid">
-        <div class="model-management__item">
-          <dt>Provider</dt>
-          <dd>Owner-controlled routing</dd>
+      <section class="model-management__settings-group" data-model-settings-group="preferences">
+        <dl class="model-management__grid">
+          <div class="model-management__item">
+            <dt>Preferences</dt>
+            <dd>Owner-controlled model settings</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="model-management__settings-group" data-model-settings-group="provider" hidden>
+        <dl class="model-management__grid">
+          <div class="model-management__item">
+            <dt>Provider</dt>
+            <dd>Owner-controlled routing</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="model-management__settings-group" data-model-settings-group="routing" hidden>
+        <dl class="model-management__grid">
+          <div class="model-management__item">
+            <dt>Routing</dt>
+            <dd>Private runtime routing boundary</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="model-management__settings-group" data-model-settings-group="visibility" hidden>
+        <div class="model-management__control-grid">
+          <label class="model-management__field">
+            <span class="model-management__field-label">Visibility relationship</span>
+            <span class="ui-inline-dropdown">
+              <span class="ui-inline-dropdown__value" data-model-visibility-label="visibilityScope">General</span>
+              <span class="ui-inline-dropdown__icon-wrapper">
+                <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                <select class="ui-dropdown ui-dropdown--icon-only" data-model-visibility-field="visibilityScope" aria-label="Select visibility relationship">
+                  <option value="general">General</option>
+                  <option value="public">Public</option>
+                  <option value="friends">Friends</option>
+                  <option value="followers">Followers</option>
+                  <option value="mutuals">Mutuals</option>
+                  <option value="family">Family</option>
+                  <option value="subscribers">Subscribers</option>
+                </select>
+              </span>
+            </span>
+          </label>
         </div>
-        <div class="model-management__item">
-          <dt>Visibility</dt>
-          <dd>Private by default</dd>
+
+        <div class="model-management__visibility-panels">
+          <section class="model-management__visibility-panel" data-model-visibility-panel="general">
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Public discovery</strong>
+                <span class="model-management__toggle-caption" data-model-visibility-state-copy>Hidden from public discovery</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="publicVisible" aria-label="Toggle public model discovery">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="public" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to public</strong>
+                <span class="model-management__toggle-caption">Allow people without a private relationship to discover the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="publicVisible" aria-label="Toggle public model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="friends" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to friends</strong>
+                <span class="model-management__toggle-caption">Allow accepted friends to discover and navigate the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="friendsVisible" aria-label="Toggle friends model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="followers" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to followers</strong>
+                <span class="model-management__toggle-caption">Allow followers to discover and navigate the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="followersVisible" aria-label="Toggle followers model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="mutuals" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to mutuals</strong>
+                <span class="model-management__toggle-caption">Allow reciprocal relationships to discover and navigate the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="mutualsVisible" aria-label="Toggle mutuals model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="family" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to family</strong>
+                <span class="model-management__toggle-caption">Allow family relationships to discover and navigate the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="familyVisible" aria-label="Toggle family model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="model-management__visibility-panel" data-model-visibility-panel="subscribers" hidden>
+            <div class="model-management__toggle-row">
+              <div class="model-management__toggle-copy">
+                <strong class="model-management__toggle-title">Visible to subscribers</strong>
+                <span class="model-management__toggle-caption">Allow subscriber relationships to discover and navigate the model.</span>
+              </div>
+              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-model-visibility-toggle="subscribersVisible" aria-label="Toggle subscribers model visibility">
+                <span class="na-toggle__track" aria-hidden="true"><span class="na-toggle__thumb"></span></span>
+                <span class="na-toggle__label" hidden>Off</span>
+              </button>
+            </div>
+          </section>
         </div>
-      </dl>
+
+        <p class="model-management__note" data-model-visibility-status aria-live="polite"></p>
+      </section>
+
+      <section class="model-management__settings-group" data-model-settings-group="changelog" hidden>
+        <dl class="model-management__grid">
+          <div class="model-management__item">
+            <dt>Changelog</dt>
+            <dd>Model setting changes are recorded in the changelog.</dd>
+          </div>
+        </dl>
+      </section>
     </article>
   </div>
 

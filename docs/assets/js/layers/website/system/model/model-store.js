@@ -41,6 +41,7 @@ const RETRIEVAL_RECORDS_TABLE = 'model_retrieval_records';
 const RUNTIME_ROUTES_TABLE = 'model_runtime_routes';
 const ACTIVE_MODEL_PREFERENCES_TABLE = 'active_model_preferences';
 const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferences';
+const MODEL_VISIBILITY_PREFERENCES_TABLE = 'model_visibility_preferences';
 const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
 
@@ -195,6 +196,7 @@ export function getModelStoreBackendState() {
     runtimeRoutesTable: RUNTIME_ROUTES_TABLE,
     activeModelPreferencesTable: ACTIVE_MODEL_PREFERENCES_TABLE,
     modelPersonalizationPreferencesTable: MODEL_PERSONALIZATION_PREFERENCES_TABLE,
+    modelVisibilityPreferencesTable: MODEL_VISIBILITY_PREFERENCES_TABLE,
     modelVoiceTrainingStateTable: MODEL_VOICE_TRAINING_STATE_TABLE,
     modelLogicRecordsTable: MODEL_LOGIC_RECORDS_TABLE,
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
@@ -351,6 +353,46 @@ function mapModelPersonalizationPreferences(row = {}) {
   };
 }
 
+function normalizeVisibilityBoolean(value, fallback = false) {
+  if (value === true || value === 'true' || value === 1 || value === '1') return true;
+  if (value === false || value === 'false' || value === 0 || value === '0') return false;
+  return fallback;
+}
+
+function mapModelVisibilityPreferences(row = {}, model = {}) {
+  const publicVisible = normalizeVisibilityBoolean(
+    row.public_visible,
+    model.model_visibility === 'public' && model.publication_state === 'published'
+  );
+
+  return {
+    visibilityScope: normalizeString(row.visibility_scope || 'general') || 'general',
+    publicVisible,
+    friendsVisible: normalizeVisibilityBoolean(row.friends_visible, publicVisible),
+    followersVisible: normalizeVisibilityBoolean(row.followers_visible, publicVisible),
+    mutualsVisible: normalizeVisibilityBoolean(row.mutuals_visible, publicVisible),
+    familyVisible: normalizeVisibilityBoolean(row.family_visible, publicVisible),
+    subscribersVisible: normalizeVisibilityBoolean(row.subscribers_visible, publicVisible),
+    updatedAt: normalizeString(row.updated_at || model.updated_at || ''),
+  };
+}
+
+function buildModelVisibilityPreferencesPayload(modelId, preferences = {}, model = {}) {
+  const publicVisible = normalizeVisibilityBoolean(preferences.publicVisible, model.model_visibility === 'public');
+
+  return {
+    model_id: normalizeString(modelId),
+    visibility_scope: normalizeString(preferences.visibilityScope || 'general') || 'general',
+    public_visible: publicVisible,
+    friends_visible: normalizeVisibilityBoolean(preferences.friendsVisible, publicVisible),
+    followers_visible: normalizeVisibilityBoolean(preferences.followersVisible, publicVisible),
+    mutuals_visible: normalizeVisibilityBoolean(preferences.mutualsVisible, publicVisible),
+    family_visible: normalizeVisibilityBoolean(preferences.familyVisible, publicVisible),
+    subscribers_visible: normalizeVisibilityBoolean(preferences.subscribersVisible, publicVisible),
+    updated_at: new Date().toISOString(),
+  };
+}
+
 function buildModelPersonalizationPreferencesPayload(modelId, preferences = {}) {
   return {
     model_id: normalizeString(modelId),
@@ -394,9 +436,14 @@ function resolveModelIdentityDisplayName(values = {}, model = {}) {
 }
 
 function getChangedModelFields(before = {}, after = {}, labels = {}) {
-  return Object.keys(labels).filter((field) => (
-    normalizeString(before?.[field] ?? '') !== normalizeString(after?.[field] ?? '')
-  ));
+  return Object.keys(labels).filter((field) => {
+    const beforeValue = before?.[field];
+    const afterValue = after?.[field];
+    if (typeof beforeValue === 'number' || typeof afterValue === 'number') {
+      return Number(beforeValue ?? 0) !== Number(afterValue ?? 0);
+    }
+    return normalizeString(beforeValue ?? '') !== normalizeString(afterValue ?? '');
+  });
 }
 
 async function recordChangedModelFields(model = {}, changedFields = [], labels = {}, options = {}) {
@@ -815,6 +862,124 @@ export async function saveModelPersonalizationPreferences(modelId, preferences =
   return savedPreferences;
 }
 
+export async function readModelVisibilityPreferences(modelId) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const model = await getModelById(normalizedModelId);
+  if (!model) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_VISIBILITY_PREFERENCES_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return mapModelVisibilityPreferences({}, model);
+    throw error;
+  }
+
+  return mapModelVisibilityPreferences(data || {}, model);
+}
+
+export async function saveModelVisibilityPreferences(modelId, preferences = {}) {
+  const supabase = getSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const model = await getModelById(normalizedModelId);
+  if (!model) return null;
+
+  const previousPreferences = await readModelVisibilityPreferences(normalizedModelId).catch(() => null);
+  const payload = buildModelVisibilityPreferencesPayload(normalizedModelId, preferences, model);
+  const publicVisible = payload.public_visible === true;
+  const publicationState = publicVisible ? 'published' : 'unpublished';
+  const modelVisibility = publicVisible ? 'public' : 'private';
+  const interactionState = publicVisible ? 'public' : 'private';
+  const now = new Date().toISOString();
+
+  let savedPreferenceRow = payload;
+  const preferenceResult = await supabase
+    .from(MODEL_VISIBILITY_PREFERENCES_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (preferenceResult.error && !isSupabaseRelationMissingError(preferenceResult.error)) {
+    throw preferenceResult.error;
+  }
+  if (preferenceResult.data) {
+    savedPreferenceRow = preferenceResult.data;
+  }
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      model_visibility: modelVisibility,
+      publication_state: publicationState,
+      interaction_state: interactionState,
+      updated_at: now,
+    })
+    .eq('id', normalizedModelId)
+    .select(MODEL_SELECT_FIELDS)
+    .single();
+
+  if (error) throw error;
+
+  const savedModel = mapSupabaseModel(data) || {
+    ...model,
+    model_visibility: modelVisibility,
+    publication_state: publicationState,
+    interaction_state: interactionState,
+    updated_at: now,
+  };
+
+  await upsertModelPublicIdentityProjection(supabase, {
+    model_id: normalizedModelId,
+    profile_id: savedModel.profile_id || undefined,
+    public_display_name: savedModel.model_name || savedModel.display_name || '',
+    display_name: savedModel.model_name || savedModel.display_name || '',
+    public_slug: savedModel.model_slug || savedModel.slug || '',
+    public_description: savedModel.description || '',
+    public_visibility: modelVisibility,
+    public_visibility_state: modelVisibility,
+    public_identity_state: publicationState === 'published' ? 'published' : 'not_published',
+    public_avatar_url: savedModel.model_image_url || '',
+    updated_at: now,
+  });
+
+  const savedPreferences = mapModelVisibilityPreferences(savedPreferenceRow, savedModel);
+  const changed = !previousPreferences
+    || previousPreferences.publicVisible !== savedPreferences.publicVisible
+    || previousPreferences.friendsVisible !== savedPreferences.friendsVisible
+    || previousPreferences.followersVisible !== savedPreferences.followersVisible
+    || previousPreferences.mutualsVisible !== savedPreferences.mutualsVisible
+    || previousPreferences.familyVisible !== savedPreferences.familyVisible
+    || previousPreferences.subscribersVisible !== savedPreferences.subscribersVisible;
+
+  if (changed) {
+    await recordModelChangelogEvent(savedModel, {
+      area: 'model.settings.visibility',
+      action: 'model_visibility_changed',
+      title: 'Model visibility changed',
+      detail: publicVisible ? 'Model was made visible in public discovery.' : 'Model was hidden from public discovery.',
+      metadata: {
+        public_visible: savedPreferences.publicVisible,
+        friends_visible: savedPreferences.friendsVisible,
+        followers_visible: savedPreferences.followersVisible,
+        mutuals_visible: savedPreferences.mutualsVisible,
+        family_visible: savedPreferences.familyVisible,
+        subscribers_visible: savedPreferences.subscribersVisible,
+      },
+    });
+  }
+
+  dispatchModelProjectionUpdated(normalizedModelId);
+  return savedPreferences;
+}
+
 export async function readModelFoundationIdentity(modelId) {
   const supabase = getSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
@@ -1067,11 +1232,11 @@ export async function listPublishedModels() {
     .in('model_id', modelIds);
 
   if (publicIdentityResult.error && !isSupabaseRelationMissingError(publicIdentityResult.error)) {
-    throw publicIdentityResult.error;
+    console.warn('[Neuroartan][Model] Public identity projection unavailable for published models.', publicIdentityResult.error);
   }
 
   const publicIdentityByModel = new Map(
-    (Array.isArray(publicIdentityResult.data) ? publicIdentityResult.data : [])
+    (!publicIdentityResult.error && Array.isArray(publicIdentityResult.data) ? publicIdentityResult.data : [])
       .map((identity) => [normalizeString(identity.model_id), identity])
   );
 
@@ -1147,14 +1312,16 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
     canonical_slug: modelSlug,
   });
 
+  const publicVisible = normalizeString(model.model_visibility || values.model_visibility || 'public') === 'public';
+
   const publicIdentity = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.publicIdentities, {
     model_id: modelId,
-    public_identity_state: 'not_published',
+    public_identity_state: publicVisible ? 'published' : 'not_published',
     public_display_name: modelName,
     public_slug: modelSlug,
     public_description: description,
     public_avatar_url: '',
-    public_visibility: 'private',
+    public_visibility: publicVisible ? 'public' : 'private',
   });
 
   const privateIdentity = await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.privateIdentities, {
@@ -1189,11 +1356,11 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
 
   await insertModelFoundationRecord(supabase, MODEL_FOUNDATION_TABLES.permission, {
     model_id: modelId,
-    permission_scope: 'private_owner_only',
+    permission_scope: publicVisible ? 'owner_controlled_public_discovery' : 'private_owner_only',
     owner_read_enabled: true,
     owner_write_enabled: true,
-    public_read_enabled: false,
-    public_interaction_enabled: false,
+    public_read_enabled: publicVisible,
+    public_interaction_enabled: publicVisible,
     export_enabled: false,
     deletion_enabled: true,
   });
@@ -1353,17 +1520,17 @@ export async function createOwnedModel(values = {}) {
     description: normalizeString(values.description || ''),
     creator_display_name: normalizeString(values.creator_display_name || modelName),
     creator_username: normalizeUsername(values.creator_username || modelSlug),
-    model_visibility: normalizeString(values.model_visibility || 'private'),
+    model_visibility: normalizeString(values.model_visibility || 'public'),
     lifecycle_state: normalizeString(values.lifecycle_state || values.model_status || 'draft'),
     readiness_state: normalizeString(values.readiness_state || 'not_ready'),
-    publication_state: normalizeString(values.publication_state || 'unpublished'),
+    publication_state: normalizeString(values.publication_state || 'published'),
     default_runtime_policy: {
       provider: normalizeString(values.provider || 'unassigned'),
       route: normalizeString(values.route || 'site_knowledge'),
       voice_enabled: values.voice_enabled === true,
     },
     entitlement_state: normalizeString(values.entitlement_state || 'free_canonical_personal_model_included'),
-    permission_state: normalizeString(values.permission_state || 'private_owner_only'),
+    permission_state: normalizeString(values.permission_state || 'owner_controlled_public_discovery'),
     economy_state: normalizeString(values.economy_state || 'blocked_until_review'),
     foundation_state: normalizeString(values.foundation_state || 'private_foundation_created'),
   };

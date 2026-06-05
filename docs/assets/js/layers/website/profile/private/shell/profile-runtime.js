@@ -914,6 +914,14 @@ function bindProfileStateEvents() {
   };
 
   window.addEventListener('neuroartan:supabase-ready', refreshPrivateAccountState);
+  window.addEventListener('neuroartan:supabase-error', () => {
+    if (!shouldApplyPrivateState()) return;
+    refreshRuntimeState({ authResolved:true });
+  });
+  window.addEventListener('neuroartan:supabase-missing-config', () => {
+    if (!shouldApplyPrivateState()) return;
+    refreshRuntimeState({ authResolved:true });
+  });
   if (window.neuroartanSupabase) {
     refreshPrivateAccountState();
   }

@@ -97,6 +97,7 @@ function bindHomeInteractionResponsePanel() {
     HOME_INTERACTION_RESPONSE_PANEL_STATE.response = response;
     HOME_INTERACTION_RESPONSE_PANEL_STATE.state = response ? 'responding' : 'idle';
     syncHomeInteractionResponsePanel();
+    dispatchHomeInteractionResponseUpdated();
   });
 
   document.addEventListener('neuroartan:home-stage-reset-requested', () => {

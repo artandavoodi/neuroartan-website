@@ -34,6 +34,9 @@ const HOME_INTERACTION_SETTINGS_SHELL_STATE = {
   mobileTouchLockTimer: null,
   didRestorePersistedState: false,
   isRestoringFromStorage: false,
+  conversationComposerPlaceholder: null,
+  conversationComposerOriginParent: null,
+  conversationComposerDocked: false,
 };
 
 const HOME_INTERACTION_SETTINGS_NESTED_PANEL_PATHS = {
@@ -424,6 +427,97 @@ function toggleHomeInteractionSettingsSessionExpanded() {
   setHomeInteractionSettingsSessionExpanded(!expanded);
 }
 
+function getHomeInteractionConversationDockNodes() {
+  return {
+    root: document.getElementById('home-interaction-settings-panel'),
+    dock: document.querySelector('[data-home-interaction-conversation-composer-dock]'),
+    origin: document.getElementById('stage-actions'),
+    panel: document.getElementById('home-stage-panel-stack'),
+  };
+}
+
+function shouldDockHomeInteractionConversationComposer(nodes = getHomeInteractionConversationDockNodes()) {
+  return (
+    nodes.root instanceof HTMLElement
+    && !nodes.root.hidden
+    && HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection === 'overview'
+    && nodes.dock instanceof HTMLElement
+    && nodes.panel instanceof HTMLElement
+  );
+}
+
+function rememberHomeInteractionConversationComposerOrigin(panel) {
+  if (HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerPlaceholder) {
+    return;
+  }
+
+  const placeholder = document.createComment('home-stage-panel-stack-origin');
+  panel.parentNode?.insertBefore(placeholder, panel);
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerPlaceholder = placeholder;
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerOriginParent = placeholder.parentNode || null;
+}
+
+function restoreHomeInteractionConversationComposer(nodes = getHomeInteractionConversationDockNodes()) {
+  const panel = nodes.panel;
+  const placeholder = HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerPlaceholder;
+
+  if (panel instanceof HTMLElement) {
+    if (placeholder?.parentNode) {
+      placeholder.parentNode.insertBefore(panel, placeholder);
+      placeholder.remove();
+    } else if (nodes.origin instanceof HTMLElement && panel.parentNode !== nodes.origin) {
+      nodes.origin.appendChild(panel);
+    }
+  }
+
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerPlaceholder = null;
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerOriginParent = null;
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerDocked = false;
+
+  if (nodes.dock instanceof HTMLElement) {
+    nodes.dock.hidden = true;
+  }
+
+  if (nodes.root instanceof HTMLElement) {
+    delete nodes.root.dataset.homeInteractionConversationDocked;
+  }
+}
+
+function syncHomeInteractionConversationComposerDock() {
+  const nodes = getHomeInteractionConversationDockNodes();
+
+  if (!shouldDockHomeInteractionConversationComposer(nodes)) {
+    restoreHomeInteractionConversationComposer(nodes);
+    return;
+  }
+
+  if (!(nodes.panel instanceof HTMLElement) || !(nodes.dock instanceof HTMLElement) || !(nodes.root instanceof HTMLElement)) {
+    return;
+  }
+
+  rememberHomeInteractionConversationComposerOrigin(nodes.panel);
+
+  const didMove = nodes.panel.parentNode !== nodes.dock;
+
+  if (didMove) {
+    nodes.dock.appendChild(nodes.panel);
+  }
+
+  nodes.dock.hidden = false;
+  nodes.root.dataset.homeInteractionConversationDocked = 'true';
+  HOME_INTERACTION_SETTINGS_SHELL_STATE.conversationComposerDocked = true;
+
+  if (didMove) {
+    window.dispatchEvent(new CustomEvent('fragment:mounted', {
+      detail: {
+        name: 'home-stage-panel-stack',
+        root: nodes.panel,
+        source: 'home-interaction-settings-conversation-dock',
+      },
+    }));
+  }
+}
+
 /* =========================================================
    04. CONFIG HELPERS
    ========================================================= */
@@ -613,15 +707,21 @@ async function setHomeInteractionSettingsSection(section) {
 
   const expandControl = nodes.root?.querySelector?.('[data-home-interaction-settings-nav-expand]');
   if (expandControl) {
-    expandControl.hidden = activeSection !== 'overview';
-    expandControl.setAttribute('aria-hidden', String(activeSection !== 'overview'));
+    const isSessionSection = activeSection === 'overview';
+    expandControl.hidden = !isSessionSection;
+    expandControl.setAttribute('aria-hidden', String(!isSessionSection));
+    expandControl.setAttribute('data-home-interaction-settings-nav-expand', activeSection);
   }
 
   syncHomeInteractionSettingsSubrailExpanded(
-    HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded && activeSection === 'overview',
+    HOME_INTERACTION_SETTINGS_SHELL_STATE.isRestoringFromStorage && activeSection === 'overview'
+      ? HOME_INTERACTION_SETTINGS_SHELL_STATE.subrailExpanded
+      : false,
     activeSection,
     { persist: false }
   );
+
+  syncHomeInteractionConversationComposerDock();
 
   if (nodes.root && !nodes.root.hidden) {
     persistHomeInteractionSettingsStorageState();
@@ -821,13 +921,16 @@ function syncHomeInteractionSettingsSubrailExpanded(expanded = false, section = 
       expandIcon.src = normalized ? expandedIcon : collapsedIcon;
     }
 
+    const sectionLabel = activeSection === 'overview' ? 'session' : activeSection;
     expandControl.setAttribute('aria-pressed', String(normalized));
-    expandControl.setAttribute('aria-label', normalized ? `Collapse ${activeSection}` : `Expand ${activeSection}`);
+    expandControl.setAttribute('aria-label', normalized ? `Collapse ${sectionLabel}` : `Expand ${sectionLabel}`);
   });
 
   if (options.persist !== false) {
     persistHomeInteractionSettingsStorageState();
   }
+
+  syncHomeInteractionConversationComposerDock();
 }
 
 function toggleHomeInteractionSettingsSubrailExpand(section) {
@@ -1055,6 +1158,7 @@ async function openHomeInteractionSettingsPanel(section = HOME_INTERACTION_SETTI
 
   // Set section after rail mode is initialized
   await setHomeInteractionSettingsSection(section);
+  syncHomeInteractionConversationComposerDock();
 
   writeHomeInteractionSettingsStorageState({
     isOpen: true,
@@ -1070,6 +1174,7 @@ function closeHomeInteractionSettingsPanel() {
 
   if (!nodes.root) return;
 
+  restoreHomeInteractionConversationComposer();
   setHomeInteractionSettingsSessionExpanded(false);
   HOME_INTERACTION_SETTINGS_SHELL_STATE.hasNestedBack = false;
   resetHomeInteractionSettingsMobileStackLevel();
@@ -1320,14 +1425,18 @@ async function bootHomeInteractionSettingsShell() {
   setHomeInteractionSettingsSection(HOME_INTERACTION_SETTINGS_SHELL_STATE.activeSection);
   syncHomeInteractionSettingsRailMode(HOME_INTERACTION_SETTINGS_SHELL_STATE.railMode);
   syncHomeInteractionSettingsMobileStackLevel(HOME_INTERACTION_SETTINGS_SHELL_STATE.mobileStackLevel);
+  syncHomeInteractionConversationComposerDock();
 
 }
 
 window.addEventListener('fragment:mounted', (event) => {
   if (event instanceof CustomEvent && event.detail?.source === 'home-interaction-settings-nested-panel') return;
+  if (event instanceof CustomEvent && event.detail?.source === 'home-interaction-settings-conversation-dock') return;
   if (!document.getElementById('home-interaction-settings-panel')) return;
 
-  bootHomeInteractionSettingsShell();
+  void bootHomeInteractionSettingsShell().then(() => {
+    syncHomeInteractionConversationComposerDock();
+  });
 });
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', bootHomeInteractionSettingsShell, { once: true });

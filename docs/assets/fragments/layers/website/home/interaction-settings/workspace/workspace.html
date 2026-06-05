@@ -1,8 +1,29 @@
 <!-- =============================================================================
-     WORKSPACE DESTINATION
+     00) FILE INDEX
+     01) CONVERSATIONS SECTION ROOT
+     02) CONVERSATION MANAGEMENT
 ============================================================================= -->
-<section class="home-interaction-settings-destination home-interaction-settings-destination--workspace" data-home-interaction-settings-destination="workspace" aria-label="Workspace">
+
+<!-- =============================================================================
+     01) CONVERSATIONS SECTION ROOT
+============================================================================= -->
+<section class="home-interaction-settings-destination home-interaction-settings-destination--workspace" data-home-interaction-settings-destination="workspace" aria-label="Conversations">
   <div class="home-interaction-settings-destination__surface home-interaction-settings-theme" data-home-interaction-settings-destination-surface>
-    <p>Workspace destination content</p>
+    <!-- =============================================================================
+         02) CONVERSATION MANAGEMENT
+    ============================================================================= -->
+    <section class="home-interaction-settings-theme__section home-interaction-conversations" aria-label="Saved conversations" data-home-interaction-settings-theme-section>
+      <div class="home-interaction-conversations__toolbar">
+        <label class="home-interaction-conversations__search">
+          <span class="home-interaction-conversations__label">Search sessions</span>
+          <input class="home-interaction-conversations__input" type="search" autocomplete="off" placeholder="Search" data-home-interaction-conversation-search>
+        </label>
+        <button class="home-interaction-conversations__new" type="button" data-home-interaction-conversation-new>New session</button>
+      </div>
+      <div class="home-interaction-conversations__empty" data-home-interaction-conversation-list-empty>
+        No saved sessions yet.
+      </div>
+      <ol class="home-interaction-conversations__list" data-home-interaction-conversation-list></ol>
+    </section>
   </div>
 </section>

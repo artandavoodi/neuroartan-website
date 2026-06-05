@@ -4,6 +4,12 @@ const HOME_INTERACTION_PANEL_STATE = {
   route: '',
 };
 
+const HOME_INTERACTION_PANEL_SUBMIT_ICONS = {
+  loading: '/registry/icons/public/assets/system/states/loading.svg',
+  mic: '/registry/icons/public/assets/core/media/audio/mic.svg',
+  send: '/registry/icons/public/assets/core/actions/send/send.svg',
+};
+
 function getHomeInteractionPanelStateNodes() {
   return {
     root: document.querySelector('#home-interaction-panel'),
@@ -34,43 +40,35 @@ function getHomeInteractionStateCopy(hasTypedInput = false) {
       return {
         voiceLabel: 'Stop listening',
         submitLabel: 'Listening',
-        submitDisabled: true,
+        submitDisabled: false,
         submitIntent: 'listening',
-        submitIcon: '/registry/icons/public/assets/system/states/loading.svg',
+        submitIcon: HOME_INTERACTION_PANEL_SUBMIT_ICONS.mic,
       };
     case 'thinking':
       return {
-        voiceLabel: 'Voice input',
+        voiceLabel: 'Stop response',
         submitLabel: 'Thinking',
-        submitDisabled: true,
+        submitDisabled: false,
         submitIntent: 'thinking',
-        submitIcon: '/registry/icons/public/assets/system/states/loading.svg',
+        submitIcon: HOME_INTERACTION_PANEL_SUBMIT_ICONS.loading,
       };
     case 'responding':
-      if (hasTypedInput) {
-        return {
-          voiceLabel: 'Voice input',
-          submitLabel: 'Send',
-          submitDisabled: false,
-          submitIntent: 'submit',
-          submitIcon: '/registry/icons/public/assets/core/actions/send/send.svg',
-        };
-      }
-
       return {
-        voiceLabel: 'Voice input',
-        submitLabel: 'Reset',
+        voiceLabel: 'Stop response',
+        submitLabel: 'Responding',
         submitDisabled: false,
-        submitIntent: 'reset',
-        submitIcon: '/registry/icons/public/assets/core/actions/create/plus.svg',
+        submitIntent: 'responding',
+        submitIcon: HOME_INTERACTION_PANEL_SUBMIT_ICONS.loading,
       };
     default:
       return {
-        voiceLabel: 'Voice input',
-        submitLabel: 'Send',
+        voiceLabel: hasTypedInput ? 'Send' : 'Voice input',
+        submitLabel: hasTypedInput ? 'Send' : 'Voice input',
         submitDisabled: false,
         submitIntent: 'submit',
-        submitIcon: '/registry/icons/public/assets/core/actions/send/send.svg',
+        submitIcon: hasTypedInput
+          ? HOME_INTERACTION_PANEL_SUBMIT_ICONS.send
+          : HOME_INTERACTION_PANEL_SUBMIT_ICONS.mic,
       };
   }
 }

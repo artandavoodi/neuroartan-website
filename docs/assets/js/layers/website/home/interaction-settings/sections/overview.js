@@ -1,153 +1,140 @@
+import {
+  getHomeInteractionConversationState,
+} from './session-store.js';
+import {
+  getActiveModelState,
+  subscribeActiveModelState,
+} from '../../../system/model/active-model.js';
+
 /* =============================================================================
    00) FILE INDEX
-   01) SESSION HISTORY STATE
-   02) STORAGE HELPERS
-   03) RENDER
-   04) EVENT BINDINGS
+   01) OVERVIEW STATE
+   02) DOM HELPERS
+   03) VALUE HELPERS
+   04) RENDER
+   05) EVENT BINDINGS
 ============================================================================= */
 
 /* =============================================================================
-   01) SESSION HISTORY STATE
+   01) OVERVIEW STATE
 ============================================================================= */
-const HOME_INTERACTION_SESSION_STORAGE_KEY = 'neuroartan.home.interaction.sessions';
-const HOME_INTERACTION_SESSION_LIMIT = 20;
-
 const HOME_INTERACTION_OVERVIEW_STATE = {
   isBound: false,
-  activeSessionId: '',
-  sessions: loadHomeInteractionSessions(),
 };
 
 /* =============================================================================
-   02) STORAGE HELPERS
-============================================================================= */
-function normalizeHomeInteractionSessionText(value = '') {
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-function createHomeInteractionSessionId() {
-  return `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function loadHomeInteractionSessions() {
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(HOME_INTERACTION_SESSION_STORAGE_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter((session) => session && typeof session === 'object') : [];
-  } catch (_error) {
-    return [];
-  }
-}
-
-function saveHomeInteractionSessions() {
-  try {
-    window.localStorage.setItem(
-      HOME_INTERACTION_SESSION_STORAGE_KEY,
-      JSON.stringify(HOME_INTERACTION_OVERVIEW_STATE.sessions.slice(0, HOME_INTERACTION_SESSION_LIMIT))
-    );
-  } catch (_error) {
-    /* Local session history is best-effort only. */
-  }
-}
-
-function getActiveHomeInteractionSession() {
-  return HOME_INTERACTION_OVERVIEW_STATE.sessions.find((session) => (
-    session.id === HOME_INTERACTION_OVERVIEW_STATE.activeSessionId
-  )) || null;
-}
-
-function recordHomeInteractionQuery(detail = {}) {
-  const query = normalizeHomeInteractionSessionText(detail.query || detail.prompt || '');
-  if (!query) return;
-
-  const session = {
-    id: createHomeInteractionSessionId(),
-    query,
-    response: '',
-    source: normalizeHomeInteractionSessionText(detail.source || 'text'),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  HOME_INTERACTION_OVERVIEW_STATE.activeSessionId = session.id;
-  HOME_INTERACTION_OVERVIEW_STATE.sessions = [
-    session,
-    ...HOME_INTERACTION_OVERVIEW_STATE.sessions.filter((item) => item.id !== session.id),
-  ].slice(0, HOME_INTERACTION_SESSION_LIMIT);
-
-  saveHomeInteractionSessions();
-  renderHomeInteractionSessionOverview();
-}
-
-function recordHomeInteractionResponse(detail = {}) {
-  const response = normalizeHomeInteractionSessionText(detail.response || detail.message || detail.text || '');
-  const activeSession = getActiveHomeInteractionSession();
-  if (!response || !activeSession) return;
-
-  activeSession.response = response;
-  activeSession.updatedAt = new Date().toISOString();
-  saveHomeInteractionSessions();
-  renderHomeInteractionSessionOverview();
-}
-
-/* =============================================================================
-   03) RENDER
+   02) DOM HELPERS
 ============================================================================= */
 function getHomeInteractionOverviewNodes() {
   return {
-    current: document.querySelector('[data-home-interaction-session-current]'),
-    history: document.querySelector('[data-home-interaction-session-history]'),
-    recent: document.querySelector('[data-home-interaction-session-recent]'),
+    activeTitle: document.querySelector('[data-home-interaction-conversation-active-title]'),
+    conversationCount: document.querySelector('[data-home-interaction-conversation-count]'),
+    messageCount: document.querySelector('[data-home-interaction-conversation-message-count]'),
+    empty: document.querySelector('[data-home-interaction-conversation-empty]'),
+    transcript: document.querySelector('[data-home-interaction-conversation-transcript]'),
   };
 }
 
-function renderHomeInteractionSessionOverview() {
+/* =============================================================================
+   03) VALUE HELPERS
+============================================================================= */
+function formatHomeInteractionConversationCount(count = 0, singular = 'item', plural = 'items') {
+  return `${count} ${count === 1 ? singular : plural}`;
+}
+
+function formatHomeInteractionMessageTimestamp(value = '') {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+function getHomeInteractionAssistantLabel() {
+  const activeModel = getActiveModelState().activeModel;
+  return activeModel?.engine?.label
+    || activeModel?.display_name
+    || activeModel?.search_title
+    || activeModel?.model_name
+    || 'Active model';
+}
+
+/* =============================================================================
+   04) RENDER
+============================================================================= */
+function createHomeInteractionMessageNode(message) {
+  const item = document.createElement('li');
+  const bubble = document.createElement('article');
+  const meta = document.createElement('span');
+  const content = document.createElement('p');
+  const role = message.role === 'assistant' ? getHomeInteractionAssistantLabel() : 'You';
+  const timestamp = formatHomeInteractionMessageTimestamp(message.createdAt);
+
+  item.className = `home-interaction-conversation-transcript__item home-interaction-conversation-transcript__item--${message.role}`;
+  bubble.className = 'home-interaction-conversation-transcript__bubble';
+  meta.className = 'home-interaction-conversation-transcript__meta';
+  content.className = 'home-interaction-conversation-transcript__content';
+
+  meta.textContent = timestamp ? `${role} · ${timestamp}` : role;
+  content.textContent = message.content || '';
+
+  bubble.append(meta, content);
+  item.append(bubble);
+  return item;
+}
+
+function renderHomeInteractionConversationOverview() {
   const nodes = getHomeInteractionOverviewNodes();
-  const sessions = HOME_INTERACTION_OVERVIEW_STATE.sessions;
-  const activeSession = getActiveHomeInteractionSession() || sessions[0] || null;
+  const state = getHomeInteractionConversationState();
+  const conversations = state.conversations || [];
+  const activeConversation = state.activeConversation || null;
+  const messages = Array.isArray(activeConversation?.messages) ? activeConversation.messages : [];
 
-  if (nodes.current instanceof HTMLElement) {
-    nodes.current.textContent = activeSession?.query || 'Waiting for interaction';
+  if (nodes.activeTitle instanceof HTMLElement) {
+    nodes.activeTitle.textContent = activeConversation?.title || 'No session yet';
   }
 
-  if (nodes.history instanceof HTMLElement) {
-    nodes.history.textContent = `${sessions.length} saved ${sessions.length === 1 ? 'session' : 'sessions'}`;
+  if (nodes.conversationCount instanceof HTMLElement) {
+    nodes.conversationCount.textContent = formatHomeInteractionConversationCount(conversations.length, 'session', 'sessions');
   }
 
-  if (nodes.recent instanceof HTMLElement) {
-    nodes.recent.textContent = activeSession?.response || activeSession?.query || 'No recent entries in this browser';
+  if (nodes.messageCount instanceof HTMLElement) {
+    nodes.messageCount.textContent = formatHomeInteractionConversationCount(messages.length, 'message', 'messages');
+  }
+
+  if (nodes.empty instanceof HTMLElement) {
+    nodes.empty.hidden = messages.length > 0;
+  }
+
+  if (nodes.transcript instanceof HTMLOListElement) {
+    nodes.transcript.replaceChildren(...messages.map(createHomeInteractionMessageNode));
+    nodes.transcript.hidden = messages.length === 0;
   }
 }
 
 /* =============================================================================
-   04) EVENT BINDINGS
+   05) EVENT BINDINGS
 ============================================================================= */
 function bindHomeInteractionOverview() {
   if (HOME_INTERACTION_OVERVIEW_STATE.isBound) {
-    renderHomeInteractionSessionOverview();
+    renderHomeInteractionConversationOverview();
     return;
   }
 
   HOME_INTERACTION_OVERVIEW_STATE.isBound = true;
 
-  document.addEventListener('neuroartan:home-stage-voice-query-submitted', (event) => {
-    recordHomeInteractionQuery(event?.detail || {});
-  });
-
-  document.addEventListener('neuroartan:home-stage-voice-response', (event) => {
-    recordHomeInteractionResponse(event?.detail || {});
-  });
-
-  document.addEventListener('neuroartan:home-interaction-response-updated', (event) => {
-    recordHomeInteractionResponse(event?.detail || {});
-  });
-
+  document.addEventListener('neuroartan:home-interaction-conversations-updated', renderHomeInteractionConversationOverview);
+  subscribeActiveModelState(renderHomeInteractionConversationOverview);
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name === 'home-interaction-settings-overview') {
-      renderHomeInteractionSessionOverview();
+      renderHomeInteractionConversationOverview();
     }
   });
 
-  renderHomeInteractionSessionOverview();
+  renderHomeInteractionConversationOverview();
 }
 
 if (document.readyState === 'loading') {

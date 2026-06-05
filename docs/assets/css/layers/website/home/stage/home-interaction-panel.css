@@ -484,15 +484,13 @@
   }
 }
 
-.home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"] .home-interaction-panel__continuity-icon img{
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"] .home-interaction-panel__continuity-icon img,
+.home-interaction-panel__continuity[data-home-interaction-submit-intent="responding"] .home-interaction-panel__continuity-icon img{
   animation: spin 1s linear infinite;
 }
 
-.home-interaction-panel__continuity[data-home-interaction-submit-intent="thinking"]:hover .home-interaction-panel__continuity-icon img,
-.home-interaction-panel__continuity[data-home-interaction-submit-intent="listening"]:hover .home-interaction-panel__continuity-icon img,
-.home-interaction-panel__continuity[data-home-interaction-submit-intent="responding"]:hover .home-interaction-panel__continuity-icon img{
+.home-interaction-panel__continuity--stop .home-interaction-panel__continuity-icon img{
   animation: none;
-  content: url('/registry/icons/public/assets/core/media/transport/stop.svg');
 }
 
 /* =============================================================================

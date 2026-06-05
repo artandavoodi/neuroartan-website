@@ -1,0 +1,161 @@
+.home-interaction-conversations,
+.home-interaction-conversations__toolbar,
+.home-interaction-conversations__list{
+  width:var(--size-full);
+}
+
+.home-interaction-conversations__toolbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:var(--spacing-lg);
+}
+
+.home-interaction-conversations__search{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-sm);
+  width:min(28rem, var(--size-full));
+}
+
+.home-interaction-conversations__label{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:var(--home-interaction-settings-option-description-size);
+  font-weight:var(--home-interaction-settings-option-description-weight);
+  line-height:var(--control-line-height);
+}
+
+.home-interaction-conversations__input{
+  width:var(--size-full);
+  min-height:var(--control-height-md);
+  padding:var(--home-interaction-settings-unified-control-padding-y) var(--home-interaction-settings-unified-control-padding-x);
+  border:var(--border-width-hairline) solid var(--home-interaction-settings-panel-control-border);
+  border-radius:var(--home-interaction-settings-panel-control-radius);
+  background:var(--home-interaction-settings-panel-control-bg);
+  color:var(--home-interaction-settings-panel-control-text);
+  font:inherit;
+  outline:none;
+}
+
+.home-interaction-conversations__input:focus{
+  border-color:var(--home-interaction-settings-panel-control-border-active);
+}
+
+.home-interaction-conversations__empty{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:var(--home-interaction-settings-option-description-size);
+  line-height:var(--home-interaction-settings-option-description-line-height);
+}
+
+.home-interaction-conversations__list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-none);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  list-style:none;
+}
+
+.home-interaction-conversations__item{
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+}
+
+.home-interaction-conversations__card{
+  display:grid;
+  grid-template-columns:minmax(var(--spacing-none), 1fr) auto;
+  gap:var(--spacing-md);
+  align-items:center;
+  width:var(--size-full);
+  padding:var(--home-interaction-settings-control-group-row-padding-y) var(--home-interaction-settings-control-group-row-padding-x);
+  border-bottom:none;
+}
+
+.home-interaction-conversations__select,
+.home-interaction-conversations__action,
+.home-interaction-conversations__new{
+  -webkit-appearance:none;
+  appearance:none;
+  border:var(--spacing-none);
+  background:transparent;
+  color:inherit;
+  font:inherit;
+  outline:none;
+}
+
+.home-interaction-conversations__select{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-xs);
+  min-width:var(--spacing-none);
+  padding:var(--spacing-none);
+  text-align:start;
+  cursor:pointer;
+}
+
+.home-interaction-conversations__title{
+  color:var(--home-interaction-settings-panel-control-text);
+  font-size:var(--home-interaction-settings-option-label-size);
+  font-weight:var(--home-interaction-settings-option-label-weight);
+  line-height:var(--control-line-height);
+}
+
+.home-interaction-conversations__meta,
+.home-interaction-conversations__preview,
+.home-interaction-conversations__action{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:var(--home-interaction-settings-option-description-size);
+  font-weight:var(--home-interaction-settings-option-description-weight);
+  line-height:var(--home-interaction-settings-option-description-line-height);
+}
+
+.home-interaction-conversations__preview{
+  display:-webkit-box;
+  margin:var(--spacing-none);
+  overflow:hidden;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
+.home-interaction-conversations__actions{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-md);
+}
+
+.home-interaction-conversations__action{
+  padding:var(--spacing-none);
+  cursor:pointer;
+}
+
+.home-interaction-conversations__new{
+  flex:0 0 auto;
+  padding:var(--spacing-none);
+  color:var(--home-interaction-settings-panel-control-text);
+  cursor:pointer;
+}
+
+.home-interaction-conversations__card.is-active .home-interaction-conversations__title,
+.home-interaction-conversations__select:hover .home-interaction-conversations__title,
+.home-interaction-conversations__select:focus-visible .home-interaction-conversations__title,
+.home-interaction-conversations__action:hover,
+.home-interaction-conversations__action:focus-visible,
+.home-interaction-conversations__new:hover,
+.home-interaction-conversations__new:focus-visible{
+  color:var(--home-interaction-settings-panel-nav-hover-color);
+}
+
+@media (max-width:760px){
+  .home-interaction-conversations__card{
+    grid-template-columns:var(--grid-column-single);
+  }
+
+  .home-interaction-conversations__toolbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .home-interaction-conversations__actions{
+    justify-content:flex-start;
+  }
+}

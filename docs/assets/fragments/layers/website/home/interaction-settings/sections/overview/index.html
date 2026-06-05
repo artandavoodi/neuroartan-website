@@ -1,26 +1,69 @@
 <!-- =============================================================================
      00) FILE INDEX
-     01) OVERVIEW SECTION ROOT
-     02) OVERVIEW SYSTEM STATUS
+     01) SESSION SECTION ROOT
+     02) SESSION STATUS
+     03) SESSION MANAGEMENT
+     04) ACTIVE TRANSCRIPT
+     05) CONVERSATION COMPOSER DOCK
 ============================================================================= -->
 
 <!-- =============================================================================
-     01) OVERVIEW SECTION ROOT
+     01) SESSION SECTION ROOT
 ============================================================================= -->
-<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="overview" aria-label="Overview">
+<section class="home-interaction-settings-panel__section" data-home-interaction-settings-section="overview" aria-label="Session">
   <!-- =============================================================================
-       02) OVERVIEW SYSTEM STATUS
+       02) SESSION STATUS
   ============================================================================= -->
-  <section class="home-interaction-settings-panel__control-group" aria-labelledby="home-interaction-settings-overview-systems-title">
-    <h3 class="home-interaction-settings-panel__control-group-title" id="home-interaction-settings-overview-systems-title">Systems</h3>
-
-    <div class="home-interaction-settings-panel__section-group" aria-label="Control center overview">
-      <div class="home-interaction-settings-panel__toggle-row" aria-label="Chat history status">
-        <span>
-          <span class="home-interaction-settings-panel__option-label">Chat history</span>
-          <span class="home-interaction-settings-panel__option-description">Prepare saved sessions, rename, archive, and retrieval</span>
-        </span>
-      </div>
+  <section class="home-interaction-settings-panel__control-group home-interaction-conversation-overview" aria-label="Conversation status">
+    <div class="home-interaction-conversation-overview__toolbar">
+      <button class="home-interaction-conversation-overview__new" type="button" data-home-interaction-conversation-new aria-label="New session">
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="" aria-hidden="true">
+      </button>
+    </div>
+    <div class="home-interaction-conversation-overview__metrics" aria-label="Conversation metrics">
+      <article class="home-interaction-conversation-overview__metric">
+        <span class="home-interaction-conversation-overview__metric-label">Active session</span>
+        <strong class="home-interaction-conversation-overview__metric-value" data-home-interaction-conversation-active-title>No session yet</strong>
+      </article>
+      <article class="home-interaction-conversation-overview__metric">
+        <span class="home-interaction-conversation-overview__metric-label">Sessions</span>
+        <strong class="home-interaction-conversation-overview__metric-value" data-home-interaction-conversation-count>0 sessions</strong>
+      </article>
+      <article class="home-interaction-conversation-overview__metric">
+        <span class="home-interaction-conversation-overview__metric-label">Messages</span>
+        <strong class="home-interaction-conversation-overview__metric-value" data-home-interaction-conversation-message-count>0 messages</strong>
+      </article>
     </div>
   </section>
+
+  <!-- =============================================================================
+       03) SESSION MANAGEMENT
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group home-interaction-conversations" aria-label="Session management">
+    <div class="home-interaction-conversations__toolbar">
+      <label class="home-interaction-conversations__search">
+        <span class="home-interaction-conversations__label">Search sessions</span>
+        <input class="home-interaction-conversations__input" type="search" autocomplete="off" placeholder="Search" data-home-interaction-conversation-search>
+      </label>
+    </div>
+    <div class="home-interaction-conversations__empty" data-home-interaction-conversation-list-empty>
+      No saved sessions yet.
+    </div>
+    <ol class="home-interaction-conversations__list" data-home-interaction-conversation-list></ol>
+  </section>
+
+  <!-- =============================================================================
+       04) ACTIVE TRANSCRIPT
+  ============================================================================= -->
+  <section class="home-interaction-settings-panel__control-group home-interaction-conversation-transcript" aria-label="Active conversation transcript">
+    <div class="home-interaction-conversation-transcript__empty" data-home-interaction-conversation-empty>
+      Start from the interaction input. The active session will appear here.
+    </div>
+    <ol class="home-interaction-conversation-transcript__list" data-home-interaction-conversation-transcript aria-live="polite"></ol>
+  </section>
+
+  <!-- =============================================================================
+       05) CONVERSATION COMPOSER DOCK
+  ============================================================================= -->
+  <section class="home-interaction-conversation-composer-dock" data-home-interaction-conversation-composer-dock aria-label="Conversation input" hidden></section>
 </section>

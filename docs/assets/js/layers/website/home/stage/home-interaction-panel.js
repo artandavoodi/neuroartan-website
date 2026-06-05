@@ -43,6 +43,7 @@ import {
 const HOME_INTERACTION_PANEL_STATE = {
   isBound: false,
   files: [],
+  activeRuntimeRequestId: 0,
   developerActions: [],
   developerActionsLoaded: false,
   developerRepositories: [],
@@ -111,6 +112,10 @@ function hasHomeInteractionTypedInput(input) {
   return input instanceof HTMLTextAreaElement && input.value.trim().length > 0;
 }
 
+function isHomeInteractionProcessingIntent(value) {
+  return value === 'thinking' || value === 'listening' || value === 'responding';
+}
+
 /* =========================================================
    05. EVENT HELPERS
    ========================================================= */
@@ -140,6 +145,31 @@ function resetHomeInteractionPanel() {
   dispatchHomeInteractionEvent('neuroartan:home-stage-reset-requested', {
     source: 'home-interaction-panel-reset',
   });
+}
+
+function stopHomeInteractionProcessing() {
+  HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId += 1;
+  const submit = document.querySelector('#home-interaction-panel-submit');
+  const icon = submit?.querySelector?.('.home-interaction-panel__continuity-icon img');
+
+  if (submit instanceof HTMLButtonElement) {
+    submit.classList.remove('home-interaction-panel__continuity--stop');
+  }
+
+  if (icon instanceof HTMLImageElement) {
+    delete icon.dataset.originalSrc;
+  }
+
+  dispatchHomeInteractionEvent('neuroartan:home-stage-reset-requested', {
+    source: 'home-interaction-panel-stop',
+  });
+
+  dispatchHomeInteractionEvent('neuroartan:home-stage-voice-mode', {
+    mode: 'idle',
+  });
+
+  setHomeInteractionResponseState('idle');
+  setHomeInteractionResponseContent('');
 }
 
 /* =========================================================
@@ -509,18 +539,23 @@ function submitHomeInteractionQuery() {
   const nodes = getHomeInteractionPanelNodes();
   const query = normalizeHomeInteractionQuery(nodes.input?.value || '');
 
-  
-if (!query) {
-  document.querySelector('#home-interaction-panel-submit')
-    ?.setAttribute('data-voice-mode', 'listening');
+  if (!query) {
+    dispatchHomeInteractionEvent('neuroartan:home-stage-voice-mode', {
+      mode: 'listening',
+    });
 
-  window.dispatchEvent(
-    new CustomEvent('home-stage-voice-start')
-  );
+    document.querySelector('#home-interaction-panel-submit')
+      ?.setAttribute('data-voice-mode', 'listening');
 
-  return;
-}
+    window.dispatchEvent(
+      new CustomEvent('home-stage-voice-start')
+    );
 
+    return;
+  }
+
+  HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId += 1;
+  const runtimeRequestId = HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId;
 
   dispatchHomeInteractionEvent('neuroartan:home-stage-voice-mode', {
     mode: 'thinking',
@@ -539,6 +574,10 @@ if (!query) {
     prompt:query
   })
     .then((response) => {
+      if (runtimeRequestId !== HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId) {
+        return;
+      }
+
       console.log(
         '[ICOS:FINAL:RUNTIME]',
         response
@@ -562,6 +601,10 @@ if (!query) {
       setHomeInteractionResponseState('complete');
     })
     .catch((error) => {
+      if (runtimeRequestId !== HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId) {
+        return;
+      }
+
       console.error(
         '[ICOS:RUNTIME:ERROR]',
         error
@@ -573,6 +616,15 @@ if (!query) {
       );
 
       setHomeInteractionResponseState('complete');
+    })
+    .finally(() => {
+      if (runtimeRequestId !== HOME_INTERACTION_PANEL_STATE.activeRuntimeRequestId) {
+        return;
+      }
+
+      dispatchHomeInteractionEvent('neuroartan:home-stage-voice-mode', {
+        mode: 'idle',
+      });
     });
 
   if (nodes.fileInput instanceof HTMLInputElement) {
@@ -604,7 +656,7 @@ function bindHomeInteractionPanel() {
       return;
     }
 
-    const target = event.target.closest('[data-home-developer-github-connect], [data-home-developer-repositories-discover], [data-home-developer-workspace-create], [data-home-developer-action], [data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-settings-open="true"]');
+    const target = event.target.closest('[data-home-developer-github-connect], [data-home-developer-repositories-discover], [data-home-developer-workspace-create], [data-home-developer-action], [data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-settings-open="true"], #home-interaction-panel-submit');
     if (!target || !root.contains(target)) {
       return;
     }
@@ -652,8 +704,69 @@ function bindHomeInteractionPanel() {
         source: 'home-interaction-panel',
         section: target.dataset.homeInteractionSettingsSection || 'overview',
       });
+      return;
+    }
+
+    const submitButton = target.closest('#home-interaction-panel-submit');
+    if (submitButton) {
+      const submitIntent = getHomeInteractionSubmitIntent();
+
+      if (isHomeInteractionProcessingIntent(submitIntent)) {
+        event.preventDefault();
+        event.stopPropagation();
+        stopHomeInteractionProcessing();
+        return;
+      }
+
+      const nodes = getHomeInteractionPanelNodes();
+
+      if (submitIntent === 'reset' && !hasHomeInteractionTypedInput(nodes.input)) {
+        event.preventDefault();
+        resetHomeInteractionPanel();
+        return;
+      }
+
+      event.preventDefault();
+      submitHomeInteractionQuery();
+      return;
     }
   });
+
+  document.addEventListener('mouseenter', (event) => {
+    const submit = event.target.closest('#home-interaction-panel-submit');
+    if (!(submit instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const submitIntent = getHomeInteractionSubmitIntent();
+    const icon = submit.querySelector('.home-interaction-panel__continuity-icon img');
+    
+    if (icon instanceof HTMLImageElement && isHomeInteractionProcessingIntent(submitIntent)) {
+      icon.dataset.originalSrc = icon.src;
+      icon.src = '/registry/icons/public/assets/core/media/transport/stop.svg';
+      submit.classList.add('home-interaction-panel__continuity--stop');
+    }
+  }, true);
+
+  document.addEventListener('mouseleave', (event) => {
+    const submit = event.target.closest('#home-interaction-panel-submit');
+    if (!(submit instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const icon = submit.querySelector('.home-interaction-panel__continuity-icon img');
+    
+    const submitIntent = getHomeInteractionSubmitIntent();
+
+    if (icon instanceof HTMLImageElement && icon.dataset.originalSrc && isHomeInteractionProcessingIntent(submitIntent)) {
+      icon.src = icon.dataset.originalSrc;
+      delete icon.dataset.originalSrc;
+    } else if (icon instanceof HTMLImageElement) {
+      delete icon.dataset.originalSrc;
+    }
+    
+    submit.classList.remove('home-interaction-panel__continuity--stop');
+  }, true);
 
   document.addEventListener('change', (event) => {
     const developerRepository = event.target.closest('[data-home-developer-repository]');
@@ -694,6 +807,11 @@ function bindHomeInteractionPanel() {
 
     const submitIntent = getHomeInteractionSubmitIntent();
 
+    if (isHomeInteractionProcessingIntent(submitIntent)) {
+      stopHomeInteractionProcessing();
+      return;
+    }
+
     if (submitIntent === 'reset' && !hasHomeInteractionTypedInput(input)) {
       resetHomeInteractionPanel();
       return;
@@ -712,6 +830,11 @@ function bindHomeInteractionPanel() {
 
     const submitIntent = getHomeInteractionSubmitIntent();
     const nodes = getHomeInteractionPanelNodes();
+
+    if (isHomeInteractionProcessingIntent(submitIntent)) {
+      stopHomeInteractionProcessing();
+      return;
+    }
 
     if (submitIntent === 'reset' && !hasHomeInteractionTypedInput(nodes.input)) {
       resetHomeInteractionPanel();

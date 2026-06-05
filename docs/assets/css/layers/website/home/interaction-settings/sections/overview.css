@@ -1,0 +1,186 @@
+.home-interaction-conversation-overview__toolbar{
+  display:flex;
+  justify-content:flex-end;
+  width:var(--size-full);
+  margin-block-end:var(--spacing-sm);
+}
+
+.home-interaction-conversation-overview__new{
+  -webkit-appearance:none;
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--home-interaction-settings-panel-icon-size);
+  height:var(--home-interaction-settings-panel-icon-size);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:none;
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--home-interaction-settings-panel-nav-color);
+  opacity:var(--home-interaction-settings-panel-nav-opacity);
+}
+
+.home-interaction-conversation-overview__new:hover,
+.home-interaction-conversation-overview__new:focus-visible{
+  color:var(--home-interaction-settings-panel-nav-hover-color);
+  opacity:var(--home-interaction-settings-panel-nav-hover-opacity);
+}
+
+.home-interaction-conversation-overview__new img{
+  display:block;
+  width:var(--size-full);
+  height:var(--size-full);
+}
+
+.home-interaction-conversation-overview__metrics{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(var(--spacing-none), 1fr));
+  gap:var(--home-interaction-settings-option-grid-gap);
+  width:var(--size-full);
+}
+
+.home-interaction-conversation-overview__metric{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-xs);
+  min-width:var(--spacing-none);
+  margin:var(--spacing-none);
+  padding:var(--home-interaction-settings-control-group-row-padding-y) var(--home-interaction-settings-control-group-row-padding-x);
+  border-bottom:none;
+}
+
+.home-interaction-conversation-overview__metric-label,
+.home-interaction-conversation-transcript__meta{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:var(--home-interaction-settings-option-description-size);
+  font-weight:var(--home-interaction-settings-option-description-weight);
+  line-height:var(--control-line-height);
+}
+
+.home-interaction-conversation-overview__metric-value{
+  color:var(--home-interaction-settings-panel-control-text);
+  font-size:var(--home-interaction-settings-option-label-size);
+  font-weight:var(--home-interaction-settings-option-label-weight);
+  line-height:var(--control-line-height);
+}
+
+.home-interaction-conversation-transcript{
+  min-height:min(34rem, 62vh);
+}
+
+.home-interaction-conversation-transcript__empty{
+  color:var(--home-interaction-settings-panel-muted-color);
+  font-size:var(--home-interaction-settings-option-description-size);
+  line-height:var(--home-interaction-settings-option-description-line-height);
+}
+
+.home-interaction-conversation-transcript__list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-lg);
+  width:var(--size-full);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  list-style:none;
+}
+
+.home-interaction-conversation-transcript__item{
+  display:flex;
+  width:var(--size-full);
+}
+
+.home-interaction-conversation-transcript__item--user{
+  justify-content:flex-end;
+}
+
+.home-interaction-conversation-transcript__item--assistant{
+  justify-content:flex-start;
+}
+
+.home-interaction-conversation-transcript__bubble{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-sm);
+  max-width:min(42rem, 82%);
+  padding:var(--home-interaction-settings-control-group-row-padding-y) var(--home-interaction-settings-control-group-row-padding-x);
+  border-bottom:none;
+}
+
+.home-interaction-conversation-transcript__content{
+  margin:var(--spacing-none);
+  color:var(--home-interaction-settings-panel-control-text);
+  font-size:var(--home-interaction-settings-option-label-size);
+  font-weight:var(--home-interaction-settings-option-label-weight);
+  line-height:var(--home-interaction-settings-option-description-line-height);
+  white-space:pre-wrap;
+}
+
+.home-interaction-conversation-composer-dock{
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+  padding-block-start:var(--home-interaction-settings-control-group-padding-top);
+}
+
+.home-interaction-conversation-composer-dock[hidden]{
+  display:none;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-active-section="overview"] .home-interaction-settings-panel__content-inner{
+  display:flex;
+  flex-direction:column;
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-active-section="overview"] .home-interaction-settings-panel__section-mount:not([hidden]){
+  display:flex;
+  flex:1 1 auto;
+  min-height:var(--spacing-none);
+}
+
+.home-interaction-settings-panel[data-home-interaction-settings-active-section="overview"] .home-interaction-settings-panel__section{
+  display:grid;
+  grid-template-rows:auto auto minmax(var(--spacing-none), 1fr) auto;
+  align-content:stretch;
+  min-height:var(--size-full);
+}
+
+.home-interaction-settings-panel[data-home-interaction-conversation-docked="true"] .home-interaction-conversation-composer-dock .home-stage-panel-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--home-composition-stage-component-gap, var(--spacing-lg));
+  width:var(--size-full);
+  max-width:var(--size-full);
+  min-width:var(--spacing-none);
+  min-height:var(--spacing-none);
+  max-height:none;
+  overflow:visible;
+}
+
+.home-interaction-settings-panel[data-home-interaction-conversation-docked="true"] .home-interaction-conversation-composer-dock .home-stage-panel-stack__item{
+  width:var(--size-full);
+  max-width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-interaction-settings-panel[data-home-interaction-conversation-docked="true"] .home-interaction-conversation-composer-dock #home-interaction-response-panel-mount{
+  display:none;
+}
+
+.home-interaction-settings-panel[data-home-interaction-conversation-docked="true"] .home-interaction-conversation-composer-dock .home-interaction-panel{
+  width:min(var(--home-interaction-panel-width), var(--size-full));
+  max-width:var(--size-full);
+  margin:var(--spacing-none) auto;
+}
+
+@media (max-width:760px){
+  .home-interaction-conversation-overview__metrics{
+    grid-template-columns:var(--grid-column-single);
+  }
+
+  .home-interaction-conversation-transcript__bubble{
+    max-width:var(--size-full);
+  }
+}

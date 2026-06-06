@@ -1,0 +1,66 @@
+{
+  "schema": "neuroartan.model.foundation.source_calibration.results",
+  "version": "0.1.0",
+  "status": "draft",
+  "language": "en",
+  "result_model": {
+    "primary_output": "Source Profile",
+    "composite_score": "Cognitive Orientation Index",
+    "summary_output": "Source Readiness Summary",
+    "event_name": "Source Calibration Event"
+  },
+  "orientation_bands": {
+    "externalized_control": {
+      "label": "Externalized Control",
+      "description": "Outcomes are often experienced as shaped by outside forces, threat, limitation, or low agency.",
+      "model_support_direction": "Support grounding, agency restoration, clear next steps, careful pacing, and emotional stabilization."
+    },
+    "reflective_agency": {
+      "label": "Reflective Agency",
+      "description": "Patterns, interpretations, choices, and personal contribution can be observed and adjusted.",
+      "model_support_direction": "Support reflection, pattern recognition, reframing, planning, and adaptive interpretation."
+    },
+    "integrated_regulation": {
+      "label": "Integrated Regulation",
+      "description": "Self-regulation, flexible interpretation, internal coherence, and values-aligned action are more stable.",
+      "model_support_direction": "Support strategic continuity, synthesis, advanced reflection, and long-range coherence."
+    }
+  },
+  "result_dimensions": {
+    "control_orientation": {
+      "label": "Control Orientation",
+      "outputs": ["Externalized", "Mixed", "Internalized"]
+    },
+    "agency_level": {
+      "label": "Agency Level",
+      "outputs": ["Low", "Developing", "Stable"]
+    },
+    "regulation_style": {
+      "label": "Regulation Style",
+      "outputs": ["Reactive", "Reflective", "Integrated"]
+    },
+    "cognitive_flexibility": {
+      "label": "Cognitive Flexibility",
+      "outputs": ["Fixed", "Adaptive", "Fluid"]
+    },
+    "narrative_coherence": {
+      "label": "Narrative Coherence",
+      "outputs": ["Fragmented", "Developing", "Coherent"]
+    },
+    "source_readiness": {
+      "label": "Source Readiness",
+      "outputs": ["Initial", "Forming", "Stable"]
+    }
+  },
+  "summary_templates": {
+    "initial": "Your Source Profile is in an initial calibration state. The model should begin with careful grounding, clear context, and gradual agency-building support.",
+    "forming": "Your Source Profile shows forming reflective agency. The model should support pattern recognition, careful memory linking, and adaptive next-step planning.",
+    "stable": "Your Source Profile shows stable integrated regulation. The model may support deeper synthesis, long-range continuity, and more advanced reflective strategy."
+  },
+  "safety_notes": [
+    "Results are calibration signals, not clinical labels, diagnoses, rankings, or fixed identity categories.",
+    "The system must avoid spiritual, ontological, medical, or therapeutic claims.",
+    "The user should be able to recalibrate, review, and understand how Source Calibration affects the model baseline.",
+    "Source Calibration may inform model behavior but must not override consent, safety, governance, or explicit personalization controls."
+  ]
+}

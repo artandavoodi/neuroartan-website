@@ -260,7 +260,64 @@
 
       <section class="model-management__foundation-group" data-model-foundation-group="identity" hidden></section>
       <section class="model-management__foundation-group" data-model-foundation-group="consent" hidden></section>
-      <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden>
+        <h3 class="model-management__section-title">Source Calibration</h3>
+        <p class="model-management__section-copy">
+          Source Calibration establishes the model’s initial cognitive orientation baseline before training, memory continuity, voice training, and personalization are activated.
+        </p>
+
+        <dl class="model-management__card-grid" aria-label="Source Calibration overview">
+          <div class="model-management__card">
+            <dt>Source Profile</dt>
+            <dd data-model-source-profile-status>Not calibrated</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>Cognitive Orientation Index</dt>
+            <dd data-model-source-orientation-index>Pending assessment</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>Source Readiness</dt>
+            <dd data-model-source-readiness>Initial</dd>
+          </div>
+        </dl>
+
+        <div class="model-management__control-groups" data-model-source-calibration>
+          <section class="model-management__control-group" data-model-source-calibration-intro>
+            <h4 class="model-management__control-title">Calibration purpose</h4>
+            <p class="model-management__section-copy">
+              This assessment helps the model understand how you currently interpret agency, control, reflection, emotional regulation, memory continuity, and self-directed action. It is not a diagnosis, clinical test, spiritual framework, or fixed identity label.
+            </p>
+          </section>
+
+          <section class="model-management__control-group" data-model-source-calibration-orientations>
+            <h4 class="model-management__control-title">Orientation bands</h4>
+            <dl class="model-management__card-grid">
+              <div class="model-management__card">
+                <dt>Externalized Control</dt>
+                <dd>Outcomes are often experienced as shaped by outside forces, threat, limitation, or low agency.</dd>
+              </div>
+              <div class="model-management__card">
+                <dt>Reflective Agency</dt>
+                <dd>Patterns, interpretations, choices, and personal contribution can be observed and adjusted.</dd>
+              </div>
+              <div class="model-management__card">
+                <dt>Integrated Regulation</dt>
+                <dd>Self-regulation, flexible interpretation, internal coherence, and values-aligned action are more stable.</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="model-management__control-group" data-model-source-calibration-assessment>
+            <h4 class="model-management__control-title">Assessment</h4>
+            <p class="model-management__section-copy" data-model-source-calibration-status>
+              Question registry, scoring engine, persistence, and audit integration are pending implementation.
+            </p>
+            <button class="model-management__button" type="button" data-model-source-calibration-start disabled>
+              Start Source Calibration
+            </button>
+          </section>
+        </div>
+      </section>
       <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden></section>
       <section class="model-management__foundation-group" data-model-foundation-group="voice" hidden></section>
     </article>

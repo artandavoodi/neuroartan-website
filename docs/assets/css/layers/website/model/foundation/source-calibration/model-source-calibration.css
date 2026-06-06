@@ -1,0 +1,58 @@
+/* MARK: - Source Calibration */
+
+.model-source-calibration__question,
+.model-source-calibration__result {
+  display: grid;
+  gap: var(--spacing-lg);
+  margin-block-start: var(--spacing-xl);
+}
+
+.model-source-calibration__progress,
+.model-source-calibration__scale-labels,
+.model-source-calibration__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.model-source-calibration__progress,
+.model-source-calibration__scale-labels {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.model-source-calibration__progress-bar {
+  block-size: var(--border-width-thin);
+  overflow: hidden;
+  background: var(--color-border-subtle);
+}
+
+.model-source-calibration__progress-bar span {
+  display: block;
+  block-size: 100%;
+  background: currentColor;
+}
+
+.model-source-calibration__question-text {
+  max-inline-size: 64ch;
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+}
+
+.model-source-calibration__slider {
+  inline-size: 100%;
+}
+
+.model-source-calibration__result-title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}

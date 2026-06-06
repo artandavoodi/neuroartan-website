@@ -46,6 +46,9 @@ const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
 const MODEL_CHANGELOG_EVENTS_TABLE = 'model_changelog_events';
 const MODEL_DEFAULT_REGISTRY_TABLE = 'model_default_registry';
+const MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE = 'model_source_calibration_sessions';
+const MODEL_SOURCE_CALIBRATION_ANSWERS_TABLE = 'model_source_calibration_answers';
+const MODEL_SOURCE_CALIBRATION_RESULTS_TABLE = 'model_source_calibration_results';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -203,6 +206,9 @@ export function getModelStoreBackendState() {
     modelLogicRecordsTable: MODEL_LOGIC_RECORDS_TABLE,
     modelChangelogEventsTable: MODEL_CHANGELOG_EVENTS_TABLE,
     modelDefaultRegistryTable: MODEL_DEFAULT_REGISTRY_TABLE,
+    modelSourceCalibrationSessionsTable: MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE,
+    modelSourceCalibrationAnswersTable: MODEL_SOURCE_CALIBRATION_ANSWERS_TABLE,
+    modelSourceCalibrationResultsTable: MODEL_SOURCE_CALIBRATION_RESULTS_TABLE,
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
     migrationStatus: 'supabase_canonical_model_foundation',
   };
@@ -964,6 +970,190 @@ export async function recordModelAuditEvent(model = {}, event = {}) {
   }
 
   return data || null;
+}
+
+export async function saveModelSourceCalibrationResult(model = {}, calibration = {}) {
+  const supabase = await resolveSupabaseClient();
+  const modelId = normalizeString(model?.id || calibration.model_id || calibration.modelId || '');
+  const currentProfile = normalizeString(model?.profile_id || calibration.profile_id || calibration.profileId || '')
+    ? null
+    : await getCurrentModelOwnerProfile();
+  const profileId = normalizeString(model?.profile_id || calibration.profile_id || calibration.profileId || currentProfile?.id || '');
+
+  if (!supabase || !modelId || !profileId || !calibration?.result) {
+    console.warn('[Neuroartan][Model] Source Calibration save skipped.', {
+      hasSupabase: Boolean(supabase),
+      modelId,
+      profileId,
+      hasResult: Boolean(calibration?.result),
+    });
+    return null;
+  }
+
+  const result = calibration.result || {};
+  const sourceProfile = {
+    cognitive_orientation_index: result.cognitive_orientation_index ?? null,
+    dominant_orientation: normalizeString(result.dominant_orientation || ''),
+    source_readiness: normalizeString(result.source_readiness || ''),
+    dimension_outputs: result.dimension_outputs || {},
+  };
+
+  const { data: session, error: sessionError } = await supabase
+    .from(MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE)
+    .insert({
+      model_id: modelId,
+      profile_id: profileId,
+      session_status: 'completed',
+      calibration_version: normalizeString(calibration.calibration_version || result.version || '0.1.0'),
+      question_version: normalizeString(calibration.question_version || calibration.questions?.version || '0.1.0'),
+      scale_version: normalizeString(calibration.scale_version || calibration.scale?.version || '0.1.0'),
+      results_version: normalizeString(calibration.results_version || calibration.results?.version || '0.1.0'),
+      source_profile: sourceProfile,
+      cognitive_orientation_index: result.cognitive_orientation_index ?? null,
+      dominant_orientation: normalizeString(result.dominant_orientation || ''),
+      source_readiness: normalizeString(result.source_readiness || ''),
+      consent_state: normalizeString(calibration.consent_state || 'source_calibration_completed'),
+      completed_at: result.completed_at || new Date().toISOString(),
+    })
+    .select('*')
+    .maybeSingle();
+
+  if (sessionError) {
+    if (isSupabaseRelationMissingError(sessionError)) return null;
+    console.warn('[Neuroartan][Model] Source Calibration session insert failed.', sessionError);
+    throw sessionError;
+  }
+
+  const sessionId = normalizeString(session?.id || '');
+  if (!sessionId) return null;
+
+  const questions = Array.isArray(calibration.questions?.questions)
+    ? calibration.questions.questions
+    : Array.isArray(calibration.questions)
+      ? calibration.questions
+      : [];
+  const answers = calibration.answers || {};
+  const answerPayload = questions
+    .filter((question) => answers[question.id] !== undefined)
+    .map((question) => {
+      const answerValue = normalizeSourceCalibrationNumber(answers[question.id]);
+      return {
+        session_id: sessionId,
+        model_id: modelId,
+        profile_id: profileId,
+        question_id: normalizeString(question.id || ''),
+        construct: normalizeString(question.construct || ''),
+        dimension: normalizeString(question.dimension || ''),
+        orientation_band: normalizeString(question.orientation_band || ''),
+        answer_value: answerValue,
+        scored_value: question.reverse_scored ? 10 - answerValue : answerValue,
+        reverse_scored: question.reverse_scored === true,
+        weight: Number(question.weight || 1),
+        question_text: normalizeString(question.text || ''),
+      };
+    });
+
+  if (answerPayload.length) {
+    const { error: answersError } = await supabase
+      .from(MODEL_SOURCE_CALIBRATION_ANSWERS_TABLE)
+      .insert(answerPayload);
+
+    if (answersError) {
+      if (!isSupabaseRelationMissingError(answersError)) {
+        console.warn('[Neuroartan][Model] Source Calibration answers insert failed.', answersError);
+        throw answersError;
+      }
+    }
+  }
+
+  const { data: savedResult, error: resultError } = await supabase
+    .from(MODEL_SOURCE_CALIBRATION_RESULTS_TABLE)
+    .insert({
+      session_id: sessionId,
+      model_id: modelId,
+      profile_id: profileId,
+      cognitive_orientation_index: result.cognitive_orientation_index ?? 0,
+      dominant_orientation: normalizeString(result.dominant_orientation || ''),
+      source_readiness: normalizeString(result.source_readiness || ''),
+      orientation_scores: result.orientation_scores || {},
+      construct_scores: result.construct_scores || {},
+      dimension_scores: result.dimension_scores || {},
+      dimension_outputs: result.dimension_outputs || {},
+      source_readiness_summary: normalizeString(result.source_readiness_summary || ''),
+      result_payload: result,
+    })
+    .select('*')
+    .maybeSingle();
+
+  if (resultError) {
+    if (isSupabaseRelationMissingError(resultError)) return { session, result: null };
+    console.warn('[Neuroartan][Model] Source Calibration result insert failed.', resultError);
+    throw resultError;
+  }
+
+  await recordModelAuditEvent({ id: modelId, profile_id: profileId }, {
+    area: 'foundation',
+    pane: 'sources',
+    section: 'source_calibration',
+    field: 'source_profile',
+    label: 'Source Profile',
+    action: 'source_calibration_completed',
+    from: null,
+    to: result.source_readiness || '',
+    source: 'source_calibration',
+  });
+
+  return {
+    session,
+    result: savedResult || null,
+    answers: answerPayload,
+  };
+}
+
+export async function readLatestModelSourceCalibrationResult(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_SOURCE_CALIBRATION_RESULTS_TABLE)
+    .select('*, model_source_calibration_sessions(*)')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return data || null;
+}
+
+export async function listModelSourceCalibrationSessions(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  const { data, error } = await supabase
+    .from(MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+function normalizeSourceCalibrationNumber(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 0;
+  return Math.max(0, Math.min(10, Math.round(numericValue * 10) / 10));
 }
 
 export async function saveModelPersonalizationPreferences(modelId, preferences = {}) {

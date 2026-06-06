@@ -44,6 +44,11 @@ import {
   isPublicModelNavigation
 } from '../navigation/model-tab-registry.js';
 
+import {
+  initializeSourceCalibration,
+  refreshSourceCalibration
+} from '../foundation/source-calibration/00-source-calibration-all.js';
+
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_CHANGELOG_STORAGE_KEY = 'neuroartan.model.changelog.records';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
@@ -1667,6 +1672,12 @@ function renderModelFoundationGroups(root, navigationState = getProfileNavigatio
     if (!(group instanceof HTMLElement)) return;
     group.hidden = group.dataset.modelFoundationGroup !== visibleGroup;
   });
+
+  if (visibleGroup === 'sources') {
+    void initializeSourceCalibration(root).then(() => {
+      refreshSourceCalibration();
+    });
+  }
 }
 
 function renderModelTrainingGroups(root, navigationState = getProfileNavigationState()) {

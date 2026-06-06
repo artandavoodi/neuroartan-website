@@ -38,7 +38,7 @@ const ACTION_ICONS = Object.freeze({
   modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   modelLearn: '/registry/icons/public/assets/layers/website/model/actions/learn.svg',
-  modelDataManager: '/registry/icons/public/assets/core/files/database/database.svg',
+  modelDataManager: '/registry/icons/public/assets/layers/website/model/actions/data-manager.svg',
   modelReset: '/registry/icons/public/assets/core/actions/reset/reset.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',

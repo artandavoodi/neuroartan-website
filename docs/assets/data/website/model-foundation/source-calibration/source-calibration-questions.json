@@ -1,0 +1,640 @@
+{
+  "schema": "neuroartan.model.foundation.source_calibration.questions",
+  "version": "0.1.0",
+  "status": "draft",
+  "language": "en",
+  "assessment": {
+    "title": "Source Calibration",
+    "primary_output": "Source Profile",
+    "composite_score": "Cognitive Orientation Index",
+    "summary_output": "Source Readiness Summary",
+    "scale_ref": "source-calibration-scale.json",
+    "results_ref": "source-calibration-results.json",
+    "question_count": 60,
+    "notes": [
+      "This registry is English-only for the first implementation phase.",
+      "Questions are calibration prompts, not diagnostic or clinical instruments.",
+      "The registry transforms the archived Spectrum of Awareness intent into scientific, product-safe Source Calibration language.",
+      "Questions should be presented in a randomized and balanced order across constructs and orientation bands."
+    ]
+  },
+  "constructs": {
+    "perceived_control": "How much influence the user feels they have over actions, choices, and outcomes.",
+    "attribution_style": "How the user explains causes of events, difficulty, success, failure, and interpersonal experience.",
+    "reflective_agency": "The user’s ability to observe patterns, interpretations, and decisions without collapsing into blame or avoidance.",
+    "cognitive_flexibility": "The user’s ability to update interpretations when new evidence, context, or perspective appears.",
+    "emotional_regulation": "The user’s ability to notice, tolerate, and respond to emotion without losing clarity or direction.",
+    "metacognitive_awareness": "The user’s ability to notice thoughts as thoughts and evaluate the reliability of interpretations.",
+    "narrative_coherence": "The degree to which past, present, values, and direction feel connected.",
+    "values_aligned_action": "The ability to act according to chosen direction even when discomfort, uncertainty, or conflict is present.",
+    "uncertainty_tolerance": "The ability to remain functional without complete certainty.",
+    "social_interpretation": "The way the user interprets others’ behavior, intention, distance, and response."
+  },
+  "orientation_bands": [
+    "externalized_control",
+    "reflective_agency",
+    "integrated_regulation"
+  ],
+  "questions": [
+    {
+      "id": "source_perceived_control_001",
+      "construct": "perceived_control",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "When something goes wrong, I usually feel that outside circumstances decide what happens next.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_perceived_control_002",
+      "construct": "perceived_control",
+      "dimension": "agency_level",
+      "orientation_band": "reflective_agency",
+      "text": "Even when conditions are difficult, I can usually identify at least one useful next step.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_perceived_control_003",
+      "construct": "perceived_control",
+      "dimension": "agency_level",
+      "orientation_band": "integrated_regulation",
+      "text": "I can separate what I cannot control from the choices that remain available to me.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_perceived_control_004",
+      "construct": "perceived_control",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "When pressure increases, I often feel that my actions will not make much difference.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_perceived_control_005",
+      "construct": "perceived_control",
+      "dimension": "agency_level",
+      "orientation_band": "reflective_agency",
+      "text": "I can usually recognize how my response influences the direction of a situation.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_perceived_control_006",
+      "construct": "perceived_control",
+      "dimension": "agency_level",
+      "orientation_band": "integrated_regulation",
+      "text": "I can stay oriented toward action without needing complete control over the outcome.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_001",
+      "construct": "attribution_style",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "When I experience difficulty, I often assume the cause is mainly outside of me.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_002",
+      "construct": "attribution_style",
+      "dimension": "control_orientation",
+      "orientation_band": "reflective_agency",
+      "text": "I can look at a problem from more than one causal angle before deciding what it means.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_003",
+      "construct": "attribution_style",
+      "dimension": "control_orientation",
+      "orientation_band": "integrated_regulation",
+      "text": "I can recognize external causes, personal contribution, and timing without reducing everything to one explanation.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_004",
+      "construct": "attribution_style",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "When people disappoint me, I often interpret it as proof that the situation is against me.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_005",
+      "construct": "attribution_style",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "reflective_agency",
+      "text": "I can question my first explanation of an event when new context appears.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_attribution_style_006",
+      "construct": "attribution_style",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "integrated_regulation",
+      "text": "I can hold multiple explanations for an event without losing clarity or direction.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_001",
+      "construct": "reflective_agency",
+      "dimension": "agency_level",
+      "orientation_band": "externalized_control",
+      "text": "I often react before I can clearly see what interpretation is driving my response.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_002",
+      "construct": "reflective_agency",
+      "dimension": "agency_level",
+      "orientation_band": "reflective_agency",
+      "text": "I can notice repeated patterns in my choices without immediately blaming myself or others.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_003",
+      "construct": "reflective_agency",
+      "dimension": "agency_level",
+      "orientation_band": "integrated_regulation",
+      "text": "I can use self-observation to adjust my next action instead of only analyzing what went wrong.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_004",
+      "construct": "reflective_agency",
+      "dimension": "regulation_style",
+      "orientation_band": "externalized_control",
+      "text": "When I feel misunderstood, it is difficult for me to pause before defending my position.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_005",
+      "construct": "reflective_agency",
+      "dimension": "regulation_style",
+      "orientation_band": "reflective_agency",
+      "text": "I can usually identify the difference between what happened and the meaning I gave it.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_reflective_agency_006",
+      "construct": "reflective_agency",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can reflect on my own role in a situation without turning reflection into self-criticism.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_001",
+      "construct": "cognitive_flexibility",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "externalized_control",
+      "text": "Once I form an interpretation, it is hard for me to consider that another interpretation may also be valid.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_002",
+      "construct": "cognitive_flexibility",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "reflective_agency",
+      "text": "I can revise my view when evidence, context, or timing changes.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_003",
+      "construct": "cognitive_flexibility",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "integrated_regulation",
+      "text": "I can move between practical, emotional, and strategic perspectives without becoming confused.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_004",
+      "construct": "cognitive_flexibility",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "externalized_control",
+      "text": "Under stress, I tend to see fewer options than I may actually have.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_005",
+      "construct": "cognitive_flexibility",
+      "dimension": "source_readiness",
+      "orientation_band": "reflective_agency",
+      "text": "I can compare different interpretations before choosing how to respond.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_cognitive_flexibility_006",
+      "construct": "cognitive_flexibility",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can stay coherent while adapting my plan to new information.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_001",
+      "construct": "emotional_regulation",
+      "dimension": "regulation_style",
+      "orientation_band": "externalized_control",
+      "text": "Strong emotion often makes it hard for me to tell what is real, urgent, or temporary.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_002",
+      "construct": "emotional_regulation",
+      "dimension": "regulation_style",
+      "orientation_band": "reflective_agency",
+      "text": "I can usually name what I am feeling before deciding what to do with it.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_003",
+      "construct": "emotional_regulation",
+      "dimension": "regulation_style",
+      "orientation_band": "integrated_regulation",
+      "text": "I can feel emotion clearly without letting it fully control my interpretation or action.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_004",
+      "construct": "emotional_regulation",
+      "dimension": "regulation_style",
+      "orientation_band": "externalized_control",
+      "text": "When I feel threatened or rejected, I often lose access to balanced thinking.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_005",
+      "construct": "emotional_regulation",
+      "dimension": "regulation_style",
+      "orientation_band": "reflective_agency",
+      "text": "I can usually slow down enough to respond rather than only react.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_emotional_regulation_006",
+      "construct": "emotional_regulation",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can use emotional information as a signal without treating it as the whole truth.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_001",
+      "construct": "metacognitive_awareness",
+      "dimension": "source_readiness",
+      "orientation_band": "externalized_control",
+      "text": "I often experience my thoughts as facts before I can examine them.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_002",
+      "construct": "metacognitive_awareness",
+      "dimension": "source_readiness",
+      "orientation_band": "reflective_agency",
+      "text": "I can notice when my mind is making a prediction rather than reporting certainty.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_003",
+      "construct": "metacognitive_awareness",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can observe a thought, evaluate it, and choose whether it deserves my attention.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_004",
+      "construct": "metacognitive_awareness",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "externalized_control",
+      "text": "When a thought feels intense, I often assume it must be accurate.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_005",
+      "construct": "metacognitive_awareness",
+      "dimension": "source_readiness",
+      "orientation_band": "reflective_agency",
+      "text": "I can recognize when attention, mood, or memory may be shaping my interpretation.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_metacognitive_awareness_006",
+      "construct": "metacognitive_awareness",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can use reflection to improve perception without becoming detached from practical action.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_001",
+      "construct": "narrative_coherence",
+      "dimension": "narrative_coherence",
+      "orientation_band": "externalized_control",
+      "text": "My past often feels like something that happened to me rather than something I can understand and integrate.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_002",
+      "construct": "narrative_coherence",
+      "dimension": "narrative_coherence",
+      "orientation_band": "reflective_agency",
+      "text": "I can identify patterns between my past experiences and my current choices.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_003",
+      "construct": "narrative_coherence",
+      "dimension": "narrative_coherence",
+      "orientation_band": "integrated_regulation",
+      "text": "I can connect past experience, present reality, and future direction without being trapped by any one of them.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_004",
+      "construct": "narrative_coherence",
+      "dimension": "narrative_coherence",
+      "orientation_band": "externalized_control",
+      "text": "When I remember painful events, it is difficult to see any continuity beyond the pain itself.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_005",
+      "construct": "narrative_coherence",
+      "dimension": "narrative_coherence",
+      "orientation_band": "reflective_agency",
+      "text": "I can understand my history without letting it fully define my next decision.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_narrative_coherence_006",
+      "construct": "narrative_coherence",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "My sense of direction can include complexity, contradiction, and growth without collapsing into confusion.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_001",
+      "construct": "values_aligned_action",
+      "dimension": "agency_level",
+      "orientation_band": "externalized_control",
+      "text": "When I feel uncomfortable, it is difficult for me to act according to what matters to me.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_002",
+      "construct": "values_aligned_action",
+      "dimension": "agency_level",
+      "orientation_band": "reflective_agency",
+      "text": "I can usually identify what matters most before choosing my next action.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_003",
+      "construct": "values_aligned_action",
+      "dimension": "agency_level",
+      "orientation_band": "integrated_regulation",
+      "text": "I can act according to chosen values even when the situation is uncertain or emotionally difficult.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_004",
+      "construct": "values_aligned_action",
+      "dimension": "agency_level",
+      "orientation_band": "externalized_control",
+      "text": "I often wait for circumstances or other people to change before I move toward what matters to me.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_005",
+      "construct": "values_aligned_action",
+      "dimension": "source_readiness",
+      "orientation_band": "reflective_agency",
+      "text": "I can turn reflection into a practical next step.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_values_aligned_action_006",
+      "construct": "values_aligned_action",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "My actions can remain aligned with my direction even when my feelings are changing.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_001",
+      "construct": "uncertainty_tolerance",
+      "dimension": "regulation_style",
+      "orientation_band": "externalized_control",
+      "text": "Uncertainty often makes me feel that I cannot move forward safely.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_002",
+      "construct": "uncertainty_tolerance",
+      "dimension": "regulation_style",
+      "orientation_band": "reflective_agency",
+      "text": "I can make a reasonable choice without having every answer first.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_003",
+      "construct": "uncertainty_tolerance",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can remain steady while holding incomplete information.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_004",
+      "construct": "uncertainty_tolerance",
+      "dimension": "regulation_style",
+      "orientation_band": "externalized_control",
+      "text": "When I do not know what will happen, my mind often fills the gap with threat-based predictions.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_005",
+      "construct": "uncertainty_tolerance",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "reflective_agency",
+      "text": "I can treat uncertainty as information to work with, not only as a problem to remove.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_uncertainty_tolerance_006",
+      "construct": "uncertainty_tolerance",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can keep thinking clearly while a situation is still unresolved.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_001",
+      "construct": "social_interpretation",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "When someone is distant or unclear, I often assume it means something negative about me or the relationship.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_002",
+      "construct": "social_interpretation",
+      "dimension": "cognitive_flexibility",
+      "orientation_band": "reflective_agency",
+      "text": "I can consider several possible reasons for another person’s behavior before reacting.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_003",
+      "construct": "social_interpretation",
+      "dimension": "regulation_style",
+      "orientation_band": "integrated_regulation",
+      "text": "I can stay grounded in social uncertainty without immediately personalizing it.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_004",
+      "construct": "social_interpretation",
+      "dimension": "control_orientation",
+      "orientation_band": "externalized_control",
+      "text": "Other people’s reactions can quickly change how safe, capable, or stable I feel.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_005",
+      "construct": "social_interpretation",
+      "dimension": "source_readiness",
+      "orientation_band": "reflective_agency",
+      "text": "I can separate someone else’s behavior from my own worth or direction.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    },
+    {
+      "id": "source_social_interpretation_006",
+      "construct": "social_interpretation",
+      "dimension": "source_readiness",
+      "orientation_band": "integrated_regulation",
+      "text": "I can respond to others from clarity rather than from immediate threat, approval-seeking, or withdrawal.",
+      "reverse_scored": false,
+      "weight": 1,
+      "review_status": "draft"
+    }
+  ]
+}

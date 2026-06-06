@@ -1,0 +1,113 @@
+{
+  "schema": "neuroartan.model.foundation.personality.framework",
+  "version": "0.1.0",
+  "status": "draft",
+  "language": "en",
+  "placement": {
+    "section": "model-foundation",
+    "pane": "personality",
+    "order": ["overview", "identity", "consent", "sources", "memory", "personality", "voice"],
+    "rationale": "Source defines baseline agency and orientation. Memory defines accumulated pattern. Personality organizes stable style. Voice expresses it."
+  },
+  "product_positioning": {
+    "concept": "Personality Calibration",
+    "definition": "Personality is stable cognitive style, motivational pattern, interpersonal expression, and adaptive risk pattern.",
+    "user_copy": "Personality Calibration helps the model understand how you tend to think, decide, relate, react, and express yourself without reducing you to a fixed type.",
+    "avoid": [
+      "diagnostic labels",
+      "clinical claims",
+      "MBTI as product truth",
+      "Enneagram as product truth",
+      "fixed identity labels",
+      "public ranking"
+    ]
+  },
+  "layers": [
+    {
+      "key": "trait_layer",
+      "label": "Trait Layer",
+      "role": "Scientific backbone",
+      "scoring": "spectrum",
+      "dimensions": [
+        "openness_exploration",
+        "structure_conscientious_regulation",
+        "social_energy_interpersonal_direction",
+        "sensitivity_affective_reactivity",
+        "assertiveness_agency_expression"
+      ]
+    },
+    {
+      "key": "archetype_layer",
+      "label": "Archetype Layer",
+      "role": "Readable result",
+      "scoring": "motivational_pattern",
+      "archetypes": [
+        "builder",
+        "seeker",
+        "integrator",
+        "protector",
+        "strategist",
+        "creator",
+        "mediator",
+        "challenger",
+        "caretaker"
+      ],
+      "framing": "Motivational archetype, not identity label."
+    },
+    {
+      "key": "model_behavior_layer",
+      "label": "Model-Behavior Layer",
+      "role": "Neuroartan-native output",
+      "outputs": [
+        "reflection_style",
+        "pacing",
+        "directness",
+        "emotional_sensitivity",
+        "decision_support_style",
+        "challenge_tolerance",
+        "memory_linking_preference",
+        "voice_persona_alignment"
+      ]
+    }
+  ],
+  "brain_maturity_map": {
+    "purpose": "Show how much of the model foundation has been calibrated, connected, and validated.",
+    "node_groups": {
+      "source": ["agency", "regulation", "orientation"],
+      "personality": ["traits", "motivation", "expression"],
+      "memory": ["recurring_domains", "recurring_patterns"],
+      "voice": ["tone", "rhythm", "identity_expression"]
+    },
+    "node_states": {
+      "calibrated": "stable",
+      "forming": "partial data",
+      "missing": "needs calibration",
+      "neutral": "not started",
+      "inconsistent": "needs recalibration"
+    },
+    "edges": [
+      "source_to_personality",
+      "personality_to_voice",
+      "memory_to_personality",
+      "source_to_memory",
+      "identity_to_all_layers",
+      "consent_to_private_public_access"
+    ]
+  },
+  "implementation_pattern": {
+    "reference": "model-foundation/source-calibration",
+    "required_modules": [
+      "registry_json",
+      "state_engine",
+      "renderer",
+      "controller",
+      "workspace_overlay",
+      "supabase_persistence",
+      "changelog",
+      "learn",
+      "summary",
+      "draft_restore",
+      "right_toolbar_actions"
+    ]
+  }
+}

@@ -387,6 +387,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],
+  personality: ['modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelLearn', 'modelReset', 'modelChangelog']
 });
 

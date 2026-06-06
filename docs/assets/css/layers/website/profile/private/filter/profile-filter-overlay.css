@@ -39,7 +39,11 @@
   backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   pointer-events:auto;
-  scrollbar-width:thin;
+  scrollbar-width:none;
+}
+
+.profile-filter-overlay__dialog::-webkit-scrollbar{
+  display:none;
 }
 
 .profile-filter-overlay__dialog:has(.profile-filter-overlay__confirm-layer){
@@ -117,6 +121,12 @@
   background:var(--overlay-popover-surface);
   box-shadow:var(--home-panel-shadow);
   text-align:center;
+  scrollbar-width:none;
+}
+
+.ui-confirm-card::-webkit-scrollbar,
+.profile-filter-overlay__confirm-card::-webkit-scrollbar{
+  display:none;
 }
 
 .ui-confirm-card strong,

@@ -175,6 +175,8 @@ const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   taskPersistence: 70
 });
 
+let modelPersonalizationDefaultOverrides = {};
+
 const MODEL_PERSONALIZATION_PANE_GROUPS = Object.freeze({
   cognition: 'cognition',
   communication: 'communication',
@@ -300,6 +302,7 @@ const MODEL_FOUNDATION_PANE_GROUPS = Object.freeze({
   consent: 'consent',
   sources: 'sources',
   memory: 'memory',
+  personality: 'personality',
   voice: 'voice'
 });
 
@@ -479,6 +482,10 @@ const PANE_LABELS = Object.freeze({
     title: 'Memory',
     summary: 'Separate private cognitive substrate from public expression before anything becomes model context.'
   },
+  personality: {
+    title: 'Personality',
+    summary: 'Calibrate stable cognitive style, motivational pattern, interpersonal expression, and model reflection behavior.'
+  },
   voice: {
     title: 'Voice',
     summary: 'Prepare consent-bound voice material for future owner-representative response and interaction.'
@@ -591,9 +598,20 @@ function setText(root, selector, value) {
   });
 }
 
-function normalizeModelPersonalizationPreferences(value = {}) {
+function getModelPersonalizationDefaults() {
   return {
     ...MODEL_PERSONALIZATION_DEFAULTS,
+    ...modelPersonalizationDefaultOverrides
+  };
+}
+
+function getModelPersonalizationDefaultValue(field) {
+  return getModelPersonalizationDefaults()[field];
+}
+
+function normalizeModelPersonalizationPreferences(value = {}) {
+  return {
+    ...getModelPersonalizationDefaults(),
     ...(value && typeof value === 'object' ? value : {})
   };
 }
@@ -607,7 +625,7 @@ function getSafeModelPersonalizationSelectValue(select, field) {
     return currentValue;
   }
 
-  const defaultValue = String(MODEL_PERSONALIZATION_DEFAULTS[field] ?? '');
+  const defaultValue = String(getModelPersonalizationDefaultValue(field) ?? '');
   if (optionValues.includes(defaultValue)) {
     return defaultValue;
   }
@@ -670,11 +688,13 @@ function normalizeModelDefaultRegistryValue(record = {}) {
 function applyModelDefaultRegistryRecords(records = []) {
   if (!Array.isArray(records) || !records.length) return;
 
+  const nextOverrides = { ...modelPersonalizationDefaultOverrides };
   records.forEach((record) => {
     const field = String(record?.field || '').trim();
     if (!field || !Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_DEFAULTS, field)) return;
-    MODEL_PERSONALIZATION_DEFAULTS[field] = normalizeModelDefaultRegistryValue(record);
+    nextOverrides[field] = normalizeModelDefaultRegistryValue(record);
   });
+  modelPersonalizationDefaultOverrides = nextOverrides;
 }
 
 function mapBackendModelChangelogEvent(event = {}) {
@@ -759,7 +779,7 @@ function getModelPersonalizationResetPatch(filters = {}) {
 
   if (field !== 'all' && Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_DEFAULTS, field)) {
     return {
-      [field]: MODEL_PERSONALIZATION_DEFAULTS[field]
+      [field]: getModelPersonalizationDefaultValue(field)
     };
   }
 
@@ -768,7 +788,7 @@ function getModelPersonalizationResetPatch(filters = {}) {
     if (area === 'personalization' && metadata.area !== 'personalization') return;
     if (pane !== 'all' && metadata.pane !== pane) return;
     if (section !== 'all' && metadata.section !== section) return;
-    patch[fieldKey] = MODEL_PERSONALIZATION_DEFAULTS[fieldKey];
+    patch[fieldKey] = getModelPersonalizationDefaultValue(fieldKey);
   });
 
   return patch;
@@ -1259,17 +1279,25 @@ async function handleModelSourceSummaryOpenRequest() {
   removeModelSourceSummaryOverlay();
 
   const overlay = document.createElement('section');
-  overlay.className = 'ui-confirm-layer';
+  overlay.className = 'model-source-calibration-workspace';
   overlay.dataset.modelSourceSummaryOverlay = '';
   overlay.setAttribute('role', 'dialog');
   overlay.setAttribute('aria-modal', 'true');
   overlay.setAttribute('aria-label', 'Source readiness summary');
   overlay.innerHTML = `
-    <article class="ui-confirm-card">
-      <h2>Source summary</h2>
-      <p>Loading private Source Calibration summary.</p>
-      <div class="ui-confirm-actions">
-        <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
+    <div class="model-source-calibration-workspace__backdrop" data-model-source-summary-close></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Source summary">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-source-calibration-workspace__progress">Summary</span>
+        <button class="global-close-button" type="button" data-model-source-summary-close aria-label="Close Source summary">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-source-calibration-workspace__result">
+          <p class="model-management__section-copy">Loading private Source summary.</p>
+        </section>
       </div>
     </article>
   `;
@@ -1280,41 +1308,42 @@ async function handleModelSourceSummaryOpenRequest() {
     const model = await getOwnedCanonicalModel();
     const latest = model?.id ? await readLatestModelSourceCalibrationResult(model.id) : null;
     const payload = latest?.result_payload || latest || {};
-    const card = overlay.querySelector('.ui-confirm-card');
+    const card = overlay.querySelector('.model-source-calibration-workspace__result');
 
     if (!(card instanceof HTMLElement)) return;
 
     if (!latest) {
       card.innerHTML = `
-        <h2>Source summary</h2>
-        <p>No Source Calibration result has been recorded yet.</p>
-        <div class="ui-confirm-actions">
-          <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
-        </div>
+        <p class="model-management__section-copy">No Source Profile has been saved yet.</p>
       `;
       return;
     }
 
     card.innerHTML = `
-      <h2>Source summary</h2>
-      <p>${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is recorded as private model foundation data.'}</p>
-      <dl class="model-management__card-grid">
+      <p class="model-management__section-copy">${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is saved as private model foundation data.'}</p>
+      <dl class="model-management__card-grid model-source-calibration__result-grid">
         <div class="model-management__card">
-          <dt>Cognitive Orientation Index</dt>
+          <dt>
+            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/cognitive-orientation-index/cognitive-orientation-index.svg" alt="">
+            Cognitive Orientation Index
+          </dt>
           <dd>${payload.cognitive_orientation_index ?? latest.cognitive_orientation_index ?? 'Not recorded'}</dd>
         </div>
         <div class="model-management__card">
-          <dt>Dominant Orientation</dt>
+          <dt>
+            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/source-profile/source-profile.svg" alt="">
+            Dominant Orientation
+          </dt>
           <dd>${formatSourceSummaryValue(payload.dominant_orientation || latest.dominant_orientation)}</dd>
         </div>
         <div class="model-management__card">
-          <dt>Source Readiness</dt>
+          <dt>
+            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/source-readiness/source-readiness.svg" alt="">
+            Source Readiness
+          </dt>
           <dd>${formatSourceSummaryValue(payload.source_readiness || latest.source_readiness)}</dd>
         </div>
       </dl>
-      <div class="ui-confirm-actions">
-        <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
-      </div>
     `;
   } catch (error) {
     console.warn('[Neuroartan][Model] Source summary overlay failed.', error);
@@ -1475,6 +1504,10 @@ function setModelManagementLoading(root, loading) {
   const loadingNode = ensureModelManagementLoadingNode(root);
   if (loadingNode instanceof HTMLElement) {
     loadingNode.hidden = !loading;
+  }
+  const sections = root.querySelector('.model-management__sections');
+  if (sections instanceof HTMLElement) {
+    sections.hidden = loading;
   }
   root.dataset.modelHydrationState = loading ? 'resolving' : 'ready';
   root.setAttribute('aria-busy', loading ? 'true' : 'false');
@@ -2534,7 +2567,7 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   setText(root, '[data-model-owner-name]', displayName || 'Profile owner');
   setText(root, '[data-model-owner-handle]', username ? `@${username}` : '@username');
   setText(root, '[data-model-owner-id]', profile.id || profile.auth_user_id || 'Owner record pending');
-  setText(root, '#model-management-title', paneCopy.title === 'Overview' ? sectionCopy.title : paneCopy.title);
+  setText(root, '#model-management-title', paneCopy.title || sectionCopy.title);
   setText(root, '[data-model-management-summary]', paneCopy.summary || sectionCopy.summary);
   setText(root, '[data-model-status]', profileComplete ? 'Foundation active' : 'Foundation incomplete');
   setText(root, '[data-model-profile-link]', username ? `Profile linked to @${username}` : 'Profile route pending');

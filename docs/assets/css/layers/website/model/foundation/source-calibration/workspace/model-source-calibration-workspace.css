@@ -9,7 +9,14 @@
 html.model-source-calibration-workspace-open,
 body.model-source-calibration-workspace-open {
   overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   overscroll-behavior: none;
+}
+
+html.model-source-calibration-workspace-open::-webkit-scrollbar,
+body.model-source-calibration-workspace-open::-webkit-scrollbar{
+  display: none;
 }
 
 .model-source-calibration-workspace {
@@ -65,7 +72,7 @@ body.model-source-calibration-workspace-open {
   font-weight: var(--font-weight-light);
   letter-spacing: var(--letter-spacing-wide);
   line-height: var(--line-height-tight);
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .model-source-calibration-workspace__body {
@@ -73,9 +80,26 @@ body.model-source-calibration-workspace-open {
   grid-template-rows: minmax(var(--spacing-none), 1fr);
   align-content: stretch;
   gap: var(--spacing-xl);
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding: var(--spacing-2xl);
   background: var(--model-source-calibration-workspace-surface);
+}
+
+.model-source-calibration-workspace__body::-webkit-scrollbar,
+.model-source-calibration-workspace__question::-webkit-scrollbar,
+.model-source-calibration-workspace__result::-webkit-scrollbar{
+  display: none;
+}
+
+.model-source-calibration-workspace *::-webkit-scrollbar{
+  display: none;
+}
+
+.model-source-calibration-workspace *{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .model-source-calibration-workspace__question,
@@ -84,5 +108,7 @@ body.model-source-calibration-workspace-open {
   min-block-size: var(--spacing-none);
   block-size: 100%;
   gap: var(--spacing-xl);
-  overflow: hidden;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }

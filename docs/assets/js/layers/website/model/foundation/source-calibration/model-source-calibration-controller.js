@@ -365,24 +365,25 @@ function renderSourceCalibrationDraftDecision() {
   removeSourceCalibrationDraftDecision();
 
   const layer = document.createElement('section');
-  layer.className = 'ui-confirm-layer';
+  layer.className = 'ui-confirm-layer profile-filter-overlay__confirm-layer';
   layer.dataset.modelSourceCalibrationDraftDecision = '';
   layer.setAttribute('role', 'dialog');
   layer.setAttribute('aria-modal', 'true');
-  layer.setAttribute('aria-label', 'Save Source Calibration draft');
+  layer.setAttribute('aria-label', 'Save Source draft');
 
   layer.innerHTML = `
-    <article class="ui-confirm-card">
-      <h2>Save Source Calibration draft?</h2>
-      <p>Your current answers can be saved as a private draft so you can continue later from the same question, or the calibration can be reset from the beginning.</p>
-      <div class="ui-confirm-actions">
-        <button class="ui-button ui-button--secondary" type="button" data-model-source-calibration-restart-draft>Restart</button>
-        <button class="ui-button ui-button--primary" type="button" data-model-source-calibration-save-draft>Save draft</button>
+    <article class="ui-confirm-card profile-filter-overlay__confirm-card">
+      <strong>Save Source draft</strong>
+      <p>Save current answers privately or restart from the beginning?</p>
+      <div class="profile-filter-overlay__options">
+        <button class="profile-filter-overlay__chip" type="button" data-model-source-calibration-restart-draft>Restart</button>
+        <button class="profile-filter-overlay__chip" type="button" data-model-source-calibration-save-draft>Save draft</button>
       </div>
     </article>
   `;
 
   document.body.append(layer);
+  layer.querySelector('[data-model-source-calibration-save-draft]')?.focus?.();
 }
 
 function removeSourceCalibrationDraftDecision() {

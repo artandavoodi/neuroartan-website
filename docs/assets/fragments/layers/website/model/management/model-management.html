@@ -2,8 +2,8 @@
      01) CANONICAL PERSONAL MODEL MANAGEMENT
      02) MODEL SECTION VIEWS
 ============================================================================= -->
-<section class="model-management" data-model-management aria-label="Model management">
-  <header class="model-management__header" hidden>
+<section class="model-management" data-model-management data-model-hydration-state="resolving" aria-label="Model management" aria-busy="true">
+  <header class="model-management__header">
     <p class="model-management__eyebrow">Canonical personal model</p>
     <h2 class="model-management__title" id="model-management-title">Model foundation</h2>
     <p class="model-management__copy" data-model-management-summary>
@@ -17,7 +17,11 @@
     <span class="model-management__note" data-model-owner-handle>@username</span>
   </div>
 
-  <div class="model-management__sections">
+  <div class="model-management__loading ui-loading-inline" data-model-management-loading role="status" aria-live="polite" aria-label="Loading model workspace">
+    <span class="ui-loading-inline__spinner" aria-hidden="true"></span>
+  </div>
+
+  <div class="model-management__sections" hidden>
     <article class="model-management__section" data-model-management-section="model-foundation">
       <section class="model-management__foundation-group" data-model-foundation-group="overview">
         <h3 class="model-management__section-title" hidden>Foundation overview</h3>
@@ -29,6 +33,23 @@
             <img class="profile-private-hero__avatar-image" data-model-avatar-image alt="" aria-hidden="true" hidden>
           </div>
         </div>
+        <section class="model-management__brain-map" aria-label="Digital brain maturity">
+          <div class="model-management__brain-visual" aria-hidden="true">
+            <span class="model-management__brain-node" data-brain-node-state="forming"></span>
+            <span class="model-management__brain-node" data-brain-node-state="initial"></span>
+            <span class="model-management__brain-node" data-brain-node-state="pending"></span>
+            <span class="model-management__brain-node" data-brain-node-state="pending"></span>
+          </div>
+          <div class="model-management__brain-copy">
+            <h3 class="model-management__brain-title">
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/digital-brain-maturity/digital-brain-maturity.svg" alt="">
+              Digital brain maturity
+            </h3>
+            <p class="model-management__section-copy">
+              Foundation maturity connects identity, consent, source, memory, personality, and voice signals into one private model map.
+            </p>
+          </div>
+        </section>
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
@@ -236,6 +257,36 @@
         <dl class="model-management__card-grid">
           <div class="model-management__card">
             <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/personality-profile/personality-profile.svg" alt="">
+              Personality profile
+            </dt>
+            <dd>Calibration not started</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/motivational-pattern/motivational-pattern.svg" alt="">
+              Motivational pattern
+            </dt>
+            <dd>Awaiting assessment</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/expression-pattern/expression-pattern.svg" alt="">
+              Expression pattern
+            </dt>
+            <dd>Awaiting assessment</dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/model-reflection-style/model-reflection-style.svg" alt="">
+              Model reflection style
+            </dt>
+            <dd>Pending Personality Calibration</dd>
+          </div>
+        </dl>
+        <dl class="model-management__card-grid">
+          <div class="model-management__card">
+            <dt>
               <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/overview/voice-samples.svg" alt="">
               Voice samples
             </dt>
@@ -310,6 +361,67 @@
         </div>
       </section>
       <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden></section>
+      <section class="model-management__foundation-group" data-model-foundation-group="personality" hidden>
+        <h3 class="model-management__section-title">Personality Calibration</h3>
+        <p class="model-management__section-copy">
+          Personality Calibration helps the model understand how you tend to think, decide, relate, react, and express yourself without reducing you to a fixed type.
+        </p>
+
+        <dl class="model-management__card-grid" aria-label="Personality Calibration overview">
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/personality-profile/personality-profile.svg" alt="">
+              Personality Profile
+            </dt>
+            <dd>
+              <span class="model-management__status-dot" data-status="initial" aria-hidden="true"></span>
+              <span>Not calibrated</span>
+            </dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/motivational-pattern/motivational-pattern.svg" alt="">
+              Motivational Pattern
+            </dt>
+            <dd>
+              <span class="model-management__status-dot" data-status="pending" aria-hidden="true"></span>
+              <span>Awaiting assessment</span>
+            </dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/expression-pattern/expression-pattern.svg" alt="">
+              Expression Pattern
+            </dt>
+            <dd>
+              <span class="model-management__status-dot" data-status="pending" aria-hidden="true"></span>
+              <span>Awaiting assessment</span>
+            </dd>
+          </div>
+          <div class="model-management__card">
+            <dt>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/personality-readiness/personality-readiness.svg" alt="">
+              Personality Readiness
+            </dt>
+            <dd>
+              <span class="model-management__status-dot" data-status="initial" aria-hidden="true"></span>
+              <span>Initial</span>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="model-management__control-groups" data-model-personality-calibration>
+          <section class="model-management__control-group" data-model-personality-calibration-assessment>
+            <h4 class="model-management__control-title">Assessment</h4>
+            <p class="model-management__section-copy">
+              The assessment will combine trait spectrums, motivational archetypes, and model-behavior outputs for reflection style, pacing, directness, emotional sensitivity, decision support, and voice alignment.
+            </p>
+            <button class="model-management__button" type="button" data-model-personality-calibration-start disabled>
+              Start Personality Calibration
+            </button>
+          </section>
+        </div>
+      </section>
       <section class="model-management__foundation-group" data-model-foundation-group="voice" hidden></section>
     </article>
 

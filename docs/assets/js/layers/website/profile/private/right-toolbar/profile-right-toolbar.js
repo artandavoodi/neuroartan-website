@@ -29,6 +29,7 @@ const ACTION_ICONS = Object.freeze({
   modelInteraction: '/registry/icons/public/assets/core/actions/model-next-action-panel/model-next-action-panel.svg',
   modelReadiness: '/registry/icons/public/assets/core/actions/model-evaluation-panel/model-evaluation-panel.svg',
   modelSources: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
+  modelSourceSummary: '/registry/icons/public/assets/core/model/source-summary/source-summary.svg',
   modelPersonalization: '/registry/icons/public/assets/core/system/personalization/customize.svg',
   modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
   modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
@@ -105,6 +106,13 @@ const ACTIONS = Object.freeze({
     label: 'Model sources',
     tooltip: 'Sources',
     icon: ACTION_ICONS.modelSources,
+    authState: 'user'
+  },
+  modelSourceSummary: {
+    id: 'model-source-summary',
+    label: 'Source summary',
+    tooltip: 'Summary',
+    icon: ACTION_ICONS.modelSourceSummary,
     authState: 'user'
   },
   modelMemory: {
@@ -377,7 +385,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   overview: ['modelLearn', 'modelReset', 'modelChangelog'],
   identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
-  sources: ['modelLearn', 'modelReset', 'modelChangelog'],
+  sources: ['modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelLearn', 'modelReset', 'modelChangelog']
 });
@@ -683,6 +691,14 @@ function requestProfileToolAction(action){
     case 'model-edit-identity':
       document.dispatchEvent(new CustomEvent('model:identity-editor-open-request', {
         detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-source-summary':
+      document.dispatchEvent(new CustomEvent('model:source-summary-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
       }));
       return;
     case 'model-sources':

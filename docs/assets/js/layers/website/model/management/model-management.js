@@ -12,6 +12,7 @@ import {
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
   readModelPersonalizationPreferences,
+  readLatestModelSourceCalibrationResult,
   listModelDefaultRegistry,
   listModelChangelogEvents,
   recordModelAuditEvent,
@@ -1224,7 +1225,7 @@ async function hydrateModelChangelogFromBackend(options = {}) {
     const model = await getOwnedCanonicalModel();
     if (!model?.id) return;
 
-    const records = await listModelChangelogEvents(model.id, { area: 'personalization' });
+    const records = await listModelChangelogEvents(model.id, {});
     if (records.length) {
       modelChangelogRecords = records.map(mapBackendModelChangelogEvent);
       writeStoredModelChangelogRecords();
@@ -1239,6 +1240,84 @@ async function hydrateModelChangelogFromBackend(options = {}) {
     }));
   } catch (error) {
     console.warn('[Neuroartan][Model] Changelog hydration skipped.', error);
+  }
+}
+
+function formatSourceSummaryValue(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (!normalizedValue) return 'Not recorded';
+  return normalizedValue
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function removeModelSourceSummaryOverlay() {
+  document.querySelector('[data-model-source-summary-overlay]')?.remove();
+}
+
+async function handleModelSourceSummaryOpenRequest() {
+  removeModelSourceSummaryOverlay();
+
+  const overlay = document.createElement('section');
+  overlay.className = 'ui-confirm-layer';
+  overlay.dataset.modelSourceSummaryOverlay = '';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Source readiness summary');
+  overlay.innerHTML = `
+    <article class="ui-confirm-card">
+      <h2>Source summary</h2>
+      <p>Loading private Source Calibration summary.</p>
+      <div class="ui-confirm-actions">
+        <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
+      </div>
+    </article>
+  `;
+
+  document.body.append(overlay);
+
+  try {
+    const model = await getOwnedCanonicalModel();
+    const latest = model?.id ? await readLatestModelSourceCalibrationResult(model.id) : null;
+    const payload = latest?.result_payload || latest || {};
+    const card = overlay.querySelector('.ui-confirm-card');
+
+    if (!(card instanceof HTMLElement)) return;
+
+    if (!latest) {
+      card.innerHTML = `
+        <h2>Source summary</h2>
+        <p>No Source Calibration result has been recorded yet.</p>
+        <div class="ui-confirm-actions">
+          <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
+        </div>
+      `;
+      return;
+    }
+
+    card.innerHTML = `
+      <h2>Source summary</h2>
+      <p>${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is recorded as private model foundation data.'}</p>
+      <dl class="model-management__card-grid">
+        <div class="model-management__card">
+          <dt>Cognitive Orientation Index</dt>
+          <dd>${payload.cognitive_orientation_index ?? latest.cognitive_orientation_index ?? 'Not recorded'}</dd>
+        </div>
+        <div class="model-management__card">
+          <dt>Dominant Orientation</dt>
+          <dd>${formatSourceSummaryValue(payload.dominant_orientation || latest.dominant_orientation)}</dd>
+        </div>
+        <div class="model-management__card">
+          <dt>Source Readiness</dt>
+          <dd>${formatSourceSummaryValue(payload.source_readiness || latest.source_readiness)}</dd>
+        </div>
+      </dl>
+      <div class="ui-confirm-actions">
+        <button class="ui-button ui-button--secondary" type="button" data-model-source-summary-close>Close</button>
+      </div>
+    `;
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Source summary overlay failed.', error);
   }
 }
 
@@ -1326,6 +1405,18 @@ function isModelManagementHydrationPending(runtimeState = getProfileRuntimeState
 function isModelOwnerAuthenticated(runtimeState = getProfileRuntimeState()) {
   return runtimeState.authResolved === true && runtimeState.viewerState === 'authenticated';
 }
+
+document.addEventListener('model:source-summary-open-request', () => {
+  void handleModelSourceSummaryOpenRequest();
+});
+
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('[data-model-source-summary-close]');
+  if (!closeButton) return;
+
+  event.preventDefault();
+  removeModelSourceSummaryOverlay();
+});
 
 function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
   if (!isModelOwnerAuthenticated(runtimeState)) return;

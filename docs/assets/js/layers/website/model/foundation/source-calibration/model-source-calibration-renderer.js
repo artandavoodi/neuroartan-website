@@ -17,16 +17,32 @@ export function renderSourceCalibrationStatus(root, state = {}) {
   const status = root.querySelector('[data-model-source-calibration-status]');
   const startButton = root.querySelector('[data-model-source-calibration-start]');
 
+  const profileStatusDot = root.querySelector('[data-model-source-profile-status-dot]');
+  const orientationIndexDot = root.querySelector('[data-model-source-orientation-index-dot]');
+  const readinessDot = root.querySelector('[data-model-source-readiness-dot]');
+
   if (profileStatus) {
     profileStatus.textContent = getSourceProfileStatusText(state);
+  }
+
+  if (profileStatusDot) {
+    profileStatusDot.dataset.status = getSourceProfileStatusToken(state);
   }
 
   if (orientationIndex) {
     orientationIndex.textContent = getSourceOrientationIndexText(state);
   }
 
+  if (orientationIndexDot) {
+    orientationIndexDot.dataset.status = getSourceOrientationIndexStatusToken(state);
+  }
+
   if (readiness) {
     readiness.textContent = getSourceReadinessText(state);
+  }
+
+  if (readinessDot) {
+    readinessDot.dataset.status = getSourceReadinessStatusToken(state);
   }
 
   if (status) {
@@ -53,24 +69,16 @@ export function renderSourceCalibrationQuestion(root, state = {}, question = nul
   }
 
   const currentValue = state.answers?.[question.id] ?? state.scale?.scale?.default ?? 5;
-  const labels = state.scale?.scale?.labels || {};
 
   questionRoot.innerHTML = `
-    <div class="model-source-calibration__progress" aria-label="Source Calibration progress">
-      <span>${escapeSourceText(progress.current || 0)} of ${escapeSourceText(progress.total || 0)}</span>
-      <span>${escapeSourceText(progress.percent || 0)}%</span>
-    </div>
-    <div class="model-source-calibration__progress-bar" aria-hidden="true">
-      <span style="inline-size:${Math.max(0, Math.min(100, Number(progress.percent || 0)))}%"></span>
-    </div>
     <p class="model-source-calibration__question-text">${escapeSourceText(question.text)}</p>
-    <div class="model-source-calibration__scale-labels" aria-hidden="true">
-      <span>${escapeSourceText(labels.left || 'Strongly disagree')}</span>
-      <span>${escapeSourceText(labels.middle || 'Uncertain')}</span>
-      <span>${escapeSourceText(labels.right || 'Strongly agree')}</span>
+    <div class="model-source-calibration__scale-indicators" aria-hidden="true">
+      <span class="model-source-calibration__scale-indicator model-source-calibration__scale-indicator--disagree"></span>
+      <span class="model-source-calibration__scale-indicator model-source-calibration__scale-indicator--uncertain"></span>
+      <span class="model-source-calibration__scale-indicator model-source-calibration__scale-indicator--agree"></span>
     </div>
     <input
-      class="model-source-calibration__slider"
+      class="ui-slider model-source-calibration__slider"
       type="range"
       min="${escapeSourceText(state.scale?.scale?.min ?? 0)}"
       max="${escapeSourceText(state.scale?.scale?.max ?? 10)}"
@@ -81,10 +89,15 @@ export function renderSourceCalibrationQuestion(root, state = {}, question = nul
       aria-label="${escapeSourceText(question.text)}"
     />
     <div class="model-source-calibration__actions">
-      <button class="model-management__button" type="button" data-model-source-calibration-previous ${progress.current <= 1 ? 'disabled' : ''}>Previous</button>
-      <button class="model-management__button" type="button" data-model-source-calibration-next>${progress.current >= progress.total ? 'Complete' : 'Next'}</button>
+      <button class="ui-button ui-button--secondary" type="button" data-model-source-calibration-previous ${progress.current <= 1 ? 'disabled' : ''}>Previous</button>
     </div>
   `;
+
+  document.dispatchEvent(new CustomEvent('model:source-calibration-progress-updated', {
+    detail: {
+      percent: Math.max(0, Math.min(100, Number(progress.percent || 0))),
+    },
+  }));
 }
 
 export function renderSourceCalibrationResult(root, result = null, resultsRegistry = null) {
@@ -100,26 +113,9 @@ export function renderSourceCalibrationResult(root, result = null, resultsRegist
     assessmentRoot.appendChild(resultRoot);
   }
 
-  const orientation = resultsRegistry?.orientation_bands?.[result.dominant_orientation];
-  const readinessLabel = titleCaseSourceText(result.source_readiness || 'initial');
-
   resultRoot.innerHTML = `
-    <h5 class="model-source-calibration__result-title">Source Readiness Summary</h5>
-    <dl class="model-management__card-grid">
-      <div class="model-management__card">
-        <dt>Cognitive Orientation Index</dt>
-        <dd>${escapeSourceText(result.cognitive_orientation_index)}</dd>
-      </div>
-      <div class="model-management__card">
-        <dt>Dominant Orientation</dt>
-        <dd>${escapeSourceText(orientation?.label || SOURCE_ORIENTATION_LABELS[result.dominant_orientation] || 'Unclassified')}</dd>
-      </div>
-      <div class="model-management__card">
-        <dt>Source Readiness</dt>
-        <dd>${escapeSourceText(readinessLabel)}</dd>
-      </div>
-    </dl>
-    <p class="model-management__section-copy">${escapeSourceText(result.source_readiness_summary || '')}</p>
+    <h5 class="model-source-calibration__result-title">Source Calibration complete</h5>
+    <p class="model-management__section-copy">Your private Source Profile has been saved. Open Summary from the right toolbar to review the Source Readiness details.</p>
   `;
 }
 
@@ -146,14 +142,35 @@ function getSourceReadinessText(state) {
   return titleCaseSourceText(state.result?.source_readiness || 'Initial');
 }
 
+function getSourceProfileStatusToken(state) {
+  if (state.status === 'complete') return 'calibrated';
+  if (state.status === 'active') return state.draftSaved === true ? 'draft' : 'forming';
+  if (state.status === 'ready') return 'ready';
+  if (state.status === 'error') return 'error';
+
+  return 'pending';
+}
+
+function getSourceOrientationIndexStatusToken(state) {
+  const index = state.result?.cognitive_orientation_index;
+  return index === undefined || index === null ? 'pending' : 'complete';
+}
+
+function getSourceReadinessStatusToken(state) {
+  const readiness = String(state.result?.source_readiness || '').trim().toLowerCase();
+  if (!readiness) return state.status === 'complete' ? 'complete' : 'initial';
+  if (readiness === 'forming') return 'forming';
+  if (readiness === 'stable' || readiness === 'calibrated' || readiness === 'ready') return 'stable';
+  if (readiness === 'initial') return 'initial';
+
+  return 'complete';
+}
+
 function getSourceCalibrationStatusText(state) {
-  if (state.status === 'loading') return 'Loading Source Calibration registry.';
-  if (state.status === 'ready') return 'Question registry loaded. Source Calibration is ready to begin.';
-  if (state.status === 'active') return 'Answer each calibration prompt using the slider.';
-  if (state.status === 'complete') return 'Source Calibration complete. Results are ready for review.';
+  if (state.status === 'complete') return 'Source Profile saved. Open Summary to review details.';
   if (state.status === 'error') return state.error?.message || 'Source Calibration is unavailable.';
 
-  return 'Question registry, scoring engine, persistence, and audit integration are pending implementation.';
+  return '';
 }
 
 function titleCaseSourceText(value) {

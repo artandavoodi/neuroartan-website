@@ -171,6 +171,41 @@
   gap:var(--spacing-sm);
 }
 
+.model-management__card dd{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
+.model-management__status-dot{
+  display:inline-block;
+  inline-size:var(--spacing-sm);
+  block-size:var(--spacing-sm);
+  border-radius:var(--radius-full, 50%);
+  aspect-ratio:1;
+  flex:0 0 auto;
+  overflow:hidden;
+  background:var(--text-secondary-color);
+}
+
+.model-management__status-dot[data-status="ready"],
+.model-management__status-dot[data-status="complete"],
+.model-management__status-dot[data-status="calibrated"],
+.model-management__status-dot[data-status="stable"]{
+  background:var(--status-success-color);
+}
+
+.model-management__status-dot[data-status="pending"],
+.model-management__status-dot[data-status="initial"],
+.model-management__status-dot[data-status="forming"],
+.model-management__status-dot[data-status="draft"]{
+  background:var(--status-warning-color);
+}
+
+.model-management__status-dot[data-status="error"]{
+  background:var(--status-danger-color);
+}
+
 .model-management__card-icon{
   width:var(--icon-size-sm);
   height:var(--icon-size-sm);

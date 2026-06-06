@@ -872,8 +872,16 @@ const MODEL_LEARN_CONTENT = Object.freeze({
     copy: 'Consent controls which owner-approved sources can be used for model context, training, and runtime behavior.'
   },
   sources: {
-    title: 'Source',
-    copy: 'Source controls the approved material that can become model context, including profile foundation, thoughts, documents, knowledge notes, and governed datasets.'
+    title: 'Source Calibration',
+    copy: 'Source Calibration privately helps your model begin from a baseline of agency, reflection, regulation, and continuity. It is not a diagnosis, therapy, spiritual framework, public score, or identity label. Your answers and Source Profile remain private model foundation data and are not shown to other users.',
+    details: [
+      'Move the slider toward the red indicator when a statement feels less accurate for your current experience.',
+      'Move the slider toward the green indicator when a statement feels more accurate for your current experience.',
+      'Release the slider to record the answer and move automatically to the next question. You can use Previous to adjust the last answer.',
+      'The result helps the model choose safer starting defaults for reflection, pacing, memory linking, and support style.'
+    ],
+    scaleGuide: true,
+    docsHref: 'https://docs.neuroartan.com/model-identity/source-calibration/'
   },
   voice: {
     title: 'Voice',
@@ -1026,6 +1034,33 @@ function renderModelLearn(root, filters = {}) {
   copy.textContent = content.copy;
 
   section.append(title, copy);
+
+  if (content.scaleGuide === true) {
+    const guide = document.createElement('div');
+    guide.className = 'profile-filter-overlay__learn-scale-guide';
+    guide.innerHTML = `
+      <span class="profile-filter-overlay__learn-scale-item">
+        <span class="profile-filter-overlay__learn-scale-dot profile-filter-overlay__learn-scale-dot--disagree" aria-hidden="true"></span>
+        <span>Less accurate</span>
+      </span>
+      <span class="profile-filter-overlay__learn-scale-item">
+        <span class="profile-filter-overlay__learn-scale-dot profile-filter-overlay__learn-scale-dot--agree" aria-hidden="true"></span>
+        <span>More accurate</span>
+      </span>
+    `;
+    section.append(guide);
+  }
+
+  if (Array.isArray(content.details) && content.details.length) {
+    const list = document.createElement('ul');
+    list.className = 'profile-filter-overlay__learn-list';
+    content.details.forEach((detail) => {
+      const item = document.createElement('li');
+      item.textContent = detail;
+      list.append(item);
+    });
+    section.append(list);
+  }
 
   if (content.docsHref) {
     const link = document.createElement('a');
@@ -1511,6 +1546,15 @@ function bindFilterOverlay() {
   document.addEventListener('model:changelog-hydrated', () => {
     STORE.modelChangelogHydrationPending = false;
     STORE.modelChangelogHydrated = true;
+    if (STORE.context !== 'modelChangelog') return;
+    renderOverlay('modelChangelog');
+  });
+
+  document.addEventListener('model:changelog-refresh-request', () => {
+    STORE.modelChangelogHydrationPending = false;
+    STORE.modelChangelogHydrated = false;
+    window.localStorage?.removeItem(MODEL_CHANGELOG_STORAGE_KEY);
+    requestModelChangelogHydration();
     if (STORE.context !== 'modelChangelog') return;
     renderOverlay('modelChangelog');
   });

@@ -7,7 +7,7 @@
     "type": "continuous_slider",
     "min": 0,
     "max": 10,
-    "step": 1,
+    "step": "any",
     "default": 5,
     "labels": {
       "left": "Strongly disagree",

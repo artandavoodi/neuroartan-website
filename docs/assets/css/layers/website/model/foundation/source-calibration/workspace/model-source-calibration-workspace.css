@@ -1,0 +1,88 @@
+/* MARK: - Source Calibration Workspace */
+
+:root {
+  --model-source-calibration-workspace-z-index: var(--z-overlay-control);
+  --model-source-calibration-workspace-backdrop: var(--glass-overlay-backdrop-bg);
+  --model-source-calibration-workspace-surface: var(--panel-surface-dropdown-unified);
+}
+
+html.model-source-calibration-workspace-open,
+body.model-source-calibration-workspace-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.model-source-calibration-workspace {
+  position: fixed;
+  inset: var(--spacing-none);
+  z-index: var(--model-source-calibration-workspace-z-index);
+  display: grid;
+  place-items: stretch;
+  padding: 0;
+  background: var(--model-source-calibration-workspace-backdrop);
+}
+
+.model-source-calibration-workspace[hidden] {
+  display: none;
+}
+
+.model-source-calibration-workspace__backdrop {
+  position: absolute;
+  inset: var(--spacing-none);
+  background: var(--model-source-calibration-workspace-backdrop);
+  backdrop-filter: blur(var(--glass-overlay-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--glass-overlay-backdrop-blur));
+}
+
+.model-source-calibration-workspace__surface {
+  position: relative;
+  z-index: var(--z-base);
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: hidden;
+  border: 0;
+  background: var(--model-source-calibration-workspace-surface);
+  box-shadow: none;
+}
+
+.model-source-calibration-workspace__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding: var(--site-shell-inline-padding);
+}
+
+.model-source-calibration-workspace__progress {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--control-size-md);
+  color: var(--text-primary-color);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-tight);
+  text-transform: uppercase;
+}
+
+.model-source-calibration-workspace__body {
+  display: grid;
+  grid-template-rows: minmax(var(--spacing-none), 1fr);
+  align-content: stretch;
+  gap: var(--spacing-xl);
+  overflow: hidden;
+  padding: var(--spacing-2xl);
+  background: var(--model-source-calibration-workspace-surface);
+}
+
+.model-source-calibration-workspace__question,
+.model-source-calibration-workspace__result {
+  display: grid;
+  min-block-size: var(--spacing-none);
+  block-size: 100%;
+  gap: var(--spacing-xl);
+  overflow: hidden;
+}

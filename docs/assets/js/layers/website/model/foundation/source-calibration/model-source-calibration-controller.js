@@ -6,9 +6,14 @@ import {
   getSourceCalibrationProgress,
   getSourceCalibrationState,
   loadSourceCalibrationRegistry,
+  markSourceCalibrationWorkspaceClosed,
+  markSourceCalibrationWorkspaceOpen,
   moveSourceCalibrationNext,
   moveSourceCalibrationPrevious,
   recordSourceCalibrationAnswer,
+  restartSourceCalibrationDraft,
+  resumeSourceCalibrationDraft,
+  saveSourceCalibrationDraft,
   setSourceCalibrationState,
   startSourceCalibrationSession,
 } from './model-source-calibration-state.js';
@@ -26,6 +31,12 @@ import {
 } from './model-source-calibration-renderer.js';
 
 import {
+  openSourceCalibrationWorkspace,
+  setSourceCalibrationWorkspaceQuestion,
+  setSourceCalibrationWorkspaceResult,
+} from './workspace/model-source-calibration-workspace.js';
+
+import {
   getOwnedCanonicalModel,
   readLatestModelSourceCalibrationResult,
   saveModelSourceCalibrationResult,
@@ -33,6 +44,7 @@ import {
 
 let sourceCalibrationRoot = null;
 let sourceCalibrationInitialized = false;
+let previousSourceCalibrationResult = null;
 
 // MARK: - Public API
 
@@ -48,9 +60,16 @@ export async function initializeSourceCalibration(root = document) {
   renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
 
   const state = await loadSourceCalibrationRegistry();
-  const hydratedState = await hydrateLatestSourceCalibrationResult(state);
+  const hydratedState = state.status === 'active'
+    ? state
+    : await hydrateLatestSourceCalibrationResult(state);
+
   renderSourceCalibrationStatus(sourceCalibrationRoot, hydratedState);
   refreshSourceCalibration();
+
+  if (hydratedState.status === 'active' && hydratedState.workspaceOpen === true) {
+    void restoreActiveSourceCalibrationWorkspace();
+  }
 
   return hydratedState;
 }
@@ -64,8 +83,10 @@ export function refreshSourceCalibration() {
 
   renderSourceCalibrationStatus(sourceCalibrationRoot, state);
 
-  if (state.status === 'active') {
-    renderActiveSourceCalibrationQuestion();
+  updateSourceCalibrationPrimaryAction(state);
+
+  if (state.status === 'active' && state.workspaceOpen === true) {
+    void renderActiveSourceCalibrationQuestion();
   }
 
   if (state.status === 'complete') {
@@ -79,30 +100,30 @@ export function refreshSourceCalibration() {
 // MARK: - Event Binding
 
 function bindSourceCalibrationEvents(root) {
-  root.addEventListener('click', (event) => {
+  const handleClick = (event) => {
     const startButton = event.target.closest('[data-model-source-calibration-start]');
     const previousButton = event.target.closest('[data-model-source-calibration-previous]');
     const nextButton = event.target.closest('[data-model-source-calibration-next]');
 
     if (startButton) {
       event.preventDefault();
-      handleSourceCalibrationStart();
+      void handleSourceCalibrationStart();
       return;
     }
 
     if (previousButton) {
       event.preventDefault();
-      handleSourceCalibrationPrevious();
+      void handleSourceCalibrationPrevious();
       return;
     }
 
     if (nextButton) {
       event.preventDefault();
-      handleSourceCalibrationNext();
+      void handleSourceCalibrationNext();
     }
-  });
+  };
 
-  root.addEventListener('input', (event) => {
+  const handleInput = (event) => {
     const slider = event.target.closest('[data-model-source-calibration-answer]');
 
     if (!slider) {
@@ -111,24 +132,99 @@ function bindSourceCalibrationEvents(root) {
 
     recordSourceCalibrationAnswer(slider.dataset.questionId, slider.value);
     renderSourceCalibrationStatus(root, getSourceCalibrationState());
+  };
+
+  const handleCommittedAnswer = (event) => {
+    const slider = event.target.closest('[data-model-source-calibration-answer]');
+
+    if (!slider) {
+      return;
+    }
+
+    recordSourceCalibrationAnswer(slider.dataset.questionId, slider.value);
+    void handleSourceCalibrationNext();
+  };
+
+  const handleDraftAction = (event) => {
+    const saveButton = event.target.closest('[data-model-source-calibration-save-draft]');
+    const restartButton = event.target.closest('[data-model-source-calibration-restart-draft]');
+
+    if (saveButton) {
+      event.preventDefault();
+      handleSourceCalibrationSaveDraft();
+      return;
+    }
+
+    if (restartButton) {
+      event.preventDefault();
+      void handleSourceCalibrationRestartDraft();
+      return;
+    }
+  };
+
+  document.addEventListener('click', handleClick);
+  document.addEventListener('click', handleDraftAction);
+  document.addEventListener('input', handleInput);
+  document.addEventListener('change', handleCommittedAnswer);
+
+  document.addEventListener('model:source-calibration-workspace-closed', () => {
+    const state = getSourceCalibrationState();
+
+    if (state.status !== 'active') {
+      return;
+    }
+
+    markSourceCalibrationWorkspaceClosed();
+    renderSourceCalibrationDraftDecision();
   });
 }
 
-// MARK: - Handlers
+function handleSourceCalibrationSaveDraft() {
+  saveSourceCalibrationDraft();
+  removeSourceCalibrationDraftDecision();
+  clearSourceCalibrationQuestion(sourceCalibrationRoot);
+  renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
+  updateSourceCalibrationPrimaryAction(getSourceCalibrationState());
+}
 
-function handleSourceCalibrationStart() {
+async function handleSourceCalibrationRestartDraft() {
+  previousSourceCalibrationResult = getSourceCalibrationState().result || null;
+  removeSourceCalibrationDraftDecision();
+  restartSourceCalibrationDraft();
+  clearSourceCalibrationQuestion(sourceCalibrationRoot);
+  renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
+  updateSourceCalibrationPrimaryAction(getSourceCalibrationState());
+}
+
+async function handleSourceCalibrationStart() {
+  removeSourceCalibrationDraftDecision();
+
+  const state = getSourceCalibrationState();
+
+  if (state.status === 'active' && state.sessionId) {
+    previousSourceCalibrationResult = state.result || previousSourceCalibrationResult || null;
+    resumeSourceCalibrationDraft();
+    await openSourceCalibrationWorkspace();
+    await renderActiveSourceCalibrationQuestion();
+    renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
+    return;
+  }
+
+  previousSourceCalibrationResult = state.result || null;
+  await openSourceCalibrationWorkspace();
+  markSourceCalibrationWorkspaceOpen();
   startSourceCalibrationSession();
-  renderActiveSourceCalibrationQuestion();
+  await renderActiveSourceCalibrationQuestion();
   renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
 }
 
-function handleSourceCalibrationPrevious() {
+async function handleSourceCalibrationPrevious() {
   moveSourceCalibrationPrevious();
-  renderActiveSourceCalibrationQuestion();
+  await renderActiveSourceCalibrationQuestion();
   renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
 }
 
-function handleSourceCalibrationNext() {
+async function handleSourceCalibrationNext() {
   const state = getSourceCalibrationState();
   const question = getCurrentSourceCalibrationQuestion();
 
@@ -145,12 +241,12 @@ function handleSourceCalibrationNext() {
   const isLastQuestion = latestState.currentIndex >= latestState.questionOrder.length - 1;
 
   if (isLastQuestion && isSourceCalibrationComplete({ questions, answers: latestState.answers })) {
-    completeCurrentSourceCalibration();
+    void completeCurrentSourceCalibration();
     return;
   }
 
   moveSourceCalibrationNext();
-  renderActiveSourceCalibrationQuestion();
+  await renderActiveSourceCalibrationQuestion();
   renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
 }
 
@@ -164,6 +260,8 @@ async function completeCurrentSourceCalibration() {
 
   completeSourceCalibrationSession(result);
   refreshSourceCalibration();
+  await renderCompletedSourceCalibrationResultInWorkspace();
+  previousSourceCalibrationResult = null;
 
   try {
     await saveModelSourceCalibrationResult(await getActiveSourceCalibrationModel(), {
@@ -178,6 +276,14 @@ async function completeCurrentSourceCalibration() {
       results_version: state.results?.version || '0.1.0',
       consent_state: 'source_calibration_completed',
     });
+
+    document.dispatchEvent(new CustomEvent('model:changelog-refresh-request', {
+      detail: {
+        source: 'source_calibration',
+        area: 'foundation',
+        pane: 'sources',
+      },
+    }));
   } catch (error) {
     console.warn('[Neuroartan][Source Calibration] Supabase persistence failed.', error);
   }
@@ -218,6 +324,12 @@ async function hydrateLatestSourceCalibrationResult(state) {
   }
 }
 
+async function restoreActiveSourceCalibrationWorkspace() {
+  await openSourceCalibrationWorkspace();
+  await renderActiveSourceCalibrationQuestion();
+  renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
+}
+
 async function getActiveSourceCalibrationModel() {
   const model = await getOwnedCanonicalModel();
 
@@ -227,9 +339,59 @@ async function getActiveSourceCalibrationModel() {
   };
 }
 
+function updateSourceCalibrationPrimaryAction(state) {
+  const button = sourceCalibrationRoot?.querySelector('[data-model-source-calibration-start]');
+  if (!button) return;
+
+  if (state.status === 'active') {
+    button.disabled = false;
+    button.textContent = 'Continue Source Calibration';
+    return;
+  }
+
+  if (state.status === 'complete') {
+    button.disabled = false;
+    button.textContent = 'Recalibrate Source';
+    return;
+  }
+
+  if (state.status === 'ready') {
+    button.disabled = false;
+    button.textContent = 'Start Source Calibration';
+  }
+}
+
+function renderSourceCalibrationDraftDecision() {
+  removeSourceCalibrationDraftDecision();
+
+  const layer = document.createElement('section');
+  layer.className = 'ui-confirm-layer';
+  layer.dataset.modelSourceCalibrationDraftDecision = '';
+  layer.setAttribute('role', 'dialog');
+  layer.setAttribute('aria-modal', 'true');
+  layer.setAttribute('aria-label', 'Save Source Calibration draft');
+
+  layer.innerHTML = `
+    <article class="ui-confirm-card">
+      <h2>Save Source Calibration draft?</h2>
+      <p>Your current answers can be saved as a private draft so you can continue later from the same question, or the calibration can be reset from the beginning.</p>
+      <div class="ui-confirm-actions">
+        <button class="ui-button ui-button--secondary" type="button" data-model-source-calibration-restart-draft>Restart</button>
+        <button class="ui-button ui-button--primary" type="button" data-model-source-calibration-save-draft>Save draft</button>
+      </div>
+    </article>
+  `;
+
+  document.body.append(layer);
+}
+
+function removeSourceCalibrationDraftDecision() {
+  document.querySelector('[data-model-source-calibration-draft-decision]')?.remove();
+}
+
 // MARK: - Rendering
 
-function renderActiveSourceCalibrationQuestion() {
+async function renderActiveSourceCalibrationQuestion() {
   const state = getSourceCalibrationState();
   const question = getCurrentSourceCalibrationQuestion();
   const progress = getSourceCalibrationProgress();
@@ -239,4 +401,23 @@ function renderActiveSourceCalibrationQuestion() {
   }
 
   renderSourceCalibrationQuestion(sourceCalibrationRoot, state, question, progress);
+  renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
+
+  const questionNode = sourceCalibrationRoot.querySelector('[data-model-source-calibration-question]');
+  if (questionNode) {
+    await setSourceCalibrationWorkspaceQuestion(questionNode);
+    clearSourceCalibrationQuestion(sourceCalibrationRoot);
+  }
+}
+
+async function renderCompletedSourceCalibrationResultInWorkspace() {
+  if (!sourceCalibrationRoot) {
+    return;
+  }
+
+  const resultNode = sourceCalibrationRoot.querySelector('[data-model-source-calibration-result]');
+  if (resultNode) {
+    await setSourceCalibrationWorkspaceResult(resultNode);
+    resultNode.remove();
+  }
 }

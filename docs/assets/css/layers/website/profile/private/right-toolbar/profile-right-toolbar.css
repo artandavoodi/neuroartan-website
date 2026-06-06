@@ -18,6 +18,7 @@
   align-self:end;
   width:max-content;
   min-width:var(--spacing-none);
+  margin-inline-start:auto;
   background:transparent;
   padding:0;
 }

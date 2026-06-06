@@ -413,7 +413,8 @@
 
 .model-management__knowledge-form,
 .model-management__knowledge-list,
-.model-management__directory-list{
+.model-management__directory-list,
+.model-management__data-manager-list{
   display:grid;
   gap:var(--spacing-md);
   min-width:0;
@@ -448,6 +449,35 @@
 
 .model-management__knowledge-item{
   gap:var(--spacing-sm);
+}
+
+.model-management__data-manager-dialog{
+  grid-template-rows:auto auto 1fr auto;
+}
+
+.model-management__data-manager-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--spacing-lg);
+}
+
+.model-management__data-manager-tabs .model-management__text-button[data-active="true"]{
+  color:var(--text-primary-color);
+}
+
+.model-management__data-manager-item{
+  display:grid;
+  gap:var(--spacing-md);
+  min-width:0;
+  padding-block:var(--spacing-lg);
+  border-block-end:var(--border-width-hairline) solid var(--border-color);
+}
+
+.model-management__data-manager-actions{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-md);
 }
 
 .model-management__directory-filters{

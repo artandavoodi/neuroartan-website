@@ -1,0 +1,93 @@
+{
+  "version": "2026-06-06",
+  "categories": [
+    {
+      "id": "personal-life",
+      "label": "Personal life",
+      "questions": [
+        "What should people understand about you before they ask for advice from your model?",
+        "What parts of your life should be treated with extra care when someone asks about you?",
+        "How should your model speak when a question touches your personal story?",
+        "What should your model never guess about your private life?",
+        "What does a respectful answer about you sound like?"
+      ]
+    },
+    {
+      "id": "family-life",
+      "label": "Family life",
+      "questions": [
+        "How should your model protect family matters when someone asks about them?",
+        "What family topics should stay private unless you clearly approve them?",
+        "How should your model respond when a family question needs warmth but also boundaries?",
+        "What should your model avoid saying about people close to you?",
+        "How should your model handle questions that could affect your family relationships?"
+      ]
+    },
+    {
+      "id": "relationships",
+      "label": "Relationship logic",
+      "questions": [
+        "How should your model respond when someone asks about trust, loyalty, or commitment?",
+        "What should your model do when a relationship question needs emotional care?",
+        "How should your model balance honesty and kindness in personal relationship advice?",
+        "What boundaries should your model keep when someone asks about your relationships?",
+        "How should your model respond when someone asks for advice about conflict?"
+      ]
+    },
+    {
+      "id": "friendship",
+      "label": "Friendship logic",
+      "questions": [
+        "How should your model recognize a respectful friendship question?",
+        "What should your model reveal to friends that it would not reveal publicly?",
+        "How should your model handle humor, memory, and privacy with friends?",
+        "What should your model do when a friend asks something emotionally sensitive?",
+        "How should your model respond when friendship and privacy point in different directions?"
+      ]
+    },
+    {
+      "id": "education",
+      "label": "Education logic",
+      "questions": [
+        "How should your model explain something when a person is learning for the first time?",
+        "What kind of teaching style should your model use when a topic is difficult?",
+        "How should your model correct a misunderstanding without sounding dismissive?",
+        "When should your model simplify an answer, and when should it go deeper?",
+        "How should your model help someone learn without pretending to know more than it does?"
+      ]
+    },
+    {
+      "id": "business",
+      "label": "Business logic",
+      "questions": [
+        "How should your model respond when a business question needs strategic judgment?",
+        "What business information should your model keep private by default?",
+        "How should your model handle questions about risk, money, or responsibility?",
+        "What should your model do when a business answer needs evidence before confidence?",
+        "How should your model balance commercial clarity with your values?"
+      ]
+    },
+    {
+      "id": "values",
+      "label": "Values and boundaries",
+      "questions": [
+        "What values should guide your model when there is no obvious right answer?",
+        "What should your model refuse to do even if someone asks politely?",
+        "How should your model decide between being helpful and protecting your boundaries?",
+        "What should your model do when a question could misrepresent you?",
+        "How should your model speak when it needs to say no?"
+      ]
+    },
+    {
+      "id": "decision-making",
+      "label": "Decision making",
+      "questions": [
+        "How should your model make a decision when the facts are incomplete?",
+        "When should your model ask a clarifying question before answering?",
+        "How should your model weigh truth, speed, privacy, and care when they conflict?",
+        "What sources should your model trust first when memories and documents disagree?",
+        "How should your model show uncertainty without becoming vague?"
+      ]
+    }
+  ]
+}

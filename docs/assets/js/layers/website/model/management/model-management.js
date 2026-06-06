@@ -25,12 +25,18 @@ import {
 import { refreshAccountProfileState } from '../../system/account/profile/account-profile-state.js';
 import { getPublicModels, loadPublicModelRegistry } from '../../system/model/public-model-registry.js';
 import {
+  createModelDatasetEntry,
   createModelKnowledgeEntry,
   createModelLogicRecord,
+  listModelDatasetEntries,
   listModelKnowledgeEntries,
   listModelLogicRecords,
+  removeModelDatasetEntry,
   removeModelKnowledgeEntry,
-  removeModelLogicRecord
+  removeModelLogicRecord,
+  updateModelDatasetEntry,
+  updateModelKnowledgeEntry,
+  updateModelLogicRecord
 } from '../../system/model/model-training-store.js';
 import { registerProfileMediaEditorTarget } from '../../profile/private/media/profile-media-editor.js';
 import {
@@ -42,8 +48,10 @@ const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.pref
 const MODEL_CHANGELOG_STORAGE_KEY = 'neuroartan.model.changelog.records';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
 const MODEL_VISIBILITY_PREFERENCES_STORAGE_KEY = 'neuroartan.model.visibility.preferences';
+const MODEL_DATASET_STORAGE_KEY = 'neuroartan.model.training.datasets';
 const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-base';
 const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
+const MODEL_LOGIC_QUESTION_REGISTRY_URL = '/assets/data/website/model-creation/model-logic-question-registry.json';
 
 const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   reasoningDepth: 'balanced',
@@ -339,6 +347,17 @@ const MODEL_VISIBILITY_DEFAULTS = Object.freeze({
   subscribersVisible: false
 });
 
+const MODEL_LOGIC_FALLBACK_QUESTIONS = Object.freeze([
+  { category: 'Personal life', question: 'What should people understand about you before they ask for advice from your model?' },
+  { category: 'Family life', question: 'How should your model protect family matters when someone asks about them?' },
+  { category: 'Relationship logic', question: 'How should your model balance honesty and kindness in personal relationship advice?' },
+  { category: 'Friendship logic', question: 'How should your model handle humor, memory, and privacy with friends?' },
+  { category: 'Education logic', question: 'How should your model explain something when a person is learning for the first time?' },
+  { category: 'Business logic', question: 'How should your model respond when a business question needs strategic judgment?' },
+  { category: 'Values and boundaries', question: 'How should your model decide between being helpful and protecting your boundaries?' },
+  { category: 'Decision making', question: 'How should your model make a decision when the facts are incomplete?' }
+]);
+
 let modelPersonalizationPreferences = loadStoredModelPersonalizationPreferences();
 let modelChangelogRecords = loadStoredModelChangelogRecords();
 let modelPersonalizationBackendLoaded = false;
@@ -351,8 +370,13 @@ let modelFoundationIdentityBackendSaveTimer = 0;
 let modelVisibilityPreferences = loadStoredModelVisibilityPreferences();
 let modelVisibilityBackendLoaded = false;
 let modelVisibilityBackendSaveTimer = 0;
+let modelDatasetEntries = loadStoredModelDatasetEntries();
 let modelKnowledgeBaseEntries = loadStoredModelKnowledgeBaseEntries();
 let modelLogicRecords = loadStoredModelLogicRecords();
+let modelLogicQuestionRegistry = null;
+let modelLogicQuestionRegistryLoading = null;
+let modelDataManagerOpen = false;
+let modelDataManagerPane = 'datasets';
 let modelTrainingSubstrateBackendLoaded = false;
 let modelAuthResolutionTimer = 0;
 let publicModelDirectory = [];
@@ -833,10 +857,31 @@ function formatModelIdentityDate(value = '', fallback = '') {
   }).format(parsedDate);
 }
 
+function loadStoredModelDatasetEntries() {
+  try {
+    const parsed = JSON.parse(window.localStorage?.getItem(MODEL_DATASET_STORAGE_KEY) || '[]');
+    return Array.isArray(parsed)
+      ? parsed.filter((entry) => entry && typeof entry === 'object').map((entry) => normalizeTrainingSourceEntry(entry, 'Dataset'))
+      : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function writeStoredModelDatasetEntries() {
+  try {
+    window.localStorage?.setItem(MODEL_DATASET_STORAGE_KEY, JSON.stringify(modelDatasetEntries));
+  } catch (error) {
+    /* Local persistence remains a resilience fallback for the Supabase-owned substrate. */
+  }
+}
+
 function loadStoredModelKnowledgeBaseEntries() {
   try {
     const parsed = JSON.parse(window.localStorage?.getItem(MODEL_KNOWLEDGE_BASE_STORAGE_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === 'object') : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((entry) => entry && typeof entry === 'object').map((entry) => normalizeTrainingSourceEntry(entry, 'Knowledge asset'))
+      : [];
   } catch (error) {
     return [];
   }
@@ -853,7 +898,9 @@ function writeStoredModelKnowledgeBaseEntries() {
 function loadStoredModelLogicRecords() {
   try {
     const parsed = JSON.parse(window.localStorage?.getItem(MODEL_LOGIC_RECORDS_STORAGE_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === 'object') : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((entry) => entry && typeof entry === 'object').map(normalizeLogicRecordEntry)
+      : [];
   } catch (error) {
     return [];
   }
@@ -865,6 +912,72 @@ function writeStoredModelLogicRecords() {
   } catch (error) {
     /* Local persistence remains a resilience fallback for the Supabase-owned substrate. */
   }
+}
+
+function normalizeModelLogicQuestionRegistry(value = {}) {
+  const categories = Array.isArray(value?.categories) ? value.categories : [];
+  const questions = categories.flatMap((category) => {
+    const categoryLabel = String(category?.label || category?.id || 'Logic').trim();
+    const categoryQuestions = Array.isArray(category?.questions) ? category.questions : [];
+    return categoryQuestions.map((question) => ({
+      category: categoryLabel,
+      question: String(question || '').trim(),
+    }));
+  }).filter((entry) => entry.question);
+
+  return questions.length ? questions : [...MODEL_LOGIC_FALLBACK_QUESTIONS];
+}
+
+async function readModelLogicQuestionRegistry() {
+  if (Array.isArray(modelLogicQuestionRegistry) && modelLogicQuestionRegistry.length) {
+    return modelLogicQuestionRegistry;
+  }
+
+  if (modelLogicQuestionRegistryLoading) return modelLogicQuestionRegistryLoading;
+
+  modelLogicQuestionRegistryLoading = fetch(MODEL_LOGIC_QUESTION_REGISTRY_URL, { cache: 'no-cache' })
+    .then((response) => (response.ok ? response.json() : null))
+    .then((data) => {
+      modelLogicQuestionRegistry = normalizeModelLogicQuestionRegistry(data);
+      return modelLogicQuestionRegistry;
+    })
+    .catch(() => {
+      modelLogicQuestionRegistry = [...MODEL_LOGIC_FALLBACK_QUESTIONS];
+      return modelLogicQuestionRegistry;
+    })
+    .finally(() => {
+      modelLogicQuestionRegistryLoading = null;
+    });
+
+  return modelLogicQuestionRegistryLoading;
+}
+
+function pickModelLogicQuestion(questions = []) {
+  const source = Array.isArray(questions) && questions.length ? questions : MODEL_LOGIC_FALLBACK_QUESTIONS;
+  return source[Math.floor(Math.random() * source.length)] || MODEL_LOGIC_FALLBACK_QUESTIONS[0];
+}
+
+function normalizeTrainingSourceEntry(entry = {}, fallbackTitle = 'Training source') {
+  return {
+    id: String(entry.id || '').trim(),
+    title: String(entry.source_title || entry.title || fallbackTitle).trim(),
+    text: String(entry.source_content || entry.text || entry.source_reference || '').trim(),
+    kind: String(entry.source_kind || entry.kind || '').trim(),
+    sourceReference: String(entry.source_reference || entry.sourceReference || '').trim(),
+    metadata: entry.source_metadata || entry.metadata || {},
+    createdAt: String(entry.created_at || entry.createdAt || '').trim(),
+    updatedAt: String(entry.updated_at || entry.updatedAt || '').trim(),
+  };
+}
+
+function normalizeLogicRecordEntry(entry = {}) {
+  return {
+    id: String(entry.id || '').trim(),
+    title: String(entry.logic_title || entry.title || '').trim(),
+    text: String(entry.logic_body || entry.text || '').trim(),
+    createdAt: String(entry.created_at || entry.createdAt || '').trim(),
+    updatedAt: String(entry.updated_at || entry.updatedAt || '').trim(),
+  };
 }
 
 function setTrainingSubstrateStatus(message = '', state = 'idle') {
@@ -898,22 +1011,16 @@ async function hydrateTrainingSubstrateFromBackend() {
   if (modelTrainingSubstrateBackendLoaded) return;
 
   try {
-    const [knowledgeEntries, logicRecords] = await Promise.all([
+    const [datasetEntries, knowledgeEntries, logicRecords] = await Promise.all([
+      listModelDatasetEntries(),
       listModelKnowledgeEntries(),
       listModelLogicRecords()
     ]);
-    modelKnowledgeBaseEntries = knowledgeEntries.map((entry) => ({
-      id: entry.id,
-      text: entry.source_content || entry.source_title || '',
-      createdAt: entry.created_at
-    }));
-    modelLogicRecords = logicRecords.map((entry) => ({
-      id: entry.id,
-      title: entry.logic_title || '',
-      text: entry.logic_body || '',
-      createdAt: entry.created_at
-    }));
+    modelDatasetEntries = datasetEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Dataset'));
+    modelKnowledgeBaseEntries = knowledgeEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Knowledge asset'));
+    modelLogicRecords = logicRecords.map(normalizeLogicRecordEntry);
     modelTrainingSubstrateBackendLoaded = true;
+    writeStoredModelDatasetEntries();
     writeStoredModelKnowledgeBaseEntries();
     writeStoredModelLogicRecords();
     renderAllModelManagement();
@@ -1706,6 +1813,44 @@ function syncDirectoryFilterLabels(root) {
   });
 }
 
+function renderModelDatasetEntries(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const list = root.querySelector('[data-model-dataset-list]');
+  if (!(list instanceof HTMLElement)) return;
+
+  list.replaceChildren();
+  if (!modelDatasetEntries.length) {
+    const empty = document.createElement('p');
+    empty.className = 'model-management__note';
+    empty.textContent = 'No datasets added.';
+    list.append(empty);
+    return;
+  }
+
+  modelDatasetEntries.forEach((entry) => {
+    const item = document.createElement('article');
+    item.className = 'model-management__knowledge-item';
+
+    const title = document.createElement('strong');
+    title.className = 'model-management__directory-title';
+    title.textContent = entry.title || 'Dataset';
+
+    const detail = document.createElement('p');
+    detail.className = 'model-management__note';
+    detail.textContent = entry.kind || entry.text || 'dataset';
+
+    const remove = document.createElement('button');
+    remove.className = 'model-management__text-button';
+    remove.type = 'button';
+    remove.dataset.modelDatasetRemove = entry.id;
+    remove.textContent = 'Remove';
+
+    item.append(title, detail, remove);
+    list.append(item);
+  });
+}
+
 function renderModelKnowledgeBase(root) {
   if (!(root instanceof HTMLElement)) return;
 
@@ -1725,9 +1870,13 @@ function renderModelKnowledgeBase(root) {
     const item = document.createElement('article');
     item.className = 'model-management__knowledge-item';
 
+    const title = document.createElement('strong');
+    title.className = 'model-management__directory-title';
+    title.textContent = entry.title || 'Knowledge asset';
+
     const text = document.createElement('p');
-    text.className = 'model-management__directory-title';
-    text.textContent = entry.text;
+    text.className = 'model-management__note';
+    text.textContent = entry.text || entry.kind || 'knowledge';
 
     const remove = document.createElement('button');
     remove.className = 'model-management__text-button';
@@ -1735,7 +1884,7 @@ function renderModelKnowledgeBase(root) {
     remove.dataset.modelKnowledgeRemove = entry.id;
     remove.textContent = 'Remove';
 
-    item.append(text, remove);
+    item.append(title, text, remove);
     list.append(item);
   });
 }
@@ -1776,6 +1925,140 @@ function renderModelLogicRecords(root) {
     item.append(title, text, remove);
     list.append(item);
   });
+}
+
+function normalizeModelDataManagerPane(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (normalizedValue === 'knowledge-base') return 'knowledge-base';
+  if (normalizedValue === 'logics') return 'logics';
+  return 'datasets';
+}
+
+function getModelDataManagerEntries(pane = modelDataManagerPane) {
+  const normalizedPane = normalizeModelDataManagerPane(pane);
+  if (normalizedPane === 'knowledge-base') return modelKnowledgeBaseEntries;
+  if (normalizedPane === 'logics') return modelLogicRecords;
+  return modelDatasetEntries;
+}
+
+function getModelDataManagerCopy(pane = modelDataManagerPane) {
+  const normalizedPane = normalizeModelDataManagerPane(pane);
+  if (normalizedPane === 'knowledge-base') {
+    return {
+      title: 'Knowledge manager',
+      empty: 'No knowledge entries recorded.',
+      titleLabel: 'Knowledge title',
+      bodyLabel: 'Knowledge content',
+      removeAttribute: 'modelDataManagerKnowledgeRemove',
+      saveAttribute: 'modelDataManagerKnowledgeSave',
+    };
+  }
+  if (normalizedPane === 'logics') {
+    return {
+      title: 'Logic manager',
+      empty: 'No logic records recorded.',
+      titleLabel: 'Logic title',
+      bodyLabel: 'Logic body',
+      removeAttribute: 'modelDataManagerLogicRemove',
+      saveAttribute: 'modelDataManagerLogicSave',
+    };
+  }
+  return {
+    title: 'Dataset manager',
+    empty: 'No datasets recorded.',
+    titleLabel: 'Dataset name',
+    bodyLabel: 'Dataset content or reference',
+    removeAttribute: 'modelDataManagerDatasetRemove',
+    saveAttribute: 'modelDataManagerDatasetSave',
+  };
+}
+
+function renderModelDataManagerTabs(overlay, pane = modelDataManagerPane) {
+  const tabs = overlay.querySelectorAll('[data-model-data-manager-pane]');
+  tabs.forEach((tab) => {
+    if (!(tab instanceof HTMLButtonElement)) return;
+    const isActive = normalizeModelDataManagerPane(tab.dataset.modelDataManagerPane) === normalizeModelDataManagerPane(pane);
+    tab.setAttribute('aria-pressed', String(isActive));
+    tab.dataset.active = isActive ? 'true' : 'false';
+  });
+}
+
+function createModelDataManagerItem(entry = {}, pane = modelDataManagerPane) {
+  const copy = getModelDataManagerCopy(pane);
+  const item = document.createElement('article');
+  item.className = 'model-management__data-manager-item';
+
+  const titleField = document.createElement('label');
+  titleField.className = 'model-management__field';
+  const titleLabel = document.createElement('span');
+  titleLabel.className = 'model-management__field-label';
+  titleLabel.textContent = copy.titleLabel;
+  const title = document.createElement('input');
+  title.className = 'model-management__input';
+  title.type = 'text';
+  title.value = entry.title || '';
+  title.dataset.modelDataManagerTitle = entry.id;
+  titleField.append(titleLabel, title);
+
+  const bodyField = document.createElement('label');
+  bodyField.className = 'model-management__field';
+  const bodyLabel = document.createElement('span');
+  bodyLabel.className = 'model-management__field-label';
+  bodyLabel.textContent = copy.bodyLabel;
+  const body = document.createElement('textarea');
+  body.className = 'model-management__input model-management__input--textarea';
+  body.value = entry.text || '';
+  body.dataset.modelDataManagerBody = entry.id;
+  bodyField.append(bodyLabel, body);
+
+  const actions = document.createElement('div');
+  actions.className = 'model-management__data-manager-actions';
+
+  const save = document.createElement('button');
+  save.className = 'model-management__button';
+  save.type = 'button';
+  save.dataset[copy.saveAttribute] = entry.id;
+  save.textContent = 'Save';
+
+  const remove = document.createElement('button');
+  remove.className = 'model-management__text-button';
+  remove.type = 'button';
+  remove.dataset[copy.removeAttribute] = entry.id;
+  remove.textContent = 'Remove';
+
+  actions.append(save, remove);
+  item.append(titleField, bodyField, actions);
+  return item;
+}
+
+function renderModelDataManager(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const overlay = root.querySelector('[data-model-data-manager]');
+  if (!(overlay instanceof HTMLElement)) return;
+
+  overlay.hidden = !modelDataManagerOpen;
+  overlay.setAttribute('aria-hidden', String(!modelDataManagerOpen));
+  if (!modelDataManagerOpen) return;
+
+  const copy = getModelDataManagerCopy(modelDataManagerPane);
+  setText(overlay, '[data-model-data-manager-title]', copy.title);
+  renderModelDataManagerTabs(overlay, modelDataManagerPane);
+
+  const list = overlay.querySelector('[data-model-data-manager-list]');
+  if (!(list instanceof HTMLElement)) return;
+  list.replaceChildren();
+
+  const entries = getModelDataManagerEntries(modelDataManagerPane);
+  if (!entries.length) {
+    const empty = document.createElement('p');
+    empty.className = 'model-management__note';
+    empty.textContent = copy.empty;
+    list.append(empty);
+    return;
+  }
+
+  list.append(...entries.map((entry) => createModelDataManagerItem(entry, modelDataManagerPane)));
 }
 
 async function hydratePublicModelDirectory() {
@@ -2168,8 +2451,10 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   renderModelFoundationIdentityControls(root);
   renderModelPersonalizationControls(root, safeNavigationState);
   renderModelVisibilityControls(root);
+  renderModelDatasetEntries(root);
   renderModelKnowledgeBase(root);
   renderModelLogicRecords(root);
+  renderModelDataManager(root);
   renderModelDirectory(root);
   renderModelChangelogRecords(root);
 }
@@ -2440,30 +2725,99 @@ function handleModelDirectorySearchOpen(event) {
   }));
 }
 
+function handleModelTrainingInlineDropdownChange(event) {
+  const select = event.target?.closest?.('[data-model-dataset-kind], [data-model-knowledge-category]');
+  if (!(select instanceof HTMLSelectElement)) return;
+
+  const dropdown = select.closest('.ui-inline-dropdown');
+  const label = dropdown?.querySelector?.('.ui-inline-dropdown__value');
+  if (!(label instanceof HTMLElement)) return;
+
+  label.textContent = getSafeSelectOptionText(select);
+}
+
+async function handleModelDatasetSubmit(event) {
+  const form = event.target?.closest?.('[data-model-dataset-form]');
+  if (!(form instanceof HTMLFormElement)) return;
+
+  event.preventDefault();
+  const title = form.querySelector('[data-model-dataset-title]');
+  const kind = form.querySelector('[data-model-dataset-kind]');
+  const content = form.querySelector('[data-model-dataset-content]');
+  const file = form.querySelector('[data-model-dataset-file]');
+  if (!(title instanceof HTMLInputElement) || !(kind instanceof HTMLSelectElement) || !(content instanceof HTMLTextAreaElement)) return;
+
+  const datasetTitle = String(title.value || '').trim();
+  const datasetContent = String(content.value || '').trim();
+  const datasetFile = file instanceof HTMLInputElement ? file.files?.[0] : null;
+  if (!datasetTitle || (!datasetContent && !datasetFile)) return;
+
+  try {
+    const entry = await createModelDatasetEntry({
+      sourceTitle: datasetTitle,
+      sourceKind: kind.value,
+      sourceContent: datasetContent,
+      file: datasetFile
+    });
+    modelDatasetEntries = [
+      normalizeTrainingSourceEntry(entry, 'Dataset'),
+      ...modelDatasetEntries
+    ];
+    writeStoredModelDatasetEntries();
+    form.reset();
+    setTrainingSubstrateStatus('Dataset saved to Supabase.', 'saved');
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+async function handleModelDatasetRemove(event) {
+  const trigger = event.target?.closest?.('[data-model-dataset-remove]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  const entryId = trigger.dataset.modelDatasetRemove;
+  try {
+    await removeModelDatasetEntry(entryId);
+    modelDatasetEntries = modelDatasetEntries.filter((entry) => entry.id !== entryId);
+    writeStoredModelDatasetEntries();
+    renderAllModelManagement();
+  } catch (error) {
+    setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
 async function handleModelKnowledgeSubmit(event) {
   const form = event.target?.closest?.('[data-model-knowledge-form]');
   if (!(form instanceof HTMLFormElement)) return;
 
   event.preventDefault();
+  const title = form.querySelector('[data-model-knowledge-title]');
+  const category = form.querySelector('[data-model-knowledge-category]');
   const input = form.querySelector('[data-model-knowledge-input]');
+  const file = form.querySelector('[data-model-knowledge-file]');
   if (!(input instanceof HTMLTextAreaElement)) return;
 
   const text = String(input.value || '').trim();
-  if (!text) return;
+  const knowledgeTitle = title instanceof HTMLInputElement ? title.value.trim() : '';
+  const knowledgeCategory = category instanceof HTMLSelectElement ? category.value : 'general';
+  const knowledgeFile = file instanceof HTMLInputElement ? file.files?.[0] : null;
+  if (!text && !knowledgeFile) return;
 
   try {
-    const entry = await createModelKnowledgeEntry(text);
+    const entry = await createModelKnowledgeEntry({
+      sourceTitle: knowledgeTitle,
+      sourceContent: text,
+      knowledgeCategory,
+      file: knowledgeFile
+    });
     modelKnowledgeBaseEntries = [
-      {
-        id: entry.id,
-        text: entry.source_content || entry.source_title || text,
-        createdAt: entry.created_at
-      },
+      normalizeTrainingSourceEntry(entry, 'Knowledge asset'),
       ...modelKnowledgeBaseEntries
     ];
     writeStoredModelKnowledgeBaseEntries();
-    input.value = '';
-    setTrainingSubstrateStatus('Knowledge note saved to Supabase.', 'saved');
+    form.reset();
+    setTrainingSubstrateStatus('Knowledge saved to Supabase.', 'saved');
     renderAllModelManagement();
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
@@ -2485,28 +2839,45 @@ async function handleModelKnowledgeRemove(event) {
   }
 }
 
+async function handleModelLogicPromptGenerate(event) {
+  const trigger = event.target?.closest?.('[data-model-logic-prompt-generate]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  const form = trigger.closest('[data-model-logic-form]');
+  if (!(form instanceof HTMLFormElement)) return;
+
+  const question = form.querySelector('[data-model-logic-question]');
+  const title = form.querySelector('[data-model-logic-title]');
+  if (!(question instanceof HTMLTextAreaElement)) return;
+
+  const prompt = pickModelLogicQuestion(await readModelLogicQuestionRegistry());
+  question.value = prompt.question;
+  if (title instanceof HTMLInputElement && !title.value.trim()) {
+    title.value = prompt.category;
+  }
+  question.focus();
+}
+
 async function handleModelLogicSubmit(event) {
   const form = event.target?.closest?.('[data-model-logic-form]');
   if (!(form instanceof HTMLFormElement)) return;
   event.preventDefault();
 
   const title = form.querySelector('[data-model-logic-title]');
+  const question = form.querySelector('[data-model-logic-question]');
   const input = form.querySelector('[data-model-logic-input]');
-  if (!(title instanceof HTMLInputElement) || !(input instanceof HTMLTextAreaElement)) return;
-  if (!title.value.trim() || !input.value.trim()) return;
+  if (!(title instanceof HTMLInputElement) || !(question instanceof HTMLTextAreaElement) || !(input instanceof HTMLTextAreaElement)) return;
+  if (!title.value.trim() || !question.value.trim() || !input.value.trim()) return;
+
+  const logicBody = `Question: ${question.value.trim()}\nAnswer: ${input.value.trim()}`;
 
   try {
     const entry = await createModelLogicRecord({
       logicTitle: title.value,
-      logicBody: input.value
+      logicBody
     });
     modelLogicRecords = [
-      {
-        id: entry.id,
-        title: entry.logic_title || title.value,
-        text: entry.logic_body || input.value,
-        createdAt: entry.created_at
-      },
+      normalizeLogicRecordEntry(entry),
       ...modelLogicRecords
     ];
     writeStoredModelLogicRecords();
@@ -2531,6 +2902,138 @@ async function handleModelLogicRemove(event) {
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
+}
+
+function setModelDataManagerStatus(message = '', state = 'idle') {
+  modelManagementRoots().forEach((root) => {
+    const status = root.querySelector('[data-model-data-manager-status]');
+    if (!(status instanceof HTMLElement)) return;
+    status.textContent = message;
+    status.dataset.modelDataManagerStatus = state;
+  });
+}
+
+function setModelDataManagerOpen(open, pane = modelDataManagerPane) {
+  modelDataManagerOpen = open === true;
+  modelDataManagerPane = normalizeModelDataManagerPane(pane);
+  if (!modelDataManagerOpen) setModelDataManagerStatus('', 'idle');
+  renderAllModelManagement();
+}
+
+function handleModelDataManagerOpenRequest(event) {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  const pane = normalizeModelDataManagerPane(detail.filters?.pane || getProfileNavigationState().modelPane);
+  setModelDataManagerOpen(true, pane);
+}
+
+function handleModelDataManagerClick(event) {
+  const close = event.target?.closest?.('[data-model-data-manager-close]');
+  if (close instanceof HTMLElement) {
+    setModelDataManagerOpen(false);
+    return;
+  }
+
+  const pane = event.target?.closest?.('[data-model-data-manager-pane]');
+  if (pane instanceof HTMLElement) {
+    modelDataManagerPane = normalizeModelDataManagerPane(pane.dataset.modelDataManagerPane);
+    renderAllModelManagement();
+  }
+}
+
+function findModelDataManagerField(root, selector, entryId) {
+  if (!(root instanceof HTMLElement) || !entryId) return null;
+  const field = root.querySelector(`${selector}="${CSS.escape(entryId)}"]`);
+  return field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement ? field : null;
+}
+
+function getModelDataManagerPayload(trigger) {
+  const root = trigger?.closest?.('[data-model-data-manager]');
+  const entryId = String(
+    trigger?.dataset?.modelDataManagerDatasetSave
+    || trigger?.dataset?.modelDataManagerKnowledgeSave
+    || trigger?.dataset?.modelDataManagerLogicSave
+    || ''
+  ).trim();
+  const title = findModelDataManagerField(root, '[data-model-data-manager-title', entryId);
+  const body = findModelDataManagerField(root, '[data-model-data-manager-body', entryId);
+  return {
+    entryId,
+    title: title?.value?.trim?.() || '',
+    text: body?.value?.trim?.() || '',
+  };
+}
+
+async function handleModelDataManagerSave(event) {
+  const trigger = event.target?.closest?.('[data-model-data-manager-dataset-save], [data-model-data-manager-knowledge-save], [data-model-data-manager-logic-save]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  const payload = getModelDataManagerPayload(trigger);
+  if (!payload.entryId || !payload.title) return;
+
+  try {
+    if (trigger.dataset.modelDataManagerDatasetSave) {
+      const entry = await updateModelDatasetEntry(payload.entryId, payload);
+      modelDatasetEntries = modelDatasetEntries.map((item) => item.id === payload.entryId ? normalizeTrainingSourceEntry(entry, 'Dataset') : item);
+      writeStoredModelDatasetEntries();
+      setModelDataManagerStatus('Dataset updated.', 'saved');
+    } else if (trigger.dataset.modelDataManagerKnowledgeSave) {
+      const entry = await updateModelKnowledgeEntry(payload.entryId, payload);
+      modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.map((item) => item.id === payload.entryId ? normalizeTrainingSourceEntry(entry, 'Knowledge asset') : item);
+      writeStoredModelKnowledgeBaseEntries();
+      setModelDataManagerStatus('Knowledge updated.', 'saved');
+    } else {
+      const entry = await updateModelLogicRecord(payload.entryId, {
+        logicTitle: payload.title,
+        logicBody: payload.text
+      });
+      modelLogicRecords = modelLogicRecords.map((item) => item.id === payload.entryId ? normalizeLogicRecordEntry(entry) : item);
+      writeStoredModelLogicRecords();
+      setModelDataManagerStatus('Logic updated.', 'saved');
+    }
+    renderAllModelManagement();
+  } catch (error) {
+    setModelDataManagerStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+async function handleModelDataManagerRemove(event) {
+  const trigger = event.target?.closest?.('[data-model-data-manager-dataset-remove], [data-model-data-manager-knowledge-remove], [data-model-data-manager-logic-remove]');
+  if (!(trigger instanceof HTMLElement)) return;
+
+  const entryId = String(
+    trigger.dataset.modelDataManagerDatasetRemove
+    || trigger.dataset.modelDataManagerKnowledgeRemove
+    || trigger.dataset.modelDataManagerLogicRemove
+    || ''
+  ).trim();
+  if (!entryId) return;
+
+  try {
+    if (trigger.dataset.modelDataManagerDatasetRemove) {
+      await removeModelDatasetEntry(entryId);
+      modelDatasetEntries = modelDatasetEntries.filter((entry) => entry.id !== entryId);
+      writeStoredModelDatasetEntries();
+      setModelDataManagerStatus('Dataset removed.', 'saved');
+    } else if (trigger.dataset.modelDataManagerKnowledgeRemove) {
+      await removeModelKnowledgeEntry(entryId);
+      modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
+      writeStoredModelKnowledgeBaseEntries();
+      setModelDataManagerStatus('Knowledge removed.', 'saved');
+    } else {
+      await removeModelLogicRecord(entryId);
+      modelLogicRecords = modelLogicRecords.filter((entry) => entry.id !== entryId);
+      writeStoredModelLogicRecords();
+      setModelDataManagerStatus('Logic removed.', 'saved');
+    }
+    renderAllModelManagement();
+  } catch (error) {
+    setModelDataManagerStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+function handleModelDataManagerKeydown(event) {
+  if (event.key !== 'Escape' || !modelDataManagerOpen) return;
+  setModelDataManagerOpen(false);
 }
 
 function renderAllModelManagement() {
@@ -2634,10 +3137,19 @@ function initModelManagement() {
   document.addEventListener('input', handleModelDirectoryFilter);
   document.addEventListener('change', handleModelDirectoryFilter);
   document.addEventListener('click', handleModelDirectorySearchOpen);
+  document.addEventListener('change', handleModelTrainingInlineDropdownChange);
+  document.addEventListener('submit', handleModelDatasetSubmit);
+  document.addEventListener('click', handleModelDatasetRemove);
   document.addEventListener('submit', handleModelKnowledgeSubmit);
   document.addEventListener('click', handleModelKnowledgeRemove);
+  document.addEventListener('click', handleModelLogicPromptGenerate);
   document.addEventListener('submit', handleModelLogicSubmit);
   document.addEventListener('click', handleModelLogicRemove);
+  document.addEventListener('model:data-manager-open-request', handleModelDataManagerOpenRequest);
+  document.addEventListener('click', handleModelDataManagerClick);
+  document.addEventListener('click', handleModelDataManagerSave);
+  document.addEventListener('click', handleModelDataManagerRemove);
+  document.addEventListener('keydown', handleModelDataManagerKeydown);
   document.addEventListener('model:identity-editor-open-request', handleModelIdentityEditorRequest);
   document.addEventListener('model:reset-request', handleModelResetRequest);
   document.addEventListener('model:parameter-filter-change', handleModelParameterFilterChange);

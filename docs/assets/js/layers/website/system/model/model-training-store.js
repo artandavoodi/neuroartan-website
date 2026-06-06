@@ -20,6 +20,8 @@ const TRAINING_RUN_REQUESTS_TABLE = 'model_training_run_requests';
 const SOURCE_OBJECTS_TABLE = 'model_source_objects';
 const LOGIC_RECORDS_TABLE = 'model_logic_records';
 const TRAINING_SOURCE_BUCKET = 'model-training-sources';
+const DATASET_SOURCE_KINDS = Object.freeze(['dataset_file', 'dataset_text', 'dataset_reference']);
+const KNOWLEDGE_SOURCE_KINDS = Object.freeze(['knowledge_note', 'knowledge_asset']);
 
 const DEFAULT_RECIPE_GRAPH = Object.freeze({
   nodes: [
@@ -431,26 +433,172 @@ export async function listModelKnowledgeEntries() {
     .from(SOURCE_OBJECTS_TABLE)
     .select('*')
     .eq('model_id', context.modelId)
-    .eq('source_kind', 'knowledge_note')
+    .in('source_kind', KNOWLEDGE_SOURCE_KINDS)
     .order('updated_at', { ascending: false });
   if (error) throw createTrainingSchemaError(error);
   return Array.isArray(data) ? data : [];
 }
 
-export async function createModelKnowledgeEntry(text) {
+export async function createModelDatasetEntry(values = {}) {
   const context = await getTrainingContext();
-  const normalizedText = normalizeString(text);
-  if (!normalizedText) throw new Error('KNOWLEDGE_NOTE_REQUIRED');
+  const upload = await uploadTrainingSourceFile(context, values.file);
+  const sourceKind = normalizeString(values.sourceKind || (upload ? 'dataset_file' : 'dataset_text'));
+  const sourceTitle = normalizeString(values.sourceTitle || values.datasetTitle || upload?.name || 'Dataset');
+  const sourceContent = normalizeString(values.sourceContent || values.datasetContent);
+  const sourceReference = normalizeString(values.sourceReference || values.datasetReference || upload?.path || `dataset:${Date.now()}`);
+  if (!sourceTitle || (!sourceContent && !sourceReference)) throw new Error('MODEL_DATASET_REQUIRED');
+
   const { data, error } = await context.supabase
     .from(SOURCE_OBJECTS_TABLE)
     .insert({
       model_id: context.modelId,
       profile_id: context.profileId,
       owner_auth_user_id: context.ownerAuthUserId,
-      source_kind: 'knowledge_note',
-      source_title: normalizedText.slice(0, 80),
-      source_content: normalizedText,
-      source_reference: `knowledge-note:${Date.now()}`,
+      source_kind: DATASET_SOURCE_KINDS.includes(sourceKind) ? sourceKind : 'dataset_text',
+      source_title: sourceTitle,
+      source_content: sourceContent || null,
+      source_reference: sourceReference,
+      storage_bucket: upload?.bucket || null,
+      storage_path: upload?.path || null,
+      source_metadata: compactObject({
+        upload,
+        original_name: upload?.name || '',
+        source_format: normalizeString(values.sourceFormat || values.datasetFormat || ''),
+      }),
+      source_status: 'received',
+      provenance_state: 'pending',
+    })
+    .select('*')
+    .single();
+  if (error) throw createTrainingSchemaError(error);
+  await recordTrainingEvent(context, {
+    area: 'model.training.datasets',
+    action: 'dataset_added',
+    title: 'Training dataset added',
+    detail: `${sourceTitle} was added to the private training dataset library.`,
+    metadata: { source_object_id: data.id },
+  });
+  return data;
+}
+
+export async function listModelDatasetEntries() {
+  const context = await getTrainingContext();
+  const { data, error } = await context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .select('*')
+    .eq('model_id', context.modelId)
+    .in('source_kind', DATASET_SOURCE_KINDS)
+    .order('updated_at', { ascending: false });
+  if (error) throw createTrainingSchemaError(error);
+  return Array.isArray(data) ? data : [];
+}
+
+export async function removeModelDatasetEntry(entryId) {
+  const context = await getTrainingContext();
+  const normalizedEntryId = normalizeString(entryId);
+  if (!normalizedEntryId) return;
+
+  const { data: source, error: sourceReadError } = await context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .select('*')
+    .eq('id', normalizedEntryId)
+    .eq('model_id', context.modelId)
+    .maybeSingle();
+  if (sourceReadError) throw createTrainingSchemaError(sourceReadError);
+
+  const { error } = await context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .delete()
+    .eq('id', normalizedEntryId)
+    .eq('model_id', context.modelId)
+    .in('source_kind', DATASET_SOURCE_KINDS);
+  if (error) throw createTrainingSchemaError(error);
+
+  if (source?.storage_path) {
+    const { error: storageError } = await context.supabase.storage
+      .from(TRAINING_SOURCE_BUCKET)
+      .remove([source.storage_path]);
+    if (storageError) throw storageError;
+  }
+}
+
+async function updateModelSourceEntry(entryId, values = {}, allowedSourceKinds = [], eventConfig = {}) {
+  const context = await getTrainingContext();
+  const normalizedEntryId = normalizeString(entryId);
+  const sourceTitle = normalizeString(values.sourceTitle || values.title);
+  const sourceContent = normalizeString(values.sourceContent || values.text || values.content);
+  const sourceReference = normalizeString(values.sourceReference || values.reference);
+  if (!normalizedEntryId || !sourceTitle) throw new Error('MODEL_SOURCE_UPDATE_REQUIRED');
+
+  const payload = compactObject({
+    source_title: sourceTitle,
+    source_content: sourceContent || null,
+    source_reference: sourceReference || undefined,
+    source_metadata: values.sourceMetadata || values.metadata || undefined,
+    updated_at: new Date().toISOString(),
+  });
+
+  let query = context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .update(payload)
+    .eq('id', normalizedEntryId)
+    .eq('model_id', context.modelId);
+
+  if (Array.isArray(allowedSourceKinds) && allowedSourceKinds.length) {
+    query = query.in('source_kind', allowedSourceKinds);
+  }
+
+  const { data, error } = await query.select('*').single();
+  if (error) throw createTrainingSchemaError(error);
+
+  await recordTrainingEvent(context, {
+    area: eventConfig.area || 'model.training.sources',
+    action: eventConfig.action || 'source_updated',
+    title: eventConfig.title || 'Training source updated',
+    detail: `${sourceTitle} was updated in the private training source library.`,
+    metadata: { source_object_id: data.id },
+  });
+  return data;
+}
+
+export async function updateModelDatasetEntry(entryId, values = {}) {
+  return updateModelSourceEntry(entryId, values, DATASET_SOURCE_KINDS, {
+    area: 'model.training.datasets',
+    action: 'dataset_updated',
+    title: 'Training dataset updated',
+  });
+}
+
+export async function createModelKnowledgeEntry(values = {}) {
+  const context = await getTrainingContext();
+  const normalizedValues = typeof values === 'string' ? { sourceContent: values } : values;
+  const upload = await uploadTrainingSourceFile(context, normalizedValues.file);
+  const sourceTitle = normalizeString(
+    normalizedValues.sourceTitle
+    || normalizedValues.knowledgeTitle
+    || upload?.name
+    || normalizeString(normalizedValues.sourceContent || normalizedValues.text).slice(0, 80)
+  );
+  const sourceContent = normalizeString(normalizedValues.sourceContent || normalizedValues.text);
+  const sourceReference = normalizeString(normalizedValues.sourceReference || upload?.path || `knowledge-note:${Date.now()}`);
+  if (!sourceTitle || (!sourceContent && !sourceReference)) throw new Error('KNOWLEDGE_NOTE_REQUIRED');
+
+  const { data, error } = await context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .insert({
+      model_id: context.modelId,
+      profile_id: context.profileId,
+      owner_auth_user_id: context.ownerAuthUserId,
+      source_kind: upload ? 'knowledge_asset' : 'knowledge_note',
+      source_title: sourceTitle,
+      source_content: sourceContent || null,
+      source_reference: sourceReference,
+      storage_bucket: upload?.bucket || null,
+      storage_path: upload?.path || null,
+      source_metadata: compactObject({
+        upload,
+        knowledge_category: normalizeString(normalizedValues.knowledgeCategory || ''),
+      }),
       source_status: 'received',
       provenance_state: 'pending',
     })
@@ -459,9 +607,9 @@ export async function createModelKnowledgeEntry(text) {
   if (error) throw createTrainingSchemaError(error);
   await recordTrainingEvent(context, {
     area: 'model.training.knowledge-base',
-    action: 'knowledge_note_added',
-    title: 'Knowledge note added',
-    detail: 'A private knowledge note was added to the training substrate.',
+    action: upload ? 'knowledge_asset_added' : 'knowledge_note_added',
+    title: upload ? 'Knowledge asset added' : 'Knowledge note added',
+    detail: `${sourceTitle} was added to the private knowledge base.`,
     metadata: { source_object_id: data.id },
   });
   return data;
@@ -469,13 +617,39 @@ export async function createModelKnowledgeEntry(text) {
 
 export async function removeModelKnowledgeEntry(entryId) {
   const context = await getTrainingContext();
+  const normalizedEntryId = normalizeString(entryId);
+  if (!normalizedEntryId) return;
+
+  const { data: source, error: sourceReadError } = await context.supabase
+    .from(SOURCE_OBJECTS_TABLE)
+    .select('*')
+    .eq('id', normalizedEntryId)
+    .eq('model_id', context.modelId)
+    .maybeSingle();
+  if (sourceReadError) throw createTrainingSchemaError(sourceReadError);
+
   const { error } = await context.supabase
     .from(SOURCE_OBJECTS_TABLE)
     .delete()
-    .eq('id', normalizeString(entryId))
+    .eq('id', normalizedEntryId)
     .eq('model_id', context.modelId)
-    .eq('source_kind', 'knowledge_note');
+    .in('source_kind', KNOWLEDGE_SOURCE_KINDS);
   if (error) throw createTrainingSchemaError(error);
+
+  if (source?.storage_path) {
+    const { error: storageError } = await context.supabase.storage
+      .from(TRAINING_SOURCE_BUCKET)
+      .remove([source.storage_path]);
+    if (storageError) throw storageError;
+  }
+}
+
+export async function updateModelKnowledgeEntry(entryId, values = {}) {
+  return updateModelSourceEntry(entryId, values, KNOWLEDGE_SOURCE_KINDS, {
+    area: 'model.training.knowledge-base',
+    action: 'knowledge_entry_updated',
+    title: 'Knowledge entry updated',
+  });
 }
 
 export async function listModelLogicRecords() {
@@ -527,4 +701,34 @@ export async function removeModelLogicRecord(recordId) {
     .eq('id', normalizeString(recordId))
     .eq('model_id', context.modelId);
   if (error) throw createTrainingSchemaError(error);
+}
+
+export async function updateModelLogicRecord(recordId, values = {}) {
+  const context = await getTrainingContext();
+  const normalizedRecordId = normalizeString(recordId);
+  const logicTitle = normalizeString(values.logicTitle || values.logic_title || values.title);
+  const logicBody = normalizeString(values.logicBody || values.logic_body || values.text);
+  if (!normalizedRecordId || !logicTitle || !logicBody) throw new Error('MODEL_LOGIC_UPDATE_REQUIRED');
+
+  const { data, error } = await context.supabase
+    .from(LOGIC_RECORDS_TABLE)
+    .update({
+      logic_title: logicTitle,
+      logic_body: logicBody,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', normalizedRecordId)
+    .eq('model_id', context.modelId)
+    .select('*')
+    .single();
+  if (error) throw createTrainingSchemaError(error);
+
+  await recordTrainingEvent(context, {
+    area: 'model.training.logics',
+    action: 'logic_record_updated',
+    title: 'Model logic updated',
+    detail: `${logicTitle} was updated in the owner-defined logic registry.`,
+    metadata: { logic_record_id: data.id },
+  });
+  return data;
 }

@@ -38,6 +38,7 @@ const ACTION_ICONS = Object.freeze({
   modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   modelLearn: '/registry/icons/public/assets/layers/website/model/actions/learn.svg',
+  modelDataManager: '/registry/icons/public/assets/core/files/database/database.svg',
   modelReset: '/registry/icons/public/assets/core/actions/reset/reset.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
@@ -146,6 +147,13 @@ const ACTIONS = Object.freeze({
     label: 'Learn',
     tooltip: 'Learn',
     icon: ACTION_ICONS.modelLearn,
+    authState: 'user'
+  },
+  modelDataManager: {
+    id: 'model-data-manager',
+    label: 'Data manager',
+    tooltip: 'Data manager',
+    icon: ACTION_ICONS.modelDataManager,
     authState: 'user'
   },
   modelReset: {
@@ -317,16 +325,16 @@ const CONTEXT_ACTIONS = Object.freeze({
   posts: ['editProfile', 'createPost', 'filterPosts'],
   thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
   models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
-  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
-  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-foundation': ['modelLearn', 'modelReset', 'modelChangelog'],
+  'model-training': ['modelLearn', 'modelReset', 'modelChangelog'],
   'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-sources': ['modelSources', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-memory': ['modelMemory', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-voice': ['modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
-  'model-readiness': ['modelReadiness', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-readiness': ['modelLearn', 'modelReset', 'modelChangelog'],
   'model-runtime': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
-  'model-settings': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-settings': ['modelLearn', 'modelReset', 'modelChangelog'],
   organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
@@ -338,31 +346,40 @@ const MODEL_PANE_ACTIONS = Object.freeze({
   consent: ['modelConsent', 'modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
-  protocol: ['modelTraining', 'modelLearn', 'modelReset', 'modelChangelog'],
-  datasets: ['modelSources', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
-  'knowledge-base': ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
-  logics: ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
-  provenance: ['modelSources', 'modelRouting', 'modelLearn', 'modelReset', 'modelChangelog'],
-  evaluation: ['modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  protocol: ['modelLearn', 'modelReset', 'modelChangelog'],
+  datasets: ['modelDataManager', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'knowledge-base': ['modelDataManager', 'modelLearn', 'modelReset', 'modelChangelog'],
+  logics: ['modelDataManager', 'modelLearn', 'modelReset', 'modelChangelog'],
+  provenance: ['modelLearn', 'modelReset', 'modelChangelog'],
+  evaluation: ['modelLearn', 'modelReset', 'modelChangelog'],
   cognition: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
   communication: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelMemory', 'modelLearn', 'modelReset', 'modelChangelog'],
   emotion: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
   behavior: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
-  state: ['modelReadiness', 'filterDashboard', 'modelLearn', 'modelReset', 'modelChangelog'],
-  checks: ['modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
-  blockers: ['modelConsent', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  state: ['modelLearn', 'modelReset', 'modelChangelog'],
+  checks: ['modelLearn', 'modelReset', 'modelChangelog'],
+  blockers: ['modelLearn', 'modelReset', 'modelChangelog'],
   history: ['modelLearn', 'modelReset', 'modelChangelog'],
   trending: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   directory: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   expertise: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   reputation: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   monetization: ['modelLearn', 'modelReset', 'modelChangelog'],
-  preferences: ['modelPreferences', 'modelLearn', 'modelReset', 'modelChangelog'],
-  provider: ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
-  routing: ['modelRouting', 'modelLearn', 'modelReset', 'modelChangelog'],
-  visibility: ['modelConsent', 'modelLearn', 'modelReset', 'modelChangelog'],
+  preferences: ['modelLearn', 'modelReset', 'modelChangelog'],
+  provider: ['modelLearn', 'modelReset', 'modelChangelog'],
+  routing: ['modelLearn', 'modelReset', 'modelChangelog'],
+  visibility: ['modelLearn', 'modelReset', 'modelChangelog'],
   changelog: ['modelLearn', 'modelReset', 'modelChangelog']
+});
+
+const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
+  overview: ['modelLearn', 'modelReset', 'modelChangelog'],
+  identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
+  consent: ['modelLearn', 'modelReset', 'modelChangelog'],
+  sources: ['modelLearn', 'modelReset', 'modelChangelog'],
+  memory: ['modelLearn', 'modelReset', 'modelChangelog'],
+  voice: ['modelLearn', 'modelReset', 'modelChangelog']
 });
 
 const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
@@ -395,6 +412,11 @@ function toolbarRoots(){
 function resolveActionKeys(state = getProfileNavigationState()){
   if (state.section === 'model-personalization') {
     return MODEL_PERSONALIZATION_PANE_ACTIONS[resolveModelPersonalizationPane(state)];
+  }
+
+  if (state.section === 'model-foundation') {
+    const foundationPane = String(state.modelPane || 'overview').trim() || 'overview';
+    return MODEL_FOUNDATION_PANE_ACTIONS[foundationPane] || MODEL_FOUNDATION_PANE_ACTIONS.overview;
   }
 
   if (String(state.section || '').startsWith('model-') && MODEL_PANE_ACTIONS[state.modelPane]) {
@@ -771,6 +793,14 @@ function requestProfileToolAction(action){
           }
         }));
       }
+      return;
+    case 'model-data-manager':
+      document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
+      }));
       return;
     case 'filter-posts':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {

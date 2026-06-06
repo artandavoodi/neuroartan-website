@@ -215,6 +215,7 @@
   color:var(--text-secondary-color);
 }
 
+
 .model-management__control-title{
   margin:0;
 }
@@ -224,6 +225,12 @@
   grid-template-columns:1fr;
   gap:var(--data-grid-gap);
   min-width:0;
+}
+
+.model-management__control-title:not(:first-child){
+  margin-block-start:var(--spacing-1xl);
+  padding-block-start:var(--spacing-xl);
+  border-block-start:var(--border-width-hairline) solid transparent;
 }
 
 .model-management__audience-groups{

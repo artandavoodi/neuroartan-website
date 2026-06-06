@@ -28,6 +28,7 @@ export function scoreSourceCalibration({ questions = [], answers = {}, results =
   const dominantOrientation = getDominantSourceOrientation(orientationScores);
   const cognitiveOrientationIndex = calculateCognitiveOrientationIndex(orientationScores);
   const sourceReadiness = classifySourceReadiness(cognitiveOrientationIndex);
+  const dimensionOutputs = classifySourceDimensions(dimensionScores);
 
   return {
     schema: 'neuroartan.model.foundation.source_calibration.result',
@@ -42,7 +43,8 @@ export function scoreSourceCalibration({ questions = [], answers = {}, results =
     orientation_scores: orientationScores,
     construct_scores: constructScores,
     dimension_scores: dimensionScores,
-    dimension_outputs: classifySourceDimensions(dimensionScores),
+    dimension_outputs: dimensionOutputs,
+    summary_metrics: createSourceSummaryMetrics({ cognitiveOrientationIndex, dominantOrientation, orientationScores, dimensionScores, dimensionOutputs }),
     source_readiness_summary: getSourceReadinessSummary(sourceReadiness, results),
   };
 }
@@ -145,6 +147,49 @@ function classifySourceDimensions(dimensionScores = {}) {
     outputs[dimension] = classifySourceDimension(dimension, average);
     return outputs;
   }, {});
+}
+
+function createSourceSummaryMetrics({ cognitiveOrientationIndex, dominantOrientation, orientationScores = {}, dimensionScores = {}, dimensionOutputs = {} } = {}) {
+  const dominantOrientationScore = orientationScores[dominantOrientation]?.average ?? null;
+
+  return {
+    cognitive_orientation_index: {
+      label: 'Cognitive Orientation Index',
+      value: cognitiveOrientationIndex,
+      score: cognitiveOrientationIndex,
+      status: classifyMetricStatus(cognitiveOrientationIndex),
+    },
+    dominant_orientation: {
+      label: 'Dominant Orientation',
+      value: dominantOrientation,
+      score: dominantOrientationScore,
+      status: classifyMetricStatus(dominantOrientationScore),
+    },
+    control_orientation: createSourceDimensionSummaryMetric('Control Orientation', dimensionScores.control_orientation, dimensionOutputs.control_orientation),
+    agency_level: createSourceDimensionSummaryMetric('Agency Level', dimensionScores.agency_level, dimensionOutputs.agency_level),
+    regulation_style: createSourceDimensionSummaryMetric('Regulation Style', dimensionScores.regulation_style, dimensionOutputs.regulation_style),
+    cognitive_flexibility: createSourceDimensionSummaryMetric('Cognitive Flexibility', dimensionScores.cognitive_flexibility, dimensionOutputs.cognitive_flexibility),
+    narrative_coherence: createSourceDimensionSummaryMetric('Narrative Coherence', dimensionScores.narrative_coherence, dimensionOutputs.narrative_coherence),
+  };
+}
+
+function createSourceDimensionSummaryMetric(label, dimensionScore = {}, output = '') {
+  const score = dimensionScore?.average ?? null;
+
+  return {
+    label,
+    value: output || 'Unclassified',
+    score,
+    status: classifyMetricStatus(score),
+  };
+}
+
+function classifyMetricStatus(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score)) return 'pending';
+  if (score >= 7) return 'complete';
+  if (score >= 4) return 'forming';
+  return 'initial';
 }
 
 function classifySourceDimension(dimension, average) {

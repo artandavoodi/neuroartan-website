@@ -113,10 +113,8 @@ export function renderSourceCalibrationResult(root, result = null, resultsRegist
     assessmentRoot.appendChild(resultRoot);
   }
 
-  resultRoot.innerHTML = `
-    <h5 class="model-source-calibration__result-title">Source Calibration complete</h5>
-    <p class="model-management__section-copy">Your private Source Profile has been saved. Open Summary from the right toolbar to review the Source Readiness details.</p>
-  `;
+  resultRoot.innerHTML = '';
+  resultRoot.hidden = true;
 }
 
 export function clearSourceCalibrationQuestion(root) {

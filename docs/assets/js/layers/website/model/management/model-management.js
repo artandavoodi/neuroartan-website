@@ -1271,6 +1271,94 @@ function formatSourceSummaryValue(value = '') {
     .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
+function getSourceSummaryStatusToken(value = '') {
+  const score = Number(value);
+  if (Number.isFinite(score)) {
+    if (score >= 7) return 'complete';
+    if (score >= 4) return 'forming';
+    return 'initial';
+  }
+
+  const normalizedValue = String(value || '').trim().toLowerCase();
+  if (!normalizedValue || normalizedValue === 'not recorded' || normalizedValue === 'unclassified') return 'pending';
+  if (['stable', 'calibrated', 'complete', 'completed'].includes(normalizedValue)) return 'complete';
+  if (['forming', 'initial', 'draft', 'pending'].includes(normalizedValue)) return normalizedValue === 'initial' ? 'initial' : 'forming';
+
+  return 'pending';
+}
+
+
+function getSourceSummaryMetricStatus(metric = {}) {
+  if (metric?.status && metric.status !== 'complete') {
+    return metric.status;
+  }
+
+  const score = Number(metric?.score ?? metric?.value);
+  if (Number.isFinite(score)) {
+    return getSourceSummaryStatusToken(score);
+  }
+
+  return getSourceSummaryStatusToken(metric?.value);
+}
+
+const SOURCE_SUMMARY_DOC_LINKS = Object.freeze({
+  'Cognitive Orientation Index': 'https://docs.neuroartan.com/model-identity/source-calibration/cognitive-orientation-index/',
+  'Dominant Orientation': 'https://docs.neuroartan.com/model-identity/source-calibration/dominant-orientation/',
+  'Control Orientation': 'https://docs.neuroartan.com/model-identity/source-calibration/control-orientation/',
+  'Agency Level': 'https://docs.neuroartan.com/model-identity/source-calibration/agency-level/',
+  'Regulation Style': 'https://docs.neuroartan.com/model-identity/source-calibration/regulation-style/',
+  'Cognitive Flexibility': 'https://docs.neuroartan.com/model-identity/source-calibration/cognitive-flexibility/',
+  'Narrative Coherence': 'https://docs.neuroartan.com/model-identity/source-calibration/narrative-coherence/'
+});
+
+function createSourceSummaryLearnButton(label = '') {
+  const href = SOURCE_SUMMARY_DOC_LINKS[label] || 'https://docs.neuroartan.com/model-identity/source-calibration/';
+
+  return `
+    <a class="model-source-summary__learn" href="${href}" target="_blank" rel="noopener noreferrer" data-model-source-summary-learn="${label}" aria-label="Learn more about ${label}">
+      <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/info/info.svg" alt="">
+    </a>
+  `;
+}
+
+function getSourceSummaryMetricValue(metric = {}, fallback = 'Not recorded') {
+  const value = metric?.value ?? fallback;
+  if (typeof value === 'number') {
+    return `${value.toFixed(1).replace(/\.0$/, '')} / 10`;
+  }
+  return formatSourceSummaryValue(value);
+}
+
+function getSourceSummaryMetricScore(metric = {}) {
+  if (typeof metric?.value === 'number') return '';
+
+  const score = Number(metric?.score);
+  if (!Number.isFinite(score)) return '';
+  return `${score.toFixed(1).replace(/\.0$/, '')} / 10`;
+}
+
+function createSourceSummaryMetricMarkup(metricKey = '', metric = {}, icon = '') {
+  const label = metric?.label || formatSourceSummaryValue(metricKey);
+  const value = getSourceSummaryMetricValue(metric);
+  const score = getSourceSummaryMetricScore(metric);
+  const status = getSourceSummaryMetricStatus(metric);
+
+  return `
+    <div class="model-source-summary__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
+        <span>${label}</span>
+        ${createSourceSummaryLearnButton(label)}
+      </dt>
+      <dd>
+        <span class="model-management__status-dot" data-status="${status}" aria-hidden="true"></span>
+        <strong>${value}</strong>
+        ${score ? `<span class="model-source-summary__score">${score}</span>` : ''}
+      </dd>
+    </div>
+  `;
+}
+
 function removeModelSourceSummaryOverlay() {
   document.querySelector('[data-model-source-summary-overlay]')?.remove();
 }
@@ -1319,31 +1407,97 @@ async function handleModelSourceSummaryOpenRequest() {
       return;
     }
 
+    const summaryMetrics = payload.summary_metrics || latest.summary_metrics || {};
+    const metricIcons = {
+      cognitive_orientation_index: '/registry/icons/public/assets/core/model/cognitive-orientation-index/cognitive-orientation-index.svg',
+      dominant_orientation: '/registry/icons/public/assets/core/model/source-profile/source-profile.svg',
+      control_orientation: '/registry/icons/public/assets/core/model/control-orientation/control-orientation.svg',
+      agency_level: '/registry/icons/public/assets/core/model/agency-level/agency-level.svg',
+      regulation_style: '/registry/icons/public/assets/core/model/regulation-style/regulation-style.svg',
+      cognitive_flexibility: '/registry/icons/public/assets/core/model/cognitive-flexibility/cognitive-flexibility.svg',
+      narrative_coherence: '/registry/icons/public/assets/core/model/narrative-coherence/narrative-coherence.svg',
+    };
+
+    const dimensionOutputs = payload.dimension_outputs || latest.dimension_outputs || {};
+    const dimensionScores = payload.dimension_scores || latest.dimension_scores || {};
+
+    const dimensionMetricFallbacks = {
+      control_orientation: {
+        label: 'Control Orientation',
+        value: dimensionOutputs.control_orientation || 'Not recorded',
+        score: dimensionScores.control_orientation?.average ?? null,
+        status: getSourceSummaryStatusToken(dimensionScores.control_orientation?.average),
+      },
+      agency_level: {
+        label: 'Agency Level',
+        value: dimensionOutputs.agency_level || 'Not recorded',
+        score: dimensionScores.agency_level?.average ?? null,
+        status: getSourceSummaryStatusToken(dimensionScores.agency_level?.average),
+      },
+      regulation_style: {
+        label: 'Regulation Style',
+        value: dimensionOutputs.regulation_style || 'Not recorded',
+        score: dimensionScores.regulation_style?.average ?? null,
+        status: getSourceSummaryStatusToken(dimensionScores.regulation_style?.average),
+      },
+      cognitive_flexibility: {
+        label: 'Cognitive Flexibility',
+        value: dimensionOutputs.cognitive_flexibility || 'Not recorded',
+        score: dimensionScores.cognitive_flexibility?.average ?? null,
+        status: getSourceSummaryStatusToken(dimensionScores.cognitive_flexibility?.average),
+      },
+      narrative_coherence: {
+        label: 'Narrative Coherence',
+        value: dimensionOutputs.narrative_coherence || 'Not recorded',
+        score: dimensionScores.narrative_coherence?.average ?? null,
+        status: getSourceSummaryStatusToken(dimensionScores.narrative_coherence?.average),
+      },
+    };
+
+    const fallbackMetrics = {
+      cognitive_orientation_index: {
+        label: 'Cognitive Orientation Index',
+        value: payload.cognitive_orientation_index ?? latest.cognitive_orientation_index ?? 'Not recorded',
+        status: getSourceSummaryStatusToken(payload.cognitive_orientation_index ?? latest.cognitive_orientation_index),
+      },
+      dominant_orientation: {
+        label: 'Dominant Orientation',
+        value: payload.dominant_orientation || latest.dominant_orientation || 'Not recorded',
+        status: getSourceSummaryStatusToken((payload.orientation_scores || latest.orientation_scores || {})[payload.dominant_orientation || latest.dominant_orientation]?.average),
+      },
+      control_orientation: dimensionMetricFallbacks.control_orientation,
+      agency_level: dimensionMetricFallbacks.agency_level,
+      regulation_style: dimensionMetricFallbacks.regulation_style,
+      cognitive_flexibility: dimensionMetricFallbacks.cognitive_flexibility,
+      narrative_coherence: dimensionMetricFallbacks.narrative_coherence,
+    };
+
+    const metricOrder = [
+      'cognitive_orientation_index',
+      'dominant_orientation',
+      'control_orientation',
+      'agency_level',
+      'regulation_style',
+      'cognitive_flexibility',
+      'narrative_coherence',
+    ];
+
+    const metricMarkup = metricOrder
+      .map((metricKey) => {
+        const metric = summaryMetrics[metricKey] || fallbackMetrics[metricKey];
+        if (!metric) return '';
+        return createSourceSummaryMetricMarkup(metricKey, metric, metricIcons[metricKey]);
+      })
+      .filter(Boolean)
+      .join('');
+
     card.innerHTML = `
-      <p class="model-management__section-copy">${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is saved as private model foundation data.'}</p>
-      <dl class="model-management__card-grid model-source-calibration__result-grid">
-        <div class="model-management__card">
-          <dt>
-            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/cognitive-orientation-index/cognitive-orientation-index.svg" alt="">
-            Cognitive Orientation Index
-          </dt>
-          <dd>${payload.cognitive_orientation_index ?? latest.cognitive_orientation_index ?? 'Not recorded'}</dd>
-        </div>
-        <div class="model-management__card">
-          <dt>
-            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/source-profile/source-profile.svg" alt="">
-            Dominant Orientation
-          </dt>
-          <dd>${formatSourceSummaryValue(payload.dominant_orientation || latest.dominant_orientation)}</dd>
-        </div>
-        <div class="model-management__card">
-          <dt>
-            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/source-readiness/source-readiness.svg" alt="">
-            Source Readiness
-          </dt>
-          <dd>${formatSourceSummaryValue(payload.source_readiness || latest.source_readiness)}</dd>
-        </div>
-      </dl>
+      <section class="model-source-summary" aria-label="Source summary dashboard">
+        <p class="model-source-summary__copy">${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is saved as private model foundation data.'}</p>
+        <dl class="model-source-summary__metrics">
+          ${metricMarkup}
+        </dl>
+      </section>
     `;
   } catch (error) {
     console.warn('[Neuroartan][Model] Source summary overlay failed.', error);
@@ -1446,6 +1600,20 @@ document.addEventListener('click', (event) => {
   event.preventDefault();
   removeModelSourceSummaryOverlay();
 });
+
+
+document.addEventListener('click', (event) => {
+  const summaryLink = event.target.closest('[data-model-source-summary-link]');
+  if (!summaryLink) return;
+
+  event.preventDefault();
+  document.dispatchEvent(new CustomEvent('model:source-summary-open-request', {
+    detail: {
+      source: 'model-informative-footer'
+    }
+  }));
+});
+
 
 function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
   if (!isModelOwnerAuthenticated(runtimeState)) return;

@@ -31,10 +31,15 @@ import {
 } from './model-source-calibration-renderer.js';
 
 import {
+  closeSourceCalibrationWorkspace,
   openSourceCalibrationWorkspace,
   setSourceCalibrationWorkspaceQuestion,
-  setSourceCalibrationWorkspaceResult,
 } from './workspace/model-source-calibration-workspace.js';
+
+import {
+  hideModelInformativeFooter,
+  showModelInformativeFooter,
+} from '../../shared/informative-footer/model-informative-footer.js';
 
 import {
   getOwnedCanonicalModel,
@@ -92,6 +97,11 @@ export function refreshSourceCalibration() {
   if (state.status === 'complete') {
     clearSourceCalibrationQuestion(sourceCalibrationRoot);
     renderSourceCalibrationResult(sourceCalibrationRoot, state.result, state.results);
+    void renderSourceCalibrationInformativeFooter();
+  }
+
+  if (state.status !== 'complete') {
+    hideModelInformativeFooter();
   }
 
   return state;
@@ -190,6 +200,7 @@ function handleSourceCalibrationSaveDraft() {
 async function handleSourceCalibrationRestartDraft() {
   previousSourceCalibrationResult = getSourceCalibrationState().result || null;
   removeSourceCalibrationDraftDecision();
+  hideModelInformativeFooter();
   restartSourceCalibrationDraft();
   clearSourceCalibrationQuestion(sourceCalibrationRoot);
   renderSourceCalibrationStatus(sourceCalibrationRoot, getSourceCalibrationState());
@@ -198,6 +209,7 @@ async function handleSourceCalibrationRestartDraft() {
 
 async function handleSourceCalibrationStart() {
   removeSourceCalibrationDraftDecision();
+  hideModelInformativeFooter();
 
   const state = getSourceCalibrationState();
 
@@ -411,14 +423,25 @@ async function renderActiveSourceCalibrationQuestion() {
   }
 }
 
+async function renderSourceCalibrationInformativeFooter() {
+  if (!sourceCalibrationRoot) {
+    return;
+  }
+
+  await showModelInformativeFooter({
+    host: sourceCalibrationRoot,
+    title: 'Source Calibration complete',
+    html: 'Your private Source Profile has been saved. Open <button class="model-informative-footer__link" type="button" data-model-source-summary-link>Summary</button> to review details.',
+  });
+}
+
 async function renderCompletedSourceCalibrationResultInWorkspace() {
   if (!sourceCalibrationRoot) {
     return;
   }
 
-  const resultNode = sourceCalibrationRoot.querySelector('[data-model-source-calibration-result]');
-  if (resultNode) {
-    await setSourceCalibrationWorkspaceResult(resultNode);
-    resultNode.remove();
-  }
+  closeSourceCalibrationWorkspace();
+  clearSourceCalibrationQuestion(sourceCalibrationRoot);
+
+  await renderSourceCalibrationInformativeFooter();
 }

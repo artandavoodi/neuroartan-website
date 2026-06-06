@@ -60,7 +60,7 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-lg);
-  padding: var(--site-shell-inline-padding);
+  padding: var(--site-shell-inline-padding) var(--site-shell-inline-padding) var(--spacing-md);
 }
 
 .model-source-calibration-workspace__progress {

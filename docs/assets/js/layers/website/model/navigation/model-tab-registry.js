@@ -138,7 +138,7 @@ export const MODEL_CONTEXT_TAB_ICONS = Object.freeze({
   evaluation: '/registry/icons/public/assets/layers/website/model/tabs/evaluation.svg',
   behavior: '/registry/icons/public/assets/layers/website/model/tabs/behavior.svg',
   communication: '/registry/icons/public/assets/core/communication/messaging/message.svg',
-  cognition: '/registry/icons/public/assets/core/cognition/cognition/cognition.svg',
+  cognition: '/registry/icons/public/assets/core/cognition/cognitive/cognitive.svg',
   'social-context': '/registry/icons/public/assets/core/identity/profile/users.svg',
   'safety-boundaries': '/registry/icons/public/assets/core/identity/security/security.svg',
   language: '/registry/icons/public/assets/layers/website/model/tabs/language.svg',

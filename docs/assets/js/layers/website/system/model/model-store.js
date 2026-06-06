@@ -44,6 +44,8 @@ const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferenc
 const MODEL_VISIBILITY_PREFERENCES_TABLE = 'model_visibility_preferences';
 const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
+const MODEL_CHANGELOG_EVENTS_TABLE = 'model_changelog_events';
+const MODEL_DEFAULT_REGISTRY_TABLE = 'model_default_registry';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -199,6 +201,8 @@ export function getModelStoreBackendState() {
     modelVisibilityPreferencesTable: MODEL_VISIBILITY_PREFERENCES_TABLE,
     modelVoiceTrainingStateTable: MODEL_VOICE_TRAINING_STATE_TABLE,
     modelLogicRecordsTable: MODEL_LOGIC_RECORDS_TABLE,
+    modelChangelogEventsTable: MODEL_CHANGELOG_EVENTS_TABLE,
+    modelDefaultRegistryTable: MODEL_DEFAULT_REGISTRY_TABLE,
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
     migrationStatus: 'supabase_canonical_model_foundation',
   };
@@ -848,6 +852,118 @@ export async function readModelPersonalizationPreferences(modelId) {
   }
 
   return mapModelPersonalizationPreferences(data);
+}
+
+export async function listModelDefaultRegistry(options = {}) {
+  const supabase = await resolveSupabaseClient();
+  if (!supabase) return [];
+
+  let query = supabase
+    .from(MODEL_DEFAULT_REGISTRY_TABLE)
+    .select('*')
+    .eq('active', true)
+    .order('pane', { ascending: true })
+    .order('section', { ascending: true })
+    .order('field', { ascending: true });
+
+  const area = normalizeString(options.area || '');
+  const pane = normalizeString(options.pane || '');
+  const section = normalizeString(options.section || '');
+  const field = normalizeString(options.field || '');
+
+  if (area) query = query.eq('area', area);
+  if (pane && pane !== 'all') query = query.eq('pane', pane);
+  if (section && section !== 'all') query = query.eq('section', section);
+  if (field && field !== 'all') query = query.eq('field', field);
+
+  const { data, error } = await query;
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listModelChangelogEvents(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(MODEL_CHANGELOG_EVENTS_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false });
+
+  const area = normalizeString(filters.area || '');
+  const pane = normalizeString(filters.pane || '');
+  const section = normalizeString(filters.section || '');
+  const field = normalizeString(filters.field || '');
+  const action = normalizeString(filters.action || '');
+
+  if (area && area !== 'model' && area !== 'all') query = query.eq('area', area);
+  if (pane && pane !== 'all') query = query.eq('pane', pane);
+  if (section && section !== 'all') query = query.eq('section', section);
+  if (field && field !== 'all') query = query.eq('field', field);
+  if (action && action !== 'all') query = query.eq('action', action);
+
+  const { data, error } = await query;
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function recordModelAuditEvent(model = {}, event = {}) {
+  const supabase = await resolveSupabaseClient();
+  const modelId = normalizeString(model?.id || event.model_id || event.modelId || '');
+  const currentProfile = normalizeString(model?.profile_id || event.profile_id || event.profileId || '')
+    ? null
+    : await getCurrentModelOwnerProfile();
+  const profileId = normalizeString(model?.profile_id || event.profile_id || event.profileId || currentProfile?.id || '');
+
+  if (!supabase || !modelId || !profileId || !event?.field) {
+    console.warn('[Neuroartan][Model] Audit event skipped.', {
+      hasSupabase: Boolean(supabase),
+      modelId,
+      profileId,
+      field: event?.field || ''
+    });
+    return null;
+  }
+
+  const payload = {
+    model_id: modelId,
+    profile_id: profileId,
+    area: normalizeString(event.area || 'personalization'),
+    pane: normalizeString(event.pane || 'all'),
+    section: normalizeString(event.section || 'all'),
+    field: normalizeString(event.field || ''),
+    label: normalizeString(event.label || event.field || 'Model field'),
+    action: normalizeString(event.action || 'change'),
+    value_from: event.from == null ? null : String(event.from),
+    value_to: event.to == null ? null : String(event.to),
+    source: normalizeString(event.source || 'model_personalization'),
+  };
+
+  const { data, error } = await supabase
+    .from(MODEL_CHANGELOG_EVENTS_TABLE)
+    .insert(payload)
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    console.warn('[Neuroartan][Model] Audit event insert failed.', error);
+    throw error;
+  }
+
+  return data || null;
 }
 
 export async function saveModelPersonalizationPreferences(modelId, preferences = {}) {

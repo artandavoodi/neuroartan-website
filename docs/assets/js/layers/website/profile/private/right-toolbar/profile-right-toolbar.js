@@ -38,6 +38,7 @@ const ACTION_ICONS = Object.freeze({
   modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   modelLearn: '/registry/icons/public/assets/layers/website/model/actions/learn.svg',
+  modelReset: '/registry/icons/public/assets/core/actions/reset/reset.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
   dashboard: '/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg',
@@ -145,6 +146,20 @@ const ACTIONS = Object.freeze({
     label: 'Learn',
     tooltip: 'Learn',
     icon: ACTION_ICONS.modelLearn,
+    authState: 'user'
+  },
+  modelReset: {
+    id: 'model-reset',
+    label: 'Reset',
+    tooltip: 'Reset',
+    icon: ACTION_ICONS.modelReset,
+    authState: 'user'
+  },
+  modelParameterFilter: {
+    id: 'model-parameter-filter',
+    label: 'Filter',
+    tooltip: 'Filter',
+    icon: ACTION_ICONS.filter,
     authState: 'user'
   },
   modelConsent: {
@@ -302,69 +317,84 @@ const CONTEXT_ACTIONS = Object.freeze({
   posts: ['editProfile', 'createPost', 'filterPosts'],
   thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
   models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
-  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelLearn', 'modelChangelog'],
-  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelLearn', 'modelChangelog'],
-  'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelLearn', 'modelChangelog'],
-  'model-sources': ['modelSources', 'filterModels', 'modelLearn', 'modelChangelog'],
-  'model-memory': ['modelMemory', 'modelLearn', 'modelChangelog'],
-  'model-voice': ['modelVoice', 'modelLearn', 'modelChangelog'],
-  'model-readiness': ['modelReadiness', 'filterModels', 'modelLearn', 'modelChangelog'],
-  'model-runtime': ['modelProvider', 'modelLearn', 'modelChangelog'],
-  'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelChangelog'],
-  'model-settings': ['modelProvider', 'modelLearn', 'modelChangelog'],
+  'model-foundation': ['modelIdentity', 'modelSources', 'modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-training': ['modelTraining', 'modelSources', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-sources': ['modelSources', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-memory': ['modelMemory', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-voice': ['modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-readiness': ['modelReadiness', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-runtime': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-settings': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
   organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
 });
 
 const MODEL_PANE_ACTIONS = Object.freeze({
-  overview: ['modelIdentity', 'modelReadiness', 'modelLearn', 'modelChangelog'],
-  identity: ['modelEditIdentity', 'modelLearn', 'modelChangelog'],
-  consent: ['modelConsent', 'modelLearn', 'modelChangelog'],
-  sources: ['modelSources', 'modelLearn', 'modelChangelog'],
-  voice: ['modelVoice', 'modelLearn', 'modelChangelog'],
-  protocol: ['modelTraining', 'modelLearn', 'modelChangelog'],
-  datasets: ['modelSources', 'filterModels', 'modelLearn', 'modelChangelog'],
-  'knowledge-base': ['modelSources', 'modelLearn', 'modelChangelog'],
-  logics: ['modelSources', 'modelLearn', 'modelChangelog'],
-  provenance: ['modelSources', 'modelRouting', 'modelLearn', 'modelChangelog'],
-  evaluation: ['modelReadiness', 'modelLearn', 'modelChangelog'],
-  cognition: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  communication: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  memory: ['modelMemory', 'modelLearn', 'modelChangelog'],
-  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  state: ['modelReadiness', 'filterDashboard', 'modelLearn', 'modelChangelog'],
-  checks: ['modelReadiness', 'modelLearn', 'modelChangelog'],
-  blockers: ['modelConsent', 'modelReadiness', 'modelLearn', 'modelChangelog'],
-  history: ['modelLearn', 'modelChangelog'],
-  trending: ['filterModels', 'modelLearn', 'modelChangelog'],
-  directory: ['filterModels', 'modelLearn', 'modelChangelog'],
-  expertise: ['filterModels', 'modelLearn', 'modelChangelog'],
-  reputation: ['filterModels', 'modelLearn', 'modelChangelog'],
-  monetization: ['modelLearn', 'modelChangelog'],
-  preferences: ['modelPreferences', 'modelLearn', 'modelChangelog'],
-  provider: ['modelProvider', 'modelLearn', 'modelChangelog'],
-  routing: ['modelRouting', 'modelLearn', 'modelChangelog'],
-  visibility: ['modelConsent', 'modelLearn', 'modelChangelog'],
-  changelog: ['modelLearn', 'modelChangelog']
+  overview: ['modelIdentity', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
+  consent: ['modelConsent', 'modelLearn', 'modelReset', 'modelChangelog'],
+  sources: ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
+  voice: ['modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
+  protocol: ['modelTraining', 'modelLearn', 'modelReset', 'modelChangelog'],
+  datasets: ['modelSources', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'knowledge-base': ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
+  logics: ['modelSources', 'modelLearn', 'modelReset', 'modelChangelog'],
+  provenance: ['modelSources', 'modelRouting', 'modelLearn', 'modelReset', 'modelChangelog'],
+  evaluation: ['modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  cognition: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
+  communication: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
+  memory: ['modelMemory', 'modelLearn', 'modelReset', 'modelChangelog'],
+  emotion: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
+  behavior: ['modelPersonalization', 'modelLearn', 'modelReset', 'modelChangelog'],
+  state: ['modelReadiness', 'filterDashboard', 'modelLearn', 'modelReset', 'modelChangelog'],
+  checks: ['modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  blockers: ['modelConsent', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
+  history: ['modelLearn', 'modelReset', 'modelChangelog'],
+  trending: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  directory: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  expertise: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  reputation: ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  monetization: ['modelLearn', 'modelReset', 'modelChangelog'],
+  preferences: ['modelPreferences', 'modelLearn', 'modelReset', 'modelChangelog'],
+  provider: ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
+  routing: ['modelRouting', 'modelLearn', 'modelReset', 'modelChangelog'],
+  visibility: ['modelConsent', 'modelLearn', 'modelReset', 'modelChangelog'],
+  changelog: ['modelLearn', 'modelReset', 'modelChangelog']
 });
 
 const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
-  cognition: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  communication: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  memory: ['modelPersonalization', 'modelMemory', 'modelLearn', 'modelChangelog'],
-  emotion: ['modelPersonalization', 'modelLearn', 'modelChangelog'],
-  behavior: ['modelPersonalization', 'modelLearn', 'modelChangelog']
+  cognition: ['modelParameterFilter', 'modelLearn', 'modelReset', 'modelChangelog'],
+  communication: ['modelParameterFilter', 'modelLearn', 'modelReset', 'modelChangelog'],
+  memory: ['modelParameterFilter', 'modelLearn', 'modelReset', 'modelChangelog'],
+  emotion: ['modelParameterFilter', 'modelLearn', 'modelReset', 'modelChangelog'],
+  behavior: ['modelParameterFilter', 'modelLearn', 'modelReset', 'modelChangelog']
 });
+
+function resolveModelPersonalizationPane(state = getProfileNavigationState()) {
+  const pane = String(state?.modelPane || '').trim();
+  if (Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_PANE_ACTIONS, pane)) {
+    return pane;
+  }
+
+  const activeModelRoot = document.querySelector('[data-model-personalization-pane]');
+  const activePane = String(activeModelRoot?.getAttribute('data-model-personalization-pane') || '').trim();
+  if (Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_PANE_ACTIONS, activePane)) {
+    return activePane;
+  }
+
+  return 'cognition';
+}
 
 function toolbarRoots(){
   return Array.from(document.querySelectorAll('[data-profile-right-toolbar]'));
 }
 
 function resolveActionKeys(state = getProfileNavigationState()){
-  if (state.section === 'model-personalization' && MODEL_PERSONALIZATION_PANE_ACTIONS[state.modelPane]) {
-    return MODEL_PERSONALIZATION_PANE_ACTIONS[state.modelPane];
+  if (state.section === 'model-personalization') {
+    return MODEL_PERSONALIZATION_PANE_ACTIONS[resolveModelPersonalizationPane(state)];
   }
 
   if (String(state.section || '').startsWith('model-') && MODEL_PANE_ACTIONS[state.modelPane]) {
@@ -393,22 +423,47 @@ function resolveSettingsChangelogArea(state = getProfileNavigationState()){
   }
 }
 
+
 function resolveModelChangelogArea(state = getProfileNavigationState()){
   const section = String(state?.section || 'model-foundation').replace(/^model-/, '') || 'foundation';
-  const pane = String(state?.modelPane || 'overview') || 'overview';
+  const pane = state?.section === 'model-personalization'
+    ? resolveModelPersonalizationPane(state)
+    : String(state?.modelPane || 'overview') || 'overview';
   return `model.${section}.${pane}`;
 }
 
+function resolveModelOverlayFilters(state = getProfileNavigationState()) {
+  if (state.section === 'model-personalization') {
+    return {
+      area: 'personalization',
+      pane: resolveModelPersonalizationPane(state)
+    };
+  }
+
+  const section = String(state?.section || 'model-foundation').replace(/^model-/, '') || 'foundation';
+  const pane = String(state?.modelPane || 'all') || 'all';
+  const validAreas = new Set(['foundation', 'training', 'personalization', 'settings', 'dashboard']);
+
+  return {
+    area: validAreas.has(section) ? section : 'model',
+    pane: pane || 'all'
+  };
+}
+
 function resolveModelLearnFilters(state = getProfileNavigationState()) {
+  const modelPane = state.section === 'model-personalization'
+    ? resolveModelPersonalizationPane(state)
+    : state.modelPane;
+
   const filters = {
     section: state.section,
-    modelPane: state.modelPane
+    modelPane
   };
 
-  if (state.section === 'model-personalization' && state.modelPane === 'response') {
+  if (state.section === 'model-personalization' && modelPane === 'communication') {
     const relationshipSelect = document.querySelector('[data-model-personalization-field="responseAudienceScope"]');
     if (relationshipSelect instanceof HTMLSelectElement) {
-      filters.responseAudience = relationshipSelect.value || 'general';
+      filters.responseAudience = relationshipSelect.value || 'public';
     }
   }
 
@@ -620,7 +675,7 @@ function requestProfileToolAction(action){
       return;
     case 'model-personalization':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'model-personalization', modelPane: 'cognition' }
+        detail: { section: 'model-personalization', modelPane: resolveModelPersonalizationPane() }
       }));
       return;
     case 'model-voice':
@@ -670,14 +725,38 @@ function requestProfileToolAction(action){
         detail: { action, source: 'profile-right-toolbar' }
       }));
       return;
+    case 'model-parameter-filter':
+      {
+        const state = getProfileNavigationState();
+        document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+          detail: {
+            context: 'modelParameterFilter',
+            source: 'profile-right-toolbar',
+            filters: {
+              area: 'personalization',
+              pane: state.section === 'model-personalization'
+                ? resolveModelPersonalizationPane(state)
+                : 'all'
+            }
+          }
+        }));
+      }
+      return;
+    case 'model-reset':
+      document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+        detail: {
+          context: 'modelReset',
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
+      }));
+      return;
     case 'model-changelog':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
         detail: {
           context: 'modelChangelog',
           source: 'profile-right-toolbar',
-          filters: {
-            area: resolveModelChangelogArea()
-          }
+          filters: resolveModelOverlayFilters()
         }
       }));
       return;

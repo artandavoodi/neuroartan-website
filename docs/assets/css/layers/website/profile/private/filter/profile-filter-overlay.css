@@ -8,6 +8,7 @@
 
 .profile-filter-overlay{
   position:fixed;
+  isolation:isolate;
   inset:0;
   z-index:var(--z-language-dropdown);
   display:block;
@@ -39,6 +40,10 @@
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   pointer-events:auto;
   scrollbar-width:thin;
+}
+
+.profile-filter-overlay__dialog:has(.profile-filter-overlay__confirm-layer){
+  overflow:hidden;
 }
 
 .profile-filter-overlay__header{
@@ -73,9 +78,74 @@
   gap:var(--home-search-shell-result-list-gap, var(--spacing-md));
 }
 
+
 .profile-filter-overlay__ledger{
   display:grid;
   gap:var(--home-search-shell-empty-gap, var(--spacing-sm));
+}
+
+.ui-confirm-layer,
+.profile-filter-overlay__confirm-layer{
+  position:fixed;
+  inset:var(--spacing-none);
+  z-index:2147483647;
+  display:grid;
+  place-items:center;
+  width:100vw;
+  height:100dvh;
+  min-width:100vw;
+  min-height:100dvh;
+  padding:var(--layout-home-search-filter-panel-padding);
+  background:var(--glass-overlay-backdrop-bg, color-mix(in srgb, var(--bg-color) 34%, transparent));
+  backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(var(--glass-overlay-backdrop-saturate));
+  overflow:hidden;
+  overscroll-behavior:contain;
+  pointer-events:auto;
+  touch-action:none;
+}
+
+.ui-confirm-card,
+.profile-filter-overlay__confirm-card{
+  width:min(var(--size-full), 22rem);
+  display:grid;
+  justify-items:center;
+  gap:var(--spacing-sm);
+  padding:var(--layout-home-search-filter-panel-padding);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--shape-panel-radius);
+  background:var(--overlay-popover-surface);
+  box-shadow:var(--home-panel-shadow);
+  text-align:center;
+}
+
+.ui-confirm-card strong,
+.ui-confirm-card p,
+.profile-filter-overlay__confirm-card strong,
+.profile-filter-overlay__confirm-card p{
+  margin:0;
+}
+
+.ui-confirm-card strong,
+.profile-filter-overlay__confirm-card strong{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
+.ui-confirm-card p,
+.profile-filter-overlay__confirm-card p{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+html:has(.ui-confirm-layer),
+html:has(.profile-filter-overlay__confirm-layer),
+body:has(.ui-confirm-layer),
+body:has(.profile-filter-overlay__confirm-layer){
+  overflow:hidden;
+  overscroll-behavior:none;
 }
 
 .profile-filter-overlay__event{

@@ -12,6 +12,9 @@ import {
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
   readModelPersonalizationPreferences,
+  listModelDefaultRegistry,
+  listModelChangelogEvents,
+  recordModelAuditEvent,
   readModelVisibilityPreferences,
   resetOwnedCanonicalModelAvatar,
   saveModelFoundationIdentity,
@@ -36,6 +39,7 @@ import {
 } from '../navigation/model-tab-registry.js';
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
+const MODEL_CHANGELOG_STORAGE_KEY = 'neuroartan.model.changelog.records';
 const MODEL_FOUNDATION_IDENTITY_STORAGE_KEY = 'neuroartan.model.foundation.identity';
 const MODEL_VISIBILITY_PREFERENCES_STORAGE_KEY = 'neuroartan.model.visibility.preferences';
 const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-base';
@@ -165,6 +169,117 @@ const MODEL_PERSONALIZATION_PANE_GROUPS = Object.freeze({
   behavior: 'behavior'
 });
 
+const MODEL_PERSONALIZATION_FILTER_SECTIONS = Object.freeze({
+  reasoning: ['reasoningDepth', 'analyticalMode', 'evidenceThreshold', 'abstractionLevel', 'synthesisStrength'],
+  attention: ['attentionFocus', 'detailSensitivity', 'distractionResistance', 'priorityDetection'],
+  flexibility: ['cognitiveFlexibility', 'perspectiveShifting', 'alternativeGeneration'],
+  creativity: ['creativityLevel', 'senseOfHumor', 'metaphorUse', 'noveltyTolerance', 'imaginationMode'],
+  reflection: ['reflectionFrequency', 'reflectionDepth', 'selfCorrectionStrength', 'uncertaintyAwareness', 'patternDetection', 'contradictionDetection'],
+  planning: ['processingMode', 'planningHorizon', 'complexityTolerance'],
+  delivery: ['directnessLevel', 'diplomacyLevel', 'tactLevel', 'assertivenessLevel', 'conflictStyle'],
+  language: ['languageStyle', 'vocabularyLevel', 'communicationRegister', 'multilingualBehavior'],
+  'response-style': ['responseLength', 'explanationDepth', 'structurePreference', 'clarificationThreshold', 'compressionLevel'],
+  'social-context': ['audienceAdaptation', 'relationshipDistance', 'boundaryAwareSpeech', 'publicFacingRestraint'],
+  'audience-response': ['responseAudienceScope', 'publicResponseOpenness', 'publicResponseDirectness', 'publicResponseRestraint', 'friendsResponseWarmth', 'friendsResponseDetail', 'friendsResponseHumor', 'followersResponseClarity', 'followersResponseEfficiency', 'followersResponseOpenness', 'mutualResponseTrustDepth', 'mutualResponseExplanationDepth', 'mutualResponseDirectness', 'familyResponseWarmth', 'familyResponsePrivacyGuard', 'familyResponseHumor', 'subscriberResponsePriority', 'subscriberResponseDetail', 'subscriberResponseProfessionalTone'],
+  retention: ['memoryRetention', 'forgettingMode', 'decaySensitivity'],
+  recall: ['continuityDepth', 'recallPriority', 'contextWeighting', 'personalHistoryInfluence', 'sourceConfidenceThreshold'],
+  'autobiographical-continuity': ['narrativeContinuity', 'identityContinuity', 'lifeEventSensitivity'],
+  'memory-safety': ['sensitiveMemoryHandling', 'memoryCitationBehavior', 'recallPermissionStrictness'],
+  tone: ['emotionalTone', 'warmthLevel', 'emotionalIntensity'],
+  empathy: ['empathyLevel', 'cognitiveEmpathy', 'affectiveEmpathy', 'validationStyle'],
+  regulation: ['emotionalRegulation', 'calmnessLevel', 'deescalationStrength', 'distressSensitivity'],
+  mirroring: ['emotionalMirroring', 'moodAdaptation', 'sentimentSensitivity'],
+  weighting: ['emotionalWeighting'],
+  'action-posture': ['riskTolerance', 'efficiencyPreference', 'initiativeLevel', 'autonomyLevel', 'decisivenessLevel'],
+  restraint: ['restraintLevel', 'cautionLevel', 'errorAvoidance', 'escalationThreshold'],
+  boundaries: ['boundaryStrictness', 'consentSensitivity', 'privacyStrictness', 'refusalStyle', 'vulnerabilityHandling'],
+  reliability: ['consistencyLevel', 'ruleAdherence', 'taskPersistence']
+});
+
+const MODEL_PERSONALIZATION_FIELD_AREAS = Object.freeze(
+  Object.fromEntries(Object.keys(MODEL_PERSONALIZATION_DEFAULTS).map((field) => {
+    const cognition = [
+      'reasoningDepth','analyticalMode','evidenceThreshold','abstractionLevel','synthesisStrength',
+      'attentionFocus','detailSensitivity','distractionResistance','priorityDetection',
+      'cognitiveFlexibility','perspectiveShifting','alternativeGeneration',
+      'creativityLevel','senseOfHumor','metaphorUse','noveltyTolerance','imaginationMode',
+      'reflectionFrequency','reflectionDepth','selfCorrectionStrength','uncertaintyAwareness',
+      'patternDetection','contradictionDetection','processingMode','planningHorizon','complexityTolerance'
+    ];
+    const communication = [
+      'directnessLevel','diplomacyLevel','tactLevel','assertivenessLevel','conflictStyle',
+      'languageStyle','vocabularyLevel','communicationRegister','multilingualBehavior',
+      'responseLength','explanationDepth','structurePreference','clarificationThreshold','compressionLevel',
+      'audienceAdaptation','relationshipDistance','boundaryAwareSpeech','publicFacingRestraint',
+      'responseAudienceScope','publicResponseOpenness','publicResponseDirectness','publicResponseRestraint',
+      'friendsResponseWarmth','friendsResponseDetail','friendsResponseHumor',
+      'followersResponseClarity','followersResponseEfficiency','followersResponseOpenness',
+      'mutualResponseTrustDepth','mutualResponseExplanationDepth','mutualResponseDirectness',
+      'familyResponseWarmth','familyResponsePrivacyGuard','familyResponseHumor',
+      'subscriberResponsePriority','subscriberResponseDetail','subscriberResponseProfessionalTone'
+    ];
+    const memory = [
+      'memoryRetention','forgettingMode','decaySensitivity','continuityDepth','recallPriority',
+      'contextWeighting','personalHistoryInfluence','sourceConfidenceThreshold',
+      'narrativeContinuity','identityContinuity','lifeEventSensitivity',
+      'sensitiveMemoryHandling','memoryCitationBehavior','recallPermissionStrictness'
+    ];
+    const emotion = [
+      'emotionalTone','warmthLevel','emotionalIntensity','empathyLevel','cognitiveEmpathy',
+      'affectiveEmpathy','validationStyle','emotionalRegulation','calmnessLevel',
+      'deescalationStrength','distressSensitivity','emotionalMirroring','moodAdaptation',
+      'sentimentSensitivity','emotionalWeighting'
+    ];
+    const behavior = [
+      'riskTolerance','efficiencyPreference','initiativeLevel','autonomyLevel','decisivenessLevel',
+      'restraintLevel','cautionLevel','errorAvoidance','escalationThreshold',
+      'boundaryStrictness','consentSensitivity','privacyStrictness','refusalStyle',
+      'vulnerabilityHandling','consistencyLevel','ruleAdherence','taskPersistence'
+    ];
+
+    const pane = cognition.includes(field) ? 'cognition'
+      : communication.includes(field) ? 'communication'
+      : memory.includes(field) ? 'memory'
+      : emotion.includes(field) ? 'emotion'
+      : behavior.includes(field) ? 'behavior'
+      : 'personalization';
+
+    const section = getModelPersonalizationFieldSection(field);
+
+    return [field, { area: 'personalization', pane, section }];
+  }))
+);
+
+function getModelPersonalizationFieldSection(field = '') {
+  const normalizedField = String(field || '').trim();
+  const sectionEntry = Object.entries(MODEL_PERSONALIZATION_FILTER_SECTIONS)
+    .find(([, fields]) => fields.includes(normalizedField));
+  return sectionEntry?.[0] || 'all';
+}
+
+const MODEL_PERSONALIZATION_FIELD_LABELS = Object.freeze({
+  reasoningDepth: 'Reasoning depth',
+  analyticalMode: 'Analytical mode',
+  evidenceThreshold: 'Evidence threshold',
+  abstractionLevel: 'Abstraction level',
+  synthesisStrength: 'Synthesis strength',
+  attentionFocus: 'Attention focus',
+  directnessLevel: 'Directness',
+  diplomacyLevel: 'Diplomacy',
+  languageStyle: 'Language style',
+  responseLength: 'Response length',
+  explanationDepth: 'Explanation depth',
+  audienceAdaptation: 'Audience adaptation',
+  responseAudienceScope: 'Audience profile',
+  memoryRetention: 'Retention period',
+  continuityDepth: 'Continuity depth',
+  emotionalTone: 'Tone',
+  empathyLevel: 'Empathy',
+  emotionalWeighting: 'Emotional weighting',
+  riskTolerance: 'Risk tolerance',
+  efficiencyPreference: 'Efficiency'
+});
+
 const MODEL_FOUNDATION_PANE_GROUPS = Object.freeze({
   overview: 'overview',
   identity: 'identity',
@@ -225,8 +340,11 @@ const MODEL_VISIBILITY_DEFAULTS = Object.freeze({
 });
 
 let modelPersonalizationPreferences = loadStoredModelPersonalizationPreferences();
+let modelChangelogRecords = loadStoredModelChangelogRecords();
 let modelPersonalizationBackendLoaded = false;
 let modelPersonalizationBackendSaveTimer = 0;
+let modelDefaultRegistryBackendLoaded = false;
+let modelChangelogBackendLoaded = false;
 let modelFoundationIdentity = loadStoredModelFoundationIdentity();
 let modelFoundationIdentityBackendLoaded = false;
 let modelFoundationIdentityBackendSaveTimer = 0;
@@ -244,6 +362,15 @@ const modelDirectoryFilters = {
   verification: 'all',
   expertise: 'all'
 };
+
+let modelParameterFilters = {
+  area: 'personalization',
+  pane: 'all',
+  section: 'all',
+  field: 'all'
+};
+
+let modelResponseAudienceFilter = 'public';
 
 const MODEL_SECTIONS = new Set([
   'model-foundation',
@@ -441,6 +568,31 @@ function normalizeModelPersonalizationPreferences(value = {}) {
   };
 }
 
+function getSafeModelPersonalizationSelectValue(select, field) {
+  if (!(select instanceof HTMLSelectElement) || !field) return '';
+  const currentValue = String(getModelPersonalizationValue(field) ?? '');
+  const optionValues = Array.from(select.options).map((option) => option.value);
+
+  if (optionValues.includes(currentValue)) {
+    return currentValue;
+  }
+
+  const defaultValue = String(MODEL_PERSONALIZATION_DEFAULTS[field] ?? '');
+  if (optionValues.includes(defaultValue)) {
+    return defaultValue;
+  }
+
+  return optionValues[0] || '';
+}
+
+function getSafeSelectOptionText(select) {
+  if (!(select instanceof HTMLSelectElement)) return '';
+  if (!select.selectedOptions.length && select.options.length) {
+    select.value = select.options[0].value;
+  }
+  return select.selectedOptions[0]?.textContent || select.options[0]?.textContent || '';
+}
+
 function loadStoredModelPersonalizationPreferences() {
   try {
     const parsed = JSON.parse(window.localStorage?.getItem(MODEL_PERSONALIZATION_STORAGE_KEY) || '{}');
@@ -459,6 +611,152 @@ function writeStoredModelPersonalizationPreferences(preferences) {
   } catch (error) {
     /* Local persistence is an enhancement; Supabase sync still attempts separately. */
   }
+}
+
+function loadStoredModelChangelogRecords() {
+  try {
+    const parsed = JSON.parse(window.localStorage?.getItem(MODEL_CHANGELOG_STORAGE_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.filter((entry) => entry && typeof entry === 'object') : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function writeStoredModelChangelogRecords() {
+  try {
+    window.localStorage?.setItem(MODEL_CHANGELOG_STORAGE_KEY, JSON.stringify(modelChangelogRecords));
+  } catch (error) {
+    /* Changelog storage is local-first until Supabase audit history is bound. */
+  }
+}
+
+function normalizeModelDefaultRegistryValue(record = {}) {
+  const value = record?.default_value;
+  if (record.value_type === 'integer') return Number(value);
+  if (record.value_type === 'boolean') return value === true || value === 'true';
+  return typeof value === 'string' ? value : String(value ?? '');
+}
+
+function applyModelDefaultRegistryRecords(records = []) {
+  if (!Array.isArray(records) || !records.length) return;
+
+  records.forEach((record) => {
+    const field = String(record?.field || '').trim();
+    if (!field || !Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_DEFAULTS, field)) return;
+    MODEL_PERSONALIZATION_DEFAULTS[field] = normalizeModelDefaultRegistryValue(record);
+  });
+}
+
+function mapBackendModelChangelogEvent(event = {}) {
+  return {
+    id: event.id || `model-audit-${event.field}-${event.created_at || Date.now()}`,
+    scope: 'Personalization',
+    area: event.area || 'personalization',
+    pane: event.pane || 'all',
+    section: event.section || 'all',
+    action: event.action || 'change',
+    field: event.field || '',
+    label: event.label || formatModelPersonalizationFieldLabel(event.field || ''),
+    from: event.value_from || 'Unset',
+    to: event.value_to || 'Unset',
+    createdAt: event.created_at || new Date().toISOString()
+  };
+}
+
+function formatModelPersonalizationFieldLabel(field = '') {
+  return MODEL_PERSONALIZATION_FIELD_LABELS[field]
+    || String(field || '')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .replace(/^./, (character) => character.toUpperCase());
+}
+
+function formatModelPersonalizationChangelogValue(value) {
+  if (value === true) return 'On';
+  if (value === false) return 'Off';
+  if (value === null || typeof value === 'undefined') return 'Unset';
+  return String(value).replace(/[_-]+/g, ' ');
+}
+
+function recordModelPersonalizationChangelog(nextPatch = {}, previousPreferences = {}, options = {}) {
+  const normalizedPrevious = normalizeModelPersonalizationPreferences(previousPreferences);
+  const changedFields = Object.keys(nextPatch).filter((field) => normalizedPrevious[field] !== nextPatch[field]);
+  if (!changedFields.length) return;
+
+  const timestamp = new Date().toISOString();
+  const entries = changedFields.map((field) => ({
+    id: `model-personalization-${field}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    scope: 'Personalization',
+    area: MODEL_PERSONALIZATION_FIELD_AREAS[field]?.area || 'personalization',
+    pane: MODEL_PERSONALIZATION_FIELD_AREAS[field]?.pane || 'personalization',
+    section: MODEL_PERSONALIZATION_FIELD_AREAS[field]?.section || 'all',
+    action: options.reset === true ? 'reset' : 'change',
+    field,
+    label: formatModelPersonalizationFieldLabel(field),
+    from: formatModelPersonalizationChangelogValue(normalizedPrevious[field]),
+    to: formatModelPersonalizationChangelogValue(nextPatch[field]),
+    createdAt: timestamp
+  }));
+
+  modelChangelogRecords = [...entries, ...modelChangelogRecords];
+  writeStoredModelChangelogRecords();
+  void persistModelPersonalizationChangelogEntries(entries);
+}
+
+async function persistModelPersonalizationChangelogEntries(entries = []) {
+  if (!entries.length || !isModelOwnerAuthenticated()) return;
+
+  try {
+    const model = await getOwnedCanonicalModel();
+    if (!model?.id || !model?.profile_id) return;
+
+    await Promise.all(entries.map((entry) => recordModelAuditEvent(model, {
+      ...entry,
+      source: 'model_personalization'
+    })));
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Changelog audit sync skipped.', error);
+  }
+}
+
+function getModelPersonalizationResetPatch(filters = {}) {
+  const area = String(filters.area || 'model').trim();
+  const pane = String(filters.pane || 'all').trim();
+  const section = String(filters.section || 'all').trim();
+  const field = String(filters.field || 'all').trim();
+
+  if (area !== 'model' && area !== 'personalization') return {};
+
+  if (field !== 'all' && Object.prototype.hasOwnProperty.call(MODEL_PERSONALIZATION_DEFAULTS, field)) {
+    return {
+      [field]: MODEL_PERSONALIZATION_DEFAULTS[field]
+    };
+  }
+
+  const patch = {};
+  Object.entries(MODEL_PERSONALIZATION_FIELD_AREAS).forEach(([fieldKey, metadata]) => {
+    if (area === 'personalization' && metadata.area !== 'personalization') return;
+    if (pane !== 'all' && metadata.pane !== pane) return;
+    if (section !== 'all' && metadata.section !== section) return;
+    patch[fieldKey] = MODEL_PERSONALIZATION_DEFAULTS[fieldKey];
+  });
+
+  return patch;
+}
+
+function handleModelResetRequest(event) {
+  const filters = event?.detail?.filters || {};
+  const patch = getModelPersonalizationResetPatch(filters);
+  if (!Object.keys(patch).length) {
+    setModelPersonalizationStatus('No resettable model values found', 'idle');
+    return;
+  }
+
+  updateModelPersonalizationPreferences(patch, {
+    source: 'model-reset',
+    reset: true
+  });
+  setModelPersonalizationStatus('Model defaults restored', 'success');
 }
 
 function normalizeModelFoundationIdentity(value = {}) {
@@ -735,12 +1033,20 @@ function scheduleModelPersonalizationBackendSave() {
 }
 
 function updateModelPersonalizationPreferences(nextPatch = {}, options = {}) {
+  const previousPreferences = normalizeModelPersonalizationPreferences(modelPersonalizationPreferences);
+  const shouldRecordChangelog = options.recordChangelog !== false && options.source !== 'model-management-backend';
+
+  if (shouldRecordChangelog) {
+    recordModelPersonalizationChangelog(nextPatch, previousPreferences, options);
+  }
+
   modelPersonalizationPreferences = normalizeModelPersonalizationPreferences({
     ...modelPersonalizationPreferences,
     ...nextPatch
   });
   writeStoredModelPersonalizationPreferences(modelPersonalizationPreferences);
   renderAllModelPersonalizationControls();
+  renderAllModelChangelogRecords();
 
   document.dispatchEvent(new CustomEvent('model:personalization-preferences-updated', {
     detail: {
@@ -772,6 +1078,55 @@ async function hydrateModelPersonalizationFromBackend() {
     });
   } catch (error) {
     console.warn('[Neuroartan][Model] Personalization preference hydration skipped.', error);
+  }
+}
+
+async function hydrateModelDefaultsFromBackend() {
+  if (modelDefaultRegistryBackendLoaded) return;
+  modelDefaultRegistryBackendLoaded = true;
+
+  try {
+    const defaults = await listModelDefaultRegistry({ area: 'personalization' });
+    applyModelDefaultRegistryRecords(defaults);
+    modelPersonalizationPreferences = normalizeModelPersonalizationPreferences(modelPersonalizationPreferences);
+    renderAllModelPersonalizationControls();
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Default registry hydration skipped.', error);
+  }
+}
+
+async function hydrateModelChangelogFromBackend(options = {}) {
+  if (!isModelOwnerAuthenticated()) return;
+  if (modelChangelogBackendLoaded && options.force !== true) {
+    document.dispatchEvent(new CustomEvent('model:changelog-hydrated', {
+      detail: {
+        source: options.source || 'model-management',
+        cached: true
+      }
+    }));
+    return;
+  }
+  modelChangelogBackendLoaded = true;
+
+  try {
+    const model = await getOwnedCanonicalModel();
+    if (!model?.id) return;
+
+    const records = await listModelChangelogEvents(model.id, { area: 'personalization' });
+    if (records.length) {
+      modelChangelogRecords = records.map(mapBackendModelChangelogEvent);
+      writeStoredModelChangelogRecords();
+      renderAllModelChangelogRecords();
+    }
+
+    document.dispatchEvent(new CustomEvent('model:changelog-hydrated', {
+      detail: {
+        source: options.source || 'model-management',
+        records: records.length
+      }
+    }));
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Changelog hydration skipped.', error);
   }
 }
 
@@ -863,8 +1218,10 @@ function isModelOwnerAuthenticated(runtimeState = getProfileRuntimeState()) {
 function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
   if (!isModelOwnerAuthenticated(runtimeState)) return;
 
+  void hydrateModelDefaultsFromBackend();
   void hydrateModelFoundationIdentityFromBackend();
   void hydrateModelPersonalizationFromBackend();
+  void hydrateModelChangelogFromBackend();
   void hydrateModelVisibilityFromBackend();
   void hydrateTrainingSubstrateFromBackend();
 }
@@ -922,6 +1279,258 @@ function setModelManagementLoading(root, loading) {
 
 function getVisibleModelPersonalizationGroup(navigationState = getProfileNavigationState()) {
   return MODEL_PERSONALIZATION_PANE_GROUPS[navigationState.modelPane] || 'cognition';
+}
+
+function normalizeModelParameterFilters(filters = {}) {
+  return {
+    area: String(filters.area || 'personalization').trim() || 'personalization',
+    pane: String(filters.pane || 'all').trim() || 'all',
+    section: String(filters.section || 'all').trim() || 'all',
+    field: String(filters.field || 'all').trim() || 'all'
+  };
+}
+
+function getEffectiveModelParameterFilters(visibleGroup = 'cognition') {
+  const filters = normalizeModelParameterFilters(modelParameterFilters);
+  if (filters.area === 'personalization' && filters.pane === 'all') {
+    return {
+      ...filters,
+      pane: visibleGroup
+    };
+  }
+  if (filters.pane !== 'all' && filters.pane !== visibleGroup) {
+    return {
+      area: 'personalization',
+      pane: visibleGroup,
+      section: 'all',
+      field: 'all'
+    };
+  }
+  return filters;
+}
+
+function shouldShowModelPersonalizationField(field = '', visibleGroup = 'cognition') {
+  const filters = getEffectiveModelParameterFilters(visibleGroup);
+  const metadata = MODEL_PERSONALIZATION_FIELD_AREAS[field];
+  if (!metadata) return true;
+  if (filters.area !== 'model' && filters.area !== 'personalization') return true;
+  if (filters.pane !== 'all' && metadata.pane !== filters.pane) return false;
+  if (filters.section !== 'all' && metadata.section !== filters.section) return false;
+  if (metadata.section === 'audience-response' && field !== 'responseAudienceScope') {
+    const selectedAudiencePrefix = getAudienceResponseScopePrefix(modelResponseAudienceFilter);
+    if (selectedAudiencePrefix && !String(field || '').startsWith(selectedAudiencePrefix)) return false;
+  }
+  if (filters.field !== 'all' && field !== filters.field) return false;
+  return true;
+}
+
+function normalizeModelPersonalizationSectionKey(value = '') {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function getModelPersonalizationTitleSectionKey(title) {
+  if (!(title instanceof HTMLElement)) return 'all';
+  const text = normalizeModelPersonalizationSectionKey(title.textContent || '');
+  const aliases = {
+    'response-style': 'response-style',
+    'social-context': 'social-context',
+    'audience-specific-response': 'audience-response',
+    'autobiographical-continuity': 'autobiographical-continuity',
+    'memory-safety': 'memory-safety',
+    'action-posture': 'action-posture'
+  };
+  return aliases[text] || text || 'all';
+}
+
+function getAudienceResponseScopePrefix(scope = '') {
+  const normalizedScope = String(scope || 'public').trim();
+  if (normalizedScope === 'all') return '';
+  return {
+    public: 'publicResponse',
+    friends: 'friendsResponse',
+    followers: 'followersResponse',
+    mutual: 'mutualResponse',
+    mutuals: 'mutualResponse',
+    family: 'familyResponse',
+    subscribers: 'subscriberResponse'
+  }[normalizedScope] || 'publicResponse';
+}
+
+function getAudienceResponsePanelKeys(scope = '') {
+  const normalizedScope = String(scope || 'public').trim();
+  if (normalizedScope === 'all') {
+    return new Set(['all', 'public', 'friends', 'followers', 'mutual', 'mutuals', 'family', 'subscribers']);
+  }
+
+  const prefixKey = getAudienceResponseScopePrefix(normalizedScope).replace('Response', '').toLowerCase();
+  return new Set([normalizedScope, prefixKey]);
+}
+
+function getModelPersonalizationFieldShell(node) {
+  if (!(node instanceof HTMLElement)) return null;
+
+  const fieldSelector = '[data-model-personalization-field], [data-model-personalization-toggle], [data-model-personalization-label], [data-model-personalization-value]';
+  const preferredShellSelector = [
+    '.model-management__control-row',
+    '.model-management__control-item',
+    '.model-management__control-card',
+    '.model-management__setting-row',
+    '.model-management__setting-item',
+    '.model-management__field-row',
+    '.model-management__field',
+    '.model-management__item',
+    'label'
+  ].join(', ');
+
+  const preferredShell = node.closest(preferredShellSelector);
+  if (preferredShell instanceof HTMLElement && !preferredShell.hasAttribute('data-model-personalization-group')) {
+    return preferredShell;
+  }
+
+  let current = node.parentElement;
+  let lastSingleFieldShell = node.parentElement || node;
+
+  while (current instanceof HTMLElement) {
+    if (current.hasAttribute('data-model-personalization-group')) return lastSingleFieldShell;
+
+    const fields = new Set(
+      Array.from(current.querySelectorAll(fieldSelector))
+        .filter((candidate) => candidate instanceof HTMLElement)
+        .map((candidate) => candidate.dataset.modelPersonalizationField
+          || candidate.dataset.modelPersonalizationToggle
+          || candidate.dataset.modelPersonalizationLabel
+          || candidate.dataset.modelPersonalizationValue)
+        .filter(Boolean)
+    );
+
+    if (fields.size === 1) {
+      lastSingleFieldShell = current;
+    }
+
+    if (fields.size > 1) {
+      return lastSingleFieldShell;
+    }
+
+    current = current.parentElement;
+  }
+
+  return lastSingleFieldShell;
+}
+
+function applyModelParameterFilters(root, visibleGroup = 'cognition') {
+  if (!(root instanceof HTMLElement)) return;
+
+  const activeGroup = root.querySelector(`[data-model-personalization-group="${visibleGroup}"]`);
+  if (!(activeGroup instanceof HTMLElement)) return;
+
+  const filters = getEffectiveModelParameterFilters(visibleGroup);
+  const filterActive = filters.section !== 'all' || filters.field !== 'all';
+  const fieldSelector = '[data-model-personalization-field], [data-model-personalization-toggle], [data-model-personalization-label], [data-model-personalization-value]';
+  const controls = Array.from(activeGroup.querySelectorAll(fieldSelector))
+    .filter((node) => node instanceof HTMLElement);
+  const shells = new Set();
+  const touchedShells = new Set();
+
+  controls.forEach((control) => {
+    const field = control.dataset.modelPersonalizationField || control.dataset.modelPersonalizationToggle || control.dataset.modelPersonalizationLabel || control.dataset.modelPersonalizationValue;
+    if (!field) return;
+
+    const shell = getModelPersonalizationFieldShell(control);
+    if (!(shell instanceof HTMLElement)) return;
+
+    const visible = !filterActive || shouldShowModelPersonalizationField(field, visibleGroup);
+    control.hidden = !visible;
+    control.style.display = visible ? '' : 'none';
+    control.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    shells.add(shell);
+    touchedShells.add(shell);
+    shell.hidden = !visible;
+    shell.style.display = visible ? '' : 'none';
+    shell.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  });
+
+  touchedShells.forEach((shell) => {
+    if (!(shell instanceof HTMLElement)) return;
+    const shellControls = Array.from(shell.querySelectorAll(fieldSelector))
+      .filter((node) => node instanceof HTMLElement);
+    const shellVisible = !filterActive || shellControls.some((control) => {
+      const field = control.dataset.modelPersonalizationField || control.dataset.modelPersonalizationToggle || control.dataset.modelPersonalizationLabel || control.dataset.modelPersonalizationValue;
+      return field && shouldShowModelPersonalizationField(field, visibleGroup);
+    });
+    shell.hidden = !shellVisible;
+    shell.style.display = shellVisible ? '' : 'none';
+    shell.setAttribute('aria-hidden', shellVisible ? 'false' : 'true');
+  });
+
+  Array.from(activeGroup.children).forEach((child) => {
+    if (!(child instanceof HTMLElement)) return;
+    const childControls = Array.from(child.querySelectorAll(fieldSelector))
+      .filter((node) => node instanceof HTMLElement);
+    if (!childControls.length) return;
+
+    const childVisible = !filterActive || childControls.some((control) => {
+      const field = control.dataset.modelPersonalizationField || control.dataset.modelPersonalizationToggle || control.dataset.modelPersonalizationLabel || control.dataset.modelPersonalizationValue;
+      return field && shouldShowModelPersonalizationField(field, visibleGroup);
+    });
+
+    child.hidden = !childVisible;
+    child.style.display = childVisible ? '' : 'none';
+    child.setAttribute('aria-hidden', childVisible ? 'false' : 'true');
+  });
+
+  if (filters.section !== 'all') {
+    activeGroup.querySelectorAll('.model-management__control-title').forEach((title) => {
+      if (!(title instanceof HTMLElement)) return;
+      const titleSection = getModelPersonalizationTitleSectionKey(title);
+      const sectionVisible = titleSection === filters.section;
+      title.hidden = !sectionVisible;
+      title.style.display = sectionVisible ? '' : 'none';
+      title.setAttribute('aria-hidden', sectionVisible ? 'false' : 'true');
+    });
+  }
+
+  activeGroup.querySelectorAll('.model-management__control-title').forEach((title) => {
+    if (!(title instanceof HTMLElement)) return;
+
+    let next = title.nextElementSibling;
+    let titleVisible = !filterActive;
+
+    while (next instanceof HTMLElement) {
+      if (next.classList.contains('model-management__control-title')) break;
+      const sectionControls = Array.from(next.querySelectorAll(fieldSelector))
+        .filter((node) => node instanceof HTMLElement);
+      if (sectionControls.length) {
+        titleVisible = sectionControls.some((control) => {
+          const field = control.dataset.modelPersonalizationField || control.dataset.modelPersonalizationToggle || control.dataset.modelPersonalizationLabel || control.dataset.modelPersonalizationValue;
+          return field && shouldShowModelPersonalizationField(field, visibleGroup);
+        });
+        break;
+      }
+      next = next.nextElementSibling;
+    }
+
+    title.hidden = !titleVisible;
+    title.style.display = titleVisible ? '' : 'none';
+    title.setAttribute('aria-hidden', titleVisible ? 'false' : 'true');
+  });
+  if (visibleGroup === 'communication') {
+    const activeAudiencePanels = getAudienceResponsePanelKeys(modelResponseAudienceFilter);
+    activeGroup.querySelectorAll('[data-model-response-audience-panel]').forEach((panel) => {
+      if (!(panel instanceof HTMLElement)) return;
+      const active = activeAudiencePanels.has(panel.dataset.modelResponseAudiencePanel || '');
+      panel.hidden = !active;
+      panel.style.display = active ? '' : 'none';
+      panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+      panel.toggleAttribute('inert', !active);
+    });
+  }
+
+  activeGroup.dataset.modelParameterFilterActive = filterActive ? 'true' : 'false';
 }
 
 function getVisibleModelFoundationGroup(navigationState = getProfileNavigationState()) {
@@ -1093,7 +1702,7 @@ function syncDirectoryFilterLabels(root) {
     const field = select.dataset.modelDirectoryFilter;
     const label = field ? root.querySelector(`[data-model-directory-filter-label="${field}"]`) : null;
     if (!(label instanceof HTMLElement)) return;
-    label.textContent = select.selectedOptions[0]?.textContent || '';
+    label.textContent = getSafeSelectOptionText(select);
   });
 }
 
@@ -1243,11 +1852,33 @@ function getModelPersonalizationPaneCopy(navigationState = getProfileNavigationS
     return null;
   }
 
-  switch (navigationState.modelPane) {
+  const personalizationGroup = getVisibleModelPersonalizationGroup(navigationState);
+
+  switch (personalizationGroup) {
+    case 'cognition':
+      return {
+        title: 'Cognition',
+        summary: 'Tune how the model reasons, attends, abstracts, reflects, and shifts perspective before it responds.'
+      };
+    case 'communication':
+      return {
+        title: 'Communication',
+        summary: 'Tune how the model speaks across language, delivery, response structure, social context, and audience-specific relationships.'
+      };
     case 'memory':
       return {
         title: 'Memory',
-        summary: 'Set retention and continuity depth for the owner model behavior without changing the private memory substrate.'
+        summary: 'Set retention, recall, autobiographical continuity, and memory safety for owner-controlled model behavior.'
+      };
+    case 'emotion':
+      return {
+        title: 'Emotion',
+        summary: 'Tune tone, empathy, emotional regulation, mirroring, and affect weighting without turning the model into therapy.'
+      };
+    case 'behavior':
+      return {
+        title: 'Behavior',
+        summary: 'Tune action posture, restraint, boundaries, and reliability so the model acts consistently within owner-defined limits.'
       };
     default:
       return null;
@@ -1268,7 +1899,12 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     const field = control.dataset.modelPersonalizationField;
     const value = getModelPersonalizationValue(field);
 
-    if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement) {
+    if (control instanceof HTMLSelectElement) {
+      control.value = getSafeModelPersonalizationSelectValue(control, field);
+      return;
+    }
+
+    if (control instanceof HTMLInputElement) {
       control.value = String(value ?? '');
     }
   });
@@ -1278,7 +1914,20 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     const field = label.dataset.modelPersonalizationLabel;
     const select = field ? root.querySelector(`[data-model-personalization-field="${field}"]`) : null;
     if (!(select instanceof HTMLSelectElement)) return;
-    label.textContent = select.selectedOptions[0]?.textContent || '';
+    const safeValue = getSafeModelPersonalizationSelectValue(select, field);
+    if (select.value !== safeValue) select.value = safeValue;
+    label.textContent = getSafeSelectOptionText(select);
+  });
+
+  root.querySelectorAll('[data-model-personalization-field="responseAudienceScope"]').forEach((select) => {
+    if (!(select instanceof HTMLSelectElement)) return;
+    const optionValues = Array.from(select.options).map((option) => option.value);
+    if (!optionValues.includes(modelResponseAudienceFilter)) {
+      modelResponseAudienceFilter = optionValues[0] || 'public';
+    }
+    select.value = modelResponseAudienceFilter;
+    const label = root.querySelector('[data-model-personalization-label="responseAudienceScope"]');
+    if (label instanceof HTMLElement) label.textContent = getSafeSelectOptionText(select);
   });
 
   root.querySelectorAll('[data-model-personalization-value]').forEach((valueNode) => {
@@ -1298,10 +1947,10 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
     if (label instanceof HTMLElement) label.textContent = checked ? 'On' : 'Off';
   });
 
-  const responseAudienceScope = String(getModelPersonalizationValue('responseAudienceScope') || 'public');
+  const responseAudienceScope = String(modelResponseAudienceFilter || 'public');
   root.querySelectorAll('[data-model-response-audience-panel]').forEach((panel) => {
     if (!(panel instanceof HTMLElement)) return;
-    const active = panel.dataset.modelResponseAudiencePanel === responseAudienceScope;
+    const active = getAudienceResponsePanelKeys(responseAudienceScope).has(panel.dataset.modelResponseAudiencePanel || '');
     panel.hidden = !active;
     panel.setAttribute('aria-hidden', active ? 'false' : 'true');
     panel.toggleAttribute('inert', !active);
@@ -1310,6 +1959,8 @@ function renderModelPersonalizationControls(root, navigationState = getProfileNa
       control.disabled = !active;
     });
   });
+
+  applyModelParameterFilters(root, visibleGroup);
 }
 
 function renderAllModelPersonalizationControls() {
@@ -1335,7 +1986,7 @@ function renderModelVisibilityControls(root) {
     const field = label.dataset.modelVisibilityLabel;
     const select = field ? root.querySelector(`[data-model-visibility-field="${field}"]`) : null;
     if (!(select instanceof HTMLSelectElement)) return;
-    label.textContent = select.selectedOptions[0]?.textContent || '';
+    label.textContent = getSafeSelectOptionText(select);
   });
 
   root.querySelectorAll('[data-model-visibility-panel]').forEach((panel) => {
@@ -1404,18 +2055,60 @@ function setModelPersonalizationStatus(message = '', state = 'idle') {
 function formatModelPersonalizationError(error) {
   const code = String(error?.code || error?.message || '').trim();
   if (code === '42703') {
-    return 'Model personalization schema update required before these controls can save.';
+    return 'Model personalization schema update required before these controls can save';
   }
   if (code === '42501') {
-    return 'Model personalization could not be saved because the Supabase policy blocked this owner.';
+    return 'Model personalization could not be saved because the Supabase policy blocked this owner';
   }
   if (code === 'MODEL_BACKEND_UNAVAILABLE') {
-    return 'Model personalization could not be saved because Supabase is not available.';
+    return 'Model personalization could not be saved because Supabase is not available';
   }
   if (code === 'MODEL_RECORD_UNAVAILABLE' || code === 'MODEL_ID_REQUIRED') {
-    return 'Model personalization could not be saved because the active model record is unavailable.';
+    return 'Model personalization could not be saved because the active model record is unavailable';
   }
-  return code ? `Model personalization could not be saved: ${code}` : 'Model personalization could not be saved.';
+  return code ? `Model personalization could not be saved: ${code}` : 'Model personalization could not be saved';
+}
+
+function renderModelChangelogRecords(root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const lists = root.querySelectorAll('[data-model-changelog-list]');
+  if (!lists.length) return;
+
+  lists.forEach((list) => {
+    if (!(list instanceof HTMLElement)) return;
+    list.replaceChildren();
+
+    if (!modelChangelogRecords.length) {
+      const empty = document.createElement('p');
+      empty.className = 'model-management__note';
+      empty.textContent = 'No model changes recorded';
+      list.append(empty);
+      return;
+    }
+
+    modelChangelogRecords.forEach((entry) => {
+      const item = document.createElement('article');
+      item.className = 'model-management__knowledge-item';
+
+      const title = document.createElement('strong');
+      title.className = 'model-management__directory-title';
+      title.textContent = entry.action === 'reset'
+        ? `${entry.label} reset to default: ${entry.from} → ${entry.to}`
+        : `${entry.label}: ${entry.from} → ${entry.to}`;
+
+      const meta = document.createElement('p');
+      meta.className = 'model-management__note';
+      meta.textContent = `${entry.scope || 'Model'} · ${formatModelIdentityDate(entry.createdAt, 'Time pending')}`;
+
+      item.append(title, meta);
+      list.append(item);
+    });
+  });
+}
+
+function renderAllModelChangelogRecords() {
+  modelManagementRoots().forEach(renderModelChangelogRecords);
 }
 
 function renderModelManagement(root, runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
@@ -1448,6 +2141,11 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
 
   root.dataset.modelSection = section;
   root.dataset.modelPane = safeNavigationState.modelPane || 'overview';
+  if (section === 'model-personalization') {
+    root.dataset.modelPersonalizationPane = getVisibleModelPersonalizationGroup(safeNavigationState);
+  } else {
+    delete root.dataset.modelPersonalizationPane;
+  }
   setText(root, '[data-model-owner-name]', displayName || 'Profile owner');
   setText(root, '[data-model-owner-handle]', username ? `@${username}` : '@username');
   setText(root, '[data-model-owner-id]', profile.id || profile.auth_user_id || 'Owner record pending');
@@ -1473,6 +2171,14 @@ function renderModelManagement(root, runtimeState = getProfileRuntimeState(), na
   renderModelKnowledgeBase(root);
   renderModelLogicRecords(root);
   renderModelDirectory(root);
+  renderModelChangelogRecords(root);
+}
+
+function handleModelParameterFilterChange(event) {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  modelParameterFilters = normalizeModelParameterFilters(detail.filters || {});
+  renderAllModelPersonalizationControls();
+  renderAllModelManagement();
 }
 
 function handleModelFoundationInput(event) {
@@ -1486,6 +2192,12 @@ function handleModelFoundationInput(event) {
 }
 
 function handleModelPersonalizationInput(event) {
+  const target = event?.target;
+  if (target instanceof HTMLSelectElement && target.dataset.modelPersonalizationField === 'responseAudienceScope') {
+    modelResponseAudienceFilter = target.value || 'public';
+    renderAllModelPersonalizationControls();
+    return;
+  }
   if (event.type === 'click') {
     const toggle = event.target?.closest?.('[data-model-personalization-toggle]');
     if (!(toggle instanceof HTMLButtonElement)) return;
@@ -1927,6 +2639,15 @@ function initModelManagement() {
   document.addEventListener('submit', handleModelLogicSubmit);
   document.addEventListener('click', handleModelLogicRemove);
   document.addEventListener('model:identity-editor-open-request', handleModelIdentityEditorRequest);
+  document.addEventListener('model:reset-request', handleModelResetRequest);
+  document.addEventListener('model:parameter-filter-change', handleModelParameterFilterChange);
+  document.addEventListener('model:changelog-hydration-request', (event) => {
+    const detail = event instanceof CustomEvent ? event.detail || {} : {};
+    void hydrateModelChangelogFromBackend({
+      force: true,
+      source: detail.source || 'profile-filter-overlay'
+    });
+  });
   document.addEventListener('click', handleModelIdentityEditorClick);
   document.addEventListener('submit', handleModelIdentityEditorSubmit);
   document.addEventListener('keydown', handleModelIdentityEditorKeydown);

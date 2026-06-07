@@ -2,10 +2,11 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) UNIVERSAL RESET
-   03) MEDIA ELEMENT RESET
-   04) FORM ELEMENT RESET
-   05) LIST / TABLE RESET
-   06) END OF FILE
+   03) MOBILE APPLICATION BASELINE
+   04) MEDIA ELEMENT RESET
+   05) FORM ELEMENT RESET
+   06) LIST / TABLE RESET
+   07) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -27,6 +28,7 @@
 html{
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -34,7 +36,40 @@ body{
 }
 
 /* =============================================================================
-   03) MEDIA ELEMENT RESET
+   03) MOBILE APPLICATION BASELINE
+============================================================================= */
+button,
+a,
+summary,
+label,
+[role="button"],
+[tabindex],
+input,
+textarea,
+select{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button,
+a,
+summary,
+label,
+[role="button"],
+[tabindex]{
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+button,
+a,
+summary,
+[role="button"]{
+  touch-action:manipulation;
+}
+
+/* =============================================================================
+   04) MEDIA ELEMENT RESET
 ============================================================================= */
 img,
 picture,
@@ -52,8 +87,13 @@ canvas{
   height:auto;
 }
 
+img,
+svg{
+  -webkit-user-drag:none;
+}
+
 /* =============================================================================
-   04) FORM ELEMENT RESET
+   05) FORM ELEMENT RESET
 ============================================================================= */
 input,
 button,
@@ -80,7 +120,7 @@ textarea{
 }
 
 /* =============================================================================
-   05) LIST / TABLE RESET
+   06) LIST / TABLE RESET
 ============================================================================= */
 ul,
 ol{
@@ -93,5 +133,5 @@ table{
 }
 
 /* =============================================================================
-   06) END OF FILE
+   07) END OF FILE
 ============================================================================= */

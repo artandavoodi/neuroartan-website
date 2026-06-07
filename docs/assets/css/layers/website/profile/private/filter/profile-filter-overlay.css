@@ -298,9 +298,11 @@ body:has(.profile-filter-overlay__confirm-layer){
   display:inline-block;
   inline-size:var(--spacing-md);
   block-size:var(--spacing-md);
-  border-radius:var(--radius-full);
-  aspect-ratio:var(--aspect-ratio-square);
-  flex:0 0 auto;
+  min-inline-size:var(--spacing-md);
+  min-block-size:var(--spacing-md);
+  border-radius:50%;
+  aspect-ratio:1 / 1;
+  flex:0 0 var(--spacing-md);
   overflow:hidden;
 }
 

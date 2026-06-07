@@ -48,6 +48,10 @@ import {
   initializePersonalityCalibration,
   refreshPersonalityCalibration
 } from '../foundation/personality-calibration/model-personality-calibration-controller.js';
+import {
+  initializeDigitalBrainMaturity,
+} from '../foundation/digital-brain-maturity/model-digital-brain-maturity.js';
+
 
 import {
   readLatestPersonalityCalibrationResult
@@ -1493,6 +1497,354 @@ function removeModelPersonalitySummaryOverlay() {
   document.querySelector('[data-model-personality-summary-overlay]')?.remove();
 }
 
+function removeModelKeysOverlay() {
+  document.querySelector('[data-model-keys-overlay]')?.remove();
+}
+
+function removeModelInfoOverlay() {
+  document.querySelector('[data-model-info-overlay]')?.remove();
+}
+
+function getMaskedModelKeyValue(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (!normalizedValue || normalizedValue.toLowerCase().includes('pending') || normalizedValue.toLowerCase().includes('not enabled')) {
+    return 'Not issued';
+  }
+  return '••••••••';
+}
+
+function getPreviewModelKeyValue(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (!normalizedValue || normalizedValue.toLowerCase().includes('pending') || normalizedValue.toLowerCase().includes('not enabled')) {
+    return 'Not issued';
+  }
+
+  if (normalizedValue.length <= 8) {
+    return `${normalizedValue.slice(0, 2)}••••${normalizedValue.slice(-2)}`;
+  }
+
+  return `${normalizedValue.slice(0, 4)}••••${normalizedValue.slice(-4)}`;
+}
+
+function getModelKeyActionPayload(label = '', value = '') {
+  const normalizedValue = String(value || '').trim();
+  const unavailable = !normalizedValue
+    || normalizedValue.toLowerCase().includes('pending')
+    || normalizedValue.toLowerCase().includes('not enabled');
+
+  return {
+    label,
+    value: unavailable ? '' : normalizedValue,
+    masked: unavailable ? 'Not issued' : getMaskedModelKeyValue(normalizedValue),
+    preview: unavailable ? 'Not issued' : getPreviewModelKeyValue(normalizedValue),
+    unavailable,
+  };
+}
+
+function getModelKeyIcon(label = '') {
+  const normalizedLabel = String(label || '').trim().toLowerCase();
+  const icons = {
+    'model id': '/registry/icons/public/assets/layers/website/model/overview/model-id.svg',
+    'owner id': '/registry/icons/public/assets/layers/website/model/overview/owner-id.svg',
+    'registry id': '/registry/icons/public/assets/layers/website/model/overview/registry-id.svg',
+    'birth certificate id': '/registry/icons/public/assets/layers/website/model/overview/birth-certificate-id.svg',
+    'private serial id': '/registry/icons/public/assets/layers/website/model/overview/private-serial-identity.svg',
+    'public serial identity': '/registry/icons/public/assets/layers/website/model/overview/public-serial-identity.svg',
+    'legacy secret key': '/registry/icons/public/assets/core/identity/security/key.svg',
+    'api key': '/registry/icons/public/assets/layers/software/api/api.svg',
+  };
+
+  return icons[normalizedLabel] || '/registry/icons/public/assets/core/identity/security/key.svg';
+}
+
+function getModelInfoIcon(label = '') {
+  const normalizedLabel = String(label || '').trim().toLowerCase();
+  const icons = {
+    'model nickname': '/registry/icons/public/assets/layers/website/model/overview/model-nickname.svg',
+    'model status': '/registry/icons/public/assets/layers/website/model/overview/model-status.svg',
+    readiness: '/registry/icons/public/assets/layers/website/model/overview/readiness.svg',
+    'profile link': '/registry/icons/public/assets/layers/website/model/overview/profile-link.svg',
+    'model type': '/registry/icons/public/assets/layers/website/model/overview/model-type.svg',
+    lifecycle: '/registry/icons/public/assets/layers/website/model/overview/lifecycle.svg',
+    'owner verification': '/registry/icons/public/assets/layers/website/model/overview/verification.svg',
+    discoverability: '/registry/icons/public/assets/layers/website/model/overview/discoverability.svg',
+    'privacy lock': '/registry/icons/public/assets/layers/website/model/overview/privacy-lock.svg',
+    created: '/registry/icons/public/assets/layers/website/model/overview/created.svg',
+    updated: '/registry/icons/public/assets/layers/website/model/overview/updated.svg',
+    'owner policy': '/registry/icons/public/assets/core/legal/policy/policy.svg',
+  };
+
+  return icons[normalizedLabel] || '/registry/icons/public/assets/core/actions/info/info.svg';
+}
+
+function showGlobalCopiedFeedback(anchor, message = 'Copied') {
+  if (!(anchor instanceof HTMLElement)) return;
+
+  document.querySelectorAll('[data-global-copied-feedback]').forEach((node) => node.remove());
+
+  const feedback = document.createElement('span');
+  feedback.className = 'global-copied-feedback';
+  feedback.dataset.globalCopiedFeedback = '';
+  feedback.textContent = message;
+  feedback.setAttribute('role', 'status');
+  feedback.setAttribute('aria-live', 'polite');
+
+  const anchorBox = anchor.getBoundingClientRect();
+  const viewportPadding = 12;
+  const top = Math.max(viewportPadding, Math.min(window.innerHeight - viewportPadding, anchorBox.top + anchorBox.height / 2));
+  const left = Math.max(viewportPadding, Math.min(window.innerWidth - viewportPadding, anchorBox.right + 8));
+
+  feedback.style.position = 'fixed';
+  feedback.style.top = `${top}px`;
+  feedback.style.left = `${left}px`;
+  feedback.style.transform = 'translateY(-50%)';
+  feedback.style.zIndex = '2147483647';
+
+  document.body.append(feedback);
+
+  window.setTimeout(() => {
+    feedback.dataset.globalCopiedFeedbackClosing = 'true';
+  }, 1200);
+
+  window.setTimeout(() => {
+    feedback.remove();
+  }, 1600);
+}
+
+async function copyTextToClipboard(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (!normalizedValue) return false;
+
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(normalizedValue);
+    return true;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = normalizedValue;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '-9999px';
+  textarea.style.left = '-9999px';
+  document.body.append(textarea);
+  textarea.select();
+
+  try {
+    return document.execCommand('copy');
+  } finally {
+    textarea.remove();
+  }
+}
+
+function getReadableModelInfoValue(value = '', fallback = 'Not recorded') {
+  const normalizedValue = String(value || '').trim();
+  if (!normalizedValue) return fallback;
+  return formatModelIdentityState(normalizedValue);
+}
+
+function escapeModelManagementText(value = '') {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function createModelKeyRow(label = '', value = '', options = {}) {
+  const payload = getModelKeyActionPayload(label, value);
+  const disabledAttribute = payload.unavailable ? ' disabled aria-disabled="true"' : '';
+  const icon = getModelKeyIcon(label);
+
+  return `
+    <div class="model-source-summary__metric model-source-summary__metric--key">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
+        <span>${options.secret === true ? `${label} · Protected` : `${label} · Private`}</span>
+      </dt>
+      <dd>
+        <code class="model-source-summary__key-box" data-model-key-value="${payload.value}" data-model-key-masked="${payload.masked}" data-model-key-preview="${payload.preview}" data-model-key-revealed="false">${payload.preview}</code>
+        <span class="model-source-summary__actions">
+          <button class="model-source-summary__action" type="button" data-model-key-reveal${disabledAttribute} aria-label="Show ${label}">
+            <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/access/visibility-on.svg" alt="">
+          </button>
+          <button class="model-source-summary__action" type="button" data-model-key-copy${disabledAttribute} aria-label="Copy ${label}">
+            <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/copy/copy.svg" alt="">
+          </button>
+        </span>
+      </dd>
+    </div>
+  `;
+}
+
+function createModelInfoRow(label = '', value = '') {
+  const icon = getModelInfoIcon(label);
+
+  return `
+    <div class="model-source-summary__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
+        <span>${label}</span>
+      </dt>
+      <dd>
+        <strong>${getReadableModelInfoValue(value)}</strong>
+      </dd>
+    </div>
+  `;
+}
+
+function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = {}) {
+  const profile = runtimeState.profile || {};
+  const displayName = String(runtimeState.displayName || profile.display_name || model?.creator_display_name || '').trim();
+  const username = String(runtimeState.username?.normalized || profile.username || model?.creator_username || '').trim();
+  const modelName = String(identity.modelNickname || model?.model_name || displayName || 'Personal model').trim();
+  const avatarUrl = String(identity.modelAvatar || model?.model_image_url || '').trim();
+  const avatarImage = avatarUrl
+    ? `<img class="profile-private-hero__avatar-image" src="${escapeModelManagementText(avatarUrl)}" alt="" aria-hidden="true">`
+    : '';
+
+  return `
+    <section class="model-source-summary__identity" aria-label="Model identity">
+      <div class="model-source-summary__avatar profile-private-hero__avatar" aria-hidden="true">
+        ${avatarImage}
+      </div>
+      <div class="model-source-summary__identity-copy">
+        <strong>${escapeModelManagementText(modelName)}</strong>
+        <span>${escapeModelManagementText(username ? `Linked to @${username}` : displayName || 'Owner profile linked')}</span>
+      </div>
+    </section>
+  `;
+}
+
+async function handleModelKeysOpenRequest() {
+  removeModelKeysOverlay();
+
+  const overlay = document.createElement('section');
+  overlay.className = 'model-source-calibration-workspace';
+  overlay.dataset.modelKeysOverlay = '';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Model keys');
+  overlay.innerHTML = `
+    <div class="model-source-calibration-workspace__backdrop" data-model-keys-close></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Model keys">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-source-calibration-workspace__progress">Keys</span>
+        <button class="global-close-button" type="button" data-model-keys-close aria-label="Close model keys">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-source-calibration-workspace__result" data-model-keys-overlay-body>
+          <p class="model-management__section-copy">Loading keys.</p>
+        </section>
+      </div>
+    </article>
+  `;
+
+  document.body.append(overlay);
+
+  const body = overlay.querySelector('[data-model-keys-overlay-body]');
+  if (!(body instanceof HTMLElement)) return;
+
+  try {
+    const identity = normalizeModelFoundationIdentity(modelFoundationIdentity);
+    const model = await getOwnedCanonicalModel().catch(() => null);
+    const modelId = identity.modelId && identity.modelId !== 'Model record pending' ? identity.modelId : model?.id || '';
+    const ownerId = model?.profile_id || '';
+
+    body.innerHTML = `
+      <section class="model-source-summary" aria-label="Model key dashboard">
+        <dl class="model-source-summary__metrics">
+          ${createModelKeyRow('Model ID', modelId)}
+          ${createModelKeyRow('Owner ID', ownerId)}
+          ${createModelKeyRow('Registry ID', identity.registryId)}
+          ${createModelKeyRow('Birth Certificate ID', identity.birthCertificateId)}
+          ${createModelKeyRow('Private Serial ID', identity.privateSerialIdentity)}
+          ${createModelKeyRow('Public Serial Identity', identity.publicSerialIdentity)}
+          ${createModelKeyRow('Legacy Secret Key', '', { secret: true })}
+          ${createModelKeyRow('API Key', '', { secret: true })}
+        </dl>
+      </section>
+    `;
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Keys overlay failed.', error);
+    body.innerHTML = '<p class="model-management__section-copy">Model keys could not be loaded.</p>';
+  }
+}
+
+async function handleModelInfoOpenRequest() {
+  removeModelInfoOverlay();
+
+  const overlay = document.createElement('section');
+  overlay.className = 'model-source-calibration-workspace';
+  overlay.dataset.modelInfoOverlay = '';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Model information');
+  overlay.innerHTML = `
+    <div class="model-source-calibration-workspace__backdrop" data-model-info-close></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Model information">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-source-calibration-workspace__progress">Info</span>
+        <button class="global-close-button" type="button" data-model-info-close aria-label="Close model info">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-source-calibration-workspace__result" data-model-info-overlay-body>
+          <p class="model-management__section-copy">Loading info.</p>
+        </section>
+      </div>
+    </article>
+  `;
+
+  document.body.append(overlay);
+
+  const body = overlay.querySelector('[data-model-info-overlay-body]');
+  if (!(body instanceof HTMLElement)) return;
+
+  try {
+    const identity = normalizeModelFoundationIdentity(modelFoundationIdentity);
+    const model = await getOwnedCanonicalModel().catch(() => null);
+    const runtimeState = getProfileRuntimeState();
+    const profile = runtimeState.profile || {};
+    const username = String(runtimeState.username?.normalized || profile.username || model?.creator_username || '').trim();
+    const profileComplete = runtimeState.profileComplete === true || profile.profile_complete === true || runtimeState.completion?.complete === true;
+    const createdAt = identity.createdAt || model?.created_at || '';
+    const updatedAt = identity.updatedAt || model?.updated_at || '';
+    const modelNickname = identity.modelNickname || model?.model_name || '';
+    const modelStatus = model?.foundation_state || model?.model_status || (profileComplete ? 'Foundation active' : 'Foundation incomplete');
+    const readinessState = identity.readinessState || model?.readiness_state || (profileComplete ? 'Preparing' : 'Not ready');
+    const profileLink = username ? `Profile linked to @${username}` : 'Profile route pending';
+
+    body.innerHTML = `
+      <section class="model-source-summary" aria-label="Model information dashboard">
+        ${createModelInfoIdentityBlock(identity, model, runtimeState)}
+        <dl class="model-source-summary__metrics">
+          ${createModelInfoRow('Model nickname', modelNickname || 'Not assigned')}
+          ${createModelInfoRow('Model status', modelStatus)}
+          ${createModelInfoRow('Readiness', readinessState)}
+          ${createModelInfoRow('Profile link', profileLink)}
+          ${createModelInfoRow('Model Type', identity.modelType)}
+          ${createModelInfoRow('Lifecycle', identity.lifecycleState)}
+          ${createModelInfoRow('Owner Verification', identity.verificationState)}
+          ${createModelInfoRow('Discoverability', identity.discoverabilityState)}
+          ${createModelInfoRow('Privacy Lock', identity.privacyLockState)}
+          ${createModelInfoRow('Created', formatModelIdentityDate(createdAt, 'Not recorded'))}
+          ${createModelInfoRow('Updated', formatModelIdentityDate(updatedAt, 'Not recorded'))}
+          ${createModelInfoRow('Owner Policy', identity.ownerRecordPolicy)}
+        </dl>
+      </section>
+    `;
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Info overlay failed.', error);
+    body.innerHTML = '<p class="model-management__section-copy">Model information could not be loaded.</p>';
+  }
+}
+
 async function handleModelSourceSummaryOpenRequest() {
   removeModelSourceSummaryOverlay();
 
@@ -1789,6 +2141,14 @@ document.addEventListener('model:personality-summary-open-request', () => {
   void handleModelPersonalitySummaryOpenRequest();
 });
 
+document.addEventListener('model:keys-open-request', () => {
+  void handleModelKeysOpenRequest();
+});
+
+document.addEventListener('model:info-open-request', () => {
+  void handleModelInfoOpenRequest();
+});
+
 document.addEventListener('click', (event) => {
   const closeButton = event.target.closest('[data-model-source-summary-close]');
   if (!closeButton) return;
@@ -1803,6 +2163,63 @@ document.addEventListener('click', (event) => {
 
   event.preventDefault();
   removeModelPersonalitySummaryOverlay();
+});
+
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('[data-model-keys-close]');
+  if (!closeButton) return;
+
+  event.preventDefault();
+  removeModelKeysOverlay();
+});
+
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('[data-model-info-close]');
+  if (!closeButton) return;
+
+  event.preventDefault();
+  removeModelInfoOverlay();
+});
+
+document.addEventListener('click', (event) => {
+  const revealButton = event.target.closest('[data-model-key-reveal]');
+  if (!(revealButton instanceof HTMLButtonElement)) return;
+
+  const row = revealButton.closest('.model-source-summary__metric--key');
+  const keyBox = row?.querySelector('[data-model-key-value]');
+  if (!(keyBox instanceof HTMLElement)) return;
+
+  const revealed = keyBox.dataset.modelKeyRevealed === 'true';
+  const nextRevealed = !revealed;
+  const value = keyBox.dataset.modelKeyValue || '';
+  const preview = keyBox.dataset.modelKeyPreview || 'Not issued';
+
+  keyBox.dataset.modelKeyRevealed = String(nextRevealed);
+  keyBox.textContent = nextRevealed ? value : preview;
+  revealButton.setAttribute('aria-label', `${nextRevealed ? 'Hide' : 'Show'} model key`);
+
+  const icon = revealButton.querySelector('img');
+  if (icon instanceof HTMLImageElement) {
+    icon.src = nextRevealed
+      ? '/registry/icons/public/assets/core/identity/access/visibility-off.svg'
+      : '/registry/icons/public/assets/core/identity/access/visibility-on.svg';
+  }
+});
+
+document.addEventListener('click', (event) => {
+  const copyButton = event.target.closest('[data-model-key-copy]');
+  if (!(copyButton instanceof HTMLButtonElement)) return;
+
+  const row = copyButton.closest('.model-source-summary__metric--key');
+  const keyBox = row?.querySelector('[data-model-key-value]');
+  const value = keyBox instanceof HTMLElement ? keyBox.dataset.modelKeyValue || '' : '';
+  if (!value) return;
+
+  void copyTextToClipboard(value).then((copied) => {
+    showGlobalCopiedFeedback(copyButton, copied ? 'Copied' : 'Copy failed');
+  }).catch(() => {
+    showGlobalCopiedFeedback(copyButton, 'Copy failed');
+  });
 });
 
 
@@ -2188,6 +2605,11 @@ function renderModelFoundationGroups(root, navigationState = getProfileNavigatio
       refreshPersonalityCalibration(root);
     });
   }
+
+  if (visibleGroup === 'overview') {
+    void initializeDigitalBrainMaturity(root);
+  }
+
 }
 
 function renderModelTrainingGroups(root, navigationState = getProfileNavigationState()) {

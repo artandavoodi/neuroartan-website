@@ -56,6 +56,37 @@
 }
 
 /* =============================================================================
+   03A) DIGITAL BRAIN COLOR TOKENS
+============================================================================= */
+:root{
+  --digital-brain-stage-bg:var(--bg-color);
+
+  --digital-brain-cortex-base:color-mix(in srgb, var(--color-primary1) 42%, var(--bg-color) 58%);
+  --digital-brain-cortex-border:color-mix(in srgb, var(--text-primary-color) 32%, transparent);
+  --digital-brain-cortex-fold:color-mix(in srgb, var(--text-primary-color) 28%, transparent);
+  --digital-brain-cortex-midline:color-mix(in srgb, var(--color-primary5) 34%, var(--text-primary-color) 18%);
+  --digital-brain-brainstem:color-mix(in srgb, var(--text-secondary-color) 42%, var(--bg-color) 58%);
+
+  --digital-brain-region-frontal:color-mix(in srgb, var(--status-success-color) 34%, var(--digital-brain-cortex-base) 66%);
+  --digital-brain-region-parietal:color-mix(in srgb, var(--color-primary5) 24%, var(--digital-brain-cortex-base) 76%);
+  --digital-brain-region-temporal:color-mix(in srgb, var(--status-warning-color) 34%, var(--digital-brain-cortex-base) 66%);
+  --digital-brain-region-occipital:color-mix(in srgb, var(--text-secondary-color) 24%, var(--digital-brain-cortex-base) 76%);
+  --digital-brain-region-limbic:color-mix(in srgb, var(--status-danger-color) 28%, var(--digital-brain-cortex-base) 72%);
+
+  --digital-brain-layer-identity:color-mix(in srgb, var(--color-primary9) 44%, var(--digital-brain-cortex-base) 56%);
+  --digital-brain-layer-source:color-mix(in srgb, var(--status-success-color) 50%, var(--digital-brain-cortex-base) 50%);
+  --digital-brain-layer-personality:color-mix(in srgb, var(--color-primary10) 52%, var(--digital-brain-cortex-base) 48%);
+  --digital-brain-layer-memory:color-mix(in srgb, var(--color-primary5) 50%, var(--digital-brain-cortex-base) 50%);
+  --digital-brain-layer-voice:color-mix(in srgb, var(--status-danger-color) 42%, var(--digital-brain-cortex-base) 58%);
+
+  --digital-brain-node-pending:var(--digital-brain-cortex-border);
+  --digital-brain-node-stable:var(--status-success-color);
+  --digital-brain-node-forming:var(--status-warning-color);
+  --digital-brain-node-blocked:var(--status-danger-color);
+  --digital-brain-node-focus:var(--field-border-focus);
+}
+
+/* =============================================================================
    04) SURFACE COLOR TOKENS
 ============================================================================= */
 :root{

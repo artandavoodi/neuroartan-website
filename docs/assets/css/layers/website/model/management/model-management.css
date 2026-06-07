@@ -1,5 +1,6 @@
 @import url("../foundation/source-calibration/00-source-calibration-all.css");
 @import url("../foundation/personality-calibration/00-personality-calibration-all.css");
+@import url("../foundation/digital-brain-maturity/model-digital-brain-maturity.css");
 @import url("../shared/informative-footer/model-informative-footer.css");
 
 /* MARK: - Model Scrollbar Visibility */
@@ -176,6 +177,31 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 
 .model-management__section[hidden]{
   display:none;
+}
+
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"]{
+  block-size:calc(var(--profile-workspace-viewport-block-size) - (var(--profile-workspace-content-padding-block) * 2));
+  gap:var(--spacing-none);
+  padding-block:var(--spacing-none);
+}
+
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__sections,
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__section,
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] [data-model-foundation-group="overview"],
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity,
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity__surface{
+  block-size:100%;
+  min-block-size:var(--spacing-none);
+}
+
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__section{
+  padding-block:var(--spacing-none);
+}
+
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity__stage{
+  block-size:100%;
+  min-block-size:30rem;
+  max-block-size:none;
 }
 
 .model-management__foundation-group,
@@ -403,14 +429,47 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 
 .model-source-summary{
   display:grid;
-  grid-template-rows:minmax(var(--spacing-none), 1fr) auto;
-  align-content:stretch;
+  align-content:center;
   justify-items:center;
   gap:var(--spacing-xl);
   inline-size:100%;
   min-block-size:100%;
   max-inline-size:var(--content-measure-wide);
-  margin-inline:auto;
+  margin:var(--spacing-none) auto;
+}
+
+.model-source-summary__identity{
+  display:grid;
+  justify-items:center;
+  gap:var(--spacing-md);
+  inline-size:100%;
+  color:var(--text-secondary-color);
+  text-align:center;
+}
+
+.model-source-summary__avatar{
+  inline-size:var(--profile-private-hero-avatar-size);
+  block-size:var(--profile-private-hero-avatar-size);
+  background:var(--color-primary1);
+}
+
+.model-source-summary__identity-copy{
+  display:grid;
+  gap:var(--spacing-2xs);
+}
+
+.model-source-summary__identity-copy strong{
+  color:var(--text-primary-color);
+  font-size:var(--body-1-size);
+  line-height:var(--body-1-line-height);
+  font-weight:var(--font-weight-light);
+}
+
+.model-source-summary__identity-copy span{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
 }
 
 .model-source-summary__metrics{
@@ -419,20 +478,17 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   gap:var(--data-grid-gap);
   inline-size:100%;
   max-inline-size:100%;
-  margin:0;
-  order:1;
+  margin:var(--spacing-none);
   align-self:center;
 }
 
 .model-source-summary__copy{
   max-inline-size:var(--content-measure-narrow);
-  margin:0 auto;
+  margin:var(--spacing-none) auto;
   color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
   text-align:center;
-  order:2;
-  align-self:end;
 }
 
 .model-source-summary__metric{
@@ -481,10 +537,108 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-source-summary__score{
-  color:var(--text-primary-color);
-  font-size:var(--headline-5-size);
-  line-height:var(--headline-5-line-height);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
   font-weight:var(--font-weight-light);
+}
+
+.model-source-summary__metric--key dd{
+  display:grid;
+  justify-items:center;
+  gap:var(--spacing-sm);
+}
+
+.model-source-summary__key-box{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-inline-size:min(100%, var(--content-measure-compact));
+  max-inline-size:100%;
+  min-block-size:var(--control-height-md);
+  padding:var(--spacing-xs) var(--spacing-md);
+  border:var(--border-width-hairline) solid var(--control-border-unified);
+  border-radius:var(--button-radius-md);
+  background:var(--control-surface);
+  color:var(--text-primary-color);
+  font-family:var(--font-family-mono, monospace);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+  text-align:center;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.model-source-summary__actions{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--spacing-sm);
+}
+
+.model-source-summary__action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  inline-size:var(--button-height-sm);
+  block-size:var(--button-height-sm);
+  padding:var(--spacing-none);
+  border:var(--border-width-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--text-secondary-color);
+  cursor:pointer;
+}
+
+.model-source-summary__action:hover,
+.model-source-summary__action:focus-visible{
+  color:var(--text-secondary-color);
+  border-color:transparent;
+  background:transparent;
+  outline:none;
+}
+
+
+.model-source-summary__action:disabled,
+.model-source-summary__action[aria-disabled="true"]{
+  cursor:default;
+  opacity:var(--state-opacity-disabled);
+}
+
+/* MARK: - Global Copy Feedback */
+
+.global-copied-feedback{
+   position:fixed;
+   z-index:calc(var(--z-country-overlay) + 10);
+   display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-block-size:var(--control-height-sm);
+  padding:var(--spacing-xs) var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--button-radius-sm);
+  background-color:var(--hover-overlay-bg);
+  color:var(--hover-overlay-text);
+  font-size:var(--home-search-shell-result-tooltip-size);
+  line-height:var(--home-search-shell-result-tooltip-line-height);
+  font-weight:var(--home-search-shell-result-tooltip-weight);
+  letter-spacing:var(--home-search-shell-result-tooltip-tracking);
+  text-transform:none;
+  pointer-events:none;
+  white-space:nowrap;
+  isolation:isolate;
+  opacity:1;
+  box-shadow:var(--shadow-sm);
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.global-copied-feedback[data-global-copied-feedback-closing="true"]{
+  opacity:0;
+  transform:translateY(-50%) translateX(var(--spacing-xs));
 }
 
 .model-source-summary__learn{
@@ -512,17 +666,47 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   color:var(--text-primary-color);
 }
 
+/* Overlay-specific source summary adjustments */
+[data-model-source-summary-overlay] .model-source-calibration-workspace__body,
+[data-model-personality-summary-overlay] .model-source-calibration-workspace__body,
+[data-model-keys-overlay] .model-source-calibration-workspace__body,
+[data-model-info-overlay] .model-source-calibration-workspace__body{
+  align-content:start;
+  padding-block:var(--spacing-none);
+}
+
+[data-model-source-summary-overlay] .model-source-calibration-workspace__result,
+[data-model-personality-summary-overlay] .model-source-calibration-workspace__result,
+[data-model-keys-overlay] .model-source-calibration-workspace__result,
+[data-model-info-overlay] .model-source-calibration-workspace__result{
+  min-block-size:auto;
+  padding-block:var(--spacing-none);
+}
+
+[data-model-source-summary-overlay] .model-source-summary,
+[data-model-personality-summary-overlay] .model-source-summary,
+[data-model-keys-overlay] .model-source-summary,
+[data-model-info-overlay] .model-source-summary{
+  min-block-size:auto;
+  align-content:start;
+}
+
 @media (max-width:760px){
   .model-source-summary{
-    gap:var(--spacing-xl);
+    min-block-size:auto;
+    align-content:start;
+    gap:var(--spacing-none);
+    margin:var(--spacing-none) auto;
   }
 
   .model-source-summary__metrics{
     grid-template-columns:1fr;
-    gap:var(--spacing-lg);
+    gap:var(--spacing-xl);
   }
 
   .model-source-summary__metric{
+    min-height:auto;
+    padding-block:var(--spacing-sm);
     justify-items:center;
     text-align:center;
   }

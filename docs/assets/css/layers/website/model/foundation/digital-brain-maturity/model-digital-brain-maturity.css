@@ -1,0 +1,826 @@
+/* MARK: - Digital Brain Maturity */
+
+.model-digital-brain-maturity{
+  inline-size:100%;
+}
+
+.model-digital-brain-maturity__surface{
+  position:relative;
+  display:grid;
+  gap:var(--spacing-lg);
+  inline-size:100%;
+  padding:var(--spacing-none);
+  border:var(--border-width-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  --digital-brain-zoom:1;
+  --digital-brain-pan-x:0px;
+  --digital-brain-pan-y:0px;
+  --digital-brain-rotate-x:0deg;
+  --digital-brain-rotate-y:0deg;
+  --digital-brain-node-scale:1;
+  --digital-brain-connection-scale:1;
+  --digital-brain-region-opacity:1;
+}
+
+.model-digital-brain-maturity__controls{
+  position:absolute;
+  inset-block-start:var(--spacing-md);
+  inset-inline:var(--spacing-md);
+  z-index:3;
+  display:grid;
+  grid-template-columns:minmax(14rem, 19rem) 1fr;
+  align-items:start;
+  gap:var(--spacing-md);
+  pointer-events:none;
+}
+
+.model-digital-brain-maturity__navigator{
+  position:relative;
+  z-index:2;
+  display:grid;
+  gap:var(--spacing-sm);
+  padding:var(--spacing-xs);
+  border:var(--border-width-none);
+  border-radius:var(--shape-card-radius);
+  background:var(--control-surface);
+  pointer-events:auto;
+}
+
+.model-digital-brain-maturity__search-icon,
+.model-digital-brain-maturity__search-clear-icon{
+  inline-size:var(--icon-size-sm);
+  block-size:var(--icon-size-sm);
+  object-fit:contain;
+}
+
+.model-digital-brain-maturity__search{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-xs);
+  min-block-size:var(--control-height-md);
+  padding-inline:var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--input-radius-md);
+  background:var(--control-surface);
+  color:var(--text-secondary-color);
+}
+
+.model-digital-brain-maturity__search input{
+  inline-size:100%;
+  min-block-size:auto;
+  padding:var(--spacing-none);
+  border:var(--border-width-none);
+  border-radius:var(--radius-none);
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+  -webkit-appearance:textfield;
+  appearance:textfield;
+}
+
+.model-digital-brain-maturity__search input::-webkit-search-cancel-button,
+.model-digital-brain-maturity__search input::-webkit-search-decoration,
+.model-digital-brain-maturity__search input::-webkit-search-results-button,
+.model-digital-brain-maturity__search input::-webkit-search-results-decoration{
+  display:none;
+  -webkit-appearance:none;
+  appearance:none;
+}
+
+.model-digital-brain-maturity__search input:focus{
+  border-color:transparent;
+  outline:none;
+}
+
+.model-digital-brain-maturity__search-clear{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  inline-size:var(--control-height-xs, var(--icon-button-size-sm));
+  block-size:var(--control-height-xs, var(--icon-button-size-sm));
+  padding:var(--spacing-none);
+  border:var(--border-width-none);
+  border-radius:var(--shape-icon-button-radius);
+  background:transparent;
+  color:var(--text-secondary-color);
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__search-clear[hidden]{
+  display:none;
+}
+
+.model-digital-brain-maturity__search input:placeholder-shown + .model-digital-brain-maturity__search-clear{
+  display:none;
+}
+
+.model-digital-brain-maturity__search-clear:hover,
+.model-digital-brain-maturity__search-clear:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.model-digital-brain-maturity__search-results{
+  display:grid;
+  gap:var(--spacing-xs);
+  max-block-size:12rem;
+  overflow:auto;
+}
+
+.model-digital-brain-maturity__result{
+  display:grid;
+  gap:var(--spacing-2xs);
+  inline-size:100%;
+  padding:var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--shape-card-radius);
+  background:transparent;
+  color:var(--text-secondary-color);
+  text-align:start;
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__result:hover,
+.model-digital-brain-maturity__result:focus-visible{
+  background:transparent;
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.model-digital-brain-maturity__result strong{
+  color:inherit;
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+}
+
+.model-digital-brain-maturity__result span,
+.model-digital-brain-maturity__empty{
+  margin:var(--spacing-none);
+  color:inherit;
+  font-size:var(--caption-size, var(--body-3-size));
+  line-height:var(--caption-line-height, var(--body-3-line-height));
+  font-weight:var(--font-weight-light);
+  opacity:var(--state-opacity-muted);
+}
+
+.model-digital-brain-maturity__toolbar{
+  position:relative;
+  display:grid;
+  justify-items:end;
+  gap:var(--spacing-sm);
+  pointer-events:auto;
+}
+
+.model-digital-brain-maturity__control-group,
+.model-digital-brain-maturity__zoom{
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:var(--spacing-xs);
+}
+
+.model-digital-brain-maturity__control{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--spacing-xs);
+  min-block-size:var(--control-height-sm);
+  padding:var(--spacing-xs) var(--spacing-sm);
+  border:var(--border-width-hairline) solid transparent;
+  border-radius:var(--button-radius-sm);
+  background:transparent;
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__control > *{
+  opacity:inherit;
+}
+
+.model-digital-brain-maturity__control--icon{
+  inline-size:var(--control-height-sm);
+  padding:var(--spacing-none);
+}
+
+.model-digital-brain-maturity__control-icon{
+  inline-size:var(--icon-size-sm);
+  block-size:var(--icon-size-sm);
+  object-fit:contain;
+}
+
+.model-digital-brain-maturity__control[aria-pressed="true"]{
+  color:var(--text-primary-color);
+  background:transparent;
+}
+
+.model-digital-brain-maturity__control[aria-pressed="false"]{
+  opacity:var(--state-opacity-muted);
+}
+
+.model-digital-brain-maturity__control:hover,
+.model-digital-brain-maturity__control:focus-visible{
+  color:var(--text-primary-color);
+  border-color:transparent;
+  background:transparent;
+  outline:none;
+}
+
+.model-digital-brain-maturity__control[aria-pressed="true"]:hover,
+.model-digital-brain-maturity__control[aria-pressed="true"]:focus-visible{
+  background:transparent;
+}
+
+.model-digital-brain-maturity__settings-panel{
+  display:grid;
+  gap:var(--spacing-sm);
+  justify-self:end;
+  inline-size:min(22rem, calc(100vw - (var(--spacing-lg) * 2)));
+  max-inline-size:calc(100vw - (var(--spacing-lg) * 2));
+  padding:var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--shape-card-radius);
+  background:var(--control-surface);
+  color:var(--text-secondary-color);
+}
+
+.model-digital-brain-maturity__settings-panel[hidden]{
+  display:none;
+}
+
+.model-digital-brain-maturity__settings-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--spacing-xs);
+  inline-size:100%;
+  min-block-size:var(--control-height-sm);
+  padding:var(--spacing-xs) var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--button-radius-sm);
+  background:transparent;
+  color:var(--text-secondary-color);
+  font:inherit;
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__settings-toggle:hover,
+.model-digital-brain-maturity__settings-toggle:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.model-digital-brain-maturity__settings-range{
+  display:grid;
+  gap:var(--spacing-xs);
+  inline-size:100%;
+  min-inline-size:0;
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+}
+
+.model-digital-brain-maturity__settings-range input{
+  inline-size:100%;
+  min-inline-size:0;
+}
+
+.model-digital-brain-maturity__stage{
+  position:relative;
+  inline-size:100%;
+  min-block-size:clamp(26rem, 46vw, 44rem);
+  border:var(--border-width-none);
+  border-radius:var(--radius-none);
+  background:var(--digital-brain-stage-bg);
+  overflow:hidden;
+  perspective:72rem;
+  touch-action:none;
+  cursor:grab;
+}
+
+.model-digital-brain-maturity__stage[data-digital-brain-dragging="true"]{
+  cursor:grabbing;
+}
+
+.model-digital-brain-maturity__stage:fullscreen{
+  inline-size:100vw;
+  block-size:100vh;
+  border-radius:var(--radius-none);
+}
+
+.model-digital-brain-maturity__canvas{
+  display:block;
+  inline-size:100%;
+  block-size:100%;
+  min-block-size:inherit;
+  cursor:inherit;
+}
+
+.model-digital-brain-maturity__network{
+  display:block;
+  inline-size:100%;
+  block-size:100%;
+  min-block-size:inherit;
+  color:var(--text-primary-color);
+  transform-box:fill-box;
+  transform-origin:center;
+  transform:
+    translate(var(--digital-brain-pan-x, 0px), var(--digital-brain-pan-y, 0px))
+    scale(var(--digital-brain-zoom, 1))
+    rotateX(var(--digital-brain-rotate-x, 0deg))
+    rotateY(var(--digital-brain-rotate-y, 0deg));
+  transition:transform var(--interaction-motion-fast) var(--interaction-ease-standard);
+  animation:model-digital-brain-float 18s var(--interaction-ease-standard) infinite alternate;
+}
+
+.model-digital-brain-maturity__region-labels{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.model-digital-brain-maturity__region-label,
+.model-digital-brain-maturity__construct-label{
+  position:absolute;
+  inset-block-start:var(--digital-brain-label-y);
+  inset-inline-start:var(--digital-brain-label-x);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  min-block-size:var(--control-height-sm);
+  padding:var(--spacing-xs) var(--spacing-sm);
+  border:var(--border-width-none);
+  border-radius:var(--button-radius-sm);
+  background:var(--control-surface);
+  color:var(--text-primary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+  transform:translate(-50%, -50%) scale(var(--digital-brain-label-scale, 1));
+  pointer-events:auto;
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__region-label{
+  background:var(--control-surface);
+}
+
+.model-digital-brain-maturity__construct-label{
+  min-block-size:var(--control-height-xs, 1.875rem);
+  max-inline-size:min(14rem, 32vw);
+  border-radius:var(--button-radius-sm);
+  background:color-mix(in srgb, var(--digital-brain-layer-color, var(--control-surface)) 28%, var(--control-surface));
+  color:var(--text-primary-color);
+  font-size:var(--caption-size, var(--body-3-size));
+  line-height:var(--caption-line-height, var(--body-3-line-height));
+  opacity:.86;
+}
+
+.model-digital-brain-maturity__construct-label span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="regions"] .model-digital-brain-maturity__region-label,
+.model-digital-brain-maturity__surface[data-digital-brain-view="nodes"] .model-digital-brain-maturity__region-label,
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__region-label{
+  display:inline-flex;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="nodes"]:not([data-digital-brain-subnodes="hidden"]) .model-digital-brain-maturity__construct-label,
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]):not([data-digital-brain-subnodes="hidden"]) .model-digital-brain-maturity__construct-label{
+  display:inline-flex;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__region-label,
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__construct-label{
+  display:none !important;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) [data-digital-brain-focus-match="true"]{
+  display:inline-flex !important;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-labels="hidden"] .model-digital-brain-maturity__region-label,
+.model-digital-brain-maturity__surface[data-digital-brain-labels="hidden"] .model-digital-brain-maturity__construct-label{
+  display:none !important;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-labels="hidden"] [data-digital-brain-active-label="true"]{
+  display:inline-flex !important;
+}
+
+.model-digital-brain-maturity__region-label[data-digital-brain-node-state="complete"],
+.model-digital-brain-maturity__region-label[data-digital-brain-node-state="stable"]{
+  color:var(--text-primary-color);
+}
+
+.model-digital-brain-maturity__region-label[data-digital-brain-node-state="forming"]{
+  color:var(--text-primary-color);
+}
+
+.model-digital-brain-maturity__region-label[data-digital-brain-node-state="blocked"]{
+  color:var(--text-primary-color);
+}
+
+.model-digital-brain-maturity__focus-panel{
+  position:absolute;
+  inset-block-end:var(--spacing-lg);
+  inset-inline-end:var(--spacing-lg);
+  z-index:3;
+  display:grid;
+  grid-template-rows:auto minmax(0, 1fr);
+  gap:var(--spacing-sm);
+  inline-size:min(24rem, calc(100% - (var(--spacing-lg) * 2)));
+  max-block-size:min(28rem, calc(100% - (var(--spacing-lg) * 2)));
+  padding:var(--spacing-md);
+  border:var(--border-width-none);
+  border-radius:var(--shape-card-radius);
+  background:var(--control-surface);
+  color:var(--text-secondary-color);
+  overflow:hidden;
+}
+
+.model-digital-brain-maturity__focus-panel[hidden]{
+  display:none;
+}
+
+.model-digital-brain-maturity__focus-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:var(--spacing-md);
+}
+
+.model-digital-brain-maturity__focus-body{
+  display:grid;
+  gap:var(--spacing-sm);
+  min-block-size:0;
+  max-block-size:19rem;
+  overflow:auto;
+  overscroll-behavior:contain;
+  padding-inline-end:var(--spacing-xs);
+}
+
+.model-digital-brain-maturity__focus-header span{
+  display:grid;
+  gap:var(--spacing-2xs);
+}
+
+.model-digital-brain-maturity__focus-header em,
+.model-digital-brain-maturity__focus-panel strong{
+  font-style:normal;
+}
+
+.model-digital-brain-maturity__focus-panel strong{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  font-weight:var(--font-weight-light);
+}
+
+.model-digital-brain-maturity__focus-close{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  inline-size:var(--icon-button-size-sm);
+  block-size:var(--icon-button-size-sm);
+  padding:var(--spacing-none);
+  border:var(--border-width-none);
+  border-radius:var(--button-radius-sm);
+  background:transparent;
+  color:var(--text-secondary-color);
+  cursor:pointer;
+}
+
+.model-digital-brain-maturity__focus-close:hover,
+.model-digital-brain-maturity__focus-close:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.model-digital-brain-maturity__focus-close-icon{
+  inline-size:var(--icon-size-sm);
+  block-size:var(--icon-size-sm);
+  object-fit:contain;
+}
+
+.model-digital-brain-maturity__focus-header em,
+.model-digital-brain-maturity__focus-panel p,
+.model-digital-brain-maturity__focus-panel dt,
+.model-digital-brain-maturity__focus-panel dd{
+  margin:var(--spacing-none);
+  color:inherit;
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-light);
+}
+
+.model-digital-brain-maturity__focus-body dl{
+  display:grid;
+  gap:var(--spacing-xs);
+  margin:var(--spacing-none);
+}
+
+.model-digital-brain-maturity__focus-body div{
+  display:grid;
+  grid-template-columns:minmax(6rem, auto) minmax(0, 1fr);
+  gap:var(--spacing-sm);
+}
+
+.model-digital-brain-maturity__focus-panel dt{
+  color:var(--text-primary-color);
+}
+
+.model-digital-brain-maturity__brain-shadow{
+  fill:url(#digital-brain-core);
+  opacity:.72;
+}
+
+.model-digital-brain-maturity__brain-outline{
+  fill:transparent;
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.58;
+  vector-effect:non-scaling-stroke;
+  opacity:.92;
+}
+
+.model-digital-brain-maturity__brain-region{
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.18;
+  vector-effect:non-scaling-stroke;
+  opacity:calc(.38 * var(--digital-brain-region-opacity, 1));
+}
+
+.model-digital-brain-maturity__brain-region--frontal{
+  fill:var(--digital-brain-region-frontal);
+}
+
+.model-digital-brain-maturity__brain-region--temporal{
+  fill:var(--digital-brain-region-temporal);
+}
+
+.model-digital-brain-maturity__brain-region--parietal{
+  fill:var(--digital-brain-region-parietal);
+}
+
+.model-digital-brain-maturity__brain-region--occipital{
+  fill:var(--digital-brain-region-occipital);
+}
+
+.model-digital-brain-maturity__brain-region--limbic{
+  fill:var(--digital-brain-region-limbic);
+}
+
+.model-digital-brain-maturity__brain-fold,
+.model-digital-brain-maturity__hemispheres path{
+  fill:none;
+  stroke:var(--digital-brain-cortex-fold);
+  stroke-width:.28;
+  vector-effect:non-scaling-stroke;
+  opacity:.46;
+}
+
+.model-digital-brain-maturity__hemispheres text{
+  fill:var(--text-secondary-color);
+  font-size:2.35px;
+  line-height:1;
+  font-weight:var(--font-weight-light);
+  opacity:.56;
+  pointer-events:none;
+}
+
+.model-digital-brain-maturity__connection{
+  fill:none;
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.34;
+  stroke-linecap:round;
+  stroke-dasharray:2 3;
+  vector-effect:non-scaling-stroke;
+  opacity:.24;
+  filter:url(#digital-brain-soft-glow);
+  animation:model-digital-brain-pulse 6s var(--interaction-ease-standard) infinite;
+}
+
+.model-digital-brain-maturity__connection[data-digital-brain-connection-state="complete"],
+.model-digital-brain-maturity__connection[data-digital-brain-connection-state="stable"]{
+  opacity:.96;
+  stroke-dasharray:0;
+}
+
+.model-digital-brain-maturity__connection[data-digital-brain-connection-state="forming"]{
+  opacity:.62;
+}
+
+.model-digital-brain-maturity__node{
+  cursor:pointer;
+  transform-box:fill-box;
+  transform-origin:center;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard), transform var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-digital-brain-maturity__node:hover,
+.model-digital-brain-maturity__node:focus-visible{
+  outline:none;
+  transform:scale(1.1);
+}
+
+.model-digital-brain-maturity__node-glow{
+  fill:var(--text-primary-color);
+  opacity:.08;
+  stroke:none;
+  filter:url(#digital-brain-soft-glow);
+}
+
+.model-digital-brain-maturity__node-core{
+  fill:var(--digital-brain-stage-bg);
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.48;
+  vector-effect:non-scaling-stroke;
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="complete"] .model-digital-brain-maturity__node-glow,
+.model-digital-brain-maturity__node[data-digital-brain-node-state="stable"] .model-digital-brain-maturity__node-glow{
+  opacity:.32;
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="complete"] .model-digital-brain-maturity__node-core,
+.model-digital-brain-maturity__node[data-digital-brain-node-state="stable"] .model-digital-brain-maturity__node-core{
+  fill:color-mix(in srgb, var(--digital-brain-node-stable) 18%, var(--digital-brain-stage-bg));
+  stroke:var(--digital-brain-node-stable);
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="forming"] .model-digital-brain-maturity__node-glow{
+  opacity:.24;
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="forming"] .model-digital-brain-maturity__node-core{
+  fill:color-mix(in srgb, var(--digital-brain-node-forming) 18%, var(--digital-brain-stage-bg));
+  stroke:var(--digital-brain-node-forming);
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="blocked"] .model-digital-brain-maturity__node-core{
+  fill:color-mix(in srgb, var(--digital-brain-node-blocked) 18%, var(--digital-brain-stage-bg));
+  stroke:var(--digital-brain-node-blocked);
+}
+
+.model-digital-brain-maturity__node[data-digital-brain-node-state="pending"]{
+  opacity:.38;
+}
+
+.model-digital-brain-maturity__subnode{
+  opacity:.34;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard), transform var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-digital-brain-maturity__subnode line{
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.18;
+  vector-effect:non-scaling-stroke;
+  opacity:.42;
+}
+
+.model-digital-brain-maturity__subnode circle{
+  fill:var(--digital-brain-stage-bg);
+  stroke:var(--digital-brain-cortex-border);
+  stroke-width:.28;
+  vector-effect:non-scaling-stroke;
+}
+
+.model-digital-brain-maturity__node-label{
+  fill:var(--text-secondary-color);
+  font-size:2.45px;
+  line-height:1;
+  font-weight:var(--font-weight-light);
+  pointer-events:none;
+}
+
+.model-digital-brain-maturity__layers{
+  display:none;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="overview"] .model-digital-brain-maturity__subnodes,
+.model-digital-brain-maturity__surface[data-digital-brain-view="regions"] .model-digital-brain-maturity__subnodes,
+.model-digital-brain-maturity__surface[data-digital-brain-view="connections"] .model-digital-brain-maturity__subnodes{
+  opacity:0;
+  pointer-events:none;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="overview"] .model-digital-brain-maturity__brain-region{
+  opacity:.2;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="regions"] .model-digital-brain-maturity__brain-region,
+.model-digital-brain-maturity__surface[data-digital-brain-view="regions"] .model-digital-brain-maturity__hemispheres text{
+  opacity:.82;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="nodes"] .model-digital-brain-maturity__subnodes{
+  opacity:1;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="connections"] .model-digital-brain-maturity__nodes,
+.model-digital-brain-maturity__surface[data-digital-brain-view="connections"] .model-digital-brain-maturity__brain-fold,
+.model-digital-brain-maturity__surface[data-digital-brain-view="connections"] .model-digital-brain-maturity__brain-region{
+  opacity:.22;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-view="connections"] .model-digital-brain-maturity__connections .model-digital-brain-maturity__connection{
+  opacity:.94;
+}
+
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__node,
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__connection,
+.model-digital-brain-maturity__surface[data-digital-brain-focus]:not([data-digital-brain-focus=""]) .model-digital-brain-maturity__subnode{
+  opacity:.18;
+}
+
+@keyframes model-digital-brain-float{
+  from{
+    transform:
+      translate(var(--digital-brain-pan-x, 0px), var(--digital-brain-pan-y, 0px))
+      scale(var(--digital-brain-zoom, 1))
+      rotateX(var(--digital-brain-rotate-x, 0deg))
+      rotateY(calc(var(--digital-brain-rotate-y, 0deg) - 1.8deg));
+  }
+
+  to{
+    transform:
+      translate(var(--digital-brain-pan-x, 0px), var(--digital-brain-pan-y, 0px))
+      scale(var(--digital-brain-zoom, 1))
+      rotateX(calc(var(--digital-brain-rotate-x, 0deg) + 1.4deg))
+      rotateY(calc(var(--digital-brain-rotate-y, 0deg) + 2.4deg))
+      translateY(-.4rem);
+  }
+}
+
+@keyframes model-digital-brain-pulse{
+  0%, 100%{
+    stroke-dashoffset:0;
+  }
+
+  50%{
+    stroke-dashoffset:8;
+  }
+}
+
+@media (max-width:760px){
+  .model-digital-brain-maturity__surface{
+    gap:var(--spacing-md);
+  }
+
+  .model-digital-brain-maturity__controls{
+    position:relative;
+    inset:auto;
+    grid-template-columns:1fr;
+    inline-size:100%;
+    pointer-events:auto;
+  }
+
+  .model-digital-brain-maturity__toolbar{
+    justify-items:start;
+  }
+
+  .model-digital-brain-maturity__navigator{
+    inline-size:100%;
+  }
+
+  .model-digital-brain-maturity__search-results{
+    max-block-size:10rem;
+  }
+
+  .model-digital-brain-maturity__control-group,
+  .model-digital-brain-maturity__zoom{
+    justify-content:flex-start;
+  }
+
+  .model-digital-brain-maturity__stage{
+    min-block-size:24rem;
+    max-block-size:none;
+  }
+
+  .model-digital-brain-maturity__focus-panel{
+    inset-inline:var(--spacing-md);
+    inset-block-end:var(--spacing-md);
+    inline-size:auto;
+    max-block-size:min(22rem, calc(100% - (var(--spacing-md) * 2)));
+  }
+
+  .model-digital-brain-maturity__settings-panel{
+    justify-self:start;
+    inline-size:100%;
+    max-inline-size:none;
+  }
+
+  .model-digital-brain-maturity__focus-body{
+    max-block-size:15rem;
+  }
+}

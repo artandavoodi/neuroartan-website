@@ -1,0 +1,77 @@
+{
+  "schema": "neuroartan.model.foundation.digital_brain_maturity",
+  "version": "0.1.0",
+  "title": "Digital Brain Maturity",
+  "summary": "Foundation maturity shows how identity, Source, memory, personality, and voice connect into one operational model map.",
+  "layers": [
+    {
+      "id": "identity",
+      "label": "Self-model",
+      "description": "The model has a canonical owner-bound identity, profile link, and private record chain.",
+      "state": "pending",
+      "icon": "/registry/icons/public/assets/layers/website/model/overview/model-id.svg",
+      "weight": 1.2,
+      "x": 50,
+      "y": 14,
+      "z": 0,
+      "next": ["source", "personality"]
+    },
+    {
+      "id": "source",
+      "label": "Axiomatic orientation",
+      "description": "Source Calibration provides the private baseline for agency, axioms, core beliefs, reflection, and regulation.",
+      "state": "pending",
+      "icon": "/registry/icons/public/assets/core/model/source-profile/source-profile.svg",
+      "weight": 1.4,
+      "x": 62,
+      "y": 34,
+      "z": 0,
+      "next": ["memory", "personality"]
+    },
+    {
+      "id": "personality",
+      "label": "Trait architecture",
+      "description": "Personality Calibration gives the model cognitive style, reflection tolerance, and response-pattern signals.",
+      "state": "pending",
+      "icon": "/registry/icons/public/assets/core/model/personality-profile/personality-profile.svg",
+      "weight": 1.3,
+      "x": 44,
+      "y": 44,
+      "z": 0,
+      "next": ["memory", "voice"]
+    },
+    {
+      "id": "memory",
+      "label": "Continuity memory",
+      "description": "Private memory will connect thoughts, posts, documents, and model history into retrievable continuity.",
+      "state": "pending",
+      "icon": "/registry/icons/public/assets/layers/website/model/overview/private-memory.svg",
+      "weight": 1.5,
+      "x": 32,
+      "y": 58,
+      "z": 0,
+      "next": ["personality", "voice"]
+    },
+    {
+      "id": "voice",
+      "label": "Expression system",
+      "description": "Voice maturity will require verified owner samples, expression alignment, and controlled activation.",
+      "state": "pending",
+      "icon": "/registry/icons/public/assets/layers/website/model/overview/voice-activation.svg",
+      "weight": 1.2,
+      "x": 72,
+      "y": 64,
+      "z": 0,
+      "next": []
+    }
+  ],
+  "connections": [
+    { "from": "identity", "to": "source", "state": "pending" },
+    { "from": "identity", "to": "personality", "state": "pending" },
+    { "from": "source", "to": "personality", "state": "pending" },
+    { "from": "source", "to": "memory", "state": "pending" },
+    { "from": "personality", "to": "memory", "state": "pending" },
+    { "from": "personality", "to": "voice", "state": "pending" },
+    { "from": "memory", "to": "voice", "state": "pending" }
+  ]
+}

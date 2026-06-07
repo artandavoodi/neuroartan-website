@@ -602,7 +602,9 @@ function getPersonalityMetricText(metric, fallback = 'Pending assessment') {
   }
 
   const value = metric.value ?? metric.label ?? fallback;
-  const score = Number(metric.score);
+  const rawScore = metric.score;
+  const hasScore = rawScore !== null && rawScore !== undefined && rawScore !== '';
+  const score = hasScore ? Number(rawScore) : NaN;
 
   if (!Number.isFinite(score)) {
     return String(value);

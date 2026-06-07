@@ -42,6 +42,7 @@ const RUNTIME_ROUTES_TABLE = 'model_runtime_routes';
 const ACTIVE_MODEL_PREFERENCES_TABLE = 'active_model_preferences';
 const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferences';
 const MODEL_VISIBILITY_PREFERENCES_TABLE = 'model_visibility_preferences';
+const MODEL_DIGITAL_BRAIN_PREFERENCES_TABLE = 'model_digital_brain_preferences';
 const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
 const MODEL_CHANGELOG_EVENTS_TABLE = 'model_changelog_events';
@@ -188,6 +189,23 @@ const MODEL_RESPONSE_AUDIENCE_DEFAULTS = Object.freeze({
   subscriberResponsePriority: 65,
   subscriberResponseDetail: 65,
   subscriberResponseProfessionalTone: 75,
+});
+
+const MODEL_DIGITAL_BRAIN_CHANGE_FIELDS = Object.freeze({
+  viewMode: 'Brain map view',
+  motionState: 'Brain map motion',
+  constructNodesVisible: 'Construct nodes',
+  constructLabelsVisible: 'Construct labels',
+  nodeScale: 'Node scale',
+  connectionScale: 'Connection scale',
+  regionOpacity: 'Region opacity',
+  labelScale: 'Label scale',
+  constructScale: 'Construct node scale',
+  constructSpread: 'Construct spread',
+  signalIntensity: 'Signal intensity',
+  zoomLevel: 'Brain map zoom',
+  rotateX: 'Brain map vertical rotation',
+  rotateY: 'Brain map horizontal rotation',
 });
 
 /* =============================================================================
@@ -428,6 +446,83 @@ function buildModelPersonalizationPreferencesPayload(modelId, preferences = {}) 
     creativity_level: normalizePreferenceNumber(preferences.creativityLevel, 50),
     risk_tolerance: normalizePreferenceNumber(preferences.riskTolerance, 25),
     response_audience_rules: buildResponseAudienceRules(preferences),
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function normalizeDigitalBrainPreferenceNumber(value, fallback = 1, min = 0, max = 3) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return fallback;
+  return Math.max(min, Math.min(max, Math.round(numericValue * 100) / 100));
+}
+
+function normalizeDigitalBrainPreferenceBoolean(value, fallback = true) {
+  if (value === true || value === 'true' || value === 'visible' || value === 1 || value === '1') return true;
+  if (value === false || value === 'false' || value === 'hidden' || value === 0 || value === '0') return false;
+  return fallback;
+}
+
+function normalizeDigitalBrainMotionState(value = '') {
+  const normalized = normalizeString(value).toLowerCase();
+  return normalized === 'paused' ? 'paused' : 'playing';
+}
+
+function mapModelDigitalBrainPreferences(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    viewMode: normalizeString(row.view_mode || 'overview') || 'overview',
+    motionState: normalizeDigitalBrainMotionState(row.motion_state),
+    constructNodesVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_nodes_visible, true),
+    constructLabelsVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_labels_visible, true),
+    nodeScale: normalizeDigitalBrainPreferenceNumber(row.node_scale, 1, 0.7, 1.4),
+    connectionScale: normalizeDigitalBrainPreferenceNumber(row.connection_scale, 1, 0.45, 1.4),
+    regionOpacity: normalizeDigitalBrainPreferenceNumber(row.region_opacity, 1, 0.45, 1),
+    labelScale: normalizeDigitalBrainPreferenceNumber(row.label_scale, 1, 0.75, 1.35),
+    constructScale: normalizeDigitalBrainPreferenceNumber(row.construct_scale, 1, 0.65, 1.6),
+    constructSpread: normalizeDigitalBrainPreferenceNumber(row.construct_spread, 1, 0.7, 1.65),
+    signalIntensity: normalizeDigitalBrainPreferenceNumber(row.signal_intensity, 1, 0.55, 1.45),
+    zoomLevel: normalizeDigitalBrainPreferenceNumber(row.zoom_level, 1, 0.7, 2.4),
+    rotateX: normalizeString(row.rotate_x || '0deg') || '0deg',
+    rotateY: normalizeString(row.rotate_y || '0deg') || '0deg',
+    focusLayer: normalizeString(row.focus_layer || ''),
+    focusSignal: normalizeString(row.focus_signal || ''),
+    focusAtlas: normalizeString(row.focus_atlas || ''),
+    updatedAt: normalizeString(row.updated_at || ''),
+  };
+}
+
+function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) {
+  const modelId = normalizeString(model?.id || preferences.modelId || preferences.model_id || '');
+  const constructNodesVisible = normalizeDigitalBrainPreferenceBoolean(preferences.constructNodesVisible, true);
+  const constructLabelsVisible = normalizeDigitalBrainPreferenceBoolean(preferences.constructLabelsVisible, true);
+
+  return {
+    model_id: modelId,
+    profile_id: normalizeString(model?.profile_id || preferences.profileId || preferences.profile_id || '') || null,
+    owner_auth_user_id: normalizeString(model?.owner_auth_user_id || preferences.ownerAuthUserId || preferences.owner_auth_user_id || '') || null,
+    view_mode: normalizeString(preferences.viewMode || 'overview') || 'overview',
+    motion_state: normalizeDigitalBrainMotionState(preferences.motionState),
+    construct_nodes_visible: constructNodesVisible,
+    construct_labels_visible: constructLabelsVisible,
+    node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0.7, 1.4),
+    connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0.45, 1.4),
+    region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0.45, 1),
+    label_scale: normalizeDigitalBrainPreferenceNumber(preferences.labelScale, 1, 0.75, 1.35),
+    construct_scale: normalizeDigitalBrainPreferenceNumber(preferences.constructScale, 1, 0.65, 1.6),
+    construct_spread: normalizeDigitalBrainPreferenceNumber(preferences.constructSpread, 1, 0.7, 1.65),
+    signal_intensity: normalizeDigitalBrainPreferenceNumber(preferences.signalIntensity, 1, 0.55, 1.45),
+    zoom_level: normalizeDigitalBrainPreferenceNumber(preferences.zoomLevel, 1, 0.7, 2.4),
+    rotate_x: normalizeString(preferences.rotateX || '0deg') || '0deg',
+    rotate_y: normalizeString(preferences.rotateY || '0deg') || '0deg',
+    focus_layer: normalizeString(preferences.focusLayer || ''),
+    focus_signal: normalizeString(preferences.focusSignal || ''),
+    focus_atlas: normalizeString(preferences.focusAtlas || ''),
+    preferences_payload: {
+      construct_nodes_visible: constructNodesVisible,
+      construct_labels_visible: constructLabelsVisible,
+      view_mode: normalizeString(preferences.viewMode || 'overview') || 'overview',
+    },
     updated_at: new Date().toISOString(),
   };
 }
@@ -1523,6 +1618,66 @@ export async function saveModelVisibilityPreferences(modelId, preferences = {}) 
   }
 
   dispatchModelProjectionUpdated(normalizedModelId);
+  return savedPreferences;
+}
+
+export async function readModelDigitalBrainPreferences(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_DIGITAL_BRAIN_PREFERENCES_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelDigitalBrainPreferences(data || {});
+}
+
+export async function saveModelDigitalBrainPreferences(modelId, preferences = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+  if (!normalizedModelId) {
+    const error = new Error('MODEL_ID_REQUIRED');
+    error.code = 'MODEL_ID_REQUIRED';
+    throw error;
+  }
+
+  const model = await getModelById(normalizedModelId);
+  if (!model) return null;
+
+  const previousPreferences = await readModelDigitalBrainPreferences(normalizedModelId).catch(() => null);
+  const payload = buildModelDigitalBrainPreferencesPayload(model, preferences);
+  const { data, error } = await supabase
+    .from(MODEL_DIGITAL_BRAIN_PREFERENCES_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  const savedPreferences = mapModelDigitalBrainPreferences(data || payload);
+  const changedFields = getChangedModelFields(previousPreferences || {}, savedPreferences || {}, MODEL_DIGITAL_BRAIN_CHANGE_FIELDS);
+  if (changedFields.length) {
+    await recordChangedModelFields(model, changedFields, MODEL_DIGITAL_BRAIN_CHANGE_FIELDS, {
+      area: 'model.foundation.digital_brain',
+    });
+  }
+
   return savedPreferences;
 }
 

@@ -71,6 +71,23 @@
   --theme-custom-text-color:var(--text-color);
   --theme-custom-surface-color:var(--surface-primary);
   --theme-custom-border-color:var(--border-color);
+
+  --digital-brain-stage-bg:var(--bg-color);
+  --digital-brain-cortex-base:color-mix(in srgb, var(--color-secondary6) 48%, var(--color-black) 52%);
+  --digital-brain-cortex-border:color-mix(in srgb, var(--color-white) 36%, transparent);
+  --digital-brain-cortex-fold:color-mix(in srgb, var(--color-white) 30%, transparent);
+  --digital-brain-cortex-midline:color-mix(in srgb, var(--color-primary5) 34%, var(--color-white) 20%);
+  --digital-brain-brainstem:color-mix(in srgb, var(--color-secondary2) 42%, var(--color-black) 58%);
+  --digital-brain-region-frontal:color-mix(in srgb, var(--status-success-color) 36%, var(--digital-brain-cortex-base) 64%);
+  --digital-brain-region-parietal:color-mix(in srgb, var(--color-primary5) 30%, var(--digital-brain-cortex-base) 70%);
+  --digital-brain-region-temporal:color-mix(in srgb, var(--status-warning-color) 38%, var(--digital-brain-cortex-base) 62%);
+  --digital-brain-region-occipital:color-mix(in srgb, var(--text-secondary-color) 30%, var(--digital-brain-cortex-base) 70%);
+  --digital-brain-region-limbic:color-mix(in srgb, var(--status-danger-color) 32%, var(--digital-brain-cortex-base) 68%);
+  --digital-brain-layer-identity:color-mix(in srgb, var(--color-primary9) 42%, var(--digital-brain-cortex-base) 58%);
+  --digital-brain-layer-source:color-mix(in srgb, var(--status-success-color) 48%, var(--digital-brain-cortex-base) 52%);
+  --digital-brain-layer-personality:color-mix(in srgb, var(--color-primary10) 52%, var(--digital-brain-cortex-base) 48%);
+  --digital-brain-layer-memory:color-mix(in srgb, var(--color-primary5) 50%, var(--digital-brain-cortex-base) 50%);
+  --digital-brain-layer-voice:color-mix(in srgb, var(--status-danger-color) 42%, var(--digital-brain-cortex-base) 58%);
 }
 
 /* =============================================================================
@@ -119,6 +136,23 @@ html[data-theme="custom"][data-theme-effective="dark"]{
   --menu-surface-strong:rgba(0,0,0,0.92);
   --menu-border:rgba(255,255,255,0.18);
   --menu-sep:rgba(255,255,255,0.14);
+
+  --digital-brain-stage-bg:var(--bg-color);
+  --digital-brain-cortex-base:color-mix(in srgb, var(--color-secondary6) 48%, var(--color-black) 52%);
+  --digital-brain-cortex-border:color-mix(in srgb, var(--color-white) 36%, transparent);
+  --digital-brain-cortex-fold:color-mix(in srgb, var(--color-white) 30%, transparent);
+  --digital-brain-cortex-midline:color-mix(in srgb, var(--color-primary5) 34%, var(--color-white) 20%);
+  --digital-brain-brainstem:color-mix(in srgb, var(--color-secondary2) 42%, var(--color-black) 58%);
+  --digital-brain-region-frontal:color-mix(in srgb, var(--status-success-color) 36%, var(--digital-brain-cortex-base) 64%);
+  --digital-brain-region-parietal:color-mix(in srgb, var(--color-primary5) 30%, var(--digital-brain-cortex-base) 70%);
+  --digital-brain-region-temporal:color-mix(in srgb, var(--status-warning-color) 38%, var(--digital-brain-cortex-base) 62%);
+  --digital-brain-region-occipital:color-mix(in srgb, var(--text-secondary-color) 30%, var(--digital-brain-cortex-base) 70%);
+  --digital-brain-region-limbic:color-mix(in srgb, var(--status-danger-color) 32%, var(--digital-brain-cortex-base) 68%);
+  --digital-brain-layer-identity:color-mix(in srgb, var(--color-primary9) 42%, var(--digital-brain-cortex-base) 58%);
+  --digital-brain-layer-source:color-mix(in srgb, var(--status-success-color) 48%, var(--digital-brain-cortex-base) 52%);
+  --digital-brain-layer-personality:color-mix(in srgb, var(--color-primary10) 52%, var(--digital-brain-cortex-base) 48%);
+  --digital-brain-layer-memory:color-mix(in srgb, var(--color-primary5) 50%, var(--digital-brain-cortex-base) 50%);
+  --digital-brain-layer-voice:color-mix(in srgb, var(--status-danger-color) 42%, var(--digital-brain-cortex-base) 58%);
 }
 
 /* =============================================================================
@@ -170,6 +204,23 @@ html[data-theme="custom"][data-theme-effective="light"]{
 
   --hover-overlay-bg:var(--color-black);
   --hover-overlay-text:var(--color-white);
+
+  --digital-brain-stage-bg:var(--bg-color);
+  --digital-brain-cortex-base:color-mix(in srgb, var(--color-secondary6) 42%, var(--color-white) 58%);
+  --digital-brain-cortex-border:color-mix(in srgb, var(--color-black) 30%, transparent);
+  --digital-brain-cortex-fold:color-mix(in srgb, var(--color-black) 22%, transparent);
+  --digital-brain-cortex-midline:color-mix(in srgb, var(--color-primary5) 32%, var(--color-black) 16%);
+  --digital-brain-brainstem:color-mix(in srgb, var(--color-secondary2) 30%, var(--color-white) 70%);
+  --digital-brain-region-frontal:color-mix(in srgb, var(--status-success-color) 24%, var(--digital-brain-cortex-base) 76%);
+  --digital-brain-region-parietal:color-mix(in srgb, var(--color-primary5) 18%, var(--digital-brain-cortex-base) 82%);
+  --digital-brain-region-temporal:color-mix(in srgb, var(--status-warning-color) 26%, var(--digital-brain-cortex-base) 74%);
+  --digital-brain-region-occipital:color-mix(in srgb, var(--color-secondary2) 18%, var(--digital-brain-cortex-base) 82%);
+  --digital-brain-region-limbic:color-mix(in srgb, var(--status-danger-color) 22%, var(--digital-brain-cortex-base) 78%);
+  --digital-brain-layer-identity:color-mix(in srgb, var(--color-primary9) 34%, var(--digital-brain-cortex-base) 66%);
+  --digital-brain-layer-source:color-mix(in srgb, var(--status-success-color) 36%, var(--digital-brain-cortex-base) 64%);
+  --digital-brain-layer-personality:color-mix(in srgb, var(--color-primary10) 42%, var(--digital-brain-cortex-base) 58%);
+  --digital-brain-layer-memory:color-mix(in srgb, var(--color-primary5) 34%, var(--digital-brain-cortex-base) 66%);
+  --digital-brain-layer-voice:color-mix(in srgb, var(--status-danger-color) 32%, var(--digital-brain-cortex-base) 68%);
 }
 
 /* =============================================================================

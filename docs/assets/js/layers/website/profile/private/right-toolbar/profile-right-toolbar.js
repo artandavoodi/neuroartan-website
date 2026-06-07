@@ -35,6 +35,8 @@ const ACTION_ICONS = Object.freeze({
   modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
   modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
   modelIdentity: '/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg',
+  modelKeys: '/registry/icons/public/assets/core/identity/security/key.svg',
+  modelInfo: '/registry/icons/public/assets/core/actions/info/info.svg',
   modelSettings: '/registry/icons/public/assets/core/system/settings/settings.svg',
   modelDiscovery: '/registry/icons/public/assets/core/navigation/discovery/discover.svg',
   modelReputation: '/registry/icons/public/assets/core/identity/shield/shield.svg',
@@ -100,6 +102,20 @@ const ACTIONS = Object.freeze({
     label: 'Edit model identity',
     tooltip: 'Edit identity',
     icon: ACTION_ICONS.edit,
+    authState: 'user'
+  },
+  modelKeys: {
+    id: 'model-keys',
+    label: 'Model keys',
+    tooltip: 'Keys',
+    icon: ACTION_ICONS.modelKeys,
+    authState: 'user'
+  },
+  modelInfo: {
+    id: 'model-info',
+    label: 'Model info',
+    tooltip: 'Info',
+    icon: ACTION_ICONS.modelInfo,
     authState: 'user'
   },
   modelSources: {
@@ -390,7 +406,7 @@ const MODEL_PANE_ACTIONS = Object.freeze({
 });
 
 const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
-  overview: ['modelLearn', 'modelReset', 'modelChangelog'],
+  overview: ['modelKeys', 'modelInfo', 'modelLearn', 'modelReset', 'modelChangelog'],
   identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
@@ -689,6 +705,22 @@ function requestProfileToolAction(action){
     case 'model-edit-identity':
       document.dispatchEvent(new CustomEvent('model:identity-editor-open-request', {
         detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-keys':
+      document.dispatchEvent(new CustomEvent('model:keys-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
+      }));
+      return;
+    case 'model-info':
+      document.dispatchEvent(new CustomEvent('model:info-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
       }));
       return;
     case 'model-source-summary':

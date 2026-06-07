@@ -44,6 +44,8 @@ function normalizeIconImage(image) {
   if (!(image instanceof HTMLImageElement)) return;
   image.draggable = false;
   image.setAttribute('draggable', 'false');
+  image.style.webkitUserDrag = 'none';
+  image.style.webkitTouchCallout = 'none';
 }
 
 export function scanIconInteractionTargets(root = document) {
@@ -74,6 +76,11 @@ function bindIconInteractionLock() {
   document.addEventListener('contextmenu', (event) => {
     if (isIconInteractionTarget(event.target)) event.preventDefault();
   }, true);
+
+  document.addEventListener('touchstart', (event) => {
+    if (!isIconInteractionTarget(event.target)) return;
+    event.target.closest(ICON_INTERACTION_SELECTOR)?.setAttribute?.('draggable', 'false');
+  }, { capture:true, passive:true });
 
   new MutationObserver((records) => {
     records.forEach((record) => {

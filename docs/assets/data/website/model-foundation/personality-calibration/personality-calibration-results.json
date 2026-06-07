@@ -1,0 +1,59 @@
+{
+  "version": "1.1.0",
+  "summaryMetrics": [
+    {
+      "id": "personalityCoherenceIndex",
+      "label": "Personality Coherence Index",
+      "icon": "personality-coherence-index",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/personality-coherence-index/"
+    },
+    {
+      "id": "dominantPersonalityPattern",
+      "label": "Dominant Personality Pattern",
+      "icon": "dominant-personality-pattern",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/dominant-personality-pattern/"
+    },
+    {
+      "id": "personalityReadiness",
+      "label": "Personality Readiness",
+      "icon": "personality-readiness",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/"
+    },
+    {
+      "id": "selfModelFunction",
+      "label": "Self-Model Function",
+      "icon": "self-model-function",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/self-model-function/"
+    },
+    {
+      "id": "socialExpression",
+      "label": "Social Expression",
+      "icon": "social-expression",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/social-expression/"
+    },
+    {
+      "id": "regulationPattern",
+      "label": "Regulation Pattern",
+      "icon": "regulation-pattern",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/regulation-pattern/"
+    },
+    {
+      "id": "cognitiveStyle",
+      "label": "Cognitive Style",
+      "icon": "cognitive-style",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/cognitive-style/"
+    },
+    {
+      "id": "adaptationStyle",
+      "label": "Adaptation Style",
+      "icon": "adaptation-style",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/adaptation-style/"
+    },
+    {
+      "id": "reflectionTolerance",
+      "label": "Reflection Tolerance",
+      "icon": "reflection-tolerance",
+      "docsUrl": "https://docs.neuroartan.com/model-identity/personality-calibration/reflection-tolerance/"
+    }
+  ]
+}

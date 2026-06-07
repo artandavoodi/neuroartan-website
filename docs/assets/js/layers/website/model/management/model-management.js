@@ -23,7 +23,6 @@ import {
   saveModelPersonalizationPreferences,
   saveModelVisibilityPreferences
 } from '../../system/model/model-store.js';
-import { refreshAccountProfileState } from '../../system/account/profile/account-profile-state.js';
 import { getPublicModels, loadPublicModelRegistry } from '../../system/model/public-model-registry.js';
 import {
   createModelDatasetEntry,
@@ -41,14 +40,18 @@ import {
 } from '../../system/model/model-training-store.js';
 import { registerProfileMediaEditorTarget } from '../../profile/private/media/profile-media-editor.js';
 import {
-  constrainModelNavigationForViewer,
-  isPublicModelNavigation
-} from '../navigation/model-tab-registry.js';
-
-import {
   initializeSourceCalibration,
   refreshSourceCalibration
 } from '../foundation/source-calibration/00-source-calibration-all.js';
+
+import {
+  initializePersonalityCalibration,
+  refreshPersonalityCalibration
+} from '../foundation/personality-calibration/model-personality-calibration-controller.js';
+
+import {
+  readLatestPersonalityCalibrationResult
+} from '../foundation/personality-calibration/model-personality-calibration-state.js';
 
 const MODEL_PERSONALIZATION_STORAGE_KEY = 'neuroartan.model.personalization.preferences';
 const MODEL_CHANGELOG_STORAGE_KEY = 'neuroartan.model.changelog.records';
@@ -379,6 +382,8 @@ let modelFoundationIdentityBackendSaveTimer = 0;
 let modelVisibilityPreferences = loadStoredModelVisibilityPreferences();
 let modelVisibilityBackendLoaded = false;
 let modelVisibilityBackendSaveTimer = 0;
+let modelOwnerHydrationInProgress = false;
+let modelOwnerHydrationComplete = false;
 let modelDatasetEntries = loadStoredModelDatasetEntries();
 let modelKnowledgeBaseEntries = loadStoredModelKnowledgeBaseEntries();
 let modelLogicRecords = loadStoredModelLogicRecords();
@@ -387,7 +392,6 @@ let modelLogicQuestionRegistryLoading = null;
 let modelDataManagerOpen = false;
 let modelDataManagerPane = 'datasets';
 let modelTrainingSubstrateBackendLoaded = false;
-let modelAuthResolutionTimer = 0;
 let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
 let publicModelDirectoryLoading = false;
@@ -484,7 +488,7 @@ const PANE_LABELS = Object.freeze({
   },
   personality: {
     title: 'Personality',
-    summary: 'Calibrate stable cognitive style, motivational pattern, interpersonal expression, and model reflection behavior.'
+    summary: 'Complete the assessment before using personality signals for model behavior.'
   },
   voice: {
     title: 'Voice',
@@ -754,7 +758,7 @@ function recordModelPersonalizationChangelog(nextPatch = {}, previousPreferences
 }
 
 async function persistModelPersonalizationChangelogEntries(entries = []) {
-  if (!entries.length || !isModelOwnerAuthenticated()) return;
+  if (!entries.length) return;
 
   try {
     const model = await getOwnedCanonicalModel();
@@ -1033,7 +1037,6 @@ function formatTrainingSubstrateError(error) {
 }
 
 async function hydrateTrainingSubstrateFromBackend() {
-  if (!isModelOwnerAuthenticated()) return;
   if (modelTrainingSubstrateBackendLoaded) return;
 
   try {
@@ -1094,7 +1097,6 @@ function updateModelFoundationIdentity(nextPatch = {}, options = {}) {
 }
 
 async function hydrateModelFoundationIdentityFromBackend() {
-  if (!isModelOwnerAuthenticated()) return;
   if (modelFoundationIdentityBackendLoaded) return;
 
   try {
@@ -1194,7 +1196,6 @@ function updateModelPersonalizationPreferences(nextPatch = {}, options = {}) {
 }
 
 async function hydrateModelPersonalizationFromBackend() {
-  if (!isModelOwnerAuthenticated()) return;
   if (modelPersonalizationBackendLoaded) return;
   modelPersonalizationBackendLoaded = true;
 
@@ -1229,7 +1230,6 @@ async function hydrateModelDefaultsFromBackend() {
 }
 
 async function hydrateModelChangelogFromBackend(options = {}) {
-  if (!isModelOwnerAuthenticated()) return;
   if (modelChangelogBackendLoaded && options.force !== true) {
     document.dispatchEvent(new CustomEvent('model:changelog-hydrated', {
       detail: {
@@ -1263,12 +1263,41 @@ async function hydrateModelChangelogFromBackend(options = {}) {
   }
 }
 
+
 function formatSourceSummaryValue(value = '') {
   const normalizedValue = String(value || '').trim();
   if (!normalizedValue) return 'Not recorded';
   return normalizedValue
     .replace(/[_-]+/g, ' ')
     .replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function createReadableSourceSummary(payload = {}, latest = {}) {
+  const readiness = String(payload.source_readiness || latest.source_readiness || '').trim();
+
+  if (readiness === 'stable') {
+    return 'Your Source Profile is stable. The model can use it as a grounded baseline for reflection and next-step planning.';
+  }
+
+  if (readiness === 'forming') {
+    return 'Your Source Profile is forming. The model should use it gently while it continues learning your reflection pattern.';
+  }
+
+  return 'Your Source Profile is initial. The model should keep reflection simple while it learns your orientation pattern.';
+}
+
+function createReadablePersonalitySummary(payload = {}, latest = {}) {
+  const readiness = String(payload.personality_readiness || latest.personality_readiness || '').trim();
+
+  if (readiness === 'complete') {
+    return 'Your Personality Profile is ready. The model can use it as a stable baseline for more natural responses.';
+  }
+
+  if (readiness === 'forming') {
+    return 'Your Personality Profile is forming. The model should use it gently while it continues learning your response pattern.';
+  }
+
+  return 'Your Personality Profile is initial. The model should keep responses simple while it learns your style and reflection needs.';
 }
 
 function getSourceSummaryStatusToken(value = '') {
@@ -1311,11 +1340,86 @@ const SOURCE_SUMMARY_DOC_LINKS = Object.freeze({
   'Narrative Coherence': 'https://docs.neuroartan.com/model-identity/source-calibration/narrative-coherence/'
 });
 
+const PERSONALITY_SUMMARY_DOC_LINKS = Object.freeze({
+  'Personality Coherence Index': 'https://docs.neuroartan.com/model-identity/personality-calibration/personality-coherence-index/',
+  'Dominant Personality Pattern': 'https://docs.neuroartan.com/model-identity/personality-calibration/dominant-personality-pattern/',
+  'Self-Model Function': 'https://docs.neuroartan.com/model-identity/personality-calibration/self-model-function/',
+  'Social Expression': 'https://docs.neuroartan.com/model-identity/personality-calibration/social-expression/',
+  'Regulation Pattern': 'https://docs.neuroartan.com/model-identity/personality-calibration/regulation-pattern/',
+  'Cognitive Style': 'https://docs.neuroartan.com/model-identity/personality-calibration/cognitive-style/',
+  'Adaptation Style': 'https://docs.neuroartan.com/model-identity/personality-calibration/adaptation-style/',
+  'Reflection Tolerance': 'https://docs.neuroartan.com/model-identity/personality-calibration/reflection-tolerance/'
+});
+
+const PERSONALITY_SUMMARY_ICON_LINKS = Object.freeze({
+  personality_coherence_index: '/registry/icons/public/assets/core/model/personality-coherence-index/personality-coherence-index.svg',
+  dominant_personality_pattern: '/registry/icons/public/assets/core/model/dominant-personality-pattern/dominant-personality-pattern.svg',
+  self_model_function: '/registry/icons/public/assets/core/model/self-model-function/self-model-function.svg',
+  social_expression: '/registry/icons/public/assets/core/model/social-expression/social-expression.svg',
+  regulation_pattern: '/registry/icons/public/assets/core/model/regulation-pattern/regulation-pattern.svg',
+  cognitive_style: '/registry/icons/public/assets/core/model/cognitive-style/cognitive-style.svg',
+  adaptation_style: '/registry/icons/public/assets/core/model/adaptation-style/adaptation-style.svg',
+  reflection_tolerance: '/registry/icons/public/assets/core/model/reflection-tolerance/reflection-tolerance.svg'
+});
+
+const PERSONALITY_SUMMARY_METRIC_FALLBACKS = Object.freeze({
+  personality_coherence_index: {
+    label: 'Personality Coherence Index',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  dominant_personality_pattern: {
+    label: 'Dominant Personality Pattern',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  self_model_function: {
+    label: 'Self-Model Function',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  social_expression: {
+    label: 'Social Expression',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  regulation_pattern: {
+    label: 'Regulation Pattern',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  cognitive_style: {
+    label: 'Cognitive Style',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  adaptation_style: {
+    label: 'Adaptation Style',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+  reflection_tolerance: {
+    label: 'Reflection Tolerance',
+    value: 'Not recorded',
+    status: 'pending',
+  },
+});
+
 function createSourceSummaryLearnButton(label = '') {
   const href = SOURCE_SUMMARY_DOC_LINKS[label] || 'https://docs.neuroartan.com/model-identity/source-calibration/';
 
   return `
     <a class="model-source-summary__learn" href="${href}" target="_blank" rel="noopener noreferrer" data-model-source-summary-learn="${label}" aria-label="Learn more about ${label}">
+      <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/info/info.svg" alt="">
+    </a>
+  `;
+}
+
+function createPersonalitySummaryLearnButton(label = '') {
+  const href = PERSONALITY_SUMMARY_DOC_LINKS[label] || 'https://docs.neuroartan.com/model-identity/personality-calibration/';
+
+  return `
+    <a class="model-source-summary__learn" href="${href}" target="_blank" rel="noopener noreferrer" data-model-personality-summary-learn="${label}" aria-label="Learn more about ${label}">
       <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/info/info.svg" alt="">
     </a>
   `;
@@ -1359,8 +1463,34 @@ function createSourceSummaryMetricMarkup(metricKey = '', metric = {}, icon = '')
   `;
 }
 
+function createPersonalitySummaryMetricMarkup(metricKey = '', metric = {}, icon = '') {
+  const label = metric?.label || formatSourceSummaryValue(metricKey);
+  const value = getSourceSummaryMetricValue(metric);
+  const score = getSourceSummaryMetricScore(metric);
+  const status = getSourceSummaryMetricStatus(metric);
+
+  return `
+    <div class="model-source-summary__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
+        <span>${label}</span>
+        ${createPersonalitySummaryLearnButton(label)}
+      </dt>
+      <dd>
+        <span class="model-management__status-dot" data-status="${status}" aria-hidden="true"></span>
+        <strong>${value}</strong>
+        ${score ? `<span class="model-source-summary__score">${score}</span>` : ''}
+      </dd>
+    </div>
+  `;
+}
+
 function removeModelSourceSummaryOverlay() {
   document.querySelector('[data-model-source-summary-overlay]')?.remove();
+}
+
+function removeModelPersonalitySummaryOverlay() {
+  document.querySelector('[data-model-personality-summary-overlay]')?.remove();
 }
 
 async function handleModelSourceSummaryOpenRequest() {
@@ -1493,7 +1623,7 @@ async function handleModelSourceSummaryOpenRequest() {
 
     card.innerHTML = `
       <section class="model-source-summary" aria-label="Source summary dashboard">
-        <p class="model-source-summary__copy">${payload.source_readiness_summary || latest.source_readiness_summary || 'Your Source Profile is saved as private model foundation data.'}</p>
+        <p class="model-source-summary__copy">${createReadableSourceSummary(payload, latest)}</p>
         <dl class="model-source-summary__metrics">
           ${metricMarkup}
         </dl>
@@ -1501,6 +1631,83 @@ async function handleModelSourceSummaryOpenRequest() {
     `;
   } catch (error) {
     console.warn('[Neuroartan][Model] Source summary overlay failed.', error);
+  }
+}
+
+async function handleModelPersonalitySummaryOpenRequest() {
+  removeModelPersonalitySummaryOverlay();
+
+  const overlay = document.createElement('section');
+  overlay.className = 'model-source-calibration-workspace';
+  overlay.dataset.modelPersonalitySummaryOverlay = '';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Personality summary');
+  overlay.innerHTML = `
+    <div class="model-source-calibration-workspace__backdrop" data-model-personality-summary-close></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Personality summary">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-source-calibration-workspace__progress">Summary</span>
+        <button class="global-close-button" type="button" data-model-personality-summary-close aria-label="Close Personality summary">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-source-calibration-workspace__result">
+          <p class="model-management__section-copy">Loading private Personality Summary.</p>
+        </section>
+      </div>
+    </article>
+  `;
+
+  document.body.append(overlay);
+
+  try {
+    const latest = readLatestPersonalityCalibrationResult();
+    const payload = latest?.result_payload || latest || {};
+    const card = overlay.querySelector('.model-source-calibration-workspace__result');
+
+    if (!(card instanceof HTMLElement)) return;
+
+    if (!latest) {
+      card.innerHTML = `
+        <p class="model-management__section-copy">No Personality Summary has been saved yet.</p>
+      `;
+      return;
+    }
+
+    const summaryMetrics = payload.summary_metrics || latest.summary_metrics || {};
+    const metricOrder = [
+      'personality_coherence_index',
+      'dominant_personality_pattern',
+      'self_model_function',
+      'social_expression',
+      'regulation_pattern',
+      'cognitive_style',
+      'adaptation_style',
+      'reflection_tolerance',
+    ];
+
+    const metricMarkup = metricOrder
+      .map((metricKey) => {
+        const metric = summaryMetrics[metricKey] || PERSONALITY_SUMMARY_METRIC_FALLBACKS[metricKey];
+        if (!metric) return '';
+        return createPersonalitySummaryMetricMarkup(metricKey, metric, PERSONALITY_SUMMARY_ICON_LINKS[metricKey]);
+      })
+      .filter(Boolean)
+      .join('');
+
+    card.innerHTML = `
+      <section class="model-source-summary" aria-label="Personality summary dashboard">
+        <p class="model-source-summary__copy">${createReadablePersonalitySummary(payload, latest)}</p>
+        <dl class="model-source-summary__metrics">
+          ${metricMarkup}
+        </dl>
+      </section>
+    `;
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Personality summary overlay failed.', error);
   }
 }
 
@@ -1540,7 +1747,6 @@ function updateModelVisibilityPreferences(nextPatch = {}, options = {}) {
 }
 
 async function hydrateModelVisibilityFromBackend() {
-  if (!isModelOwnerAuthenticated()) return;
   if (modelVisibilityBackendLoaded) return;
   modelVisibilityBackendLoaded = true;
 
@@ -1567,30 +1773,20 @@ function getActiveModelSection(navigationState = getProfileNavigationState()) {
 function getSafeModelManagementNavigationState(runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
   const section = getActiveModelSection(navigationState);
   const modelPane = navigationState.modelPane || 'overview';
-  const authenticated = runtimeState.viewerState === 'authenticated';
-  const constrained = constrainModelNavigationForViewer(section, modelPane, authenticated);
 
   return {
     ...navigationState,
-    section: constrained.section,
-    modelPane: constrained.section === 'model-discovery' && constrained.modelPane === 'overview'
-      ? 'directory'
-      : constrained.modelPane
+    section,
+    modelPane
   };
-}
-
-function isModelManagementHydrationPending(runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
-  const section = getActiveModelSection(navigationState);
-  const modelPane = navigationState.modelPane || 'overview';
-  return runtimeState.authResolved !== true && !isPublicModelNavigation(section, modelPane);
-}
-
-function isModelOwnerAuthenticated(runtimeState = getProfileRuntimeState()) {
-  return runtimeState.authResolved === true && runtimeState.viewerState === 'authenticated';
 }
 
 document.addEventListener('model:source-summary-open-request', () => {
   void handleModelSourceSummaryOpenRequest();
+});
+
+document.addEventListener('model:personality-summary-open-request', () => {
+  void handleModelPersonalitySummaryOpenRequest();
 });
 
 document.addEventListener('click', (event) => {
@@ -1599,6 +1795,14 @@ document.addEventListener('click', (event) => {
 
   event.preventDefault();
   removeModelSourceSummaryOverlay();
+});
+
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('[data-model-personality-summary-close]');
+  if (!closeButton) return;
+
+  event.preventDefault();
+  removeModelPersonalitySummaryOverlay();
 });
 
 
@@ -1614,34 +1818,42 @@ document.addEventListener('click', (event) => {
   }));
 });
 
+document.addEventListener('click', (event) => {
+  const summaryLink = event.target.closest('[data-model-personality-summary-link]');
+  if (!summaryLink) return;
 
-function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
-  if (!isModelOwnerAuthenticated(runtimeState)) return;
+  event.preventDefault();
+  document.dispatchEvent(new CustomEvent('model:personality-summary-open-request', {
+    detail: {
+      source: 'model-informative-footer'
+    }
+  }));
+});
 
-  void hydrateModelDefaultsFromBackend();
-  void hydrateModelFoundationIdentityFromBackend();
-  void hydrateModelPersonalizationFromBackend();
-  void hydrateModelChangelogFromBackend();
-  void hydrateModelVisibilityFromBackend();
-  void hydrateTrainingSubstrateFromBackend();
-}
 
-function requestModelAuthResolution() {
-  window.clearTimeout(modelAuthResolutionTimer);
-  modelAuthResolutionTimer = window.setTimeout(() => {
-    const runtimeState = getProfileRuntimeState();
-    if (runtimeState.authResolved === true) return;
+async function hydrateModelOwnerDataFromBackend(runtimeState = getProfileRuntimeState()) {
+  if (modelOwnerHydrationInProgress || modelOwnerHydrationComplete) {
+    return;
+  }
 
-    void refreshAccountProfileState().catch((error) => {
-      document.dispatchEvent(new CustomEvent('account:profile-signed-out', {
-        detail: {
-          source: 'model-management-auth-resolution',
-          authResolved: true,
-          reason: error?.code || error?.message || 'ACCOUNT_PROFILE_STATE_UNAVAILABLE'
-        }
-      }));
-    });
-  }, 600);
+  modelOwnerHydrationInProgress = true;
+  modelManagementRoots().forEach((root) => setModelManagementLoading(root, true));
+
+  try {
+    await Promise.allSettled([
+      hydrateModelDefaultsFromBackend(),
+      hydrateModelFoundationIdentityFromBackend(),
+      hydrateModelPersonalizationFromBackend(),
+      hydrateModelChangelogFromBackend(),
+      hydrateModelVisibilityFromBackend(),
+      hydrateTrainingSubstrateFromBackend(),
+    ]);
+    modelOwnerHydrationComplete = true;
+  } finally {
+    modelOwnerHydrationInProgress = false;
+    renderAllModelManagement();
+    modelManagementRoots().forEach((root) => setModelManagementLoading(root, false));
+  }
 }
 
 function ensureModelManagementLoadingNode(root) {
@@ -1968,6 +2180,12 @@ function renderModelFoundationGroups(root, navigationState = getProfileNavigatio
   if (visibleGroup === 'sources') {
     void initializeSourceCalibration(root).then(() => {
       refreshSourceCalibration();
+    });
+  }
+
+  if (visibleGroup === 'personality') {
+    void initializePersonalityCalibration(root).then(() => {
+      refreshPersonalityCalibration(root);
     });
   }
 }
@@ -2700,19 +2918,7 @@ function renderAllModelChangelogRecords() {
 function renderModelManagement(root, runtimeState = getProfileRuntimeState(), navigationState = getProfileNavigationState()) {
   if (!(root instanceof HTMLElement)) return;
 
-  if (isModelManagementHydrationPending(runtimeState, navigationState)) {
-    const section = getActiveModelSection(navigationState);
-    root.dataset.modelSection = section;
-    root.dataset.modelPane = navigationState.modelPane || 'overview';
-    setModelManagementLoading(root, true);
-    root.querySelectorAll('[data-model-management-section]').forEach((panel) => {
-      if (panel instanceof HTMLElement) panel.hidden = true;
-    });
-    requestModelAuthResolution();
-    return;
-  }
-
-  setModelManagementLoading(root, false);
+  setModelManagementLoading(root, modelOwnerHydrationInProgress && !modelOwnerHydrationComplete);
 
   const safeNavigationState = getSafeModelManagementNavigationState(runtimeState, navigationState);
   const section = getActiveModelSection(safeNavigationState);

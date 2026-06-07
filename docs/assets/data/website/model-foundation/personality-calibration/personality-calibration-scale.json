@@ -1,0 +1,33 @@
+{
+  "version": "1.1.0",
+  "scale": {
+    "min": 0,
+    "max": 10,
+    "step": 1,
+    "labels": {
+      "low": "Disagree",
+      "middle": "Uncertain",
+      "high": "Agree"
+    }
+  },
+  "statusBands": [
+    {
+      "id": "initial",
+      "min": 0,
+      "max": 3.99,
+      "label": "Initial"
+    },
+    {
+      "id": "forming",
+      "min": 4,
+      "max": 6.99,
+      "label": "Forming"
+    },
+    {
+      "id": "complete",
+      "min": 7,
+      "max": 10,
+      "label": "Complete"
+    }
+  ]
+}

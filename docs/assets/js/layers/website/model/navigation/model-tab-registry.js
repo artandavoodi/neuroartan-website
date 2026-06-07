@@ -29,18 +29,11 @@ export function isPublicModelNavigation(section = '', modelPane = '') {
 }
 
 export function constrainModelNavigationForViewer(section = '', modelPane = '', authenticated = false) {
-  if (authenticated || isPublicModelNavigation(section, modelPane)) {
-    return { section, modelPane };
-  }
-
-  return {
-    section: 'model-discovery',
-    modelPane: 'directory'
-  };
+  return { section, modelPane };
 }
 
 export function getVisibleModelContextTabs(tabs = [], authenticated = false) {
-  return tabs.filter((tab) => authenticated || tab.authState !== 'user');
+  return tabs;
 }
 
 /* =============================================================================
@@ -96,8 +89,8 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
       { key: 'directory', label: 'Directory', section: 'model-discovery', modelPane: 'directory' },
       { key: 'trending', label: 'Trending', section: 'model-discovery', modelPane: 'trending' },
       { key: 'expertise', label: 'Expertise', section: 'model-discovery', modelPane: 'expertise' },
-      { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation', authState: 'user' },
-      { key: 'monetization', label: 'Monetization', section: 'model-discovery', modelPane: 'monetization', authState: 'user' },
+      { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation' },
+      { key: 'monetization', label: 'Monetization', section: 'model-discovery', modelPane: 'monetization' },
     ],
   },
   modelSettings: {

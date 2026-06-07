@@ -45,7 +45,7 @@ export function scoreSourceCalibration({ questions = [], answers = {}, results =
     dimension_scores: dimensionScores,
     dimension_outputs: dimensionOutputs,
     summary_metrics: createSourceSummaryMetrics({ cognitiveOrientationIndex, dominantOrientation, orientationScores, dimensionScores, dimensionOutputs }),
-    source_readiness_summary: getSourceReadinessSummary(sourceReadiness, results),
+    source_readiness_summary: createSourceReadinessSummary(sourceReadiness),
   };
 }
 
@@ -207,6 +207,14 @@ function classifySourceDimension(dimension, average) {
   return labels[dimension]?.[level] || 'Unclassified';
 }
 
-function getSourceReadinessSummary(readiness, results) {
-  return results?.summary_templates?.[readiness] || '';
+function createSourceReadinessSummary(readiness = '') {
+  if (readiness === 'stable') {
+    return 'Your Source Profile is stable. The model can use it as a grounded baseline for reflection and next-step planning.';
+  }
+
+  if (readiness === 'forming') {
+    return 'Your Source Profile is forming. The model should use it gently while it continues learning your reflection pattern.';
+  }
+
+  return 'Your Source Profile is initial. The model should keep reflection simple while it learns your orientation pattern.';
 }

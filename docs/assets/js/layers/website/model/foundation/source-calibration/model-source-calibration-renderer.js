@@ -46,11 +46,12 @@ export function renderSourceCalibrationStatus(root, state = {}) {
   }
 
   if (status) {
-    status.textContent = getSourceCalibrationStatusText(state);
+    status.textContent = '';
+    status.hidden = true;
   }
 
   if (startButton) {
-    startButton.disabled = state.status !== 'ready' && state.status !== 'complete';
+    startButton.disabled = false;
     startButton.textContent = state.status === 'complete' ? 'Recalibrate Source' : 'Start Source Calibration';
   }
 }

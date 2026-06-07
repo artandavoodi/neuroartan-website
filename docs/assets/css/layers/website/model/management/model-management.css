@@ -1,4 +1,5 @@
 @import url("../foundation/source-calibration/00-source-calibration-all.css");
+@import url("../foundation/personality-calibration/00-personality-calibration-all.css");
 @import url("../shared/informative-footer/model-informative-footer.css");
 
 /* MARK: - Model Scrollbar Visibility */
@@ -6,7 +7,9 @@
 html:has(.model-management),
 body:has(.model-management),
 html:has([data-model-source-summary-overlay]),
-body:has([data-model-source-summary-overlay]){
+body:has([data-model-source-summary-overlay]),
+html:has([data-model-personality-summary-overlay]),
+body:has([data-model-personality-summary-overlay]){
   scrollbar-width:none;
   -ms-overflow-style:none;
 }
@@ -14,7 +17,9 @@ body:has([data-model-source-summary-overlay]){
 html:has(.model-management)::-webkit-scrollbar,
 body:has(.model-management)::-webkit-scrollbar,
 html:has([data-model-source-summary-overlay])::-webkit-scrollbar,
-body:has([data-model-source-summary-overlay])::-webkit-scrollbar{
+body:has([data-model-source-summary-overlay])::-webkit-scrollbar,
+html:has([data-model-personality-summary-overlay])::-webkit-scrollbar,
+body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   display:none;
 }
 
@@ -22,6 +27,8 @@ body:has([data-model-source-summary-overlay])::-webkit-scrollbar{
 .model-management *,
 .model-source-calibration-workspace,
 .model-source-calibration-workspace *,
+.model-personality-calibration-workspace,
+.model-personality-calibration-workspace *,
 .ui-confirm-layer,
 .ui-confirm-layer *{
   -ms-overflow-style:none;
@@ -32,8 +39,12 @@ body:has([data-model-source-summary-overlay])::-webkit-scrollbar{
 .model-management *::-webkit-scrollbar,
 .model-source-calibration-workspace::-webkit-scrollbar,
 .model-source-calibration-workspace *::-webkit-scrollbar,
+.model-personality-calibration-workspace::-webkit-scrollbar,
+.model-personality-calibration-workspace *::-webkit-scrollbar,
 [data-model-source-summary-overlay]::-webkit-scrollbar,
 [data-model-source-summary-overlay] *::-webkit-scrollbar,
+[data-model-personality-summary-overlay]::-webkit-scrollbar,
+[data-model-personality-summary-overlay] *::-webkit-scrollbar,
 .ui-confirm-layer::-webkit-scrollbar,
 .ui-confirm-layer *::-webkit-scrollbar{
   display:none;
@@ -337,11 +348,14 @@ body:has([data-model-source-summary-overlay])::-webkit-scrollbar{
   background:var(--panel-surface-solid-unified);
 }
 
-[data-model-foundation-group="sources"] .model-management__card{
+
+[data-model-foundation-group="sources"] .model-management__card,
+[data-model-foundation-group="personality"] .model-management__card{
   border-color:transparent;
   background:transparent;
-  box-shadow:none;
+  box-shadow:var(--shadow-none);
 }
+
 
 .model-management__card dt{
   display:flex;

@@ -49,6 +49,9 @@ const MODEL_DEFAULT_REGISTRY_TABLE = 'model_default_registry';
 const MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE = 'model_source_calibration_sessions';
 const MODEL_SOURCE_CALIBRATION_ANSWERS_TABLE = 'model_source_calibration_answers';
 const MODEL_SOURCE_CALIBRATION_RESULTS_TABLE = 'model_source_calibration_results';
+const MODEL_PERSONALITY_CALIBRATION_SESSIONS_TABLE = 'model_personality_calibration_sessions';
+const MODEL_PERSONALITY_CALIBRATION_ANSWERS_TABLE = 'model_personality_calibration_answers';
+const MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE = 'model_personality_calibration_results';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -209,6 +212,9 @@ export function getModelStoreBackendState() {
     modelSourceCalibrationSessionsTable: MODEL_SOURCE_CALIBRATION_SESSIONS_TABLE,
     modelSourceCalibrationAnswersTable: MODEL_SOURCE_CALIBRATION_ANSWERS_TABLE,
     modelSourceCalibrationResultsTable: MODEL_SOURCE_CALIBRATION_RESULTS_TABLE,
+    modelPersonalityCalibrationSessionsTable: MODEL_PERSONALITY_CALIBRATION_SESSIONS_TABLE,
+    modelPersonalityCalibrationAnswersTable: MODEL_PERSONALITY_CALIBRATION_ANSWERS_TABLE,
+    modelPersonalityCalibrationResultsTable: MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE,
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
     migrationStatus: 'supabase_canonical_model_foundation',
   };
@@ -1129,6 +1135,188 @@ export async function readLatestModelSourceCalibrationResult(modelId) {
   }
 
   return data || null;
+}
+
+export async function saveModelPersonalityCalibrationResult(model = {}, calibration = {}) {
+  const supabase = await resolveSupabaseClient();
+  const modelId = normalizeString(model?.id || calibration.model_id || calibration.modelId || '');
+  const currentProfile = normalizeString(model?.profile_id || calibration.profile_id || calibration.profileId || '')
+    ? null
+    : await getCurrentModelOwnerProfile();
+  const profileId = normalizeString(model?.profile_id || calibration.profile_id || calibration.profileId || currentProfile?.id || '');
+
+  if (!supabase || !modelId || !profileId || !calibration?.result) {
+    console.warn('[Neuroartan][Model] Personality Calibration save skipped.', {
+      hasSupabase: Boolean(supabase),
+      modelId,
+      profileId,
+      hasResult: Boolean(calibration?.result),
+    });
+    return null;
+  }
+
+  const result = calibration.result || {};
+  const personalityProfile = {
+    personality_coherence_index: result.personality_coherence_index ?? null,
+    dominant_personality_pattern: normalizeString(result.dominant_personality_pattern || ''),
+    personality_readiness: normalizeString(result.personality_readiness || ''),
+    summary_metrics: result.summary_metrics || {},
+  };
+
+  const { data: session, error: sessionError } = await supabase
+    .from(MODEL_PERSONALITY_CALIBRATION_SESSIONS_TABLE)
+    .insert({
+      model_id: modelId,
+      profile_id: profileId,
+      session_status: 'completed',
+      calibration_version: normalizeString(calibration.calibration_version || result.version || '0.1.0'),
+      question_version: normalizeString(calibration.question_version || calibration.questions?.version || '0.1.0'),
+      scale_version: normalizeString(calibration.scale_version || calibration.scale?.version || '0.1.0'),
+      results_version: normalizeString(calibration.results_version || calibration.results?.version || '0.1.0'),
+      personality_profile: personalityProfile,
+      personality_coherence_index: result.personality_coherence_index ?? null,
+      dominant_personality_pattern: normalizeString(result.dominant_personality_pattern || ''),
+      personality_readiness: normalizeString(result.personality_readiness || ''),
+      consent_state: normalizeString(calibration.consent_state || 'personality_calibration_completed'),
+      completed_at: result.completed_at || new Date().toISOString(),
+    })
+    .select('*')
+    .maybeSingle();
+
+  if (sessionError) {
+    if (isSupabaseRelationMissingError(sessionError)) return null;
+    console.warn('[Neuroartan][Model] Personality Calibration session insert failed.', sessionError);
+    throw sessionError;
+  }
+
+  const sessionId = normalizeString(session?.id || '');
+  if (!sessionId) return null;
+
+  const questions = Array.isArray(calibration.questions?.questions)
+    ? calibration.questions.questions
+    : Array.isArray(calibration.questions)
+      ? calibration.questions
+      : [];
+  const answers = calibration.answers || {};
+  const answerPayload = questions
+    .filter((question) => answers[question.id] !== undefined)
+    .map((question) => {
+      const answerValue = normalizePersonalityCalibrationNumber(answers[question.id]);
+      return {
+        session_id: sessionId,
+        model_id: modelId,
+        profile_id: profileId,
+        question_id: normalizeString(question.id || ''),
+        dimension: normalizeString(question.dimension || ''),
+        construct: normalizeString(question.construct || ''),
+        answer_value: answerValue,
+        scored_value: question.reverse_scored ? 10 - answerValue : answerValue,
+        reverse_scored: question.reverse_scored === true,
+        weight: Number(question.weight || 1),
+        question_text: normalizeString(question.text || question.displayText || ''),
+      };
+    });
+
+  if (answerPayload.length) {
+    const { error: answersError } = await supabase
+      .from(MODEL_PERSONALITY_CALIBRATION_ANSWERS_TABLE)
+      .insert(answerPayload);
+
+    if (answersError) {
+      if (!isSupabaseRelationMissingError(answersError)) {
+        console.warn('[Neuroartan][Model] Personality Calibration answers insert failed.', answersError);
+        throw answersError;
+      }
+    }
+  }
+
+  const { data: savedResult, error: resultError } = await supabase
+    .from(MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE)
+    .insert({
+      session_id: sessionId,
+      model_id: modelId,
+      profile_id: profileId,
+      personality_coherence_index: result.personality_coherence_index ?? 0,
+      dominant_personality_pattern: normalizeString(result.dominant_personality_pattern || ''),
+      personality_readiness: normalizeString(result.personality_readiness || ''),
+      dimension_scores: result.dimension_scores || {},
+      construct_scores: result.construct_scores || {},
+      summary_metrics: result.summary_metrics || {},
+      personality_readiness_summary: normalizeString(result.personality_readiness_summary || ''),
+      result_payload: result,
+    })
+    .select('*')
+    .maybeSingle();
+
+  if (resultError) {
+    if (isSupabaseRelationMissingError(resultError)) return { session, result: null };
+    console.warn('[Neuroartan][Model] Personality Calibration result insert failed.', resultError);
+    throw resultError;
+  }
+
+  await recordModelAuditEvent({ id: modelId, profile_id: profileId }, {
+    area: 'foundation',
+    pane: 'personality',
+    section: 'personality_calibration',
+    field: 'personality_profile',
+    label: 'Personality Profile',
+    action: 'personality_calibration_completed',
+    from: null,
+    to: result.personality_readiness || '',
+    source: 'personality_calibration',
+  });
+
+  return {
+    session,
+    result: savedResult || null,
+    answers: answerPayload,
+  };
+}
+
+export async function readLatestModelPersonalityCalibrationResult(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE)
+    .select('*, model_personality_calibration_sessions(*)')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return data || null;
+}
+
+export async function listModelPersonalityCalibrationSessions(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  const { data, error } = await supabase
+    .from(MODEL_PERSONALITY_CALIBRATION_SESSIONS_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+function normalizePersonalityCalibrationNumber(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 0;
+  return Math.max(0, Math.min(10, Math.round(numericValue * 10) / 10));
 }
 
 export async function listModelSourceCalibrationSessions(modelId) {

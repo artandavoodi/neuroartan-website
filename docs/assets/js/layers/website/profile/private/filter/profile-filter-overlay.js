@@ -371,6 +371,7 @@ const MODEL_CHANGELOG_PANE_OPTIONS = Object.freeze({
     { value: 'identity', label: 'Identity' },
     { value: 'consent', label: 'Consent' },
     { value: 'sources', label: 'Source' },
+    { value: 'personality', label: 'Personality' },
     { value: 'memory', label: 'Memory' },
     { value: 'voice', label: 'Voice' }
   ],
@@ -883,6 +884,18 @@ const MODEL_LEARN_CONTENT = Object.freeze({
     scaleGuide: true,
     docsHref: 'https://docs.neuroartan.com/model-identity/source-calibration/'
   },
+  personality: {
+    title: 'Personality Calibration',
+    copy: 'Personality Calibration helps your model begin from a private baseline of cognitive style, self-model function, regulation, and reflection tolerance. It also explains stable cognitive style, motivational pattern, interpersonal expression, and model reflection behavior. It is not a diagnosis, horoscope, fixed type, public score, or identity label. Your answers and Personality Profile remain private model foundation data and are not shown to other users.',
+    details: [
+      'Move the slider toward the red indicator when a statement feels less accurate for your current personality pattern.',
+      'Move the slider toward the green indicator when a statement feels more accurate for your current personality pattern.',
+      'Release the slider to record the answer and move automatically to the next question. You can use Previous to adjust the last answer.',
+      'The result helps the model choose safer starting defaults for reflection pacing, challenge level, support style, interpersonal framing, and continuity.'
+    ],
+    scaleGuide: true,
+    docsHref: 'https://docs.neuroartan.com/model-identity/personality-calibration/'
+  },
   voice: {
     title: 'Voice',
     copy: 'Voice controls consent-bound voice training and future owner-representative interaction.'
@@ -1010,13 +1023,33 @@ function normalizeFilters(context, filters = {}) {
 
 function resolveModelLearnContent(filters = {}) {
   const navigationState = getProfileNavigationState();
-  const pane = String(filters.modelPane || navigationState.modelPane || '').trim();
+  const hashState = getModelLearnHashState();
+  const pane = String(filters.modelPane || navigationState.modelPane || hashState.modelPane || '').trim();
   const responseAudience = String(filters.responseAudience || '').trim();
-  const section = String(filters.section || navigationState.section || '').replace(/^model-/, '').trim();
+  const section = String(filters.section || navigationState.section || hashState.section || '').replace(/^model-/, '').trim();
+
   if ((pane === 'response' || pane === 'communication') && responseAudience) {
     return MODEL_LEARN_CONTENT[`response:${responseAudience}`] || MODEL_LEARN_CONTENT.communication || MODEL_LEARN_CONTENT.response;
   }
+
   return MODEL_LEARN_CONTENT[pane] || MODEL_LEARN_CONTENT[section] || MODEL_LEARN_CONTENT.default;
+}
+
+function getModelLearnHashState() {
+  const hash = String(window.location.hash || '').replace(/^#/, '').trim();
+  const parts = hash.split('/').filter(Boolean);
+
+  if (parts[0] !== 'model') {
+    return {
+      section: '',
+      modelPane: '',
+    };
+  }
+
+  return {
+    section: parts[1] ? `model-${parts[1]}` : '',
+    modelPane: parts[2] || '',
+  };
 }
 
 function renderModelLearn(root, filters = {}) {

@@ -30,6 +30,7 @@ const ACTION_ICONS = Object.freeze({
   modelReadiness: '/registry/icons/public/assets/core/actions/model-evaluation-panel/model-evaluation-panel.svg',
   modelSources: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   modelSourceSummary: '/registry/icons/public/assets/core/model/source-summary/source-summary.svg',
+  modelPersonalitySummary: '/registry/icons/public/assets/core/model/source-summary/source-summary.svg',
   modelPersonalization: '/registry/icons/public/assets/core/system/personalization/customize.svg',
   modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
   modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
@@ -113,6 +114,13 @@ const ACTIONS = Object.freeze({
     label: 'Source summary',
     tooltip: 'Summary',
     icon: ACTION_ICONS.modelSourceSummary,
+    authState: 'user'
+  },
+  modelPersonalitySummary: {
+    id: 'model-personality-summary',
+    label: 'Personality summary',
+    tooltip: 'Summary',
+    icon: ACTION_ICONS.modelPersonalitySummary,
     authState: 'user'
   },
   modelMemory: {
@@ -387,7 +395,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],
-  personality: ['modelLearn', 'modelReset', 'modelChangelog'],
+  personality: ['modelPersonalitySummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelLearn', 'modelReset', 'modelChangelog']
 });
 
@@ -505,19 +513,8 @@ function renderToolbarActions(root, state = getProfileNavigationState()){
   const nav = root.querySelector('[data-profile-right-toolbar-actions]');
   if (!(nav instanceof HTMLElement)) return;
 
-  const runtimeState = getProfileRuntimeState();
-  const authPending = runtimeState.authResolved !== true;
-  const authenticated = runtimeState.viewerState === 'authenticated';
-  if (authPending) {
-    root.dataset.profileRightToolbarAuthState = 'resolving';
-    return;
-  }
-
   root.dataset.profileRightToolbarAuthState = 'ready';
-  const actionKeys = resolveActionKeys(state).filter((key) => {
-    const action = ACTIONS[key];
-    return action && (authenticated || action.authState !== 'user');
-  });
+  const actionKeys = resolveActionKeys(state).filter((key) => Boolean(ACTIONS[key]));
   nav.replaceChildren();
   root.style.setProperty('--profile-right-toolbar-action-count', String(Math.max(actionKeys.length, 1)));
   root.style.setProperty('--profile-right-toolbar-gap-count', String(Math.max(actionKeys.length - 1, 0)));
@@ -696,6 +693,14 @@ function requestProfileToolAction(action){
       return;
     case 'model-source-summary':
       document.dispatchEvent(new CustomEvent('model:source-summary-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: resolveModelOverlayFilters()
+        }
+      }));
+      return;
+    case 'model-personality-summary':
+      document.dispatchEvent(new CustomEvent('model:personality-summary-open-request', {
         detail: {
           source: 'profile-right-toolbar',
           filters: resolveModelOverlayFilters()

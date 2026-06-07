@@ -313,9 +313,6 @@
       <section class="model-management__foundation-group" data-model-foundation-group="consent" hidden></section>
       <section class="model-management__foundation-group" data-model-foundation-group="sources" hidden>
         <h3 class="model-management__section-title">Source Calibration</h3>
-        <p class="model-management__section-copy">
-          Source Calibration helps your model begin from a private baseline of agency, reflection, regulation, and continuity.
-        </p>
 
         <dl class="model-management__card-grid" aria-label="Source Calibration overview">
           <div class="model-management__card">
@@ -324,7 +321,7 @@
               Source Profile
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-model-source-profile-status-dot aria-hidden="true"></span>
+              <span class="model-management__status-dot" data-status="pending" data-model-source-profile-status-dot aria-hidden="true"></span>
               <span data-model-source-profile-status>Not calibrated</span>
             </dd>
           </div>
@@ -334,7 +331,7 @@
               Cognitive Orientation Index
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-model-source-orientation-index-dot aria-hidden="true"></span>
+              <span class="model-management__status-dot" data-status="pending" data-model-source-orientation-index-dot aria-hidden="true"></span>
               <span data-model-source-orientation-index>Pending assessment</span>
             </dd>
           </div>
@@ -344,7 +341,7 @@
               Source Readiness
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-model-source-readiness-dot aria-hidden="true"></span>
+              <span class="model-management__status-dot" data-status="initial" data-model-source-readiness-dot aria-hidden="true"></span>
               <span data-model-source-readiness>Initial</span>
             </dd>
           </div>
@@ -352,20 +349,14 @@
 
         <div class="model-management__control-groups" data-model-source-calibration>
           <section class="model-management__control-group" data-model-source-calibration-assessment>
-            <h4 class="model-management__control-title">Assessment</h4>
             <p class="model-management__section-copy" data-model-source-calibration-status hidden></p>
-            <button class="model-management__button" type="button" data-model-source-calibration-start disabled>
-              Start Source Calibration
-            </button>
+            <button class="model-management__button" type="button" data-model-source-calibration-start aria-label="Start Source Calibration">Start Source Calibration</button>
           </section>
         </div>
       </section>
       <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden></section>
       <section class="model-management__foundation-group" data-model-foundation-group="personality" hidden>
         <h3 class="model-management__section-title">Personality Calibration</h3>
-        <p class="model-management__section-copy">
-          Personality Calibration helps the model understand how you tend to think, decide, relate, react, and express yourself without reducing you to a fixed type.
-        </p>
 
         <dl class="model-management__card-grid" aria-label="Personality Calibration overview">
           <div class="model-management__card">
@@ -374,28 +365,18 @@
               Personality Profile
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-status="initial" aria-hidden="true"></span>
-              <span>Not calibrated</span>
+              <span class="model-management__status-dot" data-status="pending" data-model-personality-profile-status-dot aria-hidden="true"></span>
+              <span data-model-personality-calibration-profile-status>Not calibrated</span>
             </dd>
           </div>
           <div class="model-management__card">
             <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/motivational-pattern/motivational-pattern.svg" alt="">
-              Motivational Pattern
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/personality-coherence-index/personality-coherence-index.svg" alt="">
+              Personality Coherence Index
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-status="pending" aria-hidden="true"></span>
-              <span>Awaiting assessment</span>
-            </dd>
-          </div>
-          <div class="model-management__card">
-            <dt>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/model/expression-pattern/expression-pattern.svg" alt="">
-              Expression Pattern
-            </dt>
-            <dd>
-              <span class="model-management__status-dot" data-status="pending" aria-hidden="true"></span>
-              <span>Awaiting assessment</span>
+              <span class="model-management__status-dot" data-status="pending" data-model-personality-coherence-index-dot aria-hidden="true"></span>
+              <span data-model-personality-calibration-coherence-status>Pending assessment</span>
             </dd>
           </div>
           <div class="model-management__card">
@@ -404,21 +385,16 @@
               Personality Readiness
             </dt>
             <dd>
-              <span class="model-management__status-dot" data-status="initial" aria-hidden="true"></span>
-              <span>Initial</span>
+              <span class="model-management__status-dot" data-status="initial" data-model-personality-readiness-dot aria-hidden="true"></span>
+              <span data-model-personality-calibration-readiness-status>Initial</span>
             </dd>
           </div>
         </dl>
 
         <div class="model-management__control-groups" data-model-personality-calibration>
-          <section class="model-management__control-group" data-model-personality-calibration-assessment>
-            <h4 class="model-management__control-title">Assessment</h4>
-            <p class="model-management__section-copy">
-              The assessment will combine trait spectrums, motivational archetypes, and model-behavior outputs for reflection style, pacing, directness, emotional sensitivity, decision support, and voice alignment.
-            </p>
-            <button class="model-management__button" type="button" data-model-personality-calibration-start disabled>
-              Start Personality Calibration
-            </button>
+          <section class="model-management__control-group" data-model-personality-calibration-root>
+            <p class="model-management__section-copy" data-model-personality-calibration-status hidden></p>
+            <button class="model-management__button" type="button" data-model-personality-calibration-start aria-label="Start Personality Calibration">Start Personality Calibration</button>
           </section>
         </div>
       </section>

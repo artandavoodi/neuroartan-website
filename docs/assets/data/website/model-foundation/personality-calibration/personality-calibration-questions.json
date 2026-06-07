@@ -1,0 +1,434 @@
+{
+  "version": "1.1.0",
+  "questions": [
+    {
+      "id": "pc-q001",
+      "dimension": "cognitiveStyle",
+      "construct": "structure_processing",
+      "polarity": "structured",
+      "text": "I understand myself better when ideas are organized into a clear structure."
+    },
+    {
+      "id": "pc-q002",
+      "dimension": "cognitiveStyle",
+      "construct": "exploratory_processing",
+      "polarity": "exploratory",
+      "text": "I often need space to explore an idea before I can define it clearly."
+    },
+    {
+      "id": "pc-q003",
+      "dimension": "cognitiveStyle",
+      "construct": "pattern_integration",
+      "polarity": "structured",
+      "text": "I naturally look for the pattern that connects separate ideas."
+    },
+    {
+      "id": "pc-q004",
+      "dimension": "cognitiveStyle",
+      "construct": "conceptual_flexibility",
+      "polarity": "exploratory",
+      "text": "I can hold several possible interpretations before choosing one."
+    },
+    {
+      "id": "pc-q005",
+      "dimension": "cognitiveStyle",
+      "construct": "decision_clarity",
+      "polarity": "structured",
+      "text": "Clear distinctions help me decide what matters and what can wait."
+    },
+    {
+      "id": "pc-q006",
+      "dimension": "cognitiveStyle",
+      "construct": "ambiguity_navigation",
+      "polarity": "exploratory",
+      "text": "I can stay engaged with uncertainty without rushing to close the question."
+    },
+
+    {
+      "id": "pc-q007",
+      "dimension": "socialExpression",
+      "construct": "expressive_processing",
+      "polarity": "expressive",
+      "text": "I tend to think more clearly when I can express my thoughts to someone."
+    },
+    {
+      "id": "pc-q008",
+      "dimension": "socialExpression",
+      "construct": "private_processing",
+      "polarity": "contained",
+      "text": "I usually process important thoughts privately before sharing them."
+    },
+    {
+      "id": "pc-q009",
+      "dimension": "socialExpression",
+      "construct": "relational_signaling",
+      "polarity": "expressive",
+      "text": "People usually know where I stand because I communicate my position directly."
+    },
+    {
+      "id": "pc-q010",
+      "dimension": "socialExpression",
+      "construct": "boundary_awareness",
+      "polarity": "contained",
+      "text": "I prefer to reveal personal thoughts only after trust has been established."
+    },
+    {
+      "id": "pc-q011",
+      "dimension": "socialExpression",
+      "construct": "social_energy",
+      "polarity": "expressive",
+      "text": "Interaction often gives me energy when the conversation feels meaningful."
+    },
+    {
+      "id": "pc-q012",
+      "dimension": "socialExpression",
+      "construct": "selective_expression",
+      "polarity": "contained",
+      "text": "I communicate best when I can choose the timing and depth of expression."
+    },
+
+    {
+      "id": "pc-q013",
+      "dimension": "regulationPattern",
+      "construct": "emotional_sensitivity",
+      "polarity": "sensitive",
+      "text": "Strong emotional shifts can affect how quickly I make sense of a situation."
+    },
+    {
+      "id": "pc-q014",
+      "dimension": "regulationPattern",
+      "construct": "pressure_stability",
+      "polarity": "steady",
+      "text": "I can usually stay steady while working through pressure or uncertainty."
+    },
+    {
+      "id": "pc-q015",
+      "dimension": "regulationPattern",
+      "construct": "recovery_latency",
+      "polarity": "sensitive",
+      "text": "When something affects me deeply, I may need time before my thinking becomes clear again."
+    },
+    {
+      "id": "pc-q016",
+      "dimension": "regulationPattern",
+      "construct": "affective_containment",
+      "polarity": "steady",
+      "text": "I can notice emotion without letting it fully direct my next action."
+    },
+    {
+      "id": "pc-q017",
+      "dimension": "regulationPattern",
+      "construct": "stress_reactivity",
+      "polarity": "sensitive",
+      "text": "Pressure can make my attention narrow around the most urgent concern."
+    },
+    {
+      "id": "pc-q018",
+      "dimension": "regulationPattern",
+      "construct": "self_regulation",
+      "polarity": "steady",
+      "text": "I can return to a balanced state when I recognize that I am becoming reactive."
+    },
+
+    {
+      "id": "pc-q019",
+      "dimension": "selfModelFunction",
+      "construct": "self_protection",
+      "polarity": "defensive",
+      "text": "When I feel misunderstood, I can become protective of my position."
+    },
+    {
+      "id": "pc-q020",
+      "dimension": "selfModelFunction",
+      "construct": "self_revision",
+      "polarity": "integrative",
+      "text": "I can revise my self-understanding when new evidence becomes clear."
+    },
+    {
+      "id": "pc-q021",
+      "dimension": "selfModelFunction",
+      "construct": "identity_continuity",
+      "polarity": "integrative",
+      "text": "I can see continuity in myself even when my behavior changes across situations."
+    },
+    {
+      "id": "pc-q022",
+      "dimension": "selfModelFunction",
+      "construct": "ego_threat_response",
+      "polarity": "defensive",
+      "text": "Critical feedback can feel like a challenge to my identity before it feels useful."
+    },
+    {
+      "id": "pc-q023",
+      "dimension": "selfModelFunction",
+      "construct": "self_observation",
+      "polarity": "integrative",
+      "text": "I can observe my own reactions without immediately needing to justify them."
+    },
+    {
+      "id": "pc-q024",
+      "dimension": "selfModelFunction",
+      "construct": "self_narrative_rigidity",
+      "polarity": "defensive",
+      "text": "I sometimes hold tightly to an explanation of myself even when it may be incomplete."
+    },
+
+    {
+      "id": "pc-q025",
+      "dimension": "adaptationStyle",
+      "construct": "stepwise_change",
+      "polarity": "stable",
+      "text": "I prefer change to happen through a stable and stepwise process."
+    },
+    {
+      "id": "pc-q026",
+      "dimension": "adaptationStyle",
+      "construct": "situational_flexibility",
+      "polarity": "adaptive",
+      "text": "I can adjust quickly when the situation changes unexpectedly."
+    },
+    {
+      "id": "pc-q027",
+      "dimension": "adaptationStyle",
+      "construct": "routine_dependence",
+      "polarity": "stable",
+      "text": "Stable routines help me maintain clarity and follow-through."
+    },
+    {
+      "id": "pc-q028",
+      "dimension": "adaptationStyle",
+      "construct": "transition_capacity",
+      "polarity": "adaptive",
+      "text": "I can move into a new plan without needing every detail settled first."
+    },
+    {
+      "id": "pc-q029",
+      "dimension": "adaptationStyle",
+      "construct": "predictability_preference",
+      "polarity": "stable",
+      "text": "I perform best when expectations, roles, and next steps are clear."
+    },
+    {
+      "id": "pc-q030",
+      "dimension": "adaptationStyle",
+      "construct": "environmental_responsiveness",
+      "polarity": "adaptive",
+      "text": "I can change my approach when the environment gives me new information."
+    },
+
+    {
+      "id": "pc-q031",
+      "dimension": "reflectionTolerance",
+      "construct": "direct_feedback_capacity",
+      "polarity": "direct",
+      "text": "Direct reflection helps me recognize patterns I might otherwise avoid."
+    },
+    {
+      "id": "pc-q032",
+      "dimension": "reflectionTolerance",
+      "construct": "paced_feedback_need",
+      "polarity": "paced",
+      "text": "I receive difficult reflection better when it is paced carefully."
+    },
+    {
+      "id": "pc-q033",
+      "dimension": "reflectionTolerance",
+      "construct": "challenge_receptivity",
+      "polarity": "direct",
+      "text": "I can benefit from being challenged when the reflection is accurate and respectful."
+    },
+    {
+      "id": "pc-q034",
+      "dimension": "reflectionTolerance",
+      "construct": "supportive_framing_need",
+      "polarity": "paced",
+      "text": "I process reflection better when it begins with context before critique."
+    },
+    {
+      "id": "pc-q035",
+      "dimension": "reflectionTolerance",
+      "construct": "pattern_confrontation",
+      "polarity": "direct",
+      "text": "I would rather see an uncomfortable pattern clearly than keep it vague."
+    },
+    {
+      "id": "pc-q036",
+      "dimension": "reflectionTolerance",
+      "construct": "integration_time",
+      "polarity": "paced",
+      "text": "When reflection is intense, I need time to integrate it before responding."
+    },
+
+    {
+      "id": "pc-q037",
+      "dimension": "opennessExploration",
+      "construct": "novelty_receptivity",
+      "polarity": "open",
+      "text": "I am drawn to new perspectives even when they disrupt my existing view."
+    },
+    {
+      "id": "pc-q038",
+      "dimension": "opennessExploration",
+      "construct": "imaginative_range",
+      "polarity": "open",
+      "text": "I often imagine possibilities that are not yet practical or fully defined."
+    },
+    {
+      "id": "pc-q039",
+      "dimension": "opennessExploration",
+      "construct": "conceptual_curiosity",
+      "polarity": "open",
+      "text": "I enjoy examining ideas from angles that are not immediately obvious."
+    },
+    {
+      "id": "pc-q040",
+      "dimension": "opennessExploration",
+      "construct": "perspective_expansion",
+      "polarity": "open",
+      "text": "A strong alternative viewpoint can expand my thinking even if I do not accept it."
+    },
+    {
+      "id": "pc-q041",
+      "dimension": "opennessExploration",
+      "construct": "possibility_orientation",
+      "polarity": "open",
+      "text": "I often notice what something could become, not only what it currently is."
+    },
+    {
+      "id": "pc-q042",
+      "dimension": "opennessExploration",
+      "construct": "experimental_learning",
+      "polarity": "open",
+      "text": "I learn well by testing a new perspective in practice."
+    },
+
+    {
+      "id": "pc-q043",
+      "dimension": "structureOrientation",
+      "construct": "expectation_clarity",
+      "polarity": "structured",
+      "text": "Clear expectations help me act with more confidence."
+    },
+    {
+      "id": "pc-q044",
+      "dimension": "structureOrientation",
+      "construct": "planning_preference",
+      "polarity": "structured",
+      "text": "A defined plan helps me turn intention into action."
+    },
+    {
+      "id": "pc-q045",
+      "dimension": "structureOrientation",
+      "construct": "role_clarity",
+      "polarity": "structured",
+      "text": "I work better when responsibilities and boundaries are clearly named."
+    },
+    {
+      "id": "pc-q046",
+      "dimension": "structureOrientation",
+      "construct": "sequence_orientation",
+      "polarity": "structured",
+      "text": "Breaking a complex task into ordered steps makes it easier for me to begin."
+    },
+    {
+      "id": "pc-q047",
+      "dimension": "structureOrientation",
+      "construct": "environmental_order",
+      "polarity": "structured",
+      "text": "Order in my environment helps reduce cognitive noise."
+    },
+    {
+      "id": "pc-q048",
+      "dimension": "structureOrientation",
+      "construct": "commitment_stability",
+      "polarity": "structured",
+      "text": "Once I commit to a structure, I prefer to preserve it long enough to see results."
+    },
+
+    {
+      "id": "pc-q049",
+      "dimension": "agencyExpression",
+      "construct": "responsibility_taking",
+      "polarity": "active",
+      "text": "When something matters to me, I prefer to take direct responsibility for the next step."
+    },
+    {
+      "id": "pc-q050",
+      "dimension": "agencyExpression",
+      "construct": "initiative_expression",
+      "polarity": "active",
+      "text": "I am more likely to act when I can see a clear point of leverage."
+    },
+    {
+      "id": "pc-q051",
+      "dimension": "agencyExpression",
+      "construct": "decision_ownership",
+      "polarity": "active",
+      "text": "I prefer to own my decisions rather than leave them undefined."
+    },
+    {
+      "id": "pc-q052",
+      "dimension": "agencyExpression",
+      "construct": "action_orientation",
+      "polarity": "active",
+      "text": "When reflection becomes clear, I want it to translate into action."
+    },
+    {
+      "id": "pc-q053",
+      "dimension": "agencyExpression",
+      "construct": "self_direction",
+      "polarity": "active",
+      "text": "I trust myself more when I can choose the direction of my effort."
+    },
+    {
+      "id": "pc-q054",
+      "dimension": "agencyExpression",
+      "construct": "follow_through_drive",
+      "polarity": "active",
+      "text": "A meaningful goal increases my ability to follow through."
+    },
+
+    {
+      "id": "pc-q055",
+      "dimension": "conflictPosture",
+      "construct": "conflict_presence",
+      "polarity": "engaged",
+      "text": "I can stay present in disagreement without needing to escape the conversation."
+    },
+    {
+      "id": "pc-q056",
+      "dimension": "conflictPosture",
+      "construct": "tension_tolerance",
+      "polarity": "engaged",
+      "text": "I can remain engaged when a conversation becomes tense but still meaningful."
+    },
+    {
+      "id": "pc-q057",
+      "dimension": "conflictPosture",
+      "construct": "repair_orientation",
+      "polarity": "engaged",
+      "text": "After disagreement, I usually want to understand what can be repaired or clarified."
+    },
+    {
+      "id": "pc-q058",
+      "dimension": "conflictPosture",
+      "construct": "assertive_clarity",
+      "polarity": "engaged",
+      "text": "I can name disagreement directly without needing to dominate the conversation."
+    },
+    {
+      "id": "pc-q059",
+      "dimension": "conflictPosture",
+      "construct": "relational_accountability",
+      "polarity": "engaged",
+      "text": "I can recognize my part in a conflict without losing my own position."
+    },
+    {
+      "id": "pc-q060",
+      "dimension": "conflictPosture",
+      "construct": "dialogue_endurance",
+      "polarity": "engaged",
+      "text": "I can continue a difficult dialogue when it has a clear purpose."
+    }
+  ]
+}

@@ -3,13 +3,13 @@
 .model-informative-footer {
   position: sticky;
   inset-block-end: var(--spacing-none);
-  z-index: var(--z-base);
+  z-index: var(--z-ground);
   display: block;
   inline-size: 100%;
   padding-block: var(--spacing-md) var(--spacing-lg);
-  background: var(--page-bg);
+  background: transparent;
   pointer-events: none;
-  isolation: isolate;
+  isolation: auto;
 }
 
 .model-informative-footer[hidden] {
@@ -21,6 +21,8 @@
 }
 
 .model-informative-footer__inner {
+  position: relative;
+  z-index: var(--z-base);
   display: grid;
   justify-items: center;
   gap: var(--spacing-sm);
@@ -28,7 +30,7 @@
   margin-inline: auto;
   text-align: center;
   pointer-events: auto;
-  position: relative;
+  background: var(--page-bg);
 }
 
 .model-informative-footer__title,
@@ -54,24 +56,30 @@
   cursor: pointer;
   font: inherit;
   padding: var(--spacing-none);
-  border: 0;
-  background: var(--page-bg);
+  border: var(--border-width-none);
+  background: transparent;
 }
 
 .model-informative-footer__link:hover,
 .model-informative-footer__link:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: var(--spacing-xs);
+  color: var(--text-primary-color);
+  text-decoration: none;
+  outline: none;
 }
 
 @media (max-width: 768px) {
   .model-informative-footer {
+    z-index: var(--z-base);
     padding-block: var(--spacing-sm) var(--spacing-md);
+    background: var(--page-bg);
+    isolation: isolate;
   }
 
   .model-informative-footer__inner {
+    z-index: var(--z-base);
     inline-size: auto;
     max-inline-size: var(--content-measure-narrow);
     padding-inline: var(--spacing-md);
+    background: transparent;
   }
 }

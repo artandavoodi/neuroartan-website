@@ -1,11 +1,5 @@
 /* MARK: - Source Calibration Workspace */
 
-:root {
-  --model-source-calibration-workspace-z-index: var(--z-overlay-control);
-  --model-source-calibration-workspace-backdrop: var(--glass-overlay-backdrop-bg);
-  --model-source-calibration-workspace-surface: var(--panel-surface-dropdown-unified);
-}
-
 html.model-source-calibration-workspace-open,
 body.model-source-calibration-workspace-open {
   overflow: hidden;
@@ -22,11 +16,11 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
 .model-source-calibration-workspace {
   position: fixed;
   inset: var(--spacing-none);
-  z-index: var(--model-source-calibration-workspace-z-index);
+  z-index: var(--z-overlay-control);
   display: grid;
   place-items: stretch;
-  padding: 0;
-  background: var(--model-source-calibration-workspace-backdrop);
+  padding: var(--spacing-none);
+  background: var(--glass-overlay-backdrop-bg);
 }
 
 .model-source-calibration-workspace[hidden] {
@@ -36,7 +30,7 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
 .model-source-calibration-workspace__backdrop {
   position: absolute;
   inset: var(--spacing-none);
-  background: var(--model-source-calibration-workspace-backdrop);
+  background: var(--glass-overlay-backdrop-bg);
   backdrop-filter: blur(var(--glass-overlay-backdrop-blur));
   -webkit-backdrop-filter: blur(var(--glass-overlay-backdrop-blur));
 }
@@ -47,12 +41,12 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
   isolation: isolate;
   display: grid;
   grid-template-rows: auto 1fr;
-  inline-size: 100%;
-  block-size: 100%;
+  inline-size: var(--size-full);
+  block-size: var(--size-full);
   overflow: hidden;
-  border: 0;
-  background: var(--model-source-calibration-workspace-surface);
-  box-shadow: none;
+  border: var(--border-width-none);
+  background: var(--panel-surface-dropdown-unified);
+  box-shadow: var(--shadow-none);
 }
 
 .model-source-calibration-workspace__header {
@@ -84,7 +78,7 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: var(--spacing-2xl);
-  background: var(--model-source-calibration-workspace-surface);
+  background: var(--panel-surface-dropdown-unified);
 }
 
 .model-source-calibration-workspace__body::-webkit-scrollbar,
@@ -106,7 +100,7 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
 .model-source-calibration-workspace__result {
   display: grid;
   min-block-size: var(--spacing-none);
-  block-size: 100%;
+  block-size: var(--size-full);
   gap: var(--spacing-xl);
   overflow: auto;
   scrollbar-width: none;

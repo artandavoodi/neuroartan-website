@@ -58,43 +58,39 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="6.8930722"
-     inkscape:cx="-6.5282938"
-     inkscape:cy="21.32576"
+     inkscape:zoom="13.081425"
+     inkscape:cx="11.351974"
+     inkscape:cy="15.556409"
      inkscape:window-width="1472"
-     inkscape:window-height="923"
+     inkscape:window-height="896"
      inkscape:window-x="0"
-     inkscape:window-y="33"
+     inkscape:window-y="32"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
-  <circle
+  <ellipse
      style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
      id="path1"
-     cx="12"
-     cy="4.8188963"
-     r="1.7677165" />
+     cx="12.000001"
+     cy="5.1260643"
+     rx="2.0729704"
+     ry="2.0750232" />
   <path
      id="rect4"
-     style="fill:none;stroke:#000000;stroke-width:1.12149;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     style="fill:none;stroke:#000000;stroke-width:0.955873;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
      d="M 7.3415766,16.064335 H 22.239215 a 1.5,1.5 45 0 1 1.5,1.5 v 0.535433 a 1.5,1.5 135 0 1 -1.5,1.5 l -14.8976384,0 a 1.5,1.5 45 0 1 -1.5,-1.5 l 0,-0.535433 a 1.5,1.5 135 0 1 1.5,-1.5 z"
      inkscape:path-effect="#path-effect5"
      inkscape:original-d="M 5.8415766,16.064335 H 23.739215 v 3.535433 H 5.8415766 Z"
-     transform="matrix(0.7950745,0,0,1,0.240533,-1.353301)" />
+     transform="matrix(0.93237,0,0,1.1738438,-1.7901213,-2.1191313)" />
   <path
      id="rect4-6"
-     style="fill:none;stroke:#000000;stroke-width:1.12149;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     style="fill:none;stroke:#000000;stroke-width:0.955873;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
      d="M 7.3415766,16.064335 H 22.239215 a 1.5,1.5 45 0 1 1.5,1.5 v 0.535433 a 1.5,1.5 135 0 1 -1.5,1.5 l -14.8976384,0 a 1.5,1.5 45 0 1 -1.5,-1.5 l 0,-0.535433 a 1.5,1.5 135 0 1 1.5,-1.5 z"
      inkscape:path-effect="#path-effect5-0"
      inkscape:original-d="M 5.8415766,16.064335 H 23.739215 v 3.535433 H 5.8415766 Z"
-     transform="matrix(0.7950745,0,0,1,0.240533,-7.214709)" />
-  <path
-     id="rect4-6-8"
-     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
-     d="m 20.94882,20.50948 c -0.28546,0.271447 -0.679822,0.43934 -1.115421,0.43934 H 12 4.1666014 c -0.4355992,0 -0.8299603,-0.167893 -1.1154216,-0.43934"
-     sodipodi:nodetypes="cscsc" />
+     transform="matrix(0.93237,0,0,1.1738438,-1.7901213,-8.9995088)" />
   <path
      id="rect4-6-8-2"
      style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
-     d="m 12,20.94882 v -0.931102 -1.267236 m 0,-4.319379 V 13.5 12.568898 m 0,-3.72441 V 7.913386 6.982283"
-     sodipodi:nodetypes="ccccccccc" />
+     d="m 12.000001,16.409293 v -1.092969 -1.092969 m 0,-4.3718749 V 8.7585118 7.6655423"
+     sodipodi:nodetypes="cccccc" />
 </svg>

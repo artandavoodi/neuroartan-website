@@ -4,12 +4,9 @@
 <section class="model-training-workspace" data-model-training-workspace aria-hidden="true" hidden>
   <div class="model-training-workspace__backdrop" aria-hidden="true"></div>
 
-  <article class="model-training-workspace__surface" role="dialog" aria-modal="true" aria-labelledby="model-training-workspace-title">
+  <article class="model-training-workspace__surface" role="dialog" aria-modal="true" aria-label="Recipe workspace">
     <header class="model-training-workspace__header">
-      <div>
-        <p class="model-training-workspace__eyebrow">Model training</p>
-        <h2 class="model-training-workspace__title" id="model-training-workspace-title">Recipe workspace</h2>
-      </div>
+      <span class="model-training-workspace__progress">Recipe workspace</span>
       <button class="global-close-button" type="button" data-model-training-workspace-close aria-label="Close recipe workspace">
         <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
         <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
@@ -48,13 +45,16 @@
             </label>
             <label class="model-management__field">
               <span class="model-management__field-label">Base model provider</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" name="baseModelProvider">
-                  <option value="model_registry">Model registry</option>
-                  <option value="external_registry">External registry</option>
-                  <option value="local_runtime">Local runtime</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-training-label="baseModelProvider">Model registry</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" name="baseModelProvider" data-model-training-field="baseModelProvider" aria-label="Select base model provider">
+                    <option value="model_registry">Model registry</option>
+                    <option value="external_registry">External registry</option>
+                    <option value="local_runtime">Local runtime</option>
+                  </select>
+                </span>
               </span>
             </label>
             <label class="model-management__field">
@@ -63,13 +63,16 @@
             </label>
             <label class="model-management__field">
               <span class="model-management__field-label">Training method</span>
-              <span class="model-management__select-wrap">
-                <select class="model-management__select" name="trainingMethod">
-                  <option value="supervised_fine_tuning">Supervised fine-tuning</option>
-                  <option value="preference_alignment">Preference alignment</option>
-                  <option value="retrieval_preparation">Retrieval preparation</option>
-                </select>
-                <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+              <span class="ui-inline-dropdown">
+                <span class="ui-inline-dropdown__value" data-model-training-label="trainingMethod">Supervised fine-tuning</span>
+                <span class="ui-inline-dropdown__icon-wrapper">
+                  <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                  <select class="ui-dropdown ui-dropdown--icon-only" name="trainingMethod" data-model-training-field="trainingMethod" aria-label="Select training method">
+                    <option value="supervised_fine_tuning">Supervised fine-tuning</option>
+                    <option value="preference_alignment">Preference alignment</option>
+                    <option value="retrieval_preparation">Retrieval preparation</option>
+                  </select>
+                </span>
               </span>
             </label>
           </div>
@@ -89,15 +92,18 @@
             <div class="model-training-workspace__grid">
               <label class="model-management__field">
                 <span class="model-management__field-label">Source type</span>
-                <span class="model-management__select-wrap">
-                  <select class="model-management__select" name="externalSourceKind">
-                    <option value="dataset_registry">Dataset registry</option>
-                    <option value="external_url">External URL</option>
-                    <option value="document_upload">Document upload</option>
-                    <option value="sql_upload">SQL upload</option>
-                    <option value="spreadsheet_upload">Spreadsheet upload</option>
-                  </select>
-                  <img class="model-management__select-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                <span class="ui-inline-dropdown">
+                  <span class="ui-inline-dropdown__value" data-model-training-label="externalSourceKind">Dataset registry</span>
+                  <span class="ui-inline-dropdown__icon-wrapper">
+                    <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                    <select class="ui-dropdown ui-dropdown--icon-only" name="externalSourceKind" data-model-training-field="externalSourceKind" aria-label="Select source type">
+                      <option value="dataset_registry">Dataset registry</option>
+                      <option value="external_url">External URL</option>
+                      <option value="document_upload">Document upload</option>
+                      <option value="sql_upload">SQL upload</option>
+                      <option value="spreadsheet_upload">Spreadsheet upload</option>
+                    </select>
+                  </span>
                 </span>
               </label>
               <label class="model-management__field">
@@ -157,7 +163,7 @@
             <div class="model-training-workspace__board" data-model-training-board aria-label="Training recipe graph"></div>
           </section>
           <div class="model-training-workspace__status" data-model-training-workspace-status aria-live="polite">Draft not saved</div>
-          <button class="ui-button ui-button--secondary" type="button" data-model-training-run-request>
+          <button class="model-management__button" type="button" data-model-training-run-request>
             <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/run.svg" alt="">
             Run
           </button>
@@ -168,7 +174,7 @@
             <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/cancel.svg" alt="">
             Cancel
           </button>
-          <button class="ui-button ui-button--secondary" type="submit">
+          <button class="model-management__button" type="submit">
             <img class="model-training-workspace__action-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/save-recipe-draft.svg" alt="">
             Save recipe draft
           </button>

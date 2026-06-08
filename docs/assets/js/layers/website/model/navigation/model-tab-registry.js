@@ -81,6 +81,7 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
       { key: 'checks', label: 'Checks', section: 'model-readiness', modelPane: 'checks' },
       { key: 'blockers', label: 'Blockers', section: 'model-readiness', modelPane: 'blockers' },
       { key: 'history', label: 'History', section: 'model-readiness', modelPane: 'history' },
+      { key: 'monetization', label: 'Monetization', section: 'model-readiness', modelPane: 'monetization' },
     ],
   },
   modelDiscovery: {
@@ -90,7 +91,6 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
       { key: 'trending', label: 'Trending', section: 'model-discovery', modelPane: 'trending' },
       { key: 'expertise', label: 'Expertise', section: 'model-discovery', modelPane: 'expertise' },
       { key: 'reputation', label: 'Reputation', section: 'model-discovery', modelPane: 'reputation' },
-      { key: 'monetization', label: 'Monetization', section: 'model-discovery', modelPane: 'monetization' },
     ],
   },
   modelSettings: {

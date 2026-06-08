@@ -346,22 +346,21 @@
 }
 
 .profile-settings__input{
-  border-color:var(--control-border-unified);
-  background:var(--control-surface);
-  border-radius:var(--account-field-radius);
-  padding:var(--spacing-none) var(--account-field-padding-x);
+  width:var(--size-full);
+  border:none;
+  background:transparent;
+  border-radius:0;
+  padding:0;
   box-shadow:none;
 }
 
-.profile-settings__input:hover{
-  border-color:var(--control-border-unified);
-  background:var(--control-surface);
-}
-
+.profile-settings__input:hover,
 .profile-settings__input:focus,
 .profile-settings__input:focus-visible{
-  border-color:var(--control-border-hover-unified);
-  background:var(--control-surface-hover);
+  border:none;
+  background:transparent;
+  outline:none;
+  box-shadow:none;
 }
 
 .profile-settings__dropdown,
@@ -434,27 +433,35 @@
 }
 
 .profile-settings__textarea{
-  min-height:calc(var(--account-field-height) * 2);
+  width:var(--size-full);
+  border:none;
+  background:transparent;
+  min-height:calc(var(--control-height-lg) * 2);
   resize:none;
-  padding-block:var(--account-field-padding-x);
-  padding-inline:var(--spacing-md) var(--spacing-lg);
+}
+
+.profile-settings__textarea:focus,
+.profile-settings__textarea:focus-visible{
+  border:none;
+  background:transparent;
+  outline:none;
 }
 
 .profile-settings__textarea--minimal{
-  border:var(--input-minimal-border);
-  background:var(--input-minimal-background);
-  border-radius:var(--input-minimal-radius);
-  padding:var(--input-minimal-padding);
-  box-shadow:var(--input-minimal-box-shadow);
+  border:none;
+  background:transparent;
+  border-radius:0;
+  padding:0;
+  box-shadow:none;
 }
 
 .profile-settings__textarea--minimal:hover,
 .profile-settings__textarea--minimal:focus,
 .profile-settings__textarea--minimal:focus-visible{
-  border:var(--input-minimal-border-focus);
-  background:var(--input-minimal-background);
-  outline:var(--input-minimal-outline);
-  box-shadow:var(--input-minimal-box-shadow);
+  border:none;
+  background:transparent;
+  outline:none;
+  box-shadow:none;
 }
 
 .profile-settings__date-grid{

@@ -150,7 +150,7 @@ function renderDigitalBrainMaturityControls(surface) {
     <div class="model-digital-brain-maturity__navigator">
       <label class="model-digital-brain-maturity__search">
         <img class="model-digital-brain-maturity__search-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
-        <input type="search" data-digital-brain-search placeholder="Search regions, layers, nodes" autocomplete="off">
+        <input type="search" data-digital-brain-search placeholder="Search" autocomplete="off">
         <button class="model-digital-brain-maturity__search-clear" type="button" data-digital-brain-search-clear aria-label="Clear search" hidden>
           <img class="model-digital-brain-maturity__search-clear-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
         </button>

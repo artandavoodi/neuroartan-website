@@ -1,13 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  aria-hidden="true"
-  xmlns="http://www.w3.org/2000/svg">
-  <circle
-    cx="12"
-    cy="12"
-    r="1.5"
-    fill="#000000" />
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   aria-hidden="true"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="data-manager.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="7.6536195"
+     inkscape:cx="6.1408854"
+     inkscape:cy="6.2715425"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <path
+     id="rect1"
+     style="stroke:#000000;stroke-width:1;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="M 3.05118,17.713214 V 6.3451877 m 13.698164,0 v 6.0954103"
+     sodipodi:nodetypes="cccc" />
+  <path
+     id="path2"
+     style="stroke:#000000;stroke-width:1;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="M 16.749344,6.330468 A 6.8490818,3.2795272 0 0 1 9.9002627,9.6099958 6.8490818,3.2795272 0 0 1 3.05118,6.330468 6.8490818,3.2795272 0 0 1 9.9002627,3.0509411 6.8490818,3.2795272 0 0 1 16.749344,6.330468 Z" />
+  <path
+     id="path2-5"
+     style="stroke:#000000;stroke-width:1;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 14.256914,20.199694 c -0.169132,0.06683 -0.345078,0.129857 -0.527265,0.188792 -0.364374,0.117871 -0.753709,0.219394 -1.163415,0.302371 -0.409706,0.08298 -0.839784,0.147406 -1.285643,0.191093 -0.445858,0.04369 -0.907498,0.06663 -1.3803283,0.06663 -3.7826437,0 -6.8490827,-1.468294 -6.8490827,-3.279527"
+     sodipodi:nodetypes="cssssc" />
+  <path
+     id="path2-5-7"
+     style="stroke:#000000;stroke-width:1;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 13.164941,14.883466 c -0.194093,0.05049 -0.393854,0.09661 -0.598707,0.138099 -0.819413,0.165953 -1.720311,0.257722 -2.6659713,0.257722 -3.7826437,0 -6.8490827,-1.468294 -6.8490827,-3.279527"
+     sodipodi:nodetypes="cssc" />
+  <g
+     id="g2"
+     transform="matrix(0.47205168,0,0,0.47206334,9.6882325,24.677031)"
+     style="stroke-width:2.11839">
+    <path
+       id="rect1-0"
+       style="stroke:#000000;stroke-width:3.04794;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       d="M 27.027635,-18.493558 15.0792,-6.5451236 a 1.0000001,1.0000001 2.2636631e-7 0 1 -1.414214,0 L 8.0443225,-12.165787"
+       sodipodi:nodetypes="ccc"
+       inkscape:path-effect="#path-effect1"
+       inkscape:original-d="M 27.027635,-18.493558 14.372093,-5.8380168 8.0443225,-12.165787"
+       transform="matrix(0.69914502,0,0,0.69092607,4.9520569,-10.295705)" />
+    <circle
+       style="fill:none;stroke:#000000;stroke-width:2.11839;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       id="path1"
+       cx="14.902439"
+       cy="-16.846022"
+       r="8.9488192" />
+  </g>
 </svg>

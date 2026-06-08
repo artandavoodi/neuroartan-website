@@ -2977,7 +2977,7 @@ function createModelDataManagerItem(entry = {}, pane = modelDataManagerPane) {
 function renderModelDataManager(root) {
   if (!(root instanceof HTMLElement)) return;
 
-  const overlay = root.querySelector('[data-model-data-manager]');
+  const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;
 
   overlay.hidden = !modelDataManagerOpen;
@@ -3571,6 +3571,10 @@ function formatModelIdentitySaveError(error) {
 
 
 function handleModelIdentityEditorRequest() {
+  const editor = document.querySelector('[data-model-identity-editor]');
+  if (!(editor instanceof HTMLElement)) return;
+
+  document.body.appendChild(editor);
   setModelIdentityEditorOpen(true);
 }
 
@@ -3854,6 +3858,9 @@ function setModelDataManagerOpen(open, pane = modelDataManagerPane) {
 function handleModelDataManagerOpenRequest(event) {
   const detail = event instanceof CustomEvent ? event.detail || {} : {};
   const pane = normalizeModelDataManagerPane(detail.filters?.pane || getProfileNavigationState().modelPane);
+  const overlay = document.querySelector('[data-model-data-manager]');
+  if (!(overlay instanceof HTMLElement)) return;
+  document.body.appendChild(overlay);
   setModelDataManagerOpen(true, pane);
 }
 

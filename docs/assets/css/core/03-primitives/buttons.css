@@ -24,43 +24,23 @@
 .ui-control{
   appearance:none;
   -webkit-appearance:none;
-  min-height:var(--control-height-md);
-  padding:var(--spacing-none) var(--control-padding-x-md);
-  border-radius:var(--shape-control-radius);
-  border:var(--border-width-hairline) solid var(--control-border-unified);
-  background:var(--control-surface);
-  color:var(--control-text-unified);
-  font-family:var(--font-family);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  letter-spacing:var(--control-tracking);
-  line-height:var(--control-line-height);
-  text-align:center;
-  text-decoration:none;
   display:inline-flex;
   flex:0 0 auto;
   align-items:center;
   justify-content:center;
-  min-width:var(--spacing-none);
-  gap:var(--control-gap);
+  gap:var(--spacing-sm);
   white-space:nowrap;
+  border:none;
+  background:transparent;
   box-shadow:none;
-  backdrop-filter:blur(var(--glass-blur-sm));
-  -webkit-backdrop-filter:blur(var(--glass-blur-sm));
-  transition:var(--interaction-transition-control);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  transition:none;
 }
 
 /* =============================================================================
-   03) HOVER / FOCUS STATES
+   03) FOCUS STATES
 ============================================================================= */
-.ui-button:hover,
-.ui-control:hover{
-  background:var(--control-surface-hover);
-  border-color:var(--control-border-hover-unified);
-  color:var(--control-text-hover-unified);
-  opacity:var(--hover-opacity-strong);
-}
-
 .ui-button:focus-visible,
 .ui-control:focus-visible{
   outline:none;
@@ -101,7 +81,7 @@
    06) SECONDARY BUTTON VARIANT
 ============================================================================= */
 .ui-button--secondary{
-  background:var(--surface-secondary);
+  background:transparent;
 }
 
 /* =============================================================================

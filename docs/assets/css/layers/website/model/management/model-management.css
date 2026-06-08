@@ -870,24 +870,36 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 
 .model-management__input{
   width:var(--size-full);
+  border:none;
+  background:transparent;
+  border-radius:0;
+  padding:0;
   min-height:var(--input-height-md);
-  padding-inline:var(--input-padding-x-md);
-  border:var(--border-width-hairline) solid var(--control-border-unified);
-  border-radius:var(--input-radius-md);
-  outline:0;
-  background:var(--control-surface);
   color:var(--text-primary-color);
   font:inherit;
 }
 
+.model-management__input:hover,
+.model-management__input:focus,
 .model-management__input:focus-visible{
-  border-color:var(--field-border-focus);
+  border:none;
+  background:transparent;
+  outline:none;
 }
 
 .model-management__input--textarea{
-  min-height:var(--control-height-xl);
-  padding-block:var(--spacing-sm);
+  width:var(--size-full);
+  border:none;
+  background:transparent;
+  min-height:calc(var(--control-height-lg) * 2);
   resize:none;
+}
+
+.model-management__input--textarea:focus,
+.model-management__input--textarea:focus-visible{
+  border:none;
+  background:transparent;
+  outline:none;
 }
 
 .model-management__slider-value{
@@ -1041,6 +1053,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   grid-template-columns:auto minmax(0, 1fr);
   gap:var(--spacing-md);
   align-items:center;
+  border:none;
 }
 
 .model-management__directory-avatar{
@@ -1103,13 +1116,17 @@ body.model-management-identity-editor-open{
 .model-management__identity-overlay{
   position:fixed;
   inset:0;
-  z-index:var(--z-country-overlay);
+  z-index:9999;
   display:block;
   overflow-y:auto;
   overscroll-behavior:contain;
   background:var(--glass-overlay-shell-bg);
   backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(120%);
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(120%);
+}
+
+.model-management__data-manager-overlay{
+  z-index:9999;
 }
 
 .model-management__identity-overlay-backdrop{
@@ -1122,7 +1139,7 @@ body.model-management-identity-editor-open{
 
 .model-management__identity-dialog{
   position:relative;
-  z-index:var(--z-raised);
+  z-index:2000;
   display:grid;
   gap:var(--spacing-lg);
   width:var(--size-full);

@@ -133,12 +133,37 @@ function setBoardExpanded(expanded) {
   renderRecipeBoard(root);
 }
 
+function getSafeSelectOptionText(select) {
+  if (!(select instanceof HTMLSelectElement)) return '';
+  if (!select.selectedOptions.length && select.options.length) {
+    select.value = select.options[0].value;
+  }
+  return select.selectedOptions[0]?.textContent || select.options[0]?.textContent || '';
+}
+
 function hydrateRecipeForm(root = workspaceRoot(), draft = loadRecipeDraft()) {
   if (!(root instanceof HTMLElement)) return;
   const form = root.querySelector('[data-model-training-workspace-form]');
   if (!(form instanceof HTMLFormElement)) return;
 
   activeRecipe = draft.id ? draft : activeRecipe;
+
+  root.querySelectorAll('[data-model-training-label]').forEach((label) => {
+    if (!(label instanceof HTMLElement)) return;
+    const field = label.dataset.modelTrainingLabel;
+    const select = field ? root.querySelector(`[data-model-training-field="${field}"]`) : null;
+    if (!(select instanceof HTMLSelectElement)) return;
+    label.textContent = getSafeSelectOptionText(select);
+  });
+
+  root.querySelectorAll('[data-model-training-field]').forEach((select) => {
+    if (!(select instanceof HTMLSelectElement)) return;
+    select.addEventListener('change', () => {
+      const field = select.dataset.modelTrainingField;
+      const label = field ? root.querySelector(`[data-model-training-label="${field}"]`) : null;
+      if (label instanceof HTMLElement) label.textContent = getSafeSelectOptionText(select);
+    });
+  });
   activeGraphConfig = draft.graphConfig || activeGraphConfig || getDefaultTrainingRecipeGraph();
   Object.entries(draft).forEach(([key, value]) => {
     const control = form.elements.namedItem(key);

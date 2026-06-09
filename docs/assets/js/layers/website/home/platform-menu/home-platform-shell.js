@@ -45,6 +45,7 @@ const HOME_PLATFORM_SHELL_STATE = {
   detailBackLabel: '',
   didRestorePersistedState: false,
   pendingRouteRequest: null,
+  returnHash: '',
 };
 
 /* =============================================================================
@@ -175,6 +176,7 @@ function normalizeHomePlatformShellStorageState(state = {}) {
     subdestination: normalizeString(state.subdestination),
     mobileStackLevel: normalizeHomePlatformMobileStackLevel(state.mobileStackLevel),
     subrailExpanded: hasSubrailExpanded ? state.subrailExpanded === true : false,
+    returnHash: normalizeHomePlatformReturnHash(state.returnHash),
   };
 }
 
@@ -207,6 +209,7 @@ function persistHomePlatformShellStorageState(overrides = {}) {
     subdestination: HOME_PLATFORM_SHELL_STATE.activeSubdestination,
     mobileStackLevel: HOME_PLATFORM_SHELL_STATE.mobileStackLevel,
     subrailExpanded: HOME_PLATFORM_SHELL_STATE.subrailExpanded,
+    returnHash: HOME_PLATFORM_SHELL_STATE.returnHash,
     ...overrides,
   });
 }
@@ -217,16 +220,107 @@ function clearHomePlatformShellStorageState() {
   } catch {}
 }
 
+function normalizeHomePlatformReturnHash(hash) {
+  const normalizedHash = normalizeString(hash);
+
+  if (!normalizedHash || !normalizedHash.startsWith('#')) {
+    return '';
+  }
+
+  if (normalizedHash.startsWith('#home/')) {
+    return '';
+  }
+
+  if (normalizedHash.startsWith(HOME_PLATFORM_HASH_PREFIX)) {
+    return '';
+  }
+
+  return normalizedHash;
+}
+
+const HOME_PLATFORM_SHELL_RETURN_HASH_STORAGE_KEY = 'neuroartan.home-platform-shell.return-hash.v1';
+
+function readHomePlatformShellReturnHash() {
+  if (HOME_PLATFORM_SHELL_STATE.returnHash) {
+    return HOME_PLATFORM_SHELL_STATE.returnHash;
+  }
+
+  try {
+    const sessionHash = normalizeHomePlatformReturnHash(window.sessionStorage.getItem(HOME_PLATFORM_SHELL_RETURN_HASH_STORAGE_KEY));
+    if (sessionHash) {
+      HOME_PLATFORM_SHELL_STATE.returnHash = sessionHash;
+      return sessionHash;
+    }
+  } catch (error) {
+    // Session storage is optional; route restoration must remain non-blocking.
+  }
+
+  const storedState = readHomePlatformShellStorageState();
+  if (storedState.returnHash) {
+    HOME_PLATFORM_SHELL_STATE.returnHash = storedState.returnHash;
+    return storedState.returnHash;
+  }
+
+  return '';
+}
+
+function writeHomePlatformShellReturnHash(hash) {
+  const normalizedHash = normalizeHomePlatformReturnHash(hash);
+
+  if (!normalizedHash) {
+    return;
+  }
+
+  HOME_PLATFORM_SHELL_STATE.returnHash = normalizedHash;
+
+  try {
+    window.sessionStorage.setItem(HOME_PLATFORM_SHELL_RETURN_HASH_STORAGE_KEY, normalizedHash);
+  } catch (error) {
+    // Session storage is optional; route restoration must remain non-blocking.
+  }
+}
+
+function clearHomePlatformShellReturnHash() {
+  HOME_PLATFORM_SHELL_STATE.returnHash = '';
+
+  try {
+    window.sessionStorage.removeItem(HOME_PLATFORM_SHELL_RETURN_HASH_STORAGE_KEY);
+  } catch (error) {
+    // Session storage is optional; route restoration must remain non-blocking.
+  }
+}
+
 function clearHomePlatformShellHash() {
   if (!window.location.hash.startsWith(HOME_PLATFORM_HASH_PREFIX)) {
     return;
   }
 
+  const storedState = readHomePlatformShellStorageState();
+  const returnHash = readHomePlatformShellReturnHash() || storedState.returnHash;
+  const nextHash = normalizeHomePlatformReturnHash(returnHash);
+
+  const previousHash = window.location.hash;
+
   window.history.replaceState(
     window.history.state,
     '',
-    `${window.location.pathname}${window.location.search}`
+    `${window.location.pathname}${window.location.search}${nextHash}`
   );
+
+  if (nextHash && previousHash !== nextHash) {
+    window.dispatchEvent(new HashChangeEvent('hashchange', {
+      oldURL: `${window.location.origin}${window.location.pathname}${window.location.search}${previousHash}`,
+      newURL: `${window.location.origin}${window.location.pathname}${window.location.search}${nextHash}`,
+    }));
+  }
+
+  if (nextHash) {
+    window.requestAnimationFrame(() => {
+      dispatchHomePlatformReturnNavigation(nextHash);
+    });
+  }
+
+  clearHomePlatformShellReturnHash();
 }
 
 function syncHomePlatformShellHash(destination, subdestination) {
@@ -237,6 +331,12 @@ function syncHomePlatformShellHash(destination, subdestination) {
   }
 
   const nextHash = buildHomePlatformSubdestinationHash(normalizedDestination, normalizedSubdestination);
+  const currentHash = normalizeString(window.location.hash);
+
+  if (currentHash && currentHash !== nextHash) {
+    writeHomePlatformShellReturnHash(currentHash);
+  }
+
   if (window.location.hash === nextHash) {
     return;
   }
@@ -439,6 +539,47 @@ function navigateHomePlatformBack() {
 
 function buildHomePlatformSubdestinationHash(destination, subdestination) {
   return `${HOME_PLATFORM_HASH_PREFIX}${destination}-${subdestination}`;
+}
+
+function parseHomePlatformModelReturnHash(hash) {
+  const normalizedHash = normalizeHomePlatformReturnHash(hash);
+
+  if (!normalizedHash.startsWith('#model/')) {
+    return null;
+  }
+
+  const parts = normalizedHash
+    .slice('#model/'.length)
+    .split('/')
+    .map((part) => normalizeString(part))
+    .filter(Boolean);
+
+  if (!parts.length) {
+    return null;
+  }
+
+  return {
+    section: `model-${parts[0]}`,
+    modelPane: parts[1] || 'overview',
+    hash: normalizedHash,
+  };
+}
+
+function dispatchHomePlatformReturnNavigation(hash) {
+  const modelRoute = parseHomePlatformModelReturnHash(hash);
+
+  if (!modelRoute) {
+    return;
+  }
+
+  document.dispatchEvent(new CustomEvent('profile:navigation-request', {
+    detail: {
+      source: 'home-platform-shell',
+      section: modelRoute.section,
+      modelPane: modelRoute.modelPane,
+      hash: modelRoute.hash,
+    },
+  }));
 }
 
 async function resolveHomePlatformHash(hashValue = window.location.hash) {
@@ -1489,6 +1630,7 @@ async function restoreHomePlatformShellStorageState() {
   const storedState = readHomePlatformShellStorageState();
   if (storedState.isOpen) {
     HOME_PLATFORM_SHELL_STATE.subrailExpanded = storedState.subrailExpanded;
+    HOME_PLATFORM_SHELL_STATE.returnHash = storedState.returnHash;
     openHomePlatformShell(
       storedState.destination,
       storedState.subdestination,
@@ -1520,6 +1662,7 @@ function openHomePlatformShell(
   HOME_PLATFORM_SHELL_STATE.shellSession = shellSession;
   closeConflictingHomeChrome();
   closeBlockingGlobalOverlays();
+  writeHomePlatformShellReturnHash(window.location.hash);
   if (mountRoot) {
     mountRoot.hidden = false;
     mountRoot.setAttribute('aria-hidden', 'false');

@@ -44,7 +44,7 @@
   --home-platform-shell-radius:var(--panel-radius-unified);
   --home-platform-shell-padding:var(--layout-home-platform-padding);
   --home-platform-shell-gap:var(--layout-home-platform-gap);
-  --home-platform-shell-surface:var(--glass-surface-bg-light);
+  --home-platform-shell-surface:color-mix(in srgb, var(--surface-color) 96%, transparent);
   --home-platform-shell-inner-surface:transparent;
   --home-platform-shell-border:var(--glass-surface-border);
   --home-platform-shell-shadow:var(--glass-surface-shadow);
@@ -179,7 +179,7 @@
 }
 
 html[data-theme-effective="light"]{
-  --home-platform-shell-surface:var(--glass-surface-bg-light);
+  --home-platform-shell-surface:color-mix(in srgb, var(--surface-color) 96%, transparent);
   --home-platform-shell-inner-surface:transparent;
   --home-platform-shell-border:var(--glass-surface-border-light);
 }

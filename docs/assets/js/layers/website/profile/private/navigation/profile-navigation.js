@@ -143,13 +143,32 @@ function buildHashRoute(state = createDefaultState()) {
 
 function createDefaultState() {
   const pathname = String(window.location.pathname || '').toLowerCase();
-  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'feed' : pathname.includes('/model') ? 'model-discovery' : 'profile';
+
+  if (pathname.includes('/model')) {
+    if (RUNTIME.state && MODEL_SECTIONS.has(RUNTIME.state.section)) {
+      return buildNavigationState(
+        RUNTIME.state.section,
+        RUNTIME.state.settingsPane,
+        RUNTIME.state.dashboardPane,
+        RUNTIME.state.modelPane
+      );
+    }
+
+    return buildNavigationState(
+      'model-foundation',
+      'identity',
+      'overview',
+      'overview'
+    );
+  }
+
+  const section = pathname.includes('/dashboard') ? 'dashboard' : pathname.includes('/settings') ? 'settings' : pathname.includes('/feed') ? 'feed' : 'profile';
 
   return buildNavigationState(
     section,
     section === 'settings' ? 'password' : 'identity',
     'overview',
-    section === 'model-discovery' ? 'directory' : 'overview'
+    'overview'
   );
 }
 

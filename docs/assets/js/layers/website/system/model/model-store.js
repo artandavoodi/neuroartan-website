@@ -70,22 +70,14 @@ const PRIVACY_CONNECTOR_STATE_TABLE = 'privacy_connector_state';
 const MODEL_SELECT_FIELDS = [
   'id',
   'profile_id',
-  'owner_auth_user_id',
-  'model_slug',
+  'slug',
   'model_name',
   'description',
-  'model_image_url',
-  'creator_display_name',
-  'creator_username',
   'model_visibility',
+  'model_status',
   'readiness_state',
-  'lifecycle_state',
   'publication_state',
-  'verification_state',
-  'training_state',
-  'interaction_state',
-  'routing_class',
-  'default_runtime_policy',
+  'runtime_policy',
   'birth_certificate_id',
   'private_identity_id',
   'public_identity_id',
@@ -347,23 +339,24 @@ function mapSupabaseModel(row = {}) {
   return {
     ...row,
     id: normalizeString(row.id),
-    slug: normalizeString(row.model_slug || row.slug || row.id),
-    model_slug: normalizeString(row.model_slug || row.slug || row.id),
+    slug: normalizeString(row.slug || row.model_slug || row.id),
+    model_slug: normalizeString(row.slug || row.model_slug || row.id),
     model_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     display_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     description: normalizeString(row.description || ''),
     model_image_url: normalizeString(row.model_image_url || ''),
     creator_display_name: normalizeString(row.creator_display_name || ''),
-    creator_username: normalizeUsername(row.creator_username || ''),
+    creator_username: normalizeUsername(row.creator_username || row.slug || row.model_slug || ''),
     model_visibility: normalizeString(row.model_visibility || 'private'),
-    lifecycle_state: normalizeString(row.lifecycle_state || row.model_status || 'draft'),
-    readiness_state: normalizeString(row.readiness_state || 'uninitialized'),
+    model_status: normalizeString(row.model_status || row.lifecycle_state || 'draft'),
+    lifecycle_state: normalizeString(row.model_status || row.lifecycle_state || 'draft'),
+    readiness_state: normalizeString(row.readiness_state || 'not_ready'),
     publication_state: normalizeString(row.publication_state || 'unpublished'),
-    verification_state: normalizeString(row.verification_state || row.foundation_state || 'private_foundation_created'),
-    training_state: normalizeString(row.readiness_state || 'not_ready'),
-    default_runtime_policy: row.default_runtime_policy || row.runtime_policy || {},
-    runtime_policy: row.default_runtime_policy || row.runtime_policy || {},
-    release_version: normalizeString(row.release_version || row.foundation_state || 'private_foundation_created'),
+    verification_state: normalizeString(row.foundation_state || row.verification_state || 'private_foundation_created'),
+    training_state: normalizeString(row.readiness_state || row.training_state || 'not_ready'),
+    default_runtime_policy: row.runtime_policy || row.default_runtime_policy || {},
+    runtime_policy: row.runtime_policy || row.default_runtime_policy || {},
+    release_version: normalizeString(row.foundation_state || row.release_version || 'private_foundation_created'),
   };
 }
 
@@ -526,7 +519,7 @@ function mapModelDigitalBrainPreferences(row = {}) {
     constructNodesVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_nodes_visible, true),
     constructLabelsVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_labels_visible, true),
     nodeScale: normalizeDigitalBrainPreferenceNumber(row.node_scale, 1, 0, 1.4),
-    connectionScale: normalizeDigitalBrainPreferenceNumber(row.connection_scale, 1, 0, 1.4),
+    connectionScale: normalizeDigitalBrainPreferenceNumber(row.connection_scale, 1, 0, 1),
     connectionVisibility: normalizeDigitalBrainPreferenceNumber(row.connection_visibility ?? payload.connection_visibility, 1, 0, 2.5),
     connectionPulse: normalizeDigitalBrainPreferenceNumber(row.connection_pulse ?? payload.connection_pulse, 1, 0, 2.5),
     regionOpacity: normalizeDigitalBrainPreferenceNumber(row.region_opacity, 1, 0, 1),
@@ -557,13 +550,12 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
   return {
     model_id: modelId,
     profile_id: normalizeString(model?.profile_id || preferences.profileId || preferences.profile_id || '') || null,
-    owner_auth_user_id: normalizeString(model?.owner_auth_user_id || preferences.ownerAuthUserId || preferences.owner_auth_user_id || '') || null,
     view_mode: normalizeString(preferences.viewMode || 'overview') || 'overview',
     motion_state: normalizeDigitalBrainMotionState(preferences.motionState),
     construct_nodes_visible: constructNodesVisible,
     construct_labels_visible: constructLabelsVisible,
     node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0, 1.4),
-    connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1.4),
+    connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1),
     region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0, 1),
     label_scale: normalizeDigitalBrainPreferenceNumber(preferences.labelScale, 1, 0, 1.35),
     construct_scale: normalizeDigitalBrainPreferenceNumber(preferences.constructScale, 1, 0, 2.4),
@@ -583,7 +575,7 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
       motion_state: normalizeDigitalBrainMotionState(preferences.motionState),
       motion_direction: motionDirection,
       node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0, 1.4),
-      connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1.4),
+      connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1),
       connection_visibility: normalizeDigitalBrainPreferenceNumber(preferences.connectionVisibility, 1, 0, 2.5),
       connection_pulse: normalizeDigitalBrainPreferenceNumber(preferences.connectionPulse, 1, 0, 2.5),
       region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0, 1),
@@ -880,7 +872,7 @@ export async function getModelBySlug(modelSlug) {
   const { data, error } = await supabase
     .from(MODELS_TABLE)
     .select(MODEL_SELECT_FIELDS)
-    .eq('model_slug', normalizedSlug)
+    .eq('slug', normalizedSlug)
     .maybeSingle();
 
   if (error) {
@@ -1002,7 +994,6 @@ export async function ensureOwnedCanonicalModel(values = {}) {
   try {
     const model = await createOwnedModel({
       ...values,
-      model_slug: username,
       slug: username,
       model_name: displayName,
       creator_display_name: displayName,
@@ -1887,8 +1878,7 @@ export async function saveModelVisibilityPreferences(modelId, preferences = {}) 
     .update({
       model_visibility: modelVisibility,
       publication_state: publicationState,
-      interaction_state: interactionState,
-      updated_at: now,
+        updated_at: now,
     })
     .eq('id', normalizedModelId)
     .select(MODEL_SELECT_FIELDS)
@@ -1900,7 +1890,6 @@ export async function saveModelVisibilityPreferences(modelId, preferences = {}) 
     ...model,
     model_visibility: modelVisibility,
     publication_state: publicationState,
-    interaction_state: interactionState,
     updated_at: now,
   };
 
@@ -1909,7 +1898,7 @@ export async function saveModelVisibilityPreferences(modelId, preferences = {}) 
     profile_id: savedModel.profile_id || undefined,
     public_display_name: savedModel.model_name || savedModel.display_name || '',
     display_name: savedModel.model_name || savedModel.display_name || '',
-    public_slug: savedModel.model_slug || savedModel.slug || '',
+    public_slug: savedModel.slug || savedModel.slug || '',
     public_description: savedModel.description || '',
     public_visibility: modelVisibility,
     public_visibility_state: modelVisibility,
@@ -2105,7 +2094,7 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
     profile_id: model.profile_id || undefined,
     public_display_name: modelDisplayName,
     display_name: modelDisplayName,
-    public_slug: model.model_slug || model.slug || '',
+    public_slug: model.slug || model.slug || '',
     public_description: modelPurposeDescription,
     public_visibility: model.model_visibility || 'private',
     public_visibility_state: model.model_visibility || 'private',
@@ -2564,17 +2553,16 @@ export async function createOwnedModel(values = {}) {
   const modelSlug = await assertModelSlugAvailable(values.slug || values.model_slug || modelName);
   const payload = {
     profile_id: profile.id,
-    owner_auth_user_id: ownerAuthUserId,
-    model_slug: modelSlug,
+    slug: modelSlug,
     model_name: modelName,
     description: normalizeString(values.description || ''),
     creator_display_name: normalizeString(values.creator_display_name || modelName),
     creator_username: normalizeUsername(values.creator_username || modelSlug),
     model_visibility: normalizeString(values.model_visibility || 'public'),
-    lifecycle_state: normalizeString(values.lifecycle_state || values.model_status || 'draft'),
+    model_status: normalizeString(values.model_status || values.lifecycle_state || 'draft'),
     readiness_state: normalizeString(values.readiness_state || 'not_ready'),
     publication_state: normalizeString(values.publication_state || 'published'),
-    default_runtime_policy: {
+    runtime_policy: {
       provider: normalizeString(values.provider || 'unassigned'),
       route: normalizeString(values.route || 'site_knowledge'),
       voice_enabled: values.voice_enabled === true,

@@ -82,6 +82,9 @@ const DIGITAL_BRAIN_MAX_VISUAL_SIGNALS_PER_LAYER = 10;
 const DIGITAL_BRAIN_SENSITIVE_QUERY_PATTERN = /\b(api|auth|token|secret|password|passkey|private key|owner id|model id|profile id|user id|birth certificate|serial)\b/i;
 const DIGITAL_BRAIN_UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi;
 const DIGITAL_BRAIN_SECRET_PATTERN = /\b(?:sk-[a-z0-9_-]{12,}|pk_[a-z0-9_-]{12,}|eyJ[a-z0-9_-]{16,}|[a-z0-9]{32,})\b/gi;
+const DIGITAL_BRAIN_PREFERENCE_LIMITS = Object.freeze({
+  connectionScale: { min: 0, max: 1 },
+});
 
 const DIGITAL_BRAIN_VIEW_CONTROLS = Object.freeze([
   { id: 'overview', label: 'Overview', icon: `${DIGITAL_BRAIN_ICON_BASE}/brain-overview.svg` },
@@ -260,7 +263,7 @@ function renderDigitalBrainMaturityControls(surface) {
         ${createDigitalBrainControlRange('constructSpread', 'Construct spread', 0, 1.65, 0.05, 1)}
         ${createDigitalBrainControlRange('labelScale', 'Construct label scale', 0, 1.35, 0.05, 1)}
         ${createDigitalBrainControlRange('regionOpacity', 'Regions', 0, 1, 0.05, 1)}
-        ${createDigitalBrainControlRange('connectionScale', 'Connection thickness', 0, 1.4, 0.05, 1)}
+        ${createDigitalBrainControlRange('connectionScale', 'Connection thickness', 0, 1, 0.05, 1)}
         ${createDigitalBrainControlRange('connectionVisibility', 'Connection visibility', 0, 2.5, 0.05, 1)}
         ${createDigitalBrainControlRange('connectionPulse', 'Connection pulse', 0, 2.5, 0.05, 1)}
         ${createDigitalBrainControlRange('blurIntensity', 'Signal blur', 0, 2, 0.05, 1)}
@@ -503,10 +506,11 @@ function bindDigitalBrainMaturityControls(surface) {
     const control = event.target.closest('[data-digital-brain-control]');
     if (!(control instanceof HTMLInputElement)) return;
 
-    const parsedValue = Number(control.value);
-    const value = String(Number.isFinite(parsedValue) ? parsedValue : 1);
     const controlName = control.dataset.digitalBrainControl || '';
+    const parsedValue = Number(control.value);
+    const value = String(normalizeDigitalBrainPreferenceNumber(controlName, parsedValue, 1));
     const tokenName = controlName.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+    control.value = value;
     if (!tokenName) return;
 
     surface.dataset[`digitalBrain${controlName.charAt(0).toUpperCase()}${controlName.slice(1)}`] = value;
@@ -549,7 +553,7 @@ function applyDigitalBrainSavedPreferences(surface, preferences = null) {
   surface.dataset.digitalBrainSubnodes = resolvedPreferences.constructNodesVisible === false ? 'hidden' : 'visible';
   surface.dataset.digitalBrainLabels = resolvedPreferences.constructLabelsVisible === false ? 'hidden' : 'visible';
   surface.dataset.digitalBrainNodeScale = resolveDigitalBrainPreferenceValue(resolvedPreferences.nodeScale, surface.dataset.digitalBrainNodeScale, '1');
-  surface.dataset.digitalBrainConnectionScale = resolveDigitalBrainPreferenceValue(resolvedPreferences.connectionScale, surface.dataset.digitalBrainConnectionScale, '1');
+  surface.dataset.digitalBrainConnectionScale = String(normalizeDigitalBrainPreferenceNumber('connectionScale', resolvedPreferences.connectionScale ?? surface.dataset.digitalBrainConnectionScale, 1));
   surface.dataset.digitalBrainConnectionVisibility = resolveDigitalBrainPreferenceValue(resolvedPreferences.connectionVisibility, surface.dataset.digitalBrainConnectionVisibility, '1');
   surface.dataset.digitalBrainConnectionPulse = resolveDigitalBrainPreferenceValue(resolvedPreferences.connectionPulse, surface.dataset.digitalBrainConnectionPulse, '1');
   surface.dataset.digitalBrainRegionOpacity = resolveDigitalBrainPreferenceValue(resolvedPreferences.regionOpacity, surface.dataset.digitalBrainRegionOpacity, '1');
@@ -652,7 +656,9 @@ function syncDigitalBrainControls(surface) {
     if (!(control instanceof HTMLInputElement)) return;
     const controlName = control.dataset.digitalBrainControl || '';
     const key = `digitalBrain${controlName.charAt(0).toUpperCase()}${controlName.slice(1)}`;
-    if (surface.dataset[key]) control.value = surface.dataset[key];
+    if (surface.dataset[key]) {
+      control.value = String(normalizeDigitalBrainPreferenceNumber(controlName, surface.dataset[key], Number(control.value || 1)));
+    }
   });
 }
 
@@ -665,7 +671,7 @@ function collectDigitalBrainPreferences(surface) {
     constructNodesVisible: surface.dataset.digitalBrainSubnodes !== 'hidden',
     constructLabelsVisible: surface.dataset.digitalBrainLabels !== 'hidden',
     nodeScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainNodeScale', 1),
-    connectionScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConnectionScale', 1),
+    connectionScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConnectionScale', 1, 'connectionScale'),
     connectionVisibility: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConnectionVisibility', 1),
     connectionPulse: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConnectionPulse', 1),
     regionOpacity: readDigitalBrainPreferenceNumber(surface, 'digitalBrainRegionOpacity', 1),
@@ -685,10 +691,22 @@ function collectDigitalBrainPreferences(surface) {
   };
 }
 
-function readDigitalBrainPreferenceNumber(surface, key, fallback = 1) {
+function readDigitalBrainPreferenceNumber(surface, key, fallback = 1, preferenceKey = '') {
   const rawValue = surface?.dataset?.[key];
   const value = Number(rawValue === undefined || rawValue === null || rawValue === '' ? fallback : rawValue);
-  return Number.isFinite(value) ? value : fallback;
+  return normalizeDigitalBrainPreferenceNumber(preferenceKey, value, fallback);
+}
+
+function normalizeDigitalBrainPreferenceNumber(preferenceKey = '', value, fallback = 1) {
+  const numericValue = Number(value);
+  const resolvedValue = Number.isFinite(numericValue) ? numericValue : fallback;
+  const limits = DIGITAL_BRAIN_PREFERENCE_LIMITS[preferenceKey];
+
+  if (!limits) {
+    return resolvedValue;
+  }
+
+  return Math.max(limits.min, Math.min(limits.max, resolvedValue));
 }
 
 function normalizeDigitalBrainDisplayMode(mode = '') {

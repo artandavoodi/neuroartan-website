@@ -1,4 +1,9 @@
 import {
+  readModelInterfaceState,
+  updateModelInterfaceState,
+} from '../shared/interface-state/model-interface-state.js';
+
+import {
   addTrainingRecipeSource,
   getDefaultTrainingRecipeGraph,
   listTrainingRecipeSources,
@@ -176,20 +181,26 @@ function formatWorkspaceError(error) {
   return code ? `Training workspace could not save: ${code}` : 'Training workspace could not save.';
 }
 
-function setWorkspaceOpen(open) {
+function setWorkspaceOpen(open, options = {}) {
   const root = workspaceRoot();
   if (!(root instanceof HTMLElement)) return;
+
+  const shouldPersist = options.persist !== false;
 
   root.hidden = !open;
   root.setAttribute('aria-hidden', open ? 'false' : 'true');
   document.documentElement.classList.toggle('model-training-workspace-open', open);
   document.body?.classList.toggle('model-training-workspace-open', open);
 
+  if (shouldPersist) {
+    updateModelInterfaceState('trainingWorkspaceOpen', open);
+  }
+
   if (open) {
     hydrateRecipeForm(root);
     void hydrateRecipeFromBackend();
   } else {
-    setBoardExpanded(false);
+    setBoardExpanded(false, options);
   }
 }
 
@@ -209,15 +220,35 @@ function setActivePane(pane) {
   if (pane === 'readiness') renderRecipeBoard(root);
 }
 
-function setBoardExpanded(expanded) {
+function setBoardExpanded(expanded, options = {}) {
   const root = workspaceRoot();
   if (!(root instanceof HTMLElement)) return;
+
+  const shouldPersist = options.persist !== false;
+
   root.classList.toggle('is-board-expanded', expanded);
   const expand = root.querySelector('[data-model-training-board-expand]');
   const close = root.querySelector('[data-model-training-board-close]');
   if (expand instanceof HTMLElement) expand.setAttribute('aria-expanded', expanded ? 'true' : 'false');
   if (close instanceof HTMLElement) close.hidden = !expanded;
+
+  if (shouldPersist) {
+    updateModelInterfaceState('trainingBoardExpanded', expanded);
+  }
+
   renderRecipeBoard(root);
+}
+
+function restoreTrainingWorkspaceInterfaceState() {
+  const root = workspaceRoot();
+  if (!(root instanceof HTMLElement)) return;
+
+  const interfaceState = readModelInterfaceState();
+  setWorkspaceOpen(interfaceState.trainingWorkspaceOpen, { persist: false });
+  setBoardExpanded(
+    interfaceState.trainingWorkspaceOpen && interfaceState.trainingBoardExpanded,
+    { persist: false },
+  );
 }
 
 function getSafeSelectOptionText(select) {
@@ -756,6 +787,7 @@ function initModelTrainingWorkspace() {
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'model-training-workspace') return;
     hydrateRecipeForm();
+    restoreTrainingWorkspaceInterfaceState();
   });
 }
 

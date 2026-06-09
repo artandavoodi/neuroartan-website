@@ -56,6 +56,10 @@ import {
   refreshDigitalBrainMaturity,
 } from '../foundation/digital-brain-maturity/model-digital-brain-maturity.js';
 import { mountModelSourceVault } from '../foundation/source-vault/model-source-vault.js';
+import {
+  readModelInterfaceState,
+  updateModelInterfaceState,
+} from '../shared/interface-state/model-interface-state.js';
 
 
 import {
@@ -3973,11 +3977,40 @@ function setModelDataManagerStatus(message = '', state = 'idle') {
   });
 }
 
-function setModelDataManagerOpen(open, pane = modelDataManagerPane) {
+function setModelDataManagerOpen(open, pane = modelDataManagerPane, options = {}) {
   modelDataManagerOpen = open === true;
   modelDataManagerPane = normalizeModelDataManagerPane(pane);
+
+  if (options.persist !== false) {
+    updateModelInterfaceState('modelDataManagerOpen', modelDataManagerOpen);
+  }
+
   if (!modelDataManagerOpen) setModelDataManagerStatus('', 'idle');
-  renderAllModelManagement();
+
+  if (options.render !== false) {
+    renderAllModelManagement();
+  }
+}
+
+function applyModelIdentityEditorInterfaceState(open) {
+  const shouldOpen = open === true;
+
+  modelManagementRoots().forEach((root) => {
+    const editor = root.querySelector('[data-model-identity-editor]');
+    if (!(editor instanceof HTMLElement)) return;
+    editor.hidden = !shouldOpen;
+    editor.setAttribute('aria-hidden', shouldOpen ? 'false' : 'true');
+  });
+}
+
+function restoreModelManagementInterfaceState() {
+  const interfaceState = readModelInterfaceState();
+  modelDataManagerOpen = interfaceState.modelDataManagerOpen === true;
+  modelDataManagerPane = normalizeModelDataManagerPane(modelDataManagerPane);
+
+  window.requestAnimationFrame(() => {
+    applyModelIdentityEditorInterfaceState(interfaceState.modelIdentityEditorOpen);
+  });
 }
 
 function handleModelDataManagerOpenRequest(event) {
@@ -4261,6 +4294,7 @@ function initModelManagement() {
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'model-management') return;
+    restoreModelManagementInterfaceState();
     renderAllModelManagement();
   });
 }

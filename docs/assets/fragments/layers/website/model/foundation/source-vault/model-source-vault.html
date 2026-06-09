@@ -1,0 +1,190 @@
+<section class="model-source-vault" data-model-source-vault>
+  <header class="model-source-vault__header">
+    <div class="model-source-vault__heading">
+      <h4 class="model-source-vault__title">Source Vault</h4>
+      <p class="model-source-vault__summary">
+        Connect a local folder, iCloud vault, repository reference, or selected files for governed analysis before anything enters memory or training.
+      </p>
+    </div>
+  </header>
+
+  <div class="model-source-vault__grid">
+    <label class="model-management__field" data-model-source-vault-type-field>
+      <span class="model-management__field-label">Source type</span>
+      <span class="ui-inline-dropdown">
+        <span class="ui-inline-dropdown__value" data-model-source-vault-label="sourceType">Local folder</span>
+        <span class="ui-inline-dropdown__icon-wrapper">
+          <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+          <select class="ui-dropdown ui-dropdown--icon-only" data-model-source-vault-field="sourceType" aria-label="Select source type">
+            <option value="local_folder">Local folder</option>
+            <option value="selected_files">Selected files</option>
+            <option value="cloud_drive">Cloud drive</option>
+            <option value="repository_reference">Repositories</option>
+            <option value="workspace_apps">Workspace apps</option>
+            <option value="social_sources">Social sources</option>
+            <option value="google_workspace">Google Workspace</option>
+          </select>
+        </span>
+      </span>
+    </label>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="local_folder">
+      <button class="model-management__button" type="button" data-model-source-vault-picker="localFolderFiles">
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/choose-folder.svg" alt="">
+        Choose folder
+      </button>
+      <input class="model-source-vault__native-input" type="file" data-model-source-vault-field="localFolderFiles" webkitdirectory directory multiple tabindex="-1" aria-hidden="true">
+      <span class="model-source-vault__field-status" data-model-source-vault-selection-label="localFolderFiles">No folder selected</span>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="selected_files" hidden>
+      <button class="model-management__button" type="button" data-model-source-vault-picker="selectedFiles">
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/choose-files.svg" alt="">
+        Choose files
+      </button>
+      <input class="model-source-vault__native-input" type="file" data-model-source-vault-field="selectedFiles" multiple accept=".md,.txt,.json,.csv,.pdf" tabindex="-1" aria-hidden="true">
+      <span class="model-source-vault__field-status" data-model-source-vault-selection-label="selectedFiles">No files selected</span>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="cloud_drive" hidden>
+      <div class="model-source-vault__connector-list" data-model-source-vault-connector-list="cloud_drive" aria-label="Connected cloud drive sources"></div>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="repository_reference" hidden>
+      <div class="model-source-vault__connector-list" data-model-source-vault-connector-list="repository_reference" aria-label="Connected repository sources"></div>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="workspace_apps" hidden>
+      <div class="model-source-vault__connector-list" data-model-source-vault-connector-list="workspace_apps" aria-label="Connected workspace app sources"></div>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="social_sources" hidden>
+      <div class="model-source-vault__connector-list" data-model-source-vault-connector-list="social_sources" aria-label="Connected social sources"></div>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="google_workspace" hidden>
+      <div class="model-source-vault__connector-list" data-model-source-vault-connector-list="google_workspace" aria-label="Connected Google Workspace sources"></div>
+    </section>
+
+    <section class="model-source-vault__intake" data-model-source-vault-field-group="formats" data-model-source-vault-formats hidden>
+      <div class="model-source-vault__format-list" data-model-source-vault-format-list aria-label="Readable file types detected in the selected source"></div>
+    </section>
+  </div>
+
+  <div class="model-source-vault__actions">
+    <button class="model-management__button" type="button" data-model-source-vault-analyze hidden>
+      <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/analyze-source-vault.svg" alt="">
+      Analyze source vault
+    </button>
+    <button class="model-management__button" type="button" data-model-source-vault-save-current-draft hidden>
+      <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+      Save draft
+    </button>
+    <button class="model-management__button" type="button" data-model-source-vault-add-package hidden>
+      <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/plus.svg" alt="">
+      Add source
+    </button>
+    <button class="model-management__button" type="button" data-model-source-vault-file-manager hidden>
+      <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/file-manager.svg" alt="">
+      File Manager
+    </button>
+    <button class="model-management__button" type="button" data-model-source-vault-confirm hidden>
+      <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/confirm-intake.svg" alt="">
+      Confirm intake
+    </button>
+  </div>
+
+  <p class="model-source-vault__status" data-model-source-vault-status hidden></p>
+
+  <section class="model-source-vault__packages" data-model-source-vault-packages hidden aria-label="Saved source packages">
+    <header class="model-source-vault__packages-header">
+      <h5 class="model-source-vault__packages-title">Source packages</h5>
+      <span class="model-source-vault__packages-count" data-model-source-vault-package-count>0 saved</span>
+    </header>
+    <div class="model-source-vault__package-list" data-model-source-vault-package-list></div>
+  </section>
+
+  <dl class="model-source-vault__summary-grid" data-model-source-vault-summary aria-label="Source Vault analysis summary" hidden>
+    <div class="model-source-vault__summary-card">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/accepted-files.svg" alt="">
+        Accepted files
+      </dt>
+      <dd data-model-source-vault-summary-accepted>0</dd>
+    </div>
+    <div class="model-source-vault__summary-card">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/excluded-files.svg" alt="">
+        Excluded files
+      </dt>
+      <dd data-model-source-vault-summary-excluded>0</dd>
+    </div>
+    <div class="model-source-vault__summary-card">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/estimated-size.svg" alt="">
+        Estimated size
+      </dt>
+      <dd data-model-source-vault-summary-size>0 KB</dd>
+    </div>
+  </dl>
+
+  <aside class="model-source-calibration-workspace" data-model-source-vault-file-manager-overlay hidden aria-hidden="true">
+    <div class="model-source-calibration-workspace__backdrop" data-model-source-vault-file-manager-close></div>
+
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Source Vault File Manager">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-source-calibration-workspace__progress">File Manager</span>
+
+        <button class="global-close-button" type="button" data-model-source-vault-file-manager-close aria-label="Close File Manager">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-source-calibration-workspace__result" data-model-source-vault-file-manager-result>
+          <section class="model-source-summary" aria-label="Readable files selected for intake">
+            <div class="model-source-vault__file-manager-toolbar" data-model-source-vault-file-manager-toolbar>
+              <p class="model-source-summary__copy" data-model-source-vault-file-manager-summary>0 files selected</p>
+
+              <div class="model-source-vault__file-manager-controls" aria-label="File Manager controls">
+                <label class="model-source-vault__file-search">
+                  <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+                  <input type="search" data-model-source-vault-file-search placeholder="Search files" aria-label="Search readable files">
+                </label>
+
+                <label class="model-source-vault__file-filter">
+                  <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/filter/filter.svg" alt="">
+                  <span class="ui-inline-dropdown model-source-vault__filter-dropdown">
+                    <span class="ui-inline-dropdown__value" data-model-source-vault-file-sort-label>Name A–Z</span>
+                    <span class="ui-inline-dropdown__icon-wrapper">
+                      <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                      <select class="ui-dropdown ui-dropdown--icon-only" data-model-source-vault-file-sort aria-label="Sort readable files">
+                        <option value="name-ascending">Name A–Z</option>
+                        <option value="name-descending">Name Z–A</option>
+                        <option value="size-descending">Largest first</option>
+                        <option value="size-ascending">Smallest first</option>
+                      </select>
+                    </span>
+                  </span>
+                </label>
+
+                <button class="model-source-vault__control-button" type="button" data-model-source-vault-file-select-all>
+                  <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/select-all-files.svg" alt="">
+                  Select all
+                </button>
+
+                <button class="model-source-vault__control-button" type="button" data-model-source-vault-file-clear-all>
+                  <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/clear-all-files.svg" alt="">
+                  Clear all
+                </button>
+              </div>
+            </div>
+
+            <div class="model-source-vault__file-manager" data-model-source-vault-file-manager-list aria-label="Readable files selected for intake"></div>
+          </section>
+        </section>
+      </div>
+    </article>
+  </aside>
+</section>

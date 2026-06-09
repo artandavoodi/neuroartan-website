@@ -978,6 +978,18 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   min-width:0;
 }
 
+.model-management__data-manager-list{
+  align-content:start;
+  min-block-size:var(--spacing-none);
+  overflow:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.model-management__data-manager-list::-webkit-scrollbar{
+  display:none;
+}
+
 .model-management__directory-controls{
   display:flex;
   align-items:flex-end;
@@ -1010,18 +1022,53 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-dialog{
-  grid-template-rows:auto auto 1fr auto;
+  grid-template-rows:auto auto minmax(var(--spacing-none),1fr) auto;
+  min-block-size:var(--size-full);
+  overflow:hidden;
 }
 
 .model-management__data-manager-tabs{
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   align-items:center;
-  gap:var(--spacing-lg);
+  gap:var(--spacing-xl);
+  min-width:var(--spacing-none);
+  overflow-x:auto;
+  overflow-y:hidden;
+  border-block-end:var(--border-width-hairline) solid var(--border-color);
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.model-management__data-manager-tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.model-management__data-manager-tabs .model-management__text-button{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  min-block-size:var(--control-size-md);
+  padding-block:var(--spacing-sm);
+  color:var(--text-secondary-color);
+  white-space:nowrap;
+}
+
+.model-management__data-manager-tabs .model-management__text-button::after{
+  position:absolute;
+  inset-inline:var(--spacing-none);
+  inset-block-end:calc(var(--border-width-hairline) * -1);
+  block-size:var(--border-width-default);
+  background:transparent;
+  content:"";
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]{
   color:var(--text-primary-color);
+}
+
+.model-management__data-manager-tabs .model-management__text-button[data-active="true"]::after{
+  background:var(--text-primary-color);
 }
 
 .model-management__data-manager-item{

@@ -28,12 +28,10 @@ const PROFILE_MODEL_SETTINGS_SECTIONS = MODEL_SETTINGS_SECTIONS;
 let profileHeroLayoutFrame = 0;
 
 const PROFILE_CONTEXT_TAB_GROUPS = {
-  home: {
-    label: 'Home sections',
+  feed: {
+    label: 'Feed sections',
     tabs: [
-      { key: 'feed', label: 'Feed', section: 'feed' },
-      { key: 'notifications', label: 'Notifications', section: 'notifications' },
-      { key: 'messaging', label: 'Messaging', section: 'messaging' }
+      { key: 'feed', label: 'Feed', section: 'feed' }
     ]
   },
   profile: {
@@ -75,8 +73,6 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
 const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   overview: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview.svg',
   feed: '/registry/icons/public/assets/core/navigation/feed/feed.svg',
-  notifications: '/registry/icons/public/assets/core/system/notifications/notification.svg',
-  messaging: '/registry/icons/public/assets/layers/icos/communication/chat/chat.svg',
   posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
   models: '/registry/icons/public/assets/layers/website/profile/actions/models.svg',
@@ -139,11 +135,8 @@ function setImage(root, selector, src, alt = '') {
 
 function getTabGroupKey(navigationState = getProfileNavigationState()) {
   switch (navigationState.section) {
-    case 'home':
     case 'feed':
-    case 'notifications':
-    case 'messaging':
-      return 'home';
+      return 'feed';
     case 'profile':
     case 'posts':
     case 'thoughts':
@@ -185,12 +178,8 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
 
 function getActiveTabKey(navigationState = getProfileNavigationState()) {
   switch (navigationState.section) {
-    case 'home':
     case 'feed':
       return 'feed';
-    case 'notifications':
-    case 'messaging':
-      return navigationState.section;
     case 'profile':
       return 'posts';
     case 'posts':
@@ -222,7 +211,7 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
 }
 
 function getCurrentTabGroup(navigationState = getProfileNavigationState()) {
-  return PROFILE_CONTEXT_TAB_GROUPS[getTabGroupKey(navigationState)] || PROFILE_CONTEXT_TAB_GROUPS.overview;
+  return PROFILE_CONTEXT_TAB_GROUPS[getTabGroupKey(navigationState)] || PROFILE_CONTEXT_TAB_GROUPS.profile;
 }
 
 function readRootLengthToken(name, fallback = 0) {

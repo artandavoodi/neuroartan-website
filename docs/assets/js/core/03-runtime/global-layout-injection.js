@@ -281,11 +281,30 @@ function resolveFragmentPath(name) {
 /* =============================================================================
    06) ONE-TIME DISPATCH HELPERS
 ============================================================================= */
+
 function markDispatchOnce(target, key) {
   if (!target || !key) return false;
+  if (!(target instanceof Element) || !target.dataset) return false;
   if (target.dataset[key] === 'true') return true;
   target.dataset[key] = 'true';
   return false;
+}
+
+function ensureGlobalFragmentMount(name) {
+  if (!name || !FRAGMENT_PATHS[name]) return null;
+
+  const existingMount = document.querySelector(`[data-include="${name}"]`);
+  if (existingMount) return existingMount;
+
+  const mount = document.createElement('div');
+  mount.dataset.include = name;
+  mount.dataset.globalLayoutMount = 'true';
+  document.body.appendChild(mount);
+  return mount;
+}
+
+function ensureRequiredGlobalFragmentMounts() {
+  ensureGlobalFragmentMount('home-platform-shell');
 }
 
 /* =============================================================================
@@ -389,6 +408,7 @@ async function injectGlobalLayout() {
 
   const loadingReason = 'global-layout';
   dispatchRuntimeLoadingStart(loadingReason);
+  ensureRequiredGlobalFragmentMounts();
 
   let shouldScanAgain = true;
 
@@ -414,9 +434,16 @@ async function injectGlobalLayout() {
             window.NeuroMotion.scan(el);
           }
 
+          const fragmentMountedDetail = { name, root: el, mount: el };
           el.dispatchEvent(new CustomEvent('fragment:mounted', {
             bubbles: true,
-            detail: { name, root: el, mount: el }
+            detail: fragmentMountedDetail
+          }));
+          document.dispatchEvent(new CustomEvent('fragment:mounted', {
+            detail: fragmentMountedDetail
+          }));
+          window.dispatchEvent(new CustomEvent('fragment:mounted', {
+            detail: fragmentMountedDetail
           }));
 
           if (name === 'account-drawer') {
@@ -500,9 +527,16 @@ async function injectFooterIfNeeded() {
       if (window.NeuroMotion && typeof window.NeuroMotion.scan === 'function') {
         window.NeuroMotion.scan(mountedFooter);
       }
+      const fragmentMountedDetail = { name: 'footer', root: mountedFooter, mount: mountedFooter };
       mountedFooter.dispatchEvent(new CustomEvent('fragment:mounted', {
         bubbles: true,
-        detail: { name: 'footer', root: mountedFooter, mount: mountedFooter }
+        detail: fragmentMountedDetail
+      }));
+      document.dispatchEvent(new CustomEvent('fragment:mounted', {
+        detail: fragmentMountedDetail
+      }));
+      window.dispatchEvent(new CustomEvent('fragment:mounted', {
+        detail: fragmentMountedDetail
       }));
       broadcastFooterMounted(mount);
     }

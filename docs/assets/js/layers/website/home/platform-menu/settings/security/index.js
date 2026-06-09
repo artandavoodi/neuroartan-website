@@ -17,9 +17,6 @@ function handleSecurityAction(action) {
     case 'link-apple':
       linkAppleAccount();
       break;
-    case 'change-password':
-      changePassword();
-      break;
     case 'view-sessions':
       viewSessions();
       break;
@@ -126,28 +123,6 @@ async function linkAppleAccount() {
   } catch (error) {
     console.error('[Security] Failed to link iCloud account:', error);
     alert('Failed to link iCloud account');
-  }
-}
-
-// Password Management
-async function changePassword() {
-  console.log('[Security] Changing password');
-  
-  if (!window.neuroartanSupabase) {
-    alert('Password change requires backend integration');
-    return;
-  }
-
-  try {
-    // TODO: Implement password change flow
-    // 1. Prompt for current password
-    // 2. Prompt for new password
-    // 3. Validate password strength
-    // 4. Update password in database
-    alert('Password change will be implemented with backend integration');
-  } catch (error) {
-    console.error('[Security] Failed to change password:', error);
-    alert('Failed to change password');
   }
 }
 

@@ -41,7 +41,10 @@ const HOME_PLATFORM_SHELL_STATE = {
   mountedRoot: null,
   mountedModule: null,
   mountedCleanup: null,
+  detailBackActive: false,
+  detailBackLabel: '',
   didRestorePersistedState: false,
+  pendingRouteRequest: null,
 };
 
 /* =============================================================================
@@ -75,6 +78,21 @@ function normalizeString(value) {
 
 function getHomePlatformShellRoot() {
   return document.querySelector('#home-platform-shell');
+}
+
+function getHomePlatformShellMountRoot() {
+  const root = getHomePlatformShellRoot();
+  return root?.closest?.('[data-include="home-platform-shell"]') || root;
+}
+
+function isHomePlatformShellClosed() {
+  const root = getHomePlatformShellRoot();
+  const mountRoot = getHomePlatformShellMountRoot();
+  return !root || root.hidden || (mountRoot instanceof HTMLElement && mountRoot.hidden);
+}
+
+function isHomePlatformShellOpen() {
+  return !isHomePlatformShellClosed();
 }
 
 function getHomePlatformShellContent() {
@@ -180,12 +198,11 @@ function writeHomePlatformShellStorageState(state = {}) {
 }
 
 function persistHomePlatformShellStorageState(overrides = {}) {
-  const root = getHomePlatformShellRoot();
   const current = readHomePlatformShellStorageState();
 
   writeHomePlatformShellStorageState({
     ...current,
-    isOpen: root ? !root.hidden : current.isOpen,
+    isOpen: isHomePlatformShellOpen(),
     destination: HOME_PLATFORM_SHELL_STATE.activeDestination,
     subdestination: HOME_PLATFORM_SHELL_STATE.activeSubdestination,
     mobileStackLevel: HOME_PLATFORM_SHELL_STATE.mobileStackLevel,
@@ -209,6 +226,25 @@ function clearHomePlatformShellHash() {
     window.history.state,
     '',
     `${window.location.pathname}${window.location.search}`
+  );
+}
+
+function syncHomePlatformShellHash(destination, subdestination) {
+  const normalizedDestination = HOME_PLATFORM_DESTINATIONS.has(destination) ? destination : 'home';
+  const normalizedSubdestination = normalizeString(subdestination);
+  if (!normalizedSubdestination || typeof window.history?.replaceState !== 'function') {
+    return;
+  }
+
+  const nextHash = buildHomePlatformSubdestinationHash(normalizedDestination, normalizedSubdestination);
+  if (window.location.hash === nextHash) {
+    return;
+  }
+
+  window.history.replaceState(
+    window.history.state,
+    '',
+    `${window.location.pathname}${window.location.search}${nextHash}`
   );
 }
 
@@ -277,15 +313,31 @@ function syncHomePlatformMobileStackLevel(level = HOME_PLATFORM_SHELL_STATE.mobi
 
   syncHomePlatformBackTrigger(normalized);
 
-  if (root && !root.hidden) {
+  if (isHomePlatformShellOpen()) {
     persistHomePlatformShellStorageState();
   }
 }
 
 function shouldShowHomePlatformDesktopBack() {
-  return !isHomePlatformMobileView()
-    && HOME_PLATFORM_SHELL_STATE.activeDestination === 'settings'
-    && HOME_PLATFORM_SHELL_STATE.activeSubdestination === 'language';
+  if (isHomePlatformMobileView()) {
+    return false;
+  }
+
+  return HOME_PLATFORM_SHELL_STATE.detailBackActive === true
+    || (
+      HOME_PLATFORM_SHELL_STATE.activeDestination === 'settings'
+      && HOME_PLATFORM_SHELL_STATE.activeSubdestination === 'language'
+    );
+}
+
+function setHomePlatformDetailBackState(active = false, label = '') {
+  const root = getHomePlatformShellRoot();
+  HOME_PLATFORM_SHELL_STATE.detailBackActive = active === true;
+  HOME_PLATFORM_SHELL_STATE.detailBackLabel = normalizeString(label);
+  if (root) {
+    root.toggleAttribute('data-home-platform-detail-back', HOME_PLATFORM_SHELL_STATE.detailBackActive);
+  }
+  syncHomePlatformBackTrigger();
 }
 
 function syncHomePlatformBackTrigger(level = HOME_PLATFORM_SHELL_STATE.mobileStackLevel) {
@@ -303,7 +355,7 @@ function syncHomePlatformBackTrigger(level = HOME_PLATFORM_SHELL_STATE.mobileSta
     backTrigger.setAttribute(
       'aria-label',
       desktopBack
-        ? 'Back to general settings'
+        ? HOME_PLATFORM_SHELL_STATE.detailBackLabel || 'Back to settings'
         : normalized === 'content'
           ? `Back to ${backTarget}`
           : 'Back to main navigation'
@@ -353,6 +405,26 @@ function navigateHomePlatformMobileBack() {
 }
 
 function navigateHomePlatformBack() {
+  if (
+    HOME_PLATFORM_SHELL_STATE.detailBackActive === true
+    && HOME_PLATFORM_SHELL_STATE.mountedModule?.handleHomePlatformBack
+    && HOME_PLATFORM_SHELL_STATE.mountedRoot instanceof Element
+  ) {
+    const didHandle = HOME_PLATFORM_SHELL_STATE.mountedModule.handleHomePlatformBack(
+      HOME_PLATFORM_SHELL_STATE.mountedRoot,
+      {
+        destination: HOME_PLATFORM_SHELL_STATE.activeDestination,
+        subdestination: HOME_PLATFORM_SHELL_STATE.activeSubdestination,
+        setDestination: setHomePlatformDestination,
+        setSubdestination: setHomePlatformSubdestination,
+      }
+    );
+
+    if (didHandle !== false) {
+      return true;
+    }
+  }
+
   if (isHomePlatformMobileView()) {
     return navigateHomePlatformMobileBack();
   }
@@ -829,7 +901,7 @@ function handleProfileShellAction(action) {
   }
 
   if (normalized === 'dashboard') {
-    window.location.href = '/dashboard.html';
+    void setHomePlatformDestination('workspace', 'dashboard');
     return;
   }
 
@@ -874,7 +946,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
   const loadingReason = `home-platform:${destination}:${subdestination || 'default'}:${renderToken}`;
 
   if (!contentRoot || !destinationConfig) {
-    return;
+    return false;
   }
 
   if (shellRoot) {
@@ -907,7 +979,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     }));
     HOME_PLATFORM_SHELL_STATE.mountedDestination = destination;
     HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
-    return;
+    return true;
   }
 
   dispatchHomePlatformLoadingStart(loadingReason);
@@ -923,7 +995,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     ]);
 
     if (renderToken !== HOME_PLATFORM_SHELL_STATE.renderToken) {
-      return;
+      return false;
     }
 
     if (!fragmentHtml) {
@@ -963,9 +1035,10 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
     HOME_PLATFORM_SHELL_STATE.mountedRoot = mountedRoot instanceof Element ? mountedRoot : null;
     HOME_PLATFORM_SHELL_STATE.mountedModule = moduleNamespace || null;
+    return true;
   } catch (_error) {
     if (renderToken !== HOME_PLATFORM_SHELL_STATE.renderToken) {
-      return;
+      return false;
     }
 
     contentRoot.innerHTML = '';
@@ -978,6 +1051,7 @@ async function renderHomePlatformShellContent(destination, subdestination) {
     }));
     HOME_PLATFORM_SHELL_STATE.mountedDestination = destination;
     HOME_PLATFORM_SHELL_STATE.mountedSubdestination = subdestination || '';
+    return true;
   } finally {
     if (renderToken === HOME_PLATFORM_SHELL_STATE.renderToken) {
       window.requestAnimationFrame(() => {
@@ -1275,7 +1349,7 @@ function toggleHomePlatformSubrailExpanded(destination = HOME_PLATFORM_SHELL_STA
 ============================================================================= */
 async function setHomePlatformDestination(destination, subdestination = '') {
   if (!HOME_PLATFORM_DESTINATIONS.has(destination)) {
-    return;
+    return false;
   }
 
   if (destination === 'cookie-settings') {
@@ -1285,14 +1359,14 @@ async function setHomePlatformDestination(destination, subdestination = '') {
       },
     }));
     closeHomePlatformShell();
-    return;
+    return true;
   }
 
   await ensureHomePlatformConfig();
 
   const destinationConfig = getHomePlatformDestinationConfig(destination);
   if (!destinationConfig) {
-    return;
+    return false;
   }
 
   const nextSubdestination = getHomePlatformSubdestinationConfig(destination, subdestination)
@@ -1301,20 +1375,24 @@ async function setHomePlatformDestination(destination, subdestination = '') {
 
   HOME_PLATFORM_SHELL_STATE.activeDestination = destination;
   HOME_PLATFORM_SHELL_STATE.activeSubdestination = nextSubdestination;
+  setHomePlatformDetailBackState(false);
   syncHomePlatformBackTrigger();
 
   syncHomePlatformShellNav(destination);
   renderHomePlatformShellSubnav(destination, nextSubdestination);
-  await renderHomePlatformShellContent(destination, nextSubdestination);
+  const didRender = await renderHomePlatformShellContent(destination, nextSubdestination);
+  if (!didRender) {
+    return false;
+  }
   syncHomePlatformSubrailExpanded(
     HOME_PLATFORM_SHELL_STATE.subrailExpanded && destination === 'home',
     destination,
     { persist: false }
   );
 
-  const root = getHomePlatformShellRoot();
-  if (root && !root.hidden) {
+  if (isHomePlatformShellOpen()) {
     persistHomePlatformShellStorageState();
+    syncHomePlatformShellHash(destination, nextSubdestination);
   }
 
   document.dispatchEvent(new CustomEvent('home:platform-shell-destination-changed', {
@@ -1323,6 +1401,7 @@ async function setHomePlatformDestination(destination, subdestination = '') {
       subdestination: nextSubdestination,
     },
   }));
+  return true;
 }
 
 async function setHomePlatformSubdestination(subdestination) {
@@ -1336,10 +1415,48 @@ async function routeHomePlatformSubdestination(destination, subdestination) {
     : (getRenderedHomePlatformDestination() || HOME_PLATFORM_SHELL_STATE.activeDestination);
 
   if (!resolvedDestination) {
-    return;
+    return false;
   }
 
-  await setHomePlatformDestination(resolvedDestination, subdestination);
+  return setHomePlatformDestination(resolvedDestination, subdestination);
+}
+
+// Settings routing handler for Neuroartan settings events
+async function routeHomePlatformSettingsRequest(event) {
+  const requested = normalizeString(
+    event?.detail?.destination
+    || event?.detail?.category
+    || event?.detail?.panel
+    || event?.detail?.subdestination
+    || ''
+  );
+
+  if (!requested) return;
+
+  HOME_PLATFORM_SHELL_STATE.pendingRouteRequest = {
+    destination: 'settings',
+    subdestination: requested,
+  };
+
+  await consumePendingHomePlatformRouteRequest();
+}
+
+async function consumePendingHomePlatformRouteRequest() {
+  const pending = HOME_PLATFORM_SHELL_STATE.pendingRouteRequest;
+  const root = getHomePlatformShellRoot();
+  if (!pending || !root) return false;
+
+  HOME_PLATFORM_SHELL_STATE.pendingRouteRequest = null;
+  openHomePlatformShell(pending.destination, pending.subdestination, {
+    mobileStackLevel: isHomePlatformMobileView() ? 'content' : 'root',
+  });
+  return true;
+}
+
+function handleHomePlatformShellFragmentMounted(event) {
+  if (event?.detail?.name !== 'home-platform-shell') return;
+  bootHomePlatformShell();
+  void consumePendingHomePlatformRouteRequest();
 }
 
 async function routeHomePlatformHash(hashValue = window.location.hash) {
@@ -1348,13 +1465,13 @@ async function routeHomePlatformHash(hashValue = window.location.hash) {
     return false;
   }
 
-  const root = getHomePlatformShellRoot();
-  if (root?.hidden) {
+  if (isHomePlatformShellClosed()) {
     openHomePlatformShell(
       resolvedRoute.destination,
       resolvedRoute.subdestination,
       { mobileStackLevel: isHomePlatformMobileView() ? 'content' : 'root' }
     );
+    return true;
   }
 
   await setHomePlatformDestination(resolvedRoute.destination, resolvedRoute.subdestination);
@@ -1363,7 +1480,8 @@ async function routeHomePlatformHash(hashValue = window.location.hash) {
 
 async function restoreHomePlatformShellStorageState() {
   if (HOME_PLATFORM_SHELL_STATE.didRestorePersistedState) {
-    return false;
+    const storedState = readHomePlatformShellStorageState();
+    return storedState.isOpen || window.location.hash.startsWith(HOME_PLATFORM_HASH_PREFIX);
   }
 
   HOME_PLATFORM_SHELL_STATE.didRestorePersistedState = true;
@@ -1397,14 +1515,19 @@ function openHomePlatformShell(
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
+  const mountRoot = getHomePlatformShellMountRoot();
   const shellSession = HOME_PLATFORM_SHELL_STATE.shellSession + 1;
   HOME_PLATFORM_SHELL_STATE.shellSession = shellSession;
   closeConflictingHomeChrome();
   closeBlockingGlobalOverlays();
+  if (mountRoot) {
+    mountRoot.hidden = false;
+    mountRoot.setAttribute('aria-hidden', 'false');
+  }
   root.hidden = false;
   root.setAttribute('aria-hidden', 'false');
   document.body.classList.add('home-platform-shell-open');
-  writeHomePlatformShellStorageState({
+  persistHomePlatformShellStorageState({
     isOpen: true,
     destination,
     subdestination,
@@ -1429,8 +1552,13 @@ function openHomePlatformShell(
     { persist: false }
   );
 
-  void setHomePlatformDestination(destination, subdestination).then(() => {
+  void setHomePlatformDestination(destination, subdestination).then((didRender) => {
     if (HOME_PLATFORM_SHELL_STATE.shellSession !== shellSession || root.hidden) {
+      return;
+    }
+
+    if (!didRender) {
+      closeHomePlatformShell({ clearPersistedState: true });
       return;
     }
 
@@ -1460,9 +1588,14 @@ function closeHomePlatformShell({ clearPersistedState = false } = {}) {
   const root = getHomePlatformShellRoot();
   if (!root) return;
 
+  const mountRoot = getHomePlatformShellMountRoot();
   HOME_PLATFORM_SHELL_STATE.shellSession += 1;
   root.hidden = true;
   root.setAttribute('aria-hidden', 'true');
+  if (mountRoot && mountRoot !== root) {
+    mountRoot.hidden = true;
+    mountRoot.setAttribute('aria-hidden', 'true');
+  }
   document.body.classList.remove('home-platform-shell-open');
   document.documentElement.classList.remove('home-platform-shell-open');
   root.removeAttribute('data-home-platform-destination');
@@ -1649,7 +1782,7 @@ function bindHomePlatformShellEvents() {
     if (menuTrigger) {
       event.preventDefault();
       event.stopPropagation();
-      toggleHomePlatformShell('home');
+      openHomePlatformShell('home');
       return;
     }
 
@@ -1739,10 +1872,39 @@ function bindHomePlatformShellEvents() {
     closeHomePlatformShell({ clearPersistedState: true });
   });
 
+
   document.addEventListener('home:platform-shell-open-request', (event) => {
-    const destination = event?.detail?.destination || 'home';
-    const subdestination = event?.detail?.subdestination || '';
+    const destination = normalizeString(event?.detail?.destination || 'home');
+    const subdestination = normalizeString(event?.detail?.subdestination || '');
+
+    if (destination === 'settings' && subdestination) {
+      void routeHomePlatformSettingsRequest({
+        detail: {
+          destination: subdestination,
+          subdestination,
+        },
+      });
+      return;
+    }
+
     openHomePlatformShell(destination, subdestination);
+  });
+
+  document.addEventListener('home:platform-shell-detail-state-changed', (event) => {
+    const detail = event?.detail || {};
+    setHomePlatformDetailBackState(detail.active === true, detail.label || '');
+  });
+
+  document.addEventListener('neuroartan:settings-route-requested', (event) => {
+    void routeHomePlatformSettingsRequest(event);
+  });
+
+  document.addEventListener('neuroartan:home-settings-route-requested', (event) => {
+    void routeHomePlatformSettingsRequest(event);
+  });
+
+  document.addEventListener('neuroartan:platform-settings-route-requested', (event) => {
+    void routeHomePlatformSettingsRequest(event);
   });
 
   document.addEventListener('home:platform-shell-close-request', () => {
@@ -1815,8 +1977,13 @@ function bindHomePlatformShellStaticControls() {
 12) BOOT
 ============================================================================= */
 function bootHomePlatformShell() {
-  if (!getHomePlatformShellRoot()) return;
   bindHomePlatformShellEvents();
+
+  const root = getHomePlatformShellRoot();
+  if (!root) return;
+
+  root.setAttribute('data-home-platform-shell', '');
+
   bindHomePlatformShellStaticControls();
   HOME_PLATFORM_SHELL_STATE.railMode = loadHomePlatformRailMode();
   syncHomePlatformRailMode(HOME_PLATFORM_SHELL_STATE.railMode);
@@ -1826,11 +1993,14 @@ function bootHomePlatformShell() {
   window.dispatchEvent(new CustomEvent('fragment:mounted', {
     detail: {
       name: 'home-platform-shell-icons',
-      root: getHomePlatformShellRoot(),
+      root,
     },
   }));
 
   void ensureHomePlatformConfig().then(async () => {
+    if (await consumePendingHomePlatformRouteRequest()) {
+      return;
+    }
     if (await restoreHomePlatformShellStorageState()) {
       return;
     }
@@ -1847,10 +2017,8 @@ function bootHomePlatformShell() {
   });
 }
 
-document.addEventListener('fragment:mounted', (event) => {
-  if (event?.detail?.name !== 'home-platform-shell') return;
-  bootHomePlatformShell();
-});
+document.addEventListener('fragment:mounted', handleHomePlatformShellFragmentMounted);
+window.addEventListener('fragment:mounted', handleHomePlatformShellFragmentMounted);
 
 document.addEventListener('neuroartan:runtime-ready', () => {
   bootHomePlatformShell();

@@ -1,0 +1,247 @@
+import { mountSettingsCategory } from '../_shared/settings-category.js';
+import {
+  getSupabaseClient,
+  normalizeString
+} from '../../../../system/account/identity/account-profile-identity.js';
+import {
+  evaluateAccountPassword,
+  loadAccountPasswordPolicy
+} from '../../../../system/account/identity/account-password-policy.js';
+import {
+  getProfileVerificationState,
+  requestProfileVerification
+} from '../../../../system/profile/profile-verification.js';
+import { recordProfileChangelogEvent } from '../../../../system/profile/profile-changelog-store.js';
+
+const ACCOUNT_DETAIL_STORAGE_KEY = 'neuroartan.home.settings.account.detail';
+const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
+const ACCOUNT_DETAILS = new Set(['password']);
+
+function setShellDetailBack(active) {
+  document.dispatchEvent(new CustomEvent('home:platform-shell-detail-state-changed', {
+    detail: {
+      active: active === true,
+      label: 'Back to Account'
+    }
+  }));
+}
+
+function readStoredDetail() {
+  try {
+    const detail = window.localStorage.getItem(ACCOUNT_DETAIL_STORAGE_KEY) || '';
+    return ACCOUNT_DETAILS.has(detail) ? detail : '';
+  } catch {
+    return '';
+  }
+}
+
+function writeStoredDetail(detail = '') {
+  try {
+    if (ACCOUNT_DETAILS.has(detail)) {
+      window.localStorage.setItem(ACCOUNT_DETAIL_STORAGE_KEY, detail);
+    } else {
+      window.localStorage.removeItem(ACCOUNT_DETAIL_STORAGE_KEY);
+    }
+  } catch {}
+}
+
+function setStatus(root, selector, message, state = '') {
+  const node = root.querySelector(selector);
+  if (!(node instanceof HTMLElement)) return;
+  node.textContent = message;
+  node.dataset.state = state;
+}
+
+function setControlDisabled(control, disabled) {
+  if (control instanceof HTMLButtonElement || control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement) {
+    control.disabled = disabled === true;
+  }
+}
+
+function setActiveDetail(root, detail = '', options = {}) {
+  const normalized = ACCOUNT_DETAILS.has(detail) ? detail : '';
+  root.querySelectorAll('[data-account-settings-view]').forEach((view) => {
+    const viewName = view.getAttribute('data-account-settings-view') || '';
+    view.hidden = normalized ? viewName !== normalized : viewName !== 'overview';
+  });
+  root.dataset.accountSettingsDetail = normalized;
+  setShellDetailBack(Boolean(normalized));
+  if (options.persist !== false) {
+    writeStoredDetail(normalized);
+  }
+  void renderVerificationState(root);
+}
+
+async function getCurrentAuthUser() {
+  const supabase = getSupabaseClient();
+  if (!supabase?.auth) return null;
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  return data?.session?.user || null;
+}
+
+function isPasswordRecoveryActive() {
+  try {
+    return window.sessionStorage.getItem(PASSWORD_RECOVERY_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function clearPasswordRecoveryState() {
+  try {
+    window.sessionStorage.removeItem(PASSWORD_RECOVERY_STORAGE_KEY);
+  } catch {}
+}
+
+async function handlePasswordSubmit(root, form) {
+  const formData = new FormData(form);
+  const currentPassword = normalizeString(formData.get('current_password'));
+  const newPassword = normalizeString(formData.get('new_password'));
+  const confirmPassword = normalizeString(formData.get('confirm_password'));
+  const recoveryActive = isPasswordRecoveryActive();
+  const policy = await loadAccountPasswordPolicy();
+  const evaluation = evaluateAccountPassword(newPassword, policy);
+
+  if (!recoveryActive && !currentPassword) {
+    setStatus(root, '[data-account-password-status]', 'Current password is required.', 'error');
+    return;
+  }
+
+  if (!evaluation.ok) {
+    setStatus(root, '[data-account-password-status]', evaluation.message, 'error');
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    setStatus(root, '[data-account-password-status]', 'New password and confirmation do not match.', 'error');
+    return;
+  }
+
+  setStatus(root, '[data-account-password-status]', 'Updating password...', 'pending');
+
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase?.auth) throw new Error('SUPABASE_CLIENT_UNAVAILABLE');
+
+    const user = await getCurrentAuthUser();
+    const email = normalizeString(user?.email || user?.user_metadata?.email || '');
+    if (!user?.id || !email) throw new Error('AUTH_REQUIRED');
+
+    if (!recoveryActive) {
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword
+      });
+      if (reauthError) throw reauthError;
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    if (updateError) throw updateError;
+
+    clearPasswordRecoveryState();
+    form.reset();
+    setStatus(root, '[data-account-password-status]', 'Password updated.', 'success');
+    void recordProfileChangelogEvent({
+      area: 'account.security',
+      action: 'password_changed',
+      title: 'Password changed',
+      detail: 'The account password was updated from unified account settings.'
+    });
+  } catch (error) {
+    const message = normalizeString(error?.message || '').toLowerCase().includes('invalid login')
+      ? 'Current password is not correct.'
+      : 'Password could not be updated.';
+    setStatus(root, '[data-account-password-status]', message, 'error');
+    console.error('[account-settings] Password update failed.', error);
+  }
+}
+
+async function renderVerificationState(root) {
+  const submit = root.querySelector('[data-account-verification-submit]');
+  try {
+    const user = await getCurrentAuthUser();
+    setControlDisabled(submit, !user?.id);
+
+    const verificationState = await getProfileVerificationState();
+    const latestStatus = verificationState.latestRequest?.request_status || '';
+    const message = latestStatus
+      ? `Latest request status: ${latestStatus}`
+      : verificationState.tableAvailable
+        ? 'No verification request has been submitted yet.'
+        : 'Verification request storage is not configured.';
+
+    setStatus(root, '[data-account-verification-status]', message, verificationState.tableAvailable ? 'ready' : 'error');
+  } catch (error) {
+    console.error('[account-settings] Verification state failed.', error);
+    setStatus(root, '[data-account-verification-status]', 'Verification state could not be loaded.', 'error');
+  }
+}
+
+async function handleVerificationSubmit(root, form) {
+  const formData = new FormData(form);
+  setStatus(root, '[data-account-verification-status]', 'Submitting verification request...', 'pending');
+
+  try {
+    await requestProfileVerification({
+      request_note: formData.get('request_note') || ''
+    });
+    form.reset();
+    setStatus(root, '[data-account-verification-status]', 'Verification request submitted for review.', 'success');
+    void recordProfileChangelogEvent({
+      area: 'account.verification',
+      action: 'verification_requested',
+      title: 'Verification requested',
+      detail: 'An account verification request was submitted from unified account settings.'
+    });
+    await renderVerificationState(root);
+  } catch (error) {
+    const code = normalizeString(error?.code || error?.message || '');
+    const message = code === 'PROFILE_VERIFICATION_BACKEND_UNAVAILABLE'
+      ? 'Verification storage is not configured.'
+      : code === 'PROFILE_REQUIRED'
+        ? 'Create and save your profile before requesting verification.'
+        : 'Verification request could not be submitted.';
+    setStatus(root, '[data-account-verification-status]', message, 'error');
+  }
+}
+
+export function mountHomePlatformDestination(root, options = {}) {
+  mountSettingsCategory(root, options);
+  setActiveDetail(root, readStoredDetail(), { persist: false });
+
+  root.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-account-settings-detail]');
+    if (!trigger) return;
+    setActiveDetail(root, trigger.getAttribute('data-account-settings-detail') || '');
+  });
+
+  root.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+
+    if (form.matches('[data-account-password-form]')) {
+      event.preventDefault();
+      void handlePasswordSubmit(root, form);
+      return;
+    }
+
+    if (form.matches('[data-account-verification-form]')) {
+      event.preventDefault();
+      void handleVerificationSubmit(root, form);
+    }
+  });
+
+  return () => setShellDetailBack(false);
+}
+
+export function updateHomePlatformDestination(root) {
+  if (root instanceof Element) {
+    void renderVerificationState(root);
+  }
+}
+
+export function handleHomePlatformBack(root) {
+  setActiveDetail(root, '');
+  return true;
+}

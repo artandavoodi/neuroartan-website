@@ -21,6 +21,7 @@ import './notification-center.js';
    03) RUNTIME OWNER
 ============================================================================= */
 import './global-layout-injection.js';
+import '../../layers/website/home/platform-menu/home-platform-shell.js';
 
 /* =============================================================================
    04) END OF FILE

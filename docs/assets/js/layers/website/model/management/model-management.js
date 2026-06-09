@@ -28,15 +28,18 @@ import {
   createModelDatasetEntry,
   createModelKnowledgeEntry,
   createModelLogicRecord,
-  listModelDatasetEntries,
   listModelKnowledgeEntries,
   listModelLogicRecords,
+  listModelSourceVaultPackageEntries,
+  listModelTrainingDatasetEntries,
   removeModelDatasetEntry,
   removeModelKnowledgeEntry,
   removeModelLogicRecord,
+  removeModelSourceVaultPackageEntry,
   updateModelDatasetEntry,
   updateModelKnowledgeEntry,
-  updateModelLogicRecord
+  updateModelLogicRecord,
+  upsertModelSourceVaultPackageEntry
 } from '../../system/model/model-training-store.js';
 import { registerProfileMediaEditorTarget } from '../../profile/private/media/profile-media-editor.js';
 import {
@@ -50,7 +53,9 @@ import {
 } from '../foundation/personality-calibration/model-personality-calibration-controller.js';
 import {
   initializeDigitalBrainMaturity,
+  refreshDigitalBrainMaturity,
 } from '../foundation/digital-brain-maturity/model-digital-brain-maturity.js';
+import { mountModelSourceVault } from '../foundation/source-vault/model-source-vault.js';
 
 
 import {
@@ -65,6 +70,8 @@ const MODEL_DATASET_STORAGE_KEY = 'neuroartan.model.training.datasets';
 const MODEL_KNOWLEDGE_BASE_STORAGE_KEY = 'neuroartan.model.training.knowledge-base';
 const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
 const MODEL_LOGIC_QUESTION_REGISTRY_URL = '/assets/data/website/model-creation/model-logic-question-registry.json';
+const MODEL_SOURCE_VAULT_FRAGMENT_URL = '/assets/fragments/layers/website/model/foundation/source-vault/model-source-vault.html';
+const MODEL_SOURCE_VAULT_CSS_URL = '/assets/css/layers/website/model/foundation/source-vault/model-source-vault.css';
 
 const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   reasoningDepth: 'balanced',
@@ -606,6 +613,38 @@ function setText(root, selector, value) {
   });
 }
 
+function ensureModelSourceVaultStyles() {
+  if (document.querySelector(`link[href="${MODEL_SOURCE_VAULT_CSS_URL}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = MODEL_SOURCE_VAULT_CSS_URL;
+  document.head.append(link);
+}
+
+async function mountModelSourceVaultFragment(root = document) {
+  const mount = root?.querySelector?.('[data-model-source-vault-mount]');
+  if (!(mount instanceof HTMLElement) || mount.dataset.modelSourceVaultMounted === 'true') return;
+
+  ensureModelSourceVaultStyles();
+
+  try {
+    const response = await fetch(MODEL_SOURCE_VAULT_FRAGMENT_URL, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('MODEL_SOURCE_VAULT_FRAGMENT_UNAVAILABLE');
+    mount.innerHTML = await response.text();
+    mount.dataset.modelSourceVaultMounted = 'true';
+    mountModelSourceVault(mount);
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Source Vault mount failed.', error);
+    mount.innerHTML = '<p class="model-management__section-copy">Source Vault could not be loaded.</p>';
+  }
+}
+
+function mountAllModelSourceVaultFragments() {
+  modelManagementRoots().forEach((root) => {
+    void mountModelSourceVaultFragment(root);
+  });
+}
+
 function getModelPersonalizationDefaults() {
   return {
     ...MODEL_PERSONALIZATION_DEFAULTS,
@@ -1044,12 +1083,16 @@ async function hydrateTrainingSubstrateFromBackend() {
   if (modelTrainingSubstrateBackendLoaded) return;
 
   try {
-    const [datasetEntries, knowledgeEntries, logicRecords] = await Promise.all([
-      listModelDatasetEntries(),
+    const [datasetEntries, sourceVaultEntries, knowledgeEntries, logicRecords] = await Promise.all([
+      listModelTrainingDatasetEntries(),
+      listModelSourceVaultPackageEntries(),
       listModelKnowledgeEntries(),
       listModelLogicRecords()
     ]);
-    modelDatasetEntries = datasetEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Dataset'));
+    modelDatasetEntries = [
+      ...datasetEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Dataset')),
+      ...sourceVaultEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Source package')),
+    ];
     modelKnowledgeBaseEntries = knowledgeEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Knowledge asset'));
     modelLogicRecords = logicRecords.map(normalizeLogicRecordEntry);
     modelTrainingSubstrateBackendLoaded = true;
@@ -1060,6 +1103,61 @@ async function hydrateTrainingSubstrateFromBackend() {
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
+}
+
+async function saveModelSourceVaultPackages(packages = [], options = {}) {
+  if (!packages.length) return;
+
+  setTrainingSubstrateStatus(options.savingMessage || 'Saving Source Vault package...', 'saving');
+  try {
+    const savedEntries = await Promise.all(packages.map((packageRecord) => upsertModelSourceVaultPackageEntry(packageRecord)));
+    const normalizedEntries = savedEntries.map((entry) => normalizeTrainingSourceEntry(entry, 'Source package'));
+    const nextEntriesById = new Map(modelDatasetEntries.map((entry) => [entry.id, entry]));
+    normalizedEntries.forEach((entry) => {
+      if (entry.id) nextEntriesById.set(entry.id, entry);
+    });
+    modelDatasetEntries = Array.from(nextEntriesById.values());
+    writeStoredModelDatasetEntries();
+    renderAllModelManagement();
+    if (options.refreshBrain === true) await refreshDigitalBrainMaturity(document);
+    const savedMessage = options.savedMessage || 'Source Vault package saved to Database.';
+    setTrainingSubstrateStatus(savedMessage, 'saved');
+    document.dispatchEvent(new CustomEvent('model-source-vault:database-save-result', {
+      detail: {
+        state: 'saved',
+        message: savedMessage,
+      },
+    }));
+  } catch (error) {
+    const errorMessage = formatTrainingSubstrateError(error);
+    setTrainingSubstrateStatus(errorMessage, 'error');
+    document.dispatchEvent(new CustomEvent('model-source-vault:database-save-result', {
+      detail: {
+        state: 'error',
+        message: errorMessage,
+      },
+    }));
+  }
+}
+
+async function handleModelSourceVaultPackageSaved(event) {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  const packages = Array.isArray(detail.sourcePackages) ? detail.sourcePackages : [];
+  await saveModelSourceVaultPackages(packages, {
+    savingMessage: 'Saving Source Vault package...',
+    savedMessage: 'Source Vault package saved to Database.',
+    refreshBrain: true,
+  });
+}
+
+async function handleModelSourceVaultConfirmed(event) {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  const packages = Array.isArray(detail.sourcePackages) ? detail.sourcePackages : [];
+  await saveModelSourceVaultPackages(packages, {
+    savingMessage: 'Confirming Source Vault intake...',
+    savedMessage: 'Source Vault intake confirmed and linked to the brain overview.',
+    refreshBrain: true,
+  });
 }
 
 function scheduleModelFoundationIdentityBackendSave() {
@@ -2872,20 +2970,39 @@ function renderModelLogicRecords(root) {
 
 function normalizeModelDataManagerPane(value = '') {
   const normalizedValue = String(value || '').trim();
+  if (normalizedValue === 'source-vault' || normalizedValue === 'sources') return 'source-vault';
   if (normalizedValue === 'knowledge-base') return 'knowledge-base';
   if (normalizedValue === 'logics') return 'logics';
   return 'datasets';
 }
 
+function isModelSourceVaultDatasetEntry(entry = {}) {
+  const metadata = entry?.metadata && typeof entry.metadata === 'object' ? entry.metadata : {};
+  return metadata.intake_owner === 'model_source_vault' || Boolean(metadata.source_vault_package_id);
+}
+
 function getModelDataManagerEntries(pane = modelDataManagerPane) {
   const normalizedPane = normalizeModelDataManagerPane(pane);
+  if (normalizedPane === 'source-vault') {
+    return modelDatasetEntries.filter(isModelSourceVaultDatasetEntry);
+  }
   if (normalizedPane === 'knowledge-base') return modelKnowledgeBaseEntries;
   if (normalizedPane === 'logics') return modelLogicRecords;
-  return modelDatasetEntries;
+  return modelDatasetEntries.filter((entry) => !isModelSourceVaultDatasetEntry(entry));
 }
 
 function getModelDataManagerCopy(pane = modelDataManagerPane) {
   const normalizedPane = normalizeModelDataManagerPane(pane);
+  if (normalizedPane === 'source-vault') {
+    return {
+      title: 'Source database',
+      empty: 'No Source Vault packages recorded.',
+      titleLabel: 'Source package',
+      bodyLabel: 'Source reference',
+      removeAttribute: 'modelDataManagerDatasetRemove',
+      saveAttribute: 'modelDataManagerDatasetSave',
+    };
+  }
   if (normalizedPane === 'knowledge-base') {
     return {
       title: 'Knowledge manager',
@@ -2922,6 +3039,8 @@ function renderModelDataManagerTabs(overlay, pane = modelDataManagerPane) {
     if (!(tab instanceof HTMLButtonElement)) return;
     const isActive = normalizeModelDataManagerPane(tab.dataset.modelDataManagerPane) === normalizeModelDataManagerPane(pane);
     tab.setAttribute('aria-pressed', String(isActive));
+    tab.setAttribute('aria-selected', String(isActive));
+    tab.tabIndex = isActive ? 0 : -1;
     tab.dataset.active = isActive ? 'true' : 'false';
   });
 }
@@ -3702,6 +3821,7 @@ async function handleModelDatasetSubmit(event) {
     form.reset();
     setTrainingSubstrateStatus('Dataset saved to Supabase.', 'saved');
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3717,6 +3837,7 @@ async function handleModelDatasetRemove(event) {
     modelDatasetEntries = modelDatasetEntries.filter((entry) => entry.id !== entryId);
     writeStoredModelDatasetEntries();
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3754,6 +3875,7 @@ async function handleModelKnowledgeSubmit(event) {
     form.reset();
     setTrainingSubstrateStatus('Knowledge saved to Supabase.', 'saved');
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3769,6 +3891,7 @@ async function handleModelKnowledgeRemove(event) {
     modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
     writeStoredModelKnowledgeBaseEntries();
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3819,6 +3942,7 @@ async function handleModelLogicSubmit(event) {
     form.reset();
     setTrainingSubstrateStatus('Model logic saved to Supabase.', 'saved');
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3834,6 +3958,7 @@ async function handleModelLogicRemove(event) {
     modelLogicRecords = modelLogicRecords.filter((entry) => entry.id !== entryId);
     writeStoredModelLogicRecords();
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setTrainingSubstrateStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3857,7 +3982,7 @@ function setModelDataManagerOpen(open, pane = modelDataManagerPane) {
 
 function handleModelDataManagerOpenRequest(event) {
   const detail = event instanceof CustomEvent ? event.detail || {} : {};
-  const pane = normalizeModelDataManagerPane(detail.filters?.pane || getProfileNavigationState().modelPane);
+  const pane = normalizeModelDataManagerPane(detail.filters?.pane || detail.filters?.managerPane || getProfileNavigationState().modelPane);
   const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;
   document.body.appendChild(overlay);
@@ -3892,8 +4017,8 @@ function getModelDataManagerPayload(trigger) {
     || trigger?.dataset?.modelDataManagerLogicSave
     || ''
   ).trim();
-  const title = findModelDataManagerField(root, '[data-model-data-manager-title', entryId);
-  const body = findModelDataManagerField(root, '[data-model-data-manager-body', entryId);
+  const title = findModelDataManagerField(root, '[data-model-data-manager-title]', entryId);
+  const body = findModelDataManagerField(root, '[data-model-data-manager-body]', entryId);
   return {
     entryId,
     title: title?.value?.trim?.() || '',
@@ -3929,6 +4054,7 @@ async function handleModelDataManagerSave(event) {
       setModelDataManagerStatus('Logic updated.', 'saved');
     }
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setModelDataManagerStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3948,10 +4074,16 @@ async function handleModelDataManagerRemove(event) {
 
   try {
     if (trigger.dataset.modelDataManagerDatasetRemove) {
-      await removeModelDatasetEntry(entryId);
+      const entry = modelDatasetEntries.find((item) => item.id === entryId);
+      if (isModelSourceVaultDatasetEntry(entry)) {
+        await removeModelSourceVaultPackageEntry(entryId);
+        setModelDataManagerStatus('Source package removed from Supabase.', 'saved');
+      } else {
+        await removeModelDatasetEntry(entryId);
+        setModelDataManagerStatus('Dataset removed.', 'saved');
+      }
       modelDatasetEntries = modelDatasetEntries.filter((entry) => entry.id !== entryId);
       writeStoredModelDatasetEntries();
-      setModelDataManagerStatus('Dataset removed.', 'saved');
     } else if (trigger.dataset.modelDataManagerKnowledgeRemove) {
       await removeModelKnowledgeEntry(entryId);
       modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
@@ -3964,6 +4096,7 @@ async function handleModelDataManagerRemove(event) {
       setModelDataManagerStatus('Logic removed.', 'saved');
     }
     renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
   } catch (error) {
     setModelDataManagerStatus(formatTrainingSubstrateError(error), 'error');
   }
@@ -3978,6 +4111,7 @@ function renderAllModelManagement() {
   const runtimeState = getProfileRuntimeState();
   const navigationState = getProfileNavigationState();
   modelManagementRoots().forEach((root) => renderModelManagement(root, runtimeState, navigationState));
+  mountAllModelSourceVaultFragments();
 }
 
 function handleModelSliderInteractionStart(event) {
@@ -4083,6 +4217,8 @@ function initModelManagement() {
   document.addEventListener('click', handleModelLogicPromptGenerate);
   document.addEventListener('submit', handleModelLogicSubmit);
   document.addEventListener('click', handleModelLogicRemove);
+  document.addEventListener('model-source-vault:package-saved', handleModelSourceVaultPackageSaved);
+  document.addEventListener('model-source-vault:confirmed', handleModelSourceVaultConfirmed);
   document.addEventListener('model:data-manager-open-request', handleModelDataManagerOpenRequest);
   document.addEventListener('click', handleModelDataManagerClick);
   document.addEventListener('click', handleModelDataManagerSave);

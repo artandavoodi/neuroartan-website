@@ -6,7 +6,7 @@
 
   <article class="model-training-workspace__surface" role="dialog" aria-modal="true" aria-label="Recipe workspace">
     <header class="model-training-workspace__header">
-      <span class="model-training-workspace__progress">Recipe workspace</span>
+      <span class="model-training-workspace__progress">Foundation training workspace</span>
       <button class="global-close-button" type="button" data-model-training-workspace-close aria-label="Close recipe workspace">
         <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
         <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
@@ -14,14 +14,22 @@
     </header>
 
     <div class="model-training-workspace__layout">
-      <nav class="model-training-workspace__rail" aria-label="Training recipe sections">
-        <button class="model-training-workspace__rail-item is-active" type="button" data-model-training-workspace-pane="recipe">
+      <nav class="model-training-workspace__rail" aria-label="Foundation training sections">
+        <button class="model-training-workspace__rail-item is-active" type="button" data-model-training-workspace-pane="foundation">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/sources.svg" alt="">
+          Foundation
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="consent">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/provenance.svg" alt="">
+          Consent
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="intake">
+          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/add-external-source.svg" alt="">
+          Intake
+        </button>
+        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="recipe">
           <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/recipe.svg" alt="">
           Recipe
-        </button>
-        <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="sources">
-          <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/sources.svg" alt="">
-          Sources
         </button>
         <button class="model-training-workspace__rail-item" type="button" data-model-training-workspace-pane="execution">
           <img class="model-training-workspace__rail-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/execution.svg" alt="">
@@ -35,7 +43,75 @@
 
       <form class="model-training-workspace__content" data-model-training-workspace-form>
         <input name="recipeId" type="hidden">
-        <section class="model-training-workspace__pane" data-model-training-workspace-panel="recipe">
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="foundation">
+          <h3 class="model-training-workspace__section-title">Foundation sources</h3>
+          <p class="model-training-workspace__copy">Select the governed foundation layers that may feed the training recipe. Training executes only after identity, consent, source, memory, personality, and voice boundaries are explicit.</p>
+          <div class="model-training-workspace__grid">
+            <label class="model-training-workspace__check"><input name="foundationIdentity" data-model-training-foundation-source="identity" type="checkbox"> <span>Identity</span></label>
+            <label class="model-training-workspace__check"><input name="foundationConsent" data-model-training-foundation-source="consent" type="checkbox"> <span>Consent</span></label>
+            <label class="model-training-workspace__check"><input name="foundationSource" data-model-training-foundation-source="source" type="checkbox" checked> <span>Source</span></label>
+            <label class="model-training-workspace__check"><input name="foundationMemory" data-model-training-foundation-source="memory" type="checkbox"> <span>Memory</span></label>
+            <label class="model-training-workspace__check"><input name="foundationPersonality" data-model-training-foundation-source="personality" type="checkbox" checked> <span>Personality</span></label>
+            <label class="model-training-workspace__check"><input name="foundationVoice" data-model-training-foundation-source="voice" type="checkbox"> <span>Voice</span></label>
+          </div>
+          <div class="model-training-workspace__source-list" data-model-training-foundation-source-list aria-live="polite"></div>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="consent" hidden>
+          <h3 class="model-training-workspace__section-title">Consent</h3>
+          <p class="model-training-workspace__copy">Consent governs whether selected foundation and external sources may be indexed, copied, parsed, embedded, remembered, trained, voiced, or released.</p>
+          <div class="model-training-workspace__grid">
+            <label class="model-training-workspace__check"><input name="consentIndexing" type="checkbox"> <span>Allow indexing</span></label>
+            <label class="model-training-workspace__check"><input name="consentCloudCopy" type="checkbox"> <span>Allow encrypted cloud copy</span></label>
+            <label class="model-training-workspace__check"><input name="consentEmbeddings" type="checkbox"> <span>Allow embeddings</span></label>
+            <label class="model-training-workspace__check"><input name="consentModelTraining" type="checkbox"> <span>Allow training use</span></label>
+          </div>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="intake" hidden>
+          <h3 class="model-training-workspace__section-title">Intake</h3>
+          <p class="model-training-workspace__copy">Attach external sources only after their origin, storage boundary, and processing purpose are clear. Intake remains separate from foundation and execution.</p>
+          <section class="model-training-workspace__source-editor" aria-label="Attach external training source">
+            <h4 class="model-training-workspace__section-title">External source</h4>
+            <div class="model-training-workspace__grid">
+              <label class="model-management__field">
+                <span class="model-management__field-label">Source type</span>
+                <span class="ui-inline-dropdown">
+                  <span class="ui-inline-dropdown__value" data-model-training-label="externalSourceKind">Dataset registry</span>
+                  <span class="ui-inline-dropdown__icon-wrapper">
+                    <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                    <select class="ui-dropdown ui-dropdown--icon-only" name="externalSourceKind" data-model-training-field="externalSourceKind" aria-label="Select source type">
+                      <option value="dataset_registry">Dataset registry</option>
+                      <option value="external_url">External URL</option>
+                      <option value="document_upload">Document upload</option>
+                      <option value="sql_upload">SQL upload</option>
+                      <option value="spreadsheet_upload">Spreadsheet upload</option>
+                    </select>
+                  </span>
+                </span>
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Source label</span>
+                <input class="model-management__input" name="externalSourceLabel" type="text" placeholder="Source label">
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Repository, URL, or connection reference</span>
+                <input class="model-management__input" name="externalSourceReference" type="text" placeholder="Dataset ID, URL, or connection reference">
+              </label>
+              <label class="model-management__field">
+                <span class="model-management__field-label">Optional file</span>
+                <input class="model-management__input" name="externalSourceFile" type="file" accept=".pdf,.txt,.md,.json,.csv,.tsv,.xlsx,.xls,.sql">
+              </label>
+            </div>
+            <button class="model-management__button" type="button" data-model-training-source-add>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/add-external-source.svg" alt="">
+              Attach source
+            </button>
+            <div class="model-training-workspace__source-list" data-model-training-source-list aria-live="polite"></div>
+          </section>
+        </section>
+
+        <section class="model-training-workspace__pane" data-model-training-workspace-panel="recipe" hidden>
           <h3 class="model-training-workspace__section-title">Recipe</h3>
           <p class="model-training-workspace__copy">Define the reusable training draft before any execution request is submitted.</p>
           <div class="model-training-workspace__grid">
@@ -76,55 +152,6 @@
               </span>
             </label>
           </div>
-        </section>
-
-        <section class="model-training-workspace__pane" data-model-training-workspace-panel="sources" hidden>
-          <h3 class="model-training-workspace__section-title">Sources</h3>
-          <p class="model-training-workspace__copy">Select governed sources. Dataset attachment remains separate from provenance approval.</p>
-          <div class="model-training-workspace__grid">
-            <label class="model-training-workspace__check"><input name="sourceProfile" type="checkbox" checked> <span>Profile foundation</span></label>
-            <label class="model-training-workspace__check"><input name="sourceThoughts" type="checkbox"> <span>Thought bank</span></label>
-            <label class="model-training-workspace__check"><input name="sourceDocuments" type="checkbox"> <span>Documents</span></label>
-            <label class="model-training-workspace__check"><input name="sourceKnowledge" type="checkbox"> <span>Knowledge base</span></label>
-          </div>
-          <section class="model-training-workspace__source-editor" aria-label="Attach external training source">
-            <h4 class="model-training-workspace__section-title">External source</h4>
-            <div class="model-training-workspace__grid">
-              <label class="model-management__field">
-                <span class="model-management__field-label">Source type</span>
-                <span class="ui-inline-dropdown">
-                  <span class="ui-inline-dropdown__value" data-model-training-label="externalSourceKind">Dataset registry</span>
-                  <span class="ui-inline-dropdown__icon-wrapper">
-                    <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
-                    <select class="ui-dropdown ui-dropdown--icon-only" name="externalSourceKind" data-model-training-field="externalSourceKind" aria-label="Select source type">
-                      <option value="dataset_registry">Dataset registry</option>
-                      <option value="external_url">External URL</option>
-                      <option value="document_upload">Document upload</option>
-                      <option value="sql_upload">SQL upload</option>
-                      <option value="spreadsheet_upload">Spreadsheet upload</option>
-                    </select>
-                  </span>
-                </span>
-              </label>
-              <label class="model-management__field">
-                <span class="model-management__field-label">Source label</span>
-                <input class="model-management__input" name="externalSourceLabel" type="text" placeholder="Source label">
-              </label>
-              <label class="model-management__field">
-                <span class="model-management__field-label">Repository, URL, or connection reference</span>
-                <input class="model-management__input" name="externalSourceReference" type="text" placeholder="Dataset ID, URL, or connection reference">
-              </label>
-              <label class="model-management__field">
-                <span class="model-management__field-label">Optional file</span>
-                <input class="model-management__input" name="externalSourceFile" type="file" accept=".pdf,.txt,.md,.json,.csv,.tsv,.xlsx,.xls,.sql">
-              </label>
-            </div>
-            <button class="model-management__button" type="button" data-model-training-source-add>
-              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/training/add-external-source.svg" alt="">
-              Attach source
-            </button>
-            <div class="model-training-workspace__source-list" data-model-training-source-list aria-live="polite"></div>
-          </section>
         </section>
 
         <section class="model-training-workspace__pane" data-model-training-workspace-panel="execution" hidden>

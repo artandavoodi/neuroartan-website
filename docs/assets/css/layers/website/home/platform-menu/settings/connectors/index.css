@@ -112,6 +112,10 @@
   background-color:var(--color-primary7);
 }
 
+.home-platform-theme__connector-status[data-home-platform-connector-status="not-connected"]::before{
+  background-color:var(--color-primary7);
+}
+
 .home-platform-theme__connector-status[data-home-platform-connector-status="connected"]::before{
   background-color:var(--color-primary8);
 }
@@ -132,6 +136,6 @@
 }
 
 .home-platform-theme__connector-item[data-connector-connected="true"] .home-platform-theme__connector-status{
-  color:var(--color-success-500);
+  color:var(--text-primary-color);
   opacity:1;
 }

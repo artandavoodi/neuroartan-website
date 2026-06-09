@@ -96,7 +96,6 @@ function isModelRoute() {
 function renderSidebar(root, state = getProfileNavigationState()){
   const editProfilePanes = new Set(['identity', 'route', 'privacy']);
   const settingsPanes = new Set(['password', 'verification']);
-  const homeSections = new Set(['home', 'feed', 'notifications', 'messaging']);
   const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
   const primaryNav = root.querySelector('[data-profile-sidebar-primary-nav]');
   const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
@@ -120,12 +119,12 @@ function renderSidebar(root, state = getProfileNavigationState()){
     
     let active = false;
     
-    if (link || searchTrigger) {
+    if (link || searchTrigger || item.dataset.homePlatformMenuRoute) {
       active = false;
+    } else if (section === 'feed') {
+      active = state.section === 'feed';
     } else if (MODEL_SECTIONS.has(section)) {
       active = useModelNav ? state.section === section : MODEL_SECTIONS.has(state.section);
-    } else if (section === 'home') {
-      active = homeSections.has(state.section);
     } else if (section === 'profile') {
       active = profileSections.has(state.section)
         || (state.section === 'settings' && editProfilePanes.has(state.settingsPane));
@@ -247,6 +246,30 @@ function bindSidebar(){
 
     if(item.dataset.profileNavLink){
       window.location.href = item.dataset.profileNavLink;
+      return;
+    }
+
+    if(item.dataset.homePlatformMenuRoute){
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('home:platform-shell-open-request', {
+        detail: {
+          destination: item.dataset.homePlatformMenuRoute || 'home',
+          subdestination: item.dataset.homePlatformMenuSubdestination || '',
+          source: 'profile-sidebar'
+        }
+      }));
+      return;
+    }
+
+    if(item.dataset.homePlatformSettingsRoute){
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('home:platform-shell-open-request', {
+        detail: {
+          destination: 'settings',
+          subdestination: item.dataset.homePlatformSettingsRoute,
+          source: 'profile-sidebar'
+        }
+      }));
       return;
     }
 

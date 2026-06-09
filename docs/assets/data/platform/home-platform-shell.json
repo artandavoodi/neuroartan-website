@@ -99,6 +99,15 @@
           "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/model-runtime.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/model-runtime.css",
           "module": "/assets/js/layers/website/home/platform-menu/workspace/model-runtime.js"
+        },
+        {
+          "id": "dashboard",
+          "label": "Dashboard",
+          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-dashboard.svg",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/workspace/dashboard/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/workspace/dashboard/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/workspace/dashboard/index.js",
+          "auth_visible": "signed-in"
         }
       ]
     },
@@ -140,6 +149,15 @@
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/general/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/general/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/general/index.js"
+        },
+        {
+          "id": "account",
+          "label": "Account",
+          "icon": "/registry/icons/public/assets/core/identity/account/account.svg",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/account/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/account/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/account/index.js",
+          "auth_visible": "signed-in"
         },
         {
           "id": "notifications",
@@ -226,12 +244,12 @@
           "auth_visible": "signed-in"
         },
         {
-          "id": "dashboard",
-          "label": "Dashboard",
-          "icon": "/registry/icons/public/assets/layers/website/home/platform-menu/settings/platform-menue-settings-dashboard.svg",
-          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/dashboard/index.html",
-          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/dashboard/index.css",
-          "module": "/assets/js/layers/website/home/platform-menu/settings/dashboard/index.js",
+          "id": "model",
+          "label": "Model",
+          "icon": "/registry/icons/public/assets/core/cognition/model/model.svg",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/model/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/model/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/model/index.js",
           "auth_visible": "signed-in"
         },
         {
@@ -250,6 +268,15 @@
           "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/security/index.html",
           "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/security/index.css",
           "module": "/assets/js/layers/website/home/platform-menu/settings/security/index.js",
+          "auth_visible": "signed-in"
+        },
+        {
+          "id": "changelog",
+          "label": "Changelog",
+          "icon": "/registry/icons/public/assets/layers/website/settings/changelog/changelog.svg",
+          "fragment": "/assets/fragments/layers/website/home/platform-menu/settings/changelog/index.html",
+          "stylesheet": "/assets/css/layers/website/home/platform-menu/settings/changelog/index.css",
+          "module": "/assets/js/layers/website/home/platform-menu/settings/changelog/index.js",
           "auth_visible": "signed-in"
         }
       ]

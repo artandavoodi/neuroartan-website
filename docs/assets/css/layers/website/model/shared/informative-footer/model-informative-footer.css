@@ -1,8 +1,7 @@
 /* MARK: - Model Informative Footer */
 
 .model-informative-footer {
-  position: sticky;
-  inset-block-end: var(--spacing-none);
+  position: relative;
   z-index: var(--z-ground);
   display: block;
   inline-size: 100%;
@@ -69,7 +68,6 @@
 
 @media (max-width: 768px) {
   .model-informative-footer {
-    z-index: var(--z-base);
     padding-block: var(--spacing-sm) var(--spacing-md);
     background: var(--page-bg);
     isolation: isolate;

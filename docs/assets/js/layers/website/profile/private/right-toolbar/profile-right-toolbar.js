@@ -188,6 +188,13 @@ const ACTIONS = Object.freeze({
     icon: ACTION_ICONS.modelDataManager,
     authState: 'user'
   },
+  modelSourceDatabase: {
+    id: 'model-source-database',
+    label: 'Database',
+    tooltip: 'Database',
+    icon: ACTION_ICONS.modelDataManager,
+    authState: 'user'
+  },
   modelReset: {
     id: 'model-reset',
     label: 'Reset',
@@ -409,7 +416,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   overview: ['modelKeys', 'modelInfo', 'modelLearn', 'modelReset', 'modelChangelog'],
   identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
-  sources: ['modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
+  sources: ['modelSourceDatabase', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],
   personality: ['modelPersonalitySummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelLearn', 'modelReset', 'modelChangelog']
@@ -853,6 +860,17 @@ function requestProfileToolAction(action){
         detail: {
           source: 'profile-right-toolbar',
           filters: resolveModelOverlayFilters()
+        }
+      }));
+      return;
+    case 'model-source-database':
+      document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          filters: {
+            ...resolveModelOverlayFilters(),
+            pane: 'source-vault'
+          }
         }
       }));
       return;

@@ -130,6 +130,15 @@ function normalizeDigitalBrainSignal(signal = {}) {
     value: normalizeString(signal.value),
     category: normalizeString(signal.category),
     source: normalizeString(signal.source),
+    subject: normalizeString(signal.subject),
+    reference: normalizeString(signal.reference),
+    dataType: normalizeString(signal.dataType),
+    searchableText: normalizeString(signal.searchableText),
+    searchVisible: signal.searchVisible !== false,
+    privacy: normalizeString(signal.privacy || 'standard'),
+    visualRole: normalizeString(signal.visualRole || 'construct'),
+    aggregateCount: normalizeNumber(signal.aggregateCount, 1),
+    impact: normalizeNumber(signal.impact, 0),
   };
 }
 

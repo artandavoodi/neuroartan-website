@@ -1,0 +1,111 @@
+<section class="home-platform-destination home-platform-destination--settings-model" data-home-platform-destination-root data-model-settings-root aria-label="Model settings destination">
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" data-model-settings-view="overview" aria-label="Model settings">
+      <div class="home-platform-theme__section-header">
+        <div>
+          <p class="home-platform-theme__section-eyebrow-text">Model</p>
+          <p class="home-platform-theme__section-copy">Owner-controlled model preferences, routing, provider, and visibility live here.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" data-model-settings-view="preferences" aria-label="Model preferences">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow-text">Preferences</p>
+      </div>
+      <div class="home-platform-theme__metric-grid">
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Response length</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-preference="responseLength">Loading</strong>
+        </div>
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Explanation depth</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-preference="explanationDepth">Loading</strong>
+        </div>
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Emotional tone</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-preference="emotionalTone">Loading</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" data-model-settings-view="provider" aria-label="Model provider">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow-text">Provider</p>
+      </div>
+      <div class="home-platform-theme__metric-grid">
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Provider policy</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-model-field="runtime_policy">Loading</strong>
+        </div>
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Runtime provider</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-runtime-field="provider">Loading</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" data-model-settings-view="routing" aria-label="Model routing">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow-text">Routing</p>
+      </div>
+      <div class="home-platform-theme__metric-grid">
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Routing class</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-model-field="routing_class">Loading</strong>
+        </div>
+        <div class="home-platform-theme__metric-item">
+          <span class="home-platform-theme__metric-label">Default route</span>
+          <strong class="home-platform-theme__metric-value" data-model-settings-runtime-field="route">Loading</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-platform-theme__section" data-model-settings-view="visibility" aria-label="Model visibility">
+      <div class="home-platform-theme__section-header">
+        <p class="home-platform-theme__section-eyebrow-text">Visibility</p>
+      </div>
+      <label class="home-platform-theme__select-row">
+        <span class="home-platform-theme__select-label">Visibility scope</span>
+        <select class="ui-inline-dropdown" data-model-visibility-field="visibilityScope">
+          <option value="general">General</option>
+          <option value="public">Public</option>
+          <option value="friends">Friends</option>
+          <option value="followers">Followers</option>
+          <option value="mutuals">Mutuals</option>
+          <option value="family">Family</option>
+          <option value="subscribers">Subscribers</option>
+        </select>
+      </label>
+
+      <div class="home-platform-theme__toggle-list" data-model-visibility-toggle-list>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to public</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="publicVisible">
+        </label>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to friends</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="friendsVisible">
+        </label>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to followers</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="followersVisible">
+        </label>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to mutuals</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="mutualsVisible">
+        </label>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to family</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="familyVisible">
+        </label>
+        <label class="home-platform-theme__toggle-row">
+          <span>Visible to subscribers</span>
+          <input class="na-toggle" type="checkbox" data-model-visibility-toggle="subscribersVisible">
+        </label>
+      </div>
+
+      <p class="home-platform-theme__save-status" data-model-settings-status role="status" aria-live="polite"></p>
+    </section>
+  </div>
+</section>

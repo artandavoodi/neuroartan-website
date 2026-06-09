@@ -9,15 +9,71 @@ import {
 } from '../../system/model/model-training-store.js';
 
 const MODEL_TRAINING_RECIPE_STORAGE_KEY = 'neuroartan.model.training.recipe-draft';
+const FOUNDATION_SOURCE_REGISTRY = Object.freeze([
+  {
+    id: 'identity',
+    label: 'Identity',
+    layer: 'foundation.identity',
+    state: 'pending',
+    description: 'The stable profile and identity layer that defines who the model belongs to and what identity boundaries govern it.',
+  },
+  {
+    id: 'consent',
+    label: 'Consent',
+    layer: 'foundation.consent',
+    state: 'pending',
+    description: 'The permission layer that decides what can be indexed, copied, processed, trained, remembered, voiced, or released.',
+  },
+  {
+    id: 'source',
+    label: 'Source',
+    layer: 'foundation.source',
+    state: 'active',
+    description: 'The calibrated source layer that establishes cognitive orientation before training execution.',
+  },
+  {
+    id: 'memory',
+    label: 'Memory',
+    layer: 'foundation.memory',
+    state: 'pending',
+    description: 'The user-owned thought, document, reflection, and continuity material that may become model memory after consent.',
+  },
+  {
+    id: 'personality',
+    label: 'Personality',
+    layer: 'foundation.personality',
+    state: 'active',
+    description: 'The calibrated expression and behavioral pattern layer that shapes how the model responds.',
+  },
+  {
+    id: 'voice',
+    label: 'Voice',
+    layer: 'foundation.voice',
+    state: 'pending',
+    description: 'The voice continuity layer that remains disabled until capture, processing, activation, and legacy permissions are explicitly governed.',
+  },
+]);
+
+const LEGACY_SOURCE_FIELD_MAP = Object.freeze({
+  sourceProfile: 'identity',
+  sourceThoughts: 'memory',
+  sourceDocuments: 'memory',
+  sourceKnowledge: 'source',
+});
+
 const DEFAULT_DRAFT = Object.freeze({
   recipeName: 'Model foundation recipe',
   baseModelProvider: 'model_registry',
   baseModel: '',
   trainingMethod: 'supervised_fine_tuning',
-  sourceProfile: true,
-  sourceThoughts: false,
-  sourceDocuments: false,
-  sourceKnowledge: false,
+  foundationSources: {
+    identity: false,
+    consent: false,
+    source: true,
+    memory: false,
+    personality: true,
+    voice: false,
+  },
   epochs: 1,
   learningRate: '0.0002',
   contextLength: 2048,
@@ -29,8 +85,35 @@ let activeGraphConfig = getDefaultTrainingRecipeGraph();
 let selectedConnectionNodeId = '';
 let draggingNode = null;
 
+function requestDigitalBrainRefresh() {
+  document.dispatchEvent(new CustomEvent('model:digital-brain-refresh-request', {
+    detail: {
+      source: 'model-training-workspace',
+    },
+  }));
+}
+
 function normalizeProviderValue(value = '') {
   return value === 'hugging_face' ? 'model_registry' : value;
+}
+
+function normalizeFoundationSourceSelection(draft = {}) {
+  const directSelection = draft.foundationSources && typeof draft.foundationSources === 'object'
+    ? draft.foundationSources
+    : {};
+
+  return FOUNDATION_SOURCE_REGISTRY.reduce((selection, source) => {
+    const legacyField = Object.entries(LEGACY_SOURCE_FIELD_MAP).find(([, sourceId]) => sourceId === source.id)?.[0];
+    selection[source.id] = directSelection[source.id] === true || draft[legacyField] === true;
+    return selection;
+  }, {});
+}
+
+function getFoundationSourceRows(selection = normalizeFoundationSourceSelection(loadRecipeDraft())) {
+  return FOUNDATION_SOURCE_REGISTRY.map((source) => ({
+    ...source,
+    selected: selection[source.id] === true,
+  }));
 }
 
 function workspaceRoot() {
@@ -40,14 +123,17 @@ function workspaceRoot() {
 function loadRecipeDraft() {
   try {
     const parsed = JSON.parse(window.localStorage?.getItem(MODEL_TRAINING_RECIPE_STORAGE_KEY) || '{}');
-    return {
+    const draft = {
       ...DEFAULT_DRAFT,
       ...(parsed && typeof parsed === 'object' ? parsed : {}),
       graphConfig: parsed?.graphConfig || getDefaultTrainingRecipeGraph(),
     };
+    draft.foundationSources = normalizeFoundationSourceSelection(draft);
+    return draft;
   } catch (error) {
     return {
       ...DEFAULT_DRAFT,
+      foundationSources: normalizeFoundationSourceSelection(DEFAULT_DRAFT),
       graphConfig: getDefaultTrainingRecipeGraph(),
     };
   }
@@ -59,6 +145,7 @@ function writeRecipeDraft(draft) {
       MODEL_TRAINING_RECIPE_STORAGE_KEY,
       JSON.stringify({
         ...draft,
+        foundationSources: normalizeFoundationSourceSelection(draft),
         graphConfig: activeGraphConfig,
         updatedAt: new Date().toISOString(),
       })
@@ -174,10 +261,19 @@ function hydrateRecipeForm(root = workspaceRoot(), draft = loadRecipeDraft()) {
     }
   });
 
+  const foundationSelection = normalizeFoundationSourceSelection(draft);
+  root.querySelectorAll('[data-model-training-foundation-source]').forEach((control) => {
+    if (!(control instanceof HTMLInputElement)) return;
+    const sourceId = control.dataset.modelTrainingFoundationSource || '';
+    control.checked = foundationSelection[sourceId] === true;
+  });
+
   const recipeId = form.elements.namedItem('recipeId');
   if (recipeId instanceof HTMLInputElement) recipeId.value = String(draft.id || '');
   renderRecipeBoard(root);
   renderRecipeSources(root);
+
+  renderFoundationSourceList(root);
 
   if (draft.updatedAt) {
     setWorkspaceStatus(`Recipe draft saved ${new Date(draft.updatedAt).toLocaleString()}`, 'saved');
@@ -207,15 +303,25 @@ function serializeRecipeForm(form) {
     };
   }
 
-  return Array.from(form.elements).reduce((draft, control) => {
-    if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement)) return draft;
-    if (!control.name || control.type === 'file') return draft;
-    draft[control.name] = control.type === 'checkbox' ? control.checked : control.value;
-    return draft;
+  const draft = Array.from(form.elements).reduce((nextDraft, control) => {
+    if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement)) return nextDraft;
+    if (!control.name || control.type === 'file') return nextDraft;
+    nextDraft[control.name] = control.type === 'checkbox' ? control.checked : control.value;
+    return nextDraft;
   }, {
     id: activeRecipe?.id || '',
+    foundationSources: normalizeFoundationSourceSelection(activeRecipe || loadRecipeDraft()),
     graphConfig: activeGraphConfig,
   });
+
+  form.querySelectorAll('[data-model-training-foundation-source]').forEach((control) => {
+    if (!(control instanceof HTMLInputElement)) return;
+    const sourceId = control.dataset.modelTrainingFoundationSource || '';
+    if (!sourceId) return;
+    draft.foundationSources[sourceId] = control.checked;
+  });
+
+  return draft;
 }
 
 function renderRecipeSources(root = workspaceRoot()) {
@@ -252,6 +358,31 @@ function renderRecipeSources(root = workspaceRoot()) {
   });
 }
 
+function renderFoundationSourceList(root = workspaceRoot()) {
+  const list = root?.querySelector('[data-model-training-foundation-source-list]');
+  if (!(list instanceof HTMLElement)) return;
+  const values = getRecipeFormValues(root);
+  const rows = getFoundationSourceRows(normalizeFoundationSourceSelection(values));
+  list.replaceChildren();
+
+  rows.forEach((source) => {
+    const item = document.createElement('article');
+    item.className = 'model-training-workspace__source-item';
+    item.dataset.modelTrainingFoundationSourceState = source.state;
+    item.classList.toggle('is-selected', source.selected);
+
+    const text = document.createElement('div');
+    const title = document.createElement('strong');
+    title.textContent = source.label;
+    const detail = document.createElement('span');
+    detail.textContent = `${source.layer} · ${source.state}${source.selected ? ' · selected' : ' · not selected'}`;
+    text.append(title, detail);
+
+    item.append(text);
+    list.append(item);
+  });
+}
+
 function getBoardNode(nodeId) {
   return activeGraphConfig.nodes.find((node) => node.id === nodeId) || null;
 }
@@ -261,11 +392,13 @@ function getRecipeFormValues(root = workspaceRoot()) {
 }
 
 function getEnabledSourceLabels(values = {}) {
+  const foundationSelection = normalizeFoundationSourceSelection(values);
+  const foundationLabels = getFoundationSourceRows(foundationSelection)
+    .filter((source) => source.selected)
+    .map((source) => source.label);
+
   return [
-    values.sourceProfile ? 'Profile foundation' : '',
-    values.sourceThoughts ? 'Thought bank' : '',
-    values.sourceDocuments ? 'Documents' : '',
-    values.sourceKnowledge ? 'Knowledge base' : '',
+    ...foundationLabels,
     ...activeRecipeSources.map((source) => source.source_label || source.source_kind || 'External source'),
   ].filter(Boolean);
 }
@@ -306,8 +439,8 @@ function getBoardNodePresentation(nodeId, values = {}) {
         state: sourcesReady ? 'ready' : 'setup',
         status: sourcesReady ? 'Ready' : 'Needs setup',
         details: [
-          ['Selected', String(sources.length)],
-          ['Sources', sources.join(', ') || 'None selected'],
+          ['Foundation', getFoundationSourceRows(normalizeFoundationSourceSelection(values)).filter((source) => source.selected).map((source) => source.label).join(', ') || 'None selected'],
+          ['External', activeRecipeSources.length ? String(activeRecipeSources.length) : 'None attached'],
         ],
       };
     case 'execution':
@@ -405,6 +538,7 @@ function renderRecipeBoard(root = workspaceRoot()) {
     board.append(button);
   });
 
+  renderFoundationSourceList(root);
   renderRecipeBoardConnections(board);
 }
 
@@ -479,6 +613,7 @@ async function saveWorkspaceDraft(form) {
   activeGraphConfig = recipe.graphConfig;
   writeRecipeDraft(recipe);
   setWorkspaceStatus('Recipe draft saved to Supabase.', 'saved');
+  requestDigitalBrainRefresh();
   return recipe;
 }
 
@@ -517,6 +652,7 @@ async function handleSourceAdd() {
     if (sourceReference instanceof HTMLInputElement) sourceReference.value = '';
     if (sourceFile instanceof HTMLInputElement) sourceFile.value = '';
     setWorkspaceStatus('Training source attached.', 'saved');
+    requestDigitalBrainRefresh();
   } catch (error) {
     setWorkspaceStatus(formatWorkspaceError(error), 'error');
   }
@@ -527,6 +663,7 @@ async function handleSourceRemove(sourceId) {
     await removeTrainingRecipeSource(sourceId);
     activeRecipeSources = activeRecipe?.id ? await listTrainingRecipeSources(activeRecipe.id) : [];
     renderRecipeSources();
+    requestDigitalBrainRefresh();
   } catch (error) {
     setWorkspaceStatus(formatWorkspaceError(error), 'error');
   }
@@ -544,12 +681,22 @@ async function handleRunRequest() {
     };
     renderRecipeBoard();
     setWorkspaceStatus('Run queued. A connected training runner can claim this request.', 'queued');
+    requestDigitalBrainRefresh();
   } catch (error) {
     setWorkspaceStatus(formatWorkspaceError(error), 'error');
   }
 }
 
 function handleWorkspaceClick(event) {
+  const foundationSourceToggle = event.target?.closest?.('[data-model-training-foundation-source]');
+  if (foundationSourceToggle instanceof HTMLInputElement) {
+    const form = workspaceRoot()?.querySelector('[data-model-training-workspace-form]');
+    if (form instanceof HTMLFormElement) writeRecipeDraft(serializeRecipeForm(form));
+    renderRecipeBoard();
+    renderFoundationSourceList();
+    return;
+  }
+
   if (event.target?.closest?.('[data-model-training-workspace-open]')) {
     setWorkspaceOpen(true);
     return;

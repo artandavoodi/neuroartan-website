@@ -53,6 +53,19 @@ const MODEL_SOURCE_CALIBRATION_RESULTS_TABLE = 'model_source_calibration_results
 const MODEL_PERSONALITY_CALIBRATION_SESSIONS_TABLE = 'model_personality_calibration_sessions';
 const MODEL_PERSONALITY_CALIBRATION_ANSWERS_TABLE = 'model_personality_calibration_answers';
 const MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE = 'model_personality_calibration_results';
+const PRIVACY_SOURCE_REGISTRY_TABLE = 'privacy_source_registry';
+const PRIVACY_CONSENT_LEDGER_TABLE = 'privacy_consent_ledger';
+const PRIVACY_PROCESSING_LEDGER_TABLE = 'privacy_processing_ledger';
+const PRIVACY_STORAGE_LOCATION_REGISTRY_TABLE = 'privacy_storage_location_registry';
+const PRIVACY_EXPORT_JOBS_TABLE = 'privacy_export_jobs';
+const PRIVACY_DELETION_JOBS_TABLE = 'privacy_deletion_jobs';
+const PRIVACY_MEMORY_REGISTRY_TABLE = 'privacy_memory_registry';
+const PRIVACY_VOICE_REGISTRY_TABLE = 'privacy_voice_registry';
+const PRIVACY_LEGACY_REGISTRY_TABLE = 'privacy_legacy_registry';
+const PRIVACY_STAFF_ACCESS_AUDIT_TABLE = 'privacy_staff_access_audit';
+const PRIVACY_PROVIDER_REGISTRY_TABLE = 'privacy_provider_registry';
+const PRIVACY_PERMISSION_STATE_TABLE = 'privacy_permission_state';
+const PRIVACY_CONNECTOR_STATE_TABLE = 'privacy_connector_state';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -193,16 +206,23 @@ const MODEL_RESPONSE_AUDIENCE_DEFAULTS = Object.freeze({
 
 const MODEL_DIGITAL_BRAIN_CHANGE_FIELDS = Object.freeze({
   viewMode: 'Brain map view',
+  displayMode: 'Brain map display mode',
   motionState: 'Brain map motion',
+  motionDirection: 'Brain map rotation direction',
   constructNodesVisible: 'Construct nodes',
   constructLabelsVisible: 'Construct labels',
   nodeScale: 'Node scale',
-  connectionScale: 'Connection scale',
+  connectionScale: 'Connection thickness',
+  connectionVisibility: 'Connection visibility',
+  connectionPulse: 'Connection pulse',
   regionOpacity: 'Region opacity',
   labelScale: 'Label scale',
   constructScale: 'Construct node scale',
   constructSpread: 'Construct spread',
   signalIntensity: 'Signal intensity',
+  blurIntensity: 'Signal blur',
+  motionSpeed: 'Motion speed',
+  colorIntensity: 'Color intensity',
   zoomLevel: 'Brain map zoom',
   rotateX: 'Brain map vertical rotation',
   rotateY: 'Brain map horizontal rotation',
@@ -234,6 +254,21 @@ export function getModelStoreBackendState() {
     modelPersonalityCalibrationAnswersTable: MODEL_PERSONALITY_CALIBRATION_ANSWERS_TABLE,
     modelPersonalityCalibrationResultsTable: MODEL_PERSONALITY_CALIBRATION_RESULTS_TABLE,
     modelFoundationTables: MODEL_FOUNDATION_TABLES,
+    privacyDataGovernanceTables: {
+      sourceRegistry: PRIVACY_SOURCE_REGISTRY_TABLE,
+      consentLedger: PRIVACY_CONSENT_LEDGER_TABLE,
+      processingLedger: PRIVACY_PROCESSING_LEDGER_TABLE,
+      storageLocationRegistry: PRIVACY_STORAGE_LOCATION_REGISTRY_TABLE,
+      exportJobs: PRIVACY_EXPORT_JOBS_TABLE,
+      deletionJobs: PRIVACY_DELETION_JOBS_TABLE,
+      memoryRegistry: PRIVACY_MEMORY_REGISTRY_TABLE,
+      voiceRegistry: PRIVACY_VOICE_REGISTRY_TABLE,
+      legacyRegistry: PRIVACY_LEGACY_REGISTRY_TABLE,
+      staffAccessAudit: PRIVACY_STAFF_ACCESS_AUDIT_TABLE,
+      providerRegistry: PRIVACY_PROVIDER_REGISTRY_TABLE,
+      permissionState: PRIVACY_PERMISSION_STATE_TABLE,
+      connectorState: PRIVACY_CONNECTOR_STATE_TABLE,
+    },
     migrationStatus: 'supabase_canonical_model_foundation',
   };
 }
@@ -467,21 +502,41 @@ function normalizeDigitalBrainMotionState(value = '') {
   return normalized === 'paused' ? 'paused' : 'playing';
 }
 
+function normalizeDigitalBrainDisplayMode(value = '') {
+  const normalized = normalizeString(value).toLowerCase();
+  if (normalized === 'scan') return 'scan';
+  if (normalized === 'connectome') return 'connectome';
+  return 'nodes';
+}
+
+function normalizeDigitalBrainMotionDirection(value = '') {
+  const normalized = normalizeString(value).toLowerCase();
+  return normalized === 'counterclockwise' ? 'counterclockwise' : 'clockwise';
+}
+
 function mapModelDigitalBrainPreferences(row = {}) {
   if (!row || typeof row !== 'object') return null;
+  const payload = row.preferences_payload && typeof row.preferences_payload === 'object' ? row.preferences_payload : {};
 
   return {
     viewMode: normalizeString(row.view_mode || 'overview') || 'overview',
+    displayMode: normalizeDigitalBrainDisplayMode(row.display_mode ?? payload.display_mode),
     motionState: normalizeDigitalBrainMotionState(row.motion_state),
+    motionDirection: normalizeDigitalBrainMotionDirection(row.motion_direction ?? payload.motion_direction),
     constructNodesVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_nodes_visible, true),
     constructLabelsVisible: normalizeDigitalBrainPreferenceBoolean(row.construct_labels_visible, true),
-    nodeScale: normalizeDigitalBrainPreferenceNumber(row.node_scale, 1, 0.7, 1.4),
-    connectionScale: normalizeDigitalBrainPreferenceNumber(row.connection_scale, 1, 0.45, 1.4),
-    regionOpacity: normalizeDigitalBrainPreferenceNumber(row.region_opacity, 1, 0.45, 1),
-    labelScale: normalizeDigitalBrainPreferenceNumber(row.label_scale, 1, 0.75, 1.35),
-    constructScale: normalizeDigitalBrainPreferenceNumber(row.construct_scale, 1, 0.65, 1.6),
-    constructSpread: normalizeDigitalBrainPreferenceNumber(row.construct_spread, 1, 0.7, 1.65),
-    signalIntensity: normalizeDigitalBrainPreferenceNumber(row.signal_intensity, 1, 0.55, 1.45),
+    nodeScale: normalizeDigitalBrainPreferenceNumber(row.node_scale, 1, 0, 1.4),
+    connectionScale: normalizeDigitalBrainPreferenceNumber(row.connection_scale, 1, 0, 1.4),
+    connectionVisibility: normalizeDigitalBrainPreferenceNumber(row.connection_visibility ?? payload.connection_visibility, 1, 0, 2.5),
+    connectionPulse: normalizeDigitalBrainPreferenceNumber(row.connection_pulse ?? payload.connection_pulse, 1, 0, 2.5),
+    regionOpacity: normalizeDigitalBrainPreferenceNumber(row.region_opacity, 1, 0, 1),
+    labelScale: normalizeDigitalBrainPreferenceNumber(row.label_scale, 1, 0, 1.35),
+    constructScale: normalizeDigitalBrainPreferenceNumber(row.construct_scale, 1, 0, 2.4),
+    constructSpread: normalizeDigitalBrainPreferenceNumber(row.construct_spread, 1, 0, 1.65),
+    signalIntensity: normalizeDigitalBrainPreferenceNumber(row.signal_intensity, 1, 0, 1.45),
+    blurIntensity: normalizeDigitalBrainPreferenceNumber(row.blur_intensity ?? payload.blur_intensity, 1, 0, 2),
+    motionSpeed: normalizeDigitalBrainPreferenceNumber(row.motion_speed ?? payload.motion_speed, 1, 0, 2.5),
+    colorIntensity: normalizeDigitalBrainPreferenceNumber(row.color_intensity ?? payload.color_intensity, 1, 0, 1.6),
     zoomLevel: normalizeDigitalBrainPreferenceNumber(row.zoom_level, 1, 0.7, 2.4),
     rotateX: normalizeString(row.rotate_x || '0deg') || '0deg',
     rotateY: normalizeString(row.rotate_y || '0deg') || '0deg',
@@ -496,6 +551,8 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
   const modelId = normalizeString(model?.id || preferences.modelId || preferences.model_id || '');
   const constructNodesVisible = normalizeDigitalBrainPreferenceBoolean(preferences.constructNodesVisible, true);
   const constructLabelsVisible = normalizeDigitalBrainPreferenceBoolean(preferences.constructLabelsVisible, true);
+  const displayMode = normalizeDigitalBrainDisplayMode(preferences.displayMode);
+  const motionDirection = normalizeDigitalBrainMotionDirection(preferences.motionDirection);
 
   return {
     model_id: modelId,
@@ -505,13 +562,13 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
     motion_state: normalizeDigitalBrainMotionState(preferences.motionState),
     construct_nodes_visible: constructNodesVisible,
     construct_labels_visible: constructLabelsVisible,
-    node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0.7, 1.4),
-    connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0.45, 1.4),
-    region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0.45, 1),
-    label_scale: normalizeDigitalBrainPreferenceNumber(preferences.labelScale, 1, 0.75, 1.35),
-    construct_scale: normalizeDigitalBrainPreferenceNumber(preferences.constructScale, 1, 0.65, 1.6),
-    construct_spread: normalizeDigitalBrainPreferenceNumber(preferences.constructSpread, 1, 0.7, 1.65),
-    signal_intensity: normalizeDigitalBrainPreferenceNumber(preferences.signalIntensity, 1, 0.55, 1.45),
+    node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0, 1.4),
+    connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1.4),
+    region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0, 1),
+    label_scale: normalizeDigitalBrainPreferenceNumber(preferences.labelScale, 1, 0, 1.35),
+    construct_scale: normalizeDigitalBrainPreferenceNumber(preferences.constructScale, 1, 0, 2.4),
+    construct_spread: normalizeDigitalBrainPreferenceNumber(preferences.constructSpread, 1, 0, 1.65),
+    signal_intensity: normalizeDigitalBrainPreferenceNumber(preferences.signalIntensity, 1, 0, 1.45),
     zoom_level: normalizeDigitalBrainPreferenceNumber(preferences.zoomLevel, 1, 0.7, 2.4),
     rotate_x: normalizeString(preferences.rotateX || '0deg') || '0deg',
     rotate_y: normalizeString(preferences.rotateY || '0deg') || '0deg',
@@ -522,6 +579,27 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
       construct_nodes_visible: constructNodesVisible,
       construct_labels_visible: constructLabelsVisible,
       view_mode: normalizeString(preferences.viewMode || 'overview') || 'overview',
+      display_mode: displayMode,
+      motion_state: normalizeDigitalBrainMotionState(preferences.motionState),
+      motion_direction: motionDirection,
+      node_scale: normalizeDigitalBrainPreferenceNumber(preferences.nodeScale, 1, 0, 1.4),
+      connection_scale: normalizeDigitalBrainPreferenceNumber(preferences.connectionScale, 1, 0, 1.4),
+      connection_visibility: normalizeDigitalBrainPreferenceNumber(preferences.connectionVisibility, 1, 0, 2.5),
+      connection_pulse: normalizeDigitalBrainPreferenceNumber(preferences.connectionPulse, 1, 0, 2.5),
+      region_opacity: normalizeDigitalBrainPreferenceNumber(preferences.regionOpacity, 1, 0, 1),
+      label_scale: normalizeDigitalBrainPreferenceNumber(preferences.labelScale, 1, 0, 1.35),
+      construct_scale: normalizeDigitalBrainPreferenceNumber(preferences.constructScale, 1, 0, 2.4),
+      construct_spread: normalizeDigitalBrainPreferenceNumber(preferences.constructSpread, 1, 0, 1.65),
+      signal_intensity: normalizeDigitalBrainPreferenceNumber(preferences.signalIntensity, 1, 0, 1.45),
+      blur_intensity: normalizeDigitalBrainPreferenceNumber(preferences.blurIntensity, 1, 0, 2),
+      motion_speed: normalizeDigitalBrainPreferenceNumber(preferences.motionSpeed, 1, 0, 2.5),
+      color_intensity: normalizeDigitalBrainPreferenceNumber(preferences.colorIntensity, 1, 0, 1.6),
+      zoom_level: normalizeDigitalBrainPreferenceNumber(preferences.zoomLevel, 1, 0.7, 2.4),
+      rotate_x: normalizeString(preferences.rotateX || '0deg') || '0deg',
+      rotate_y: normalizeString(preferences.rotateY || '0deg') || '0deg',
+      focus_layer: normalizeString(preferences.focusLayer || ''),
+      focus_signal: normalizeString(preferences.focusSignal || ''),
+      focus_atlas: normalizeString(preferences.focusAtlas || ''),
     },
     updated_at: new Date().toISOString(),
   };
@@ -1024,6 +1102,255 @@ export async function listModelChangelogEvents(modelId, filters = {}) {
   }
 
   return Array.isArray(data) ? data : [];
+}
+
+export async function listModelPrivacySourceRecords(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(PRIVACY_SOURCE_REGISTRY_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('updated_at', { ascending: false });
+
+  const classification = normalizeString(filters.classification || '');
+  const storageLocation = normalizeString(filters.storageLocation || filters.storage_location || '');
+  const processingDepth = normalizeString(filters.processingDepth || filters.processing_depth || '');
+  const consentState = normalizeString(filters.consentState || filters.consent_state || '');
+
+  if (classification && classification !== 'all') query = query.eq('classification', classification);
+  if (storageLocation && storageLocation !== 'all') query = query.eq('storage_location', storageLocation);
+  if (processingDepth && processingDepth !== 'all') query = query.eq('processing_depth', processingDepth);
+  if (consentState && consentState !== 'all') query = query.eq('consent_state', consentState);
+
+  const { data, error } = await query;
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listModelPrivacyConsentRecords(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(PRIVACY_CONSENT_LEDGER_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('updated_at', { ascending: false });
+
+  const consentScope = normalizeString(filters.consentScope || filters.consent_scope || '');
+  const consentState = normalizeString(filters.consentState || filters.consent_state || '');
+
+  if (consentScope && consentScope !== 'all') query = query.eq('consent_scope', consentScope);
+  if (consentState && consentState !== 'all') query = query.eq('consent_state', consentState);
+
+  const { data, error } = await query;
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listModelPrivacyProcessingRecords(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(PRIVACY_PROCESSING_LEDGER_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('updated_at', { ascending: false });
+
+  const processingType = normalizeString(filters.processingType || filters.processing_type || '');
+  const jobState = normalizeString(filters.jobState || filters.job_state || '');
+
+  if (processingType && processingType !== 'all') query = query.eq('processing_type', processingType);
+  if (jobState && jobState !== 'all') query = query.eq('job_state', jobState);
+
+  const { data, error } = await query;
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
+}
+
+export async function listModelPrivacyGovernanceSnapshot(modelId) {
+  const normalizedModelId = normalizeString(modelId);
+  if (!normalizedModelId) {
+    return {
+      sources: [],
+      consent: [],
+      processing: [],
+    };
+  }
+
+  const [sources, consent, processing] = await Promise.all([
+    listModelPrivacySourceRecords(normalizedModelId),
+    listModelPrivacyConsentRecords(normalizedModelId),
+    listModelPrivacyProcessingRecords(normalizedModelId),
+  ]);
+
+  return {
+    sources,
+    consent,
+    processing,
+  };
+}
+
+export async function readUserPermissionState() {
+  const supabase = await resolveSupabaseClient();
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+
+  if (!supabase || !userId) return {};
+
+  const { data, error } = await supabase
+    .from(PRIVACY_PERMISSION_STATE_TABLE)
+    .select('*')
+    .eq('user_id', userId)
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return {};
+    throw error;
+  }
+
+  return (Array.isArray(data) ? data : []).reduce((state, row) => {
+    const key = normalizeString(row.permission_key || '');
+    if (!key || state[key]) return state;
+    state[key] = {
+      state: normalizeString(row.permission_state || ''),
+      runtime: normalizeString(row.runtime || ''),
+      source: normalizeString(row.source || ''),
+      scopeName: normalizeString(row.scope_name || ''),
+      metadata: row.metadata || {},
+      updatedAt: normalizeString(row.updated_at || ''),
+    };
+    return state;
+  }, {});
+}
+
+export async function saveUserPermissionState(permissionKey, values = {}) {
+  const supabase = await resolveSupabaseClient();
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+  const key = normalizeString(permissionKey || values.permission_key || values.key || '');
+
+  if (!supabase || !userId || !key) return null;
+
+  const profile = await getCurrentModelOwnerProfile().catch(() => null);
+  const now = new Date().toISOString();
+  const payload = {
+    user_id: userId,
+    profile_id: normalizeString(profile?.id || '') || null,
+    permission_key: key,
+    permission_state: normalizeString(values.state || values.permission_state || 'granted'),
+    runtime: normalizeString(values.runtime || 'browser'),
+    source: normalizeString(values.source || 'settings-permissions'),
+    scope_name: normalizeString(values.scopeName || values.scope_name || ''),
+    metadata: values.metadata && typeof values.metadata === 'object' ? values.metadata : {},
+    updated_at: now,
+  };
+
+  const { data, error } = await supabase
+    .from(PRIVACY_PERMISSION_STATE_TABLE)
+    .upsert(payload, { onConflict: 'user_id,permission_key' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return data || payload;
+}
+
+export async function readUserConnectorState() {
+  const supabase = await resolveSupabaseClient();
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+
+  if (!supabase || !userId) return {};
+
+  const { data, error } = await supabase
+    .from(PRIVACY_CONNECTOR_STATE_TABLE)
+    .select('*')
+    .eq('user_id', userId)
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return {};
+    throw error;
+  }
+
+  return (Array.isArray(data) ? data : []).reduce((state, row) => {
+    const service = normalizeString(row.connector_service || '');
+    if (!service || state[service]) return state;
+    state[service] = {
+      service,
+      label: normalizeString(row.connector_label || ''),
+      category: normalizeString(row.connector_category || ''),
+      runtime: normalizeString(row.runtime || ''),
+      connectionState: normalizeString(row.connection_state || 'not-connected'),
+      sourceVaultReady: row.source_vault_ready === true,
+      metadata: row.metadata || {},
+      updatedAt: normalizeString(row.updated_at || ''),
+    };
+    return state;
+  }, {});
+}
+
+export async function saveUserConnectorState(connectorService, values = {}) {
+  const supabase = await resolveSupabaseClient();
+  const user = await getCurrentSupabaseUser();
+  const userId = getUserId(user);
+  const service = normalizeString(connectorService || values.connector_service || values.service || '');
+
+  if (!supabase || !userId || !service) return null;
+
+  const profile = await getCurrentModelOwnerProfile().catch(() => null);
+  const now = new Date().toISOString();
+  const payload = {
+    user_id: userId,
+    profile_id: normalizeString(profile?.id || '') || null,
+    connector_service: service,
+    connector_label: normalizeString(values.label || values.connector_label || service),
+    connector_category: normalizeString(values.category || values.connector_category || 'general'),
+    runtime: normalizeString(values.runtime || 'not-configured'),
+    connection_state: normalizeString(values.connectionState || values.connection_state || 'not-connected'),
+    source_vault_ready: values.sourceVaultReady === true || values.source_vault_ready === true,
+    metadata: values.metadata && typeof values.metadata === 'object' ? values.metadata : {},
+    updated_at: now,
+  };
+
+  const { data, error } = await supabase
+    .from(PRIVACY_CONNECTOR_STATE_TABLE)
+    .upsert(payload, { onConflict: 'user_id,connector_service' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return data || payload;
 }
 
 export async function recordModelAuditEvent(model = {}, event = {}) {

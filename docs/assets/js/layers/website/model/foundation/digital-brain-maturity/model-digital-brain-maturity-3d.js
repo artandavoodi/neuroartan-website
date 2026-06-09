@@ -3,7 +3,31 @@
 import * as THREE from '/assets/vendor/three/three.module.js';
 
 const DIGITAL_BRAIN_3D_INSTANCES = new WeakMap();
+const DIGITAL_BRAIN_MAX_VISUAL_SIGNALS_PER_LAYER = 10;
+const DIGITAL_BRAIN_HALO_VERTEX_SHADER = `
+  varying vec2 vUv;
 
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const DIGITAL_BRAIN_HALO_FRAGMENT_SHADER = `
+  precision highp float;
+
+  varying vec2 vUv;
+  uniform vec3 uColor;
+  uniform float uOpacity;
+
+  void main() {
+    vec2 center = vUv - vec2(0.5);
+    float distanceFromCenter = length(center) * 2.0;
+    float softCore = 1.0 - smoothstep(0.0, 0.78, distanceFromCenter);
+    float feather = 1.0 - smoothstep(0.42, 1.0, distanceFromCenter);
+    float alpha = pow(max(softCore * 0.54 + feather * 0.46, 0.0), 1.72) * uOpacity;
+    gl_FragColor = vec4(uColor, alpha);
+  }
+`;
 export const DIGITAL_BRAIN_ATLAS_REGIONS = Object.freeze({
   prefrontal_cortex: {
     label: 'Prefrontal cortex',
@@ -82,6 +106,8 @@ export const DIGITAL_BRAIN_ATLAS_REGIONS = Object.freeze({
 const ATLAS_MESH_REGION_IDS = Object.freeze({
   'frontal-left': 'prefrontal_cortex',
   'frontal-right': 'prefrontal_cortex',
+  'frontal-cap': 'prefrontal_cortex',
+  'orbitofrontal-cap': 'prefrontal_cortex',
   'parietal-left': 'parietal_cortex',
   'parietal-right': 'postcentral_gyrus',
   'temporal-left': 'temporal_cortex',
@@ -202,6 +228,9 @@ export function updateDigitalBrainMaturity3D(surface, nextState = null) {
 
   const zoom = clamp(Number(surface.dataset.digitalBrainZoom || 1), 0.7, 2.4);
   const view = String(surface.dataset.digitalBrainView || 'overview');
+  const displayMode = String(surface.dataset.digitalBrainDisplayMode || 'nodes');
+  const scanMode = displayMode === 'scan';
+  const connectomeMode = displayMode === 'connectome';
   instance.camera.position.z = 6.6 / zoom;
   instance.camera.updateProjectionMatrix();
 
@@ -212,34 +241,84 @@ export function updateDigitalBrainMaturity3D(surface, nextState = null) {
   const constructScale = readDigitalBrainControl(surface, 'digitalBrainConstructScale', 1);
   const constructSpread = readDigitalBrainControl(surface, 'digitalBrainConstructSpread', 1);
   const signalIntensity = readDigitalBrainControl(surface, 'digitalBrainSignalIntensity', 1);
+  const blurIntensity = readDigitalBrainControl(surface, 'digitalBrainBlurIntensity', 1);
+  const colorIntensity = readDigitalBrainControl(surface, 'digitalBrainColorIntensity', 1);
+  const connectionVisibility = readDigitalBrainControl(surface, 'digitalBrainConnectionVisibility', 1);
+  const nodeSharpness = clamp(1 - (blurIntensity * 0.85), 0, 1);
+  const signalSharpness = blurIntensity > 0 ? 0 : 1;
+  const regionGlass = scanMode
+    ? 0.58
+    : view === 'nodes'
+      ? 0.68
+      : view === 'connections' || connectomeMode
+        ? 0.54
+        : 0.78;
+  instance.nodesGroup.visible = true;
+  instance.connectionsGroup.visible = !scanMode;
   if (!focus) surface.dataset.digitalBrainSignalFocus = '';
   instance.activeLayerId = focus;
   instance.layerMeshes.forEach((mesh, layerId) => {
     const active = !focus || layerId === focus;
-    const viewOpacity = view === 'regions' ? 0.54 : view === 'connections' ? 0.72 : 1;
-    mesh.material.opacity = active ? viewOpacity : 0.2;
+    const viewOpacity = view === 'regions' ? 0.46 : view === 'connections' ? 0.58 : 0.72;
+    mesh.visible = !scanMode;
+    mesh.material.opacity = (active ? viewOpacity : 0.2) * nodeSharpness;
     const nodeScale = readDigitalBrainControl(surface, 'digitalBrainNodeScale', 1);
-    mesh.scale.setScalar((active ? (view === 'nodes' ? 1.18 : 1.04) : 0.84) * nodeScale);
+    const baseScale = (active ? (view === 'nodes' ? 1.18 : 1.04) : 0.84) * nodeScale;
+    mesh.userData.pulseBaseScale = baseScale;
+    mesh.scale.setScalar(baseScale);
   });
   instance.nodesGroup.children.forEach((child) => {
-    const isSignalNode = Boolean(child.userData?.signal);
     const isSignalConnection = child.name.startsWith('signal-line:');
-    if (!isSignalNode && !isSignalConnection) return;
+    const isSignalHalo = child.name.startsWith('signal-blur:');
+    const isCoreHalo = child.name.startsWith('node-blur:');
+    const isSignalNode = Boolean(child.userData?.signal) && !isSignalConnection && !isSignalHalo;
+    const isCoreNode = child.name.startsWith('node:') || child.name.startsWith('node-ring:');
+    if (scanMode && isCoreNode) {
+      child.visible = false;
+      return;
+    }
+    if (!isSignalNode && !isSignalConnection && !isSignalHalo && !isCoreHalo) return;
 
     const layerId = child.userData?.layer?.id || '';
     const signalId = child.userData?.signal?.id || '';
     const impact = Number(child.userData?.impact || 0.35);
     const active = !focus || layerId === focus;
     const signalActive = active && (!signalFocus || signalId === signalFocus);
-    child.visible = subnodesVisible;
-    updateDigitalBrainSignalPosition(child, constructSpread);
+    child.visible = (isCoreHalo || subnodesVisible)
+      && (!scanMode || isSignalNode || isSignalHalo || isCoreHalo)
+      && (!isSignalConnection || (!scanMode && blurIntensity <= 0))
+      && (!isSignalNode || signalSharpness > 0.01)
+      && (!isSignalHalo || blurIntensity > 0)
+      && (!isCoreHalo || blurIntensity > 0);
+    updateDigitalBrainSignalPosition(child, constructSpread, isSignalConnection);
     if (child.material) {
-      child.material.opacity = isSignalConnection
-        ? clamp((signalActive ? 0.1 + (impact * 0.22) : active ? 0.08 : 0.035) * signalIntensity, 0, 1)
-        : clamp((signalActive ? 0.42 + (impact * 0.52) : active ? 0.32 + (impact * 0.22) : 0.12) * signalIntensity, 0, 1);
+      const signalLineViewWeight = view === 'connections' || connectomeMode
+        ? 1
+        : view === 'nodes'
+          ? 0.96
+          : 0.74;
+      child.material.opacity = isCoreHalo
+        ? clamp((active ? 0.34 + (impact * 0.36) : 0.08) * blurIntensity * colorIntensity, 0, 0.8)
+        : isSignalHalo
+        ? clamp((signalActive ? 0.42 + (impact * 0.34) : active ? 0.3 + (impact * 0.24) : 0.08) * signalIntensity * blurIntensity * colorIntensity, 0, 0.86)
+        : isSignalConnection
+        ? clamp((signalActive ? 0.2 + (impact * 0.28) : active ? 0.14 + (impact * 0.18) : 0.04) * signalLineViewWeight * signalIntensity * connectionVisibility, 0, 0.92)
+        : scanMode
+          ? clamp((signalActive ? 0.24 + (impact * 0.3) : active ? 0.18 + (impact * 0.18) : 0.08) * signalIntensity * colorIntensity * signalSharpness, 0, 0.62)
+          : clamp((signalActive ? 0.42 + (impact * 0.52) : active ? 0.32 + (impact * 0.22) : 0.12) * signalIntensity * colorIntensity * signalSharpness, 0, 1);
+      syncDigitalBrainMaterialOpacity(child.material);
+      if (scanMode && child.material.emissive) {
+        child.material.emissive.copy(child.material.color).multiplyScalar(0.26);
+        child.material.emissiveIntensity = (0.16 + (impact * 0.18)) * colorIntensity;
+      }
     }
     if (isSignalNode) {
-      child.scale.setScalar((signalActive ? 1 : 0.74) * constructScale * (0.82 + (impact * 0.24)));
+      child.scale.setScalar((scanMode ? 1.9 : signalActive ? 1 : 0.74) * constructScale * (0.82 + (impact * 0.24)));
+    } else if (isSignalHalo) {
+      child.scale.setScalar((0.22 + (impact * 0.44)) * constructScale * Math.max(0, blurIntensity));
+    } else if (isCoreHalo) {
+      const nodeScale = readDigitalBrainControl(surface, 'digitalBrainNodeScale', 1);
+      child.scale.setScalar((0.36 + (impact * 0.46)) * nodeScale * Math.max(0, blurIntensity));
     }
   });
 
@@ -248,9 +327,10 @@ export function updateDigitalBrainMaturity3D(surface, nextState = null) {
     const to = line.userData?.to || '';
     const active = !focus || from === focus || to === focus;
     const baseOpacity = line.userData?.baseOpacity || 0.72;
-    line.material.opacity = active
-      ? view === 'connections' ? Math.min(1, baseOpacity + 0.18) : baseOpacity
-      : 0.1;
+    line.visible = true;
+    line.material.opacity = clamp((active
+      ? view === 'connections' || connectomeMode ? Math.min(1, baseOpacity + 0.18) : baseOpacity
+      : 0.1) * connectionVisibility, 0, 1);
   });
   updateDigitalBrainConnectionThickness(instance);
 
@@ -263,15 +343,24 @@ export function updateDigitalBrainMaturity3D(surface, nextState = null) {
       : !focus || layerRelated;
     const baseOpacity = mesh.userData.baseOpacity || 0.68;
     const regionOpacity = readDigitalBrainControl(surface, 'digitalBrainRegionOpacity', 1);
+    const impact = calculateAtlasImpact(instance, region);
+    mesh.visible = !connectomeMode;
     const viewOpacity = view === 'nodes'
-      ? 0.32
+      ? scanMode ? 0.42 + (impact * 0.1) : 0.24
       : view === 'connections'
-        ? 0.24
+        ? scanMode ? 0.38 + (impact * 0.08) : 0.18
         : view === 'regions'
-          ? Math.min(0.78, baseOpacity + 0.08)
-          : baseOpacity;
-    mesh.material.opacity = clamp((active ? viewOpacity : 0.16) * regionOpacity, 0, 1);
-    mesh.material.emissiveIntensity = active && (atlasFocus || layerRelated) ? 0.1 : 0;
+          ? Math.min(scanMode ? 0.58 : 0.62, baseOpacity + 0.04 + (impact * 0.08))
+          : scanMode ? 0.46 + (impact * 0.1) : Math.min(baseOpacity, 0.52);
+    if (scanMode) {
+      mesh.material.color.copy(createAtlasScanColor(instance.materials, impact, colorIntensity));
+      mesh.material.emissive.copy(mesh.material.color).multiplyScalar(0.22);
+    } else if (mesh.userData.baseColor) {
+      mesh.material.color.copy(mesh.userData.baseColor);
+      mesh.material.emissive.copy(mesh.userData.baseColor).multiplyScalar(0.14);
+    }
+    mesh.material.opacity = clamp((active ? viewOpacity : scanMode ? 0.18 : 0.12) * regionOpacity * regionGlass, 0, 0.66);
+    mesh.material.emissiveIntensity = active && (scanMode || atlasFocus || layerRelated) ? (0.08 + (impact * 0.2)) * colorIntensity : 0;
   });
 
   renderDigitalBrainMaturity3DPanel(instance, focus, atlasFocus);
@@ -295,31 +384,33 @@ function createAnatomicalBrainModel(group, materials, atlasMeshes) {
   const brain = new THREE.Group();
   group.add(brain);
 
-  addLobe(brain, 'frontal-left', materials.frontal, [-0.58, 0.48, 0.12], [1.12, 0.9, 0.78], [0.02, 0.08, -0.14], atlasMeshes);
-  addLobe(brain, 'frontal-right', materials.frontal, [0.58, 0.48, 0.12], [1.12, 0.9, 0.78], [0.02, -0.08, 0.14], atlasMeshes);
-  addLobe(brain, 'parietal-left', materials.parietal, [-0.5, 0.04, -0.2], [1, 0.84, 0.74], [0.04, 0.08, -0.08], atlasMeshes);
-  addLobe(brain, 'parietal-right', materials.parietal, [0.5, 0.04, -0.2], [1, 0.84, 0.74], [0.04, -0.08, 0.08], atlasMeshes);
-  addLobe(brain, 'temporal-left', materials.temporal, [-0.86, -0.38, 0.08], [0.78, 0.5, 0.58], [-0.16, 0.1, -0.16], atlasMeshes);
-  addLobe(brain, 'temporal-right', materials.temporal, [0.86, -0.38, 0.08], [0.78, 0.5, 0.58], [-0.16, -0.1, 0.16], atlasMeshes);
-  addLobe(brain, 'occipital-left', materials.occipital, [-0.36, -0.08, -0.86], [0.72, 0.66, 0.5], [0.04, 0.16, -0.08], atlasMeshes);
-  addLobe(brain, 'occipital-right', materials.occipital, [0.36, -0.08, -0.86], [0.72, 0.66, 0.5], [0.04, -0.16, 0.08], atlasMeshes);
-  addLobe(brain, 'limbic-core', materials.limbic, [0, -0.14, 0.42], [0.7, 0.26, 0.26], [0.08, 0, 0], atlasMeshes);
-  addLobe(brain, 'cerebellum-left', materials.cerebellum, [-0.32, -0.9, -0.48], [0.48, 0.26, 0.3], [0.18, 0, -0.08], atlasMeshes);
-  addLobe(brain, 'cerebellum-right', materials.cerebellum, [0.32, -0.9, -0.48], [0.48, 0.26, 0.3], [0.18, 0, 0.08], atlasMeshes);
+  addLobe(brain, 'frontal-left', materials.frontal, [-0.42, 0.28, 0.38], [0.92, 0.66, 0.82], [0.02, 0.06, -0.1], atlasMeshes);
+  addLobe(brain, 'frontal-right', materials.frontal, [0.42, 0.28, 0.38], [0.92, 0.66, 0.82], [0.02, -0.06, 0.1], atlasMeshes);
+  addLobe(brain, 'frontal-cap', materials.frontal, [0, 0.1, 0.76], [0.98, 0.56, 0.48], [0.04, 0, 0], atlasMeshes);
+  addLobe(brain, 'orbitofrontal-cap', materials.frontal, [0, -0.24, 0.62], [0.76, 0.3, 0.34], [0.02, 0, 0], atlasMeshes);
+  addLobe(brain, 'parietal-left', materials.parietal, [-0.44, 0.18, -0.18], [0.9, 0.68, 0.82], [0.02, 0.08, -0.06], atlasMeshes);
+  addLobe(brain, 'parietal-right', materials.parietal, [0.44, 0.18, -0.18], [0.9, 0.68, 0.82], [0.02, -0.08, 0.06], atlasMeshes);
+  addLobe(brain, 'temporal-left', materials.temporal, [-0.78, -0.32, -0.02], [0.68, 0.4, 0.7], [-0.12, 0.1, -0.14], atlasMeshes);
+  addLobe(brain, 'temporal-right', materials.temporal, [0.78, -0.32, -0.02], [0.68, 0.4, 0.7], [-0.12, -0.1, 0.14], atlasMeshes);
+  addLobe(brain, 'occipital-left', materials.occipital, [-0.3, 0.08, -0.82], [0.66, 0.54, 0.5], [0.02, 0.14, -0.06], atlasMeshes);
+  addLobe(brain, 'occipital-right', materials.occipital, [0.3, 0.08, -0.82], [0.66, 0.54, 0.5], [0.02, -0.14, 0.06], atlasMeshes);
+  addLobe(brain, 'limbic-core', materials.limbic, [0, -0.2, 0.06], [0.6, 0.24, 0.42], [0.06, 0, 0], atlasMeshes);
+  addLobe(brain, 'cerebellum-left', materials.cerebellum, [-0.28, -0.72, -0.62], [0.44, 0.26, 0.36], [0.16, 0, -0.08], atlasMeshes);
+  addLobe(brain, 'cerebellum-right', materials.cerebellum, [0.28, -0.72, -0.62], [0.44, 0.26, 0.36], [0.16, 0, 0.08], atlasMeshes);
 
   const brainstem = new THREE.Mesh(
     new THREE.CylinderGeometry(0.12, 0.18, 0.82, 28, 1),
     materials.brainstem.clone(),
   );
   brainstem.name = 'brainstem';
-  brainstem.position.set(0, -1.22, -0.22);
+  brainstem.position.set(0, -1.0, -0.26);
   brainstem.rotation.x = 0.1;
   assignAtlasRegion(brainstem, 'brainstem', atlasMeshes);
   brain.add(brainstem);
 
   addFoldSet(brain, materials.fold);
   addMidline(brain, materials.midline);
-  brain.scale.set(1.18, 1.32, 1.12);
+  brain.scale.set(1.08, 1.18, 1.32);
 }
 
 function addLobe(group, name, material, position, scale, rotation, atlasMeshes) {
@@ -362,6 +453,7 @@ function assignAtlasRegion(mesh, meshName, atlasMeshes) {
 
   mesh.userData.atlas = { id: atlasId, ...atlas };
   mesh.userData.baseOpacity = mesh.material.opacity;
+  mesh.userData.baseColor = mesh.material.color.clone();
   mesh.material.emissive = mesh.material.color.clone().multiplyScalar(0.14);
   mesh.material.emissiveIntensity = 0;
   atlasMeshes.push(mesh);
@@ -407,6 +499,13 @@ function createLayerNodes(group, layers = [], materials, layerMeshes) {
     layerMeshes.set(layer.id, mesh);
     group.add(mesh);
 
+    const coreBlur = createDigitalBrainHaloMesh(materials, getLayerColor(materials, layer.id));
+    coreBlur.name = `node-blur:${layer.id}`;
+    coreBlur.position.copy(mesh.position);
+    coreBlur.userData.layer = layer;
+    coreBlur.userData.impact = impact;
+    group.add(coreBlur);
+
     const layerColor = getLayerColor(materials, layer.id);
     const ringMaterial = materials.nodeRing.clone();
     ringMaterial.color = layerColor;
@@ -424,10 +523,10 @@ function createLayerNodes(group, layers = [], materials, layerMeshes) {
 }
 
 function createLayerSignalNodes(group, layer = {}, origin, materials, layerImpact = 0.35) {
-  const signals = Array.isArray(layer.signals) ? layer.signals : [];
+  const signals = getDigitalBrainVisualSignals(layer);
   if (!signals.length) return;
 
-  signals.slice(0, 18).forEach((signal, index) => {
+  signals.forEach((signal, index) => {
     const offset = createSignalOffset(index, signals.length);
     const position = origin.clone().add(offset);
     const signalImpact = calculateSignalImpact(signal, layerImpact);
@@ -444,16 +543,27 @@ function createLayerSignalNodes(group, layer = {}, origin, materials, layerImpac
     node.userData.baseOffset = offset.clone();
     group.add(node);
 
+    const blur = createDigitalBrainHaloMesh(materials, getLayerColor(materials, layer.id));
+    blur.name = `signal-blur:${layer.id}:${signal.id || index}`;
+    blur.position.copy(position);
+    blur.userData.layer = layer;
+    blur.userData.signal = signal;
+    blur.userData.impact = signalImpact;
+    blur.userData.origin = origin.clone();
+    blur.userData.baseOffset = offset.clone();
+    group.add(blur);
+
     const points = [origin.clone(), position.clone()];
     const lineMaterial = materials.connection.clone();
     lineMaterial.color = getLayerColor(materials, layer.id);
-    lineMaterial.opacity = 0.08 + (signalImpact * 0.18);
-    const line = new THREE.Mesh(createConnectionTubeGeometry(points, 0.003 + (signalImpact * 0.0025)), lineMaterial);
+    lineMaterial.opacity = 0.16 + (signalImpact * 0.24);
+    const lineRadius = 0.005 + (signalImpact * 0.004);
+    const line = new THREE.Mesh(createConnectionTubeGeometry(points, lineRadius), lineMaterial);
     line.name = `signal-line:${layer.id}:${signal.id || index}`;
     line.userData.layer = layer;
     line.userData.signal = signal;
     line.userData.connectionPoints = points;
-    line.userData.baseRadius = 0.003 + (signalImpact * 0.0025);
+    line.userData.baseRadius = lineRadius;
     line.userData.impact = signalImpact;
     line.userData.origin = origin.clone();
     line.userData.baseOffset = offset.clone();
@@ -461,12 +571,32 @@ function createLayerSignalNodes(group, layer = {}, origin, materials, layerImpac
   });
 }
 
-function updateDigitalBrainSignalPosition(mesh, constructSpread = 1) {
+function createDigitalBrainHaloMesh(materials, color) {
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      uColor: { value: color.clone() },
+      uOpacity: { value: 0 },
+    },
+    vertexShader: DIGITAL_BRAIN_HALO_VERTEX_SHADER,
+    fragmentShader: DIGITAL_BRAIN_HALO_FRAGMENT_SHADER,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE.NormalBlending,
+  });
+  const mesh = new THREE.Mesh(materials.haloGeometry, material);
+  mesh.renderOrder = 1;
+  return mesh;
+}
+
+function updateDigitalBrainSignalPosition(mesh, constructSpread = 1, connector = false) {
   const origin = mesh.userData?.origin;
   const baseOffset = mesh.userData?.baseOffset;
   if (!(origin instanceof THREE.Vector3) || !(baseOffset instanceof THREE.Vector3)) return;
 
-  const nextPosition = origin.clone().add(baseOffset.clone().multiplyScalar(constructSpread));
+  const spread = connector ? Math.min(Number(constructSpread) || 1, 0.9) : constructSpread;
+  const nextPosition = origin.clone().add(baseOffset.clone().multiplyScalar(spread));
   if (mesh.userData?.signal && !mesh.name.startsWith('signal-line:')) {
     mesh.position.copy(nextPosition);
     return;
@@ -478,15 +608,38 @@ function updateDigitalBrainSignalPosition(mesh, constructSpread = 1) {
 }
 
 function createSignalOffset(index = 0, total = 1) {
-  const angle = ((Math.PI * 2) / Math.max(1, Math.min(total, 18))) * index;
-  const ring = Math.floor(index / 8);
-  const radius = 0.18 + (ring * 0.08);
+  const angle = index * Math.PI * (3 - Math.sqrt(5));
+  const density = Math.max(1, Math.sqrt(Math.max(1, total)));
+  const ring = Math.sqrt(index + 1) / density;
+  const radius = 0.08 + (ring * 0.2);
 
   return new THREE.Vector3(
     Math.cos(angle) * radius,
-    Math.sin(angle) * radius * 0.72,
-    0.08 + (ring * 0.03),
+    Math.sin(angle) * radius * 0.36,
+    0.02 + (ring * 0.04),
   );
+}
+
+function getDigitalBrainVisualSignals(layer = {}) {
+  return (Array.isArray(layer.signals) ? layer.signals : [])
+    .filter((signal) => signal?.visualRole !== 'detail')
+    .sort(compareDigitalBrainVisualSignalStrength)
+    .slice(0, DIGITAL_BRAIN_MAX_VISUAL_SIGNALS_PER_LAYER);
+}
+
+function compareDigitalBrainVisualSignalStrength(left = {}, right = {}) {
+  return getDigitalBrainVisualSignalRank(right) - getDigitalBrainVisualSignalRank(left);
+}
+
+function getDigitalBrainVisualSignalRank(signal = {}) {
+  const roleWeight = signal.visualRole === 'cluster'
+    ? 2
+    : signal.source === 'foundation_construct'
+      ? 0
+      : 1;
+  const aggregateWeight = Math.log10(Math.max(1, Number(signal.aggregateCount || 1))) / 2;
+  const valueWeight = String(signal.value || '').trim() ? 0.18 : 0;
+  return roleWeight + aggregateWeight + valueWeight + Number(signal.impact || 0);
 }
 
 function createLayerConnections(group, connections = [], layerMeshes, materials, layerState) {
@@ -518,12 +671,10 @@ function createConnectionTubeGeometry(points = [], radius = 0.006) {
 
 function updateDigitalBrainConnectionThickness(instance) {
   const connectionScale = readDigitalBrainControl(instance.surface, 'digitalBrainConnectionScale', 1);
-  const constructScale = readDigitalBrainControl(instance.surface, 'digitalBrainConstructScale', 1);
   const updateMesh = (mesh) => {
     if (!(mesh instanceof THREE.Mesh) || !Array.isArray(mesh.userData?.connectionPoints)) return;
     const baseRadius = Number(mesh.userData.baseRadius || 0.006);
-    const signalScale = mesh.name.startsWith('signal-line:') ? constructScale : 1;
-    const nextRadius = Math.max(0.0015, baseRadius * connectionScale * signalScale);
+    const nextRadius = Math.max(0.0001, baseRadius * Math.max(0, connectionScale));
     const pointSignature = createDigitalBrainPointSignature(mesh.userData.connectionPoints);
     if (
       Math.abs(Number(mesh.userData.currentRadius || 0) - nextRadius) < 0.0005
@@ -574,8 +725,8 @@ function bindDigitalBrainMaturity3D(instance) {
     if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
       instance.moved = true;
     }
-    instance.targetRotationY = clamp(instance.rotationY + deltaX * 0.006, -0.84, 0.84);
-    instance.targetRotationX = clamp(instance.rotationX + deltaY * 0.004, -0.48, 0.48);
+    instance.targetRotationY = instance.rotationY + deltaX * 0.006;
+    instance.targetRotationX = instance.rotationX + deltaY * 0.004;
   };
   const finishPointer = (event) => {
     if (!instance.dragging) return;
@@ -628,6 +779,7 @@ function focusLayerFromPointer(instance, event) {
     child instanceof THREE.Mesh
     && Boolean(child.userData?.signal)
     && !child.name.startsWith('signal-line:')
+    && !child.name.startsWith('signal-blur:')
   ));
   const intersections = instance.raycaster.intersectObjects([
     ...signalMeshes,
@@ -669,37 +821,93 @@ function resizeDigitalBrainMaturity3D(instance) {
 function animateDigitalBrainMaturity3D(instance) {
   instance.frame = requestAnimationFrame(() => animateDigitalBrainMaturity3D(instance));
   const motionPaused = instance.surface.dataset.digitalBrainMotion === 'paused';
+  const motionSpeed = readDigitalBrainControl(instance.surface, 'digitalBrainMotionSpeed', 1);
+  const motionDirection = instance.surface.dataset.digitalBrainMotionDirection === 'counterclockwise' ? -1 : 1;
+  const scanMode = String(instance.surface.dataset.digitalBrainDisplayMode || 'nodes') === 'scan';
   instance.brainGroup.rotation.x += (instance.targetRotationX - instance.brainGroup.rotation.x) * 0.08;
   instance.brainGroup.rotation.y += (instance.targetRotationY - instance.brainGroup.rotation.y) * 0.08;
   instance.nodesGroup.rotation.copy(instance.brainGroup.rotation);
   instance.connectionsGroup.rotation.copy(instance.brainGroup.rotation);
 
-  const pulse = (Math.sin(Date.now() / 900) + 1) / 2;
+  const connectionPulse = readDigitalBrainControl(instance.surface, 'digitalBrainConnectionPulse', 1);
+  const heartbeatPulse = createDigitalBrainHeartbeatPulse(motionSpeed) * connectionPulse;
   const nodeScale = readDigitalBrainControl(instance.surface, 'digitalBrainNodeScale', 1);
   const constructSpread = readDigitalBrainControl(instance.surface, 'digitalBrainConstructSpread', 1);
   const constructScale = readDigitalBrainControl(instance.surface, 'digitalBrainConstructScale', 1);
+  const blurIntensity = readDigitalBrainControl(instance.surface, 'digitalBrainBlurIntensity', 1);
+  instance.layerMeshes.forEach((mesh, layerId) => {
+    const active = !instance.activeLayerId || layerId === instance.activeLayerId;
+    const baseScale = Number(mesh.userData?.pulseBaseScale || mesh.scale.x || 1);
+    mesh.scale.setScalar(baseScale * (active ? 1 + (heartbeatPulse * 0.22) : 1));
+  });
   instance.nodesGroup.children.forEach((child) => {
     if (child.name.startsWith('node-ring:')) {
       const active = !instance.activeLayerId || child.userData?.layer?.id === instance.activeLayerId;
-      child.scale.setScalar((active ? 1 + (motionPaused ? 0 : pulse * 0.18) : 0.88) * nodeScale);
-      if (!motionPaused) child.rotation.z += 0.006;
+      child.scale.setScalar((active ? 1 + (heartbeatPulse * 0.3) : 0.88) * nodeScale);
+      if (!motionPaused) child.rotation.z += 0.006 * motionSpeed;
+    } else if (child.name.startsWith('node-blur:')) {
+      faceDigitalBrainHaloToCamera(child, instance.camera);
+      const impact = Number(child.userData?.impact || 0.35);
+      child.scale.setScalar(
+        (0.36 + (impact * 0.46))
+        * nodeScale
+        * Math.max(0, blurIntensity)
+        * (1 + (heartbeatPulse * 0.28)),
+      );
+    } else if (child.name.startsWith('signal-blur:')) {
+      updateDigitalBrainSignalPosition(child, constructSpread);
+      faceDigitalBrainHaloToCamera(child, instance.camera);
+      const impact = Number(child.userData?.impact || 0.35);
+      child.scale.setScalar(
+        (0.16 + (impact * 0.36))
+        * constructScale
+        * Math.max(0, blurIntensity)
+        * (1 + (heartbeatPulse * 0.38)),
+      );
     } else if (child.userData?.signal && !child.name.startsWith('signal-line:')) {
       updateDigitalBrainSignalPosition(child, constructSpread);
       const impact = Number(child.userData?.impact || 0.35);
-      child.scale.setScalar(constructScale * (0.82 + (impact * 0.2)) * (motionPaused ? 1 : 1 + (pulse * 0.08)));
+      child.scale.setScalar(
+        constructScale
+        * (scanMode ? 1.9 : 1)
+        * (0.82 + (impact * 0.2))
+        * (1 + (heartbeatPulse * 0.34)),
+      );
     }
   });
   const connectionScale = readDigitalBrainControl(instance.surface, 'digitalBrainConnectionScale', 1);
+  const connectionVisibility = readDigitalBrainControl(instance.surface, 'digitalBrainConnectionVisibility', 1);
+  const signalIntensity = readDigitalBrainControl(instance.surface, 'digitalBrainSignalIntensity', 1);
   instance.connectionsGroup.children.forEach((line) => {
     const base = line.userData?.baseOpacity || 0.32;
     const from = line.userData?.from || '';
     const to = line.userData?.to || '';
     const active = !instance.activeLayerId || from === instance.activeLayerId || to === instance.activeLayerId;
-    line.material.opacity = clamp((active ? Math.min(1, base + (motionPaused ? 0 : pulse * 0.1)) : 0.12) * connectionScale, 0, 1);
+    line.material.opacity = clamp(
+      (active ? Math.min(1, base + (heartbeatPulse * 0.42)) : 0.12)
+      * connectionVisibility,
+      0,
+      1,
+    );
+  });
+  instance.nodesGroup.children.forEach((child) => {
+    if (!child.name.startsWith('signal-line:') || !child.material) return;
+
+    const layerId = child.userData?.layer?.id || '';
+    const impact = Number(child.userData?.impact || 0.35);
+    const active = !instance.activeLayerId || layerId === instance.activeLayerId;
+    const pulseBoost = heartbeatPulse * 0.58;
+    child.material.opacity = clamp(
+      (active ? 0.08 + (impact * 0.16) + pulseBoost : 0.024)
+      * signalIntensity
+      * connectionVisibility,
+      0,
+      0.86,
+    );
   });
 
   if (!motionPaused && !instance.dragging && !instance.activeLayerId) {
-    instance.targetRotationY += 0.001;
+    instance.targetRotationY += 0.001 * motionSpeed * motionDirection;
   }
 
   syncDigitalBrainDomLabels(instance);
@@ -782,10 +990,13 @@ function renderDigitalBrainSignalDetails(signal = {}, layer = {}) {
 }
 
 function renderDigitalBrainLayerDetails(instance, layer = {}, region = {}) {
+  const visualSignals = getDigitalBrainVisualSignals(layer);
+  const aggregateCount = visualSignals.reduce((total, signal) => total + Math.max(1, Number(signal.aggregateCount || 1)), 0);
   return `
     <div><dt>System</dt><dd>${escapeDigitalBrainText(region.system || 'Distributed model layer')}</dd></div>
     <div><dt>Lobe</dt><dd>${escapeDigitalBrainText(region.lobe || 'Distributed')}</dd></div>
     <div><dt>Hemisphere</dt><dd>${escapeDigitalBrainText(region.hemisphere || 'Bilateral / model-wide')}</dd></div>
+    <div><dt>Visible constructs</dt><dd>${escapeDigitalBrainText(`${visualSignals.length} construct${visualSignals.length === 1 ? '' : 's'} · ${aggregateCount} connected item${aggregateCount === 1 ? '' : 's'}`)}</dd></div>
     <div><dt>Connected data</dt><dd>${escapeDigitalBrainText(getLayerRegisteredData(instance, layer.id).join(', ') || 'No live records connected')}</dd></div>
     <div><dt>Next</dt><dd>${escapeDigitalBrainText((layer.next || []).join(', ') || 'No downstream dependency')}</dd></div>
   `;
@@ -819,7 +1030,11 @@ function syncDigitalBrainDomLabels(instance) {
   });
 
   instance.nodesGroup.children.forEach((mesh) => {
-    if (!(mesh instanceof THREE.Mesh) || !mesh.userData?.signal || mesh.name.startsWith('signal-line:')) return;
+    if (!(mesh instanceof THREE.Mesh)
+      || !mesh.userData?.signal
+      || mesh.name.startsWith('signal-line:')
+      || mesh.name.startsWith('signal-blur:')
+    ) return;
     const layerId = mesh.userData?.layer?.id || '';
     const signalId = mesh.userData?.signal?.id || '';
     if (!layerId || !signalId) return;
@@ -857,7 +1072,7 @@ function getAtlasRegisteredSignals(instance, atlas = {}) {
 
 function getLayerRegisteredData(instance, layerId = '') {
   const layer = (instance.state.layers || []).find((item) => item.id === layerId);
-  return (Array.isArray(layer?.signals) ? layer.signals : [])
+  return getDigitalBrainVisualSignals(layer)
     .map((signal) => signal.value ? `${signal.label}: ${signal.value}` : signal.label)
     .filter(Boolean);
 }
@@ -868,8 +1083,21 @@ function getDigitalBrainMaturity3DInstance(surface) {
 }
 
 function readDigitalBrainControl(surface, key, fallback = 1) {
-  const value = Number(surface?.dataset?.[key] || fallback);
+  const rawValue = surface?.dataset?.[key];
+  const value = Number(rawValue === undefined || rawValue === null || rawValue === '' ? fallback : rawValue);
   return Number.isFinite(value) ? value : fallback;
+}
+
+function createDigitalBrainHeartbeatPulse(motionSpeed = 1) {
+  const numericSpeed = Number(motionSpeed);
+  const speed = clamp(Number.isFinite(numericSpeed) ? numericSpeed : 1, 0, 2.5);
+  if (speed <= 0) return 0;
+  const phase = ((Date.now() * speed) % 1180) / 1180;
+  const breathPhase = (Math.sin(Date.now() / (1250 / speed)) + 1) / 2;
+  const primaryBeat = Math.exp(-Math.pow((phase - 0.12) / 0.044, 2));
+  const secondaryBeat = Math.exp(-Math.pow((phase - 0.27) / 0.072, 2)) * 0.42;
+  const breathingFloor = breathPhase * 0.2;
+  return clamp(primaryBeat + secondaryBeat + breathingFloor, 0, 1);
 }
 
 function createDigitalBrainMaterials(tokens) {
@@ -889,12 +1117,13 @@ function createDigitalBrainMaterials(tokens) {
     occipital: createBrainMaterial(base, createThreeColor(tokens.occipital), 0.64),
     limbic: createBrainMaterial(base, createThreeColor(tokens.limbic), 0.68),
     cerebellum: createBrainMaterial(base, border, 0.32),
-    brainstem: new THREE.MeshStandardMaterial({ color: brainstem, roughness: 0.68, metalness: 0.04, transparent: true, opacity: 0.72 }),
+    brainstem: new THREE.MeshStandardMaterial({ color: brainstem, roughness: 0.68, metalness: 0.04, transparent: true, opacity: 0.46, depthWrite: false }),
     fold: new THREE.MeshStandardMaterial({ color: fold, roughness: 0.82, metalness: 0.02, transparent: true, opacity: 0.34 }),
     midline: new THREE.MeshStandardMaterial({ color: focus, roughness: 0.7, metalness: 0.02, transparent: true, opacity: 0.36 }),
     nodeRing: new THREE.MeshBasicMaterial({ color: border, transparent: true, opacity: 0.44 }),
     nodeFallback: new THREE.MeshStandardMaterial({ color: border, roughness: 0.52, transparent: true, opacity: 0.94 }),
     connection: new THREE.MeshBasicMaterial({ color: border, transparent: true, opacity: 0.38 }),
+    haloGeometry: new THREE.PlaneGeometry(1, 1, 1, 1),
     layers: {
       identity: createThreeColor(tokens.identity),
       source: createThreeColor(tokens.source),
@@ -906,6 +1135,18 @@ function createDigitalBrainMaterials(tokens) {
   };
 }
 
+function syncDigitalBrainMaterialOpacity(material) {
+  if (material?.uniforms?.uOpacity) {
+    material.uniforms.uOpacity.value = Number(material.opacity) || 0;
+  }
+}
+
+function faceDigitalBrainHaloToCamera(mesh, camera) {
+  const parentQuaternion = new THREE.Quaternion();
+  mesh.parent?.getWorldQuaternion(parentQuaternion);
+  mesh.quaternion.copy(parentQuaternion.invert().multiply(camera.quaternion));
+}
+
 function createBrainMaterial(baseColor, tintColor, mix = 0.5) {
   const color = baseColor.clone().lerp(tintColor, mix);
   return new THREE.MeshStandardMaterial({
@@ -913,7 +1154,8 @@ function createBrainMaterial(baseColor, tintColor, mix = 0.5) {
     roughness: 0.74,
     metalness: 0.02,
     transparent: true,
-    opacity: 0.68,
+    opacity: 0.48,
+    depthWrite: false,
   });
 }
 
@@ -962,11 +1204,14 @@ function getLayerColor(materials, layerId = '') {
 }
 
 function calculateLayerImpact(layer = {}) {
-  const signals = Array.isArray(layer.signals) ? layer.signals : [];
+  const signals = getDigitalBrainVisualSignals(layer);
   const liveSignals = signals.filter((signal) => signal?.source !== 'foundation_construct');
-  const valuedSignals = liveSignals.filter((signal) => String(signal?.value || '').trim()).length;
-  const signalRatio = Math.min(1, liveSignals.length / 10);
-  const valueRatio = liveSignals.length ? valuedSignals / liveSignals.length : 0;
+  const connectedItems = liveSignals.reduce((total, signal) => total + Math.max(1, Number(signal.aggregateCount || 1)), 0);
+  const valuedSignals = liveSignals
+    .filter((signal) => String(signal?.value || '').trim())
+    .reduce((total, signal) => total + Math.max(1, Number(signal.aggregateCount || 1)), 0);
+  const signalRatio = Math.min(1, Math.log10(connectedItems + 1) / 3);
+  const valueRatio = connectedItems ? valuedSignals / connectedItems : 0;
   const stateWeight = layer.state === 'complete' || layer.state === 'stable'
     ? 0.24
     : layer.state === 'forming'
@@ -976,10 +1221,41 @@ function calculateLayerImpact(layer = {}) {
   return clamp(0.22 + (signalRatio * 0.34) + (valueRatio * 0.28) + stateWeight, 0.24, 1);
 }
 
+function calculateAtlasImpact(instance, region = null) {
+  const relatedLayerIds = Array.isArray(region?.modelLayers) ? region.modelLayers : [];
+  if (!relatedLayerIds.length) return 0.35;
+  const layers = Array.isArray(instance?.state?.layers) ? instance.state.layers : [];
+  const impacts = relatedLayerIds
+    .map((layerId) => layers.find((layer) => layer.id === layerId))
+    .filter(Boolean)
+    .map(calculateLayerImpact);
+  if (!impacts.length) return 0.35;
+  return impacts.reduce((sum, value) => sum + value, 0) / impacts.length;
+}
+
+function createAtlasScanColor(materials, impact = 0.35, colorIntensity = 1) {
+  const value = clamp(Number(impact) || 0.35, 0, 1);
+  const numericIntensity = Number(colorIntensity);
+  const intensity = clamp(Number.isFinite(numericIntensity) ? numericIntensity : 1, 0, 1.6);
+  const color = materials.state.focus.clone().lerp(materials.state.warning, clamp(value * 1.2 * intensity, 0, 1));
+  if (value > 0.62) {
+    color.lerp(materials.state.danger, clamp((value - 0.62) / 0.38, 0, 1) * 0.72 * intensity);
+  }
+  if (intensity < 1) {
+    color.lerp(materials.state.border, 1 - intensity);
+  }
+  return color;
+}
+
 function calculateSignalImpact(signal = {}, layerImpact = 0.35) {
+  const explicitImpact = Number(signal?.impact);
+  const aggregateBoost = Math.min(0.18, Math.log10(Math.max(1, Number(signal?.aggregateCount || 1))) / 16);
+  if (Number.isFinite(explicitImpact) && explicitImpact > 0) {
+    return clamp((layerImpact * 0.3) + (explicitImpact * 0.64) + aggregateBoost, 0.16, 1);
+  }
   const valueLength = String(signal?.value || '').trim().length;
   const valueImpact = Math.min(1, valueLength / 80);
-  return clamp((layerImpact * 0.62) + (valueImpact * 0.38), 0.2, 1);
+  return clamp((layerImpact * 0.56) + (valueImpact * 0.34) + aggregateBoost, 0.2, 1);
 }
 
 function createConnectionMaterial(materials, state = 'pending') {
@@ -1114,8 +1390,12 @@ function disposeThreeObject(object) {
     if (child.geometry) child.geometry.dispose();
     if (child.material) {
       if (Array.isArray(child.material)) {
-        child.material.forEach((material) => material.dispose());
+        child.material.forEach((material) => {
+          material.map?.dispose?.();
+          material.dispose();
+        });
       } else {
+        child.material.map?.dispose?.();
         child.material.dispose();
       }
     }

@@ -1,0 +1,63 @@
+<section class="home-platform-destination home-platform-destination--settings-account" data-home-platform-destination-root data-account-settings-root aria-label="Account settings destination">
+  <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
+    <section class="home-platform-theme__section" data-account-settings-view="overview" aria-label="Account settings">
+      <div class="home-platform-theme__section-header">
+        <div>
+          <p class="home-platform-theme__section-eyebrow-text">Account</p>
+          <p class="home-platform-theme__section-copy">Account security and trust controls are governed from here.</p>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__toggle-list">
+        <button class="home-platform-theme__action-button" type="button" data-account-settings-detail="password">
+          <span class="home-platform-theme__action-button-label">
+            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/change-password/change-password.svg" alt="" width="16" height="16">
+            Change password
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="profile-settings__pane" data-account-settings-view="password" hidden aria-label="Change password">
+      <form class="profile-settings__form" data-account-password-form>
+        <div class="profile-settings__field-grid">
+          <label class="profile-settings__field">
+            <span class="profile-settings__label">Current password</span>
+            <input class="ui-field profile-settings__input" type="password" name="current_password" autocomplete="current-password" data-account-current-password>
+          </label>
+
+          <label class="profile-settings__field">
+            <span class="profile-settings__label">New password</span>
+            <input class="ui-field profile-settings__input" type="password" name="new_password" autocomplete="new-password" required data-account-new-password>
+          </label>
+
+          <label class="profile-settings__field">
+            <span class="profile-settings__label">Confirm password</span>
+            <input class="ui-field profile-settings__input" type="password" name="confirm_password" autocomplete="new-password" required>
+          </label>
+        </div>
+
+        <p class="profile-settings__status" data-account-password-status role="status" aria-live="polite"></p>
+
+        <div class="profile-settings__actions">
+          <button class="ui-button ui-button--secondary" type="submit">Update password</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="profile-settings__pane" data-account-settings-view="overview" aria-label="Verification request">
+      <form class="profile-settings__form" data-account-verification-form>
+        <label class="profile-settings__field">
+          <span class="profile-settings__label">Request note</span>
+          <textarea class="ui-field profile-settings__input profile-settings__textarea" name="request_note" rows="4" placeholder="Add context for the verification review"></textarea>
+        </label>
+
+        <p class="profile-settings__status" data-account-verification-status role="status" aria-live="polite"></p>
+
+        <div class="profile-settings__actions">
+          <button class="ui-button ui-button--secondary" type="submit" data-account-verification-submit>Request verification</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</section>

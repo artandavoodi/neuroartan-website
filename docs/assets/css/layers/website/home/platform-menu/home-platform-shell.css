@@ -398,7 +398,8 @@ body.home-platform-shell-open .home-platform-shell{
   display:none;
 }
 
-.home-platform-shell[data-home-platform-destination="settings"][data-home-platform-subdestination="language"] .home-platform-shell__back:not([hidden]){
+.home-platform-shell[data-home-platform-destination="settings"][data-home-platform-subdestination="language"] .home-platform-shell__back:not([hidden]),
+.home-platform-shell[data-home-platform-detail-back] .home-platform-shell__back:not([hidden]){
   display:inline-flex;
 }
 

@@ -75,6 +75,8 @@
             <button class="model-management__button" type="button" data-model-source-calibration-start aria-label="Start Source Calibration">Start Source Calibration</button>
           </section>
         </div>
+
+        <section class="model-management__control-group" data-model-source-vault-mount aria-label="Source Vault"></section>
       </section>
       <section class="model-management__foundation-group" data-model-foundation-group="memory" hidden></section>
       <section class="model-management__foundation-group" data-model-foundation-group="personality" hidden>
@@ -852,10 +854,11 @@
           <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
         </button>
       </header>
-      <nav class="model-management__data-manager-tabs" aria-label="Training data manager">
-        <button class="model-management__text-button" type="button" data-model-data-manager-pane="datasets">Datasets</button>
-        <button class="model-management__text-button" type="button" data-model-data-manager-pane="knowledge-base">Knowledge</button>
-        <button class="model-management__text-button" type="button" data-model-data-manager-pane="logics">Logics</button>
+      <nav class="model-management__data-manager-tabs" aria-label="Training data manager" role="tablist">
+        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="source-vault">Source database</button>
+        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="datasets">Datasets</button>
+        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="knowledge-base">Knowledge</button>
+        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="logics">Logics</button>
       </nav>
       <div class="model-management__data-manager-list" data-model-data-manager-list aria-live="polite"></div>
       <div class="profile-settings__status model-management__identity-status" data-model-data-manager-status aria-live="polite"></div>

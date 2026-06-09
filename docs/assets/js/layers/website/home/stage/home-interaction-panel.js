@@ -645,6 +645,10 @@ function submitHomeInteractionQuery() {
    11. EVENT BINDING
    ========================================================= */
 
+function getHomeInteractionEventElement(event) {
+  return event?.target instanceof Element ? event.target : null;
+}
+
 function bindHomeInteractionPanel() {
   subscribeActiveModelState(() => {
     renderHomeInteractionActiveModel();
@@ -652,11 +656,12 @@ function bindHomeInteractionPanel() {
 
   document.addEventListener('click', (event) => {
     const root = document.querySelector('#home-interaction-panel');
-    if (!root) {
+    const eventTarget = getHomeInteractionEventElement(event);
+    if (!root || !eventTarget) {
       return;
     }
 
-    const target = event.target.closest('[data-home-developer-github-connect], [data-home-developer-repositories-discover], [data-home-developer-workspace-create], [data-home-developer-action], [data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-settings-open="true"], #home-interaction-panel-submit');
+    const target = eventTarget.closest('[data-home-developer-github-connect], [data-home-developer-repositories-discover], [data-home-developer-workspace-create], [data-home-developer-action], [data-home-interaction-open-search], [data-home-interaction-attach], [data-home-interaction-settings-open="true"], #home-interaction-panel-submit');
     if (!target || !root.contains(target)) {
       return;
     }
@@ -733,7 +738,7 @@ function bindHomeInteractionPanel() {
   });
 
   document.addEventListener('mouseenter', (event) => {
-    const submit = event.target.closest('#home-interaction-panel-submit');
+    const submit = getHomeInteractionEventElement(event)?.closest('#home-interaction-panel-submit');
     if (!(submit instanceof HTMLButtonElement)) {
       return;
     }
@@ -749,7 +754,7 @@ function bindHomeInteractionPanel() {
   }, true);
 
   document.addEventListener('mouseleave', (event) => {
-    const submit = event.target.closest('#home-interaction-panel-submit');
+    const submit = getHomeInteractionEventElement(event)?.closest('#home-interaction-panel-submit');
     if (!(submit instanceof HTMLButtonElement)) {
       return;
     }
@@ -769,13 +774,16 @@ function bindHomeInteractionPanel() {
   }, true);
 
   document.addEventListener('change', (event) => {
-    const developerRepository = event.target.closest('[data-home-developer-repository]');
+    const eventTarget = getHomeInteractionEventElement(event);
+    if (!eventTarget) return;
+
+    const developerRepository = eventTarget.closest('[data-home-developer-repository]');
     if (developerRepository instanceof HTMLSelectElement) {
       void persistHomeDeveloperRepositorySelection();
       return;
     }
 
-    const fileInput = event.target.closest('#home-interaction-panel-file-input');
+    const fileInput = eventTarget.closest('#home-interaction-panel-file-input');
     if (!(fileInput instanceof HTMLInputElement)) {
       return;
     }
@@ -785,7 +793,7 @@ function bindHomeInteractionPanel() {
   });
 
   document.addEventListener('input', (event) => {
-    const input = event.target.closest('#home-interaction-panel-input');
+    const input = getHomeInteractionEventElement(event)?.closest('#home-interaction-panel-input');
     if (!(input instanceof HTMLTextAreaElement)) {
       return;
     }
@@ -794,7 +802,7 @@ function bindHomeInteractionPanel() {
   });
 
   document.addEventListener('keydown', (event) => {
-    const input = event.target.closest('#home-interaction-panel-input');
+    const input = getHomeInteractionEventElement(event)?.closest('#home-interaction-panel-input');
     if (!(input instanceof HTMLTextAreaElement)) {
       return;
     }
@@ -821,7 +829,7 @@ function bindHomeInteractionPanel() {
   });
 
   document.addEventListener('submit', (event) => {
-    const form = event.target.closest('#home-interaction-panel-form');
+    const form = getHomeInteractionEventElement(event)?.closest('#home-interaction-panel-form');
     if (!form) {
       return;
     }

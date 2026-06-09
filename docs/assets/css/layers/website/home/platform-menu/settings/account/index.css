@@ -1,0 +1,13 @@
+@import url('../../../../profile/private/settings/profile-settings.css');
+
+.home-platform-destination--settings-account [data-account-settings-view][hidden] {
+  display: none;
+}
+
+.home-platform-destination--settings-account .profile-settings__pane {
+  max-width: min(100%, 720px);
+}
+
+.home-platform-destination--settings-account .profile-settings__form {
+  margin-top: 0;
+}

@@ -5,7 +5,7 @@
    03) NAVIGATION GROUPS
    04) NAVIGATION ROWS
    05) NAVIGATION LABELS / ICONS / META
-   06) ACTIVE / HOVER / FOCUS STATES
+   06) NAVIGATION STATE STABILITY
    07) BREADCRUMB PRIMITIVE
    08) SIDEBAR / STACK NAVIGATION
    09) COLLAPSIBLE GROUP HOOKS
@@ -171,7 +171,7 @@
 }
 
 /* =============================================================================
-   06) ACTIVE / HOVER / FOCUS STATES
+   06) NAVIGATION STATE STABILITY
 ============================================================================= */
 .ui-nav__item:hover,
 .ui-nav__item:focus-visible,
@@ -179,7 +179,6 @@
 .ui-nav__link:focus-visible,
 .ui-nav__button:hover,
 .ui-nav__button:focus-visible{
-  border-color:var(--nav-primitive-hover-border);
   background:var(--nav-primitive-hover-background);
   outline:none;
   transform:none;
@@ -191,7 +190,6 @@
 .ui-nav__item.is-active,
 .ui-nav__link.is-active,
 .ui-nav__button.is-active{
-  border-color:var(--nav-primitive-active-border);
   background:var(--nav-primitive-active-background);
   color:var(--text-color);
 }

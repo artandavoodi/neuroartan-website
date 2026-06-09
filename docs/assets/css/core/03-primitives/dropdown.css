@@ -8,7 +8,7 @@
    00) FILE INDEX
    01) DROPDOWN TOKENS
    02) DROPDOWN ROOT
-   03) DROPDOWN STATES
+   03) DROPDOWN STATE STABILITY
    04) END OF FILE
 ============================================================================= */
 
@@ -68,11 +68,10 @@
 }
 
 /* =============================================================================
-   03) DROPDOWN STATES
+   03) DROPDOWN STATE STABILITY
 ============================================================================= */
 .ui-dropdown:hover,
 .ui-dropdown:focus-visible{
-  border-color:var(--ui-dropdown-border-hover);
   background-color:var(--ui-dropdown-bg-hover);
   color:var(--ui-dropdown-color-hover);
   outline:none;

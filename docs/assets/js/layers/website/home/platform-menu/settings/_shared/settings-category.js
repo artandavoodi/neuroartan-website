@@ -18,9 +18,33 @@ const RUNTIME_MODEL_SELECTOR = '[data-home-platform-runtime-model]';
 const RUNTIME_API_KEY_SELECTOR = '[data-home-platform-runtime-api-key]';
 const RUNTIME_SERVER_URL_SELECTOR = '[data-home-platform-runtime-server-url]';
 const SECTION_TOGGLE_SELECTOR = '[data-home-platform-theme-section-toggle]';
-const SECTION_CONTENT_SELECTOR = '[data-home-platform-theme-section-content]';
+const SECTION_CONTENT_SELECTOR = '.home-platform-theme__section-content';
 const PLUS_ICON_PATH = '/registry/icons/public/assets/core/actions/create/plus.svg';
 const MINUS_ICON_PATH = '/registry/icons/public/assets/core/actions/minus/minus.svg';
+const SECTION_TOGGLE_ICON_SELECTOR = '.home-platform-theme__section-toggle-icon';
+function syncSectionToggleIcon(toggleButton) {
+  if (!(toggleButton instanceof HTMLButtonElement)) return;
+
+  const icon = toggleButton.querySelector(SECTION_TOGGLE_ICON_SELECTOR);
+  if (!(icon instanceof HTMLElement)) return;
+
+  const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+  const iconPath = isExpanded ? MINUS_ICON_PATH : PLUS_ICON_PATH;
+
+  let image = icon.querySelector('img');
+  if (!(image instanceof HTMLImageElement)) {
+    icon.textContent = '';
+    image = document.createElement('img');
+    image.className = 'ui-icon-theme-aware';
+    image.alt = '';
+    image.width = 16;
+    image.height = 16;
+    icon.appendChild(image);
+  }
+
+  image.src = iconPath;
+}
+
 const NEUROARTAN_PERMISSION_STATE_KEY = 'neuroartan.permissions.state';
 const PERMISSION_KEY_MAP = Object.freeze({
   'permission-files': 'files',
@@ -478,21 +502,16 @@ function toggleSection(toggleButton) {
   const content = section.querySelector(SECTION_CONTENT_SELECTOR);
   if (!(content instanceof HTMLElement)) return;
 
-  const icon = toggleButton.querySelector('.home-platform-theme__section-toggle-icon');
   const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
 
   if (isExpanded) {
     toggleButton.setAttribute('aria-expanded', 'false');
     section.setAttribute('data-home-platform-theme-section-collapsed', 'true');
-    if (icon instanceof HTMLImageElement) {
-      icon.src = PLUS_ICON_PATH;
-    }
+    syncSectionToggleIcon(toggleButton);
   } else {
     toggleButton.setAttribute('aria-expanded', 'true');
     section.removeAttribute('data-home-platform-theme-section-collapsed');
-    if (icon instanceof HTMLImageElement) {
-      icon.src = MINUS_ICON_PATH;
-    }
+    syncSectionToggleIcon(toggleButton);
   }
 }
 
@@ -688,6 +707,7 @@ export function mountSettingsCategory(root, options = {}) {
 
   root.querySelectorAll(SECTION_TOGGLE_SELECTOR).forEach((toggleButton) => {
     if (!(toggleButton instanceof HTMLButtonElement)) return;
+    syncSectionToggleIcon(toggleButton);
     if (toggleButton.dataset.sectionToggleBound === 'true') return;
 
     toggleButton.dataset.sectionToggleBound = 'true';

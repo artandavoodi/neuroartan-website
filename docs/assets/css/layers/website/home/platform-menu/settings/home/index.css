@@ -1,0 +1,87 @@
+/* ==========================================================================
+   Priority Controls
+   Custom styling for drag-and-drop priority list
+   ========================================================================== */
+
+.home-platform-dashboard__priority-list{
+  display:flex;
+  flex-direction:column;
+  max-width:var(--size-full);
+  width:var(--size-full);
+  box-sizing:border-box;
+}
+
+.home-platform-dashboard__priority-row{
+  display:flex;
+  align-items:center;
+  border:0;
+  border-radius:var(--radius-panel);
+  background:transparent;
+  cursor:grab;
+  max-width:var(--size-full);
+  width:var(--size-full);
+  box-sizing:border-box;
+}
+
+.home-platform-dashboard__priority-row:active{
+  cursor:grabbing;
+}
+
+.home-platform-dashboard__priority-row.dragging{
+  opacity:0.5;
+}
+
+.home-platform-dashboard__priority-handle{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:var(--control-height-sm);
+  height:var(--control-height-sm);
+  cursor:grab;
+  opacity:var(--state-opacity-muted);
+}
+
+.home-platform-dashboard__priority-handle:active{
+  cursor:grabbing;
+}
+
+.home-platform-dashboard__priority-copy{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-width:var(--spacing-none);
+  flex:1;
+}
+
+.home-platform-dashboard__priority-title{
+  font:var(--type-body-strong);
+}
+
+.home-platform-dashboard__priority-caption{
+}
+
+.home-platform-dashboard__priority-controls{
+  display:none;
+}
+
+.home-platform-dashboard__priority-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--control-height-sm);
+  height:var(--control-height-sm);
+  border:var(--spacing-none);
+  border-radius:var(--radius-control);
+  background:transparent;
+  cursor:pointer;
+  transition:background var(--transition-fast) ease;
+}
+
+.home-platform-dashboard__priority-button:hover{
+  background:transparent;
+}
+
+.home-platform-dashboard__priority-button:disabled{
+  opacity:var(--state-opacity-disabled);
+  cursor:not-allowed;
+}

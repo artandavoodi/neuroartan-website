@@ -7,19 +7,25 @@
 /* =============================================================================
    01) SETTINGS AUTHORITY IMPORTS
 ============================================================================= */
-@import url('./_shared/settings-category.css');
 @import url('./appearance/index.css');
 @import url('./general/index.css');
+@import url('./_shared/settings-category.css');
+@import url('./home/index.css');
+@import url('./dashboard/index.css');
+@import url('./account/index.css');
+@import url('./model/index.css');
 @import url('./voice/index.css');
+@import url('./notifications/index.css');
 @import url('./permissions/index.css');
 @import url('./privacy/index.css');
+@import url('./security/index.css');
 @import url('./accessibility/index.css');
 @import url('./configuration/index.css');
 @import url('./connectors/index.css');
 @import url('./personalization/index.css');
-@import url('./dashboard/index.css');
 @import url('./storage-backup/index.css');
-@import url('./security/index.css');
+@import url('./language/index.css');
+@import url('./changelog/index.css');
 
 /* =============================================================================
    02) END OF FILE

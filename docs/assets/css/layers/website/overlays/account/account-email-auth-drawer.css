@@ -42,8 +42,8 @@
   --account-email-auth-input-letter-spacing: var(--account-field-letter-spacing);
   --account-email-auth-input-border:var(--control-border-unified);
   --account-email-auth-input-background:var(--control-surface);
-  --account-email-auth-input-focus-border:var(--control-border-hover-unified);
-  --account-email-auth-input-focus-ring:var(--focus-ring-shadow);
+  --account-email-auth-input-focus-border:var(--account-email-auth-input-border);
+  --account-email-auth-input-focus-ring:none;
 
   --account-email-auth-action-height: var(--account-button-height);
   --account-email-auth-action-radius:var(--shape-control-radius);
@@ -179,10 +179,6 @@ html[data-theme-effective="light"]{
   color: color-mix(in srgb, var(--text-primary-color) 52%, transparent);
 }
 
-.account-email-auth-drawer-input:focus{
-  border-color: var(--account-email-auth-input-focus-border);
-  box-shadow: var(--account-email-auth-input-focus-ring);
-}
 
 /* =============================================================================
    06) ACTIONS
@@ -227,7 +223,6 @@ html[data-theme-effective="light"]{
 .account-email-auth-drawer-action:hover,
 .account-email-auth-drawer-action:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--account-email-auth-action-border-hover);
   background: var(--account-email-auth-action-background-hover);
   outline: none;
 }

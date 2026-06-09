@@ -1,37 +1,12 @@
+@import url('../general/index.css');
+
 .home-platform-destination--settings-model [data-model-settings-view][hidden] {
   display: none;
 }
 
-.home-platform-destination--settings-model .home-platform-theme__metric-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-}
-
-.home-platform-destination--settings-model .home-platform-theme__metric-item {
-  min-width: 0;
-}
-
-.home-platform-destination--settings-model .home-platform-theme__metric-label {
-  display: block;
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.home-platform-destination--settings-model .home-platform-theme__metric-value {
-  display: block;
-  margin-top: var(--space-2);
-  color: var(--theme-text-primary);
-  font-size: var(--font-size-md);
-}
-
 .home-platform-destination--settings-model .home-platform-theme__save-status {
-  min-height: 1.5em;
-  color: var(--theme-text-muted);
-}
-
-@media (max-width: 760px) {
-  .home-platform-destination--settings-model .home-platform-theme__metric-grid {
-    grid-template-columns: 1fr;
-  }
+  min-height: var(--control-height-sm);
+  color: var(--text-color);
+  font: var(--type-label);
+  opacity: var(--state-opacity-muted);
 }

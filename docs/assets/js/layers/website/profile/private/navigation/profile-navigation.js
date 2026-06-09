@@ -359,12 +359,16 @@ function setState(nextState, options = {}) {
     ? normalizeModelPaneForSection(section, nextState?.modelPane || RUNTIME.state?.modelPane || 'overview')
     : normalizeModelPane(RUNTIME.state?.modelPane || nextState?.modelPane || 'overview');
 
-  RUNTIME.state = constrainStateToViewer(buildNavigationState(
+  const builtState = buildNavigationState(
     section,
     settingsPane,
     dashboardPane,
     modelPane
-  ));
+  );
+
+  RUNTIME.state = options.preserveExactModelRoute === true && MODEL_SECTIONS.has(builtState.section)
+    ? builtState
+    : constrainStateToViewer(builtState);
 
   if (options.writeHash !== false) {
     writeHash(RUNTIME.state);
@@ -422,6 +426,8 @@ function initProfileNavigation() {
       settingsPane: detail.settingsPane,
       dashboardPane: detail.dashboardPane,
       modelPane: detail.modelPane
+    }, {
+      preserveExactModelRoute: detail.source === 'home-platform-shell'
     });
   });
 
@@ -429,6 +435,14 @@ function initProfileNavigation() {
     if (!isPrivateProfileSurface() || getRouteContext() !== 'model') return;
 
     const requestedState = parseHash();
+    if (
+      RUNTIME.state
+      && MODEL_SECTIONS.has(RUNTIME.state.section)
+      && requestedState.section === RUNTIME.state.section
+      && requestedState.modelPane === RUNTIME.state.modelPane
+    ) {
+      return;
+    }
     if (shouldRequestModelAuthentication(requestedState, runtimeState)) {
       requestModelAuthentication();
     }

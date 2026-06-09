@@ -84,6 +84,7 @@ const DIGITAL_BRAIN_UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[
 const DIGITAL_BRAIN_SECRET_PATTERN = /\b(?:sk-[a-z0-9_-]{12,}|pk_[a-z0-9_-]{12,}|eyJ[a-z0-9_-]{16,}|[a-z0-9]{32,})\b/gi;
 const DIGITAL_BRAIN_PREFERENCE_LIMITS = Object.freeze({
   connectionScale: { min: 0, max: 1 },
+  constructScale: { min: 0, max: 1 },
 });
 
 const DIGITAL_BRAIN_VIEW_CONTROLS = Object.freeze([
@@ -258,7 +259,7 @@ function renderDigitalBrainMaturityControls(surface) {
           <span>Construct labels</span>
         </button>
         ${createDigitalBrainControlRange('nodeScale', 'Core node scale', 0, 1.4, 0.05, 1)}
-        ${createDigitalBrainControlRange('constructScale', 'Construct node scale', 0, 2.4, 0.05, 1)}
+        ${createDigitalBrainControlRange('constructScale', 'Construct node scale', 0, 1, 0.05, 1)}
         ${createDigitalBrainControlRange('signalIntensity', 'Construct visibility', 0, 1.45, 0.05, 1)}
         ${createDigitalBrainControlRange('constructSpread', 'Construct spread', 0, 1.65, 0.05, 1)}
         ${createDigitalBrainControlRange('labelScale', 'Construct label scale', 0, 1.35, 0.05, 1)}
@@ -558,7 +559,7 @@ function applyDigitalBrainSavedPreferences(surface, preferences = null) {
   surface.dataset.digitalBrainConnectionPulse = resolveDigitalBrainPreferenceValue(resolvedPreferences.connectionPulse, surface.dataset.digitalBrainConnectionPulse, '1');
   surface.dataset.digitalBrainRegionOpacity = resolveDigitalBrainPreferenceValue(resolvedPreferences.regionOpacity, surface.dataset.digitalBrainRegionOpacity, '1');
   surface.dataset.digitalBrainLabelScale = resolveDigitalBrainPreferenceValue(resolvedPreferences.labelScale, surface.dataset.digitalBrainLabelScale, '1');
-  surface.dataset.digitalBrainConstructScale = resolveDigitalBrainPreferenceValue(resolvedPreferences.constructScale, surface.dataset.digitalBrainConstructScale, '1');
+  surface.dataset.digitalBrainConstructScale = String(normalizeDigitalBrainPreferenceNumber('constructScale', resolvedPreferences.constructScale ?? surface.dataset.digitalBrainConstructScale, 1));
   surface.dataset.digitalBrainConstructSpread = resolveDigitalBrainPreferenceValue(resolvedPreferences.constructSpread, surface.dataset.digitalBrainConstructSpread, '1');
   surface.dataset.digitalBrainSignalIntensity = resolveDigitalBrainPreferenceValue(resolvedPreferences.signalIntensity, surface.dataset.digitalBrainSignalIntensity, '1');
   surface.dataset.digitalBrainBlurIntensity = resolveDigitalBrainPreferenceValue(resolvedPreferences.blurIntensity, surface.dataset.digitalBrainBlurIntensity, '1');
@@ -676,7 +677,7 @@ function collectDigitalBrainPreferences(surface) {
     connectionPulse: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConnectionPulse', 1),
     regionOpacity: readDigitalBrainPreferenceNumber(surface, 'digitalBrainRegionOpacity', 1),
     labelScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainLabelScale', 1),
-    constructScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConstructScale', 1),
+    constructScale: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConstructScale', 1, 'constructScale'),
     constructSpread: readDigitalBrainPreferenceNumber(surface, 'digitalBrainConstructSpread', 1),
     signalIntensity: readDigitalBrainPreferenceNumber(surface, 'digitalBrainSignalIntensity', 1),
     blurIntensity: readDigitalBrainPreferenceNumber(surface, 'digitalBrainBlurIntensity', 1),

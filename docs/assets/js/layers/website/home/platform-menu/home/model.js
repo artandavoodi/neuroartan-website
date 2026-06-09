@@ -1,25 +1,25 @@
-// Model Readiness Module - Model Layer
+// Model Module
 // Provides model training and deployment readiness information
 
-// Get dashboard configuration
-function getDashboardConfig() {
-  const stored = localStorage.getItem('neuroartan-dashboard-config');
+// Get home configuration
+function getHomeConfig() {
+  const stored = localStorage.getItem('neuroartan-home-config');
   if (stored) {
     try {
       return JSON.parse(stored);
     } catch (e) {
-      console.error('Failed to parse dashboard config:', e);
+      console.error('Failed to parse home config:', e);
     }
   }
   return null;
 }
 
-// Update model readiness display
-function updateModelReadinessDisplay(root) {
-  const config = getDashboardConfig();
+// Update model display
+function updateModelDisplay(root) {
+  const config = getHomeConfig();
   
   // Check if module is visible
-  if (config && config.visibility && config.visibility['model-readiness'] === false) {
+  if (config && config.visibility && config.visibility['model'] === false) {
     root.style.display = 'none';
     return;
   }
@@ -40,7 +40,7 @@ function updateModelReadinessDisplay(root) {
 // Fetch readiness data from backend
 async function fetchReadinessData() {
   try {
-    const response = await fetch('/assets/data/dashboard/readiness-data.json');
+    const response = await fetch('/assets/data/home/readiness-data.json');
     if (!response.ok) throw new Error('Failed to fetch readiness data');
     const data = await response.json();
     
@@ -65,25 +65,25 @@ async function fetchReadinessData() {
   }
 }
 
-// Listen for dashboard configuration changes
+// Listen for home configuration changes
 function listenForConfigChanges(root) {
   const controller = new AbortController();
-  document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'model-readiness') {
-      updateModelReadinessDisplay(root);
+  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
+    if (e.detail.moduleId === 'model') {
+      updateModelDisplay(root);
     }
   }, { signal: controller.signal });
   
-  document.addEventListener('neuroartan:dashboard:initialized', () => {
-    updateModelReadinessDisplay(root);
+  document.addEventListener('neuroartan:home:initialized', () => {
+    updateModelDisplay(root);
   }, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount model readiness module
-export function mountHomeModelReadiness(root) {
-  const scope = root?.querySelector?.('[data-home-overview-module="model-readiness"]')
-    || root?.matches?.('[data-home-overview-module="model-readiness"]') && root;
+// Mount model module
+export function mountHomeModel(root) {
+  const scope = root?.querySelector?.('[data-home-overview-module="model"]')
+    || root?.matches?.('[data-home-overview-module="model"]') && root;
 
   if (!(scope instanceof Element)) return;
 
@@ -91,7 +91,7 @@ export function mountHomeModelReadiness(root) {
   const nodes = [...scope.querySelectorAll('[data-readiness-node]')];
 
   // Initialize display
-  updateModelReadinessDisplay(scope);
+  updateModelDisplay(scope);
   const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle node selection
@@ -104,7 +104,7 @@ export function mountHomeModelReadiness(root) {
   
   // Set up periodic updates
   const updateInterval = setInterval(() => {
-    updateModelReadinessDisplay(scope);
+    updateModelDisplay(scope);
   }, 30000); // Update every 30 seconds
   
   // Return cleanup function

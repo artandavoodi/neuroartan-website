@@ -87,6 +87,11 @@
   --type-body-sm-line-height:1.5;
   --type-body-sm-size:0.875rem;
   --type-body-tracking:0;
+  --type-label-size:0.84rem;
+  --type-label-weight:400;
+  --type-label-line-height:1.38;
+  --type-label-tracking:0;
+  --type-label:var(--type-label-weight) calc(var(--type-label-size) * var(--accessibility-typography-scale, 1)) / var(--type-label-line-height) var(--font-family-sans);
 }
 
 /* =============================================================================

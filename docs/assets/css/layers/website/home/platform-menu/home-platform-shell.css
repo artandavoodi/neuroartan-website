@@ -864,7 +864,7 @@ body[data-auth-state="resolving"] [data-profile-auth-visible]{
   scrollbar-width:none;
   scrollbar-color:color-mix(in srgb, var(--text-primary-color) 24%, transparent) transparent;
   -ms-overflow-style:none;
-  padding:var(--home-platform-shell-content-inner-padding-top) var(--home-platform-shell-content-inner-padding-right) var(--home-platform-shell-column-padding-bottom) var(--home-platform-shell-content-inner-padding-left);
+  padding:var(--home-platform-shell-content-inner-padding-top) var(--home-platform-shell-content-inner-padding-right) var(--home-platform-shell-content-inner-padding-top) var(--home-platform-shell-content-inner-padding-left);
 }
 
 .home-platform-shell__content-inner::-webkit-scrollbar{
@@ -885,7 +885,7 @@ body[data-auth-state="resolving"] [data-profile-auth-visible]{
 .home-platform-destination,
 .home-platform-destination__surface{
   display:grid;
-  gap:var(--home-platform-shell-destination-gap);
+  gap:var(--spacing-none);
   min-width:var(--spacing-none);
   max-width:var(--size-full);
   overflow:visible;

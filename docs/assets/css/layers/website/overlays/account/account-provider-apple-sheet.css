@@ -188,7 +188,6 @@ html[data-theme-effective="dark"]{
 .account-provider-apple-sheet-action:hover,
 .account-provider-apple-sheet-action:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--account-provider-apple-button-border-hover);
   background: var(--account-provider-apple-button-background-hover);
   outline: none;
 }

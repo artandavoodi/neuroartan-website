@@ -1,26 +1,21 @@
+@import url('../general/index.css');
+
 .settings-changelog__list {
   display: grid;
-  gap: var(--space-4);
 }
 
 .settings-changelog__item {
   display: grid;
-  gap: var(--space-2);
-  padding-block: var(--space-3);
-  border-bottom: 1px solid var(--theme-border-subtle);
-}
-
-.settings-changelog__item:last-child {
-  border-bottom: 0;
 }
 
 .settings-changelog__title {
-  color: var(--theme-text-primary);
-  font-weight: var(--font-weight-semibold);
+  color: var(--text-color);
+  font: var(--type-body-strong);
 }
 
 .settings-changelog__meta,
 .settings-changelog__detail {
-  color: var(--theme-text-muted);
-  font-size: var(--font-size-sm);
+  color: var(--text-color);
+  font: var(--type-label);
+  opacity: var(--state-opacity-muted);
 }

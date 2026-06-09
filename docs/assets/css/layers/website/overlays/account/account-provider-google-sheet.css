@@ -184,7 +184,6 @@ html[data-theme-effective="dark"]{
 .account-provider-google-sheet-action:hover,
 .account-provider-google-sheet-action:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--account-provider-google-button-border-hover);
   background: var(--account-provider-google-button-background-hover);
   outline: none;
 }

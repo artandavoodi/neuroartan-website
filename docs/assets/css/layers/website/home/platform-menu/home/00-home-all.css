@@ -1,9 +1,17 @@
 @import url('../settings/general/index.css');
+@import url('./overview-canvas.css');
+@import url('./shortcuts.css');
+@import url('./now.css');
+@import url('./system-state.css');
+@import url('./model.css');
+@import url('./continuity.css');
+@import url('./cognitive-map.css');
+@import url('./direction.css');
 
 .home-platform-destination--home-overview{
   width:var(--size-full);
 }
 
-.home-platform-destination__surface.home-platform-theme{
+.home-platform-destination--home-overview .home-platform-destination__surface.home-platform-theme{
   padding:var(--spacing-none);
 }

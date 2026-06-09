@@ -19,6 +19,7 @@ import './accessibility/index.js';
 import './configuration/index.js';
 import './connectors/index.js';
 import './personalization/index.js';
+import './home/index.js';
 import './dashboard/index.js';
 import './storage-backup/index.js';
 import './security/index.js';

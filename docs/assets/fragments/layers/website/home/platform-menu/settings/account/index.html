@@ -1,20 +1,19 @@
 <section class="home-platform-destination home-platform-destination--settings-account" data-home-platform-destination-root data-account-settings-root aria-label="Account settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" data-account-settings-view="overview" aria-label="Account settings">
-      <div class="home-platform-theme__section-header">
-        <div>
-          <p class="home-platform-theme__section-eyebrow-text">Account</p>
-          <p class="home-platform-theme__section-copy">Account security and trust controls are governed from here.</p>
+    <section class="home-platform-theme__section" data-account-settings-view="overview" aria-labelledby="settings-account-overview" data-home-platform-theme-section>
+      <button class="home-platform-theme__section-eyebrow" type="button" aria-expanded="true" aria-controls="settings-account-overview-content" data-home-platform-theme-section-toggle>
+        <span class="home-platform-theme__section-title" id="settings-account-overview">Account</span>
+        <span class="home-platform-theme__section-toggle-icon" aria-hidden="true">⌄</span>
+      </button>
+      <div class="home-platform-theme__section-content" id="settings-account-overview-content" data-home-platform-theme-section-content>
+        <div class="home-platform-theme__toggle-list">
+          <button class="home-platform-theme__action-button" type="button" data-account-settings-detail="password">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/change-password/change-password.svg" alt="" width="16" height="16">
+              Change password
+            </span>
+          </button>
         </div>
-      </div>
-
-      <div class="home-platform-theme__toggle-list">
-        <button class="home-platform-theme__action-button" type="button" data-account-settings-detail="password">
-          <span class="home-platform-theme__action-button-label">
-            <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/change-password/change-password.svg" alt="" width="16" height="16">
-            Change password
-          </span>
-        </button>
       </div>
     </section>
 
@@ -23,24 +22,29 @@
         <div class="profile-settings__field-grid">
           <label class="profile-settings__field">
             <span class="profile-settings__label">Current password</span>
-            <input class="ui-field profile-settings__input" type="password" name="current_password" autocomplete="current-password" data-account-current-password>
+            <input class="account-email-auth-drawer-input" type="password" name="current_password" autocomplete="current-password" data-account-current-password>
           </label>
 
           <label class="profile-settings__field">
             <span class="profile-settings__label">New password</span>
-            <input class="ui-field profile-settings__input" type="password" name="new_password" autocomplete="new-password" required data-account-new-password>
+            <input class="account-email-auth-drawer-input" type="password" name="new_password" autocomplete="new-password" required data-account-new-password>
           </label>
 
           <label class="profile-settings__field">
             <span class="profile-settings__label">Confirm password</span>
-            <input class="ui-field profile-settings__input" type="password" name="confirm_password" autocomplete="new-password" required>
+            <input class="account-email-auth-drawer-input" type="password" name="confirm_password" autocomplete="new-password" required>
           </label>
         </div>
 
         <p class="profile-settings__status" data-account-password-status role="status" aria-live="polite"></p>
 
-        <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit">Update password</button>
+        <div class="home-platform-theme__toggle-list">
+          <button class="home-platform-theme__action-button" type="submit">
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/core/actions/password-security/password-security.svg" alt="" width="16" height="16">
+              Update password
+            </span>
+          </button>
         </div>
       </form>
     </section>
@@ -54,8 +58,13 @@
 
         <p class="profile-settings__status" data-account-verification-status role="status" aria-live="polite"></p>
 
-        <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-account-verification-submit>Request verification</button>
+        <div class="home-platform-theme__toggle-list">
+          <button class="home-platform-theme__action-button" type="submit" data-account-verification-submit>
+            <span class="home-platform-theme__action-button-label">
+              <img class="ui-icon-theme-aware home-platform-theme__action-icon" src="/registry/icons/public/assets/layers/website/profile/actions/verification.svg" alt="" width="16" height="16">
+              Request verification
+            </span>
+          </button>
         </div>
       </form>
     </section>

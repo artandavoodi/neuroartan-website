@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) SHARED BUTTON / CONTROL BASE
-   03) HOVER / FOCUS STATES
+   03) BUTTON STATE STABILITY
    04) PRIMARY BUTTON VARIANT
    05) BRAND BUTTON VARIANT
    06) SECONDARY BUTTON VARIANT
@@ -39,13 +39,12 @@
 }
 
 /* =============================================================================
-   03) FOCUS STATES
+   03) BUTTON STATE STABILITY
 ============================================================================= */
 .ui-button:focus-visible,
 .ui-control:focus-visible{
   outline:none;
-  border-color:var(--control-border-hover-unified);
-  box-shadow:var(--focus-ring-shadow);
+  box-shadow:none;
 }
 
 /* =============================================================================

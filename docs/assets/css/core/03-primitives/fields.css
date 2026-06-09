@@ -2,7 +2,7 @@
    00) FILE INDEX
    01) MODULE IDENTITY
    02) SHARED FIELD BASE
-   03) HOVER / FOCUS STATES
+   03) FIELD STATE STABILITY
    04) PLACEHOLDER STATES
    05) MOBILE FIELD STABILITY
    06) END OF FILE
@@ -34,20 +34,16 @@
 }
 
 /* =============================================================================
-   03) HOVER / FOCUS STATES
+   03) FIELD STATE STABILITY
 ============================================================================= */
-.ui-field:hover{
+.ui-field:hover,
+.ui-field:focus,
+.ui-field:focus-visible{
   border-color:var(--control-border-unified);
   background:var(--control-surface);
   color:var(--control-text-unified);
-}
-
-.ui-field:focus,
-.ui-field:focus-visible{
-  background:var(--control-surface-hover);
-  border-color:var(--control-border-hover-unified);
   outline:none;
-  box-shadow:var(--focus-ring-shadow);
+  box-shadow:none;
 }
 
 /* =============================================================================

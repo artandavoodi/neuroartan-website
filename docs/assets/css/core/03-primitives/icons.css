@@ -3,7 +3,7 @@
    01) MODULE IDENTITY
    02) ROOT ICON TOKENS
    03) SHARED ICON BUTTON BASE
-   04) ICON BUTTON HOVER / FOCUS STATES
+   04) ICON BUTTON STATE STABILITY
    05) ICON SIZE UTILITIES
    06) GENERIC ICON THEME UTILITIES
    07) ICON INTERACTION LOCK
@@ -73,19 +73,17 @@ html[data-theme-effective="dark"]{
 }
 
 /* =============================================================================
-   04) ICON BUTTON HOVER / FOCUS STATES
+   04) ICON BUTTON STATE STABILITY
 ============================================================================= */
 .ui-icon-button:hover{
   background:var(--control-surface-hover);
-  border-color:var(--control-border-hover-unified);
   color:var(--control-text-hover-unified);
   transform:none;
 }
 
 .ui-icon-button:focus-visible{
   outline:none;
-  border-color:var(--control-border-hover-unified);
-  box-shadow:var(--focus-ring-shadow);
+  box-shadow:none;
 }
 
 /* =============================================================================

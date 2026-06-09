@@ -39,7 +39,7 @@
 
   --account-phone-auth-input-border:var(--control-border-unified);
   --account-phone-auth-input-surface:var(--control-surface);
-  --account-phone-auth-input-focus:var(--control-border-hover-unified);
+  --account-phone-auth-input-focus:var(--account-phone-auth-input-border);
   --account-phone-auth-dropdown-surface:var(--panel-surface-dropdown-unified);
   --account-phone-auth-input-height: var(--account-field-height);
   --account-phone-auth-input-radius: var(--account-field-radius);
@@ -87,7 +87,7 @@ html[data-theme-effective="light"]{
   --account-phone-auth-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-phone-auth-primary-shadow:var(--panel-shadow-unified);
   --account-phone-auth-input-border:var(--control-border-unified);
-  --account-phone-auth-input-focus:var(--control-border-hover-unified);
+  --account-phone-auth-input-focus:var(--account-phone-auth-input-border);
 }
 
 html[data-theme-effective="dark"]{
@@ -309,9 +309,6 @@ html[data-theme-effective="dark"]{
   color: var(--account-phone-auth-muted);
 }
 
-.account-phone-auth-drawer-input:focus{
-  border-color: var(--account-phone-auth-input-focus);
-}
 
 .account-phone-auth-drawer-submit-status{
   margin: var(--spacing-none);
@@ -378,7 +375,6 @@ html[data-theme-effective="dark"]{
 .account-phone-auth-drawer-action--primary:hover,
 .account-phone-auth-drawer-action--primary:focus-visible{
   opacity:var(--account-phone-auth-action-hover-opacity);
-  border-color:var(--account-phone-auth-action-hover-border);
   background:var(--account-phone-auth-action-hover-bg);
   outline: none;
 }

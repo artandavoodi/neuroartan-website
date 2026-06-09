@@ -201,9 +201,6 @@ function saveSettings(settings, options = {}) {
       console.error('Failed to sync personalization settings:', error);
     });
     
-    // Show status message
-    setHomePlatformStatus('Personalization settings saved', 'success');
-    
     return Promise.resolve();
   } catch (error) {
     console.error('Failed to save personalization settings:', error);

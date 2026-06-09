@@ -1,11 +1,70 @@
-/* ==========================================================================
+/* ========================================================================== 
    Home Overview Canvas
-   Parent scrollable dashboard shell.
-   Child modules remain independently owned.
+   Uses the same Home Platform Theme spacing contract as Settings.
    ========================================================================== */
 
-.home-overview-canvas{
+.home-platform-destination--home-overview{
+  --home-overview-canvas-gap:calc(var(--layout-home-platform-theme-section-padding-top) + var(--layout-home-platform-theme-section-gap));
+  --home-overview-section-padding:calc(var(--layout-home-platform-theme-section-padding-top) + var(--layout-home-platform-theme-section-gap));
+  --home-overview-section-gap:var(--layout-home-platform-theme-section-gap);
+  --home-overview-header-gap:var(--layout-home-platform-theme-section-header-gap);
+}
+
+.home-platform-destination--home-overview[data-home-display-mode="compact"]{
+  --home-overview-canvas-gap:calc(var(--layout-home-platform-theme-section-header-gap) + var(--layout-home-platform-theme-section-header-gap));
+  --home-overview-section-padding:calc(var(--layout-home-platform-theme-section-header-gap) + var(--layout-home-platform-theme-section-header-gap));
+  --home-overview-section-gap:var(--layout-home-platform-theme-section-header-gap);
+  --home-overview-header-gap:var(--layout-home-platform-theme-section-header-gap);
+}
+
+.home-platform-destination--home-overview[data-home-display-mode="detailed"]{
+  --home-overview-canvas-gap:calc(var(--layout-home-platform-theme-section-padding-top) + var(--layout-home-platform-theme-section-gap) + var(--layout-home-platform-theme-section-gap) + var(--layout-home-platform-theme-section-header-gap));
+  --home-overview-section-padding:calc(var(--layout-home-platform-theme-section-padding-top) + var(--layout-home-platform-theme-section-gap) + var(--layout-home-platform-theme-section-gap) + var(--layout-home-platform-theme-section-header-gap));
+  --home-overview-section-gap:calc(var(--layout-home-platform-theme-section-gap) + var(--layout-home-platform-theme-section-gap));
+  --home-overview-header-gap:var(--layout-home-platform-theme-section-gap);
+}
+
+.home-platform-destination--home-overview .home-overview-canvas,
+.home-platform-destination--home-overview .home-overview-canvas__stack{
   display:grid;
-  gap:var(--spacing-6);
-  min-width:0;
+  gap:var(--home-overview-canvas-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-destination--home-overview .home-overview-canvas__slot,
+.home-platform-destination--home-overview .home-overview-module{
+  display:grid;
+  min-width:var(--spacing-none);
+}
+
+.home-platform-destination--home-overview .home-overview-module__section{
+  display:grid;
+  gap:var(--home-overview-section-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-destination--home-overview .home-overview-canvas__slot:not(:first-child) .home-overview-module__section{
+  padding:var(--home-overview-section-padding) var(--spacing-none) var(--spacing-none);
+  border-top:var(--border-width-hairline) solid var(--border-color);
+}
+
+.home-platform-destination--home-overview .home-overview-module__section > .home-platform-theme__section-header{
+  gap:var(--home-overview-header-gap);
+}
+
+.home-platform-destination--home-overview .home-platform-theme__empty-title,
+.home-platform-destination--home-overview .home-platform-theme__empty-caption{
+  font:var(--type-label);
+  opacity:var(--state-opacity-muted);
+}
+
+.home-platform-destination--home-overview .home-platform-theme__empty-title{
+  opacity:var(--state-opacity-high);
+}
+
+.home-platform-destination--home-overview[data-home-empty-state-behavior="minimal"] .home-platform-theme__empty-caption,
+.home-platform-destination--home-overview[data-home-empty-state-behavior="minimal"] .home-platform-theme__empty-guidance,
+.home-overview-canvas[data-home-empty-state-behavior="minimal"] .home-platform-theme__empty-caption,
+.home-overview-canvas[data-home-empty-state-behavior="minimal"] .home-platform-theme__empty-guidance{
+  display:none;
 }

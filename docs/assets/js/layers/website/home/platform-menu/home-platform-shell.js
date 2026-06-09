@@ -572,7 +572,7 @@ function dispatchHomePlatformReturnNavigation(hash) {
     return;
   }
 
-  document.dispatchEvent(new CustomEvent('profile:navigation-request', {
+  document.dispatchEvent(new CustomEvent('profile:navigate-request', {
     detail: {
       source: 'home-platform-shell',
       section: modelRoute.section,

@@ -22,8 +22,6 @@
   --home-platform-theme-token-grid-disabled-opacity:var(--layout-home-platform-theme-token-grid-disabled-opacity);
   --home-platform-theme-token-grid-enabled-opacity:var(--layout-home-platform-theme-token-grid-enabled-opacity);
   --home-platform-theme-motion-fast:var(--interaction-motion-medium);
-  --home-platform-theme-shell-gap:var(--layout-home-platform-theme-shell-gap);
-  --home-platform-theme-header-gap:var(--layout-home-platform-theme-header-gap);
   --home-platform-theme-eyebrow-size:var(--layout-home-platform-theme-eyebrow-size);
   --home-platform-theme-eyebrow-weight:var(--layout-home-platform-theme-eyebrow-weight);
   --home-platform-theme-eyebrow-tracking:var(--layout-home-platform-theme-eyebrow-tracking);
@@ -34,12 +32,8 @@
   --home-platform-theme-summary-max-width:var(--layout-home-platform-theme-summary-max-width);
   --home-platform-theme-summary-size:var(--layout-home-platform-theme-summary-size);
   --home-platform-theme-summary-line-height:var(--layout-home-platform-theme-summary-line-height);
-  --home-platform-theme-section-gap:var(--layout-home-platform-theme-section-gap);
   --home-platform-theme-section-padding-top:var(--layout-home-platform-theme-section-padding-top);
-  --home-platform-theme-section-header-gap:var(--layout-home-platform-theme-section-header-gap);
   --home-platform-theme-mode-grid-count:var(--layout-home-platform-theme-mode-grid-count);
-  --home-platform-theme-mode-grid-gap:var(--layout-home-platform-theme-mode-grid-gap);
-  --home-platform-theme-mode-option-gap:var(--layout-home-platform-theme-mode-option-gap);
   --home-platform-theme-mode-option-min-height:var(--layout-home-platform-theme-mode-option-min-height);
   --home-platform-theme-mode-option-padding-y:var(--layout-home-platform-theme-mode-option-padding-y);
   --home-platform-theme-mode-option-padding-x:var(--layout-home-platform-theme-mode-option-padding-x);
@@ -50,8 +44,6 @@
   --home-platform-theme-caption-size:var(--layout-home-platform-theme-caption-size);
   --home-platform-theme-caption-line-height:var(--layout-home-platform-theme-caption-line-height);
   --home-platform-theme-token-grid-count:var(--layout-home-platform-theme-token-grid-count);
-  --home-platform-theme-token-grid-gap:var(--layout-home-platform-theme-token-grid-gap);
-  --home-platform-theme-token-field-gap:var(--layout-home-platform-theme-token-field-gap);
   --home-platform-theme-token-field-min-height:var(--layout-home-platform-theme-token-field-min-height);
   --home-platform-theme-token-field-padding-y:var(--layout-home-platform-theme-token-field-padding-y);
   --home-platform-theme-token-field-padding-x:var(--layout-home-platform-theme-token-field-padding-x);
@@ -59,8 +51,6 @@
   --home-platform-theme-token-label-size:var(--layout-home-platform-theme-token-label-size);
   --home-platform-theme-token-label-weight:var(--layout-home-platform-theme-token-label-weight);
   --home-platform-theme-token-label-line-height:var(--layout-home-platform-theme-token-label-line-height);
-  --home-platform-theme-toggle-list-gap:var(--layout-home-platform-theme-toggle-list-gap);
-  --home-platform-theme-toggle-row-gap:var(--layout-home-platform-theme-toggle-row-gap);
   --home-platform-theme-toggle-row-padding-y:var(--layout-home-platform-theme-toggle-row-padding-y);
 }
 
@@ -79,7 +69,6 @@
 .home-platform-theme{
   display:flex;
   flex-direction:column;
-  gap:var(--home-platform-theme-shell-gap);
   width:var(--size-full);
   max-width:var(--size-full);
   overflow-x:hidden;
@@ -91,42 +80,18 @@
 .home-platform-theme__header{
   display:flex;
   flex-direction:column;
-  gap:var(--home-platform-theme-header-gap);
 }
 
-.home-platform-theme__eyebrow,
-.home-platform-theme__section-eyebrow{
+.home-platform-theme__eyebrow{
   margin:var(--spacing-none);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
+  font:var(--type-body-strong);
   letter-spacing:var(--home-platform-theme-eyebrow-tracking);
 }
 
-.home-platform-theme__section-eyebrow{
-  -webkit-appearance:none;
-  appearance:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:var(--spacing-sm);
-  width:var(--size-full);
-  padding:var(--spacing-none);
-  border:var(--spacing-none);
-  border-radius:var(--radius-none);
-  background:transparent;
-  color:inherit;
-  text-align:left;
-  cursor:pointer;
-  transition:var(--interaction-transition-control);
-}
 
-
-.home-platform-theme__title,
-.home-platform-theme__section-title{
+.home-platform-theme__title{
   margin:var(--spacing-none);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--home-platform-theme-title-line-height);
+  font:var(--type-body-strong);
   letter-spacing:var(--home-platform-theme-title-tracking);
   opacity:var(--home-platform-theme-eyebrow-opacity);
 }
@@ -134,26 +99,13 @@
 .home-platform-theme__summary{
   margin:var(--spacing-none);
   max-width:var(--home-platform-theme-summary-max-width);
-  font-size:var(--home-platform-theme-summary-size);
-  line-height:var(--home-platform-theme-summary-line-height);
+  font:var(--type-label);
   opacity:var(--home-platform-theme-summary-opacity);
 }
 
 /* =============================================================================
    05) SECTION STRUCTURE
 ============================================================================= */
-.home-platform-theme__section{
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-lg);
-  padding:var(--home-platform-theme-section-padding-top) var(--spacing-none) var(--spacing-none);
-  border-top:var(--border-width-hairline) solid var(--control-border);
-}
-
-.home-platform-theme__section:first-of-type{
-  padding-top:var(--spacing-none);
-  border-top:var(--spacing-none);
-}
 
 /* =============================================================================
    06) MODE GRID
@@ -161,7 +113,6 @@
 .home-platform-theme__mode-grid{
   display:grid;
   grid-template-columns:repeat(var(--home-platform-theme-mode-grid-count), minmax(var(--spacing-none), 1fr));
-  gap:var(--home-platform-theme-mode-grid-gap);
 }
 
 .home-platform-theme__mode-option{
@@ -182,75 +133,26 @@
 
 .home-platform-theme__mode-option:hover,
 .home-platform-theme__mode-option:focus-visible{
-  border-color:var(--control-border);
   background:var(--control-bg);
   outline:none;
 }
 
 .home-platform-theme__mode-option[aria-pressed="true"]{
-  border-color:var(--control-border-strong);
   background:var(--control-bg);
 }
 
 .home-platform-theme__mode-label,
 .home-platform-theme__toggle-title{
   margin:var(--spacing-none);
-  font-size:var(--home-platform-theme-mode-label-size);
-  font-weight:var(--home-platform-theme-eyebrow-weight);
-  line-height:var(--home-platform-theme-mode-label-line-height);
+  font:var(--type-body-strong);
 }
 
 .home-platform-theme__mode-caption{
   margin:var(--spacing-none);
-  font-size:var(--home-platform-theme-caption-size);
-  line-height:var(--home-platform-theme-caption-line-height);
-  opacity:var(--home-platform-theme-caption-opacity);
+  font:var(--type-label);
+  opacity:var(--state-opacity-muted);
 }
 
-/* =============================================================================
-   DROPDOWN CONTAINER
-============================================================================= */
-.home-platform-theme__dropdown-container{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  gap:var(--spacing-sm);
-}
-
-.home-platform-theme__dropdown-label{
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-  color:var(--text-color);
-}
-
-.home-platform-theme__dropdown-container[data-toggle-availability="locked"],
-.home-platform-theme__dropdown-label[data-toggle-availability="locked"]{
-  opacity:0.5;
-  pointer-events:none;
-}
-
-.home-platform-theme__dropdown-select[disabled]{
-  opacity:0.5;
-  cursor:not-allowed;
-}
-
-.home-platform-theme__dropdown-icon-wrapper{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
-}
-
-.home-platform-theme__dropdown-icon{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  pointer-events:none;
-}
 
 /* =============================================================================
    07) COLOR PICKER CONSUMER STATE
@@ -258,14 +160,12 @@
 .home-platform-theme__token-grid{
   display:grid;
   grid-template-columns:repeat(var(--home-platform-theme-token-grid-count), minmax(var(--spacing-none), 1fr));
-  gap:var(--home-platform-theme-token-grid-gap);
 }
 
 .home-platform-theme__token-field{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:var(--home-platform-theme-token-field-gap);
   min-height:var(--home-platform-theme-token-field-min-height);
   width:var(--size-full);
   min-width:var(--spacing-none);
@@ -278,9 +178,7 @@
 
 .home-platform-theme__token-label{
   margin:var(--spacing-none);
-  font-size:var(--home-platform-theme-token-label-size);
-  font-weight:var(--home-platform-theme-eyebrow-weight);
-  line-height:var(--home-platform-theme-token-label-line-height);
+  font:var(--type-body-strong);
 }
 
 .home-platform-theme__token-input{
@@ -318,28 +216,23 @@
 .home-platform-theme__toggle-list{
   display:flex;
   flex-direction:column;
-  gap:var(--home-platform-theme-toggle-list-gap);
 }
 
 .home-platform-theme__toggle-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:var(--home-platform-theme-toggle-row-gap);
   padding:var(--home-platform-theme-toggle-row-padding-y) var(--spacing-none);
-  border-top:var(--border-width-hairline) solid var(--control-border);
 }
 
 .home-platform-theme__toggle-row:first-child{
   padding-top:var(--spacing-none);
-  border-top:var(--spacing-none);
 }
 
 .home-platform-theme__toggle-copy{
   display:flex;
   flex:1 1 auto;
   flex-direction:column;
-  gap:var(--spacing-none);
   min-width:var(--spacing-none);
 }
 

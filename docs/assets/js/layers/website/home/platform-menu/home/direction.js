@@ -1,25 +1,25 @@
-// System Guidance Module - Priority Actions
+// Direction Module - Priority Actions
 // Provides actionable guidance items and priority actions
 
-// Get dashboard configuration
-function getDashboardConfig() {
-  const stored = localStorage.getItem('neuroartan-dashboard-config');
+// Get home configuration
+function getHomeConfig() {
+  const stored = localStorage.getItem('neuroartan-home-config');
   if (stored) {
     try {
       return JSON.parse(stored);
     } catch (e) {
-      console.error('Failed to parse dashboard config:', e);
+      console.error('Failed to parse home config:', e);
     }
   }
   return null;
 }
 
-// Update system guidance display
-function updateSystemGuidanceDisplay(root) {
-  const config = getDashboardConfig();
+// Update direction display
+function updateDirectionDisplay(root) {
+  const config = getHomeConfig();
   
   // Check if module is visible
-  if (config && config.visibility && config.visibility['system-guidance'] === false) {
+  if (config && config.visibility && config.visibility['direction'] === false) {
     root.style.display = 'none';
     return;
   }
@@ -40,8 +40,8 @@ function updateSystemGuidanceDisplay(root) {
 // Fetch guidance data from backend
 async function fetchGuidanceData() {
   try {
-    const response = await fetch('/assets/data/dashboard/dashboard-config.json');
-    if (!response.ok) throw new Error('Failed to fetch dashboard config');
+    const response = await fetch('/assets/data/home/home-config.json');
+    if (!response.ok) throw new Error('Failed to fetch home config');
     const config = await response.json();
     
     // Determine priority action based on config state
@@ -73,29 +73,29 @@ async function fetchGuidanceData() {
   }
 }
 
-// Listen for dashboard configuration changes
+// Listen for home configuration changes
 function listenForConfigChanges(root) {
   const controller = new AbortController();
-  document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'system-guidance') {
-      updateSystemGuidanceDisplay(root);
+  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
+    if (e.detail.moduleId === 'direction') {
+      updateDirectionDisplay(root);
     }
   }, { signal: controller.signal });
   
-  document.addEventListener('neuroartan:dashboard:initialized', () => {
-    updateSystemGuidanceDisplay(root);
+  document.addEventListener('neuroartan:home:initialized', () => {
+    updateDirectionDisplay(root);
   }, { signal: controller.signal });
   
-  document.addEventListener('neuroartan:dashboard:model:changed', () => {
-    updateSystemGuidanceDisplay(root);
+  document.addEventListener('neuroartan:home:model:changed', () => {
+    updateDirectionDisplay(root);
   }, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount system guidance module
-export function mountHomeSystemGuidance(root) {
-  const scope = root?.querySelector?.('[data-home-overview-module="system-guidance"]')
-    || root?.matches?.('[data-home-overview-module="system-guidance"]') && root;
+// Mount direction module
+export function mountHomeDirection(root) {
+  const scope = root?.querySelector?.('[data-home-overview-module="direction"]')
+    || root?.matches?.('[data-home-overview-module="direction"]') && root;
 
   if (!(scope instanceof Element)) return;
 
@@ -103,7 +103,7 @@ export function mountHomeSystemGuidance(root) {
   const nodes = [...scope.querySelectorAll('[data-home-guidance-action]')];
 
   // Initialize display
-  updateSystemGuidanceDisplay(scope);
+  updateDirectionDisplay(scope);
   const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle action selection
@@ -116,7 +116,7 @@ export function mountHomeSystemGuidance(root) {
   
   // Set up periodic updates
   const updateInterval = setInterval(() => {
-    updateSystemGuidanceDisplay(scope);
+    updateDirectionDisplay(scope);
   }, 30000); // Update every 30 seconds
   
   // Return cleanup function

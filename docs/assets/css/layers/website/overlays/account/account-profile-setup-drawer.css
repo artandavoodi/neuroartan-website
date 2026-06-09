@@ -54,8 +54,8 @@
   --account-profile-setup-field-background:var(--control-surface);
   --account-profile-setup-field-foreground: var(--text-color);
   --account-profile-setup-field-placeholder: var(--text-secondary-color);
-  --account-profile-setup-field-focus-border:var(--control-border-hover-unified);
-  --account-profile-setup-field-focus-ring:var(--focus-ring-shadow);
+  --account-profile-setup-field-focus-border:var(--account-profile-setup-field-border);
+  --account-profile-setup-field-focus-ring:none;
 
   --account-profile-setup-note-font-size: var(--body-2-size);
   --account-profile-setup-note-line-height: var(--body-2-line-height);
@@ -180,8 +180,6 @@
   margin: var(--spacing-none);
   outline: none;
   transition:
-    border-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
-    box-shadow var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
     background-color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease),
     color var(--account-profile-setup-motion-fast) var(--account-profile-setup-motion-ease);
 }
@@ -191,11 +189,6 @@
   opacity: 1;
 }
 
-.account-profile-setup-drawer-input:focus,
-.account-profile-setup-drawer-select:focus{
-  border-color: var(--account-profile-setup-field-focus-border);
-  box-shadow: var(--account-profile-setup-field-focus-ring);
-}
 
 .account-profile-setup-drawer-input--date{
   color-scheme: light dark;
@@ -279,7 +272,6 @@
 
 .account-profile-setup-drawer-username-suggestion:hover,
 .account-profile-setup-drawer-username-suggestion:focus-visible{
-  border-color: var(--account-profile-setup-suggestion-border-hover);
   background: var(--account-profile-setup-suggestion-background-hover);
 }
 
@@ -394,7 +386,6 @@
 .account-profile-setup-drawer-action:hover,
 .account-profile-setup-drawer-action:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--account-profile-setup-action-border-hover);
   background: var(--account-profile-setup-action-background-hover);
   outline: none;
 }

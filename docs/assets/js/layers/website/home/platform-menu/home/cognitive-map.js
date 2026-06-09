@@ -1,33 +1,33 @@
-// Knowledge Graph Module - Cognitive Map
+// Cognitive Map Module
 // Provides knowledge graph preview and navigation
 
-// Get dashboard configuration
-function getDashboardConfig() {
-  const stored = localStorage.getItem('neuroartan-dashboard-config');
+// Get home configuration
+function getHomeConfig() {
+  const stored = localStorage.getItem('neuroartan-home-config');
   if (stored) {
     try {
       return JSON.parse(stored);
     } catch (e) {
-      console.error('Failed to parse dashboard config:', e);
+      console.error('Failed to parse home config:', e);
     }
   }
   return null;
 }
 
-// Update knowledge graph display
-function updateKnowledgeGraphDisplay(root) {
-  const config = getDashboardConfig();
+// Update cognitive map display
+function updateCognitiveMapDisplay(root) {
+  const config = getHomeConfig();
   
   // Check if module is visible
-  if (config && config.visibility && config.visibility['knowledge-graph'] === false) {
+  if (config && config.visibility && config.visibility['cognitive-map'] === false) {
     root.style.display = 'none';
     return;
   }
   
   root.style.display = '';
   
-  // Fetch knowledge graph data from backend
-  fetchKnowledgeGraphData().then(data => {
+  // Fetch cognitive map data from backend
+  fetchCognitiveMapData().then(data => {
     const value = root.querySelector('[data-home-graph-value]');
     if (value) {
       value.textContent = data.currentView || 'Domains';
@@ -37,11 +37,11 @@ function updateKnowledgeGraphDisplay(root) {
   });
 }
 
-// Fetch knowledge graph data from backend
-async function fetchKnowledgeGraphData() {
+// Fetch cognitive map data from backend
+async function fetchCognitiveMapData() {
   try {
-    const response = await fetch('/assets/data/dashboard/knowledge-graph.json');
-    if (!response.ok) throw new Error('Failed to fetch knowledge graph data');
+    const response = await fetch('/assets/data/home/cognitive-map.json');
+    if (!response.ok) throw new Error('Failed to fetch cognitive map data');
     const data = await response.json();
     
     return {
@@ -51,7 +51,7 @@ async function fetchKnowledgeGraphData() {
       entityCount: data.nodes?.entities?.length || 0
     };
   } catch (error) {
-    console.error('Error fetching knowledge graph data:', error);
+    console.error('Error fetching cognitive map data:', error);
     return {
       currentView: 'Domains',
       domainCount: 0,
@@ -61,25 +61,25 @@ async function fetchKnowledgeGraphData() {
   }
 }
 
-// Listen for dashboard configuration changes
+// Listen for home configuration changes
 function listenForConfigChanges(root) {
   const controller = new AbortController();
-  document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'knowledge-graph') {
-      updateKnowledgeGraphDisplay(root);
+  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
+    if (e.detail.moduleId === 'cognitive-map') {
+      updateCognitiveMapDisplay(root);
     }
   }, { signal: controller.signal });
   
-  document.addEventListener('neuroartan:dashboard:initialized', () => {
-    updateKnowledgeGraphDisplay(root);
+  document.addEventListener('neuroartan:home:initialized', () => {
+    updateCognitiveMapDisplay(root);
   }, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount knowledge graph module
-export function mountHomeKnowledgeGraph(root) {
-  const scope = root?.querySelector?.('[data-home-overview-module="knowledge-graph"]')
-    || root?.matches?.('[data-home-overview-module="knowledge-graph"]') && root;
+// Mount cognitive map module
+export function mountHomeCognitiveMap(root) {
+  const scope = root?.querySelector?.('[data-home-overview-module="cognitive-map"]')
+    || root?.matches?.('[data-home-overview-module="cognitive-map"]') && root;
 
   if (!(scope instanceof Element)) return;
 
@@ -87,7 +87,7 @@ export function mountHomeKnowledgeGraph(root) {
   const nodes = [...scope.querySelectorAll('[data-home-graph-node]')];
 
   // Initialize display
-  updateKnowledgeGraphDisplay(scope);
+  updateCognitiveMapDisplay(scope);
   const cleanupConfigChanges = listenForConfigChanges(scope);
 
   // Handle node selection
@@ -100,7 +100,7 @@ export function mountHomeKnowledgeGraph(root) {
   
   // Set up periodic updates
   const updateInterval = setInterval(() => {
-    updateKnowledgeGraphDisplay(scope);
+    updateCognitiveMapDisplay(scope);
   }, 30000); // Update every 30 seconds
   
   // Return cleanup function

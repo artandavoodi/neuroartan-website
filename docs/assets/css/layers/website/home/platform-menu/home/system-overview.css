@@ -1,7 +1,0 @@
-@import url('../settings/general/index.css');
-
-.home-overview-module{
-  display:grid;
-  gap:var(--spacing-4);
-  min-width:0;
-}

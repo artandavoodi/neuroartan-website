@@ -480,13 +480,7 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-action:hover,
 .account-drawer-action:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--control-border-hover-unified);
   background: var(--control-surface-hover);
-  outline: none;
-}
-
-.account-drawer-action:focus-visible{
-  box-shadow:var(--focus-ring-shadow);
   outline: none;
 }
 
@@ -872,7 +866,6 @@ body.account-drawer-closing .account-drawer-close{
 .account-drawer-identity-option:hover,
 .account-drawer-identity-option:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--control-border-hover-unified);
   background: var(--control-surface-hover);
   outline: none;
 }

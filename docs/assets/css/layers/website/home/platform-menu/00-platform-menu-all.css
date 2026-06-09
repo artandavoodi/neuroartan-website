@@ -14,6 +14,7 @@
    02) PLATFORM MENU CHILD AUTHORITY IMPORTS
 ============================================================================= */
 @import url('./continuity/00-continuity-all.css');
+@import url('./home/00-home-all.css');
 @import url('./messaging/00-messaging-all.css');
 @import url('./more/00-more-all.css');
 @import url('./notifications/00-notifications-all.css');
@@ -24,4 +25,3 @@
 /* =============================================================================
    03) END OF FILE
 ============================================================================= */
-@import "./home/00-home-all.css";

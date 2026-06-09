@@ -139,9 +139,6 @@
   outline: none;
 }
 
-.account-phone-verification-sheet-code-input:focus-visible{
-  border-color: var(--field-border-focus-color);
-}
 
 .account-phone-verification-sheet-status{
   margin: var(--spacing-none);

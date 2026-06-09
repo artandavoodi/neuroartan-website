@@ -1,1 +1,5 @@
 @import url('../general/index.css');
+
+.home-platform-destination--settings-security{
+  width:var(--size-full);
+}

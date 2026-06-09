@@ -89,7 +89,7 @@
 
   --account-sign-up-input-border:var(--field-border);
   --account-sign-up-input-surface: transparent;
-  --account-sign-up-input-focus:var(--field-border-focus);
+  --account-sign-up-input-focus:var(--account-sign-up-input-border);
   --account-sign-up-control-height: var(--account-sign-up-field-height);
   --account-sign-up-control-inline-padding: var(--account-sign-up-field-padding-x);
   --account-sign-up-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
@@ -104,7 +104,7 @@ html[data-theme-effective="light"]{
   --account-sign-up-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-up-primary-shadow:var(--panel-shadow-unified);
   --account-sign-up-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  --account-sign-up-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --account-sign-up-input-focus:var(--account-sign-up-input-border);
   --account-sign-up-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
@@ -238,9 +238,6 @@ html[data-theme-effective="dark"]{
   color: var(--account-sign-up-muted);
 }
 
-.account-sign-up-drawer-input:focus{
-  border-color: var(--account-sign-up-input-focus);
-}
 
 /* =============================================================================
    06) ACTIONS
@@ -291,7 +288,6 @@ html[data-theme-effective="dark"]{
 .account-sign-up-drawer-action--primary:hover,
 .account-sign-up-drawer-action--primary:focus-visible{
   opacity:var(--account-sign-up-action-hover-opacity);
-  border-color:var(--account-sign-up-action-hover-border);
   background:var(--account-sign-up-action-hover-bg);
   outline: none;
 }

@@ -2,54 +2,22 @@
 
 .home-platform-destination--settings-configuration{width:var(--size-full);}
 
-.home-platform-theme__dropdown-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: var(--spacing-md);
-}
-
-.home-platform-theme__dropdown-container:last-child {
-  margin-bottom: 0;
-}
-
-.home-platform-theme__dropdown-static-label {
-  font-size: var(--control-font-size);
-  font-weight: var(--control-font-weight);
-  line-height: var(--control-line-height);
-  color: var(--text-color);
-}
-
-.home-platform-theme__dropdown-right {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.home-platform-theme__dropdown-label {
-  text-align: right;
-}
-
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid {
   display: block !important;
   grid-template-columns: unset !important;
-  padding: 0;
   text-align: center;
 }
 
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid .home-platform-theme__token-field {
   display: inline-flex !important;
   align-items: center !important;
-  gap: var(--spacing-sm) !important;
-  margin: 0 !important;
   width: auto !important;
   flex-direction: row !important;
 }
 
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid .home-platform-theme__token-input {
-  width: 180px;
-  max-width: 180px;
+  width: var(--control-width-field);
+  max-width: var(--control-width-field);
 }
 
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid--hidden {

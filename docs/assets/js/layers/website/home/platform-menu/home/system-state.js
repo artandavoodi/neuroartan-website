@@ -1,14 +1,14 @@
-// System Overview Module - ICOS State Dashboard
+// System State Module
 // Provides real-time system state information
 
-// Get dashboard configuration
-function getDashboardConfig() {
-  const stored = localStorage.getItem('neuroartan-dashboard-config');
+// Get home configuration
+function getHomeConfig() {
+  const stored = localStorage.getItem('neuroartan-home-config');
   if (stored) {
     try {
       return JSON.parse(stored);
     } catch (e) {
-      console.error('Failed to parse dashboard config:', e);
+      console.error('Failed to parse home config:', e);
     }
   }
   return null;
@@ -16,10 +16,10 @@ function getDashboardConfig() {
 
 // Update system state display
 function updateSystemState(root) {
-  const config = getDashboardConfig();
+  const config = getHomeConfig();
   
   // Check if module is visible
-  if (config && config.visibility && config.visibility['system-overview'] === false) {
+  if (config && config.visibility && config.visibility['system-state'] === false) {
     root.style.display = 'none';
     return;
   }
@@ -51,8 +51,8 @@ function updateSystemState(root) {
 // Fetch system state from backend
 async function fetchSystemState() {
   try {
-    const response = await fetch('/assets/data/dashboard/dashboard-config.json');
-    if (!response.ok) throw new Error('Failed to fetch dashboard config');
+    const response = await fetch('/assets/data/home/home-config.json');
+    if (!response.ok) throw new Error('Failed to fetch home config');
     const config = await response.json();
     
     // Return mock system state based on config
@@ -73,23 +73,23 @@ async function fetchSystemState() {
   }
 }
 
-// Listen for dashboard configuration changes
+// Listen for home configuration changes
 function listenForConfigChanges(root) {
   const controller = new AbortController();
-  document.addEventListener('neuroartan:dashboard:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'system-overview') {
+  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
+    if (e.detail.moduleId === 'system-state') {
       updateSystemState(root);
     }
   }, { signal: controller.signal });
   
-  document.addEventListener('neuroartan:dashboard:initialized', () => {
+  document.addEventListener('neuroartan:home:initialized', () => {
     updateSystemState(root);
   }, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount system overview module
-export function mountHomeSystemOverview(root) {
+// Mount system state module
+export function mountHomeSystemState(root) {
   updateSystemState(root);
   const cleanupConfigChanges = listenForConfigChanges(root);
   

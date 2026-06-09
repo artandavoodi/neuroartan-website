@@ -5,9 +5,8 @@
 }
 
 .home-platform-destination--settings-account .profile-settings__pane {
-  max-width: min(100%, 720px);
+  max-width: var(--size-full);
 }
 
 .home-platform-destination--settings-account .profile-settings__form {
-  margin-top: 0;
 }

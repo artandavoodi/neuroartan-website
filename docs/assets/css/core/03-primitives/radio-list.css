@@ -130,20 +130,16 @@
 /* =============================================================================
    06) RADIO LIST STATES
 ============================================================================= */
-.ui-radio-list__indicator:focus-visible{
-  border-color:var(--ui-radio-list-indicator-border-active);
-}
 
 .ui-radio-list__item[aria-checked="true"],
 .ui-radio-list__item[aria-pressed="true"]{
-  border-color:var(--ui-radio-list-item-border-active);
   background:var(--ui-radio-list-item-bg-active);
   color:var(--ui-radio-list-item-color-active);
 }
 
 .ui-radio-list__item[aria-checked="true"] .ui-radio-list__indicator,
 .ui-radio-list__item[aria-pressed="true"] .ui-radio-list__indicator{
-  border-color:var(--ui-radio-list-indicator-border-active);
+  border-color:var(--ui-radio-list-indicator-border);
 }
 
 .ui-radio-list__item[aria-checked="true"] .ui-radio-list__indicator::after,

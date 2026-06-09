@@ -78,7 +78,7 @@
   --account-sign-in-text-action-size: var(--body-3-size);
   --account-sign-in-input-border:var(--field-border);
   --account-sign-in-input-surface: transparent;
-  --account-sign-in-input-focus:var(--field-border-focus);
+  --account-sign-in-input-focus:var(--account-sign-in-input-border);
   --account-sign-in-control-height: var(--account-sign-in-field-height);
   --account-sign-in-control-inline-padding: var(--account-sign-in-field-padding-x);
   --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
@@ -93,7 +93,7 @@ html[data-theme-effective="light"]{
   --account-sign-in-header-divider: color-mix(in srgb, var(--text-primary-color) 6%, transparent);
   --account-sign-in-primary-shadow:var(--panel-shadow-unified);
   --account-sign-in-input-border: color-mix(in srgb, var(--text-primary-color) 10%, transparent);
-  --account-sign-in-input-focus: color-mix(in srgb, var(--text-primary-color) 18%, transparent);
+  --account-sign-in-input-focus:var(--account-sign-in-input-border);
   --account-sign-in-divider-line:color-mix(in srgb, var(--text-primary-color) 16%, transparent);
 }
 
@@ -228,9 +228,6 @@ html[data-theme-effective="dark"]{
   color: var(--account-sign-in-muted);
 }
 
-.account-sign-in-drawer-input:focus{
-  border-color: var(--account-sign-in-input-focus);
-}
 
 .account-sign-in-drawer-submit-status{
   margin: var(--spacing-none);
@@ -299,7 +296,6 @@ html[data-theme-effective="dark"]{
 .account-sign-in-drawer-action--primary:hover,
 .account-sign-in-drawer-action--primary:focus-visible{
   opacity: var(--hover-opacity-strong);
-  border-color: var(--control-border-hover-unified);
   background: var(--control-surface-hover);
   outline: none;
 }

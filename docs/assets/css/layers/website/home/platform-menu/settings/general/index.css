@@ -1,6 +1,41 @@
-@import url('../appearance/index.css');
-
 .home-platform-destination--settings-general{width:var(--size-full);}
+
+/* =============================================================================
+   SETTINGS TEXT CONTRACT
+   Primary text remains owned by title/control classes.
+   Description text uses the registered global label token.
+============================================================================= */
+.home-platform-theme__section-caption,
+.home-platform-theme__toggle-caption,
+.home-platform-theme__shortcut-caption,
+.home-platform-theme__action-caption,
+.home-platform-theme__empty-caption,
+.home-platform-theme__mode-caption,
+.home-platform-settings-category__caption,
+.home-platform-settings-category__status,
+.home-platform-dashboard__priority-caption,
+.home-platform-dashboard__priority-description{
+  font:var(--type-label);
+  opacity:var(--state-opacity-muted);
+}
+
+/* =============================================================================
+   SETTINGS OPTION STATE CONTRACT
+   Active option controls use border-only emphasis.
+   Background remains transparent across settings layers.
+============================================================================= */
+.home-platform-settings-category__option{
+  background:transparent;
+}
+
+.home-platform-settings-category__option:hover,
+.home-platform-settings-category__option:focus-visible,
+.home-platform-settings-category__option[aria-pressed="true"],
+.home-platform-settings-category__option.is-active,
+.home-platform-settings-category__option[data-state="active"]{
+  background:transparent;
+  border-color:inherit;
+}
 
 /* =============================================================================
    SHORTCUT LIST
@@ -8,17 +43,14 @@
 .home-platform-theme__shortcut-list{
   display:flex;
   flex-direction:column;
-  gap:var(--spacing-none);
 }
 
 .home-platform-theme__shortcut-item{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:var(--spacing-sm);
   width:var(--size-full);
   min-width:var(--spacing-none);
-  padding:var(--spacing-sm) var(--spacing-none);
   border:var(--spacing-none);
   border-radius:var(--radius-none);
   background:transparent;
@@ -33,126 +65,59 @@
 }
 
 .home-platform-theme__shortcut-label{
-  margin:var(--spacing-none);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
+  font:var(--type-body-strong);
 }
 
 .home-platform-theme__shortcut-icon{
   flex:0 0 auto;
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
-  opacity:0.5;
+  opacity:var(--home-platform-shell-nav-opacity);
 }
 
 .home-platform-theme__shortcut-item:hover .home-platform-theme__shortcut-icon,
 .home-platform-theme__shortcut-item:focus-visible .home-platform-theme__shortcut-icon{
-  opacity:1;
+  opacity:var(--home-platform-shell-nav-hover-opacity);
 }
 
 /* =============================================================================
-   ACTION LIST
+   SETTINGS SEPARATION CONTRACT
+   Separation lines belong between real sections only.
+   Rows, toggles, shortcut items, priority items, action items, and mode options
+   must not create their own internal separator rhythm.
 ============================================================================= */
-.home-platform-theme__action-list{
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-none);
+
+.home-platform-theme__toggle-row,
+.home-platform-settings-category__row,
+.home-platform-theme__shortcut-item,
+.home-platform-theme__action-row,
+.home-platform-theme__action-button,
+.home-platform-dashboard__priority-item,
+.home-platform-dashboard__priority-row{
 }
 
-.home-platform-theme__action-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:var(--spacing-sm);
-  padding:var(--spacing-sm) var(--spacing-none);
+.home-platform-theme__toggle-row + .home-platform-theme__toggle-row,
+.home-platform-settings-category__row + .home-platform-settings-category__row,
+.home-platform-theme__shortcut-item + .home-platform-theme__shortcut-item,
+.home-platform-theme__action-row + .home-platform-theme__action-row,
+.home-platform-theme__action-button + .home-platform-theme__action-button,
+.home-platform-dashboard__priority-item + .home-platform-dashboard__priority-item,
+.home-platform-dashboard__priority-row + .home-platform-dashboard__priority-row{
 }
 
-.home-platform-theme__action-row:first-child{
-  padding-top:var(--spacing-none);
-}
-
-.home-platform-theme__action-copy{
-  display:flex;
-  flex:1 1 auto;
-  flex-direction:column;
-  gap:var(--spacing-none);
-  min-width:var(--spacing-none);
-  align-items:center;
-  text-align:center;
-}
-
-.home-platform-theme__action-title{
-  margin:var(--spacing-none);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-  color:var(--text-color);
-}
-
-.home-platform-theme__action-button{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:var(--spacing-sm);
-  width:var(--size-full);
-  flex:0 0 auto;
-  min-width:var(--spacing-none);
-  padding:var(--spacing-sm) var(--spacing-none);
-  border:var(--spacing-none);
-  border-radius:var(--radius-none);
-  background:transparent;
-  color:var(--text-color);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-  transition:var(--interaction-transition-control);
-  text-align:left;
-}
-
-.home-platform-theme__action-button-label{
-  margin:var(--spacing-none);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-}
-
-.home-platform-theme__action-button-value{
-  display:inline-flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:var(--spacing-sm);
-  color:var(--text-secondary-color);
-  font-size:var(--control-font-size);
-  font-weight:var(--control-font-weight);
-  line-height:var(--control-line-height);
-}
-
-.home-platform-theme__action-button-icon{
-  flex:0 0 auto;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
-  opacity:var(--home-platform-shell-nav-opacity);
-}
-
-.home-platform-theme__action-button:hover,
-.home-platform-theme__action-button:focus-visible{
-  outline:none;
-}
-
-.home-platform-theme__action-label{
-  display:inline-flex;
-  align-items:center;
-  gap:var(--spacing-sm);
-  margin:var(--spacing-none);
-  color:var(--text-primary-color);
-  font-size:var(--headline-5-size);
-  font-weight:var(--headline-5-weight);
-  line-height:var(--headline-5-line-height);
-}
-
-.home-platform-theme__action-icon{
-  flex:0 0 auto;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+.home-platform-theme__toggle-row::before,
+.home-platform-theme__toggle-row::after,
+.home-platform-settings-category__row::before,
+.home-platform-settings-category__row::after,
+.home-platform-theme__shortcut-item::before,
+.home-platform-theme__shortcut-item::after,
+.home-platform-theme__action-row::before,
+.home-platform-theme__action-row::after,
+.home-platform-theme__action-button::before,
+.home-platform-theme__action-button::after,
+.home-platform-dashboard__priority-item::before,
+.home-platform-dashboard__priority-item::after,
+.home-platform-dashboard__priority-row::before,
+.home-platform-dashboard__priority-row::after{
+  content:none;
 }

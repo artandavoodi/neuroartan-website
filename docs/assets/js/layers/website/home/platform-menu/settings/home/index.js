@@ -21,23 +21,7 @@ const HOME_CONFIG = {
     'direction': 7
   },
   shortcuts: {
-    items: [
-      {
-        id: 'feed',
-        label: 'Feed',
-        target: 'feed'
-      },
-      {
-        id: 'model',
-        label: 'Model',
-        target: 'model'
-      },
-      {
-        id: 'memory',
-        label: 'Memory',
-        target: 'memory'
-      }
-    ]
+    model: false
   },
   display: {
     mode: 'standard',
@@ -60,6 +44,16 @@ const HOME_CONFIG = {
     enableDashboard: false,
     defaultView: 'overview'
   }
+};
+
+// Module label mapping for shortcuts
+const MODULE_LABELS = {
+  'now': 'Now',
+  'system-state': 'System State',
+  'model': 'Model',
+  'continuity': 'Continuity',
+  'cognitive-map': 'Cognitive Map',
+  'direction': 'Direction'
 };
 
 // Get home configuration from localStorage
@@ -412,7 +406,126 @@ function initDropdownControls(root) {
   }
 }
 
-// Initialize global toggle system integration
+// Render shortcuts list
+function renderShortcuts(root) {
+  const config = getHomeConfig();
+  const shortcutsList = root.querySelector('[data-home-shortcuts-list]');
+  const emptyState = root.querySelector('[data-home-shortcuts-empty]');
+  
+  if (!(shortcutsList instanceof HTMLElement)) return;
+  if (!(emptyState instanceof HTMLElement)) return;
+  
+  // Clear existing shortcuts
+  shortcutsList.innerHTML = '';
+  
+  // Check if model shortcut is enabled
+  const modelShortcutEnabled = config.shortcuts.model === true;
+  
+  // Show empty state if model shortcut is not enabled
+  if (!modelShortcutEnabled) {
+    emptyState.hidden = false;
+    return;
+  }
+  
+  emptyState.hidden = true;
+  
+  // Render Model shortcut as toggle-style row
+  const label = 'Model';
+  const shortcutRow = document.createElement('div');
+  shortcutRow.className = 'home-platform-theme__toggle-row';
+  shortcutRow.role = 'listitem';
+  shortcutRow.dataset.homeShortcutRow = 'model';
+  
+  shortcutRow.innerHTML = `
+    <div class="home-platform-theme__toggle-copy">
+      <p class="home-platform-theme__toggle-title">${label}</p>
+    </div>
+    <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="model" data-toggle-scope="home-shortcuts">
+      <span class="na-toggle__track" aria-hidden="true">
+        <span class="na-toggle__thumb"></span>
+      </span>
+    </button>
+  `;
+  
+  shortcutsList.appendChild(shortcutRow);
+  
+  // Add event listener for toggle
+  const toggle = shortcutRow.querySelector('[data-toggle-key="model"]');
+  if (toggle instanceof HTMLButtonElement) {
+    toggle.addEventListener('click', () => {
+      const config = getHomeConfig();
+      config.shortcuts.model = false;
+      saveHomeConfig(config);
+      renderShortcuts(root);
+      dispatchHomeEvent('shortcuts:changed', { moduleId: 'model', enabled: false });
+    });
+  }
+}
+
+// Render available modules for adding as shortcuts
+function renderAvailableModules(root) {
+  const config = getHomeConfig();
+  const availableModulesList = root.querySelector('[data-home-available-modules-list]');
+  
+  if (!(availableModulesList instanceof HTMLElement)) return;
+  
+  // Clear existing modules
+  availableModulesList.innerHTML = '';
+  
+  // Get all available module IDs
+  const allModuleIds = Object.keys(MODULE_LABELS);
+  const pinnedModuleIds = config.shortcuts.pinned || [];
+  
+  // Filter to get only unpinned modules
+  const availableModuleIds = allModuleIds.filter(id => !pinnedModuleIds.includes(id));
+  
+  // Render available modules
+  availableModuleIds.forEach(moduleId => {
+    const label = MODULE_LABELS[moduleId] || moduleId;
+    const moduleRow = document.createElement('div');
+    moduleRow.className = 'home-platform-theme__toggle-row';
+    moduleRow.role = 'listitem';
+    moduleRow.dataset.homeAvailableModuleRow = moduleId;
+    
+    moduleRow.innerHTML = `
+      <div class="home-platform-theme__toggle-copy">
+        <p class="home-platform-theme__toggle-title">${label}</p>
+      </div>
+      <button class="home-platform-theme__pin-button" type="button" data-pin-shortcut data-module-id="${moduleId}" aria-label="Add to shortcuts">
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/pin/pin.svg" alt="" width="16" height="16" aria-hidden="true">
+      </button>
+    `;
+    
+    availableModulesList.appendChild(moduleRow);
+  });
+  
+  // Hide available modules section if all are pinned
+  const availableModulesSection = root.querySelector('[data-home-available-modules]');
+  if (availableModulesSection instanceof HTMLElement) {
+    availableModulesSection.hidden = availableModuleIds.length === 0;
+  }
+  
+  // Add event listeners for pin buttons
+  availableModulesList.querySelectorAll('[data-pin-shortcut]').forEach(button => {
+    button.addEventListener('click', () => {
+      const moduleId = button.dataset.moduleId;
+      if (!moduleId) return;
+      
+      const config = getHomeConfig();
+      if (!config.shortcuts.pinned) {
+        config.shortcuts.pinned = [];
+      }
+      
+      config.shortcuts.pinned.push(moduleId);
+      saveHomeConfig(config);
+      
+      renderShortcuts(root);
+      renderAvailableModules(root);
+      dispatchHomeEvent('shortcuts:changed', { moduleId, action: 'pinned' });
+    });
+  });
+}
+
 function initGlobalToggles(root) {
   const config = getHomeConfig();
   
@@ -522,6 +635,8 @@ export function mountHomePlatformDestination(root, options = {}) {
   initPriorityControls(root);
   initDragAndDrop(root);
   initDropdownControls(root);
+  renderShortcuts(root);
+  renderAvailableModules(root);
   listenForConfigChanges(root);
   
   // Dispatch initialization event

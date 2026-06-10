@@ -78,3 +78,71 @@
   opacity:var(--state-opacity-disabled);
   cursor:not-allowed;
 }
+
+/* ==========================================================================
+   Pin Buttons
+   Styling for shortcut pin/unpin buttons
+   ========================================================================== */
+
+.home-platform-theme__pin-button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--control-height-sm);
+  height:var(--control-height-sm);
+  border:var(--spacing-none);
+  border-radius:var(--radius-control);
+  background:transparent;
+  cursor:pointer;
+  transition:background var(--transition-fast) ease, opacity var(--transition-fast) ease;
+  opacity:var(--state-opacity-muted);
+}
+
+.home-platform-theme__pin-button:hover{
+  background:transparent;
+  opacity:var(--state-opacity-hover);
+}
+
+.home-platform-theme__pin-button--pinned{
+  opacity:var(--state-opacity-full);
+}
+
+.home-platform-theme__pin-button--pinned:hover{
+  opacity:var(--state-opacity-hover);
+}
+
+/* ==========================================================================
+   Empty State
+   Styling for shortcuts empty state
+   ========================================================================== */
+
+.home-platform-theme__empty-state{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:var(--spacing-md);
+}
+
+.home-platform-theme__empty-state-text{
+  color:var(--color-text-secondary);
+  font-size:var(--body-3-size);
+  text-align:center;
+}
+
+/* ==========================================================================
+   Available Modules
+   Styling for available modules section
+   ========================================================================== */
+
+.home-platform-theme__available-modules{
+  margin-top:var(--spacing-md);
+  padding-top:var(--spacing-md);
+  border-top:1px solid var(--color-border);
+}
+
+.home-platform-theme__section-subtitle{
+  color:var(--color-text-secondary);
+  font-size:var(--body-3-size);
+  font-weight:var(--font-weight-medium);
+  margin:0 0 var(--spacing-sm) 0;
+}

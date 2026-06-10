@@ -3,3 +3,49 @@
    Module-level ownership reserved.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-platform-theme__empty-state {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.home-platform-theme__empty-state-buttons {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.home-platform-theme__empty-state-buttons .home-dashboard-topbar__action {
+  width: 100%;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.home-platform-theme__empty-state-buttons .home-dashboard-topbar__action:hover {
+  text-decoration: none;
+}
+
+.home-platform-theme__empty-state-buttons .home-dashboard-topbar__action:focus {
+  outline: none;
+}
+
+.home-platform-theme__empty-title {
+  margin-top: auto;
+}
+
+.home-platform-theme__empty-caption {
+  margin-top: 0.5rem;
+}

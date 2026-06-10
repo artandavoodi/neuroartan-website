@@ -60,6 +60,11 @@ function renderVisibility(root, preferences = VISIBILITY_DEFAULTS) {
     ...preferences
   };
 
+  const section = root.querySelector('[data-model-settings-view="visibility"]');
+  if (section instanceof HTMLElement) {
+    section.hidden = false;
+  }
+
   root.querySelectorAll('[data-model-visibility-toggle]').forEach((toggle) => {
     const field = toggle.getAttribute('data-model-visibility-toggle') || '';
     if (toggle instanceof HTMLInputElement) {
@@ -110,6 +115,16 @@ async function hydrateModelSettings(root) {
     setText(root, '[data-model-settings-preference="explanationDepth"]', titleize(personalization?.explanationDepth || 'standard'));
     setText(root, '[data-model-settings-preference="emotionalTone"]', titleize(personalization?.emotionalTone || 'neutral'));
     renderVisibility(root, visibility || VISIBILITY_DEFAULTS);
+
+    const loading = root.querySelector('[data-model-settings-loading]');
+    if (loading instanceof HTMLElement) {
+      loading.remove();
+    }
+
+    const sections = root.querySelector('.home-platform-theme__sections');
+    if (sections instanceof HTMLElement) {
+      sections.hidden = false;
+    }
   } catch (error) {
     console.error('[model-settings] Hydration failed.', error);
     setStatus(root, 'Model settings could not be loaded.', 'error');

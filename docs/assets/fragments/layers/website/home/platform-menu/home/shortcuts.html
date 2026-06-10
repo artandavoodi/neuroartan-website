@@ -6,7 +6,66 @@
         <p class="home-platform-theme__section-caption">Quick access to selected destinations and actions.</p>
       </div>
 
-      <div class="home-platform-theme__empty-state" data-home-shortcuts-empty-state>
+      <div class="home-platform-theme__toggle-list" role="list" aria-label="Home shortcuts" data-home-overview-shortcuts-list>
+        <!-- Dynamic shortcuts will be rendered here -->
+      </div>
+      <div class="home-platform-theme__empty-state" data-home-overview-shortcuts-empty>
+        <div class="home-platform-theme__empty-state-buttons">
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#home-platform-workspace-dashboard'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/dashboard/dashboard.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Dashboard</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/profile.html#profile'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/profile/profile.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Profile</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#model/training/protocol'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/sidebar/training.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Training</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#model/discovery/directory'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/sidebar/discovery.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Discovery</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#model/foundation/sources'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/source.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Source</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#model/foundation/voice'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/voice.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Voice</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/model/#model/foundation/overview'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/cognition/model/model.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Model</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/feed/'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/feed/feed.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Feed</span>
+          </button>
+          <button class="home-dashboard-topbar__action home-dashboard-topbar__action--nav" type="button" onclick="window.location.href='/profile.html#thoughts'">
+            <span class="home-dashboard-topbar__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg" alt="" draggable="false" style="-webkit-user-drag: none;">
+            </span>
+            <span class="home-dashboard-topbar__label">Thoughts</span>
+          </button>
+        </div>
         <p class="home-platform-theme__empty-title">No shortcuts configured yet</p>
         <p class="home-platform-theme__empty-caption">Add shortcuts from Home settings to keep primary destinations and actions immediately accessible.</p>
       </div>

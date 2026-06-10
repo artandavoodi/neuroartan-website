@@ -8,5 +8,6 @@
   min-height: var(--control-height-sm);
   color: var(--text-color);
   font: var(--type-label);
-  opacity: var(--state-opacity-muted);
+  line-height: var(--type-label-line-height);
+  opacity: var(--state-opacity-high);
 }

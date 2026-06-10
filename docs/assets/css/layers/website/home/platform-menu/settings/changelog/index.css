@@ -2,6 +2,7 @@
 
 .settings-changelog__list {
   display: grid;
+  gap: var(--spacing-md);
 }
 
 .settings-changelog__item {
@@ -10,12 +11,15 @@
 
 .settings-changelog__title {
   color: var(--text-color);
-  font: var(--type-body-strong);
+  font: var(--type-label);
+  line-height: var(--type-label-line-height);
+  opacity: var(--state-opacity-high);
 }
 
 .settings-changelog__meta,
 .settings-changelog__detail {
   color: var(--text-color);
   font: var(--type-label);
-  opacity: var(--state-opacity-muted);
+  line-height: var(--type-label-line-height);
+  opacity: var(--home-platform-shell-nav-opacity);
 }

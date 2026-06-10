@@ -7,7 +7,6 @@ import {
 } from '../../../../system/model/model-store.js';
 
 const VISIBILITY_DEFAULTS = Object.freeze({
-  visibilityScope: 'general',
   publicVisible: false,
   friendsVisible: false,
   followersVisible: false,
@@ -61,15 +60,22 @@ function renderVisibility(root, preferences = VISIBILITY_DEFAULTS) {
     ...preferences
   };
 
-  const scope = root.querySelector('[data-model-visibility-field="visibilityScope"]');
-  if (scope instanceof HTMLSelectElement) {
-    scope.value = root.__modelVisibilityPreferences.visibilityScope;
-  }
-
   root.querySelectorAll('[data-model-visibility-toggle]').forEach((toggle) => {
-    if (!(toggle instanceof HTMLInputElement)) return;
-    const key = toggle.getAttribute('data-model-visibility-toggle') || '';
-    toggle.checked = root.__modelVisibilityPreferences[key] === true;
+    const field = toggle.getAttribute('data-model-visibility-toggle') || '';
+    if (toggle instanceof HTMLInputElement) {
+      toggle.checked = root.__modelVisibilityPreferences[field] === true;
+    } else if (toggle instanceof HTMLButtonElement) {
+      const isChecked = root.__modelVisibilityPreferences[field] === true;
+      toggle.setAttribute('aria-checked', String(isChecked));
+      const track = toggle.querySelector('.na-toggle__track');
+      if (track instanceof HTMLElement) {
+        track.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');
+      }
+      const thumb = toggle.querySelector('.na-toggle__thumb');
+      if (thumb instanceof HTMLElement) {
+        thumb.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');
+      }
+    }
   });
 }
 
@@ -137,17 +143,15 @@ export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   void hydrateModelSettings(root);
 
-  root.addEventListener('change', (event) => {
-    const target = event.target;
-    if (target instanceof HTMLSelectElement && target.matches('[data-model-visibility-field="visibilityScope"]')) {
-      void saveVisibility(root, { visibilityScope: target.value });
-      return;
-    }
+  root.addEventListener('click', (event) => {
+    const toggle = event.target?.closest?.('[data-model-visibility-toggle]');
+    if (!(toggle instanceof HTMLButtonElement)) return;
 
-    if (target instanceof HTMLInputElement && target.matches('[data-model-visibility-toggle]')) {
-      const key = target.getAttribute('data-model-visibility-toggle') || '';
-      if (key) void saveVisibility(root, { [key]: target.checked });
-    }
+    const field = toggle.getAttribute('data-model-visibility-toggle') || '';
+    if (!field) return;
+
+    const currentState = root.__modelVisibilityPreferences[field] === true;
+    void saveVisibility(root, { [field]: !currentState });
   });
 }
 

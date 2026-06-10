@@ -53,13 +53,6 @@
   flex:1;
 }
 
-.home-platform-dashboard__priority-title{
-  font:var(--type-body-strong);
-}
-
-.home-platform-dashboard__priority-caption{
-}
-
 .home-platform-dashboard__priority-controls{
   display:none;
 }

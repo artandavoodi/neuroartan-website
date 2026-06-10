@@ -23,25 +23,15 @@
   background:transparent;
 }
 
-.home-platform-theme__storage-breakdown-label{
-  font:var(--type-label);
-  color:var(--text-color);
-  opacity:var(--state-opacity-muted);
-}
-
+.home-platform-theme__storage-breakdown-label,
 .home-platform-theme__storage-breakdown-value{
-  font:var(--type-body-strong);
+  margin:var(--spacing-none);
   color:var(--text-color);
-  font-variant-numeric:tabular-nums;
-}
-
-.home-platform-theme__storage-breakdown-row--total .home-platform-theme__storage-breakdown-label{
-  font:var(--type-body-strong);
-  color:var(--text-color);
+  font:var(--type-label);
+  line-height:var(--type-label-line-height);
   opacity:var(--state-opacity-high);
 }
 
-.home-platform-theme__storage-breakdown-row--total .home-platform-theme__storage-breakdown-value{
-  font:var(--type-body-strong);
-  color:var(--text-color);
+.home-platform-theme__storage-breakdown-value{
+  font-variant-numeric:tabular-nums;
 }

@@ -121,6 +121,7 @@
 
 .ui-radio-list__label{
   color:currentColor;
+  font-size:var(--type-label-size);
 }
 
 .ui-radio-list__description{

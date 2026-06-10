@@ -133,25 +133,16 @@
 
 .home-platform-theme__mode-option:hover,
 .home-platform-theme__mode-option:focus-visible{
-  background:var(--control-bg);
+  background:transparent;
   outline:none;
 }
 
 .home-platform-theme__mode-option[aria-pressed="true"]{
-  background:var(--control-bg);
+  border:var(--border-width-hairline) solid var(--field-border);
+  background:transparent;
 }
 
-.home-platform-theme__mode-label,
-.home-platform-theme__toggle-title{
-  margin:var(--spacing-none);
-  font:var(--type-body-strong);
-}
 
-.home-platform-theme__mode-caption{
-  margin:var(--spacing-none);
-  font:var(--type-label);
-  opacity:var(--state-opacity-muted);
-}
 
 
 /* =============================================================================
@@ -176,10 +167,6 @@
   color:var(--text-color);
 }
 
-.home-platform-theme__token-label{
-  margin:var(--spacing-none);
-  font:var(--type-body-strong);
-}
 
 .home-platform-theme__token-input{
   flex:0 0 auto;

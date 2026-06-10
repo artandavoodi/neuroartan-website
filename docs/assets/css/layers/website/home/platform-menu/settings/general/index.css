@@ -12,12 +12,11 @@
 .home-platform-theme__empty-caption,
 .home-platform-theme__mode-caption,
 .home-platform-settings-category__caption,
-.home-platform-settings-category__status,
-.home-platform-dashboard__priority-caption,
-.home-platform-dashboard__priority-description{
+.home-platform-settings-category__status{
   font:var(--type-label);
   opacity:var(--state-opacity-muted);
 }
+
 
 /* =============================================================================
    SETTINGS OPTION STATE CONTRACT
@@ -51,6 +50,9 @@
   justify-content:space-between;
   width:var(--size-full);
   min-width:var(--spacing-none);
+  margin:var(--spacing-none);
+  padding-block:var(--layout-home-platform-theme-toggle-row-padding-y);
+  padding-inline:var(--spacing-none);
   border:var(--spacing-none);
   border-radius:var(--radius-none);
   background:transparent;
@@ -64,9 +66,6 @@
   outline:none;
 }
 
-.home-platform-theme__shortcut-label{
-  font:var(--type-body-strong);
-}
 
 .home-platform-theme__shortcut-icon{
   flex:0 0 auto;

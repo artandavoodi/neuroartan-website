@@ -6,7 +6,6 @@
 .home-platform-theme__connector-list{
   display:flex;
   flex-direction:column;
-  gap:var(--layout-home-platform-theme-section-gap);
 }
 
 .home-platform-theme__connector-item{
@@ -89,6 +88,14 @@
   color:transparent;
   opacity:0;
   pointer-events:none;
+}
+
+#settings-privacy-data-content .home-platform-theme__connector-name{
+  font:var(--type-label);
+  line-height:var(--type-label-line-height);
+  color:var(--text-color);
+  opacity:var(--state-opacity-high);
+  pointer-events:auto;
 }
 
 .home-platform-theme__connector-status{

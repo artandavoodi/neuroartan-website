@@ -113,7 +113,7 @@
   display:grid;
   gap:var(--profile-settings-field-gap);
   min-width:var(--spacing-none);
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-md);
+  padding:var(--spacing-none);
 }
 
 .profile-settings__field--full{

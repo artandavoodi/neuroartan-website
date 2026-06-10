@@ -129,8 +129,7 @@
         </div>
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Step-by-step explanations</p>
-            <p class="home-platform-theme__toggle-caption">Break down complex topics into steps</p>
+            <p class="home-platform-theme__toggle-title">Step-by-step mode</p>
           </div>
           <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-toggle-key="stepByStep" data-toggle-scope="personalization-response">
             <span class="na-toggle__track" aria-hidden="true">
@@ -151,8 +150,7 @@
       <div class="home-platform-theme__memory-section">
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Enable memory</p>
-            <p class="home-platform-theme__toggle-caption">Allow ICOS to remember context across sessions</p>
+            <p class="home-platform-theme__toggle-title">Cross-session memory</p>
           </div>
           <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-toggle-key="enableMemory" data-toggle-scope="personalization-memory">
             <span class="na-toggle__track" aria-hidden="true">
@@ -203,8 +201,7 @@
       <div class="home-platform-theme__behavioral-section">
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Workflow pattern learning</p>
-            <p class="home-platform-theme__toggle-caption">Learn from your work patterns</p>
+            <p class="home-platform-theme__toggle-title">Workflow learning</p>
           </div>
           <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-toggle-key="workflowLearning" data-toggle-scope="personalization-behavioral">
             <span class="na-toggle__track" aria-hidden="true">
@@ -214,8 +211,7 @@
         </div>
         <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
           <div class="home-platform-theme__toggle-copy">
-            <p class="home-platform-theme__toggle-title">Communication style learning</p>
-            <p class="home-platform-theme__toggle-caption">Adapt to your communication preferences</p>
+            <p class="home-platform-theme__toggle-title">Communication learning</p>
           </div>
           <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-toggle-key="communicationLearning" data-toggle-scope="personalization-behavioral">
             <span class="na-toggle__track" aria-hidden="true">
@@ -318,41 +314,35 @@
         <span class="home-platform-theme__section-toggle-icon" aria-hidden="true">⌄</span>
       </button>
       <div class="home-platform-theme__section-content" id="settings-personalization-personality-content" data-home-platform-theme-section-content>
-      <div class="home-platform-theme__personality-section">
-        <div class="home-platform-theme__slider-group">
-          <div class="home-platform-theme__slider-item">
-            <label class="home-platform-theme__slider-label" for="sense-of-humor">Sense of humor</label>
-            <div class="home-platform-theme__slider-wrapper">
-              <input class="home-platform-theme__slider ui-slider" type="range" id="sense-of-humor" data-home-platform-field="sense-of-humor" min="0" max="100" value="50">
-              <span class="home-platform-theme__slider-value" data-home-platform-slider-value="sense-of-humor">50%</span>
-            </div>
-            <p class="home-platform-theme__slider-caption">From dry/serious to playful/witty</p>
-          </div>
-          <div class="home-platform-theme__slider-item">
-            <label class="home-platform-theme__slider-label" for="efficiency-preference">Efficiency preference</label>
-            <div class="home-platform-theme__slider-wrapper">
-              <input class="home-platform-theme__slider ui-slider" type="range" id="efficiency-preference" data-home-platform-field="efficiency-preference" min="0" max="100" value="50">
-              <span class="home-platform-theme__slider-value" data-home-platform-slider-value="efficiency-preference">50%</span>
-            </div>
-            <p class="home-platform-theme__slider-caption">From thorough/contemplative to rapid/efficient</p>
-          </div>
-          <div class="home-platform-theme__slider-item">
-            <label class="home-platform-theme__slider-label" for="creativity-level">Creativity level</label>
-            <div class="home-platform-theme__slider-wrapper">
-              <input class="home-platform-theme__slider ui-slider" type="range" id="creativity-level" data-home-platform-field="creativity-level" min="0" max="100" value="50">
-              <span class="home-platform-theme__slider-value" data-home-platform-slider-value="creativity-level">50%</span>
-            </div>
-            <p class="home-platform-theme__slider-caption">From conventional/structured to innovative/experimental</p>
-          </div>
-          <div class="home-platform-theme__slider-item">
-            <label class="home-platform-theme__slider-label" for="risk-tolerance">Risk tolerance</label>
-            <div class="home-platform-theme__slider-wrapper">
-              <input class="home-platform-theme__slider ui-slider" type="range" id="risk-tolerance" data-home-platform-field="risk-tolerance" min="0" max="100" value="50">
-              <span class="home-platform-theme__slider-value" data-home-platform-slider-value="risk-tolerance">50%</span>
-            </div>
-            <p class="home-platform-theme__slider-caption">From conservative/cautious to adventurous/bold</p>
-          </div>
-        </div>
+      <div class="model-management__control-grid">
+          <label class="model-management__field">
+            <span class="model-management__field-label">Humor: serious to playful</span>
+            <span class="model-management__slider-row">
+              <input class="model-management__slider ui-slider" type="range" id="sense-of-humor" data-home-platform-field="sense-of-humor" min="0" max="100" value="50">
+              <span class="model-management__slider-value" data-home-platform-slider-value="sense-of-humor">50%</span>
+            </span>
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Efficiency: thorough to rapid</span>
+            <span class="model-management__slider-row">
+              <input class="model-management__slider ui-slider" type="range" id="efficiency-preference" data-home-platform-field="efficiency-preference" min="0" max="100" value="50">
+              <span class="model-management__slider-value" data-home-platform-slider-value="efficiency-preference">50%</span>
+            </span>
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Creativity: structured to innovative</span>
+            <span class="model-management__slider-row">
+              <input class="model-management__slider ui-slider" type="range" id="creativity-level" data-home-platform-field="creativity-level" min="0" max="100" value="50">
+              <span class="model-management__slider-value" data-home-platform-slider-value="creativity-level">50%</span>
+            </span>
+          </label>
+          <label class="model-management__field">
+            <span class="model-management__field-label">Risk: cautious to adventurous</span>
+            <span class="model-management__slider-row">
+              <input class="model-management__slider ui-slider" type="range" id="risk-tolerance" data-home-platform-field="risk-tolerance" min="0" max="100" value="50">
+              <span class="model-management__slider-value" data-home-platform-slider-value="risk-tolerance">50%</span>
+            </span>
+          </label>
       </div>
       </div>
     </section>

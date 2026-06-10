@@ -67,6 +67,8 @@ function renderVisibility(root, preferences = VISIBILITY_DEFAULTS) {
     } else if (toggle instanceof HTMLButtonElement) {
       const isChecked = root.__modelVisibilityPreferences[field] === true;
       toggle.setAttribute('aria-checked', String(isChecked));
+      toggle.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');
+      toggle.setAttribute('data-toggle-checked', String(isChecked));
       const track = toggle.querySelector('.na-toggle__track');
       if (track instanceof HTMLElement) {
         track.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');

@@ -32,11 +32,17 @@
   const FALLBACK_CLOSE_DURATION_MS = 320;
   const STORAGE_KEY = 'neuroartan.announcementOverlay';
   const AUTO_SHOW_DELAY_MS = 10000;
+  const COOKIE_CLOSE_DELAY_MS = 650;
+  const COOKIE_CONSENT_STORAGE_KEY = 'neuroartan.cookieConsent';
 
   let closeTimer = null;
   let autoShowTimer = null;
+  let cookieDelayTimer = null;
   let bootBound = false;
   let mountEventsBound = false;
+  let cookieEventsBound = false;
+  let cookieClosedThisPage = false;
+  let pendingCookieClearOpen = null;
 
   /* =============================================================================
      03) STORAGE HELPERS
@@ -128,6 +134,12 @@
     autoShowTimer = null;
   }
 
+  function clearCookieDelayTimer() {
+    if (!cookieDelayTimer) return;
+    window.clearTimeout(cookieDelayTimer);
+    cookieDelayTimer = null;
+  }
+
   /* =============================================================================
      06) DISPLAY DECISION HELPERS
   ============================================================================= */
@@ -144,6 +156,65 @@
     return true;
   }
 
+  function readStoredCookieConsent() {
+    try {
+      const raw = window.localStorage.getItem(COOKIE_CONSENT_STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch {}
+
+    try {
+      const raw = window.sessionStorage.getItem(COOKIE_CONSENT_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function isCookieConsentPending() {
+    const stored = readStoredCookieConsent();
+    return !stored || String(stored.state || 'pending').trim() === 'pending';
+  }
+
+  function isCookieConsentVisible() {
+    return (
+      document.body.classList.contains('cookie-consent-open') ||
+      document.body.classList.contains('cookie-consent-closing')
+    );
+  }
+
+  function shouldWaitForCookieConsent() {
+    if (!isHomepage()) return false;
+    if (isCookieConsentVisible()) return true;
+
+    const cookieOverlay = q('[data-cookie-consent="root"]') || q('.cookie-consent');
+    if (!cookieOverlay) return false;
+    if (cookieClosedThisPage) return false;
+
+    return isCookieConsentPending();
+  }
+
+  function openAfterCookieConsent(detail = {}) {
+    pendingCookieClearOpen = { ...detail };
+    clearAutoShowTimer();
+    clearCookieDelayTimer();
+
+    if (shouldWaitForCookieConsent()) return;
+
+    cookieDelayTimer = window.setTimeout(() => {
+      const pendingDetail = pendingCookieClearOpen || detail;
+      pendingCookieClearOpen = null;
+      cookieDelayTimer = null;
+
+      if (!shouldAutoShow()) return;
+      if (shouldWaitForCookieConsent()) {
+        openAfterCookieConsent(pendingDetail);
+        return;
+      }
+
+      openOverlay(pendingDetail);
+    }, COOKIE_CLOSE_DELAY_MS);
+  }
+
   /* =============================================================================
      07) AUTO-SHOW LOGIC
   ============================================================================= */
@@ -153,7 +224,7 @@
 
     autoShowTimer = window.setTimeout(() => {
       if (shouldAutoShow()) {
-        openOverlay({ source: 'auto-show' });
+        openAfterCookieConsent({ source: 'auto-show' });
       }
     }, AUTO_SHOW_DELAY_MS);
   }
@@ -165,7 +236,14 @@
     const overlay = getOverlay();
     if (!overlay) return;
 
+    if (shouldWaitForCookieConsent()) {
+      openAfterCookieConsent(detail);
+      return;
+    }
+
     clearCloseTimer();
+    clearCookieDelayTimer();
+    pendingCookieClearOpen = null;
 
     document.body.classList.remove(CLOSING_CLASS);
     document.body.classList.add(OPEN_CLASS);
@@ -176,7 +254,7 @@
     }));
   }
 
-  function closeOverlay(source = MODULE_ID) {
+  function closeOverlay(source = MODULE_ID, options = {}) {
     const overlay = getOverlay();
     if (!overlay) return;
 
@@ -191,7 +269,9 @@
     document.body.classList.add(CLOSING_CLASS);
     overlay.setAttribute('aria-hidden', 'true');
 
-    markAsDismissed();
+    if (options.dismiss !== false) {
+      markAsDismissed();
+    }
 
     closeTimer = window.setTimeout(() => {
       document.body.classList.remove(CLOSING_CLASS);
@@ -232,7 +312,7 @@
       const detail = event && event.detail && typeof event.detail === 'object'
         ? event.detail
         : {};
-      openOverlay(detail);
+      openAfterCookieConsent(detail);
     });
 
     document.addEventListener('announcement-overlay:close-request', () => {
@@ -271,6 +351,27 @@
     });
   }
 
+  function bindCookieEvents() {
+    if (cookieEventsBound) return;
+    cookieEventsBound = true;
+
+    document.addEventListener('cookie-consent:opened', () => {
+      if (!document.body.classList.contains(OPEN_CLASS)) return;
+      closeOverlay('cookie-consent-opened', { dismiss: false });
+    });
+
+    document.addEventListener('cookie-consent:closed', () => {
+      cookieClosedThisPage = true;
+      if (!pendingCookieClearOpen) return;
+      openAfterCookieConsent(pendingCookieClearOpen);
+    });
+
+    document.addEventListener('cookie-consent:state-changed', () => {
+      if (!pendingCookieClearOpen || isCookieConsentVisible()) return;
+      openAfterCookieConsent(pendingCookieClearOpen);
+    });
+  }
+
   /* =============================================================================
      13) BOOTSTRAP
   ============================================================================= */
@@ -301,6 +402,7 @@
     bindGlobalRequests();
     bindEscape();
     bindMountEvents();
+    bindCookieEvents();
     initAnnouncementOverlay();
   }
 

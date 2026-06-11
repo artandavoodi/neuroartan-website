@@ -141,7 +141,6 @@ body.announcement-overlay-closing .announcement-overlay-backdrop{
   max-height: var(--announcement-overlay-dialog-max-height);
   padding: var(--announcement-overlay-shell-padding-y) var(--announcement-overlay-shell-padding-x) var(--announcement-overlay-shell-padding-bottom);
   background-color: var(--announcement-overlay-surface);
-  border: var(--border-width-hairline) solid var(--announcement-overlay-border);
   border-radius: var(--announcement-overlay-dialog-radius);
   backdrop-filter: blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   -webkit-backdrop-filter: blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));

@@ -616,7 +616,7 @@
       alignItems: "center",
       justifyContent: "center",
       direction: "ltr",
-      background: "transparent",
+      background: "var(--bg-color, #000)",
       zIndex: "2147483000",
       pointerEvents: "none",
       opacity: "1",

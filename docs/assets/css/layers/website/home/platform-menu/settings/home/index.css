@@ -3,6 +3,10 @@
    Custom styling for drag-and-drop priority list
    ========================================================================== */
 
+.home-platform-destination--settings-home [data-home-platform-theme-section][hidden]{
+  display:none;
+}
+
 .home-platform-dashboard__priority-list{
   display:flex;
   flex-direction:column;
@@ -21,6 +25,19 @@
   max-width:var(--size-full);
   width:var(--size-full);
   box-sizing:border-box;
+}
+
+.home-platform-dashboard__priority-row--shortcut{
+  gap:var(--spacing-sm);
+}
+
+.home-platform-dashboard__priority-row--shortcut .home-platform-dashboard__priority-copy{
+  justify-content:flex-start;
+}
+
+.home-platform-dashboard__priority-row--shortcut .na-toggle{
+  flex:0 0 auto;
+  margin-left:var(--spacing-md);
 }
 
 .home-platform-dashboard__priority-row:active{
@@ -121,6 +138,10 @@
   align-items:center;
   justify-content:center;
   padding:var(--spacing-md);
+}
+
+.home-platform-theme__empty-state[hidden]{
+  display:none;
 }
 
 .home-platform-theme__empty-state-text{

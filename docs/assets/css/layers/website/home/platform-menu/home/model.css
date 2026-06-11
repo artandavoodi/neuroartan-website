@@ -1,5 +1,245 @@
 /* ========================================================================== 
    Home Model Styles
-   Module-level ownership reserved.
+   Compact model overview and scan preview.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-model-overview{
+  display:grid;
+  grid-template-columns:minmax(8.5rem, 14rem) minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-xl);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview[hidden],
+.home-model-overview__scan[hidden]{
+  display:none;
+}
+
+.home-model-overview__scan{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:var(--spacing-none);
+}
+
+.home-model-scan__brain{
+  position:relative;
+  width:min(13rem, 100%);
+  aspect-ratio:1.52;
+  color:var(--text-primary-color);
+  isolation:isolate;
+}
+
+.home-model-scan__region,
+.home-model-scan__connection,
+.home-model-scan__node{
+  position:absolute;
+  display:block;
+}
+
+.home-model-scan__region{
+  border-radius:var(--radius-full);
+  border:var(--border-width-hairline) solid color-mix(in srgb, var(--control-border-unified) 54%, transparent);
+  background:color-mix(in srgb, var(--digital-brain-cortex-base) 70%, transparent);
+  opacity:0.7;
+}
+
+.home-model-scan__region--frontal{
+  inset:8% 16% 28% 10%;
+  background:color-mix(in srgb, var(--digital-brain-region-frontal) 62%, transparent);
+}
+
+.home-model-scan__region--parietal{
+  inset:12% 6% 24% 38%;
+  background:color-mix(in srgb, var(--digital-brain-region-parietal) 56%, transparent);
+}
+
+.home-model-scan__region--temporal{
+  inset:38% 12% 10% 26%;
+  background:color-mix(in srgb, var(--digital-brain-region-temporal) 52%, transparent);
+}
+
+.home-model-scan__region--cerebellum{
+  inset:58% 50% 2% 9%;
+  background:color-mix(in srgb, var(--digital-brain-brainstem) 58%, transparent);
+}
+
+.home-model-scan__connection{
+  left:48%;
+  top:50%;
+  width:34%;
+  height:var(--border-width-hairline);
+  transform-origin:left center;
+  background:color-mix(in srgb, var(--text-secondary-color) 54%, transparent);
+  opacity:0.42;
+  z-index:2;
+}
+
+.home-model-scan__connection--source{
+  transform:rotate(-20deg);
+}
+
+.home-model-scan__connection--memory{
+  transform:rotate(142deg);
+}
+
+.home-model-scan__connection--personality{
+  transform:rotate(14deg);
+}
+
+.home-model-scan__connection--voice{
+  transform:rotate(40deg);
+}
+
+.home-model-scan__node{
+  --home-model-node-size:calc(0.58rem + (var(--home-model-node-strength, 0.4) * 0.72rem));
+  width:var(--home-model-node-size);
+  height:var(--home-model-node-size);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid color-mix(in srgb, currentColor 68%, transparent);
+  border-radius:var(--radius-circle);
+  background:color-mix(in srgb, currentColor calc(26% + (var(--home-model-node-strength, 0.4) * 42%)), transparent);
+  box-shadow:0 0 calc(var(--home-model-node-size) * 1.45) color-mix(in srgb, currentColor calc(10% + (var(--home-model-node-strength, 0.4) * 22%)), transparent);
+  cursor:default;
+  z-index:3;
+}
+
+.home-model-scan__node--identity{
+  top:19%;
+  left:42%;
+  color:var(--digital-brain-layer-identity);
+}
+
+.home-model-scan__node--source{
+  top:35%;
+  left:67%;
+  color:var(--digital-brain-layer-source);
+}
+
+.home-model-scan__node--memory{
+  top:62%;
+  left:24%;
+  color:var(--digital-brain-layer-memory);
+}
+
+.home-model-scan__node--personality{
+  top:47%;
+  left:53%;
+  color:var(--digital-brain-layer-personality);
+}
+
+.home-model-scan__node--voice{
+  top:66%;
+  left:72%;
+  color:var(--digital-brain-layer-voice);
+}
+
+.home-model-scan__node-label{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+.home-model-overview__summary{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview__status{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-xs);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview__eyebrow,
+.home-model-overview__title,
+.home-model-overview__caption,
+.home-model-overview__metric-value,
+.home-model-overview__metric-label{
+  margin:var(--spacing-none);
+}
+
+.home-model-overview__eyebrow{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.home-model-overview__title{
+  color:var(--text-primary-color);
+  font-size:var(--body-1-size);
+  line-height:var(--body-1-line-height);
+  font-weight:var(--font-weight-semibold);
+}
+
+.home-model-overview__caption{
+  color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
+.home-model-overview__metrics{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview__metric{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview__metric-value{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  font-weight:var(--font-weight-semibold);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.home-model-overview__metric-label{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+@media (max-width: 760px){
+  .home-model-overview{
+    grid-template-columns:1fr;
+    gap:var(--spacing-lg);
+  }
+
+  .home-model-overview__scan{
+    justify-content:flex-start;
+  }
+
+  .home-model-scan__brain{
+    width:min(12rem, 100%);
+  }
+
+  .home-model-overview__metrics{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px){
+  .home-model-overview__metrics{
+    grid-template-columns:1fr;
+    gap:var(--spacing-md);
+  }
+}

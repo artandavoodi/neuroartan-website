@@ -48,18 +48,49 @@
   border-top:var(--border-width-hairline) solid var(--border-color);
 }
 
+.home-platform-destination--home-overview[data-home-section-chrome="minimal"] .home-overview-canvas,
+.home-platform-destination--home-overview[data-home-section-chrome="minimal"] .home-overview-canvas__stack,
+.home-overview-canvas[data-home-section-chrome="minimal"],
+.home-overview-canvas[data-home-section-chrome="minimal"] .home-overview-canvas__stack{
+  gap:var(--spacing-none);
+}
+
+.home-platform-destination--home-overview[data-home-section-chrome="minimal"] .home-overview-canvas__slot .home-overview-module__section,
+.home-overview-canvas[data-home-section-chrome="minimal"] .home-overview-canvas__slot .home-overview-module__section{
+  padding-block:var(--home-overview-section-padding);
+}
+
 .home-platform-destination--home-overview .home-overview-module__section > .home-platform-theme__section-header{
   gap:var(--home-overview-header-gap);
 }
 
+.home-platform-destination--home-overview [data-home-module-empty-state]{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:var(--home-overview-header-gap);
+}
+
+.home-platform-destination--home-overview[data-home-section-chrome="minimal"] .home-overview-module__section > .home-platform-theme__section-header,
+.home-overview-canvas[data-home-section-chrome="minimal"] .home-overview-module__section > .home-platform-theme__section-header{
+  display:none;
+}
+
 .home-platform-destination--home-overview .home-platform-theme__empty-title,
 .home-platform-destination--home-overview .home-platform-theme__empty-caption{
+  display:block;
   font:var(--type-label);
   opacity:var(--state-opacity-muted);
+  text-align:center;
 }
 
 .home-platform-destination--home-overview .home-platform-theme__empty-title{
   opacity:var(--state-opacity-high);
+}
+
+.home-platform-destination--home-overview .home-platform-theme__empty-caption{
+  margin-top:0;
 }
 
 .home-platform-destination--home-overview[data-home-empty-state-behavior="minimal"] .home-platform-theme__empty-caption,

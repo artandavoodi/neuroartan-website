@@ -1,6 +1,11 @@
 // Shortcuts Module
 // Provides quick access to selected destinations and actions
 
+import {
+  getOrderedHomeShortcutItems,
+  normalizeHomeShortcutState,
+} from './shortcut-registry.js';
+
 function getHomeConfig() {
   const stored = localStorage.getItem('neuroartan-home-config');
   if (stored) {
@@ -13,8 +18,38 @@ function getHomeConfig() {
   return null;
 }
 
+function closeHomePlatformShellForShortcut() {
+  document.dispatchEvent(new CustomEvent('home:platform-shell-close-request', {
+    detail: {
+      clearPersistedState: true,
+    },
+  }));
+}
+
+function navigateHomeShortcut(event, href = '') {
+  const destination = String(href || '').trim();
+  if (!destination) return;
+
+  event.preventDefault();
+  closeHomePlatformShellForShortcut();
+  window.requestAnimationFrame(() => {
+    window.location.assign(destination);
+  });
+}
+
+function navigateShortcutSettings(event) {
+  event.preventDefault();
+  document.dispatchEvent(new CustomEvent('home:platform-shell-open-request', {
+    detail: {
+      destination: 'settings-home',
+      section: 'settings',
+    },
+  }));
+}
+
 function updateShortcutsDisplay(root) {
   const config = getHomeConfig();
+  const shortcutState = normalizeHomeShortcutState(config?.shortcuts || {});
 
   if (config && config.visibility && config.visibility.shortcuts === false) {
     root.style.display = 'none';
@@ -29,69 +64,39 @@ function updateShortcutsDisplay(root) {
   if (!(shortcutsList instanceof HTMLElement)) return;
   if (!(emptyState instanceof HTMLElement)) return;
   
-  // Clear existing shortcuts
   shortcutsList.innerHTML = '';
-  
-  // Check if model shortcut is enabled
-  const modelShortcutEnabled = config?.shortcuts?.model === true;
-  
-  // Show empty state if model shortcut is not enabled
-  if (!modelShortcutEnabled) {
+
+  const visibleShortcuts = getOrderedHomeShortcutItems(shortcutState, { enabledOnly: true });
+
+  if (!visibleShortcuts.length) {
     emptyState.hidden = false;
+    const settingsLink = emptyState.querySelector('[data-home-shortcut-settings-link]');
+    if (settingsLink instanceof HTMLAnchorElement && settingsLink.dataset.homeShortcutSettingsBound !== 'true') {
+      settingsLink.dataset.homeShortcutSettingsBound = 'true';
+      settingsLink.addEventListener('click', navigateShortcutSettings);
+    }
     return;
   }
   
   emptyState.hidden = true;
-  
-  // Render Model shortcut as interactive button
-  const shortcutRow = document.createElement('div');
-  shortcutRow.className = 'home-platform-theme__toggle-row';
-  shortcutRow.role = 'listitem';
-  shortcutRow.dataset.homeOverviewShortcutRow = 'model';
-  
-  const shortcutButton = document.createElement('button');
-  shortcutButton.className = 'home-platform-theme__shortcut-button';
-  shortcutButton.type = 'button';
-  shortcutButton.textContent = 'Model';
-  shortcutButton.addEventListener('click', () => {
-    window.location.href = '/model/#model/foundation/overview';
+
+  visibleShortcuts.forEach((shortcut) => {
+    const shortcutLink = document.createElement('a');
+    shortcutLink.className = 'home-platform-theme__shortcut-link home-dashboard-topbar__action';
+    shortcutLink.href = shortcut.href;
+    shortcutLink.dataset.homeOverviewShortcut = shortcut.id;
+    shortcutLink.setAttribute('aria-label', shortcut.label);
+    shortcutLink.innerHTML = `
+      <span class="home-platform-theme__shortcut-icon home-dashboard-topbar__icon" aria-hidden="true">
+        <img class="ui-icon-theme-aware" src="${shortcut.icon}" alt="" draggable="false">
+      </span>
+      <span class="home-platform-theme__shortcut-label home-dashboard-topbar__label">${shortcut.label}</span>
+    `;
+    shortcutLink.addEventListener('click', (event) => {
+      navigateHomeShortcut(event, shortcut.href);
+    });
+    shortcutsList.appendChild(shortcutLink);
   });
-  
-  shortcutRow.appendChild(shortcutButton);
-  shortcutsList.appendChild(shortcutRow);
-}
-
-function initEmptyStateButtons(root) {
-  console.log('initEmptyStateButtons called with root:', root);
-  
-  const buttonUrls = {
-    'dashboard': '/model/#home-platform-workspace-dashboard',
-    'profile': '/profile.html#profile',
-    'training': '/model/#model/training/protocol',
-    'discovery': '/model/#model/discovery/directory',
-    'source': '/model/#model/foundation/sources',
-    'voice': '/model/#model/foundation/voice',
-    'model': '/model/#model/foundation/overview',
-    'feed': '/feed/',
-    'thoughts': '/profile.html#thoughts'
-  };
-
-  // Use event delegation on document for better reliability
-  document.addEventListener('click', (e) => {
-    const button = e.target.closest('[data-shortcut-button]');
-    if (button) {
-      const shortcutKey = button.getAttribute('data-shortcut-button');
-      console.log('Button clicked via delegation:', shortcutKey);
-      if (shortcutKey && buttonUrls[shortcutKey]) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Navigating to:', buttonUrls[shortcutKey]);
-        window.location.href = buttonUrls[shortcutKey];
-      }
-    }
-  }, true);
-  
-  console.log('Event delegation set up for shortcut buttons');
 }
 
 function listenForConfigChanges(root) {
@@ -122,7 +127,6 @@ export function mountHomeShortcuts(root) {
   if (!scope) return () => {};
 
   updateShortcutsDisplay(scope);
-  initEmptyStateButtons(scope);
   const cleanupConfigChanges = listenForConfigChanges(scope);
 
   return () => {

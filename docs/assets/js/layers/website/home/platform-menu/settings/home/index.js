@@ -1,4 +1,11 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
+import {
+  HOME_SHORTCUT_ITEMS,
+  getDefaultHomeShortcutEnabled,
+  getDefaultHomeShortcutPriority,
+  getOrderedHomeShortcutItems,
+  normalizeHomeShortcutState,
+} from '../../home/shortcut-registry.js';
 
 // Home configuration state
 const HOME_CONFIG = {
@@ -21,11 +28,13 @@ const HOME_CONFIG = {
     'direction': 7
   },
   shortcuts: {
-    model: false
+    enabled: getDefaultHomeShortcutEnabled(),
+    priority: getDefaultHomeShortcutPriority(),
   },
   display: {
     mode: 'standard',
-    emptyStateBehavior: 'guidance'
+    emptyStateBehavior: 'guidance',
+    sectionChrome: 'guidance'
   },
   analytics: {
     enableTracking: false,
@@ -42,18 +51,13 @@ const HOME_CONFIG = {
   },
   model: {
     enableDashboard: false,
-    defaultView: 'overview'
+    defaultView: 'overview',
+    showBrainScan: true,
+    showReadiness: true,
+    showSourceCoverage: true,
+    showTrainingState: true,
+    showVisibilityState: true
   }
-};
-
-// Module label mapping for shortcuts
-const MODULE_LABELS = {
-  'now': 'Now',
-  'system-state': 'System State',
-  'model': 'Model',
-  'continuity': 'Continuity',
-  'cognitive-map': 'Cognitive Map',
-  'direction': 'Direction'
 };
 
 // Get home configuration from localStorage
@@ -67,7 +71,10 @@ function getHomeConfig() {
         ...storedConfig,
         visibility: { ...HOME_CONFIG.visibility, ...(storedConfig.visibility || {}) },
         priority: { ...HOME_CONFIG.priority, ...(storedConfig.priority || {}) },
-        shortcuts: { ...HOME_CONFIG.shortcuts, ...(storedConfig.shortcuts || {}) },
+        shortcuts: normalizeHomeShortcutState({
+          ...HOME_CONFIG.shortcuts,
+          ...(storedConfig.shortcuts || {}),
+        }),
         display: { ...HOME_CONFIG.display, ...(storedConfig.display || {}) },
         analytics: { ...HOME_CONFIG.analytics, ...(storedConfig.analytics || {}) },
         health: { ...HOME_CONFIG.health, ...(storedConfig.health || {}) },
@@ -83,7 +90,32 @@ function getHomeConfig() {
 
 // Save home configuration to localStorage
 function saveHomeConfig(config) {
-  localStorage.setItem('neuroartan-home-config', JSON.stringify(config));
+  localStorage.setItem('neuroartan-home-config', JSON.stringify({
+    ...config,
+    shortcuts: normalizeHomeShortcutState(config.shortcuts || {}),
+  }));
+}
+
+function saveHomeShortcutEnabled(shortcutId, isEnabled) {
+  const nextConfig = getHomeConfig();
+  const nextShortcutState = normalizeHomeShortcutState(nextConfig.shortcuts || {});
+
+  nextShortcutState.enabled[shortcutId] = isEnabled;
+  nextConfig.shortcuts = nextShortcutState;
+  saveHomeConfig(nextConfig);
+  dispatchHomeEvent('shortcuts:changed', { moduleId: shortcutId, enabled: isEnabled });
+}
+
+function syncHomeShortcutToggle(toggle, checked) {
+  const isChecked = Boolean(checked);
+  toggle.setAttribute('aria-checked', String(isChecked));
+  toggle.setAttribute('data-toggle-checked', String(isChecked));
+  toggle.dataset.toggleState = isChecked ? 'on' : 'off';
+
+  toggle.querySelector('.na-toggle__track, [data-na-toggle-track]')
+    ?.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');
+  toggle.querySelector('.na-toggle__thumb, [data-na-toggle-thumb]')
+    ?.setAttribute('data-toggle-state', isChecked ? 'on' : 'off');
 }
 
 // Initialize drag-and-drop for priority ordering
@@ -291,14 +323,20 @@ function syncHomePlatformOptionGroup(root, groupSelector, optionSelector, value,
 
   if (!options.length) return;
 
+  const getOptionValue = (option) => (
+    option.dataset.homeDisplayModeOption
+    || option.dataset.homeEmptyStateBehaviorOption
+    || option.dataset.homeSectionChromeOption
+  );
+
   const optionValues = options
-    .map((option) => option.dataset.homeDisplayModeOption || option.dataset.homeEmptyStateBehaviorOption)
+    .map(getOptionValue)
     .filter(Boolean);
   const fallbackValue = optionValues.includes(value) ? value : optionValues[0];
 
   const applyValue = (nextValue) => {
     options.forEach((option) => {
-      const optionValue = option.dataset.homeDisplayModeOption || option.dataset.homeEmptyStateBehaviorOption;
+      const optionValue = getOptionValue(option);
       const isActive = optionValue === nextValue;
       option.classList.toggle('home-platform-theme__mode-option--active', isActive);
       option.classList.toggle('is-active', isActive);
@@ -314,7 +352,7 @@ function syncHomePlatformOptionGroup(root, groupSelector, optionSelector, value,
 
   options.forEach((option) => {
     option.addEventListener('click', () => {
-      const nextValue = option.dataset.homeDisplayModeOption || option.dataset.homeEmptyStateBehaviorOption;
+      const nextValue = getOptionValue(option);
       if (!nextValue) return;
       applyValue(nextValue);
       group.dataset.value = nextValue;
@@ -341,6 +379,10 @@ function initDropdownControls(root) {
     '#empty-state-behavior',
     '[data-home-platform-field="home-empty-state-behavior"]',
     '[data-home-platform-field="empty-state-behavior"]'
+  ];
+  const sectionChromeSelectors = [
+    '#home-section-chrome',
+    '[data-home-platform-field="home-section-chrome"]'
   ];
 
   const config = getHomeConfig();
@@ -372,6 +414,24 @@ function initDropdownControls(root) {
       config.display.emptyStateBehavior = value;
       saveHomeConfig(config);
       dispatchHomeEvent('empty-state:changed', { behavior: value });
+    }
+  );
+
+  syncHomePlatformSelect(root, sectionChromeSelectors, config.display.sectionChrome, (value) => {
+    config.display.sectionChrome = value;
+    saveHomeConfig(config);
+    dispatchHomeEvent('section-chrome:changed', { mode: value });
+  });
+
+  syncHomePlatformOptionGroup(
+    root,
+    '[data-home-section-chrome-group]',
+    '[data-home-section-chrome-option]',
+    config.display.sectionChrome,
+    (value) => {
+      config.display.sectionChrome = value;
+      saveHomeConfig(config);
+      dispatchHomeEvent('section-chrome:changed', { mode: value });
     }
   );
   
@@ -410,119 +470,179 @@ function initDropdownControls(root) {
 function renderShortcuts(root) {
   const config = getHomeConfig();
   const shortcutsList = root.querySelector('[data-home-shortcuts-list]');
-  const emptyState = root.querySelector('[data-home-shortcuts-empty]');
   
   if (!(shortcutsList instanceof HTMLElement)) return;
-  if (!(emptyState instanceof HTMLElement)) return;
   
-  // Clear existing shortcuts
   shortcutsList.innerHTML = '';
-  
-  // Check if model shortcut is enabled
-  const modelShortcutEnabled = config.shortcuts.model === true;
-  
-  // Show empty state if model shortcut is not enabled
-  if (!modelShortcutEnabled) {
-    emptyState.hidden = false;
-    return;
-  }
-  
-  emptyState.hidden = true;
-  
-  // Render Model shortcut as toggle-style row
-  const label = 'Model';
-  const shortcutRow = document.createElement('div');
-  shortcutRow.className = 'home-platform-theme__toggle-row';
-  shortcutRow.role = 'listitem';
-  shortcutRow.dataset.homeShortcutRow = 'model';
-  
-  shortcutRow.innerHTML = `
-    <div class="home-platform-theme__toggle-copy">
-      <p class="home-platform-theme__toggle-title">${label}</p>
-    </div>
-    <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="model" data-toggle-scope="home-shortcuts">
-      <span class="na-toggle__track" aria-hidden="true">
-        <span class="na-toggle__thumb"></span>
-      </span>
-    </button>
-  `;
-  
-  shortcutsList.appendChild(shortcutRow);
-  
-  // Add event listener for toggle
-  const toggle = shortcutRow.querySelector('[data-toggle-key="model"]');
-  if (toggle instanceof HTMLButtonElement) {
-    toggle.addEventListener('click', () => {
-      const config = getHomeConfig();
-      config.shortcuts.model = false;
-      saveHomeConfig(config);
-      renderShortcuts(root);
-      dispatchHomeEvent('shortcuts:changed', { moduleId: 'model', enabled: false });
-    });
-  }
+
+  const shortcutState = normalizeHomeShortcutState(config.shortcuts || {});
+  const shortcutItems = getOrderedHomeShortcutItems(shortcutState);
+
+  shortcutItems.forEach((shortcut, index) => {
+    const shortcutRow = document.createElement('div');
+    shortcutRow.className = 'home-platform-dashboard__priority-row home-platform-dashboard__priority-row--shortcut';
+    shortcutRow.role = 'listitem';
+    shortcutRow.draggable = true;
+    shortcutRow.dataset.homeShortcutRow = shortcut.id;
+    shortcutRow.dataset.homeShortcutPriorityOrder = String(index + 1);
+    shortcutRow.innerHTML = `
+      <div class="home-platform-dashboard__priority-handle" data-home-shortcut-priority-handle>
+        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/drag/drag.svg" alt="" width="16" height="16" aria-hidden="true">
+      </div>
+      <div class="home-platform-dashboard__priority-copy">
+        <p class="home-platform-dashboard__priority-title">${shortcut.label}</p>
+      </div>
+      <button class="na-toggle" type="button" role="switch" aria-checked="${shortcutState.enabled[shortcut.id] !== false ? 'true' : 'false'}" data-na-toggle data-toggle-key="${shortcut.id}" data-toggle-scope="home-shortcuts">
+        <span class="na-toggle__track" aria-hidden="true">
+          <span class="na-toggle__thumb"></span>
+        </span>
+      </button>
+    `;
+
+    const toggle = shortcutRow.querySelector('[data-toggle-scope="home-shortcuts"]');
+    if (toggle instanceof HTMLButtonElement) {
+      toggle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isChecked = toggle.getAttribute('aria-checked') !== 'true';
+        syncHomeShortcutToggle(toggle, isChecked);
+        saveHomeShortcutEnabled(shortcut.id, isChecked);
+      }, { capture: true });
+
+      toggle.addEventListener('keydown', (event) => {
+        if (event.key !== ' ' && event.key !== 'Enter') return;
+        event.preventDefault();
+        event.stopPropagation();
+
+        const isChecked = toggle.getAttribute('aria-checked') !== 'true';
+        syncHomeShortcutToggle(toggle, isChecked);
+        saveHomeShortcutEnabled(shortcut.id, isChecked);
+      }, { capture: true });
+    }
+
+    shortcutsList.appendChild(shortcutRow);
+  });
+
+  initShortcutDragAndDrop(root);
+}
+
+function updateShortcutPriorityOrder(root) {
+  const config = getHomeConfig();
+  const shortcutState = normalizeHomeShortcutState(config.shortcuts || {});
+  const shortcutsList = root.querySelector('[data-home-shortcuts-list]');
+  if (!(shortcutsList instanceof HTMLElement)) return;
+
+  const shortcutRows = [...shortcutsList.querySelectorAll('[data-home-shortcut-row]')];
+  shortcutRows.forEach((row, index) => {
+    const shortcutId = row.dataset.homeShortcutRow;
+    if (!shortcutId) return;
+    shortcutState.priority[shortcutId] = index + 1;
+    row.dataset.homeShortcutPriorityOrder = String(index + 1);
+  });
+
+  config.shortcuts = shortcutState;
+  saveHomeConfig(config);
+  dispatchHomeEvent('shortcuts:changed', { priority: shortcutState.priority });
+}
+
+function initShortcutDragAndDrop(root) {
+  const shortcutsList = root.querySelector('[data-home-shortcuts-list]');
+  if (!(shortcutsList instanceof HTMLElement) || shortcutsList.dataset.homeShortcutDragBound === 'true') return;
+
+  shortcutsList.dataset.homeShortcutDragBound = 'true';
+  let draggedItem = null;
+
+  shortcutsList.addEventListener('dragstart', (event) => {
+    const row = event.target.closest('[data-home-shortcut-row]');
+    if (!(row instanceof HTMLElement)) return;
+    draggedItem = row;
+    row.classList.add('dragging');
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+    }
+  });
+
+  shortcutsList.addEventListener('dragend', () => {
+    if (draggedItem instanceof HTMLElement) {
+      draggedItem.classList.remove('dragging');
+    }
+    draggedItem = null;
+    updateShortcutPriorityOrder(root);
+  });
+
+  shortcutsList.addEventListener('dragover', (event) => {
+    if (!(draggedItem instanceof HTMLElement)) return;
+    const row = event.target.closest('[data-home-shortcut-row]');
+    if (!(row instanceof HTMLElement) || row === draggedItem) return;
+
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+
+    const rect = row.getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+
+    if (event.clientY < midY) {
+      shortcutsList.insertBefore(draggedItem, row);
+    } else {
+      shortcutsList.insertBefore(draggedItem, row.nextSibling);
+    }
+  });
+
+  shortcutsList.addEventListener('drop', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+}
+
+function syncShortcutToggleState(root) {
+  const config = getHomeConfig();
+  const shortcutState = normalizeHomeShortcutState(config.shortcuts || {});
+  root.querySelectorAll('[data-toggle-scope="home-shortcuts"]').forEach((toggle) => {
+    const shortcutId = toggle.dataset.toggleKey;
+    if (!shortcutId) return;
+    syncHomeShortcutToggle(toggle, shortcutState.enabled[shortcutId] !== false);
+  });
+}
+
+function syncShortcutSectionVisibility(root) {
+  const config = getHomeConfig();
+  const shortcutSection = root
+    .querySelector('[data-home-shortcuts-list]')
+    ?.closest('[data-home-platform-theme-section]');
+  if (!(shortcutSection instanceof HTMLElement)) return;
+
+  shortcutSection.hidden = config.visibility.shortcuts === false;
+}
+
+function syncModelSectionVisibility(root) {
+  const config = getHomeConfig();
+  const modelSection = root.querySelector('[data-home-model-settings-section]');
+  if (!(modelSection instanceof HTMLElement)) return;
+
+  modelSection.hidden = config.visibility.model === false;
 }
 
 // Render available modules for adding as shortcuts
 function renderAvailableModules(root) {
-  const config = getHomeConfig();
   const availableModulesList = root.querySelector('[data-home-available-modules-list]');
   
   if (!(availableModulesList instanceof HTMLElement)) return;
   
-  // Clear existing modules
   availableModulesList.innerHTML = '';
-  
-  // Get all available module IDs
-  const allModuleIds = Object.keys(MODULE_LABELS);
-  const pinnedModuleIds = config.shortcuts.pinned || [];
-  
-  // Filter to get only unpinned modules
-  const availableModuleIds = allModuleIds.filter(id => !pinnedModuleIds.includes(id));
-  
-  // Render available modules
-  availableModuleIds.forEach(moduleId => {
-    const label = MODULE_LABELS[moduleId] || moduleId;
+  HOME_SHORTCUT_ITEMS.forEach((shortcut) => {
     const moduleRow = document.createElement('div');
     moduleRow.className = 'home-platform-theme__toggle-row';
     moduleRow.role = 'listitem';
-    moduleRow.dataset.homeAvailableModuleRow = moduleId;
-    
+    moduleRow.dataset.homeAvailableModuleRow = shortcut.id;
     moduleRow.innerHTML = `
       <div class="home-platform-theme__toggle-copy">
-        <p class="home-platform-theme__toggle-title">${label}</p>
+        <p class="home-platform-theme__toggle-title">${shortcut.label}</p>
       </div>
-      <button class="home-platform-theme__pin-button" type="button" data-pin-shortcut data-module-id="${moduleId}" aria-label="Add to shortcuts">
-        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/pin/pin.svg" alt="" width="16" height="16" aria-hidden="true">
-      </button>
     `;
-    
     availableModulesList.appendChild(moduleRow);
-  });
-  
-  // Hide available modules section if all are pinned
-  const availableModulesSection = root.querySelector('[data-home-available-modules]');
-  if (availableModulesSection instanceof HTMLElement) {
-    availableModulesSection.hidden = availableModuleIds.length === 0;
-  }
-  
-  // Add event listeners for pin buttons
-  availableModulesList.querySelectorAll('[data-pin-shortcut]').forEach(button => {
-    button.addEventListener('click', () => {
-      const moduleId = button.dataset.moduleId;
-      if (!moduleId) return;
-      
-      const config = getHomeConfig();
-      if (!config.shortcuts.pinned) {
-        config.shortcuts.pinned = [];
-      }
-      
-      config.shortcuts.pinned.push(moduleId);
-      saveHomeConfig(config);
-      
-      renderShortcuts(root);
-      renderAvailableModules(root);
-      dispatchHomeEvent('shortcuts:changed', { moduleId, action: 'pinned' });
-    });
   });
 }
 
@@ -534,9 +654,20 @@ function initGlobalToggles(root) {
     const { scope, key, checked } = event.detail;
     
     if (scope === 'home-visibility' && key in config.visibility) {
-      config.visibility[key] = checked;
-      saveHomeConfig(config);
+      const nextConfig = getHomeConfig();
+      nextConfig.visibility[key] = checked;
+      saveHomeConfig(nextConfig);
+      if (key === 'shortcuts') {
+        syncShortcutSectionVisibility(root);
+      }
+      if (key === 'model') {
+        syncModelSectionVisibility(root);
+      }
       dispatchHomeEvent('visibility:changed', { moduleId: key, visible: checked });
+    }
+
+    if (scope === 'home-shortcuts') {
+      saveHomeShortcutEnabled(key, checked);
     }
     
     if (scope === 'home-analytics' && key === 'enableTracking') {
@@ -562,6 +693,13 @@ function initGlobalToggles(root) {
       saveHomeConfig(config);
       dispatchHomeEvent('model:changed', { enableDashboard: checked });
     }
+
+    if (scope === 'home-model-display' && key in config.model) {
+      const nextConfig = getHomeConfig();
+      nextConfig.model[key] = checked;
+      saveHomeConfig(nextConfig);
+      dispatchHomeEvent('model:changed', { [key]: checked });
+    }
   });
   
   // Initialize toggle states from home config
@@ -572,16 +710,6 @@ function initGlobalToggles(root) {
     toggle.setAttribute('aria-checked', isChecked);
   });
 
-  const shortcutsRows = root.querySelectorAll('[data-home-shortcut-row]');
-  shortcutsRows.forEach((row) => {
-    const moduleId = row.dataset.homeShortcutRow;
-    const shortcut = config.shortcuts.items.find((item) => item.id === moduleId || item.target === moduleId);
-    const caption = row.querySelector('.home-platform-theme__toggle-caption');
-    if (caption && shortcut) {
-      caption.textContent = `Default shortcut: ${shortcut.label}`;
-    }
-  });
-  
   const analyticsToggle = root.querySelector('[data-toggle-scope="home-analytics"]');
   if (analyticsToggle) {
     const isChecked = config.analytics.enableTracking;
@@ -607,6 +735,13 @@ function initGlobalToggles(root) {
     const isChecked = config.model.enableDashboard;
     modelToggle.setAttribute('aria-checked', isChecked);
   }
+
+  const modelDisplayToggles = root.querySelectorAll('[data-toggle-scope="home-model-display"]');
+  modelDisplayToggles.forEach((toggle) => {
+    const toggleKey = toggle.dataset.toggleKey;
+    const isChecked = config.model[toggleKey] !== false;
+    syncHomeShortcutToggle(toggle, isChecked);
+  });
 }
 
 // Dispatch home event
@@ -636,6 +771,9 @@ export function mountHomePlatformDestination(root, options = {}) {
   initDragAndDrop(root);
   initDropdownControls(root);
   renderShortcuts(root);
+  syncShortcutToggleState(root);
+  syncShortcutSectionVisibility(root);
+  syncModelSectionVisibility(root);
   renderAvailableModules(root);
   listenForConfigChanges(root);
   

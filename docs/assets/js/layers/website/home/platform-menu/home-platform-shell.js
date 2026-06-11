@@ -2050,8 +2050,10 @@ function bindHomePlatformShellEvents() {
     void routeHomePlatformSettingsRequest(event);
   });
 
-  document.addEventListener('home:platform-shell-close-request', () => {
-    closeHomePlatformShell();
+  document.addEventListener('home:platform-shell-close-request', (event) => {
+    closeHomePlatformShell({
+      clearPersistedState: event?.detail?.clearPersistedState === true,
+    });
   });
 
   window.addEventListener('hashchange', () => {

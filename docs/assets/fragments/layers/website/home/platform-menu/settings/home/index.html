@@ -223,8 +223,67 @@
         <div class="home-platform-theme__toggle-list" role="list" aria-label="Home module shortcuts" data-home-shortcuts-list>
           <!-- Dynamic shortcuts will be rendered here -->
         </div>
-        <div class="home-platform-theme__empty-state" data-home-shortcuts-empty hidden>
-          <p class="home-platform-theme__empty-state-text">No shortcuts selected.</p>
+      </div>
+    </section>
+
+
+    <!-- Model Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-home-model" data-home-platform-theme-section data-home-model-settings-section>
+      <div class="home-platform-theme__section-eyebrow">
+        <span class="home-platform-theme__section-title" id="settings-home-model">Model section</span>
+      </div>
+      <div class="home-platform-theme__section-content" id="settings-home-model-content">
+        <div class="home-platform-theme__toggle-list" role="list" aria-label="Home model section controls">
+          <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="showBrainScan">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Brain scan preview</p>
+            </div>
+            <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="showBrainScan" data-toggle-scope="home-model-display">
+              <span class="na-toggle__track" aria-hidden="true">
+                <span class="na-toggle__thumb"></span>
+              </span>
+            </button>
+          </div>
+          <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="showReadiness">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Readiness level</p>
+            </div>
+            <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="showReadiness" data-toggle-scope="home-model-display">
+              <span class="na-toggle__track" aria-hidden="true">
+                <span class="na-toggle__thumb"></span>
+              </span>
+            </button>
+          </div>
+          <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="showSourceCoverage">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Input coverage</p>
+            </div>
+            <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="showSourceCoverage" data-toggle-scope="home-model-display">
+              <span class="na-toggle__track" aria-hidden="true">
+                <span class="na-toggle__thumb"></span>
+              </span>
+            </button>
+          </div>
+          <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="showTrainingState">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Training state</p>
+            </div>
+            <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="showTrainingState" data-toggle-scope="home-model-display">
+              <span class="na-toggle__track" aria-hidden="true">
+                <span class="na-toggle__thumb"></span>
+              </span>
+            </button>
+          </div>
+          <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row data-toggle-key="showVisibilityState">
+            <div class="home-platform-theme__toggle-copy">
+              <p class="home-platform-theme__toggle-title">Visibility state</p>
+            </div>
+            <button class="na-toggle" type="button" role="switch" aria-checked="true" data-na-toggle data-toggle-key="showVisibilityState" data-toggle-scope="home-model-display">
+              <span class="na-toggle__track" aria-hidden="true">
+                <span class="na-toggle__thumb"></span>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -246,6 +305,24 @@
           </button>
           <button class="home-platform-theme__mode-option" type="button" aria-pressed="false" data-home-display-mode-option="detailed">
             <span class="home-platform-theme__mode-label">Detailed</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section Chrome Section -->
+    <section class="home-platform-theme__section" aria-labelledby="settings-home-section-chrome" data-home-platform-theme-section data-home-platform-theme-section-collapsed="true">
+      <button class="home-platform-theme__section-eyebrow" type="button" aria-expanded="false" aria-controls="settings-home-section-chrome-content" data-home-platform-theme-section-toggle>
+        <span class="home-platform-theme__section-title" id="settings-home-section-chrome">Section chrome</span>
+        <span class="home-platform-theme__section-toggle-icon" aria-hidden="true">⌄</span>
+      </button>
+      <div class="home-platform-theme__section-content" id="settings-home-section-chrome-content" data-home-platform-theme-section-content>
+        <div class="home-platform-theme__mode-grid" role="group" aria-label="Home section chrome" data-home-section-chrome-group>
+          <button class="home-platform-theme__mode-option" type="button" aria-pressed="true" data-home-section-chrome-option="guidance">
+            <span class="home-platform-theme__mode-label">Guidance</span>
+          </button>
+          <button class="home-platform-theme__mode-option" type="button" aria-pressed="false" data-home-section-chrome-option="minimal">
+            <span class="home-platform-theme__mode-label">Minimal</span>
           </button>
         </div>
       </div>

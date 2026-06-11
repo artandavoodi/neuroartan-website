@@ -78,6 +78,7 @@ function getHomeConfig() {
         display: {
           mode: 'standard',
           emptyStateBehavior: 'guidance',
+          sectionChrome: 'guidance',
           ...(parsed.display || {})
         }
       };
@@ -117,14 +118,17 @@ function applyHomeDisplaySettings(root) {
   const config = getHomeConfig();
   const mode = config?.display?.mode || 'standard';
   const emptyStateBehavior = config?.display?.emptyStateBehavior || 'guidance';
+  const sectionChrome = config?.display?.sectionChrome || 'guidance';
 
   root.dataset.homeDisplayMode = mode;
   root.dataset.homeEmptyStateBehavior = emptyStateBehavior;
+  root.dataset.homeSectionChrome = sectionChrome;
 
   const destination = root.closest('.home-platform-destination--home-overview');
   if (destination instanceof HTMLElement) {
     destination.dataset.homeDisplayMode = mode;
     destination.dataset.homeEmptyStateBehavior = emptyStateBehavior;
+    destination.dataset.homeSectionChrome = sectionChrome;
   }
 }
 

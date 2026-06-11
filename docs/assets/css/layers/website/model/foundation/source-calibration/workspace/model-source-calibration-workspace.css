@@ -58,15 +58,11 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
 }
 
 .model-source-calibration-workspace__progress {
-  display: inline-flex;
-  align-items: center;
-  min-block-size: var(--control-size-md);
-  color: var(--text-primary-color);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-light);
-  letter-spacing: var(--letter-spacing-wide);
-  line-height: var(--line-height-tight);
-  text-transform: none;
+  display: none;
+}
+
+.model-source-calibration-workspace__header .global-close-button {
+  margin-left: auto;
 }
 
 .model-source-calibration-workspace__body {

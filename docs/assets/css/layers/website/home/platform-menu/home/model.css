@@ -5,152 +5,25 @@
    ========================================================================== */
 
 .home-model-overview{
-  display:grid;
-  grid-template-columns:minmax(8.5rem, 14rem) minmax(0, 1fr);
-  align-items:center;
-  gap:var(--spacing-xl);
+  display:block;
   width:var(--size-full);
   min-width:var(--spacing-none);
 }
 
 .home-model-overview[hidden],
-.home-model-overview__scan[hidden]{
+.home-model-overview__loading[hidden]{
   display:none;
 }
 
-.home-model-overview__scan{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-width:var(--spacing-none);
-}
-
-.home-model-scan__brain{
-  position:relative;
-  width:min(13rem, 100%);
-  aspect-ratio:1.52;
-  color:var(--text-primary-color);
-  isolation:isolate;
-}
-
-.home-model-scan__region,
-.home-model-scan__connection,
-.home-model-scan__node{
-  position:absolute;
-  display:block;
-}
-
-.home-model-scan__region{
-  border-radius:var(--radius-full);
-  border:var(--border-width-hairline) solid color-mix(in srgb, var(--control-border-unified) 54%, transparent);
-  background:color-mix(in srgb, var(--digital-brain-cortex-base) 70%, transparent);
-  opacity:0.7;
-}
-
-.home-model-scan__region--frontal{
-  inset:8% 16% 28% 10%;
-  background:color-mix(in srgb, var(--digital-brain-region-frontal) 62%, transparent);
-}
-
-.home-model-scan__region--parietal{
-  inset:12% 6% 24% 38%;
-  background:color-mix(in srgb, var(--digital-brain-region-parietal) 56%, transparent);
-}
-
-.home-model-scan__region--temporal{
-  inset:38% 12% 10% 26%;
-  background:color-mix(in srgb, var(--digital-brain-region-temporal) 52%, transparent);
-}
-
-.home-model-scan__region--cerebellum{
-  inset:58% 50% 2% 9%;
-  background:color-mix(in srgb, var(--digital-brain-brainstem) 58%, transparent);
-}
-
-.home-model-scan__connection{
-  left:48%;
-  top:50%;
-  width:34%;
-  height:var(--border-width-hairline);
-  transform-origin:left center;
-  background:color-mix(in srgb, var(--text-secondary-color) 54%, transparent);
-  opacity:0.42;
-  z-index:2;
-}
-
-.home-model-scan__connection--source{
-  transform:rotate(-20deg);
-}
-
-.home-model-scan__connection--memory{
-  transform:rotate(142deg);
-}
-
-.home-model-scan__connection--personality{
-  transform:rotate(14deg);
-}
-
-.home-model-scan__connection--voice{
-  transform:rotate(40deg);
-}
-
-.home-model-scan__node{
-  --home-model-node-size:calc(0.58rem + (var(--home-model-node-strength, 0.4) * 0.72rem));
-  width:var(--home-model-node-size);
-  height:var(--home-model-node-size);
-  padding:var(--spacing-none);
-  border:var(--border-width-hairline) solid color-mix(in srgb, currentColor 68%, transparent);
-  border-radius:var(--radius-circle);
-  background:color-mix(in srgb, currentColor calc(26% + (var(--home-model-node-strength, 0.4) * 42%)), transparent);
-  box-shadow:0 0 calc(var(--home-model-node-size) * 1.45) color-mix(in srgb, currentColor calc(10% + (var(--home-model-node-strength, 0.4) * 22%)), transparent);
-  cursor:default;
-  z-index:3;
-}
-
-.home-model-scan__node--identity{
-  top:19%;
-  left:42%;
-  color:var(--digital-brain-layer-identity);
-}
-
-.home-model-scan__node--source{
-  top:35%;
-  left:67%;
-  color:var(--digital-brain-layer-source);
-}
-
-.home-model-scan__node--memory{
-  top:62%;
-  left:24%;
-  color:var(--digital-brain-layer-memory);
-}
-
-.home-model-scan__node--personality{
-  top:47%;
-  left:53%;
-  color:var(--digital-brain-layer-personality);
-}
-
-.home-model-scan__node--voice{
-  top:66%;
-  left:72%;
-  color:var(--digital-brain-layer-voice);
-}
-
-.home-model-scan__node-label{
-  position:absolute;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-  clip:rect(0 0 0 0);
-  clip-path:inset(50%);
-  white-space:nowrap;
+.home-model-overview__loading{
+  min-block-size:clamp(7rem, 18vh, 12rem);
 }
 
 .home-model-overview__summary{
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-lg);
+  display:grid;
+  grid-template-columns:minmax(0, 0.82fr) minmax(0, 1.18fr);
+  align-items:center;
+  gap:var(--spacing-xl);
   min-width:var(--spacing-none);
 }
 
@@ -188,24 +61,140 @@
   line-height:var(--body-2-line-height);
 }
 
+.home-model-overview__visibility{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-xs);
+  width:max-content;
+  margin:var(--spacing-none);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.home-model-overview__visibility::before{
+  content:"";
+  inline-size:var(--space-2);
+  block-size:var(--space-2);
+  border-radius:var(--radius-circle);
+  background:var(--semantic-warning-color, var(--digital-brain-signal-forming));
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--semantic-warning-color, var(--digital-brain-signal-forming)) 28%, transparent);
+}
+
+.home-model-overview__visibility[data-home-model-visibility-state="visible"]::before{
+  background:var(--semantic-success-color, var(--digital-brain-signal-stable));
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--semantic-success-color, var(--digital-brain-signal-stable)) 28%, transparent);
+}
+
+.home-model-overview__visibility[data-home-model-visibility-state="private"]::before{
+  background:var(--semantic-danger-color, var(--digital-brain-signal-missing));
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--semantic-danger-color, var(--digital-brain-signal-missing)) 28%, transparent);
+}
+
 .home-model-overview__metrics{
   display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:var(--spacing-lg);
+  grid-template-columns:auto minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-xl);
   min-width:var(--spacing-none);
 }
 
-.home-model-overview__metric{
-  display:flex;
-  flex-direction:column;
+.home-model-overview__activity-stack{
+  display:grid;
+  gap:var(--spacing-md);
+  min-width:var(--spacing-none);
+}
+
+.home-model-overview__activity-metric{
+  --home-model-ring-color:var(--digital-brain-layer-identity);
+  display:grid;
   gap:var(--spacing-2xs);
   min-width:var(--spacing-none);
 }
 
+.home-model-overview__activity-metric[data-home-model-metric-tone="source"],
+.home-model-overview__activity-ring[data-home-model-metric-tone="source"]{
+  --home-model-ring-color:var(--digital-brain-layer-source);
+}
+
+.home-model-overview__activity-metric[data-home-model-metric-tone="memory"],
+.home-model-overview__activity-ring[data-home-model-metric-tone="memory"]{
+  --home-model-ring-color:var(--digital-brain-layer-memory);
+}
+
+.home-model-overview__activity-metric[data-home-model-metric-tone="personality"],
+.home-model-overview__activity-ring[data-home-model-metric-tone="personality"]{
+  --home-model-ring-color:var(--digital-brain-layer-personality);
+}
+
+.home-model-overview__activity-metric[data-home-model-metric-tone="voice"],
+.home-model-overview__activity-ring[data-home-model-metric-tone="voice"]{
+  --home-model-ring-color:var(--digital-brain-layer-voice);
+}
+
+.home-model-overview__activity-rings{
+  position:relative;
+  inline-size:clamp(7rem, 14vw, 9rem);
+  aspect-ratio:1;
+  border-radius:var(--radius-circle);
+  isolation:isolate;
+}
+
+.home-model-overview__activity-rings::after{
+  content:"";
+  position:absolute;
+  inset:36%;
+  border-radius:inherit;
+  background:color-mix(in srgb, var(--bg-color) 82%, transparent);
+  box-shadow:inset 0 0 0 var(--border-width-hairline) color-mix(in srgb, var(--text-primary-color) 10%, transparent);
+  z-index:4;
+}
+
+.home-model-overview__activity-ring{
+  --home-model-ring-track:color-mix(in srgb, var(--text-primary-color) 9%, transparent);
+  position:absolute;
+  border-radius:inherit;
+  background:
+    conic-gradient(
+      from -90deg,
+      var(--home-model-ring-color) var(--home-model-ring-progress, 0deg),
+      var(--home-model-ring-track) 0deg
+    );
+  box-shadow:0 0 var(--space-6) color-mix(in srgb, var(--home-model-ring-color) 16%, transparent);
+  animation:home-model-ring-enter var(--interaction-motion-slow) var(--ease-standard, ease) both;
+}
+
+.home-model-overview__activity-ring::after{
+  content:"";
+  position:absolute;
+  inset:clamp(0.58rem, 1.45vw, 0.78rem);
+  border-radius:inherit;
+  background:var(--bg-color);
+}
+
+.home-model-overview__activity-ring--1{
+  inset:var(--spacing-none);
+  z-index:1;
+}
+
+.home-model-overview__activity-ring--2{
+  inset:18%;
+  z-index:2;
+}
+
+.home-model-overview__activity-ring--3{
+  inset:36%;
+  z-index:3;
+}
+
+.home-model-overview__activity-ring--3::after{
+  inset:38%;
+}
+
 .home-model-overview__metric-value{
-  color:var(--text-primary-color);
-  font-size:var(--body-2-size);
-  line-height:var(--body-2-line-height);
+  color:var(--home-model-ring-color, var(--text-primary-color));
+  font-size:var(--headline-4-size);
+  line-height:var(--headline-4-line-height);
   font-weight:var(--font-weight-semibold);
   white-space:nowrap;
   overflow:hidden;
@@ -218,28 +207,41 @@
   line-height:var(--body-3-line-height);
 }
 
+@keyframes home-model-ring-enter{
+  from{
+    opacity:0;
+    transform:rotate(-18deg) scale(0.92);
+  }
+  to{
+    opacity:1;
+    transform:rotate(0deg) scale(1);
+  }
+}
+
 @media (max-width: 760px){
   .home-model-overview{
+    display:block;
+  }
+
+  .home-model-overview__summary{
     grid-template-columns:1fr;
     gap:var(--spacing-lg);
-  }
-
-  .home-model-overview__scan{
-    justify-content:flex-start;
-  }
-
-  .home-model-scan__brain{
-    width:min(12rem, 100%);
-  }
-
-  .home-model-overview__metrics{
-    grid-template-columns:repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 430px){
   .home-model-overview__metrics{
     grid-template-columns:1fr;
-    gap:var(--spacing-md);
+    gap:var(--spacing-lg);
+  }
+
+  .home-model-overview__activity-rings{
+    inline-size:clamp(7rem, 58vw, 8.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .home-model-overview__activity-ring{
+    animation:none;
   }
 }

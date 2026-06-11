@@ -285,7 +285,6 @@ body.account-drawer-closing .account-drawer-backdrop{
   padding: var(--account-drawer-shell-padding-y) var(--account-drawer-shell-padding-x) var(--account-drawer-shell-padding-bottom);
   background-color: var(--account-drawer-surface);
   background-image: var(--account-drawer-shell-highlight);
-  border: var(--border-width-hairline) solid var(--account-drawer-border);
   border-radius: var(--account-drawer-dialog-radius);
   backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
   -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
@@ -445,7 +444,6 @@ body.account-drawer-closing .account-drawer-close{
   min-height: var(--account-drawer-button-height);
   padding: var(--spacing-none) var(--account-drawer-button-padding-x);
   box-sizing: border-box;
-  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--shape-control-radius);
   background: var(--control-surface);
   color: var(--text-color);
@@ -815,7 +813,6 @@ body.account-drawer-closing .account-drawer-close{
   min-height: var(--account-drawer-provider-button-height);
   padding: var(--spacing-none) var(--account-drawer-provider-button-padding-x);
   box-sizing: border-box;
-  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--shape-control-radius);
   background: var(--control-surface);
   color: var(--text-color);

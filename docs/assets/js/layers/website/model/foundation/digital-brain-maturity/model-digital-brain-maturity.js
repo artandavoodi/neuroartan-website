@@ -9,6 +9,7 @@ import {
 } from './model-digital-brain-maturity-renderer.js';
 
 import {
+  getCurrentSupabaseUser,
   getOwnedCanonicalModel,
   readModelDigitalBrainPreferences,
   readLatestModelPersonalityCalibrationResult,
@@ -33,6 +34,7 @@ const DIGITAL_BRAIN_MATURITY_FRAGMENT_URL = '/assets/fragments/layers/website/mo
 const DIGITAL_BRAIN_MATURITY_DATA_URL = '/assets/data/website/model-foundation/digital-brain-maturity/digital-brain-maturity-layers.json';
 const DIGITAL_BRAIN_QUICK_READ_TIMEOUT_MS = 8000;
 const DIGITAL_BRAIN_SOURCE_READ_TIMEOUT_MS = 0;
+const DIGITAL_BRAIN_INITIAL_LOADING_REASON = 'model-digital-brain';
 const DIGITAL_BRAIN_CONTENT_SEGMENT_MIN_LENGTH = 24;
 const DIGITAL_BRAIN_SUBJECT_MIN_COUNT = 2;
 const DIGITAL_BRAIN_DETAIL_VISUAL_ROLE = 'detail';
@@ -119,6 +121,7 @@ const DIGITAL_BRAIN_FOUNDATION_CONSTRUCTS = Object.freeze({
 });
 
 let digitalBrainMaturityInitialized = false;
+let digitalBrainMaturityInitializePromise = null;
 let digitalBrainMaturityFragment = null;
 let digitalBrainMaturityData = null;
 let digitalBrainMaturityRefreshBound = false;
@@ -132,24 +135,45 @@ export async function initializeDigitalBrainMaturity(root = document) {
     return null;
   }
 
-  const [fragment, data] = await Promise.all([
-    loadDigitalBrainMaturityFragment(),
-    loadDigitalBrainMaturityData(),
-  ]);
-  bindDigitalBrainMaturityRefreshRequests();
+  if (digitalBrainMaturityInitializePromise) return digitalBrainMaturityInitializePromise;
 
-  if (!mount.querySelector('[data-digital-brain-maturity-surface]')) {
-    mount.innerHTML = fragment;
+  if (digitalBrainMaturityInitialized && mount.querySelector('[data-digital-brain-maturity-surface]')) {
+    return refreshDigitalBrainMaturity(root);
   }
-  const runtime = await createDigitalBrainRuntimeSnapshot({ includeSourceRecords: false });
-  const state = createDigitalBrainMaturityState(data, runtime);
-  renderDigitalBrainMaturity(mount, state);
-  window.requestAnimationFrame(() => {
-    void refreshDigitalBrainMaturity(root);
-  });
-  digitalBrainMaturityInitialized = true;
 
-  return state;
+  digitalBrainMaturityInitializePromise = (async () => {
+    setDigitalBrainMaturityBusy(mount, true);
+    dispatchDigitalBrainLoadingStart();
+
+    try {
+      const [fragment, data] = await Promise.all([
+        loadDigitalBrainMaturityFragment(),
+        loadDigitalBrainMaturityData(),
+      ]);
+      bindDigitalBrainMaturityRefreshRequests();
+
+      if (!mount.querySelector('[data-digital-brain-maturity-surface]')) {
+        mount.innerHTML = fragment;
+        setDigitalBrainMaturityBusy(mount, true);
+      }
+      const runtime = await createDigitalBrainRuntimeSnapshot({ includeSourceRecords: false });
+      const state = createDigitalBrainMaturityState(data, runtime);
+      renderDigitalBrainMaturity(mount, state);
+      setDigitalBrainMaturityBusy(mount, false);
+      window.requestAnimationFrame(() => {
+        void refreshDigitalBrainMaturity(root);
+      });
+      digitalBrainMaturityInitialized = true;
+
+      return state;
+    } finally {
+      dispatchDigitalBrainLoadingStop();
+    }
+  })().finally(() => {
+    digitalBrainMaturityInitializePromise = null;
+  });
+
+  return digitalBrainMaturityInitializePromise;
 }
 
 export async function refreshDigitalBrainMaturity(root = document) {
@@ -163,9 +187,14 @@ export async function refreshDigitalBrainMaturity(root = document) {
   }
 
   digitalBrainMaturityRefreshPromise = (async () => {
+    const surface = mount.querySelector('[data-digital-brain-maturity-surface]');
+    if (!(surface instanceof HTMLElement)) {
+      setDigitalBrainMaturityBusy(mount, true);
+    }
     const runtime = await createDigitalBrainRuntimeSnapshot({ includeSourceRecords: true });
     const state = createDigitalBrainMaturityState(digitalBrainMaturityData, runtime);
     renderDigitalBrainMaturity(mount, state);
+    setDigitalBrainMaturityBusy(mount, false);
     return state;
   })().finally(() => {
     digitalBrainMaturityRefreshPromise = null;
@@ -216,8 +245,11 @@ async function loadDigitalBrainMaturityData() {
 
 async function createDigitalBrainRuntimeSnapshot(options = {}) {
   const includeSourceRecords = options.includeSourceRecords !== false;
+  const user = await withDigitalBrainReadTimeout(getCurrentSupabaseUser(), null, DIGITAL_BRAIN_QUICK_READ_TIMEOUT_MS);
+  const viewerUserId = normalizeDigitalBrainString(user?.id || '');
   const runtime = {
     modelId: '',
+    accessMode: viewerUserId ? 'owner' : 'public',
     layers: {
       identity: createEmptyDigitalBrainRuntimeLayer('identity'),
       source: createEmptyDigitalBrainRuntimeLayer('source'),
@@ -227,10 +259,19 @@ async function createDigitalBrainRuntimeSnapshot(options = {}) {
     },
   };
 
+  if (!viewerUserId) return runtime;
+
   const model = await withDigitalBrainReadTimeout(getOwnedCanonicalModel(), null, DIGITAL_BRAIN_QUICK_READ_TIMEOUT_MS);
   runtime.modelId = normalizeDigitalBrainString(model?.id || '');
 
   if (!model?.id) return runtime;
+
+  const modelOwnerUserId = normalizeDigitalBrainString(model?.owner_auth_user_id || '');
+  if (modelOwnerUserId && modelOwnerUserId !== viewerUserId) {
+    runtime.modelId = '';
+    runtime.accessMode = 'public';
+    return runtime;
+  }
 
   const [
     identity,
@@ -517,8 +558,35 @@ function mergeDigitalBrainConstructSignals(layerId = '', liveSignals = []) {
 function createEmptyDigitalBrainRuntimeLayer(layerId = '') {
   return {
     state: 'pending',
-    signals: mergeDigitalBrainConstructSignals(layerId, []),
+    signals: [],
   };
+}
+
+function setDigitalBrainMaturityBusy(mount, isLoading) {
+  if (!(mount instanceof HTMLElement)) return;
+
+  mount.querySelectorAll('[data-digital-brain-maturity-loading]').forEach((loading) => loading.remove());
+  mount.dataset.digitalBrainLoadingState = isLoading ? 'resolving' : 'ready';
+  mount.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+}
+
+function dispatchDigitalBrainLoadingStart() {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-start', {
+    detail: {
+      reason: DIGITAL_BRAIN_INITIAL_LOADING_REASON,
+      blocking: true,
+      source: 'model-digital-brain-maturity',
+    },
+  }));
+}
+
+function dispatchDigitalBrainLoadingStop() {
+  document.dispatchEvent(new CustomEvent('neuroartan:loading-stop', {
+    detail: {
+      reason: DIGITAL_BRAIN_INITIAL_LOADING_REASON,
+      source: 'model-digital-brain-maturity',
+    },
+  }));
 }
 
 function createSignal(id = '', label = '', value = '', source = '', options = {}) {

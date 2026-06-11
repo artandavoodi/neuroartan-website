@@ -102,6 +102,7 @@ export function renderDigitalBrainMaturity(root, state = {}) {
   if (!(surface instanceof HTMLElement)) return;
 
   surface.dataset.digitalBrainModelId = state.runtime?.modelId || surface.dataset.digitalBrainModelId || '';
+  surface.dataset.digitalBrainAccessMode = state.runtime?.accessMode || 'public';
   applyDigitalBrainSavedPreferences(surface, state.runtime?.digitalBrainPreferences || null);
   surface.dataset.digitalBrainMaturityState = state.maturity?.state || 'pending';
   surface.dataset.digitalBrainView = surface.dataset.digitalBrainView || 'overview';
@@ -426,6 +427,7 @@ function bindDigitalBrainMaturityControls(surface) {
         const open = panel.hidden;
         panel.hidden = !open;
         controlsToggle.setAttribute('aria-expanded', String(open));
+        if (open) panel.scrollTop = 0;
       }
       return;
     }
@@ -737,6 +739,7 @@ function scheduleDigitalBrainPreferencesSave(surface) {
   const modelId = surface.dataset.digitalBrainModelId || '';
   if (!modelId) return;
   writeDigitalBrainPreferencesCache(surface);
+  dispatchDigitalBrainPreferencesChanged(surface);
 
   const activeTimer = DIGITAL_BRAIN_SAVE_TIMERS.get(surface);
   if (activeTimer) window.clearTimeout(activeTimer);
@@ -760,6 +763,7 @@ async function persistDigitalBrainPreferences(surface) {
   try {
     const preferences = collectDigitalBrainPreferences(surface);
     writeDigitalBrainPreferencesCache(surface, preferences);
+    dispatchDigitalBrainPreferencesChanged(surface, preferences);
     await saveModelDigitalBrainPreferences(modelId, preferences);
     document.dispatchEvent(new CustomEvent('model:changelog-refresh-request', {
       detail: {
@@ -769,6 +773,18 @@ async function persistDigitalBrainPreferences(surface) {
   } catch (error) {
     console.warn('[model-digital-brain-maturity] Digital Brain preferences could not be saved.', error);
   }
+}
+
+function dispatchDigitalBrainPreferencesChanged(surface, preferences = null) {
+  const modelId = surface?.dataset?.digitalBrainModelId || '';
+  if (!modelId) return;
+
+  document.dispatchEvent(new CustomEvent('model:digital-brain-preferences-changed', {
+    detail: {
+      modelId,
+      preferences: preferences || collectDigitalBrainPreferences(surface),
+    },
+  }));
 }
 
 function readDigitalBrainPreferencesCache(surface) {
@@ -848,6 +864,7 @@ function scheduleDigitalBrainSourceSearch(surface, query = '', localMatches = []
   clearDigitalBrainSourceSearch(surface);
   const normalizedQuery = String(query || '').trim().toLowerCase();
   if (!normalizedQuery) return;
+  if (surface?.dataset?.digitalBrainAccessMode !== 'owner') return;
   if (isSensitiveDigitalBrainSearchQuery(normalizedQuery)) {
     const results = surface.querySelector('[data-digital-brain-search-results]');
     if (results instanceof HTMLElement) {

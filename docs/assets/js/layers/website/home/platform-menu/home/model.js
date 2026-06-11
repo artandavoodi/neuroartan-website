@@ -1,11 +1,10 @@
 import {
+  getCurrentSupabaseUser,
   getModelStoreBackendState,
   getOwnedCanonicalModel,
   listModelPersonalityCalibrationSessions,
   listModelSourceCalibrationSessions,
-  readModelDigitalBrainPreferences,
 } from '../../../system/model/model-store.js';
-import { getActiveModelState } from '../../../system/model/active-model.js';
 import {
   listModelKnowledgeEntries,
   listModelLogicRecords,
@@ -15,20 +14,16 @@ import {
 } from '../../../system/model/model-training-store.js';
 
 const HOME_MODEL_DEFAULT_CONFIG = Object.freeze({
-  showBrainScan: true,
   showReadiness: true,
   showSourceCoverage: true,
   showTrainingState: true,
+  showActivityState: true,
   showVisibilityState: true,
 });
 
-const HOME_MODEL_LAYERS = Object.freeze([
-  { id: 'identity', label: 'Identity' },
-  { id: 'source', label: 'Source' },
-  { id: 'memory', label: 'Memory' },
-  { id: 'personality', label: 'Personality' },
-  { id: 'voice', label: 'Voice' },
-]);
+const HOME_MODEL_READ_TIMEOUT_MS = 6500;
+const HOME_MODEL_READ_TIMEOUT = Object.freeze({ __homeModelReadTimeout: true });
+const HOME_MODEL_RETRY_TIMERS = new WeakMap();
 
 function getHomeConfig() {
   const stored = localStorage.getItem('neuroartan-home-config');
@@ -70,40 +65,14 @@ function normalizeNumber(value = 0) {
   return Number.isFinite(number) ? number : 0;
 }
 
+function clampNumber(value = 0, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, normalizeNumber(value)));
+}
+
 function titleize(value = '') {
   return normalizeString(value)
     .replace(/[_-]+/g, ' ')
     .replace(/\b\w/g, (letter) => letter.toUpperCase()) || 'Pending';
-}
-
-function normalizeActiveModelFallback(activeModel = {}) {
-  const id = normalizeString(activeModel?.id || activeModel?.model_id || '');
-  if (!id) return null;
-
-  return {
-    id,
-    model_name: normalizeString(
-      activeModel.model_name
-      || activeModel.display_name
-      || activeModel.search_title
-      || activeModel.public_profile?.public_display_name
-      || 'Active model'
-    ),
-    display_name: normalizeString(activeModel.display_name || activeModel.search_title || ''),
-    model_status: normalizeString(activeModel.model_status || activeModel.status || 'active'),
-    model_visibility: normalizeString(
-      activeModel.model_visibility
-      || activeModel.public_profile?.public_profile_visibility
-      || 'public'
-    ),
-    publication_state: normalizeString(
-      activeModel.publication_state
-      || activeModel.public_profile?.public_route_status
-      || 'published'
-    ),
-    readiness_state: normalizeString(activeModel.readiness_state || ''),
-    model_image_url: normalizeString(activeModel.model_image_url || activeModel.public_profile?.public_avatar_url || ''),
-  };
 }
 
 function getRecordAggregateCount(record = {}) {
@@ -132,28 +101,21 @@ function calculateModelReadiness(snapshot = {}) {
   return Math.round((complete / checks.length) * 100);
 }
 
-function getLayerStrength(layerId, snapshot = {}) {
-  switch (layerId) {
-    case 'identity':
-      return snapshot.model?.id ? 1 : 0.12;
-    case 'source':
-      return Math.min(1, (snapshot.sourceInputCount + snapshot.sourceSessionCount) / 12);
-    case 'memory':
-      return Math.min(1, snapshot.memoryInputCount / 12);
-    case 'personality':
-      return Math.min(1, snapshot.personalitySessionCount / 3);
-    case 'voice':
-      return snapshot.model?.model_image_url ? 0.75 : 0.22;
-    default:
-      return 0.2;
-  }
+function getTrainingProgress(recipe = null) {
+  const state = normalizeString(recipe?.readinessState || recipe?.recipeState || '').toLowerCase();
+  if (['ready', 'complete', 'completed', 'trained', 'active'].includes(state)) return 1;
+  if (['running', 'training', 'processing', 'queued'].includes(state)) return 0.72;
+  if (['draft', 'pending', 'not_requested'].includes(state)) return 0.28;
+  return recipe?.id ? 0.42 : 0.08;
 }
 
-function getLayerState(strength = 0) {
-  if (strength >= 0.82) return 'stable';
-  if (strength >= 0.42) return 'forming';
-  if (strength > 0.12) return 'initial';
-  return 'pending';
+function getVisibilityState(model = {}) {
+  const visibility = normalizeString(model?.model_visibility || '').toLowerCase();
+  const publication = normalizeString(model?.publication_state || '').toLowerCase();
+  if (visibility === 'public' && publication === 'published') return 'visible';
+  if (visibility === 'public') return 'partial';
+  if (['friends', 'followers', 'family', 'subscribers'].includes(visibility)) return 'limited';
+  return 'private';
 }
 
 async function safeRead(label, reader, fallback) {
@@ -165,11 +127,53 @@ async function safeRead(label, reader, fallback) {
   }
 }
 
+async function withReadTimeout(promise, fallback, timeoutMs = HOME_MODEL_READ_TIMEOUT_MS) {
+  if (!timeoutMs || timeoutMs < 1) return promise;
+
+  let timeoutId = null;
+  const timeout = new Promise((resolve) => {
+    timeoutId = window.setTimeout(() => resolve(fallback), timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) window.clearTimeout(timeoutId);
+  }
+}
+
 async function readHomeModelSnapshot() {
   const backend = getModelStoreBackendState();
-  const ownedModel = await safeRead('Canonical model', () => getOwnedCanonicalModel(), null);
-  const activeState = getActiveModelState();
-  const model = ownedModel || normalizeActiveModelFallback(activeState.activeModel);
+  const user = await withReadTimeout(
+    safeRead('Current user', () => getCurrentSupabaseUser(), null),
+    HOME_MODEL_READ_TIMEOUT
+  );
+  if (user === HOME_MODEL_READ_TIMEOUT) {
+    return { backend, resolving: true };
+  }
+
+  if (!user?.id) {
+    return {
+      backend,
+      model: null,
+      sourceInputCount: 0,
+      memoryInputCount: 0,
+      sourceSessionCount: 0,
+      personalitySessionCount: 0,
+      recipe: null,
+      readiness: 0,
+    };
+  }
+
+  const ownedModel = await withReadTimeout(
+    safeRead('Canonical model', () => getOwnedCanonicalModel(), null),
+    HOME_MODEL_READ_TIMEOUT
+  );
+  if (ownedModel === HOME_MODEL_READ_TIMEOUT) {
+    return { backend, resolving: true };
+  }
+
+  const model = ownedModel || null;
   if (!model?.id) {
     return {
       backend,
@@ -179,26 +183,7 @@ async function readHomeModelSnapshot() {
       sourceSessionCount: 0,
       personalitySessionCount: 0,
       recipe: null,
-      digitalBrainPreferences: null,
       readiness: 0,
-    };
-  }
-
-  if (!ownedModel?.id) {
-    const snapshot = {
-      backend: activeState.backendState || backend,
-      model,
-      sourceInputCount: 0,
-      memoryInputCount: 0,
-      sourceSessionCount: 0,
-      personalitySessionCount: 0,
-      recipe: null,
-      digitalBrainPreferences: null,
-    };
-
-    return {
-      ...snapshot,
-      readiness: calculateModelReadiness(snapshot),
     };
   }
 
@@ -210,30 +195,34 @@ async function readHomeModelSnapshot() {
     sourceSessions,
     personalitySessions,
     recipe,
-    digitalBrainPreferences,
   ] = await Promise.all([
-    safeRead('Source Vault records', () => listModelSourceVaultIndexEntries(), []),
-    safeRead('Training datasets', () => listModelTrainingDatasetEntries(), []),
-    safeRead('Knowledge entries', () => listModelKnowledgeEntries(), []),
-    safeRead('Logic records', () => listModelLogicRecords(), []),
-    safeRead('Source calibration sessions', () => listModelSourceCalibrationSessions(model.id), []),
-    safeRead('Personality calibration sessions', () => listModelPersonalityCalibrationSessions(model.id), []),
-    safeRead('Training recipe', () => readLatestTrainingRecipe(), null),
-    safeRead('Digital Brain preferences', () => readModelDigitalBrainPreferences(model.id), null),
+    withReadTimeout(safeRead('Source Vault records', () => listModelSourceVaultIndexEntries(), []), []),
+    withReadTimeout(safeRead('Training datasets', () => listModelTrainingDatasetEntries(), []), []),
+    withReadTimeout(safeRead('Knowledge entries', () => listModelKnowledgeEntries(), []), []),
+    withReadTimeout(safeRead('Logic records', () => listModelLogicRecords(), []), []),
+    withReadTimeout(safeRead('Source calibration sessions', () => listModelSourceCalibrationSessions(model.id), []), []),
+    withReadTimeout(safeRead('Personality calibration sessions', () => listModelPersonalityCalibrationSessions(model.id), []), []),
+    withReadTimeout(safeRead('Training recipe', () => readLatestTrainingRecipe(), null), null),
   ]);
 
-  const sourceInputCount = sourceVaultRecords.reduce((total, record) => total + getRecordAggregateCount(record), 0)
-    + trainingDatasets.length;
-  const memoryInputCount = knowledgeEntries.length + logicRecords.length + trainingDatasets.length;
+  const sourceVaultCount = sourceVaultRecords.reduce((total, record) => total + getRecordAggregateCount(record), 0);
+  const trainingDatasetCount = trainingDatasets.length;
+  const knowledgeEntryCount = knowledgeEntries.length;
+  const logicRecordCount = logicRecords.length;
+  const sourceInputCount = sourceVaultCount + trainingDatasetCount;
+  const memoryInputCount = knowledgeEntryCount + logicRecordCount + trainingDatasetCount;
   const snapshot = {
     backend,
     model,
+    sourceVaultCount,
+    trainingDatasetCount,
+    knowledgeEntryCount,
+    logicRecordCount,
     sourceInputCount,
     memoryInputCount,
     sourceSessionCount: sourceSessions.length,
     personalitySessionCount: personalitySessions.length,
     recipe,
-    digitalBrainPreferences,
   };
 
   return {
@@ -242,65 +231,53 @@ async function readHomeModelSnapshot() {
   };
 }
 
-function renderScan(scope, snapshot, settings) {
-  const scan = scope.querySelector('[data-home-model-scan]');
-  if (!(scan instanceof HTMLElement)) return;
+function scheduleHomeModelRetry(scope) {
+  if (!(scope instanceof Element)) return;
+  const existingTimer = HOME_MODEL_RETRY_TIMERS.get(scope);
+  if (existingTimer) window.clearTimeout(existingTimer);
+  const timer = window.setTimeout(() => {
+    HOME_MODEL_RETRY_TIMERS.delete(scope);
+    void updateModelDisplay(scope);
+  }, 900);
+  HOME_MODEL_RETRY_TIMERS.set(scope, timer);
+}
 
-  scan.hidden = settings.showBrainScan === false;
-  if (scan.hidden) return;
+function clearHomeModelRetry(scope) {
+  const timer = HOME_MODEL_RETRY_TIMERS.get(scope);
+  if (timer) window.clearTimeout(timer);
+  HOME_MODEL_RETRY_TIMERS.delete(scope);
+}
 
-  const layers = HOME_MODEL_LAYERS.map((layer) => {
-    const strength = getLayerStrength(layer.id, snapshot);
-    const state = getLayerState(strength);
-    return {
-      ...layer,
-      strength,
-      state,
-    };
-  });
-
-  const connections = layers.slice(1).map((layer) => `
-    <span class="home-model-scan__connection home-model-scan__connection--${layer.id}" aria-hidden="true"></span>
-  `).join('');
-
-  const nodes = layers.map((layer) => `
-    <button
-      class="home-model-scan__node home-model-scan__node--${layer.id}"
-      type="button"
-      data-home-model-scan-node="${layer.id}"
-      data-home-model-scan-state="${layer.state}"
-      style="--home-model-node-strength:${Math.max(0.16, layer.strength).toFixed(2)}"
-      aria-label="${layer.label}: ${titleize(layer.state)}"
-    >
-      <span class="home-model-scan__node-label">${layer.label}</span>
-    </button>
-  `).join('');
-
-  scan.innerHTML = `
-    <div class="home-model-scan__brain" data-home-model-scan-mode="${snapshot.digitalBrainPreferences?.displayMode || 'connectome'}">
-      <span class="home-model-scan__region home-model-scan__region--frontal" aria-hidden="true"></span>
-      <span class="home-model-scan__region home-model-scan__region--temporal" aria-hidden="true"></span>
-      <span class="home-model-scan__region home-model-scan__region--parietal" aria-hidden="true"></span>
-      <span class="home-model-scan__region home-model-scan__region--cerebellum" aria-hidden="true"></span>
-      ${connections}
-      ${nodes}
-    </div>
+function createActivityMetric(label, value, progress = 0, tone = 'identity', isVisible = true) {
+  if (!isVisible) return '';
+  const normalizedProgress = clampNumber(progress, 0, 1);
+  const progressDegrees = Math.round(normalizedProgress * 360);
+  return `
+    <article class="home-model-overview__activity-metric" data-home-model-metric-tone="${tone}" style="--home-model-ring-progress:${progressDegrees}deg">
+      <span class="home-model-overview__metric-label">${label}</span>
+      <span class="home-model-overview__metric-value">${value}</span>
+    </article>
   `;
 }
 
-function createMetric(label, value, isVisible = true) {
-  if (!isVisible) return '';
+function createActivityRing(label, progress = 0, tone = 'identity', index = 0) {
+  const normalizedProgress = clampNumber(progress, 0, 1);
+  const progressDegrees = Math.round(normalizedProgress * 360);
   return `
-    <article class="home-model-overview__metric">
-      <span class="home-model-overview__metric-value">${value}</span>
-      <span class="home-model-overview__metric-label">${label}</span>
-    </article>
+    <span
+      class="home-model-overview__activity-ring home-model-overview__activity-ring--${index + 1}"
+      data-home-model-metric-tone="${tone}"
+      style="--home-model-ring-progress:${progressDegrees}deg"
+      aria-label="${label}: ${Math.round(normalizedProgress * 100)} percent"
+      role="img"
+    ></span>
   `;
 }
 
 function renderSummary(scope, snapshot, settings) {
   const modelName = scope.querySelector('[data-home-model-field="modelName"]');
   const modelState = scope.querySelector('[data-home-model-field="modelState"]');
+  const modelVisibility = scope.querySelector('[data-home-model-field="modelVisibility"]');
   const metrics = scope.querySelector('[data-home-model-metrics]');
   const model = snapshot.model;
 
@@ -309,21 +286,42 @@ function renderSummary(scope, snapshot, settings) {
   }
 
   if (modelState) {
-    const publication = titleize(model?.publication_state || '');
-    const status = titleize(model?.model_status || '');
+    modelState.hidden = Boolean(model?.id);
     modelState.textContent = model?.id
-      ? `${status} · ${publication}`
+      ? ''
       : snapshot.backend?.supabaseConfigured
         ? 'No canonical model is selected.'
         : 'Model backend is unavailable.';
   }
 
+  if (modelVisibility) {
+    const visibilityState = getVisibilityState(model);
+    const visibilityLabel = titleize(model?.model_visibility || 'private');
+    modelVisibility.textContent = '';
+    modelVisibility.setAttribute('aria-label', `Visibility: ${visibilityLabel}`);
+    modelVisibility.title = visibilityLabel;
+    modelVisibility.dataset.homeModelVisibilityState = visibilityState;
+    modelVisibility.hidden = settings.showVisibilityState === false;
+  }
+
   if (metrics instanceof HTMLElement) {
+    const inputProgress = Math.min(1, Math.log10(Math.max(1, snapshot.sourceInputCount)) / 3);
+    const trainingLabel = titleize(snapshot.recipe?.readinessState || snapshot.recipe?.recipeState || 'draft');
+    const trainingProgress = getTrainingProgress(snapshot.recipe);
+    const activityCount = snapshot.sourceInputCount + snapshot.memoryInputCount + snapshot.sourceSessionCount + snapshot.personalitySessionCount;
+    const activityProgress = Math.min(1, Math.log10(Math.max(1, activityCount)) / 3);
     metrics.innerHTML = [
-      createMetric('Readiness', `${snapshot.readiness}%`, settings.showReadiness),
-      createMetric('Inputs', snapshot.sourceInputCount.toLocaleString(), settings.showSourceCoverage),
-      createMetric('Training', titleize(snapshot.recipe?.readinessState || snapshot.recipe?.recipeState || 'draft'), settings.showTrainingState),
-      createMetric('Visibility', titleize(model?.model_visibility || 'private'), settings.showVisibilityState),
+      `<div class="home-model-overview__activity-rings" aria-label="Model activity rings">
+        ${createActivityRing('Readiness', snapshot.readiness / 100, 'identity', 0)}
+        ${createActivityRing('Inputs', inputProgress, 'source', 1)}
+        ${createActivityRing('Training', trainingProgress, 'memory', 2)}
+      </div>`,
+      `<div class="home-model-overview__activity-stack">
+        ${createActivityMetric('Readiness', `${snapshot.readiness}%`, snapshot.readiness / 100, 'identity', settings.showReadiness)}
+        ${createActivityMetric('Inputs', snapshot.sourceInputCount.toLocaleString(), inputProgress, 'source', settings.showSourceCoverage)}
+        ${createActivityMetric('Training', trainingLabel, trainingProgress, 'memory', settings.showTrainingState)}
+        ${createActivityMetric('Signals', activityCount.toLocaleString(), activityProgress, 'personality', settings.showActivityState)}
+      </div>`,
     ].join('');
   }
 }
@@ -332,6 +330,7 @@ async function updateModelDisplay(scope) {
   const config = getHomeConfig();
   const content = scope.querySelector('[data-home-model-content]');
   const empty = scope.querySelector('[data-home-module-empty-state]');
+  const loading = scope.querySelector('[data-home-model-loading]');
 
   if (config.visibility?.model === false) {
     scope.hidden = true;
@@ -339,15 +338,42 @@ async function updateModelDisplay(scope) {
   }
 
   scope.hidden = false;
+  const hasRenderedContent = content instanceof HTMLElement && content.dataset.homeModelResolved === 'true';
+  if (!hasRenderedContent && content instanceof HTMLElement) content.hidden = true;
+  if (empty instanceof HTMLElement) empty.hidden = true;
+  if (loading instanceof HTMLElement) loading.hidden = hasRenderedContent;
+  scope.setAttribute('aria-busy', 'true');
 
-  const snapshot = await readHomeModelSnapshot();
-  const hasModel = Boolean(snapshot.model?.id);
-  if (content instanceof HTMLElement) content.hidden = !hasModel;
-  if (empty instanceof HTMLElement) empty.hidden = hasModel;
-  if (!hasModel) return;
+  let keepLoading = false;
+  try {
+    const snapshot = await readHomeModelSnapshot();
+    if (snapshot.resolving) {
+      if (content instanceof HTMLElement) content.hidden = !hasRenderedContent;
+      if (empty instanceof HTMLElement) empty.hidden = true;
+      if (loading instanceof HTMLElement) loading.hidden = hasRenderedContent;
+      scope.setAttribute('aria-busy', 'true');
+      keepLoading = true;
+      scheduleHomeModelRetry(scope);
+      return;
+    }
 
-  renderScan(scope, snapshot, config.model || HOME_MODEL_DEFAULT_CONFIG);
-  renderSummary(scope, snapshot, config.model || HOME_MODEL_DEFAULT_CONFIG);
+    clearHomeModelRetry(scope);
+    const hasModel = Boolean(snapshot.model?.id);
+    if (content instanceof HTMLElement) content.hidden = !hasModel && !hasRenderedContent;
+    if (empty instanceof HTMLElement) empty.hidden = hasModel || hasRenderedContent;
+    if (!hasModel) return;
+
+    renderSummary(scope, snapshot, config.model || HOME_MODEL_DEFAULT_CONFIG);
+    if (content instanceof HTMLElement) {
+      content.dataset.homeModelResolved = 'true';
+      content.hidden = false;
+    }
+  } finally {
+    if (!keepLoading) {
+      if (loading instanceof HTMLElement) loading.hidden = true;
+      scope.setAttribute('aria-busy', 'false');
+    }
+  }
 }
 
 function listenForConfigChanges(scope) {
@@ -382,6 +408,7 @@ export function mountHomeModel(root) {
   }, 45000);
 
   return () => {
+    clearHomeModelRetry(scope);
     cleanupConfigChanges?.();
     window.clearInterval(updateInterval);
   };

@@ -357,6 +357,7 @@
 
     document.addEventListener('cookie-consent:opened', () => {
       if (!document.body.classList.contains(OPEN_CLASS)) return;
+      pendingCookieClearOpen = { source: 'cookie-consent-closed' };
       closeOverlay('cookie-consent-opened', { dismiss: false });
     });
 

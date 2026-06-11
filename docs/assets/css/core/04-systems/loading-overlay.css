@@ -28,9 +28,7 @@
 .loading-overlay__backdrop{
   position: absolute;
   inset: var(--spacing-none);
-  background: color-mix(in srgb, var(--bg-color) 72%, transparent);
-  -webkit-backdrop-filter: blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
-  backdrop-filter: blur(var(--panel-blur-unified)) saturate(var(--panel-saturate-unified));
+  background: var(--bg-color);
 }
 
 .loading-overlay__surface{
@@ -43,12 +41,13 @@
 }
 
 .loading-overlay__spinner{
-  width: var(--control-height-lg);
-  height: var(--control-height-lg);
+  width: var(--space-4);
+  height: var(--space-4);
   border-radius: var(--radius-circle);
-  border: var(--border-width-thin) solid color-mix(in srgb, var(--color-primary1) 18%, transparent);
-  border-top-color: var(--color-primary1);
-  animation: loading-overlay-spin var(--interaction-motion-slow) linear infinite;
+  background: var(--text-primary-color);
+  box-shadow: 0 0 var(--space-4) color-mix(in srgb, var(--text-primary-color) 14%, transparent);
+  transform: scale(0.94);
+  animation: loading-overlay-breathe var(--loader-circle-motion-duration, 2400ms) var(--loader-circle-motion-ease, ease-in-out) infinite;
 }
 
 .ui-loading-inline{
@@ -64,12 +63,13 @@
 }
 
 .ui-loading-inline__spinner{
-  width: var(--control-height-md);
-  height: var(--control-height-md);
+  width: var(--loader-circle-size, var(--space-3));
+  height: var(--loader-circle-size, var(--space-3));
   border-radius: var(--radius-circle);
-  border: var(--border-width-thin) solid color-mix(in srgb, var(--color-primary1) 18%, transparent);
-  border-top-color: var(--color-primary1);
-  animation: loading-overlay-spin var(--interaction-motion-slow) linear infinite;
+  background: var(--text-primary-color);
+  box-shadow: 0 0 var(--space-3) color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+  transform: scale(0.94);
+  animation: loading-overlay-breathe var(--loader-circle-motion-duration, 2400ms) var(--loader-circle-motion-ease, ease-in-out) infinite;
 }
 
 .loading-overlay__label{
@@ -85,8 +85,8 @@
 }
 
 .loading-overlay--compact .loading-overlay__spinner{
-  width: var(--control-height-md);
-  height: var(--control-height-md);
+  width: var(--loader-circle-size, var(--space-3));
+  height: var(--loader-circle-size, var(--space-3));
 }
 
 .loading-overlay--compact .loading-overlay__label{
@@ -94,19 +94,26 @@
   letter-spacing: var(--tracking-ui);
 }
 
-@keyframes loading-overlay-spin{
-  from{
-    transform: rotate(var(--spacing-none));
+@keyframes loading-overlay-breathe{
+  0%,
+  100%{
+    opacity: 0.72;
+    transform: scale(0.94);
   }
-  to{
-    transform: rotate(360deg);
+
+  50%{
+    opacity: 1;
+    transform: scale(1.06);
   }
 }
 
 @media (prefers-reduced-motion: reduce){
   .loading-overlay,
-  .loading-overlay__spinner{
+  .loading-overlay__spinner,
+  .ui-loading-inline__spinner{
     transition: none !important;
     animation: none !important;
+    opacity: 1;
+    transform: scale(1);
   }
 }

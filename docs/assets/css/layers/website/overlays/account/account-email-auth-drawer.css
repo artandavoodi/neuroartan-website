@@ -203,7 +203,6 @@ html[data-theme-effective="light"]{
   min-height: var(--account-email-auth-action-height);
   padding-inline: var(--account-email-auth-action-padding-x);
   box-sizing: border-box;
-  border: var(--border-width-hairline) solid var(--account-email-auth-action-border);
   border-radius: var(--account-email-auth-action-radius);
   background: var(--account-email-auth-action-background);
   color: var(--account-email-auth-action-foreground);

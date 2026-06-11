@@ -1,5 +1,254 @@
 /* ========================================================================== 
    Home Cognitive Map Styles
-   Module-level ownership reserved.
+   Compact knowledge graph preview.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-cognitive-map{
+  display:grid;
+  grid-template-columns:minmax(8.5rem, 13rem) minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-xl);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-cognitive-map[hidden],
+.home-cognitive-map__loading[hidden]{
+  display:none;
+}
+
+.home-cognitive-map__loading{
+  min-block-size:clamp(7rem, 18vh, 12rem);
+}
+
+.home-cognitive-map__graph{
+  display:grid;
+  justify-items:center;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+}
+
+.home-cognitive-map__network{
+  position:relative;
+  width:min(11.75rem, 100%);
+  aspect-ratio:1.35;
+  color:var(--text-primary-color);
+  overflow:hidden;
+  isolation:isolate;
+  contain:layout paint;
+}
+
+.home-cognitive-map__core,
+.home-cognitive-map__node,
+.home-cognitive-map__construct{
+  position:absolute;
+  display:block;
+}
+
+.home-cognitive-map__core{
+  left:50%;
+  top:50%;
+  inline-size:var(--space-4);
+  block-size:var(--space-4);
+  border-radius:var(--radius-circle);
+  background:color-mix(in srgb, var(--text-primary-color) 55%, transparent);
+  box-shadow:0 0 var(--space-6) color-mix(in srgb, var(--text-primary-color) 24%, transparent);
+  transform:translate(-50%, -50%) scale(calc(1 + (var(--home-cognitive-live-pulse, 0) * 0.22)));
+  z-index:3;
+  opacity:calc(0.72 * var(--home-cognitive-signal-intensity, 1));
+}
+
+.home-cognitive-map__node{
+  --home-cognitive-node-size:calc((0.58rem + (var(--home-cognitive-node-strength, 0.2) * 0.82rem)) * var(--home-cognitive-core-node-scale, 1));
+  left:var(--home-cognitive-node-x, 50%);
+  top:var(--home-cognitive-node-y, 50%);
+  inline-size:var(--home-cognitive-node-size);
+  block-size:var(--home-cognitive-node-size);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid color-mix(in srgb, currentColor 64%, transparent);
+  border-radius:var(--radius-circle);
+  background:color-mix(in srgb, currentColor calc(34% + (var(--home-cognitive-node-strength, 0.2) * 38%)), transparent);
+  box-shadow:0 0 calc(var(--home-cognitive-node-size) * (1.1 + var(--home-cognitive-blur-intensity, 0))) color-mix(in srgb, currentColor calc(16% + (var(--home-cognitive-node-strength, 0.2) * 30%)), transparent);
+  filter:blur(var(--home-cognitive-blur-intensity, 0));
+  cursor:default;
+  z-index:4;
+  transform:translate(-50%, -50%) scale(calc(1 + (var(--home-cognitive-live-pulse, 0) * 0.3)));
+}
+
+.home-cognitive-map__construct{
+  --home-cognitive-construct-size:calc((0.34rem + (var(--home-cognitive-construct-strength, 0.2) * 0.5rem)) * var(--home-cognitive-construct-node-scale, 1));
+  left:var(--home-cognitive-construct-x, 50%);
+  top:var(--home-cognitive-construct-y, 50%);
+  inline-size:var(--home-cognitive-construct-size);
+  block-size:var(--home-cognitive-construct-size);
+  padding:var(--spacing-none);
+  border:var(--border-width-hairline) solid color-mix(in srgb, currentColor 58%, transparent);
+  border-radius:var(--radius-circle);
+  background:color-mix(in srgb, currentColor calc(24% + (var(--home-cognitive-construct-strength, 0.2) * 34%)), transparent);
+  box-shadow:0 0 calc(var(--home-cognitive-construct-size) * (1.25 + var(--home-cognitive-blur-intensity, 0))) color-mix(in srgb, currentColor calc(12% + (var(--home-cognitive-construct-strength, 0.2) * 24%)), transparent);
+  filter:blur(var(--home-cognitive-blur-intensity, 0));
+  opacity:calc((0.2 + (var(--home-cognitive-signal-intensity, 1) * 0.48)) * var(--home-cognitive-color-intensity, 1));
+  transform:translate(-50%, -50%) scale(calc(1 + (var(--home-cognitive-live-pulse, 0) * 0.34)));
+  z-index:3;
+}
+
+.home-cognitive-map__node--source,
+.home-cognitive-map__construct--source{
+  color:var(--digital-brain-layer-source);
+}
+
+.home-cognitive-map__node--memory,
+.home-cognitive-map__construct--memory{
+  color:var(--digital-brain-layer-memory);
+}
+
+.home-cognitive-map__node--personality,
+.home-cognitive-map__construct--personality{
+  color:var(--digital-brain-layer-personality);
+}
+
+.home-cognitive-map__node--voice,
+.home-cognitive-map__construct--voice{
+  color:var(--digital-brain-layer-voice);
+}
+
+.home-cognitive-map__node--identity,
+.home-cognitive-map__construct--identity{
+  color:var(--digital-brain-layer-identity);
+}
+
+.home-cognitive-map__node-label{
+  position:absolute;
+  inline-size:1px;
+  block-size:1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+.home-cognitive-map__signal-label,
+.home-cognitive-map__signal-value{
+  margin:var(--spacing-none);
+}
+
+.home-cognitive-map__signal-label{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.home-cognitive-map__summary{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-md);
+  min-width:var(--spacing-none);
+}
+
+.home-cognitive-map__stats{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+}
+
+.home-cognitive-map__signal-metric{
+  --home-cognitive-stat-color:var(--digital-brain-layer-source);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-xs);
+  min-width:var(--spacing-none);
+  padding-block-start:var(--spacing-md);
+}
+
+.home-cognitive-map__signal-metric::before{
+  content:"";
+  position:absolute;
+  inset-block-start:var(--spacing-none);
+  inset-inline-start:var(--spacing-none);
+  inline-size:var(--size-full);
+  block-size:var(--border-width-thin);
+  border-radius:var(--radius-pill);
+  background:
+    linear-gradient(
+      90deg,
+      var(--home-cognitive-stat-color) calc(var(--home-cognitive-map-metric-progress, 0) * 100%),
+      color-mix(in srgb, var(--text-primary-color) 10%, transparent) 0
+    );
+  opacity:0.82;
+}
+
+.home-cognitive-map__signal-metric[data-home-cognitive-map-tone="memory"]{
+  --home-cognitive-stat-color:var(--digital-brain-layer-memory);
+}
+
+.home-cognitive-map__signal-metric[data-home-cognitive-map-tone="personality"]{
+  --home-cognitive-stat-color:var(--digital-brain-layer-personality);
+}
+
+.home-cognitive-map__signal-metric[data-home-cognitive-map-tone="voice"]{
+  --home-cognitive-stat-color:var(--digital-brain-layer-voice);
+}
+
+.home-cognitive-map__signal-value{
+  color:var(--home-cognitive-stat-color);
+  font-size:var(--headline-4-size);
+  line-height:var(--headline-4-line-height);
+  font-weight:var(--font-weight-semibold);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.home-cognitive-map__network[data-home-cognitive-map-display="scan"] .home-cognitive-map__core,
+.home-cognitive-map__network[data-home-cognitive-map-display="scan"] .home-cognitive-map__node{
+  opacity:0;
+}
+
+.home-cognitive-map__network[data-home-cognitive-map-display="scan"] .home-cognitive-map__construct{
+  --home-cognitive-construct-size:calc((0.9rem + (var(--home-cognitive-construct-strength, 0.2) * 1rem)) * var(--home-cognitive-construct-node-scale, 1));
+  border-color:transparent;
+  background:color-mix(in srgb, currentColor 44%, transparent);
+  box-shadow:0 0 calc(var(--home-cognitive-construct-size) * (3.8 + var(--home-cognitive-blur-intensity, 0))) currentColor;
+  opacity:calc((0.12 + (var(--home-cognitive-signal-intensity, 1) * 0.42)) * var(--home-cognitive-color-intensity, 1));
+}
+
+.home-cognitive-map__network[data-home-cognitive-map-display="connectome"] .home-cognitive-map__node{
+  opacity:calc(0.32 + (var(--home-cognitive-signal-intensity, 1) * 0.24));
+}
+
+.home-cognitive-map__network[data-home-cognitive-map-motion-direction="counterclockwise"] .home-cognitive-map__node,
+.home-cognitive-map__network[data-home-cognitive-map-motion-direction="counterclockwise"] .home-cognitive-map__construct{
+  transform-origin:center;
+}
+
+@media (max-width: 760px){
+  .home-cognitive-map{
+    grid-template-columns:1fr;
+    gap:var(--spacing-lg);
+  }
+
+  .home-cognitive-map__graph{
+    justify-items:start;
+  }
+
+  .home-cognitive-map__stats{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px){
+  .home-cognitive-map__stats{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .home-cognitive-map__node,
+  .home-cognitive-map__construct,
+  .home-cognitive-map__core{
+    transform:translate(-50%, -50%) scale(1);
+  }
+}

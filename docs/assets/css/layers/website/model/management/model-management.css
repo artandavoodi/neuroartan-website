@@ -758,9 +758,12 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   display:flex;
   align-items:center;
   justify-content:center;
-  color:var(--text-secondary-color);
+  color:var(--text-primary-color);
 }
 
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__loading{
+  min-block-size:calc(var(--profile-workspace-viewport-block-size) - (var(--profile-workspace-content-padding-block) * 2));
+}
 
 .model-management__control-title{
   margin:0;
@@ -1025,6 +1028,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   grid-template-rows:auto auto minmax(var(--spacing-none),1fr) auto;
   min-block-size:var(--size-full);
   overflow:hidden;
+  background:var(--panel-surface-dropdown-unified);
 }
 
 .model-management__data-manager-tabs{
@@ -1055,12 +1059,16 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-tabs .model-management__text-button::after{
-  position:absolute;
-  inset-inline:var(--spacing-none);
-  inset-block-end:calc(var(--border-width-hairline) * -1);
-  block-size:var(--border-width-default);
-  background:transparent;
   content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:var(--spacing-none);
+  height:var(--border-width-hairline);
+  background:var(--local-nav-active-indicator-color);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]{
@@ -1068,7 +1076,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]::after{
-  background:var(--text-primary-color);
+  opacity:var(--selected-indicator-opacity);
 }
 
 .model-management__data-manager-item{
@@ -1184,6 +1192,10 @@ body.model-management-identity-editor-open{
   -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur)) saturate(120%);
 }
 
+.model-management__identity-overlay:not([hidden]) .model-management__identity-overlay-backdrop{
+  display:block;
+}
+
 .model-management__identity-dialog{
   position:relative;
   z-index:2000;
@@ -1208,17 +1220,14 @@ body.model-management-identity-editor-open{
   gap:var(--spacing-md);
 }
 
-.model-management__identity-dialog-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:var(--spacing-md);
-  position:sticky;
-  inset-block-start:0;
-  z-index:var(--z-raised);
+.model-management__data-manager-dialog .global-close-button{
+  position:absolute;
+  top:var(--spacing-md);
+  right:var(--site-shell-inline-padding);
 }
 
 .model-management__identity-dialog-title{
+  display:none;
   margin:0;
   color:var(--text-primary-color);
   font-size:var(--headline-4-size);

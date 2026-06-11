@@ -125,7 +125,7 @@ html[data-theme-effective="dark"]{
   margin: var(--spacing-none);
   padding: var(--spacing-none);
   overflow: hidden;
-  border: var(--spacing-none);
+  border: none;
   border-radius: var(--radius-none);
   background: transparent;
   box-shadow: none;

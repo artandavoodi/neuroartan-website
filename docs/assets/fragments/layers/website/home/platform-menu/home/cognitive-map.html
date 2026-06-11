@@ -6,6 +6,17 @@
         <p class="home-platform-theme__section-caption">Structured view of knowledge, themes, and relationships.</p>
       </div>
 
+      <div class="home-cognitive-map" data-home-cognitive-map-content hidden>
+        <div class="home-cognitive-map__graph" data-home-cognitive-map-graph aria-label="Compact cognitive relationship map"></div>
+        <div class="home-cognitive-map__summary">
+          <div class="home-cognitive-map__stats" data-home-cognitive-map-stats></div>
+        </div>
+      </div>
+
+      <div class="home-platform-theme__empty-state home-cognitive-map__loading ui-loading-inline" data-home-cognitive-map-loading role="status" aria-live="polite" aria-label="Loading cognitive map">
+        <span class="ui-loading-inline__spinner" aria-hidden="true"></span>
+      </div>
+
       <div class="home-platform-theme__empty-state" data-home-module-empty-state>
         <p class="home-platform-theme__empty-title">No cognitive map yet</p>
         <p class="home-platform-theme__empty-caption">Knowledge relationships, themes, and mapped cognitive structures appear here when graph data is available.</p>

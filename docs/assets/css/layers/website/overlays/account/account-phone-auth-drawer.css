@@ -349,7 +349,6 @@ html[data-theme-effective="dark"]{
   height: var(--account-phone-auth-button-height);
   padding: var(--spacing-none) var(--account-phone-auth-button-padding-x);
   box-sizing: border-box;
-  border:var(--border-width-hairline) solid var(--account-phone-auth-action-border);
   border-radius:var(--account-phone-auth-button-radius);
   background:var(--control-surface);
   color:var(--account-phone-auth-action-text);

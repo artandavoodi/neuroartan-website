@@ -846,14 +846,11 @@
 
   <div class="model-management__identity-overlay model-management__data-manager-overlay" data-model-data-manager hidden>
     <div class="model-management__identity-overlay-backdrop" aria-hidden="true" data-model-data-manager-close></div>
-    <article class="model-management__identity-dialog model-management__data-manager-dialog ui-card ui-surface--glass" role="dialog" aria-modal="true" aria-labelledby="model-data-manager-title">
-      <header class="model-management__identity-dialog-header">
-        <h2 class="model-management__identity-dialog-title" id="model-data-manager-title" data-model-data-manager-title>Data manager</h2>
-        <button class="global-close-button" type="button" data-model-data-manager-close aria-label="Close data manager">
-          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-        </button>
-      </header>
+    <article class="model-management__identity-dialog model-management__data-manager-dialog ui-card ui-surface--glass" role="dialog" aria-modal="true" aria-label="Training data manager">
+      <button class="global-close-button" type="button" data-model-data-manager-close aria-label="Close data manager">
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
       <nav class="model-management__data-manager-tabs" aria-label="Training data manager" role="tablist">
         <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="source-vault">Source database</button>
         <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="datasets">Datasets</button>

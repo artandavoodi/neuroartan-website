@@ -1,3 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <circle cx="12" cy="12" r="1" fill="currentColor"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="cognitive-orientation-index.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="11.522333"
+     inkscape:cx="6.6826745"
+     inkscape:cy="12.323893"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <g
+     id="g2"
+     transform="translate(16.003887,-0.81745958)">
+    <circle
+       cx="-4.0038881"
+       cy="6.2032862"
+       r="2.3346457"
+       fill="currentColor"
+       id="circle1"
+       style="fill:none;stroke:#000000;stroke-width:1" />
+    <circle
+       cx="-4.0038881"
+       cy="19.431633"
+       r="2.3346457"
+       fill="currentColor"
+       id="circle1-8"
+       style="fill:none;stroke:#000000;stroke-width:1" />
+  </g>
+  <g
+     id="g1"
+     transform="rotate(90,9.1417321,22.307087)">
+    <circle
+       cx="-1.1653543"
+       cy="12.834646"
+       r="2.3346457"
+       fill="currentColor"
+       id="circle1-88"
+       style="fill:none;stroke:#000000;stroke-width:1" />
+    <circle
+       cx="-1.1653543"
+       cy="26.062992"
+       r="2.3346457"
+       fill="currentColor"
+       id="circle1-8-9"
+       style="fill:none;stroke:#000000;stroke-width:1" />
+  </g>
+  <path
+     id="path1"
+     style="stroke:#000000;stroke-width:0.999999;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+     d="M 5.49568,9.2522964 C 5.852887,8.4077631 6.3697745,7.6472128 7.0084934,7.0084939 7.6472122,6.3697751 8.4077626,5.8528878 9.2522962,5.4956802 m 5.4954058,0 c 0.844533,0.3572076 1.605084,0.8740949 2.243802,1.5128138 0.638719,0.6387188 1.155606,1.3992691 1.512814,2.2438024 m 0,5.4954056 c -0.357207,0.844533 -0.874095,1.605084 -1.512814,2.243803 -0.638718,0.638718 -1.399269,1.155606 -2.243802,1.512813 m -5.4954059,0 C 8.4077625,18.147111 7.6472121,17.630224 7.0084933,16.991505 6.3697744,16.352786 5.852887,15.592235 5.495679,14.747702"
+     sodipodi:nodetypes="csccsccsccsc" />
 </svg>

@@ -268,7 +268,6 @@ html[data-theme-effective="dark"]{
   height: var(--account-sign-in-button-height);
   padding: var(--spacing-none) var(--account-sign-in-button-padding-x);
   box-sizing: border-box;
-  border: var(--border-width-hairline) solid var(--control-border-unified);
   border-radius: var(--account-sign-in-button-radius);
   background: var(--control-surface);
   color: var(--text-color);

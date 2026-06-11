@@ -3983,6 +3983,7 @@ function setModelDataManagerOpen(open, pane = modelDataManagerPane, options = {}
 
   if (options.persist !== false) {
     updateModelInterfaceState('modelDataManagerOpen', modelDataManagerOpen);
+    updateModelInterfaceState('modelDataManagerPane', modelDataManagerPane);
   }
 
   if (!modelDataManagerOpen) setModelDataManagerStatus('', 'idle');
@@ -4006,10 +4007,11 @@ function applyModelIdentityEditorInterfaceState(open) {
 function restoreModelManagementInterfaceState() {
   const interfaceState = readModelInterfaceState();
   modelDataManagerOpen = interfaceState.modelDataManagerOpen === true;
-  modelDataManagerPane = normalizeModelDataManagerPane(modelDataManagerPane);
+  modelDataManagerPane = normalizeModelDataManagerPane(interfaceState.modelDataManagerPane || modelDataManagerPane);
 
   window.requestAnimationFrame(() => {
     applyModelIdentityEditorInterfaceState(interfaceState.modelIdentityEditorOpen);
+    renderAllModelManagement();
   });
 }
 

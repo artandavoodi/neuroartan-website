@@ -273,7 +273,6 @@
   gap:var(--spacing-sm);
   min-width:var(--spacing-none);
   padding:var(--spacing-lg);
-  border:var(--border-width-hairline) solid var(--border-color);
   border-radius:var(--radius-lg);
   background:var(--surface-muted-color);
 }

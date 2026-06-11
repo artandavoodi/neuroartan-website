@@ -4,6 +4,10 @@
   inline-size:100%;
 }
 
+.model-digital-brain-maturity[aria-busy="true"] .model-digital-brain-maturity__surface{
+  display:none;
+}
+
 .model-digital-brain-maturity__surface{
   position:relative;
   display:grid;

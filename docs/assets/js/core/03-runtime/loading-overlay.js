@@ -307,10 +307,12 @@
 
       visible = overlay.classList.contains('is-active');
       overlay.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      updateVisibility();
     });
 
     window.addEventListener('load', () => {
       overlay = getOverlayNode();
+      updateVisibility();
     }, { once: true });
   };
 

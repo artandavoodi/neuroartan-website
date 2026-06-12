@@ -1427,11 +1427,35 @@ async function renderChangelogLedger(root, filters = {}) {
     return;
   }
 
-  const events = (await listProfileChangelogEvents(filters)).map((event) => ({
-    title: event.event_title || 'Change recorded',
-    detail: event.event_detail || '',
-    createdAt: event.event_created_at || event.created_at
-  }));
+  const events = (await listProfileChangelogEvents(filters)).map((event) => {
+    const metadata = event.event_metadata || event.metadata || {};
+    const fromValue = String(metadata.from_value || metadata.fromValue || '').trim();
+    const toValue = String(metadata.to_value || metadata.toValue || '').trim();
+    const detail = event.event_detail || '';
+    const action = event.event_action || '';
+    const area = event.event_area || event.area || '';
+
+    let constructedDetail = detail;
+    if (fromValue && toValue) {
+      constructedDetail = `${detail} ${fromValue} → ${toValue}`.trim();
+    } else if (fromValue || toValue) {
+      constructedDetail = `${detail} ${fromValue || toValue}`.trim();
+    }
+
+    if (!constructedDetail && action) {
+      constructedDetail = action;
+    }
+
+    if (area && constructedDetail) {
+      constructedDetail = `${area} · ${constructedDetail}`;
+    }
+
+    return {
+      title: event.event_title || 'Change recorded',
+      detail: constructedDetail,
+      createdAt: event.event_created_at || event.created_at
+    };
+  });
 
   renderChangelogEvents(root, events, 'No changes recorded yet');
 }

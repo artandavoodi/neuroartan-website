@@ -156,7 +156,7 @@
 .home-platform-theme__token-field{
   display:flex;
   align-items:center;
-  justify-content:space-between;
+  gap:var(--layout-home-platform-theme-token-field-gap);
   min-height:var(--home-platform-theme-token-field-min-height);
   width:var(--size-full);
   min-width:var(--spacing-none);

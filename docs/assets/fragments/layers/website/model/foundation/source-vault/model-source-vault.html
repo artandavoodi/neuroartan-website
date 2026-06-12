@@ -148,10 +148,15 @@
               <p class="model-source-summary__copy" data-model-source-vault-file-manager-summary>0 files selected</p>
 
               <div class="model-source-vault__file-manager-controls" aria-label="File Manager controls">
-                <label class="model-source-vault__file-search">
-                  <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+                <div class="model-source-vault__file-search" role="search">
+                  <button class="model-source-vault__file-search-button" type="button" data-model-source-vault-file-search-trigger aria-label="Search readable files">
+                    <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+                  </button>
                   <input type="search" data-model-source-vault-file-search placeholder="Search files" aria-label="Search readable files">
-                </label>
+                  <button class="model-source-vault__file-search-button model-source-vault__file-search-button--close" type="button" data-model-source-vault-file-search-close aria-label="Close search">
+                    <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
+                  </button>
+                </div>
 
                 <label class="model-source-vault__file-filter">
                   <img class="model-source-vault__control-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/filter/filter.svg" alt="">

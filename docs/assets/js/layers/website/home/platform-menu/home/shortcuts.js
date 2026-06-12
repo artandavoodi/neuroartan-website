@@ -51,6 +51,8 @@ function updateShortcutsDisplay(root) {
   const config = getHomeConfig();
   const shortcutState = normalizeHomeShortcutState(config?.shortcuts || {});
 
+  console.log('[shortcuts] updateShortcutsDisplay called', { config, shortcutState });
+
   if (config && config.visibility && config.visibility.shortcuts === false) {
     root.style.display = 'none';
     return;
@@ -61,12 +63,16 @@ function updateShortcutsDisplay(root) {
   const shortcutsList = root.querySelector('[data-home-overview-shortcuts-list]');
   const emptyState = root.querySelector('[data-home-overview-shortcuts-empty]');
   
+  console.log('[shortcuts] DOM elements found', { shortcutsList, emptyState });
+  
   if (!(shortcutsList instanceof HTMLElement)) return;
   if (!(emptyState instanceof HTMLElement)) return;
   
   shortcutsList.innerHTML = '';
 
   const visibleShortcuts = getOrderedHomeShortcutItems(shortcutState, { enabledOnly: true });
+
+  console.log('[shortcuts] Visible shortcuts', visibleShortcuts);
 
   if (!visibleShortcuts.length) {
     emptyState.hidden = false;

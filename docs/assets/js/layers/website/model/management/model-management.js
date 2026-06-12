@@ -4139,10 +4139,51 @@ function handleModelDataManagerOpenRequest(event) {
   setModelDataManagerOpen(true, pane);
 }
 
+function handleModelDataManagerSearchPointerDown(event) {
+  const searchTrigger = event.target?.closest?.('[data-model-data-manager-search-trigger]');
+  if (!(searchTrigger instanceof HTMLElement)) return;
+
+  const shell = searchTrigger.closest('.model-management__data-manager-filter');
+  const search = shell?.querySelector?.('[data-model-data-manager-filter]');
+  if (!(shell instanceof HTMLElement) || !(search instanceof HTMLInputElement)) return;
+
+  event.preventDefault();
+  shell.dataset.searchOpen = 'true';
+  requestAnimationFrame(() => search.focus());
+}
+
 function handleModelDataManagerClick(event) {
   const close = event.target?.closest?.('[data-model-data-manager-close]');
   if (close instanceof HTMLElement) {
     setModelDataManagerOpen(false);
+    return;
+  }
+
+  const searchTrigger = event.target?.closest?.('[data-model-data-manager-search-trigger]');
+  if (searchTrigger instanceof HTMLElement) {
+    const shell = searchTrigger.closest('.model-management__data-manager-filter');
+    const search = shell?.querySelector?.('[data-model-data-manager-filter]');
+    if (shell instanceof HTMLElement) shell.dataset.searchOpen = 'true';
+    if (search instanceof HTMLInputElement) window.setTimeout(() => search.focus(), 0);
+    return;
+  }
+
+  const searchClose = event.target?.closest?.('[data-model-data-manager-search-close]');
+  if (searchClose instanceof HTMLElement) {
+    const shell = searchClose.closest('.model-management__data-manager-filter');
+    const search = shell?.querySelector?.('[data-model-data-manager-filter]');
+    if (shell instanceof HTMLElement) shell.dataset.searchClosing = 'true';
+    if (search instanceof HTMLInputElement) {
+      search.value = '';
+      search.blur();
+      modelDataManagerFilter = '';
+    }
+    if (shell instanceof HTMLElement) delete shell.dataset.searchOpen;
+    searchClose.blur();
+    window.setTimeout(() => {
+      if (shell instanceof HTMLElement) delete shell.dataset.searchClosing;
+      renderAllModelManagement();
+    }, 160);
     return;
   }
 
@@ -4470,6 +4511,7 @@ function initModelManagement() {
   document.addEventListener('model-source-vault:package-saved', handleModelSourceVaultPackageSaved);
   document.addEventListener('model-source-vault:confirmed', handleModelSourceVaultConfirmed);
   document.addEventListener('model:data-manager-open-request', handleModelDataManagerOpenRequest);
+  document.addEventListener('pointerdown', handleModelDataManagerSearchPointerDown, true);
   document.addEventListener('click', handleModelDataManagerClick);
   document.addEventListener('input', handleModelDataManagerFilterInput);
   document.addEventListener('change', handleModelDataManagerSortChange);

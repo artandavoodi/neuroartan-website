@@ -527,7 +527,9 @@ function getChangedProfileFields(scope, values = {}, existingProfile = null, use
     })
     .map((fieldName) => ({
       field: fieldName,
-      label: getProfileChangelogFieldLabel(fieldName)
+      label: getProfileChangelogFieldLabel(fieldName),
+      from: normalizeProfileComparableValue(seed[fieldName], fieldName),
+      to: normalizeProfileComparableValue(values[fieldName], fieldName)
     }));
 }
 
@@ -565,7 +567,9 @@ function buildProfileChangelogEvent(scope, values = {}, existingProfile = null, 
       scope,
       fields: getSubmittedFieldNames(formData),
       changed_fields: changedFields.map((field) => field.field),
-      changed_field_labels: changedFields.map((field) => field.label)
+      changed_field_labels: changedFields.map((field) => field.label),
+      from_value: changedFields.length === 1 ? changedFields[0].from : undefined,
+      to_value: changedFields.length === 1 ? changedFields[0].to : undefined
     }
   };
 }

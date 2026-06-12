@@ -1,6 +1,11 @@
 @import url('../general/index.css');
 
-.home-platform-destination--settings-configuration{width:var(--size-full);}
+.home-platform-destination--settings-configuration{
+  width:var(--size-full);
+  --home-platform-theme-token-label-size:var(--layout-home-platform-theme-token-label-size);
+  --home-platform-theme-token-label-weight:var(--layout-home-platform-theme-token-label-weight);
+  --home-platform-theme-token-label-line-height:var(--layout-home-platform-theme-token-label-line-height);
+}
 
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid {
   display: block !important;
@@ -19,6 +24,7 @@
   width: var(--control-width-field);
   max-width: var(--control-width-field);
 }
+
 
 .home-platform-destination--settings-configuration .home-platform-theme__token-grid--hidden {
   display: none !important;

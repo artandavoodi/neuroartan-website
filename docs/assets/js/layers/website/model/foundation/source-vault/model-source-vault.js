@@ -1956,6 +1956,34 @@ function handleClick(event) {
     return;
   }
 
+  const fileSearchTrigger = target.closest('[data-model-source-vault-file-search-trigger]');
+  if (fileSearchTrigger instanceof HTMLElement) {
+    const shell = fileSearchTrigger.closest('.model-source-vault__file-search');
+    const search = shell?.querySelector?.('[data-model-source-vault-file-search]');
+    if (shell instanceof HTMLElement) shell.dataset.searchOpen = 'true';
+    if (search instanceof HTMLInputElement) window.setTimeout(() => search.focus(), 0);
+    return;
+  }
+
+  const fileSearchClose = target.closest('[data-model-source-vault-file-search-close]');
+  if (fileSearchClose instanceof HTMLElement) {
+    const shell = fileSearchClose.closest('.model-source-vault__file-search');
+    const search = shell?.querySelector?.('[data-model-source-vault-file-search]');
+    if (shell instanceof HTMLElement) shell.dataset.searchClosing = 'true';
+    if (search instanceof HTMLInputElement) {
+      search.value = '';
+      search.blur();
+    }
+    if (shell instanceof HTMLElement) delete shell.dataset.searchOpen;
+    fileSearchClose.blur();
+    window.setTimeout(() => {
+      if (shell instanceof HTMLElement) delete shell.dataset.searchClosing;
+      renderFileManager(root, latestAnalysis);
+      saveSourceVaultDraft(root);
+    }, 160);
+    return;
+  }
+
   if (target.closest('[data-model-source-vault-file-select-all]')) {
     selectAllFileManagerFiles(root);
     saveSourceVaultDraft(root);
@@ -1973,6 +2001,22 @@ function handleClick(event) {
   }
 }
 
+function handleFileManagerSearchPointerDown(event) {
+  const root = mountedRoot;
+  if (!(root instanceof HTMLElement)) return;
+  const target = getEventElement(event);
+  const fileSearchTrigger = target?.closest?.('[data-model-source-vault-file-search-trigger]');
+  if (!(fileSearchTrigger instanceof HTMLElement)) return;
+
+  const shell = fileSearchTrigger.closest('.model-source-vault__file-search');
+  const search = shell?.querySelector?.('[data-model-source-vault-file-search]');
+  if (!(shell instanceof HTMLElement) || !(search instanceof HTMLInputElement)) return;
+
+  event.preventDefault();
+  shell.dataset.searchOpen = 'true';
+  requestAnimationFrame(() => search.focus());
+}
+
 export function mountModelSourceVault(root = document) {
   mountedRoot = root?.querySelector?.('[data-model-source-vault]') || root;
   if (!(mountedRoot instanceof HTMLElement)) return null;
@@ -1983,6 +2027,7 @@ export function mountModelSourceVault(root = document) {
   bindSourceVaultDatabaseResult();
 
   mountedRoot.addEventListener('change', handleChange);
+  mountedRoot.addEventListener('pointerdown', handleFileManagerSearchPointerDown, true);
   mountedRoot.addEventListener('click', handleClick);
 
   const draftRestored = restoreSourceVaultDraft(mountedRoot);

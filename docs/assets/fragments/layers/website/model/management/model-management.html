@@ -871,10 +871,15 @@
           </button>
         </nav>
         <div class="model-management__data-manager-controls" aria-label="Data manager controls">
-          <label class="model-management__data-manager-filter">
-            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
-            <input type="search" data-model-data-manager-filter placeholder="Filter" aria-label="Filter data manager records">
-          </label>
+          <div class="model-management__data-manager-filter" role="search">
+            <button class="model-management__data-manager-search-button" type="button" data-model-data-manager-search-trigger aria-label="Search data manager records">
+              <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+            </button>
+            <input type="search" data-model-data-manager-filter placeholder="Search" aria-label="Search data manager records">
+            <button class="model-management__data-manager-search-button model-management__data-manager-search-button--close" type="button" data-model-data-manager-search-close aria-label="Close search">
+              <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
+            </button>
+          </div>
           <label class="model-management__data-manager-sort">
             <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/filter/filter.svg" alt="">
             <span class="ui-inline-dropdown model-management__data-manager-dropdown">

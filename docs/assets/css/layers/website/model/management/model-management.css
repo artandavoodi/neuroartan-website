@@ -369,7 +369,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   align-content:start;
   min-height:var(--control-height-lg);
   padding:var(--spacing-lg);
-  border:var(--border-width-hairline) solid var(--border-color);
+  border:none;
   border-radius:var(--shape-card-radius);
   background:var(--panel-surface-solid-unified);
 }
@@ -1034,9 +1034,10 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-chrome{
+  position:relative;
   display:grid;
   grid-template-columns:minmax(var(--spacing-none),1fr) auto;
-  align-items:end;
+  align-items:center;
   gap:var(--spacing-lg);
   min-width:var(--spacing-none);
   padding-inline-end:calc(var(--control-size-md) + var(--spacing-xl));
@@ -1044,10 +1045,11 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-tabs{
+  align-self:end;
   display:flex;
   flex-wrap:nowrap;
   align-items:center;
-  gap:var(--spacing-xl);
+  gap:var(--spacing-lg);
   min-width:var(--spacing-none);
   overflow-x:auto;
   overflow-y:hidden;
@@ -1060,17 +1062,27 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-tabs .model-management__text-button{
+  appearance:none;
+  -webkit-appearance:none;
+  border:0;
+  background:transparent;
+  margin:0;
   position:relative;
   display:inline-flex;
   align-items:center;
+  justify-content:center;
   gap:var(--spacing-sm);
-  min-block-size:var(--control-size-md);
-  padding-block:var(--spacing-sm);
-  color:var(--text-secondary-color);
-  font-size:var(--body-2-size);
-  line-height:var(--body-2-line-height);
-  font-weight:var(--font-weight-body);
+  min-block-size:var(--profile-private-hero-tab-band-height);
+  padding:0;
+  padding-block:var(--spacing-md);
+  color:var(--profile-private-hero-tab-color);
+  font-size:calc(var(--website-local-nav-link-font-size) * var(--accessibility-typography-scale));
+  line-height:var(--website-local-nav-line-height);
+  font-weight:var(--website-local-nav-font-weight);
+  letter-spacing:var(--website-local-nav-letter-spacing);
+  text-decoration:none;
   white-space:nowrap;
+  transform:none !important;
 }
 
 .model-management__data-manager-tabs .model-management__text-button::after{
@@ -1078,16 +1090,18 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   position:absolute;
   left:0;
   right:0;
-  bottom:calc(-1 * var(--border-width-hairline));
-  height:var(--border-width-hairline);
-  background:var(--local-nav-active-indicator-color);
+  bottom:var(--profile-private-hero-tab-indicator-bottom);
+  height:var(--profile-private-hero-tab-indicator-height);
+  background:var(--profile-private-hero-tab-active-underline-bg);
   pointer-events:none;
-  opacity:0;
+  z-index:1;
+  opacity:var(--profile-private-hero-tab-indicator-opacity);
   transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]{
-  color:var(--text-primary-color);
+  color:var(--profile-private-hero-tab-hover-color);
+  opacity:var(--profile-private-hero-tab-active-opacity);
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"] .model-management__data-manager-icon{
@@ -1095,7 +1109,39 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]::after{
-  opacity:var(--selected-indicator-opacity);
+  opacity:var(--profile-private-hero-tab-indicator-opacity-active);
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter[data-search-open="true"]){
+  --profile-private-hero-tab-indicator-opacity-active:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter[data-search-closing="true"]){
+  --profile-private-hero-tab-indicator-opacity-active:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter:focus-within){
+  --profile-private-hero-tab-indicator-opacity-active:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter input:not(:placeholder-shown)){
+  --profile-private-hero-tab-indicator-opacity-active:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter[data-search-open="true"]) .model-management__data-manager-tabs .model-management__text-button::after{
+  opacity:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter[data-search-closing="true"]) .model-management__data-manager-tabs .model-management__text-button::after{
+  opacity:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter:focus-within) .model-management__data-manager-tabs .model-management__text-button::after{
+  opacity:0;
+}
+
+.model-management__data-manager-chrome:has(.model-management__data-manager-filter input:not(:placeholder-shown)) .model-management__data-manager-tabs .model-management__text-button::after{
+  opacity:0;
 }
 
 .model-management__data-manager-icon{
@@ -1106,6 +1152,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-controls{
+  align-self:center;
   display:flex;
   align-items:center;
   justify-content:flex-end;
@@ -1156,14 +1203,151 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   font-weight:var(--control-sm-weight);
 }
 
+.model-management__data-manager-filter{
+  box-sizing:border-box;
+  flex:0 0 auto;
+  inline-size:var(--control-size-sm);
+  justify-content:center;
+  gap:var(--spacing-none);
+  overflow:hidden;
+  transition:
+    inline-size var(--interaction-motion-fast) var(--interaction-ease-standard),
+    gap var(--interaction-motion-fast) var(--interaction-ease-standard),
+    padding-inline var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-management__data-manager-filter[data-search-open="true"],
+.model-management__data-manager-filter:focus-within,
+.model-management__data-manager-filter:has(input:not(:placeholder-shown)){
+  position:absolute;
+  inset-block:var(--spacing-sm);
+  inset-inline-start:var(--spacing-none);
+  inset-inline-end:var(--spacing-none);
+  z-index:4;
+  width:auto;
+  inline-size:auto;
+  max-inline-size:none;
+  padding-inline-end:calc(var(--icon-size-md) + var(--spacing-lg));
+  background:var(--panel-surface-dropdown-unified);
+  justify-content:flex-start;
+  gap:var(--spacing-sm);
+}
+
+.model-management__data-manager-search-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  inline-size:var(--icon-size-md);
+  block-size:var(--icon-size-md);
+  padding:var(--spacing-none);
+  border:0;
+  background:transparent;
+  color:var(--text-primary-color);
+  cursor:pointer;
+}
+
 .model-management__data-manager-filter input{
-  inline-size:10rem;
+  inline-size:var(--spacing-none);
   min-width:var(--spacing-none);
   border:0;
   background:transparent;
   color:var(--text-primary-color);
   font:inherit;
   outline:none;
+  opacity:0;
+  pointer-events:none;
+  transition:
+    inline-size var(--interaction-motion-fast) var(--interaction-ease-standard),
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-management__data-manager-filter[data-search-open="true"] input,
+.model-management__data-manager-filter:focus-within input,
+.model-management__data-manager-filter:has(input:not(:placeholder-shown)) input{
+  inline-size:100%;
+  opacity:1;
+  pointer-events:auto;
+}
+
+.model-management__data-manager-search-button--close{
+  display:none;
+  position:absolute;
+  inset-block-start:50%;
+  inset-inline-end:var(--spacing-sm);
+  transform:translateY(-50%);
+  transition:none;
+}
+
+.model-management__data-manager-filter[data-search-open="true"] .model-management__data-manager-search-button--close,
+.model-management__data-manager-filter:focus-within .model-management__data-manager-search-button--close,
+.model-management__data-manager-filter:has(input:not(:placeholder-shown)) .model-management__data-manager-search-button--close{
+  display:inline-flex;
+}
+
+.model-management__data-manager-filter[data-search-closing="true"] .model-management__data-manager-search-button--close{
+  display:none;
+}
+
+.model-management__data-manager-filter[data-search-closing="true"]{
+  background:transparent;
+  transition:
+    inline-size var(--interaction-motion-fast) var(--interaction-ease-standard),
+    gap var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-management__data-manager-filter[data-search-closing="true"] input{
+  transition:none;
+}
+
+.model-management__data-manager-control[data-model-data-manager-add-source]{
+  position:relative;
+  justify-content:center;
+  inline-size:var(--control-size-sm);
+  gap:var(--spacing-none);
+  padding-inline:var(--spacing-xs);
+}
+
+.model-management__data-manager-control[data-model-data-manager-add-source] span{
+  position:absolute;
+  max-inline-size:var(--spacing-none);
+  overflow:hidden;
+  opacity:0;
+}
+
+.model-management__data-manager-control[data-model-data-manager-add-source]::after{
+  content:"Add source";
+  position:absolute;
+  top:50%;
+  right:calc(100% + var(--spacing-sm));
+  z-index:var(--z-raised);
+  transform:translateY(-50%) translateX(var(--spacing-xs));
+  width:max-content;
+  padding:calc(4px * var(--accessibility-density-scale)) var(--spacing-xs);
+  border:0;
+  border-radius:var(--control-radius-composer);
+  background-color:var(--hover-overlay-bg);
+  color:var(--hover-overlay-text);
+  box-shadow:0 calc(2px * var(--accessibility-density-scale)) calc(8px * var(--accessibility-density-scale)) var(--hover-overlay-shadow);
+  font-size:var(--home-search-shell-result-tooltip-size);
+  font-weight:var(--home-search-shell-result-tooltip-weight);
+  line-height:var(--home-search-shell-result-tooltip-line-height);
+  letter-spacing:var(--home-search-shell-result-tooltip-tracking);
+  white-space:nowrap;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:
+    opacity var(--interaction-motion-fast) var(--interaction-ease-standard),
+    transform var(--interaction-motion-fast) var(--interaction-ease-standard),
+    visibility var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+
+.model-management__data-manager-control[data-model-data-manager-add-source]:hover::after,
+.model-management__data-manager-control[data-model-data-manager-add-source]:focus-visible::after{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(-50%) translateX(0);
 }
 
 .model-management__data-manager-dropdown{
@@ -1437,7 +1621,14 @@ body.model-management-identity-editor-open{
   }
 
   .model-management__data-manager-filter{
+    flex:0 0 auto;
+  }
+
+  .model-management__data-manager-filter[data-search-open="true"],
+  .model-management__data-manager-filter:focus-within,
+  .model-management__data-manager-filter:has(input:not(:placeholder-shown)){
     flex:1 1 100%;
+    inline-size:100%;
   }
 
   .model-management__data-manager-sort,
@@ -1445,7 +1636,9 @@ body.model-management-identity-editor-open{
     flex:1 1 auto;
   }
 
-  .model-management__data-manager-filter input{
+  .model-management__data-manager-filter[data-search-open="true"] input,
+  .model-management__data-manager-filter:focus-within input,
+  .model-management__data-manager-filter:has(input:not(:placeholder-shown)) input{
     inline-size:100%;
   }
 }
@@ -1490,12 +1683,20 @@ body.model-management-identity-editor-open{
     flex-wrap:wrap;
   }
 
-  .model-management__data-manager-filter,
   .model-management__data-manager-sort{
     flex:1 1 100%;
   }
 
-  .model-management__data-manager-filter input{
+  .model-management__data-manager-filter[data-search-open="true"],
+  .model-management__data-manager-filter:focus-within,
+  .model-management__data-manager-filter:has(input:not(:placeholder-shown)){
+    flex:1 1 100%;
+    inline-size:100%;
+  }
+
+  .model-management__data-manager-filter[data-search-open="true"] input,
+  .model-management__data-manager-filter:focus-within input,
+  .model-management__data-manager-filter:has(input:not(:placeholder-shown)) input{
     inline-size:100%;
   }
 

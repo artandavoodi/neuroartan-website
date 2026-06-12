@@ -21,16 +21,104 @@ function formatDate(value) {
   }).format(date);
 }
 
+function humanizeIdentifier(value = '') {
+  return normalizeString(value)
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/^./, (character) => character.toUpperCase());
+}
+
+function normalizeChangeValue(value) {
+  if (value === null || typeof value === 'undefined') return '';
+  if (value === true) return 'On';
+  if (value === false) return 'Off';
+  return normalizeString(String(value).replace(/[_-]+/g, ' '));
+}
+
+function generateEventHref(event = {}) {
+  const source = normalizeString(event.source || '');
+  const area = normalizeString(event.area || '');
+
+  if (source === 'Profile') {
+    if (area === 'personalization') return '/profile.html#profile/personalization';
+    if (area === 'privacy') return '/profile.html#profile/privacy';
+    if (area === 'security') return '/profile.html#profile/security';
+    if (area === 'accessibility') return '/profile.html#profile/accessibility';
+    if (area === 'notifications') return '/profile.html#profile/notifications';
+    return '/profile.html#profile';
+  }
+
+  if (source === 'Model') {
+    if (area.includes('personalization')) return '/model/#model/personalization';
+    if (area.includes('training')) return '/model/#model/training/protocol';
+    if (area.includes('discovery')) return '/model/#model/discovery/directory';
+    if (area.includes('source')) return '/model/#model/foundation/sources';
+    if (area.includes('voice')) return '/model/#model/foundation/voice';
+    return '/model/#model/foundation/overview';
+  }
+
+  return '';
+}
+
 function normalizeEvent(event = {}, source = 'Profile') {
+  const metadata = event.event_metadata || event.metadata || {};
+  const fromValue = normalizeString(metadata.from_value || metadata.fromValue || '');
+  const toValue = normalizeString(metadata.to_value || metadata.toValue || '');
+  const detail = normalizeString(event.event_detail || event.detail || '');
+  const action = normalizeString(event.event_action || event.action || '');
+  const fieldLabel = normalizeString(
+    event.label
+    || event.field_label
+    || metadata.changed_field_label
+    || metadata.changedFieldLabel
+    || humanizeIdentifier(event.field || metadata.changed_field || metadata.changedField || '')
+  );
+  const auditFromValue = normalizeChangeValue(event.value_from ?? event.from ?? metadata.value_from ?? metadata.from);
+  const auditToValue = normalizeChangeValue(event.value_to ?? event.to ?? metadata.value_to ?? metadata.to);
+
+  let constructedDetail = detail;
+  if (fieldLabel && auditFromValue && auditToValue) {
+    constructedDetail = `${fieldLabel} . ${auditFromValue} → ${auditToValue}`;
+  } else if (fieldLabel && (auditFromValue || auditToValue)) {
+    constructedDetail = `${fieldLabel} . ${auditFromValue || auditToValue}`;
+  } else if (fromValue && toValue) {
+    constructedDetail = `${fieldLabel || detail} . ${fromValue} → ${toValue}`.trim();
+  } else if (fromValue || toValue) {
+    constructedDetail = `${fieldLabel || detail} . ${fromValue || toValue}`.trim();
+  } else if (fieldLabel && (!detail || detail === action)) {
+    constructedDetail = fieldLabel;
+  }
+
+  if (!constructedDetail && action) {
+    constructedDetail = humanizeIdentifier(action);
+  }
+
   return {
     id: normalizeString(event.id || `${source}-${event.created_at || Math.random()}`),
     source,
     area: normalizeString(event.event_area || event.area || source.toLowerCase()),
-    action: normalizeString(event.event_action || event.action || ''),
+    action,
     title: normalizeString(event.event_title || event.title || event.action || 'Change recorded'),
-    detail: normalizeString(event.event_detail || event.detail || ''),
+    detail: constructedDetail,
     createdAt: normalizeString(event.created_at || event.createdAt || '')
   };
+}
+
+function navigateChangelogEvent(event, href = '') {
+  const destination = String(href || '').trim();
+  if (!destination) return;
+
+  event.preventDefault();
+  document.dispatchEvent(new CustomEvent('home:platform-shell-close-request', {
+    detail: {
+      clearPersistedState: true,
+      source: 'settings-changelog'
+    }
+  }));
+  window.requestAnimationFrame(() => {
+    window.location.assign(destination);
+  });
 }
 
 function renderEvents(root, events = []) {
@@ -52,21 +140,26 @@ function renderEvents(root, events = []) {
     item.className = 'settings-changelog__item';
     item.setAttribute('role', 'listitem');
 
-    const title = document.createElement('strong');
+    const href = generateEventHref(event);
+    const title = document.createElement('a');
     title.className = 'settings-changelog__title';
-    title.textContent = event.title;
+    title.textContent = event.source;
+    if (href) {
+      title.href = href;
+      title.addEventListener('click', (clickEvent) => {
+        navigateChangelogEvent(clickEvent, href);
+      });
+    }
 
     const meta = document.createElement('span');
     meta.className = 'settings-changelog__meta';
-    meta.textContent = [event.source, event.area, formatDate(event.createdAt)].filter(Boolean).join(' · ');
+    meta.textContent = event.detail || humanizeIdentifier(event.area);
 
-    item.append(title, meta);
-    if (event.detail) {
-      const detail = document.createElement('p');
-      detail.className = 'settings-changelog__detail';
-      detail.textContent = event.detail;
-      item.append(detail);
-    }
+    const date = document.createElement('div');
+    date.className = 'settings-changelog__date';
+    date.textContent = formatDate(event.createdAt);
+
+    item.append(title, meta, date);
     list.append(item);
   });
 }

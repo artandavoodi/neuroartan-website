@@ -653,6 +653,12 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   background:transparent;
   color:var(--text-secondary-color);
   cursor:pointer;
+  opacity:0;
+  transition:opacity var(--toggle-transition-duration, 220ms) var(--toggle-transition-ease, cubic-bezier(0.25, 0.1, 0.25, 1));
+}
+
+.model-source-summary__metric:hover .model-source-summary__learn{
+  opacity:1;
 }
 
 .model-source-summary__learn-icon{

@@ -1,3 +1,158 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-  <circle cx="12" cy="12" r="1" fill="currentColor"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="control-orientation.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1-6"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1-2"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1-6-4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,1,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showguides="false"
+     inkscape:zoom="7.8257439"
+     inkscape:cx="2.8112343"
+     inkscape:cy="2.9390177"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <g
+     id="g1"
+     transform="matrix(0.528474,0.528474,-0.528474,0.528474,20.709248,16.1095)"
+     style="stroke-width:1.33802">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.34908;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       d="m -24.967009,-15.709552 -3.499109,3.312521 a 1.0563283,1.0563283 0 0 1 -1.452408,0 l -3.499109,-3.312521"
+       id="path1"
+       sodipodi:nodetypes="ccc"
+       inkscape:path-effect="#path-effect1"
+       inkscape:original-d="m -24.967009,-15.709552 -4.225313,4 -4.225313,-4"
+       transform="matrix(0.70631128,-0.70631128,-0.69633436,-0.69633436,-8.412721,-33.170462)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.34908;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       d="m -24.967009,-15.709552 -3.499109,3.312521 a 1.0563283,1.0563283 0 0 1 -1.452408,0 l -3.499109,-3.312521"
+       id="path1-4"
+       sodipodi:nodetypes="ccc"
+       inkscape:path-effect="#path-effect1-6"
+       inkscape:original-d="m -24.967009,-15.709552 -4.225313,4 -4.225313,-4"
+       transform="matrix(-0.70631128,0.70631128,0.69633436,0.69633436,-15.843434,41.874291)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.34908;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       d="m -24.967009,-15.709552 -3.499109,3.312521 a 1.0563283,1.0563283 0 0 1 -1.452408,0 l -3.499109,-3.312521"
+       id="path1-9"
+       sodipodi:nodetypes="ccc"
+       inkscape:path-effect="#path-effect1-2"
+       inkscape:original-d="m -24.967009,-15.709552 -4.225313,4 -4.225313,-4"
+       transform="matrix(0.70631128,0.70631128,0.69633436,-0.69633436,25.394298,8.0672714)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.34908;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+       d="m -24.967009,-15.709552 -3.499109,3.312521 a 1.0563283,1.0563283 0 0 1 -1.452408,0 l -3.499109,-3.312521"
+       id="path1-4-1"
+       sodipodi:nodetypes="ccc"
+       inkscape:path-effect="#path-effect1-6-4"
+       inkscape:original-d="m -24.967009,-15.709552 -4.225313,4 -4.225313,-4"
+       transform="matrix(-0.70631128,-0.70631128,-0.69633436,0.69633436,-49.650455,0.6365584)" />
+  </g>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+     d="m 15.730904,8.2690955 -1.865452,1.8654525 m -3.730904,3.730904 -1.8654522,1.865453"
+     id="path2-0"
+     sodipodi:nodetypes="cccc" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999995;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+     d="M 15.730904,15.730904 13.865452,13.865452 M 10.134548,10.134548 8.2690958,8.2690956"
+     id="path2-0-8"
+     sodipodi:nodetypes="cccc" />
+  <circle
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+     id="path3"
+     cx="12"
+     cy="12"
+     r="2.4510374" />
 </svg>

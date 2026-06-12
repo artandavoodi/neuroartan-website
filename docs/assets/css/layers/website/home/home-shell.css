@@ -104,6 +104,15 @@ body.home-platform-shell-open .home-dashboard-topbar *{
   pointer-events:none;
 }
 
+/* Homepage-specific: Remove separation lines from topbar and footer */
+body.home-page .home-dashboard-topbar::before{
+  border-bottom:none;
+}
+
+body.home-page .site-footer{
+  border-top:none;
+}
+
 .home-shell__topbar{
   top:0;
 }

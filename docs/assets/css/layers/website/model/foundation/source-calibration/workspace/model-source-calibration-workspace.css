@@ -16,7 +16,7 @@ body.model-source-calibration-workspace-open::-webkit-scrollbar{
 .model-source-calibration-workspace {
   position: fixed;
   inset: var(--spacing-none);
-  z-index: var(--z-overlay-control);
+  z-index: var(--z-country-overlay);
   display: grid;
   place-items: stretch;
   padding: var(--spacing-none);

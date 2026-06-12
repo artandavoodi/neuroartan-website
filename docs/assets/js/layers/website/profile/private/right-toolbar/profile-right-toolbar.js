@@ -33,6 +33,8 @@ const ACTION_ICONS = Object.freeze({
   modelPersonalitySummary: '/registry/icons/public/assets/core/model/source-summary/source-summary.svg',
   modelPersonalization: '/registry/icons/public/assets/core/system/personalization/customize.svg',
   modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
+  modelVoiceSamples: '/registry/icons/public/assets/core/files/database/database.svg',
+  modelVoiceFineTune: '/registry/icons/public/assets/core/media/audio/waveform.svg',
   modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
   modelIdentity: '/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg',
   modelKeys: '/registry/icons/public/assets/core/identity/security/key.svg',
@@ -158,6 +160,20 @@ const ACTIONS = Object.freeze({
     label: 'Voice training',
     tooltip: 'Voice',
     icon: ACTION_ICONS.modelVoice,
+    authState: 'user'
+  },
+  modelVoiceSamples: {
+    id: 'model-voice-samples',
+    label: 'Voice database',
+    tooltip: 'Database',
+    icon: ACTION_ICONS.modelVoiceSamples,
+    authState: 'user'
+  },
+  modelVoiceFineTune: {
+    id: 'model-voice-fine-tune',
+    label: 'Voice fine tune',
+    tooltip: 'Fine tune',
+    icon: ACTION_ICONS.modelVoiceFineTune,
     authState: 'user'
   },
   modelProvider: {
@@ -419,7 +435,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   sources: ['modelSourceDatabase', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],
   personality: ['modelPersonalitySummary', 'modelLearn', 'modelReset', 'modelChangelog'],
-  voice: ['modelLearn', 'modelReset', 'modelChangelog']
+  voice: ['modelVoiceSamples', 'modelVoiceFineTune', 'modelLearn', 'modelReset', 'modelChangelog']
 });
 
 const MODEL_PERSONALIZATION_PANE_ACTIONS = Object.freeze({
@@ -764,6 +780,16 @@ function requestProfileToolAction(action){
     case 'model-voice':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
         detail: { section: 'model-foundation', modelPane: 'voice' }
+      }));
+      return;
+    case 'model-voice-samples':
+      document.dispatchEvent(new CustomEvent('model:voice-samples-open-request', {
+        detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-voice-fine-tune':
+      document.dispatchEvent(new CustomEvent('model:voice-fine-tune-open-request', {
+        detail: { source: 'profile-right-toolbar' }
       }));
       return;
     case 'model-provider':

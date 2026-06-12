@@ -56,6 +56,7 @@ import {
   refreshDigitalBrainMaturity,
 } from '../foundation/digital-brain-maturity/model-digital-brain-maturity.js';
 import { mountModelSourceVault } from '../foundation/source-vault/model-source-vault.js';
+import { mountModelVoiceTraining } from '../foundation/voice-training/model-voice-training.js';
 import {
   readModelInterfaceState,
   updateModelInterfaceState,
@@ -76,6 +77,8 @@ const MODEL_LOGIC_RECORDS_STORAGE_KEY = 'neuroartan.model.training.logics';
 const MODEL_LOGIC_QUESTION_REGISTRY_URL = '/assets/data/website/model-creation/model-logic-question-registry.json';
 const MODEL_SOURCE_VAULT_FRAGMENT_URL = '/assets/fragments/layers/website/model/foundation/source-vault/model-source-vault.html';
 const MODEL_SOURCE_VAULT_CSS_URL = '/assets/css/layers/website/model/foundation/source-vault/model-source-vault.css';
+const MODEL_VOICE_TRAINING_FRAGMENT_URL = '/assets/fragments/layers/website/model/foundation/voice-training/model-voice-training.html';
+const MODEL_VOICE_TRAINING_CSS_URL = '/assets/css/layers/website/model/foundation/voice-training/model-voice-training.css';
 
 const MODEL_PERSONALIZATION_DEFAULTS = Object.freeze({
   reasoningDepth: 'balanced',
@@ -628,6 +631,14 @@ function ensureModelSourceVaultStyles() {
   document.head.append(link);
 }
 
+function ensureModelVoiceTrainingStyles() {
+  if (document.querySelector(`link[href="${MODEL_VOICE_TRAINING_CSS_URL}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = MODEL_VOICE_TRAINING_CSS_URL;
+  document.head.append(link);
+}
+
 async function mountModelSourceVaultFragment(root = document) {
   const mount = root?.querySelector?.('[data-model-source-vault-mount]');
   if (!(mount instanceof HTMLElement) || mount.dataset.modelSourceVaultMounted === 'true') return;
@@ -649,6 +660,30 @@ async function mountModelSourceVaultFragment(root = document) {
 function mountAllModelSourceVaultFragments() {
   modelManagementRoots().forEach((root) => {
     void mountModelSourceVaultFragment(root);
+  });
+}
+
+async function mountModelVoiceTrainingFragment(root = document) {
+  const mount = root?.querySelector?.('[data-model-voice-training-mount]');
+  if (!(mount instanceof HTMLElement) || mount.dataset.modelVoiceTrainingMounted === 'true') return;
+
+  ensureModelVoiceTrainingStyles();
+
+  try {
+    const response = await fetch(MODEL_VOICE_TRAINING_FRAGMENT_URL, { cache: 'no-cache' });
+    if (!response.ok) throw new Error('MODEL_VOICE_TRAINING_FRAGMENT_UNAVAILABLE');
+    mount.innerHTML = await response.text();
+    mount.dataset.modelVoiceTrainingMounted = 'true';
+    mountModelVoiceTraining(mount);
+  } catch (error) {
+    console.warn('[Neuroartan][Model] Voice Training mount failed.', error);
+    mount.innerHTML = '<p class="model-management__section-copy">Voice Training could not be loaded.</p>';
+  }
+}
+
+function mountAllModelVoiceTrainingFragments() {
+  modelManagementRoots().forEach((root) => {
+    void mountModelVoiceTrainingFragment(root);
   });
 }
 
@@ -4403,6 +4438,7 @@ function renderAllModelManagement() {
   const navigationState = getProfileNavigationState();
   modelManagementRoots().forEach((root) => renderModelManagement(root, runtimeState, navigationState));
   mountAllModelSourceVaultFragments();
+  mountAllModelVoiceTrainingFragments();
 }
 
 function handleModelSliderInteractionStart(event) {

@@ -44,6 +44,7 @@ const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferenc
 const MODEL_VISIBILITY_PREFERENCES_TABLE = 'model_visibility_preferences';
 const MODEL_DIGITAL_BRAIN_PREFERENCES_TABLE = 'model_digital_brain_preferences';
 const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
+const MODEL_VOICE_TRAINING_SAMPLES_TABLE = 'model_voice_training_samples';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
 const MODEL_CHANGELOG_EVENTS_TABLE = 'model_changelog_events';
 const MODEL_DEFAULT_REGISTRY_TABLE = 'model_default_registry';
@@ -66,6 +67,7 @@ const PRIVACY_STAFF_ACCESS_AUDIT_TABLE = 'privacy_staff_access_audit';
 const PRIVACY_PROVIDER_REGISTRY_TABLE = 'privacy_provider_registry';
 const PRIVACY_PERMISSION_STATE_TABLE = 'privacy_permission_state';
 const PRIVACY_CONNECTOR_STATE_TABLE = 'privacy_connector_state';
+const MODEL_VOICE_SAMPLE_BUCKET = 'model-voice-samples';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -236,6 +238,8 @@ export function getModelStoreBackendState() {
     modelPersonalizationPreferencesTable: MODEL_PERSONALIZATION_PREFERENCES_TABLE,
     modelVisibilityPreferencesTable: MODEL_VISIBILITY_PREFERENCES_TABLE,
     modelVoiceTrainingStateTable: MODEL_VOICE_TRAINING_STATE_TABLE,
+    modelVoiceTrainingSamplesTable: MODEL_VOICE_TRAINING_SAMPLES_TABLE,
+    modelVoiceSampleBucket: MODEL_VOICE_SAMPLE_BUCKET,
     modelLogicRecordsTable: MODEL_LOGIC_RECORDS_TABLE,
     modelChangelogEventsTable: MODEL_CHANGELOG_EVENTS_TABLE,
     modelDefaultRegistryTable: MODEL_DEFAULT_REGISTRY_TABLE,
@@ -1995,6 +1999,417 @@ export async function saveModelDigitalBrainPreferences(modelId, preferences = {}
   }
 
   return savedPreferences;
+}
+
+function compactDefinedObject(value = {}) {
+  return Object.fromEntries(
+    Object.entries(value || {}).filter(([, entry]) => entry !== undefined)
+  );
+}
+
+function normalizeVoiceTrainingNumber(value, fallback = 0, min = 0, max = 100) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return fallback;
+  return Math.max(min, Math.min(max, Math.round(numericValue * 100) / 100));
+}
+
+function normalizeVoiceStorageSegment(value = '') {
+  return normalizeString(value || 'voice-sample')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 96) || 'voice-sample';
+}
+
+function normalizeModelVoiceTrainingState(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    id: normalizeString(row.id),
+    modelId: normalizeString(row.model_id),
+    profileId: normalizeString(row.profile_id),
+    ownerAuthUserId: normalizeString(row.owner_auth_user_id),
+    sampleCount: Number.parseInt(row.sample_count, 10) || 0,
+    consentState: normalizeString(row.consent_state || 'not_yet_granted'),
+    verificationState: normalizeString(row.verification_state || 'not_verified'),
+    activationState: normalizeString(row.activation_state || 'inactive'),
+    readinessState: normalizeString(row.readiness_state || 'not_started'),
+    readinessScore: normalizeVoiceTrainingNumber(row.readiness_score, 0),
+    sampleCoverage: row.sample_coverage && typeof row.sample_coverage === 'object' ? row.sample_coverage : {},
+    emotionCoverage: row.emotion_coverage && typeof row.emotion_coverage === 'object' ? row.emotion_coverage : {},
+    transcriptState: normalizeString(row.transcript_state || 'not_started'),
+    speechToTextState: normalizeString(row.speech_to_text_state || 'not_started'),
+    textToSpeechState: normalizeString(row.text_to_speech_state || 'not_started'),
+    synthesisState: normalizeString(row.synthesis_state || 'not_started'),
+    trainingPipelineState: normalizeString(row.training_pipeline_state || 'not_started'),
+    voiceProfileReference: normalizeString(row.voice_profile_reference),
+    lastSampleAt: normalizeString(row.last_sample_at),
+    statePayload: row.state_payload && typeof row.state_payload === 'object' ? row.state_payload : {},
+    createdAt: normalizeString(row.created_at),
+    updatedAt: normalizeString(row.updated_at),
+  };
+}
+
+function normalizeModelVoiceTrainingSample(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    id: normalizeString(row.id),
+    modelId: normalizeString(row.model_id),
+    profileId: normalizeString(row.profile_id),
+    ownerAuthUserId: normalizeString(row.owner_auth_user_id),
+    privacyVoiceRecordId: normalizeString(row.privacy_voice_record_id),
+    sampleTitle: normalizeString(row.sample_title || 'Voice sample'),
+    sampleOrigin: normalizeString(row.sample_origin || 'guided_recording'),
+    promptId: normalizeString(row.prompt_id),
+    promptText: normalizeString(row.prompt_text),
+    emotionalTone: normalizeString(row.emotional_tone || 'neutral'),
+    expressionMode: normalizeString(row.expression_mode || 'spoken'),
+    sampleStatus: normalizeString(row.sample_status || 'received'),
+    qualityState: normalizeString(row.quality_state || 'pending_review'),
+    qualityScore: normalizeVoiceTrainingNumber(row.quality_score, 0),
+    transcriptText: normalizeString(row.transcript_text),
+    transcriptStatus: normalizeString(row.transcript_status || 'pending'),
+    audioStorageBucket: normalizeString(row.audio_storage_bucket),
+    audioStoragePath: normalizeString(row.audio_storage_path),
+    audioMimeType: normalizeString(row.audio_mime_type),
+    audioSizeBytes: Number(row.audio_size_bytes || 0),
+    durationSeconds: Number(row.duration_seconds || 0),
+    featureReference: normalizeString(row.feature_reference),
+    trainingSplit: normalizeString(row.training_split || 'calibration'),
+    readinessWeight: Number(row.readiness_weight || 1),
+    metadata: row.metadata && typeof row.metadata === 'object' ? row.metadata : {},
+    createdAt: normalizeString(row.created_at),
+    updatedAt: normalizeString(row.updated_at),
+  };
+}
+
+async function getVoiceTrainingContext(modelId = '') {
+  const supabase = await resolveSupabaseClient();
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+
+  const requestedModelId = normalizeString(modelId);
+  const [model, user] = await Promise.all([
+    requestedModelId ? getModelById(requestedModelId) : ensureOwnedCanonicalModel(),
+    getCurrentSupabaseUser(),
+  ]);
+
+  const profileId = normalizeString(model?.profile_id);
+  const ownerAuthUserId = normalizeString(model?.owner_auth_user_id || user?.id);
+  if (!model?.id || !profileId || !ownerAuthUserId) {
+    const error = new Error('MODEL_VOICE_TRAINING_CONTEXT_REQUIRED');
+    error.code = 'MODEL_VOICE_TRAINING_CONTEXT_REQUIRED';
+    throw error;
+  }
+
+  return {
+    supabase,
+    model,
+    modelId: normalizeString(model.id),
+    profileId,
+    ownerAuthUserId,
+  };
+}
+
+async function uploadModelVoiceSampleFile(context, file, values = {}) {
+  if (!(file instanceof Blob)) return null;
+
+  const originalName = normalizeString(file.name || values.fileName || 'voice-sample.webm');
+  const storageName = normalizeVoiceStorageSegment(`${Date.now()}-${originalName}`);
+  const storagePath = `${context.ownerAuthUserId}/${context.modelId}/${storageName}`;
+  const { error } = await context.supabase.storage
+    .from(MODEL_VOICE_SAMPLE_BUCKET)
+    .upload(storagePath, file, {
+      cacheControl: '3600',
+      contentType: normalizeString(file.type || values.mimeType || 'audio/webm'),
+      upsert: false,
+    });
+
+  if (error) throw error;
+
+  return {
+    bucket: MODEL_VOICE_SAMPLE_BUCKET,
+    path: storagePath,
+    name: originalName,
+    type: normalizeString(file.type || values.mimeType || 'audio/webm'),
+    size: Number(file.size || 0),
+  };
+}
+
+async function updateModelVoiceTrainingStateFromSamples(context) {
+  const { data, error } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_SAMPLES_TABLE)
+    .select('id, emotional_tone, sample_status, updated_at')
+    .eq('model_id', context.modelId)
+    .neq('sample_status', 'removed');
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  const samples = Array.isArray(data) ? data : [];
+  const sampleCount = samples.length;
+  const toneCount = new Set(samples.map((sample) => normalizeString(sample.emotional_tone)).filter(Boolean)).size;
+  const readinessScore = Math.min(100, Math.round((((Math.min(sampleCount, 12) / 12) * 65) + ((Math.min(toneCount, 8) / 8) * 35)) * 100) / 100);
+  const readinessState = sampleCount >= 12 && toneCount >= 8
+    ? 'ready_for_review'
+    : sampleCount >= 6 && toneCount >= 4
+      ? 'forming'
+      : sampleCount > 0
+        ? 'initial'
+        : 'not_started';
+
+  const payload = {
+    model_id: context.modelId,
+    profile_id: context.profileId,
+    owner_auth_user_id: context.ownerAuthUserId,
+    sample_count: sampleCount,
+    readiness_state: readinessState,
+    readiness_score: readinessScore,
+    sample_coverage: { sample_count: sampleCount, target_sample_count: 12 },
+    emotion_coverage: { tone_count: toneCount, target_tone_count: 8 },
+    consent_state: sampleCount > 0 ? 'capture_requested' : 'not_yet_granted',
+    verification_state: 'not_verified',
+    activation_state: 'inactive',
+    transcript_state: sampleCount > 0 ? 'pending' : 'not_started',
+    speech_to_text_state: sampleCount > 0 ? 'queued' : 'not_started',
+    text_to_speech_state: 'not_started',
+    synthesis_state: 'not_started',
+    training_pipeline_state: sampleCount > 0 ? 'sample_collection' : 'not_started',
+    last_sample_at: samples[0]?.updated_at || null,
+    state_payload: { sample_count: sampleCount, tone_count: toneCount, readiness_score: readinessScore },
+    updated_at: new Date().toISOString(),
+  };
+
+  const result = await context.supabase
+    .from(MODEL_VOICE_TRAINING_STATE_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (result.error) {
+    if (isSupabaseRelationMissingError(result.error)) return null;
+    throw result.error;
+  }
+
+  return normalizeModelVoiceTrainingState(result.data || payload);
+}
+
+export async function readModelVoiceTrainingState(modelId = '') {
+  const context = await getVoiceTrainingContext(modelId).catch((error) => {
+    if (error?.code === 'MODEL_BACKEND_UNAVAILABLE' || error?.code === 'MODEL_VOICE_TRAINING_CONTEXT_REQUIRED') return null;
+    throw error;
+  });
+  if (!context) return null;
+
+  const { data, error } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_STATE_TABLE)
+    .select('*')
+    .eq('model_id', context.modelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return normalizeModelVoiceTrainingState(data || {
+    model_id: context.modelId,
+    profile_id: context.profileId,
+    owner_auth_user_id: context.ownerAuthUserId,
+  });
+}
+
+export async function listModelVoiceTrainingSamples(modelId = '') {
+  const context = await getVoiceTrainingContext(modelId).catch((error) => {
+    if (error?.code === 'MODEL_BACKEND_UNAVAILABLE' || error?.code === 'MODEL_VOICE_TRAINING_CONTEXT_REQUIRED') return null;
+    throw error;
+  });
+  if (!context) return [];
+
+  const { data, error } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_SAMPLES_TABLE)
+    .select('*')
+    .eq('model_id', context.modelId)
+    .neq('sample_status', 'removed')
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data.map(normalizeModelVoiceTrainingSample).filter(Boolean) : [];
+}
+
+export async function saveModelVoiceTrainingSample(values = {}) {
+  const context = await getVoiceTrainingContext(values.modelId || values.model_id);
+  const file = values.file instanceof Blob ? values.file : null;
+  const upload = file ? await uploadModelVoiceSampleFile(context, file, values) : null;
+  const now = new Date().toISOString();
+  const sampleTitle = normalizeString(values.sampleTitle || values.sample_title || values.title || 'Voice sample');
+  const emotionalTone = normalizeString(values.emotionalTone || values.emotional_tone || 'neutral');
+  const sampleOrigin = normalizeString(values.sampleOrigin || values.sample_origin || (upload ? 'audio_file' : 'external_reference'));
+  const transcriptText = normalizeString(values.transcriptText || values.transcript_text);
+  const audioReference = normalizeString(values.audioReference || values.audio_reference || upload?.path || values.reference || '');
+
+  const privacyPayload = {
+    user_id: context.ownerAuthUserId,
+    profile_id: context.profileId,
+    model_id: context.modelId,
+    voice_record_type: sampleOrigin,
+    classification: 'biometric_like',
+    capture_consent_state: 'requested',
+    processing_consent_state: 'requested',
+    activation_consent_state: 'not_requested',
+    legacy_voice_consent_state: 'not_requested',
+    raw_audio_reference: audioReference || null,
+    transcript_reference: transcriptText ? `inline-transcript:${now}` : null,
+    feature_reference: null,
+    activation_state: 'inactive',
+    deletion_state: 'active',
+    metadata: compactDefinedObject({
+      sample_title: sampleTitle,
+      sample_origin: sampleOrigin,
+      prompt_id: normalizeString(values.promptId || values.prompt_id),
+      emotional_tone: emotionalTone,
+      expression_mode: normalizeString(values.expressionMode || values.expression_mode || 'spoken'),
+      storage_bucket: upload?.bucket,
+      storage_path: upload?.path,
+      mime_type: upload?.type || values.mimeType,
+      size_bytes: upload?.size,
+      privacy_owner: 'model_voice_training',
+      ...(values.metadata || {}),
+    }),
+    updated_at: now,
+  };
+
+  const privacyResult = await context.supabase
+    .from(PRIVACY_VOICE_REGISTRY_TABLE)
+    .insert(privacyPayload)
+    .select('*')
+    .maybeSingle();
+
+  if (privacyResult.error && !isSupabaseRelationMissingError(privacyResult.error)) {
+    throw privacyResult.error;
+  }
+
+  const samplePayload = compactDefinedObject({
+    model_id: context.modelId,
+    profile_id: context.profileId,
+    owner_auth_user_id: context.ownerAuthUserId,
+    privacy_voice_record_id: privacyResult.data?.id,
+    sample_title: sampleTitle,
+    sample_origin: sampleOrigin,
+    prompt_id: normalizeString(values.promptId || values.prompt_id),
+    prompt_text: normalizeString(values.promptText || values.prompt_text),
+    emotional_tone: emotionalTone,
+    expression_mode: normalizeString(values.expressionMode || values.expression_mode || 'spoken'),
+    sample_status: 'received',
+    quality_state: 'pending_review',
+    quality_score: 0,
+    transcript_text: transcriptText || null,
+    transcript_status: transcriptText ? 'owner_provided' : 'pending',
+    audio_storage_bucket: upload?.bucket,
+    audio_storage_path: upload?.path || audioReference || null,
+    audio_mime_type: upload?.type || values.mimeType,
+    audio_size_bytes: upload?.size,
+    duration_seconds: Number.isFinite(Number(values.durationSeconds)) ? Number(values.durationSeconds) : undefined,
+    feature_reference: null,
+    training_split: normalizeString(values.trainingSplit || values.training_split || 'calibration'),
+    readiness_weight: Number.isFinite(Number(values.readinessWeight)) ? Number(values.readinessWeight) : 1,
+    metadata: compactDefinedObject({
+      external_reference: normalizeString(values.reference || values.externalReference),
+      storage_upload: upload,
+      ...(values.metadata || {}),
+    }),
+    updated_at: now,
+  });
+
+  const { data, error } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_SAMPLES_TABLE)
+    .insert(samplePayload)
+    .select('*')
+    .maybeSingle();
+
+  if (error) throw error;
+
+  await updateModelVoiceTrainingStateFromSamples(context).catch((stateError) => {
+    console.warn('[Neuroartan][Model Voice] State refresh skipped.', stateError);
+  });
+
+  await recordModelChangelogEvent(context.model, {
+    area: 'model.foundation.voice',
+    action: 'voice_sample_added',
+    title: 'Voice sample added',
+    detail: `${sampleTitle} was added to Voice Training.`,
+    metadata: {
+      changed_field: 'voice_sample',
+      emotional_tone: emotionalTone,
+      sample_origin: sampleOrigin,
+    },
+  });
+
+  dispatchModelProjectionUpdated(context.modelId);
+  return normalizeModelVoiceTrainingSample(data || samplePayload);
+}
+
+export async function removeModelVoiceTrainingSample(sampleId = '') {
+  const normalizedSampleId = normalizeString(sampleId);
+  if (!normalizedSampleId) return null;
+
+  const context = await getVoiceTrainingContext();
+  const { data: sample, error: readError } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_SAMPLES_TABLE)
+    .select('*')
+    .eq('id', normalizedSampleId)
+    .eq('model_id', context.modelId)
+    .maybeSingle();
+
+  if (readError) throw readError;
+  if (!sample) return null;
+
+  const { data, error } = await context.supabase
+    .from(MODEL_VOICE_TRAINING_SAMPLES_TABLE)
+    .update({
+      sample_status: 'removed',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', normalizedSampleId)
+    .eq('model_id', context.modelId)
+    .select('*')
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (sample.audio_storage_bucket === MODEL_VOICE_SAMPLE_BUCKET && sample.audio_storage_path) {
+    await context.supabase.storage
+      .from(MODEL_VOICE_SAMPLE_BUCKET)
+      .remove([sample.audio_storage_path])
+      .catch((storageError) => {
+        console.warn('[Neuroartan][Model Voice] Storage sample removal skipped.', storageError);
+      });
+  }
+
+  if (sample.privacy_voice_record_id) {
+    await context.supabase
+      .from(PRIVACY_VOICE_REGISTRY_TABLE)
+      .update({ deletion_state: 'deleted', updated_at: new Date().toISOString() })
+      .eq('id', sample.privacy_voice_record_id)
+      .catch((privacyError) => {
+        console.warn('[Neuroartan][Model Voice] Privacy voice registry update skipped.', privacyError);
+      });
+  }
+
+  await updateModelVoiceTrainingStateFromSamples(context).catch(() => null);
+  dispatchModelProjectionUpdated(context.modelId);
+  return normalizeModelVoiceTrainingSample(data || sample);
 }
 
 export async function readModelFoundationIdentity(modelId) {

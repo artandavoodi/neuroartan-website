@@ -1,3 +1,60 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="12" cy="12" r="2" fill="currentColor"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="voice-verification.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="17.743458"
+     inkscape:cx="12.173501"
+     inkscape:cy="12.624371"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 12,7.922294 v 8.155413"
+     id="path1-9" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 9.4153208,8.941723 v 6.116555"
+     id="path1-0" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999998;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 14.58468,8.941723 v 6.116555"
+     id="path1-0-9" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999975;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 6.830653,10.651088 v 2.697825"
+     id="path1-3-7" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.999975;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:83.9;paint-order:markers fill stroke"
+     d="m 17.169347,10.651088 v 2.697825"
+     id="path1-3-7-6-3" />
+  <path
+     id="path1"
+     style="stroke:#000000;stroke-linecap:round;stroke-miterlimit:10;paint-order:fill markers stroke"
+     d="m 15.152854,19.767336 c -1.0091,0.409206 -2.081761,0.61381 -3.154425,0.61381 -1.072661,0 -2.145323,-0.204604 -3.154424,-0.61381 -1.009099,-0.409208 -1.954636,-1.023017 -2.773051,-1.84143 -3.273655,-3.273655 -3.273653,-8.5812973 10e-7,-11.8549514 3.273653,-3.273654 8.581296,-3.273655 11.85495,0 0.818414,0.818414 1.432224,1.763951 1.84143,2.773051 0.409208,1.0091 0.613811,2.0817624 0.613811,3.1544244 0,1.072662 -0.204604,2.145325 -0.613811,3.154425"
+     sodipodi:nodetypes="csssssssc" />
 </svg>

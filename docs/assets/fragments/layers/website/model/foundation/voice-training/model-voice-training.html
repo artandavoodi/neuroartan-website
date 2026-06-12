@@ -1,0 +1,283 @@
+<section class="model-voice-training" data-model-voice-training>
+  <header class="model-voice-training__header">
+    <div class="model-voice-training__heading">
+      <h4 class="model-voice-training__title">Voice Training</h4>
+      <p class="model-voice-training__summary">
+        Calibrate owner-approved tone, rhythm, pacing, and future governed speech activation.
+      </p>
+    </div>
+  </header>
+
+  <dl class="model-voice-training__metrics" aria-label="Voice Training state">
+    <div class="model-voice-training__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/overview/voice-samples.svg" alt="">
+        Samples
+      </dt>
+      <dd data-model-voice-training-sample-count>0</dd>
+    </div>
+    <div class="model-voice-training__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/audio/waveform.svg" alt="">
+        Coverage
+      </dt>
+      <dd data-model-voice-training-tone-count>0 / 8</dd>
+    </div>
+    <div class="model-voice-training__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/overview/voice-verification.svg" alt="">
+        Readiness
+      </dt>
+      <dd>
+        <span class="model-management__status-dot" data-status="initial" data-model-voice-training-readiness-dot aria-hidden="true"></span>
+        <span data-model-voice-training-readiness>Not started</span>
+      </dd>
+    </div>
+    <div class="model-voice-training__metric">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/overview/voice-activation.svg" alt="">
+        Activation
+      </dt>
+      <dd data-model-voice-training-activation>Inactive</dd>
+    </div>
+  </dl>
+
+  <section class="model-voice-training__live" aria-label="Live Voice Training">
+    <p class="model-voice-training__prompt" data-model-voice-training-prompt></p>
+    <div class="model-voice-training__live-actions">
+      <button class="model-management__button" type="button" data-model-voice-training-open-live>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/start-voice-dictation/start-voice-dictation.svg" alt="">
+        Start live training
+      </button>
+      <button class="model-management__button" type="button" data-model-voice-training-open-file>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/files/document-audio/document-audio.svg" alt="">
+        Add audio sample
+      </button>
+    </div>
+  </section>
+
+  <section class="model-voice-training__intake" data-model-voice-training-intake hidden aria-label="Add Voice sample">
+    <label class="model-management__field">
+      <span class="model-management__field-label">Sample type</span>
+      <span class="ui-inline-dropdown">
+        <span class="ui-inline-dropdown__value" data-model-voice-training-label="sampleOrigin">Guided recording</span>
+        <span class="ui-inline-dropdown__icon-wrapper">
+          <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+          <select class="ui-dropdown ui-dropdown--icon-only" data-model-voice-training-field="sampleOrigin" aria-label="Select sample type">
+            <option value="guided_recording">Guided recording</option>
+            <option value="audio_file">Audio file</option>
+            <option value="external_reference">External reference</option>
+          </select>
+        </span>
+      </span>
+    </label>
+
+    <label class="model-management__field">
+      <span class="model-management__field-label">Tone</span>
+      <span class="ui-inline-dropdown">
+        <span class="ui-inline-dropdown__value" data-model-voice-training-label="emotionalTone">Neutral</span>
+        <span class="ui-inline-dropdown__icon-wrapper">
+          <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+          <select class="ui-dropdown ui-dropdown--icon-only" data-model-voice-training-field="emotionalTone" aria-label="Select tone">
+            <option value="neutral">Neutral</option>
+            <option value="happy">Happy</option>
+            <option value="excited">Excited</option>
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="anxious">Anxious</option>
+            <option value="calm">Calm</option>
+            <option value="empathetic">Empathetic</option>
+            <option value="confident">Confident</option>
+            <option value="reflective">Reflective</option>
+            <option value="soft">Soft</option>
+            <option value="formal">Formal</option>
+          </select>
+        </span>
+      </span>
+    </label>
+
+    <label class="model-management__field">
+      <span class="model-management__field-label">Prompt</span>
+      <span class="ui-inline-dropdown">
+        <span class="ui-inline-dropdown__value" data-model-voice-training-label="promptId">Baseline identity</span>
+        <span class="ui-inline-dropdown__icon-wrapper">
+          <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+          <select class="ui-dropdown ui-dropdown--icon-only" data-model-voice-training-field="promptId" aria-label="Select prompt"></select>
+        </span>
+      </span>
+    </label>
+
+    <section class="model-voice-training__file" data-model-voice-training-file-group hidden>
+      <button class="model-management__button" type="button" data-model-voice-training-file-picker>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/files/document-audio/document-audio.svg" alt="">
+        Choose audio
+      </button>
+      <input class="model-voice-training__native-input" type="file" accept="audio/mpeg,audio/mp4,audio/wav,audio/webm,audio/ogg,audio/aac,.mp3,.m4a,.wav,.webm,.ogg,.aac" data-model-voice-training-field="audioFile" tabindex="-1" aria-hidden="true">
+      <span class="model-voice-training__capture-status" data-model-voice-training-file-status>No audio selected</span>
+    </section>
+
+    <label class="model-management__field" data-model-voice-training-reference-group hidden>
+      <span class="model-management__field-label">Reference</span>
+      <input class="model-management__input" type="text" data-model-voice-training-field="audioReference" placeholder="Paste a private reference path or URL">
+    </label>
+
+    <label class="model-management__field">
+      <span class="model-management__field-label">Transcript note</span>
+      <textarea class="model-management__textarea" data-model-voice-training-field="transcriptText" rows="3" placeholder="Optional owner-provided transcript or note"></textarea>
+    </label>
+
+    <div class="model-voice-training__actions">
+      <button class="model-management__button" type="button" data-model-voice-training-save>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+        Save sample
+      </button>
+    </div>
+  </section>
+
+  <p class="model-voice-training__status" data-model-voice-training-status hidden></p>
+
+  <section class="model-voice-training__samples" data-model-voice-training-samples-inline hidden aria-label="Voice samples">
+    <header class="model-voice-training__samples-header">
+      <h5 class="model-voice-training__samples-title">Samples</h5>
+      <span class="model-voice-training__samples-count" data-model-voice-training-list-count>0 saved</span>
+    </header>
+    <div class="model-voice-training__sample-list" data-model-voice-training-samples></div>
+  </section>
+
+  <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-live-overlay hidden aria-hidden="true">
+    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-live></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Live Voice Training">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-voice-training__overlay-label" data-model-voice-training-live-progress>Live Voice Training</span>
+        <button class="global-close-button" type="button" data-model-voice-training-close-live aria-label="Close Live Voice Training">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <div class="model-source-calibration-workspace__body model-voice-training__overlay-body">
+        <section class="model-voice-training__training-stage" aria-label="Guided voice prompt">
+          <div class="model-voice-training__mode-switch" role="group" aria-label="Voice capture mode">
+            <button class="model-voice-training__mode-button" type="button" data-model-voice-training-mode="guided" aria-pressed="true">
+              Guided capture
+            </button>
+            <button class="model-voice-training__mode-button" type="button" data-model-voice-training-mode="casual" aria-pressed="false">
+              Casual capture
+            </button>
+          </div>
+          <p class="model-voice-training__training-kicker" data-model-voice-training-live-tone>Natural voice</p>
+          <div class="model-voice-training__training-nav">
+            <button class="model-management__button" type="button" data-model-voice-training-previous-step hidden>Previous</button>
+            <span class="model-voice-training__overlay-label" data-model-voice-training-step-state>Ready</span>
+          </div>
+          <h5 class="model-voice-training__training-title" data-model-voice-training-live-instruction>Say this sentence naturally.</h5>
+          <p class="model-voice-training__training-prompt" data-model-voice-training-live-prompt></p>
+          <canvas class="model-voice-training__waveform" width="960" height="220" data-model-voice-training-waveform aria-label="Live audio waveform"></canvas>
+          <p class="model-voice-training__transcript" data-model-voice-training-live-transcript>Transcript appears here when browser speech recognition is available.</p>
+          <p class="model-voice-training__validation" data-model-voice-training-validation hidden></p>
+          <div class="model-voice-training__live-controls">
+            <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--record" type="button" data-model-voice-training-record>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/recording/record.svg" alt="">
+              Begin capture
+            </button>
+            <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--stop" type="button" data-model-voice-training-stop hidden>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/transport/stop.svg" alt="">
+              Stop
+            </button>
+            <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--save" type="button" data-model-voice-training-save-recording hidden>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+              Save capture
+            </button>
+            <button class="model-management__button" type="button" data-model-voice-training-reset-capture hidden>
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/reset/reset.svg" alt="">
+              Reset
+            </button>
+          </div>
+          <p class="model-voice-training__capture-status" data-model-voice-training-recording-status>No recording captured</p>
+          <section class="model-voice-training__close-confirmation" data-model-voice-training-close-confirmation hidden aria-live="polite">
+            <p class="model-voice-training__summary">This capture has not been saved.</p>
+            <div class="model-voice-training__live-controls">
+              <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--save" type="button" data-model-voice-training-save-draft>Save draft</button>
+              <button class="model-management__button" type="button" data-model-voice-training-restart-capture>Restart</button>
+              <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--stop" type="button" data-model-voice-training-discard-capture>Discard</button>
+            </div>
+          </section>
+        </section>
+      </div>
+    </article>
+  </aside>
+
+  <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-samples-overlay hidden aria-hidden="true">
+    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-samples></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Voice Samples">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-voice-training__overlay-label">Voice samples</span>
+        <button class="global-close-button" type="button" data-model-voice-training-close-samples aria-label="Close Voice Samples">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-voice-training__samples" aria-label="Recorded voice samples">
+          <header class="model-voice-training__samples-header">
+            <h5 class="model-voice-training__samples-title">Samples</h5>
+            <span class="model-voice-training__samples-count" data-model-voice-training-overlay-list-count>0 saved</span>
+          </header>
+          <div class="model-voice-training__sample-list" data-model-voice-training-overlay-samples></div>
+        </section>
+      </div>
+    </article>
+  </aside>
+
+  <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-fine-tune-overlay hidden aria-hidden="true">
+    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-fine-tune></div>
+    <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Voice Fine Tune">
+      <header class="model-source-calibration-workspace__header">
+        <span class="model-voice-training__overlay-label">Voice fine tune</span>
+        <button class="global-close-button" type="button" data-model-voice-training-close-fine-tune aria-label="Close Voice Fine Tune">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+      </header>
+      <div class="model-source-calibration-workspace__body">
+        <section class="model-voice-training__fine-tune">
+          <p class="model-voice-training__summary">Fine tuning will use local or self-hosted processing for transcription, diarization, feature extraction, and synthesis review after enough governed samples exist.</p>
+          <canvas class="model-voice-training__waveform model-voice-training__waveform--static" width="960" height="180" data-model-voice-training-fine-tune-waveform aria-label="Voice fine tune waveform"></canvas>
+          <section class="model-voice-training__fine-tune-controls" aria-label="Voice processing controls">
+            <label class="model-voice-training__fine-tune-control">
+              <span>Noise floor</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.22" data-model-voice-training-fine-tune-control="noiseFloor">
+            </label>
+            <label class="model-voice-training__fine-tune-control">
+              <span>Breath preservation</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.72" data-model-voice-training-fine-tune-control="breathPreservation">
+            </label>
+            <label class="model-voice-training__fine-tune-control">
+              <span>Prosody contour</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.64" data-model-voice-training-fine-tune-control="prosodyContour">
+            </label>
+            <label class="model-voice-training__fine-tune-control">
+              <span>Pitch stability</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.58" data-model-voice-training-fine-tune-control="pitchStability">
+            </label>
+            <label class="model-voice-training__fine-tune-control">
+              <span>Timbre match</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.66" data-model-voice-training-fine-tune-control="timbreMatch">
+            </label>
+            <label class="model-voice-training__fine-tune-control">
+              <span>Silence trim</span>
+              <input class="model-voice-training__range" type="range" min="0" max="1" step="0.01" value="0.34" data-model-voice-training-fine-tune-control="silenceTrim">
+            </label>
+          </section>
+          <dl class="model-voice-training__pipeline">
+            <div><dt>Speech to text</dt><dd data-model-voice-training-pipeline="speechToText">Not started</dd></div>
+            <div><dt>Text to speech</dt><dd data-model-voice-training-pipeline="textToSpeech">Not started</dd></div>
+            <div><dt>Synthesis</dt><dd data-model-voice-training-pipeline="synthesis">Not started</dd></div>
+            <div><dt>Training</dt><dd data-model-voice-training-pipeline="training">Not started</dd></div>
+            <div><dt>Voice match</dt><dd data-model-voice-training-pipeline="voiceMatch">Awaiting owner baseline</dd></div>
+          </dl>
+        </section>
+      </div>
+    </article>
+  </aside>
+</section>

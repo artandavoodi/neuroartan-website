@@ -9,6 +9,7 @@ const DEFAULT_MODEL_INTERFACE_STATE = Object.freeze({
   trainingBoardExpanded: false,
   modelIdentityEditorOpen: false,
   modelDataManagerOpen: false,
+  modelDataManagerPane: 'datasets',
 });
 
 // MARK: - Storage Safety
@@ -51,6 +52,19 @@ function normalizeBoolean(value, fallback = false) {
   return typeof value === 'boolean' ? value : fallback;
 }
 
+function normalizeDataManagerPane(value) {
+  const normalizedValue = String(value || '').trim();
+  if (
+    normalizedValue === 'source-vault'
+    || normalizedValue === 'datasets'
+    || normalizedValue === 'knowledge-base'
+    || normalizedValue === 'logics'
+  ) {
+    return normalizedValue;
+  }
+  return DEFAULT_MODEL_INTERFACE_STATE.modelDataManagerPane;
+}
+
 function normalizeModelInterfaceState(value = {}) {
   const source = value && typeof value === 'object' ? value : {};
 
@@ -62,6 +76,7 @@ function normalizeModelInterfaceState(value = {}) {
     trainingBoardExpanded: normalizeBoolean(source.trainingBoardExpanded),
     modelIdentityEditorOpen: normalizeBoolean(source.modelIdentityEditorOpen),
     modelDataManagerOpen: normalizeBoolean(source.modelDataManagerOpen),
+    modelDataManagerPane: normalizeDataManagerPane(source.modelDataManagerPane),
   };
 }
 

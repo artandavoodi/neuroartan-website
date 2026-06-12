@@ -851,12 +851,70 @@
         <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
         <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
       </button>
-      <nav class="model-management__data-manager-tabs" aria-label="Training data manager" role="tablist">
-        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="source-vault">Source database</button>
-        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="datasets">Datasets</button>
-        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="knowledge-base">Knowledge</button>
-        <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="logics">Logics</button>
-      </nav>
+      <header class="model-management__data-manager-chrome">
+        <nav class="model-management__data-manager-tabs" aria-label="Training data manager" role="tablist">
+          <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="source-vault">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/source.svg" alt="">
+            <span>Source database</span>
+          </button>
+          <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="datasets">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/datasets.svg" alt="">
+            <span>Datasets</span>
+          </button>
+          <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="knowledge-base">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/knowledge-base.svg" alt="">
+            <span>Knowledge</span>
+          </button>
+          <button class="model-management__text-button" type="button" role="tab" data-model-data-manager-pane="logics">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/tabs/logics.svg" alt="">
+            <span>Logics</span>
+          </button>
+        </nav>
+        <div class="model-management__data-manager-controls" aria-label="Data manager controls">
+          <label class="model-management__data-manager-filter">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/search/search.svg" alt="">
+            <input type="search" data-model-data-manager-filter placeholder="Filter" aria-label="Filter data manager records">
+          </label>
+          <label class="model-management__data-manager-sort">
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/filter/filter.svg" alt="">
+            <span class="ui-inline-dropdown model-management__data-manager-dropdown">
+              <span class="ui-inline-dropdown__value" data-model-data-manager-sort-label>Name A-Z</span>
+              <span class="ui-inline-dropdown__icon-wrapper">
+                <img class="ui-inline-dropdown__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="">
+                <select class="ui-dropdown ui-dropdown--icon-only" data-model-data-manager-sort aria-label="Sort data manager records">
+                  <option value="name-ascending">Name A-Z</option>
+                  <option value="name-descending">Name Z-A</option>
+                  <option value="updated-descending">Newest first</option>
+                  <option value="updated-ascending">Oldest first</option>
+                </select>
+              </span>
+            </span>
+          </label>
+          <button class="model-management__data-manager-control" type="button" data-model-data-manager-add-source>
+            <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/create/add.svg" alt="">
+            <span>Add source</span>
+          </button>
+          <div class="model-management__data-manager-more" data-model-data-manager-more>
+            <button class="model-management__data-manager-control model-management__data-manager-control--icon" type="button" aria-label="More data manager controls" aria-expanded="false" data-model-data-manager-more-toggle>
+              <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more-horizontal/more-horizontal.svg" alt="">
+            </button>
+            <div class="model-management__data-manager-more-menu" data-model-data-manager-more-menu hidden>
+              <button class="model-management__data-manager-control" type="button" data-model-data-manager-select-all>
+                <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/select-all-files.svg" alt="">
+                <span>Select all</span>
+              </button>
+              <button class="model-management__data-manager-control" type="button" data-model-data-manager-clear-selection hidden>
+                <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/clear-all-files.svg" alt="">
+                <span>Clear selection</span>
+              </button>
+              <button class="model-management__data-manager-control" type="button" data-model-data-manager-remove-selected hidden disabled>
+                <img class="model-management__data-manager-icon ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/model/foundation/source-vault/excluded-files.svg" alt="">
+                <span>Remove selected</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
       <div class="model-management__data-manager-list" data-model-data-manager-list aria-live="polite"></div>
       <div class="profile-settings__status model-management__identity-status" data-model-data-manager-status aria-live="polite"></div>
     </article>

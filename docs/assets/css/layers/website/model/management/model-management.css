@@ -985,6 +985,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   align-content:start;
   min-block-size:var(--spacing-none);
   overflow:auto;
+  padding-block-start:var(--spacing-md);
   scrollbar-width:none;
   -ms-overflow-style:none;
 }
@@ -1025,10 +1026,21 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__data-manager-dialog{
-  grid-template-rows:auto auto minmax(var(--spacing-none),1fr) auto;
+  grid-template-rows:auto minmax(var(--spacing-none),1fr) auto;
   min-block-size:var(--size-full);
+  block-size:100dvh;
   overflow:hidden;
   background:var(--panel-surface-dropdown-unified);
+}
+
+.model-management__data-manager-chrome{
+  display:grid;
+  grid-template-columns:minmax(var(--spacing-none),1fr) auto;
+  align-items:end;
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+  padding-inline-end:calc(var(--control-size-md) + var(--spacing-xl));
+  border-block-end:var(--border-width-hairline) solid var(--border-color);
 }
 
 .model-management__data-manager-tabs{
@@ -1039,7 +1051,6 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   min-width:var(--spacing-none);
   overflow-x:auto;
   overflow-y:hidden;
-  border-block-end:var(--border-width-hairline) solid var(--border-color);
   scrollbar-width:none;
   -ms-overflow-style:none;
 }
@@ -1052,9 +1063,13 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   position:relative;
   display:inline-flex;
   align-items:center;
+  gap:var(--spacing-sm);
   min-block-size:var(--control-size-md);
   padding-block:var(--spacing-sm);
   color:var(--text-secondary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  font-weight:var(--font-weight-body);
   white-space:nowrap;
 }
 
@@ -1063,7 +1078,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   position:absolute;
   left:0;
   right:0;
-  bottom:var(--spacing-none);
+  bottom:calc(-1 * var(--border-width-hairline));
   height:var(--border-width-hairline);
   background:var(--local-nav-active-indicator-color);
   pointer-events:none;
@@ -1075,16 +1090,164 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   color:var(--text-primary-color);
 }
 
+.model-management__data-manager-tabs .model-management__text-button[data-active="true"] .model-management__data-manager-icon{
+  opacity:var(--state-opacity-high);
+}
+
 .model-management__data-manager-tabs .model-management__text-button[data-active="true"]::after{
   opacity:var(--selected-indicator-opacity);
 }
 
+.model-management__data-manager-icon{
+  inline-size:var(--icon-size-sm);
+  block-size:var(--icon-size-sm);
+  flex:0 0 auto;
+  opacity:var(--state-opacity-medium);
+}
+
+.model-management__data-manager-controls{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  padding-block:var(--spacing-sm);
+}
+
+.model-management__data-manager-control{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  min-block-size:var(--control-size-sm);
+  padding-block:var(--spacing-xs);
+  padding-inline:var(--spacing-sm);
+  border:0;
+  border-radius:var(--radius-full);
+  background:transparent;
+  color:var(--text-primary-color);
+  font-size:var(--control-sm-size);
+  line-height:var(--caption-1-line-height);
+  font-weight:var(--control-sm-weight);
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.model-management__data-manager-control--icon{
+  justify-content:center;
+  inline-size:var(--control-size-sm);
+  padding-inline:var(--spacing-xs);
+}
+
+.model-management__data-manager-filter,
+.model-management__data-manager-sort{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  min-block-size:var(--control-size-sm);
+  padding-block:var(--spacing-xs);
+  padding-inline:var(--spacing-sm);
+  border:0;
+  border-radius:var(--radius-full);
+  background:transparent;
+  color:var(--text-primary-color);
+  font-size:var(--control-sm-size);
+  line-height:var(--caption-1-line-height);
+  font-weight:var(--control-sm-weight);
+}
+
+.model-management__data-manager-filter input{
+  inline-size:10rem;
+  min-width:var(--spacing-none);
+  border:0;
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+  outline:none;
+}
+
+.model-management__data-manager-dropdown{
+  gap:var(--spacing-xs);
+}
+
+.model-management__data-manager-sort{
+  flex:0 0 auto;
+}
+
+.model-management__data-manager-more{
+  position:relative;
+  display:inline-flex;
+  flex:0 0 auto;
+}
+
+.model-management__data-manager-more-menu{
+  position:absolute;
+  top:calc(100% + var(--spacing-xs));
+  right:0;
+  z-index:5;
+  display:grid;
+  gap:var(--spacing-xs);
+  min-inline-size:12rem;
+  padding:var(--spacing-sm);
+  border:var(--border-width-hairline) solid var(--border-color);
+  border-radius:var(--shape-card-radius);
+  background:var(--panel-surface-dropdown-unified);
+  box-shadow:var(--elevation-floating);
+}
+
+.model-management__data-manager-more-menu[hidden]{
+  display:none;
+}
+
+.model-management__data-manager-more-menu .model-management__data-manager-control{
+  justify-content:flex-start;
+  inline-size:100%;
+}
+
+.model-management__data-manager-filter input::placeholder{
+  color:var(--text-tertiary-color);
+}
+
+.model-management__data-manager-filter input::-webkit-search-decoration,
+.model-management__data-manager-filter input::-webkit-search-cancel-button,
+.model-management__data-manager-filter input::-webkit-search-results-button,
+.model-management__data-manager-filter input::-webkit-search-results-decoration{
+  display:none;
+  -webkit-appearance:none;
+}
+
+.model-management__data-manager-control:disabled{
+  cursor:default;
+  opacity:var(--state-opacity-disabled);
+}
+
 .model-management__data-manager-item{
   display:grid;
+  grid-template-columns:auto minmax(var(--spacing-none),1fr);
   gap:var(--spacing-md);
+  align-items:start;
   min-width:0;
   padding-block:var(--spacing-lg);
   border-block-end:var(--border-width-hairline) solid var(--border-color);
+}
+
+.model-management__data-manager-item-body{
+  display:grid;
+  gap:var(--spacing-md);
+  min-width:0;
+}
+
+.model-management__data-manager-selection{
+  display:inline-grid;
+  place-items:center;
+  min-block-size:var(--control-size-sm);
+}
+
+.model-management__data-manager-selection input{
+  inline-size:var(--icon-size-sm);
+  block-size:var(--icon-size-sm);
+  margin:var(--spacing-none);
+  accent-color:var(--text-primary-color);
 }
 
 .model-management__data-manager-actions{
@@ -1260,6 +1423,33 @@ body.model-management-identity-editor-open{
   opacity:var(--state-opacity-high);
 }
 
+@media (max-width:960px){
+  .model-management__data-manager-chrome{
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:var(--spacing-sm);
+    padding-inline-end:calc(var(--control-size-md) + var(--spacing-lg));
+  }
+
+  .model-management__data-manager-controls{
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .model-management__data-manager-filter{
+    flex:1 1 100%;
+  }
+
+  .model-management__data-manager-sort,
+  .model-management__data-manager-control:not(.model-management__data-manager-control--icon){
+    flex:1 1 auto;
+  }
+
+  .model-management__data-manager-filter input{
+    inline-size:100%;
+  }
+}
+
 @media (max-width:760px){
   .model-management{
     gap:var(--spacing-lg);
@@ -1286,6 +1476,27 @@ body.model-management-identity-editor-open{
 
   .model-management__identity-dialog{
     padding:var(--site-shell-inline-padding-mobile);
+  }
+
+  .model-management__data-manager-chrome{
+    grid-template-columns:1fr;
+    align-items:start;
+    gap:var(--spacing-sm);
+    padding-inline-end:calc(var(--control-size-md) + var(--spacing-lg));
+  }
+
+  .model-management__data-manager-controls{
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .model-management__data-manager-filter,
+  .model-management__data-manager-sort{
+    flex:1 1 100%;
+  }
+
+  .model-management__data-manager-filter input{
+    inline-size:100%;
   }
 
   .model-management__brain-map{

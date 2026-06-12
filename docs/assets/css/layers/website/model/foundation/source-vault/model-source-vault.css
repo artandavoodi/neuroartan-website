@@ -372,7 +372,9 @@
   border-radius:var(--radius-full);
   background:transparent;
   color:var(--text-primary-color);
-  font:inherit;
+  font-size:var(--control-sm-size);
+  line-height:var(--caption-1-line-height);
+  font-weight:var(--control-sm-weight);
   white-space:nowrap;
 }
 
@@ -468,7 +470,7 @@
   white-space:nowrap;
 }
 
-@media (max-width: 760px){
+@media (max-width: 960px){
   .model-source-vault__summary-grid{
     grid-template-columns:1fr;
   }
@@ -486,6 +488,10 @@
   .model-source-vault__file-search,
   .model-source-vault__file-filter{
     inline-size:100%;
+  }
+
+  .model-source-vault__control-button{
+    flex:1 1 auto;
   }
 
   .model-source-vault__file-search input{

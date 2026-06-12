@@ -406,6 +406,9 @@ let modelLogicQuestionRegistry = null;
 let modelLogicQuestionRegistryLoading = null;
 let modelDataManagerOpen = false;
 let modelDataManagerPane = 'datasets';
+let modelDataManagerFilter = '';
+let modelDataManagerSort = 'name-ascending';
+let modelDataManagerMoreOpen = false;
 let modelTrainingSubstrateBackendLoaded = false;
 let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
@@ -2985,14 +2988,59 @@ function isModelSourceVaultDatasetEntry(entry = {}) {
   return metadata.intake_owner === 'model_source_vault' || Boolean(metadata.source_vault_package_id);
 }
 
+function getModelDataManagerEntryTime(entry = {}) {
+  const candidates = [
+    entry.updatedAt,
+    entry.updated_at,
+    entry.createdAt,
+    entry.created_at,
+    entry.metadata?.updated_at,
+    entry.metadata?.created_at,
+  ];
+  for (const candidate of candidates) {
+    const time = Date.parse(candidate);
+    if (Number.isFinite(time)) return time;
+  }
+  return 0;
+}
+
+function sortModelDataManagerEntries(entries = []) {
+  const sortMode = String(modelDataManagerSort || 'name-ascending');
+  return [...entries].sort((firstEntry, secondEntry) => {
+    if (sortMode === 'updated-descending' || sortMode === 'updated-ascending') {
+      const firstTime = getModelDataManagerEntryTime(firstEntry);
+      const secondTime = getModelDataManagerEntryTime(secondEntry);
+      return sortMode === 'updated-descending' ? secondTime - firstTime : firstTime - secondTime;
+    }
+
+    const firstTitle = String(firstEntry?.title || '').localeCompare(String(secondEntry?.title || ''), undefined, { sensitivity: 'base' });
+    return sortMode === 'name-descending' ? firstTitle * -1 : firstTitle;
+  });
+}
+
 function getModelDataManagerEntries(pane = modelDataManagerPane) {
   const normalizedPane = normalizeModelDataManagerPane(pane);
+  let entries = modelDatasetEntries.filter((entry) => !isModelSourceVaultDatasetEntry(entry));
   if (normalizedPane === 'source-vault') {
-    return modelDatasetEntries.filter(isModelSourceVaultDatasetEntry);
+    entries = modelDatasetEntries.filter(isModelSourceVaultDatasetEntry);
+  } else if (normalizedPane === 'knowledge-base') {
+    entries = modelKnowledgeBaseEntries;
+  } else if (normalizedPane === 'logics') {
+    entries = modelLogicRecords;
   }
-  if (normalizedPane === 'knowledge-base') return modelKnowledgeBaseEntries;
-  if (normalizedPane === 'logics') return modelLogicRecords;
-  return modelDatasetEntries.filter((entry) => !isModelSourceVaultDatasetEntry(entry));
+
+  const query = String(modelDataManagerFilter || '').trim().toLowerCase();
+  if (!query) return sortModelDataManagerEntries(entries);
+
+  return sortModelDataManagerEntries(entries.filter((entry) => {
+    const searchable = [
+      entry.title,
+      entry.text,
+      entry.kind,
+      entry.sourceKind,
+    ].filter(Boolean).join(' ').toLowerCase();
+    return searchable.includes(query);
+  }));
 }
 
 function getModelDataManagerCopy(pane = modelDataManagerPane) {
@@ -3053,6 +3101,18 @@ function createModelDataManagerItem(entry = {}, pane = modelDataManagerPane) {
   const copy = getModelDataManagerCopy(pane);
   const item = document.createElement('article');
   item.className = 'model-management__data-manager-item';
+  item.dataset.modelDataManagerEntry = entry.id;
+
+  const selection = document.createElement('label');
+  selection.className = 'model-management__data-manager-selection';
+  const selectionInput = document.createElement('input');
+  selectionInput.type = 'checkbox';
+  selectionInput.dataset.modelDataManagerSelect = entry.id;
+  selectionInput.setAttribute('aria-label', `Select ${entry.title || copy.titleLabel}`);
+  selection.append(selectionInput);
+
+  const bodyWrapper = document.createElement('div');
+  bodyWrapper.className = 'model-management__data-manager-item-body';
 
   const titleField = document.createElement('label');
   titleField.className = 'model-management__field';
@@ -3093,8 +3153,43 @@ function createModelDataManagerItem(entry = {}, pane = modelDataManagerPane) {
   remove.textContent = 'Remove';
 
   actions.append(save, remove);
-  item.append(titleField, bodyField, actions);
+  bodyWrapper.append(titleField, bodyField, actions);
+  item.append(selection, bodyWrapper);
   return item;
+}
+
+function getModelDataManagerSelectedIds(overlay) {
+  if (!(overlay instanceof HTMLElement)) return [];
+  return Array.from(overlay.querySelectorAll('[data-model-data-manager-select]:checked'))
+    .filter((input) => input instanceof HTMLInputElement)
+    .map((input) => String(input.dataset.modelDataManagerSelect || '').trim())
+    .filter(Boolean);
+}
+
+function syncModelDataManagerControls(overlay, entryCount = getModelDataManagerEntries().length) {
+  if (!(overlay instanceof HTMLElement)) return;
+  const selectedCount = getModelDataManagerSelectedIds(overlay).length;
+  const selectAll = overlay.querySelector('[data-model-data-manager-select-all]');
+  const clearSelection = overlay.querySelector('[data-model-data-manager-clear-selection]');
+  const removeSelected = overlay.querySelector('[data-model-data-manager-remove-selected]');
+  const moreToggle = overlay.querySelector('[data-model-data-manager-more-toggle]');
+  const moreMenu = overlay.querySelector('[data-model-data-manager-more-menu]');
+
+  if (selectAll instanceof HTMLButtonElement) selectAll.disabled = entryCount < 1;
+  if (clearSelection instanceof HTMLButtonElement) {
+    clearSelection.hidden = selectedCount < 1;
+    clearSelection.disabled = selectedCount < 1;
+  }
+  if (removeSelected instanceof HTMLButtonElement) {
+    removeSelected.hidden = selectedCount < 1;
+    removeSelected.disabled = selectedCount < 1;
+  }
+  if (moreToggle instanceof HTMLButtonElement) {
+    moreToggle.setAttribute('aria-expanded', String(modelDataManagerMoreOpen));
+  }
+  if (moreMenu instanceof HTMLElement) {
+    moreMenu.hidden = !modelDataManagerMoreOpen;
+  }
 }
 
 function renderModelDataManager(root) {
@@ -3102,6 +3197,9 @@ function renderModelDataManager(root) {
 
   const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;
+  if (modelDataManagerOpen && overlay.parentElement !== document.body) {
+    document.body.appendChild(overlay);
+  }
 
   overlay.hidden = !modelDataManagerOpen;
   overlay.setAttribute('aria-hidden', String(!modelDataManagerOpen));
@@ -3111,6 +3209,20 @@ function renderModelDataManager(root) {
   setText(overlay, '[data-model-data-manager-title]', copy.title);
   renderModelDataManagerTabs(overlay, modelDataManagerPane);
 
+  const filter = overlay.querySelector('[data-model-data-manager-filter]');
+  if (filter instanceof HTMLInputElement && filter.value !== modelDataManagerFilter) {
+    filter.value = modelDataManagerFilter;
+  }
+  const sort = overlay.querySelector('[data-model-data-manager-sort]');
+  if (sort instanceof HTMLSelectElement && sort.value !== modelDataManagerSort) {
+    sort.value = modelDataManagerSort;
+  }
+  const sortLabel = overlay.querySelector('[data-model-data-manager-sort-label]');
+  if (sortLabel instanceof HTMLElement) {
+    const selectedSort = sort instanceof HTMLSelectElement ? sort.selectedOptions[0] : null;
+    sortLabel.textContent = selectedSort?.textContent?.trim?.() || 'Name A-Z';
+  }
+
   const list = overlay.querySelector('[data-model-data-manager-list]');
   if (!(list instanceof HTMLElement)) return;
   list.replaceChildren();
@@ -3119,12 +3231,14 @@ function renderModelDataManager(root) {
   if (!entries.length) {
     const empty = document.createElement('p');
     empty.className = 'model-management__note';
-    empty.textContent = copy.empty;
+    empty.textContent = modelDataManagerFilter ? 'No records match this filter.' : copy.empty;
     list.append(empty);
+    syncModelDataManagerControls(overlay, 0);
     return;
   }
 
   list.append(...entries.map((entry) => createModelDataManagerItem(entry, modelDataManagerPane)));
+  syncModelDataManagerControls(overlay, entries.length);
 }
 
 async function hydratePublicModelDirectory() {
@@ -3980,6 +4094,7 @@ function setModelDataManagerStatus(message = '', state = 'idle') {
 function setModelDataManagerOpen(open, pane = modelDataManagerPane, options = {}) {
   modelDataManagerOpen = open === true;
   modelDataManagerPane = normalizeModelDataManagerPane(pane);
+  if (!modelDataManagerOpen) modelDataManagerMoreOpen = false;
 
   if (options.persist !== false) {
     updateModelInterfaceState('modelDataManagerOpen', modelDataManagerOpen);
@@ -4031,11 +4146,81 @@ function handleModelDataManagerClick(event) {
     return;
   }
 
+  const moreToggle = event.target?.closest?.('[data-model-data-manager-more-toggle]');
+  if (moreToggle instanceof HTMLElement) {
+    modelDataManagerMoreOpen = !modelDataManagerMoreOpen;
+    syncModelDataManagerControls(moreToggle.closest('[data-model-data-manager]'));
+    return;
+  }
+
+  const managerOverlay = document.querySelector('[data-model-data-manager]');
+  if (modelDataManagerMoreOpen && managerOverlay instanceof HTMLElement && !event.target?.closest?.('[data-model-data-manager-more]')) {
+    modelDataManagerMoreOpen = false;
+    syncModelDataManagerControls(managerOverlay);
+  }
+
+  const addSource = event.target?.closest?.('[data-model-data-manager-add-source]');
+  if (addSource instanceof HTMLElement) {
+    setModelDataManagerOpen(false);
+    window.location.hash = '#model/foundation/sources';
+    return;
+  }
+
+  const selectAll = event.target?.closest?.('[data-model-data-manager-select-all]');
+  if (selectAll instanceof HTMLElement) {
+    const overlay = selectAll.closest('[data-model-data-manager]');
+    overlay?.querySelectorAll?.('[data-model-data-manager-select]')?.forEach((input) => {
+      if (input instanceof HTMLInputElement) input.checked = true;
+    });
+    syncModelDataManagerControls(overlay);
+    return;
+  }
+
+  const clearSelection = event.target?.closest?.('[data-model-data-manager-clear-selection]');
+  if (clearSelection instanceof HTMLElement) {
+    const overlay = clearSelection.closest('[data-model-data-manager]');
+    overlay?.querySelectorAll?.('[data-model-data-manager-select]')?.forEach((input) => {
+      if (input instanceof HTMLInputElement) input.checked = false;
+    });
+    syncModelDataManagerControls(overlay);
+    return;
+  }
+
+  const removeSelected = event.target?.closest?.('[data-model-data-manager-remove-selected]');
+  if (removeSelected instanceof HTMLElement && !removeSelected.hasAttribute('disabled')) {
+    const overlay = removeSelected.closest('[data-model-data-manager]');
+    void removeSelectedModelDataManagerEntries(overlay);
+    modelDataManagerMoreOpen = false;
+    return;
+  }
+
   const pane = event.target?.closest?.('[data-model-data-manager-pane]');
   if (pane instanceof HTMLElement) {
     modelDataManagerPane = normalizeModelDataManagerPane(pane.dataset.modelDataManagerPane);
+    modelDataManagerMoreOpen = false;
+    updateModelInterfaceState('modelDataManagerPane', modelDataManagerPane);
     renderAllModelManagement();
   }
+}
+
+function handleModelDataManagerSelectionChange(event) {
+  const input = event.target?.closest?.('[data-model-data-manager-select]');
+  if (!(input instanceof HTMLInputElement)) return;
+  syncModelDataManagerControls(input.closest('[data-model-data-manager]'));
+}
+
+function handleModelDataManagerFilterInput(event) {
+  const input = event.target?.closest?.('[data-model-data-manager-filter]');
+  if (!(input instanceof HTMLInputElement)) return;
+  modelDataManagerFilter = input.value || '';
+  renderAllModelManagement();
+}
+
+function handleModelDataManagerSortChange(event) {
+  const select = event.target?.closest?.('[data-model-data-manager-sort]');
+  if (!(select instanceof HTMLSelectElement)) return;
+  modelDataManagerSort = select.value || 'name-ascending';
+  renderAllModelManagement();
 }
 
 function findModelDataManagerField(root, selector, entryId) {
@@ -4108,28 +4293,53 @@ async function handleModelDataManagerRemove(event) {
   if (!entryId) return;
 
   try {
-    if (trigger.dataset.modelDataManagerDatasetRemove) {
-      const entry = modelDatasetEntries.find((item) => item.id === entryId);
-      if (isModelSourceVaultDatasetEntry(entry)) {
-        await removeModelSourceVaultPackageEntry(entryId);
-        setModelDataManagerStatus('Source package removed from Supabase.', 'saved');
-      } else {
-        await removeModelDatasetEntry(entryId);
-        setModelDataManagerStatus('Dataset removed.', 'saved');
-      }
-      modelDatasetEntries = modelDatasetEntries.filter((entry) => entry.id !== entryId);
-      writeStoredModelDatasetEntries();
-    } else if (trigger.dataset.modelDataManagerKnowledgeRemove) {
-      await removeModelKnowledgeEntry(entryId);
-      modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
-      writeStoredModelKnowledgeBaseEntries();
-      setModelDataManagerStatus('Knowledge removed.', 'saved');
-    } else {
-      await removeModelLogicRecord(entryId);
-      modelLogicRecords = modelLogicRecords.filter((entry) => entry.id !== entryId);
-      writeStoredModelLogicRecords();
-      setModelDataManagerStatus('Logic removed.', 'saved');
+    await removeModelDataManagerEntry(entryId, modelDataManagerPane);
+    renderAllModelManagement();
+    await refreshDigitalBrainMaturity(document);
+  } catch (error) {
+    setModelDataManagerStatus(formatTrainingSubstrateError(error), 'error');
+  }
+}
+
+async function removeModelDataManagerEntry(entryId, pane = modelDataManagerPane) {
+  const normalizedPane = normalizeModelDataManagerPane(pane);
+  if (normalizedPane === 'knowledge-base') {
+    await removeModelKnowledgeEntry(entryId);
+    modelKnowledgeBaseEntries = modelKnowledgeBaseEntries.filter((entry) => entry.id !== entryId);
+    writeStoredModelKnowledgeBaseEntries();
+    setModelDataManagerStatus('Knowledge removed.', 'saved');
+    return;
+  }
+
+  if (normalizedPane === 'logics') {
+    await removeModelLogicRecord(entryId);
+    modelLogicRecords = modelLogicRecords.filter((entry) => entry.id !== entryId);
+    writeStoredModelLogicRecords();
+    setModelDataManagerStatus('Logic removed.', 'saved');
+    return;
+  }
+
+  const entry = modelDatasetEntries.find((item) => item.id === entryId);
+  if (isModelSourceVaultDatasetEntry(entry)) {
+    await removeModelSourceVaultPackageEntry(entryId);
+    setModelDataManagerStatus('Source package removed from Supabase.', 'saved');
+  } else {
+    await removeModelDatasetEntry(entryId);
+    setModelDataManagerStatus('Dataset removed.', 'saved');
+  }
+  modelDatasetEntries = modelDatasetEntries.filter((entryItem) => entryItem.id !== entryId);
+  writeStoredModelDatasetEntries();
+}
+
+async function removeSelectedModelDataManagerEntries(overlay) {
+  const selectedIds = getModelDataManagerSelectedIds(overlay);
+  if (!selectedIds.length) return;
+
+  try {
+    for (const entryId of selectedIds) {
+      await removeModelDataManagerEntry(entryId, modelDataManagerPane);
     }
+    setModelDataManagerStatus(`${selectedIds.length} record${selectedIds.length === 1 ? '' : 's'} removed.`, 'saved');
     renderAllModelManagement();
     await refreshDigitalBrainMaturity(document);
   } catch (error) {
@@ -4139,6 +4349,11 @@ async function handleModelDataManagerRemove(event) {
 
 function handleModelDataManagerKeydown(event) {
   if (event.key !== 'Escape' || !modelDataManagerOpen) return;
+  if (modelDataManagerMoreOpen) {
+    modelDataManagerMoreOpen = false;
+    syncModelDataManagerControls(document.querySelector('[data-model-data-manager]'));
+    return;
+  }
   setModelDataManagerOpen(false);
 }
 
@@ -4256,6 +4471,9 @@ function initModelManagement() {
   document.addEventListener('model-source-vault:confirmed', handleModelSourceVaultConfirmed);
   document.addEventListener('model:data-manager-open-request', handleModelDataManagerOpenRequest);
   document.addEventListener('click', handleModelDataManagerClick);
+  document.addEventListener('input', handleModelDataManagerFilterInput);
+  document.addEventListener('change', handleModelDataManagerSortChange);
+  document.addEventListener('change', handleModelDataManagerSelectionChange);
   document.addEventListener('click', handleModelDataManagerSave);
   document.addEventListener('click', handleModelDataManagerRemove);
   document.addEventListener('keydown', handleModelDataManagerKeydown);

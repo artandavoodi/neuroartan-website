@@ -54,9 +54,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   ...MODEL_CONTEXT_TAB_GROUPS,
   editProfile: {
     label: 'Edit Profile',
-    tabs: [
-      { key: 'identity', label: 'Profile', section: 'settings', settingsPane: 'identity' }
-    ]
+    tabs: []
   },
   settings: {
     label: 'Settings',
@@ -120,6 +118,22 @@ function setText(root, selector, value) {
   const node = root?.querySelector(selector);
   if (!node) return;
   node.textContent = value || '';
+}
+
+function readProfileText(profile = {}, keys = []) {
+  for (const key of keys) {
+    const value = String(profile?.[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
+
+function setProfileInfoText(root, selector, value = '') {
+  const node = root?.querySelector(selector);
+  if (!(node instanceof HTMLElement)) return;
+  const normalizedValue = String(value || '').trim();
+  node.textContent = normalizedValue || 'Not set';
+  node.dataset.profileInfoSet = normalizedValue ? 'true' : 'false';
 }
 
 function setImage(root, selector, src, alt = '') {
@@ -310,8 +324,8 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
       bioNode.textContent = bio;
       bioNode.hidden = !bio;
     }
-    setText(root, '[data-profile-location]', String(profile.location || profile.public_location || '').trim() || 'Not set');
-    setText(root, '[data-profile-role]', String(profile.role || profile.public_identity_label || '').trim() || 'Not set');
+    setProfileInfoText(root, '[data-profile-location]', readProfileText(profile, ['location', 'public_location', 'profile_location']));
+    setProfileInfoText(root, '[data-profile-role]', readProfileText(profile, ['public_identity_label', 'role', 'professional_role', 'identity_label']));
     setText(
       root,
       '[data-profile-hero-description]',
@@ -385,6 +399,15 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
   tabRoots.forEach((tabsRoot) => {
     tabsRoot.dataset.profileHeroAuthState = 'ready';
     tabsRoot.setAttribute('aria-label', group.label);
+
+    if (!visibleTabs.length) {
+      tabsRoot.hidden = true;
+      tabsRoot.replaceChildren();
+      tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
+      return;
+    }
+
+    tabsRoot.hidden = false;
     if (tabsRoot.dataset.profileHeroTabsSignature !== nextSignature) {
       tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
       tabsRoot.replaceChildren();

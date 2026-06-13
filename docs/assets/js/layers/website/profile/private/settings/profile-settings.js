@@ -209,6 +209,104 @@ function setValue(root, name, value) {
   }
 }
 
+function getProfileSettingsCoordinates(position) {
+  const latitude = Number(position?.coords?.latitude);
+  const longitude = Number(position?.coords?.longitude);
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+  return {
+    latitude,
+    longitude
+  };
+}
+
+function buildProfileSettingsLocationLabel(address = {}) {
+  const city = normalizeString(address.city || address.town || address.village || address.municipality || address.county || '');
+  const region = normalizeString(address.state || address.region || '');
+  const country = normalizeString(address.country || '');
+  return [city, region, country].filter(Boolean).join(', ');
+}
+
+async function resolveProfileSettingsLocationValue(position) {
+  const coordinates = getProfileSettingsCoordinates(position);
+  if (!coordinates) return '';
+
+  const fallback = `${coordinates.latitude.toFixed(6)}, ${coordinates.longitude.toFixed(6)}`;
+
+  try {
+    const params = new URLSearchParams({
+      format: 'jsonv2',
+      lat: String(coordinates.latitude),
+      lon: String(coordinates.longitude),
+      zoom: '10',
+      addressdetails: '1'
+    });
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params.toString()}`, {
+      headers: {
+        Accept: 'application/json'
+      }
+    });
+
+    if (!response.ok) return fallback;
+
+    const payload = await response.json();
+    return buildProfileSettingsLocationLabel(payload?.address || {}) || normalizeString(payload?.display_name || '') || fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function setProfileSettingsLocationState(root, value = '', state = 'idle') {
+  const input = root.querySelector('[data-profile-settings-location]');
+  const action = root.querySelector('[data-profile-settings-location-action]');
+  const label = root.querySelector('[data-profile-settings-location-label]');
+  const normalizedValue = normalizeString(value);
+
+  if (input instanceof HTMLInputElement) {
+    input.value = normalizedValue;
+  }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsLocationReady = normalizedValue ? 'true' : 'false';
+    action.dataset.profileSettingsLocationState = state;
+  }
+
+  if (label instanceof HTMLElement) {
+    if (state === 'pending') {
+      label.textContent = 'Detecting current location';
+      return;
+    }
+    if (state === 'error') {
+      label.textContent = 'Location permission unavailable';
+      return;
+    }
+    label.textContent = normalizedValue || 'Use current location';
+  }
+}
+
+function requestProfileSettingsLocation(root) {
+  if (!('geolocation' in navigator)) {
+    setProfileSettingsLocationState(root, '', 'error');
+    return;
+  }
+
+  setProfileSettingsLocationState(root, '', 'pending');
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      void resolveProfileSettingsLocationValue(position).then((value) => {
+        setProfileSettingsLocationState(root, value, value ? 'ready' : 'error');
+      });
+    },
+    () => {
+      setProfileSettingsLocationState(root, '', 'error');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 300000
+    }
+  );
+}
+
 function getProfileSettingsToggle(root, name) {
   return root.querySelector(`[data-profile-settings-toggle="${name}"]`);
 }
@@ -385,6 +483,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
 
     setValue(root, 'username', state.username.raw || state.username.normalized);
     setValue(root, 'public_identity_label', state.profile?.public_identity_label || '');
+    setProfileSettingsLocationState(root, state.profile?.location || state.profile?.public_location || '', 'idle');
     setValue(root, 'public_primary_link', state.profile?.public_primary_link || '');
     setValue(root, 'public_profile_enabled', state.visibility.publicEnabled);
     setValue(root, 'public_profile_discoverable', state.visibility.discoverable);
@@ -623,6 +722,16 @@ function initProfileSettings() {
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
         detail: { section: 'posts' }
       }));
+      return;
+    }
+
+    const locationButton = event.target.closest('[data-profile-settings-location-action]');
+    if (locationButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = locationButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        requestProfileSettingsLocation(root);
+      }
       return;
     }
 

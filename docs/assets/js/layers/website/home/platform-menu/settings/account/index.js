@@ -9,7 +9,8 @@ import {
 } from '../../../../system/account/identity/account-password-policy.js';
 import {
   getProfileVerificationState,
-  requestProfileVerification
+  requestProfileVerification,
+  VERIFICATION_REQUEST_COOLDOWN_MS
 } from '../../../../system/profile/profile-verification.js';
 import { recordProfileChangelogEvent } from '../../../../system/profile/profile-changelog-store.js';
 
@@ -35,6 +36,16 @@ const ACCOUNT_PRIVACY_DEFAULTS = Object.freeze({
   profile_followers_visible: true,
   profile_posts_visible: true,
   profile_thoughts_visible: false
+});
+
+const VERIFICATION_STATUS_LABELS = Object.freeze({
+  approved: 'Verified',
+  verified: 'Verified',
+  submitted: 'Submitted',
+  under_review: 'Under review',
+  declined: 'Declined',
+  expired: 'Expired',
+  rate_limited: 'Rate limited'
 });
 
 function setShellDetailBack(active) {
@@ -83,6 +94,49 @@ function normalizeBoolean(value, fallback = false) {
   if (value === 'true') return true;
   if (value === 'false') return false;
   return fallback;
+}
+
+function formatVerificationDateTime(value = '') {
+  const time = Date.parse(normalizeString(value));
+  if (!Number.isFinite(time)) return '';
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(new Date(time));
+}
+
+function formatVerificationCountdown(value = '') {
+  const targetTime = Date.parse(normalizeString(value));
+  if (!Number.isFinite(targetTime)) return '';
+
+  const remaining = Math.max(0, targetTime - Date.now());
+  if (remaining <= 0) return 'now';
+
+  const totalMinutes = Math.ceil(remaining / 60000);
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  const parts = [];
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (!days && minutes) parts.push(`${minutes}m`);
+  return parts.join(' ') || 'now';
+}
+
+function getVerificationStatusLabel(status = '') {
+  const key = normalizeString(status).toLowerCase();
+  return VERIFICATION_STATUS_LABELS[key] || (key ? key.replace(/_/g, ' ') : 'Not verified');
+}
+
+function setVerificationRow(root, selector, text = '') {
+  const row = root.querySelector(selector);
+  if (!(row instanceof HTMLElement)) return;
+  const label = row.querySelector('.home-platform-theme__toggle-title');
+  if (label instanceof HTMLElement) {
+    label.textContent = text;
+  }
+  row.hidden = !text;
 }
 
 function setPrivacyToggleState(root, key, value) {
@@ -282,21 +336,64 @@ async function handlePasswordSubmit(root, form) {
 
 async function renderVerificationState(root) {
   const submit = root.querySelector('[data-account-verification-submit]');
+  const note = root.querySelector('[data-account-verification-form] textarea[name="request_note"]');
+  const statusLabel = root.querySelector('[data-account-verification-status-label]');
+
   try {
     const user = await getCurrentAuthUser();
-    setControlDisabled(submit, !user?.id);
-
     const verificationState = await getProfileVerificationState();
-    const latestStatus = verificationState.latestRequest?.request_status || '';
-    const message = latestStatus
-      ? `Latest request status: ${latestStatus}`
+    const latestRequest = verificationState.latestRequest || null;
+    const latestStatus = normalizeString(latestRequest?.request_status || '');
+    const statusText = latestStatus
+      ? getVerificationStatusLabel(latestStatus)
       : verificationState.tableAvailable
-        ? 'No verification request has been submitted yet.'
-        : 'Verification request storage is not configured.';
+        ? 'Not verified'
+        : 'Verification storage is not configured';
 
-    setStatus(root, '[data-account-verification-status]', message, verificationState.tableAvailable ? 'ready' : 'error');
+    if (statusLabel instanceof HTMLElement) {
+      statusLabel.textContent = statusText;
+    }
+
+    const submittedAt = latestRequest?.created_at || latestRequest?.updated_at || '';
+    const submittedLabel = formatVerificationDateTime(submittedAt);
+    setVerificationRow(root, '[data-account-verification-last-request-row]', submittedLabel ? `Last request: ${submittedLabel}` : '');
+
+    const gate = verificationState.requestGate || {};
+    const nextAvailableAt = gate.nextRequestAvailableAt || latestRequest?.next_request_available_at || '';
+    const nextAvailableLabel = formatVerificationDateTime(nextAvailableAt);
+    const countdownLabel = formatVerificationCountdown(nextAvailableAt);
+    const lockedMessage = gate.locked && nextAvailableLabel
+      ? `Next request available: ${nextAvailableLabel} · ${countdownLabel}`
+      : '';
+    setVerificationRow(root, '[data-account-verification-next-request-row]', lockedMessage);
+
+    const disabled = !user?.id || !verificationState.tableAvailable || gate.locked === true;
+    setControlDisabled(submit, disabled);
+    setControlDisabled(note, disabled);
+
+    if (gate.locked === true) {
+      const message = gate.lockReason === 'active_review'
+        ? `A verification request is already active. ${lockedMessage || 'Please wait before submitting another request.'}`
+        : `72 hours are required between verification requests. ${lockedMessage}`;
+      setStatus(root, '[data-account-verification-status]', message, 'ready');
+      return;
+    }
+
+    if (!verificationState.tableAvailable) {
+      setStatus(root, '[data-account-verification-status]', 'Verification request storage is not configured.', 'error');
+      return;
+    }
+
+    setStatus(root, '[data-account-verification-status]', `Verification requests are limited to one request every ${Math.round(VERIFICATION_REQUEST_COOLDOWN_MS / 3600000)} hours.`, 'ready');
   } catch (error) {
     console.error('[account-settings] Verification state failed.', error);
+    setControlDisabled(submit, true);
+    setControlDisabled(note, true);
+    if (statusLabel instanceof HTMLElement) {
+      statusLabel.textContent = 'Verification state unavailable';
+    }
+    setVerificationRow(root, '[data-account-verification-last-request-row]', '');
+    setVerificationRow(root, '[data-account-verification-next-request-row]', '');
     setStatus(root, '[data-account-verification-status]', 'Verification state could not be loaded.', 'error');
   }
 }
@@ -320,12 +417,18 @@ async function handleVerificationSubmit(root, form) {
     await renderVerificationState(root);
   } catch (error) {
     const code = normalizeString(error?.code || error?.message || '');
+    const nextAvailable = formatVerificationDateTime(error?.nextRequestAvailableAt || '');
     const message = code === 'PROFILE_VERIFICATION_BACKEND_UNAVAILABLE'
       ? 'Verification storage is not configured.'
       : code === 'PROFILE_REQUIRED'
         ? 'Create and save your profile before requesting verification.'
-        : 'Verification request could not be submitted.';
+        : code === 'PROFILE_VERIFICATION_COOLDOWN_ACTIVE'
+          ? nextAvailable
+            ? `72 hours are required between verification requests. Next request available: ${nextAvailable}.`
+            : '72 hours are required between verification requests.'
+          : 'Verification request could not be submitted.';
     setStatus(root, '[data-account-verification-status]', message, 'error');
+    void renderVerificationState(root);
   }
 }
 

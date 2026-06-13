@@ -27,8 +27,10 @@ import {
    03) CONSTANTS
 ============================================================================= */
 const PROFILE_VERIFICATION_REQUESTS_TABLE = 'profile_verification_requests';
-const REQUEST_SELECT_FIELDS = 'id, profile_id, auth_user_id, request_status, verification_type, request_note, created_at, updated_at, reviewed_at';
+export const VERIFICATION_REQUEST_COOLDOWN_MS = 72 * 60 * 60 * 1000;
+const REQUEST_SELECT_FIELDS = 'id, profile_id, auth_user_id, request_status, verification_type, request_note, created_at, updated_at, reviewed_at, next_request_available_at';
 const APPROVED_VERIFICATION_STATUSES = new Set(['approved', 'verified']);
+const ACTIVE_REQUEST_STATUSES = new Set(['submitted', 'under_review']);
 
 /* =============================================================================
    04) BACKEND HELPERS
@@ -37,6 +39,12 @@ function isRelationMissing(error) {
   const code = normalizeString(error?.code).toUpperCase();
   const message = normalizeString(error?.message || error?.details).toLowerCase();
   return code === '42P01' || code === 'PGRST205' || message.includes('does not exist');
+}
+
+function isCooldownViolation(error) {
+  const code = normalizeString(error?.code).toUpperCase();
+  const message = normalizeString(error?.message || error?.details).toUpperCase();
+  return code === 'P0001' && message.includes('PROFILE_VERIFICATION_COOLDOWN_ACTIVE');
 }
 
 async function getCurrentUserAndProfile(supabase = getSupabaseClient()) {
@@ -56,6 +64,45 @@ async function getCurrentUserAndProfile(supabase = getSupabaseClient()) {
 
 function isApprovedVerificationStatus(value = '') {
   return APPROVED_VERIFICATION_STATUSES.has(normalizeString(value).toLowerCase());
+}
+
+function parseTimestamp(value = '') {
+  const time = Date.parse(normalizeString(value));
+  return Number.isFinite(time) ? time : 0;
+}
+
+function resolveNextRequestAvailableAt(request = null) {
+  const explicitTime = parseTimestamp(request?.next_request_available_at || '');
+  if (explicitTime > 0) return new Date(explicitTime).toISOString();
+
+  const createdTime = parseTimestamp(request?.created_at || request?.updated_at || '');
+  if (createdTime <= 0) return '';
+
+  return new Date(createdTime + VERIFICATION_REQUEST_COOLDOWN_MS).toISOString();
+}
+
+function resolveVerificationRequestGate(request = null, now = Date.now()) {
+  if (!request) {
+    return {
+      canRequest: true,
+      locked: false,
+      nextRequestAvailableAt: '',
+      lockReason: ''
+    };
+  }
+
+  const status = normalizeString(request?.request_status || '').toLowerCase();
+  const nextRequestAvailableAt = resolveNextRequestAvailableAt(request);
+  const nextRequestTime = parseTimestamp(nextRequestAvailableAt);
+  const activeLocked = ACTIVE_REQUEST_STATUSES.has(status);
+  const cooldownLocked = nextRequestTime > now;
+
+  return {
+    canRequest: !(activeLocked || cooldownLocked),
+    locked: activeLocked || cooldownLocked,
+    nextRequestAvailableAt,
+    lockReason: activeLocked ? 'active_review' : cooldownLocked ? 'cooldown' : ''
+  };
 }
 
 export function resolveApprovedProfileVerification(profile = {}) {
@@ -96,7 +143,8 @@ export async function getProfileVerificationState(profileOverride = null) {
       backendConfigured: false,
       tableAvailable: false,
       verification: resolveApprovedProfileVerification(profileOverride || {}),
-      latestRequest: null
+      latestRequest: null,
+      requestGate: resolveVerificationRequestGate(null)
     };
   }
 
@@ -110,7 +158,8 @@ export async function getProfileVerificationState(profileOverride = null) {
       backendConfigured: true,
       tableAvailable: true,
       verification: resolveApprovedProfileVerification(activeProfile),
-      latestRequest: null
+      latestRequest: null,
+      requestGate: resolveVerificationRequestGate(null)
     };
   }
 
@@ -132,7 +181,8 @@ export async function getProfileVerificationState(profileOverride = null) {
       backendConfigured: true,
       tableAvailable: true,
       verification: resolveApprovedProfileVerification(activeProfile),
-      latestRequest: data || null
+      latestRequest: data || null,
+      requestGate: resolveVerificationRequestGate(data || null)
     };
   } catch (error) {
     if (isRelationMissing(error)) {
@@ -141,7 +191,8 @@ export async function getProfileVerificationState(profileOverride = null) {
         tableAvailable: false,
         verification: resolveApprovedProfileVerification(activeProfile),
         latestRequest: null,
-        errorCode: 'PROFILE_VERIFICATION_REQUESTS_TABLE_MISSING'
+        errorCode: 'PROFILE_VERIFICATION_REQUESTS_TABLE_MISSING',
+        requestGate: resolveVerificationRequestGate(null)
       };
     }
 
@@ -162,12 +213,22 @@ export async function requestProfileVerification(values = {}) {
 
   if (!authUserId || !profileId) throw Object.assign(new Error('PROFILE_REQUIRED'), { code: 'PROFILE_REQUIRED' });
 
+  const verificationState = await getProfileVerificationState(profile);
+  if (verificationState?.requestGate?.locked) {
+    throw Object.assign(new Error('PROFILE_VERIFICATION_COOLDOWN_ACTIVE'), {
+      code: 'PROFILE_VERIFICATION_COOLDOWN_ACTIVE',
+      nextRequestAvailableAt: verificationState.requestGate.nextRequestAvailableAt || '',
+      lockReason: verificationState.requestGate.lockReason || 'cooldown'
+    });
+  }
+
   const payload = {
     profile_id: profileId,
     auth_user_id: authUserId,
     request_status: 'submitted',
     verification_type: normalizeString(values.verification_type || values.type || 'profile_identity'),
     request_note: normalizeString(values.request_note || values.note || ''),
+    next_request_available_at: new Date(Date.now() + VERIFICATION_REQUEST_COOLDOWN_MS).toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
@@ -178,7 +239,17 @@ export async function requestProfileVerification(values = {}) {
     .select(REQUEST_SELECT_FIELDS)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    if (isCooldownViolation(error)) {
+      const verificationState = await getProfileVerificationState(profile);
+      throw Object.assign(new Error('PROFILE_VERIFICATION_COOLDOWN_ACTIVE'), {
+        code: 'PROFILE_VERIFICATION_COOLDOWN_ACTIVE',
+        nextRequestAvailableAt: verificationState?.requestGate?.nextRequestAvailableAt || '',
+        lockReason: verificationState?.requestGate?.lockReason || 'cooldown'
+      });
+    }
+    throw error;
+  }
 
   document.dispatchEvent(new CustomEvent('neuroartan:notification-create-request', {
     detail: {
@@ -203,7 +274,9 @@ export async function requestProfileVerification(values = {}) {
 ============================================================================= */
 window.NEUROARTAN_PROFILE_VERIFICATION = {
   getProfileVerificationState,
-  requestProfileVerification
+  requestProfileVerification,
+  resolveVerificationRequestGate,
+  VERIFICATION_REQUEST_COOLDOWN_MS
 };
 
 /* =============================================================================

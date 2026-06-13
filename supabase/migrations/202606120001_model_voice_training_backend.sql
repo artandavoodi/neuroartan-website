@@ -10,6 +10,8 @@ on conflict (id) do nothing;
 
 alter table public.model_voice_training_state
   add column if not exists profile_id uuid references public.profiles(id) on delete cascade,
+  add column if not exists owner_auth_user_id uuid,
+  add column if not exists sample_count integer not null default 0,
   add column if not exists readiness_state text not null default 'not_started',
   add column if not exists readiness_score numeric not null default 0,
   add column if not exists sample_coverage jsonb not null default '{}'::jsonb,
@@ -19,14 +21,23 @@ alter table public.model_voice_training_state
   add column if not exists text_to_speech_state text not null default 'not_started',
   add column if not exists synthesis_state text not null default 'not_started',
   add column if not exists training_pipeline_state text not null default 'not_started',
+  add column if not exists consent_state text not null default 'not_yet_granted',
+  add column if not exists verification_state text not null default 'not_verified',
+  add column if not exists activation_state text not null default 'inactive',
   add column if not exists last_sample_at timestamptz,
   add column if not exists state_payload jsonb not null default '{}'::jsonb;
+
+create unique index if not exists model_voice_training_state_model_unique
+  on public.model_voice_training_state(model_id);
+
+create index if not exists model_voice_training_state_owner_idx
+  on public.model_voice_training_state(owner_auth_user_id, updated_at desc);
 
 create table if not exists public.model_voice_training_samples (
   id uuid primary key default gen_random_uuid(),
   model_id uuid not null references public.models(id) on delete cascade,
   profile_id uuid not null references public.profiles(id) on delete cascade,
-  owner_auth_user_id uuid not null,
+  owner_auth_user_id uuid not null references auth.users(id) on delete cascade,
   privacy_voice_record_id uuid references public.privacy_voice_registry(id) on delete set null,
   sample_title text not null,
   sample_origin text not null default 'guided_recording',
@@ -61,6 +72,12 @@ create index if not exists model_voice_training_samples_tone_idx
 create index if not exists model_voice_training_samples_owner_idx
   on public.model_voice_training_samples(owner_auth_user_id, updated_at desc);
 
+create index if not exists model_voice_training_samples_profile_idx
+  on public.model_voice_training_samples(profile_id, updated_at desc);
+
+create index if not exists model_voice_training_samples_status_idx
+  on public.model_voice_training_samples(model_id, sample_status);
+
 create or replace function public.neuroartan_update_model_voice_training_state()
 returns trigger
 language plpgsql
@@ -76,6 +93,26 @@ declare
   next_score numeric;
   next_readiness text;
 begin
+  if tg_op = 'DELETE' and not exists (
+    select 1
+    from public.model_voice_training_samples
+    where model_id = old.model_id
+  ) then
+    update public.model_voice_training_state
+    set sample_count = 0,
+        readiness_state = 'not_started',
+        readiness_score = 0,
+        sample_coverage = jsonb_build_object('sample_count', 0, 'target_sample_count', 12),
+        emotion_coverage = jsonb_build_object('tone_count', 0, 'target_tone_count', 8),
+        training_pipeline_state = 'not_started',
+        last_sample_at = null,
+        state_payload = jsonb_build_object('sample_count', 0, 'tone_count', 0, 'readiness_score', 0),
+        updated_at = timezone('utc', now())
+    where model_id = old.model_id;
+
+    return old;
+  end if;
+
   if tg_op = 'DELETE' then
     target_model_id := old.model_id;
     target_profile_id := old.profile_id;
@@ -128,11 +165,11 @@ begin
     next_score,
     jsonb_build_object('sample_count', sample_total, 'target_sample_count', 12),
     jsonb_build_object('tone_count', tone_total, 'target_tone_count', 8),
-    'capture_requested',
+    'not_yet_granted',
     'not_verified',
     'inactive',
     case when sample_total > 0 then 'sample_collection' else 'not_started' end,
-    timezone('utc', now()),
+    case when sample_total > 0 then timezone('utc', now()) else null end,
     jsonb_build_object('sample_count', sample_total, 'tone_count', tone_total, 'readiness_score', next_score),
     timezone('utc', now())
   )
@@ -157,15 +194,53 @@ begin
 end;
 $$;
 
+create or replace function public.neuroartan_sync_model_voice_training_sample_owner()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  model_record record;
+begin
+  select
+    m.profile_id,
+    coalesce(m.owner_auth_user_id, p.auth_user_id) as owner_auth_user_id
+  into model_record
+  from public.models m
+  left join public.profiles p on p.id = m.profile_id
+  where m.id = new.model_id;
+
+  if not found then
+    raise exception 'MODEL_NOT_FOUND for model %', new.model_id;
+  end if;
+
+  if model_record.owner_auth_user_id is null then
+    raise exception 'MODEL_OWNER_REQUIRED for model %', new.model_id;
+  end if;
+
+  new.profile_id := model_record.profile_id;
+  new.owner_auth_user_id := model_record.owner_auth_user_id;
+
+  return new;
+end;
+$$;
+
 create or replace function public.neuroartan_set_model_voice_training_sample_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = timezone('utc', now());
   return new;
 end;
 $$;
+
+drop trigger if exists sync_model_voice_training_sample_owner on public.model_voice_training_samples;
+create trigger sync_model_voice_training_sample_owner
+before insert or update on public.model_voice_training_samples
+for each row execute function public.neuroartan_sync_model_voice_training_sample_owner();
 
 drop trigger if exists set_model_voice_training_samples_updated_at on public.model_voice_training_samples;
 create trigger set_model_voice_training_samples_updated_at
@@ -189,12 +264,64 @@ for each row execute function public.neuroartan_update_model_voice_training_stat
 
 alter table public.model_voice_training_samples enable row level security;
 
+alter table public.model_voice_training_state enable row level security;
+
+drop policy if exists model_voice_training_state_owner_all on public.model_voice_training_state;
+
+drop policy if exists model_voice_training_state_owner_select on public.model_voice_training_state;
+create policy model_voice_training_state_owner_select on public.model_voice_training_state
+  for select to authenticated
+  using (
+    exists (
+      select 1
+      from public.models model
+      join public.profiles profile on profile.id = model.profile_id
+      where model.id = public.model_voice_training_state.model_id
+        and profile.auth_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists model_voice_training_state_owner_insert on public.model_voice_training_state;
+create policy model_voice_training_state_owner_insert on public.model_voice_training_state
+  for insert to authenticated
+  with check (
+    exists (
+      select 1
+      from public.models model
+      join public.profiles profile on profile.id = model.profile_id
+      where model.id = public.model_voice_training_state.model_id
+        and profile.auth_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists model_voice_training_state_owner_update on public.model_voice_training_state;
+create policy model_voice_training_state_owner_update on public.model_voice_training_state
+  for update to authenticated
+  using (
+    exists (
+      select 1
+      from public.models model
+      join public.profiles profile on profile.id = model.profile_id
+      where model.id = public.model_voice_training_state.model_id
+        and profile.auth_user_id = auth.uid()
+    )
+  )
+  with check (
+    exists (
+      select 1
+      from public.models model
+      join public.profiles profile on profile.id = model.profile_id
+      where model.id = public.model_voice_training_state.model_id
+        and profile.auth_user_id = auth.uid()
+    )
+  );
+
 drop policy if exists model_voice_training_samples_owner_all on public.model_voice_training_samples;
 create policy model_voice_training_samples_owner_all on public.model_voice_training_samples
-  for all using (
-    auth.uid()::text = owner_auth_user_id::text
+  for all to authenticated using (
+    auth.uid() = owner_auth_user_id
   ) with check (
-    auth.uid()::text = owner_auth_user_id::text
+    auth.uid() = owner_auth_user_id
     and exists (
       select 1
       from public.models model

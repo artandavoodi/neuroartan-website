@@ -150,10 +150,13 @@
                 </button>
               </div>
 
-              <label class="profile-settings__field profile-settings__field--quiet">
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-timezone-field>
                 <span class="profile-settings__label">Time zone</span>
-                <input class="ui-field profile-settings__input" type="text" name="timezone" placeholder="Time zone" aria-label="Time zone">
-              </label>
+                <input class="ui-field profile-settings__input" type="hidden" name="timezone" autocomplete="off" data-profile-settings-timezone-input>
+                <button class="profile-settings__timezone-action" type="button" data-profile-settings-timezone-open>
+                  <span data-profile-settings-timezone-label>Detect time zone</span>
+                </button>
+              </div>
 
               <label class="profile-settings__field profile-settings__field--quiet">
                 <span class="profile-settings__label">Primary language</span>

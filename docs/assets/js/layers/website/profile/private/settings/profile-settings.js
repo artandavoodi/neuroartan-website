@@ -330,6 +330,7 @@ function setProfileSettingsCountryRegionState(root, value = '') {
   const normalizedValue = normalizeString(value);
   const input = root.querySelector('[data-profile-settings-country-region-input]');
   const label = root.querySelector('[data-profile-settings-country-region-label]');
+  const action = root.querySelector('[data-profile-settings-country-region-open]');
 
   if (input instanceof HTMLInputElement) {
     input.value = normalizedValue;
@@ -338,16 +339,234 @@ function setProfileSettingsCountryRegionState(root, value = '') {
   if (label instanceof HTMLElement) {
     label.textContent = normalizedValue || 'Country or region';
   }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsCountryRegionReady = normalizedValue ? 'true' : 'false';
+  }
 }
 
 function openProfileSettingsCountryRegionOverlay(root) {
   if (!(root instanceof HTMLElement)) return;
+  root.dataset.profileSettingsCountryRegionPending = 'true';
   document.dispatchEvent(new CustomEvent('neuroartan:country-overlay-open-requested', {
     detail: {
       source: 'profile-settings-country-region',
       field: 'locale_country_label'
     }
   }));
+}
+
+function getProfileSettingsCountryRegionEventValue(event) {
+  const detail = event?.detail || {};
+  const localeState = detail.locale || detail.state || detail.localeState || {};
+  const candidates = [
+    detail.locale_country_label,
+    detail.country_label,
+    detail.countryLabel,
+    detail.country,
+    detail.region,
+    detail.label,
+    localeState.locale_country_label,
+    localeState.country_label,
+    localeState.countryLabel,
+    localeState.country,
+    localeState.region,
+    localeState.label
+  ];
+  return normalizeString(candidates.find((value) => normalizeString(value)) || '');
+}
+
+function syncProfileSettingsCountryRegionFromLocaleEvent(event) {
+  const value = getProfileSettingsCountryRegionEventValue(event);
+  if (!value) return;
+
+  getSettingsRoots().forEach((root) => {
+    const input = root.querySelector('[data-profile-settings-country-region-input]');
+    const previousValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+    const shouldSubmit = root.dataset.profileSettingsCountryRegionPending === 'true' && value !== previousValue;
+
+    setProfileSettingsCountryRegionState(root, value);
+    root.dataset.profileSettingsCountryRegionPending = 'false';
+
+    if (shouldSubmit) {
+      const form = root.querySelector('[data-profile-save-form]');
+      if (form instanceof HTMLFormElement) {
+        form.requestSubmit();
+      }
+    }
+  });
+}
+
+function getProfileSettingsDetectedTimezone() {
+  try {
+    return normalizeString(Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+  } catch (_) {
+    return '';
+  }
+}
+
+function getProfileSettingsTimezoneOptions() {
+  try {
+    if (typeof Intl.supportedValuesOf === 'function') {
+      const values = Intl.supportedValuesOf('timeZone');
+      if (Array.isArray(values) && values.length) {
+        return values.map((value) => normalizeString(value)).filter(Boolean);
+      }
+    }
+  } catch (_) {}
+
+  return [
+    'UTC',
+    'Europe/Zagreb',
+    'Europe/Berlin',
+    'Europe/London',
+    'Asia/Tehran',
+    'America/New_York',
+    'America/Los_Angeles'
+  ];
+}
+
+function getProfileSettingsInitialTimezone(value = '') {
+  return normalizeString(value) || getProfileSettingsDetectedTimezone() || 'UTC';
+}
+
+function setProfileSettingsTimezoneState(root, value = '', state = 'ready') {
+  const normalizedValue = getProfileSettingsInitialTimezone(value);
+  const input = root.querySelector('[data-profile-settings-timezone-input]');
+  const label = root.querySelector('[data-profile-settings-timezone-label]');
+  const action = root.querySelector('[data-profile-settings-timezone-open]');
+
+  if (input instanceof HTMLInputElement) {
+    input.value = normalizedValue;
+  }
+
+  if (label instanceof HTMLElement) {
+    label.textContent = normalizedValue || 'Detect time zone';
+  }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsTimezoneReady = normalizedValue ? 'true' : 'false';
+    action.dataset.profileSettingsTimezoneState = state;
+  }
+}
+
+function getProfileSettingsTimezoneOverlay(root) {
+  let overlay = document.querySelector('[data-profile-settings-timezone-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.profileSettingsTimezoneRoot = root;
+    return overlay;
+  }
+
+  overlay = document.createElement('section');
+  overlay.className = 'profile-settings__timezone-overlay';
+  overlay.dataset.profileSettingsTimezoneOverlay = '';
+  overlay.hidden = true;
+  overlay.profileSettingsTimezoneRoot = root;
+  overlay.innerHTML = `
+    <section class="profile-settings__timezone-panel cookie-language-overlay" role="dialog" aria-modal="true" aria-label="Time zone selector" data-cookie-language-overlay="root">
+      <div class="cookie-language-overlay-inner" data-cookie-language-overlay-inner="true">
+        <button class="profile-settings__timezone-close global-close-button" type="button" data-profile-settings-timezone-close aria-label="Close time zone selector">
+          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+        </button>
+        <div class="profile-settings__timezone-current cookie-language-overlay-heading" data-profile-settings-timezone-current></div>
+        <div class="profile-settings__timezone-search-wrap cookie-language-overlay-toolbar" data-cookie-language-overlay-toolbar="true">
+          <div class="cookie-language-overlay-search-shell">
+            <input class="profile-settings__timezone-search cookie-language-overlay-search" type="search" autocomplete="off" placeholder="Search time zone" aria-label="Search time zone" data-profile-settings-timezone-search>
+          </div>
+        </div>
+        <div class="profile-settings__timezone-list cookie-language-overlay-regions" data-profile-settings-timezone-list data-cookie-language-overlay-regions="true"></div>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function getProfileSettingsTimezoneRootFromEventTarget(target) {
+  const overlay = target?.closest?.('[data-profile-settings-timezone-overlay]');
+  const root = overlay?.profileSettingsTimezoneRoot;
+  return root instanceof HTMLElement ? root : null;
+}
+
+function buildProfileSettingsTimezoneOption(value, currentValue) {
+  const option = document.createElement('button');
+  option.className = 'profile-settings__timezone-option cookie-language-overlay-country ui-radio-list__item';
+  option.type = 'button';
+  option.dataset.profileSettingsTimezoneOption = value;
+  option.dataset.profileSettingsTimezoneActive = value === currentValue ? 'true' : 'false';
+  option.setAttribute('aria-pressed', value === currentValue ? 'true' : 'false');
+  if (value === currentValue) {
+    option.classList.add('is-selected');
+  }
+
+  const copy = document.createElement('span');
+  copy.className = 'profile-settings__timezone-option-copy cookie-language-overlay-country-copy';
+  const strong = document.createElement('strong');
+  strong.textContent = value;
+  copy.appendChild(strong);
+
+  const radio = document.createElement('span');
+  radio.className = 'profile-settings__timezone-radio cookie-language-overlay-country-radio ui-radio-list__indicator';
+  radio.setAttribute('aria-hidden', 'true');
+
+  option.append(copy, radio);
+  return option;
+}
+
+function renderProfileSettingsTimezoneOptions(root, query = '') {
+  const overlay = getProfileSettingsTimezoneOverlay(root);
+  const list = overlay.querySelector('[data-profile-settings-timezone-list]');
+  const current = overlay.querySelector('[data-profile-settings-timezone-current]');
+  const input = root.querySelector('[data-profile-settings-timezone-input]');
+  const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+  const detectedValue = getProfileSettingsDetectedTimezone() || 'UTC';
+  const normalizedQuery = normalizeString(query).toLowerCase();
+  const options = getProfileSettingsTimezoneOptions()
+    .filter((value) => !normalizedQuery || value.toLowerCase().includes(normalizedQuery));
+
+  if (current instanceof HTMLElement) {
+    current.textContent = `System detected · ${detectedValue}`;
+  }
+
+  if (list instanceof HTMLElement) {
+    list.replaceChildren(...options.map((value) => buildProfileSettingsTimezoneOption(value, currentValue)));
+  }
+}
+
+function openProfileSettingsTimezoneOverlay(root) {
+  if (!(root instanceof HTMLElement)) return;
+  setProfileSettingsTimezoneState(root, root.querySelector('[data-profile-settings-timezone-input]')?.value || '', 'ready');
+  const overlay = getProfileSettingsTimezoneOverlay(root);
+  renderProfileSettingsTimezoneOptions(root);
+  document.body.classList.add('profile-settings-timezone-overlay-open');
+  overlay.hidden = false;
+  const search = overlay.querySelector('[data-profile-settings-timezone-search]');
+  if (search instanceof HTMLInputElement) {
+    search.value = '';
+    window.setTimeout(() => search.focus(), 0);
+  }
+}
+
+function closeProfileSettingsTimezoneOverlay(root) {
+  const overlay = document.querySelector('[data-profile-settings-timezone-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.hidden = true;
+    overlay.profileSettingsTimezoneRoot = root instanceof HTMLElement ? root : null;
+  }
+  document.body.classList.remove('profile-settings-timezone-overlay-open');
+}
+
+function applyProfileSettingsTimezone(root, value = '') {
+  const normalizedValue = normalizeString(value);
+  if (!normalizedValue) return;
+  setProfileSettingsTimezoneState(root, normalizedValue, 'ready');
+  closeProfileSettingsTimezoneOverlay(root);
+
+  const form = root.querySelector('[data-profile-save-form]');
+  if (form instanceof HTMLFormElement) {
+    form.requestSubmit();
+  }
 }
 
 async function loadProfileSettingsSocialLinksConfig() {
@@ -733,7 +952,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'date_of_birth', state.birthDate || state.profile?.date_of_birth || '');
     setValue(root, 'gender', state.gender);
     setProfileSettingsCountryRegionState(root, state.profile?.locale_country_label || '');
-    setValue(root, 'timezone', state.profile?.timezone || '');
+    setProfileSettingsTimezoneState(root, state.profile?.timezone || '');
     setValue(root, 'preferred_language', state.profile?.preferred_language || '');
     setValue(root, 'locale_languages', formatProfileSettingsListValue(state.profile?.locale_languages));
     setValue(root, 'public_summary', state.bio || state.profile?.public_summary || state.profile?.public_bio || '');
@@ -967,6 +1186,10 @@ function initProfileSettings() {
     syncProfileSettingsToggleInput(toggle);
   });
 
+  document.addEventListener('neuroartan:locale-state-changed', syncProfileSettingsCountryRegionFromLocaleEvent);
+  document.addEventListener('neuroartan:country-region-changed', syncProfileSettingsCountryRegionFromLocaleEvent);
+  document.addEventListener('neuroartan:country-selected', syncProfileSettingsCountryRegionFromLocaleEvent);
+
   document.addEventListener('change', (event) => {
     const control = event.target;
     if (!(control instanceof HTMLSelectElement)) return;
@@ -977,6 +1200,15 @@ function initProfileSettings() {
     }
     if (control.name) {
       setSelectLabel(root, control.name, control.options?.[0]?.textContent || '');
+    }
+  });
+
+  document.addEventListener('input', (event) => {
+    const search = event.target;
+    if (!(search instanceof HTMLInputElement) || !search.matches('[data-profile-settings-timezone-search]')) return;
+    const root = getProfileSettingsTimezoneRootFromEventTarget(search);
+    if (root instanceof HTMLElement) {
+      renderProfileSettingsTimezoneOptions(root, search.value || '');
     }
   });
 
@@ -996,6 +1228,33 @@ function initProfileSettings() {
       const root = locationButton.closest('[data-profile-settings-panel]');
       if (root instanceof HTMLElement) {
         requestProfileSettingsLocation(root);
+      }
+      return;
+    }
+
+    const timezoneButton = event.target.closest('[data-profile-settings-timezone-open]');
+    if (timezoneButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = timezoneButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        openProfileSettingsTimezoneOverlay(root);
+      }
+      return;
+    }
+
+    const timezoneCloseButton = event.target.closest('[data-profile-settings-timezone-close]');
+    if (timezoneCloseButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeProfileSettingsTimezoneOverlay(getProfileSettingsTimezoneRootFromEventTarget(timezoneCloseButton));
+      return;
+    }
+
+    const timezoneOptionButton = event.target.closest('[data-profile-settings-timezone-option]');
+    if (timezoneOptionButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = getProfileSettingsTimezoneRootFromEventTarget(timezoneOptionButton);
+      if (root instanceof HTMLElement) {
+        applyProfileSettingsTimezone(root, timezoneOptionButton.dataset.profileSettingsTimezoneOption || '');
       }
       return;
     }

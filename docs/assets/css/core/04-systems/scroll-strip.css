@@ -57,12 +57,8 @@ body::-webkit-scrollbar-thumb:hover,
 /* =============================================================================
    03) CUSTOM SCROLL STRIP
 ============================================================================= */
-.na-scroll-strip-host{
-  position:relative;
-}
-
 .na-scroll-strip{
-  position:absolute;
+  position:fixed;
   z-index:var(--scroll-strip-z-index);
   top:var(--scroll-strip-inset-block);
   right:var(--scroll-strip-inset-inline);
@@ -71,6 +67,7 @@ body::-webkit-scrollbar-thumb:hover,
   pointer-events:none;
   opacity:0;
   transition:var(--scroll-strip-transition);
+  will-change:opacity, top, left, height;
 }
 
 .na-scroll-strip--viewport{
@@ -81,10 +78,7 @@ body::-webkit-scrollbar-thumb:hover,
   opacity:var(--scroll-strip-opacity-idle);
 }
 
-.na-scroll-strip[data-scroll-strip-active="true"],
-[data-na-scroll-strip="true"]:focus-within > .na-scroll-strip,
-[data-na-scroll-strip="true"]:hover > .na-scroll-strip,
-.na-scroll-strip-host:hover > .na-scroll-strip{
+.na-scroll-strip[data-scroll-strip-active="true"]{
   opacity:var(--scroll-strip-opacity-active);
 }
 
@@ -110,10 +104,7 @@ body::-webkit-scrollbar-thumb:hover,
   will-change:transform, height;
 }
 
-.na-scroll-strip[data-scroll-strip-active="true"] .na-scroll-strip__thumb,
-[data-na-scroll-strip="true"]:focus-within > .na-scroll-strip .na-scroll-strip__thumb,
-[data-na-scroll-strip="true"]:hover > .na-scroll-strip .na-scroll-strip__thumb,
-.na-scroll-strip-host:hover > .na-scroll-strip .na-scroll-strip__thumb{
+.na-scroll-strip[data-scroll-strip-active="true"] .na-scroll-strip__thumb{
   background:var(--scroll-strip-thumb-hover-color);
 }
 

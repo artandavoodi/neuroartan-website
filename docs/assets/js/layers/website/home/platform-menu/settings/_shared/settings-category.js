@@ -696,6 +696,7 @@ export function mountSettingsCategory(root, options = {}) {
 
   root.querySelectorAll(SETTINGS_ACTION_SELECTOR).forEach((control) => {
     if (!(control instanceof HTMLElement)) return;
+    if (control instanceof HTMLAnchorElement && control.hasAttribute('href')) return;
     if (control.dataset.settingsActionBound === 'true') return;
 
     control.dataset.settingsActionBound = 'true';

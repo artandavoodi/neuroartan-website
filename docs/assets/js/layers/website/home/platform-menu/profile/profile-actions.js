@@ -13,6 +13,7 @@ function normalizeString(value = '') {
 }
 
 function navigateToProfileHash(hash = '') {
+  closeProfileMenu();
   window.location.href = `${PROFILE_ROUTE}${hash}`;
 }
 
@@ -27,6 +28,7 @@ function getCurrentProfileUsername() {
 
 function navigateToPublicProfileRoute() {
   const username = getCurrentProfileUsername();
+  closeProfileMenu();
   window.location.href = buildPublicProfilePath(username) || PROFILE_ROUTE;
 }
 
@@ -43,7 +45,8 @@ function openProfileSubdestination(subdestination) {
 function closeProfileMenu() {
   document.dispatchEvent(new CustomEvent('home:platform-shell-close-request', {
     detail: {
-      source: 'profile-menu'
+      source: 'profile-menu',
+      clearPersistedState: true
     }
   }));
 }
@@ -107,6 +110,7 @@ export function routeProfileMenuAction(action) {
       return;
     case 'manage-plan':
     case 'pricing':
+      closeProfileMenu();
       window.location.href = PRICING_ROUTE;
       return;
     case 'billing':

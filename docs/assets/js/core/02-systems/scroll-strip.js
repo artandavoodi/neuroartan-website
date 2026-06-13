@@ -30,6 +30,8 @@ const SELECTOR_SKIP = [
   'select',
   'textarea',
   '[contenteditable="true"]',
+  '#home-platform-shell',
+  '[data-home-platform-shell]',
   '[data-na-scroll-strip="off"]',
   '[data-na-scroll-strip="hidden"]',
   '[data-scroll-strip-hidden]',
@@ -52,9 +54,8 @@ function isViewportTarget(target) {
   return target === getScrollElement() || target === document.documentElement || target === document.body;
 }
 
-function hasHiddenScrollbar(target, style = getComputedStyle(target)) {
-  return style.scrollbarWidth === 'none'
-    || target.matches?.('[data-na-scroll-strip="off"], [data-na-scroll-strip="hidden"], [data-scroll-strip-hidden], [data-scrollbar-hidden], [data-native-scroll-hidden]');
+function hasHiddenScrollbar(target) {
+  return target.matches?.('[data-na-scroll-strip="off"], [data-na-scroll-strip="hidden"], [data-scroll-strip-hidden], [data-scrollbar-hidden], [data-native-scroll-hidden]');
 }
 
 function canOwnStrip(target) {
@@ -64,7 +65,8 @@ function canOwnStrip(target) {
   if (target.classList.contains('na-scroll-strip') || target.classList.contains('na-scroll-strip__thumb')) return false;
 
   const style = getComputedStyle(target);
-  if (hasHiddenScrollbar(target, style)) return false;
+  if (hasHiddenScrollbar(target)) return false;
+  if (target.hidden || style.display === 'none' || style.visibility === 'hidden') return false;
 
   const overflowY = style.overflowY;
   const scrollableOverflow = overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay';
@@ -83,11 +85,12 @@ function canOwnStrip(target) {
 function collectTargets() {
   const targets = new Set();
   const scrollElement = getScrollElement();
-  if (canOwnStrip(scrollElement)) targets.add(scrollElement);
 
   document.querySelectorAll('*').forEach((node) => {
-    if (canOwnStrip(node)) targets.add(node);
+    if (!isViewportTarget(node) && canOwnStrip(node)) targets.add(node);
   });
+
+  if (!targets.size && canOwnStrip(scrollElement)) targets.add(scrollElement);
 
   return targets;
 }
@@ -104,40 +107,90 @@ function createStrip(viewport = false) {
   return strip;
 }
 
+function resolveCssMetric(name, reference = 0, fallback = 0) {
+  const rootStyle = getComputedStyle(document.documentElement);
+  const value = rootStyle.getPropertyValue(name).trim();
+  const numeric = Number.parseFloat(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  if (value.endsWith('%')) return (reference * numeric) / 100;
+  if (value.endsWith('rem')) return numeric * Number.parseFloat(rootStyle.fontSize || '16');
+  if (value.endsWith('em')) return numeric * Number.parseFloat(getComputedStyle(document.body).fontSize || '16');
+  return numeric;
+}
+
+function positionStrip(record) {
+  const { target, strip, viewport } = record;
+  if (viewport) {
+    strip.style.removeProperty('top');
+    strip.style.removeProperty('right');
+    strip.style.removeProperty('bottom');
+    strip.style.removeProperty('left');
+    strip.style.removeProperty('height');
+    return true;
+  }
+
+  const rect = target.getBoundingClientRect();
+  const visibleTop = Math.max(0, rect.top);
+  const visibleBottom = Math.min(window.innerHeight, rect.bottom);
+  const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+  if (visibleHeight < 12 || rect.right <= 0 || rect.left >= window.innerWidth) {
+    strip.dataset.scrollStripVisible = 'false';
+    return false;
+  }
+
+  const insetBlock = Math.min(resolveCssMetric('--scroll-strip-inset-block', visibleHeight, 0), visibleHeight / 3);
+  const hitSize = Math.max(1, resolveCssMetric('--scroll-strip-hit-size', rect.width, 8));
+  strip.style.top = `${visibleTop + insetBlock}px`;
+  strip.style.right = 'auto';
+  strip.style.bottom = 'auto';
+  strip.style.left = `${Math.min(window.innerWidth - hitSize, Math.max(0, rect.right - hitSize))}px`;
+  strip.style.height = `${Math.max(0, visibleHeight - (insetBlock * 2))}px`;
+  return true;
+}
+
 function ensureTarget(target) {
   const viewport = isViewportTarget(target);
   const existing = STATE.targets.get(target);
   if (existing) return existing;
 
   const strip = createStrip(viewport);
-  const host = viewport ? document.body : target;
   if (!viewport) {
     target.dataset.naScrollStrip = 'true';
-    if (getComputedStyle(target).position === 'static') {
-      target.classList.add('na-scroll-strip-host');
-    }
   }
-  host.appendChild(strip);
+  document.body.appendChild(strip);
 
   const record = {
     target,
+    viewport,
     strip,
     thumb: strip.querySelector('.na-scroll-strip__thumb'),
-    hideTimer:0
+    hideTimer:0,
+    hover:false
   };
   STATE.targets.set(target, record);
   target.addEventListener('scroll', handleScroll, { passive:true });
+  target.addEventListener('wheel', handleScrollIntent, { passive:true });
+  target.addEventListener('touchmove', handleScrollIntent, { passive:true });
+  target.addEventListener('pointerenter', handlePointerEnter, { passive:true });
+  target.addEventListener('pointerleave', handlePointerLeave, { passive:true });
+  target.addEventListener('focusin', handlePointerEnter);
+  target.addEventListener('focusout', handlePointerLeave);
   return record;
 }
 
 function removeTarget(target, record = STATE.targets.get(target)) {
   if (!record) return;
   target.removeEventListener('scroll', handleScroll);
+  target.removeEventListener('wheel', handleScrollIntent);
+  target.removeEventListener('touchmove', handleScrollIntent);
+  target.removeEventListener('pointerenter', handlePointerEnter);
+  target.removeEventListener('pointerleave', handlePointerLeave);
+  target.removeEventListener('focusin', handlePointerEnter);
+  target.removeEventListener('focusout', handlePointerLeave);
   window.clearTimeout(record.hideTimer);
   record.strip.remove();
   if (!isViewportTarget(target)) {
     target.removeAttribute('data-na-scroll-strip');
-    target.classList.remove('na-scroll-strip-host');
   }
   STATE.targets.delete(target);
 }
@@ -149,7 +202,9 @@ function updateRecord(record) {
     return;
   }
 
-  const viewport = isViewportTarget(target);
+  if (!positionStrip(record)) return;
+
+  const viewport = record.viewport;
   const clientHeight = viewport ? window.innerHeight : target.clientHeight;
   const scrollHeight = viewport
     ? Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
@@ -199,7 +254,7 @@ function setActive(record) {
   record.strip.dataset.scrollStripActive = 'true';
   window.clearTimeout(record.hideTimer);
   record.hideTimer = window.setTimeout(() => {
-    record.strip.dataset.scrollStripActive = 'false';
+    if (!record.hover) record.strip.dataset.scrollStripActive = 'false';
   }, 1400);
 }
 
@@ -215,23 +270,58 @@ function handleScroll(event) {
   setActive(record);
 }
 
+function handleScrollIntent(event) {
+  const target = event?.currentTarget || getScrollElement();
+  const record = STATE.targets.get(target);
+  if (!record) {
+    scheduleUpdate();
+    return;
+  }
+
+  updateRecord(record);
+  setActive(record);
+}
+
+function handlePointerEnter(event) {
+  const record = STATE.targets.get(event.currentTarget);
+  if (!record) return;
+  record.hover = true;
+  updateRecord(record);
+  setActive(record);
+}
+
+function handlePointerLeave(event) {
+  const record = STATE.targets.get(event.currentTarget);
+  if (!record) return;
+  record.hover = false;
+  window.clearTimeout(record.hideTimer);
+  record.hideTimer = window.setTimeout(() => {
+    record.strip.dataset.scrollStripActive = 'false';
+  }, 280);
+}
+
 /* =============================================================================
    05) OBSERVERS
 ============================================================================= */
 function bindObservers() {
-  STATE.resizeObserver = new ResizeObserver(scheduleUpdate);
-  STATE.resizeObserver.observe(document.documentElement);
-  STATE.resizeObserver.observe(document.body);
+  if (typeof ResizeObserver !== 'undefined') {
+    STATE.resizeObserver = new ResizeObserver(scheduleUpdate);
+    STATE.resizeObserver.observe(document.documentElement);
+    STATE.resizeObserver.observe(document.body);
+  }
 
-  STATE.mutationObserver = new MutationObserver(scheduleUpdate);
-  STATE.mutationObserver.observe(document.documentElement, {
-    childList:true,
-    subtree:true,
-    attributes:true,
-    attributeFilter:['class', 'style', 'hidden', 'data-na-scroll-strip', 'data-scroll-strip-hidden', 'data-scrollbar-hidden']
-  });
+  if (typeof MutationObserver !== 'undefined') {
+    STATE.mutationObserver = new MutationObserver(scheduleUpdate);
+    STATE.mutationObserver.observe(document.documentElement, {
+      childList:true,
+      subtree:true,
+      attributes:true,
+      attributeFilter:['class', 'style', 'hidden', 'data-na-scroll-strip', 'data-scroll-strip-hidden', 'data-scrollbar-hidden']
+    });
+  }
 
   window.addEventListener('resize', scheduleUpdate, { passive:true });
+  window.addEventListener('scroll', scheduleUpdate, { passive:true });
   window.addEventListener('orientationchange', scheduleUpdate, { passive:true });
   window.addEventListener('load', scheduleUpdate, { once:true });
   document.addEventListener('fragment:mounted', scheduleUpdate);
@@ -243,7 +333,7 @@ function bindObservers() {
    06) INITIALIZATION
 ============================================================================= */
 function initScrollStrip() {
-  if (STATE.initialized || typeof window === 'undefined' || typeof ResizeObserver === 'undefined') return;
+  if (STATE.initialized || typeof window === 'undefined') return;
   STATE.initialized = true;
   bindObservers();
   scheduleUpdate();

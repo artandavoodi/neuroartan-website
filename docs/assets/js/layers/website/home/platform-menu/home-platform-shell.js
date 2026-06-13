@@ -1,4 +1,5 @@
 import { subscribeHomeSurfaceState } from '../core/home-surface-state.js';
+import { routeProfileMenuAction } from './profile/profile-actions.js';
 /* =============================================================================
 00) FILE INDEX
 01) MODULE STATE
@@ -1002,17 +1003,19 @@ function handleWorkspaceShellAction(action) {
   const normalized = normalizeShellActionLabel(action);
 
   if (normalized === 'voice') {
-    closeHomePlatformShell();
+    closeHomePlatformShell({ clearPersistedState: true });
     requestMicrophoneInteraction();
     return;
   }
 
   if (normalized === 'history') {
+    closeHomePlatformShell({ clearPersistedState: true });
     window.location.href = '/pages/continuity-history/index.html';
     return;
   }
 
   if (normalized === 'knowledge') {
+    closeHomePlatformShell({ clearPersistedState: true });
     window.location.href = '/pages/knowledge-research/index.html';
   }
 }
@@ -1023,20 +1026,23 @@ function handleProfileShellAction(action) {
   if (normalized === 'account-identity' || normalized === 'verification' || normalized === 'linked-accounts') {
     if (!hasSignedInAccount()) {
       requestAccountEntryFromShell();
-      closeHomePlatformShell();
+      closeHomePlatformShell({ clearPersistedState: true });
       return;
     }
 
+    closeHomePlatformShell({ clearPersistedState: true });
     window.location.href = '/profile.html';
     return;
   }
 
   if (normalized === 'subscription-plan') {
+    closeHomePlatformShell({ clearPersistedState: true });
     window.location.href = '/pages/pricing/index.html';
     return;
   }
 
   if (normalized === 'my-models') {
+    closeHomePlatformShell({ clearPersistedState: true });
     window.location.href = '/model/#model/discovery/directory';
     return;
   }
@@ -1057,7 +1063,7 @@ function handleProfileShellAction(action) {
         source: 'home-platform-shell',
       },
     }));
-    closeHomePlatformShell();
+    closeHomePlatformShell({ clearPersistedState: true });
   }
 }
 
@@ -1071,7 +1077,7 @@ function handleHomePlatformDetailAction(action) {
         surface: 'platform-shell',
       },
     }));
-    closeHomePlatformShell();
+    closeHomePlatformShell({ clearPersistedState: true });
   }
 }
 
@@ -1499,7 +1505,7 @@ async function setHomePlatformDestination(destination, subdestination = '') {
         source: 'home-platform-shell',
       },
     }));
-    closeHomePlatformShell();
+    closeHomePlatformShell({ clearPersistedState: true });
     return true;
   }
 
@@ -1884,8 +1890,59 @@ function activateHomePlatformLinkTrigger(target) {
     return true;
   }
 
-  closeHomePlatformShell();
+  closeHomePlatformShell({ clearPersistedState: true });
   window.location.href = href;
+  return true;
+}
+
+function isHomePlatformShellHashHref(href) {
+  const normalizedHref = normalizeString(href);
+  if (!normalizedHref) return false;
+
+  try {
+    const url = new URL(normalizedHref, window.location.href);
+    return url.pathname === window.location.pathname
+      && url.search === window.location.search
+      && url.hash.startsWith(HOME_PLATFORM_HASH_PREFIX);
+  } catch (_error) {
+    return normalizedHref.startsWith(HOME_PLATFORM_HASH_PREFIX);
+  }
+}
+
+function activateHomePlatformAnchorNavigation(target) {
+  const eventTarget = getEventElementTarget(target);
+  const anchor = eventTarget
+    ? eventTarget.closest('#home-platform-shell a[href]')
+    : null;
+
+  if (!(anchor instanceof HTMLAnchorElement)) {
+    return false;
+  }
+
+  if (anchor.hasAttribute('data-home-platform-internal-link') || isHomePlatformShellHashHref(anchor.getAttribute('href') || '')) {
+    return false;
+  }
+
+  closeHomePlatformShell({ clearPersistedState: true });
+  return false;
+}
+
+function activateHomePlatformProfileAction(target) {
+  const eventTarget = getEventElementTarget(target);
+  const profileAction = eventTarget
+    ? eventTarget.closest('#home-platform-shell [data-profile-action]')
+    : null;
+
+  if (!(profileAction instanceof HTMLElement)) {
+    return false;
+  }
+
+  const action = profileAction.getAttribute('data-profile-action') || '';
+  if (!action) {
+    return false;
+  }
+
+  routeProfileMenuAction(action);
   return true;
 }
 
@@ -1896,6 +1953,8 @@ function handleHomePlatformShellActivationEvent(event) {
 
   if (
     activateHomePlatformLinkTrigger(event.target)
+    || (event.type === 'click' && activateHomePlatformAnchorNavigation(event.target))
+    || (event.type === 'click' && activateHomePlatformProfileAction(event.target))
     || activateHomePlatformSubnavTrigger(event.target, event)
     || activateHomePlatformNavTrigger(event.target)
   ) {
@@ -1964,6 +2023,13 @@ function bindHomePlatformShellEvents() {
       return;
     }
 
+    activateHomePlatformAnchorNavigation(eventTarget);
+
+    if (activateHomePlatformProfileAction(eventTarget)) {
+      event.preventDefault();
+      return;
+    }
+
     if (activateHomePlatformNavTrigger(eventTarget)) {
       event.preventDefault();
       return;
@@ -1976,7 +2042,7 @@ function bindHomePlatformShellEvents() {
 
     const detailLink = eventTarget.closest('[data-home-platform-detail-href]');
     if (detailLink instanceof HTMLAnchorElement) {
-      closeHomePlatformShell();
+      closeHomePlatformShell({ clearPersistedState: true });
       return;
     }
 

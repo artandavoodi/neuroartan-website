@@ -76,6 +76,7 @@ const PROFILE_CHANGELOG_FIELD_LABELS = Object.freeze({
   public_identity_label: 'Identity label',
   public_location: 'Location',
   website_url: 'Website',
+  social_links: 'Social links',
   locale_country_label: 'Country / region',
   timezone: 'Time zone',
   preferred_language: 'Primary language',
@@ -84,6 +85,9 @@ const PROFILE_CHANGELOG_FIELD_LABELS = Object.freeze({
   professional_field: 'Professional field',
   expertise_areas: 'Expertise areas',
   current_focus: 'Current focus',
+  credentials_education: 'Credentials / education',
+  portfolio_links: 'Portfolio / work links',
+  industry_sector: 'Industry / sector',
   public_profile_enabled: 'Public profile visibility',
   public_profile_discoverable: 'Public discovery',
   profile_search_visible: 'Search visibility',
@@ -353,6 +357,7 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     public_summary: normalizeString(existingProfile?.public_summary || existingProfile?.public_bio || existingProfile?.bio || ''),
     public_location: normalizeString(existingProfile?.public_location || existingProfile?.location || ''),
     website_url: normalizeString(existingProfile?.website_url || existingProfile?.public_primary_link || ''),
+    social_links: Array.isArray(existingProfile?.social_links) ? existingProfile.social_links : [],
     locale_country_label: normalizeString(existingProfile?.locale_country_label || ''),
     timezone: normalizeString(existingProfile?.timezone || ''),
     preferred_language: normalizeString(existingProfile?.preferred_language || 'en'),
@@ -361,6 +366,9 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     professional_field: normalizeString(existingProfile?.professional_field || ''),
     expertise_areas: Array.isArray(existingProfile?.expertise_areas) ? existingProfile.expertise_areas : [],
     current_focus: normalizeString(existingProfile?.current_focus || ''),
+    credentials_education: normalizeString(existingProfile?.credentials_education || ''),
+    portfolio_links: Array.isArray(existingProfile?.portfolio_links) ? existingProfile.portfolio_links : [],
+    industry_sector: normalizeString(existingProfile?.industry_sector || ''),
     public_profile_enabled: existingProfile?.public_profile_enabled === true,
     public_profile_discoverable: existingProfile?.public_profile_discoverable === true,
     profile_search_visible: existingProfile?.profile_search_visible !== false,
@@ -414,6 +422,21 @@ function readDelimitedListValue(formData, name) {
     .filter(Boolean);
 }
 
+function readJsonArrayValue(formData, name) {
+  const rawValue = normalizeString(formData.get(name) || '');
+  if (!rawValue) return [];
+
+  try {
+    const parsed = JSON.parse(rawValue);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) {
+    return rawValue
+      .split(',')
+      .map((entry) => normalizeString(entry))
+      .filter(Boolean);
+  }
+}
+
 function readUploadableFile(source, name) {
   const file = source?.get?.(name) || source?.[name] || null;
   return typeof File !== 'undefined' && file instanceof File && file.size > 0 ? file : null;
@@ -459,8 +482,12 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         professional_field: normalizeString(formData.get('professional_field') || seed.professional_field || ''),
         expertise_areas: readDelimitedListValue(formData, 'expertise_areas'),
         current_focus: normalizeString(formData.get('current_focus') || seed.current_focus || ''),
+        credentials_education: normalizeString(formData.get('credentials_education') || seed.credentials_education || ''),
+        portfolio_links: readDelimitedListValue(formData, 'portfolio_links'),
+        industry_sector: normalizeString(formData.get('industry_sector') || seed.industry_sector || ''),
         public_location: normalizeString(formData.get('public_location') || seed.public_location || ''),
-        website_url: normalizeString(formData.get('website_url') || seed.website_url || '')
+        website_url: normalizeString(formData.get('website_url') || seed.website_url || ''),
+        social_links: readJsonArrayValue(formData, 'social_links')
       };
     case 'route':
       return {
@@ -474,7 +501,11 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         current_focus: normalizeString(formData.get('current_focus') || seed.current_focus || ''),
         public_location: normalizeString(formData.get('public_location') || seed.public_location || ''),
         website_url: normalizeString(formData.get('website_url') || seed.website_url || ''),
-        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || '')
+        social_links: readJsonArrayValue(formData, 'social_links'),
+        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
+        credentials_education: normalizeString(formData.get('credentials_education') || seed.credentials_education || ''),
+        portfolio_links: readDelimitedListValue(formData, 'portfolio_links'),
+        industry_sector: normalizeString(formData.get('industry_sector') || seed.industry_sector || '')
       };
     case 'privacy':
     case 'visibility':
@@ -938,6 +969,11 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     public_tagline: payload.public_tagline || currentProfile?.public_tagline || '',
     public_location: payload.public_location || currentProfile?.public_location || '',
     website_url: payload.website_url || currentProfile?.website_url || '',
+    social_links: Array.isArray(values.social_links)
+      ? values.social_links
+      : Array.isArray(payload.social_links)
+        ? payload.social_links
+        : currentProfile?.social_links || [],
     locale_country_label: payload.locale_country_label || currentProfile?.locale_country_label || '',
     timezone: payload.timezone || currentProfile?.timezone || '',
     preferred_language: payload.preferred_language || currentProfile?.preferred_language || 'en',
@@ -945,6 +981,13 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     professional_field: payload.professional_field || currentProfile?.professional_field || '',
     expertise_areas: Array.isArray(payload.expertise_areas) ? payload.expertise_areas : currentProfile?.expertise_areas || [],
     current_focus: payload.current_focus || currentProfile?.current_focus || '',
+    credentials_education: values.credentials_education || payload.credentials_education || currentProfile?.credentials_education || '',
+    portfolio_links: Array.isArray(values.portfolio_links)
+      ? values.portfolio_links
+      : Array.isArray(payload.portfolio_links)
+        ? payload.portfolio_links
+        : currentProfile?.portfolio_links || [],
+    industry_sector: values.industry_sector || payload.industry_sector || currentProfile?.industry_sector || '',
     cover_url: normalizedScope === 'media' && values.cover_url === ''
       ? ''
       : (payload.cover_url || currentProfile?.cover_url || ''),

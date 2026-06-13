@@ -6,11 +6,15 @@ alter table public.profiles
   add column if not exists preferred_name text,
   add column if not exists public_location text,
   add column if not exists website_url text,
+  add column if not exists social_links jsonb not null default '[]'::jsonb,
   add column if not exists timezone text,
   add column if not exists organization_name text,
   add column if not exists professional_field text,
   add column if not exists expertise_areas jsonb not null default '[]'::jsonb,
-  add column if not exists current_focus text;
+  add column if not exists current_focus text,
+  add column if not exists credentials_education text,
+  add column if not exists portfolio_links jsonb not null default '[]'::jsonb,
+  add column if not exists industry_sector text;
 
 alter table public.profiles
   drop constraint if exists profiles_gender_supported_check;
@@ -37,6 +41,20 @@ alter table public.profiles
 alter table public.profiles
   add constraint profiles_expertise_areas_array_check
   check (jsonb_typeof(expertise_areas) = 'array');
+
+alter table public.profiles
+  drop constraint if exists profiles_social_links_array_check;
+
+alter table public.profiles
+  add constraint profiles_social_links_array_check
+  check (jsonb_typeof(social_links) = 'array');
+
+alter table public.profiles
+  drop constraint if exists profiles_portfolio_links_array_check;
+
+alter table public.profiles
+  add constraint profiles_portfolio_links_array_check
+  check (jsonb_typeof(portfolio_links) = 'array');
 
 create table if not exists public.profile_identity_change_requests (
   id uuid primary key default gen_random_uuid(),
@@ -162,10 +180,14 @@ create trigger set_profile_organizations_updated_at
 comment on column public.profiles.preferred_name is 'User-approved preferred personal name for profile identity.';
 comment on column public.profiles.public_location is 'Public profile location shown on user-facing profile surfaces.';
 comment on column public.profiles.website_url is 'Primary public website URL for the profile.';
+comment on column public.profiles.social_links is 'User-approved public social profile links.';
 comment on column public.profiles.timezone is 'User profile timezone for locale-aware profile behavior.';
 comment on column public.profiles.organization_name is 'Primary public or professional organization name shown on profile-owned surfaces.';
 comment on column public.profiles.professional_field is 'User professional field or domain.';
 comment on column public.profiles.expertise_areas is 'User-approved public/professional expertise areas.';
 comment on column public.profiles.current_focus is 'User-approved current professional or creative focus.';
+comment on column public.profiles.credentials_education is 'User-approved professional credentials or education summary.';
+comment on column public.profiles.portfolio_links is 'User-approved professional portfolio or work links.';
+comment on column public.profiles.industry_sector is 'User-approved professional industry or sector.';
 comment on table public.profile_identity_change_requests is 'Governed request table for protected identity field changes such as date of birth.';
 comment on table public.profile_organizations is 'Profile-owned organization connection layer for the private profile Organizations tab.';

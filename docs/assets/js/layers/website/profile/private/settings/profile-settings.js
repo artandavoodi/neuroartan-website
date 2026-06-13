@@ -28,7 +28,12 @@ import {
   recordProfileChangelogEvent
 } from '../../../system/profile/profile-changelog-store.js';
 
+import { mountSettingsCategory } from '../../../home/platform-menu/settings/_shared/settings-category.js';
+
 const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
+const SOCIAL_LINKS_CONFIG_URL = '/assets/data/layers/website/profile/social-links.json';
+let profileSettingsSocialLinksConfig = null;
+let profileSettingsSocialLinksConfigPromise = null;
 
 /* =============================================================================
    02) SETTINGS HELPERS
@@ -36,6 +41,14 @@ const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
 
 function getSettingsRoots() {
   return Array.from(document.querySelectorAll('[data-profile-settings-panel]'));
+}
+
+function initializeSharedSettingsSections(root) {
+  if (!(root instanceof HTMLElement)) return;
+  if (root.dataset.profileSettingsSharedSectionsReady === 'true') return;
+
+  mountSettingsCategory(root);
+  root.dataset.profileSettingsSharedSectionsReady = 'true';
 }
 
 function setText(root, selector, value) {
@@ -216,6 +229,185 @@ function formatProfileSettingsListValue(value) {
   if (typeof value === 'string') return normalizeString(value);
   return '';
 }
+
+function normalizeProfileSettingsSocialEntry(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+  const platform = normalizeString(entry.platform || entry.id || '');
+  const value = normalizeString(entry.value || entry.username || entry.handle || entry.url || '');
+  const url = normalizeString(entry.url || '');
+  if (!platform || (!value && !url)) return null;
+  return { platform, value: value || url, url };
+}
+
+function parseProfileSettingsSocialLinks(value) {
+  if (Array.isArray(value)) {
+    return value.map(normalizeProfileSettingsSocialEntry).filter(Boolean);
+  }
+
+  if (typeof value !== 'string') return [];
+  const normalizedValue = normalizeString(value);
+  if (!normalizedValue) return [];
+
+  try {
+    const parsed = JSON.parse(normalizedValue);
+    if (Array.isArray(parsed)) {
+      return parsed.map(normalizeProfileSettingsSocialEntry).filter(Boolean);
+    }
+  } catch (_) {}
+
+  return normalizedValue
+    .split(',')
+    .map((item) => normalizeString(item))
+    .filter(Boolean)
+    .map((url) => ({ platform: 'website', value: url, url }));
+}
+
+function getProfileSettingsSocialInput(root) {
+  return root.querySelector('[data-profile-settings-social-links-input]');
+}
+
+function getProfileSettingsSocialOverlay(root) {
+  return root.querySelector('[data-profile-settings-social-overlay]');
+}
+
+function buildProfileSettingsSocialUrl(platform = {}, value = '') {
+  const normalizedValue = normalizeString(value).replace(/^@+/, '');
+  if (!normalizedValue) return '';
+  if (/^https?:\/\//i.test(normalizedValue)) return normalizedValue;
+  const baseUrl = normalizeString(platform.base_url || '');
+  if (!baseUrl) return normalizedValue;
+  return `${baseUrl}${normalizedValue}`;
+}
+
+function getProfileSettingsSocialSummary(links = []) {
+  const count = Array.isArray(links) ? links.length : 0;
+  if (!count) return 'Add public social profiles';
+  if (count === 1) return '1 public social profile';
+  return `${count} public social profiles`;
+}
+
+function setProfileSettingsSocialLinksState(root, value = []) {
+  const input = getProfileSettingsSocialInput(root);
+  const summary = root.querySelector('[data-profile-settings-social-links-summary]');
+  const links = parseProfileSettingsSocialLinks(value);
+
+  if (input instanceof HTMLInputElement) {
+    input.value = JSON.stringify(links);
+  }
+
+  if (summary instanceof HTMLElement) {
+    summary.textContent = getProfileSettingsSocialSummary(links);
+  }
+}
+
+async function loadProfileSettingsSocialLinksConfig() {
+  if (profileSettingsSocialLinksConfig) return profileSettingsSocialLinksConfig;
+  if (!profileSettingsSocialLinksConfigPromise) {
+    profileSettingsSocialLinksConfigPromise = fetch(SOCIAL_LINKS_CONFIG_URL, { headers: { Accept: 'application/json' } })
+      .then((response) => {
+        if (!response.ok) throw new Error('SOCIAL_LINKS_CONFIG_UNAVAILABLE');
+        return response.json();
+      })
+      .then((payload) => {
+        profileSettingsSocialLinksConfig = Array.isArray(payload?.platforms) ? payload.platforms : [];
+        return profileSettingsSocialLinksConfig;
+      })
+      .catch((error) => {
+        console.error('[profile-settings] Social links configuration could not be loaded.', error);
+        profileSettingsSocialLinksConfig = [];
+        return profileSettingsSocialLinksConfig;
+      });
+  }
+  return profileSettingsSocialLinksConfigPromise;
+}
+
+function renderProfileSettingsSocialRows(root, platforms = []) {
+  const list = root.querySelector('[data-profile-settings-social-list]');
+  const input = getProfileSettingsSocialInput(root);
+  if (!(list instanceof HTMLElement)) return;
+
+  const existingLinks = parseProfileSettingsSocialLinks(input instanceof HTMLInputElement ? input.value : '');
+  const existingByPlatform = new Map(existingLinks.map((entry) => [entry.platform, entry]));
+
+  list.replaceChildren(...platforms.map((platform) => {
+    const row = document.createElement('label');
+    row.className = 'profile-settings__social-row';
+    row.dataset.profileSettingsSocialPlatform = platform.id || '';
+
+    const icon = document.createElement('span');
+    icon.className = 'profile-settings__social-icon';
+    icon.setAttribute('aria-hidden', 'true');
+
+    const iconGlyph = document.createElement('span');
+    iconGlyph.className = 'profile-settings__social-icon-glyph';
+    iconGlyph.style.setProperty('--profile-settings-social-icon-source', `url("${platform.icon || ''}")`);
+    icon.appendChild(iconGlyph);
+
+    const copy = document.createElement('span');
+    copy.className = 'profile-settings__social-copy';
+
+    const label = document.createElement('span');
+    label.className = 'profile-settings__social-label';
+    label.textContent = platform.label || platform.id || '';
+
+    const field = document.createElement('input');
+    field.className = 'profile-settings__social-input';
+    field.type = 'text';
+    field.autocomplete = 'off';
+    field.dataset.profileSettingsSocialInput = platform.id || '';
+    field.placeholder = platform.placeholder || '';
+    field.value = existingByPlatform.get(platform.id)?.value || '';
+    field.setAttribute('aria-label', `${platform.label || platform.id || 'Social'} profile`);
+
+    copy.append(label, field);
+    row.append(icon, copy);
+    return row;
+  }));
+}
+
+async function openProfileSettingsSocialOverlay(root) {
+  const overlay = getProfileSettingsSocialOverlay(root);
+  if (!(overlay instanceof HTMLElement)) return;
+  const platforms = await loadProfileSettingsSocialLinksConfig();
+  renderProfileSettingsSocialRows(root, platforms);
+  overlay.hidden = false;
+}
+
+function closeProfileSettingsSocialOverlay(root) {
+  const overlay = getProfileSettingsSocialOverlay(root);
+  if (overlay instanceof HTMLElement) {
+    overlay.hidden = true;
+  }
+}
+
+async function applyProfileSettingsSocialLinks(root) {
+  const platforms = await loadProfileSettingsSocialLinksConfig();
+  const platformsById = new Map(platforms.map((platform) => [platform.id, platform]));
+  const links = Array.from(root.querySelectorAll('[data-profile-settings-social-input]'))
+    .map((field) => {
+      if (!(field instanceof HTMLInputElement)) return null;
+      const platformId = normalizeString(field.dataset.profileSettingsSocialInput || '');
+      const platform = platformsById.get(platformId) || { id: platformId };
+      const value = normalizeString(field.value || '');
+      if (!platformId || !value) return null;
+      return {
+        platform: platformId,
+        value,
+        url: buildProfileSettingsSocialUrl(platform, value)
+      };
+    })
+    .filter(Boolean);
+
+  setProfileSettingsSocialLinksState(root, links);
+  closeProfileSettingsSocialOverlay(root);
+
+  const form = root.querySelector('[data-profile-save-form]');
+  if (form instanceof HTMLFormElement) {
+    form.requestSubmit();
+  }
+}
+
+
 
 function getProfileSettingsCoordinates(position) {
   const latitude = Number(position?.coords?.latitude);
@@ -476,6 +668,7 @@ function renderPaneState(root, navigationState) {
 
 function renderSettings(state = getProfileRuntimeState(), navigationState = getProfileNavigationState(), saveState = getPrivateProfileSaveState()) {
   getSettingsRoots().forEach((root) => {
+    initializeSharedSettingsSections(root);
     const authenticated = state.viewerState === 'authenticated';
     const usernameLocked = Boolean(state.username.normalized);
 
@@ -501,8 +694,12 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'professional_field', state.profile?.professional_field || '');
     setValue(root, 'expertise_areas', formatProfileSettingsListValue(state.profile?.expertise_areas));
     setValue(root, 'current_focus', state.profile?.current_focus || '');
+    setValue(root, 'credentials_education', state.profile?.credentials_education || '');
+    setValue(root, 'portfolio_links', formatProfileSettingsListValue(state.profile?.portfolio_links));
+    setValue(root, 'industry_sector', state.profile?.industry_sector || '');
     setProfileSettingsLocationState(root, state.profile?.public_location || state.profile?.location || '', 'idle');
     setValue(root, 'website_url', state.profile?.website_url || state.profile?.public_primary_link || '');
+    setProfileSettingsSocialLinksState(root, state.profile?.social_links);
     setValue(root, 'public_profile_enabled', state.visibility.publicEnabled);
     setValue(root, 'public_profile_discoverable', state.visibility.discoverable);
     setValue(root, 'profile_search_visible', state.profile?.profile_search_visible !== false);
@@ -752,6 +949,37 @@ function initProfileSettings() {
       }
       return;
     }
+
+    const socialOpenButton = event.target.closest('[data-profile-settings-social-links-open]');
+    if (socialOpenButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = socialOpenButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        void openProfileSettingsSocialOverlay(root);
+      }
+      return;
+    }
+
+    const socialCloseButton = event.target.closest('.profile-settings__social-close[data-profile-settings-social-close]');
+    if (socialCloseButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = socialCloseButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        closeProfileSettingsSocialOverlay(root);
+      }
+      return;
+    }
+
+    const socialApplyButton = event.target.closest('[data-profile-settings-social-apply]');
+    if (socialApplyButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = socialApplyButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        void applyProfileSettingsSocialLinks(root);
+      }
+      return;
+    }
+
 
     const paneButton = event.target.closest('[data-profile-settings-pane-target]');
     if (paneButton instanceof HTMLElement) {

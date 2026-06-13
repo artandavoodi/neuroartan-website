@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "title": "Social Links",
+  "description": "Public social profile link definitions for the Edit Profile social links overlay.",
+  "platforms": [
+    {
+      "id": "github",
+      "label": "GitHub",
+      "placeholder": "Username or full URL",
+      "base_url": "https://github.com/",
+      "icon": "/registry/icons/public/assets/system/social/github.svg"
+    },
+    {
+      "id": "x",
+      "label": "X",
+      "placeholder": "Username or full URL",
+      "base_url": "https://x.com/",
+      "icon": "/registry/icons/public/assets/system/social/x.svg"
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "placeholder": "Username or full URL",
+      "base_url": "https://www.linkedin.com/in/",
+      "icon": "/registry/icons/public/assets/system/social/linkedin.svg"
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "placeholder": "Username or full URL",
+      "base_url": "https://www.instagram.com/",
+      "icon": "/registry/icons/public/assets/system/social/instagram.svg"
+    },
+    {
+      "id": "youtube",
+      "label": "YouTube",
+      "placeholder": "Username or full URL",
+      "base_url": "https://www.youtube.com/@",
+      "icon": "/registry/icons/public/assets/layers/website/social/platforms/youtube.svg"
+    },
+    {
+      "id": "tiktok",
+      "label": "TikTok",
+      "placeholder": "Username or full URL",
+      "base_url": "https://www.tiktok.com/@",
+      "icon": "/registry/icons/public/assets/layers/website/social/platforms/tiktok.svg"
+    },
+    {
+      "id": "facebook",
+      "label": "Facebook",
+      "placeholder": "Username or full URL",
+      "base_url": "https://www.facebook.com/",
+      "icon": "/registry/icons/public/assets/layers/website/social/platforms/facebook.svg"
+    },
+    {
+      "id": "discord",
+      "label": "Discord",
+      "placeholder": "Username or full URL",
+      "base_url": "https://discord.com/users/",
+      "icon": "/registry/icons/public/assets/system/social/discord.svg"
+    }
+  ]
+}

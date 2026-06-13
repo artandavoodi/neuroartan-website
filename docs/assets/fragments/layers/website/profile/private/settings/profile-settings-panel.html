@@ -5,220 +5,282 @@
      04) SETTINGS PANES
 ============================================================================= -->
 <div class="profile-settings" data-profile-settings-panel data-profile-surface="private" role="dialog" aria-modal="true" aria-label="Edit profile">
-  <button
-    class="profile-settings__close global-close-button"
-    type="button"
-    data-profile-settings-close
-    aria-label="Close edit profile"
-  >
-    <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-    <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-  </button>
-
   <div class="profile-settings__hero-mount" data-include="profile-private-hero"></div>
 
   <div class="profile-settings__panes">
     <section class="profile-settings__pane" data-profile-settings-pane="identity">
       <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="identity" novalidate>
-        <div class="profile-settings__section" data-profile-settings-section="public-profile">
-          <h3 class="profile-settings__section-title">Public profile</h3>
-          <div class="profile-settings__field-grid">
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Display name</span>
-              <input class="ui-field profile-settings__input" type="text" name="display_name" autocomplete="nickname" placeholder="Name shown on your profile" aria-label="Display name">
-            </label>
+        <section class="home-platform-theme__section" aria-labelledby="profile-settings-public-profile-title" data-home-platform-theme-section>
+          <button class="home-platform-theme__section-eyebrow" type="button" aria-expanded="true" aria-controls="profile-settings-public-profile-body" data-home-platform-theme-section-toggle>
+            <span class="home-platform-theme__section-title" id="profile-settings-public-profile-title">Public profile</span>
+            <span class="home-platform-theme__section-toggle-icon" aria-hidden="true"></span>
+          </button>
+          <div class="home-platform-theme__section-content" id="profile-settings-public-profile-body" data-home-platform-theme-section-content>
+            <div class="profile-settings__field-grid">
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Display name</span>
+                <input class="ui-field profile-settings__input" type="text" name="display_name" autocomplete="nickname" placeholder="Name shown on your profile" aria-label="Display name">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Profile headline</span>
-              <input class="ui-field profile-settings__input" type="text" name="public_tagline" placeholder="Short headline shown under your name" aria-label="Profile headline">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Profile headline</span>
+                <input class="ui-field profile-settings__input" type="text" name="public_tagline" placeholder="Short headline shown under your name" aria-label="Profile headline">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--with-info profile-settings__field--full">
-              <div class="profile-settings__label-row">
-                <span class="profile-settings__label">Username</span>
-                <span class="profile-settings__field-info">
-                  <button class="profile-settings__info-button" type="button" data-profile-settings-info-toggle aria-expanded="false" aria-label="Username information">
-                    <span class="profile-settings__icon-wrap" aria-hidden="true">
-                      <img class="profile-settings__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/for-more-information-about/for-more-information-about.svg" alt="" aria-hidden="true">
-                    </span>
-                  </button>
-                  <span class="profile-settings__info-popover" data-profile-settings-info-popover hidden>
-                    <span class="profile-settings__info-content" data-profile-settings-username-note>
-                      Username changes are governed by the canonical reservation policy.
+              <label class="profile-settings__field profile-settings__field--with-info profile-settings__field--full">
+                <div class="profile-settings__label-row">
+                  <span class="profile-settings__label">Username</span>
+                  <span class="profile-settings__field-info">
+                    <button class="profile-settings__info-button" type="button" data-profile-settings-info-toggle aria-expanded="false" aria-label="Username information">
+                      <span class="profile-settings__icon-wrap" aria-hidden="true">
+                        <img class="profile-settings__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/for-more-information-about/for-more-information-about.svg" alt="" aria-hidden="true">
+                      </span>
+                    </button>
+                    <span class="profile-settings__info-popover" data-profile-settings-info-popover hidden>
+                      <span class="profile-settings__info-content" data-profile-settings-username-note>
+                        Username changes are governed by the canonical reservation policy.
+                      </span>
                     </span>
                   </span>
-                </span>
+                </div>
+                <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false" placeholder="username" aria-label="Username">
+              </label>
+
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Bio</span>
+                <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Short public bio" aria-label="Bio"></textarea>
+              </label>
+
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Public location</span>
+                <input class="ui-field profile-settings__input" type="hidden" name="public_location" data-profile-settings-location>
+                <button class="profile-settings__location-action" type="button" data-profile-settings-location-action>
+                  <span data-profile-settings-location-label>Use current location</span>
+                </button>
+              </label>
+
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Website</span>
+                <input class="ui-field profile-settings__input" type="url" name="website_url" placeholder="https://example.com" aria-label="Website">
+              </label>
+
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-social-links-field>
+                <span class="profile-settings__label">Social links</span>
+                <input class="ui-field profile-settings__input" type="hidden" name="social_links" data-profile-settings-social-links-input>
+                <button class="profile-settings__social-links-action" type="button" data-profile-settings-social-links-open>
+                  <span class="profile-settings__social-links-summary" data-profile-settings-social-links-summary>Add public social profiles</span>
+                </button>
               </div>
-              <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false" placeholder="username" aria-label="Username">
-            </label>
-
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Bio</span>
-              <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Short public bio" aria-label="Bio"></textarea>
-            </label>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="profile-settings__section" data-profile-settings-section="personal-identity">
-          <h3 class="profile-settings__section-title">Personal identity</h3>
-          <div class="profile-settings__field-grid">
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">First name</span>
-              <input class="ui-field profile-settings__input" type="text" name="first_name" autocomplete="given-name" placeholder="Given name" aria-label="First name">
-            </label>
+        <section class="home-platform-theme__section" aria-labelledby="profile-settings-personal-identity-title" data-home-platform-theme-section data-home-platform-theme-section-collapsed="true">
+          <button class="home-platform-theme__section-eyebrow" type="button" aria-expanded="false" aria-controls="profile-settings-personal-identity-body" data-home-platform-theme-section-toggle>
+            <span class="home-platform-theme__section-title" id="profile-settings-personal-identity-title">Personal identity</span>
+            <span class="home-platform-theme__section-toggle-icon" aria-hidden="true"></span>
+          </button>
+          <div class="home-platform-theme__section-content" id="profile-settings-personal-identity-body" data-home-platform-theme-section-content hidden>
+            <div class="profile-settings__field-grid">
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">First name</span>
+                <input class="ui-field profile-settings__input" type="text" name="first_name" autocomplete="given-name" placeholder="Given name" aria-label="First name">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Last name</span>
-              <input class="ui-field profile-settings__input" type="text" name="last_name" autocomplete="family-name" placeholder="Family name" aria-label="Last name">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Last name</span>
+                <input class="ui-field profile-settings__input" type="text" name="last_name" autocomplete="family-name" placeholder="Family name" aria-label="Last name">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Preferred name</span>
-              <input class="ui-field profile-settings__input" type="text" name="preferred_name" autocomplete="nickname" placeholder="Name you prefer to be addressed by" aria-label="Preferred name">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Preferred name</span>
+                <input class="ui-field profile-settings__input" type="text" name="preferred_name" autocomplete="nickname" placeholder="Name you prefer to be addressed by" aria-label="Preferred name">
+              </label>
 
-            <label class="profile-settings__field">
-              <span class="profile-settings__label">Date of birth</span>
-              <input
-                class="ui-field profile-settings__input"
-                type="hidden"
-                name="date_of_birth"
-                autocomplete="bday"
-                data-profile-settings-date-of-birth
-              >
-              <span class="profile-settings__date-grid" data-profile-settings-date-grid>
-                <span class="ui-inline-dropdown profile-settings__select-control">
-                  <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="month">Month</span>
+              <label class="profile-settings__field">
+                <span class="profile-settings__label">Date of birth</span>
+                <input
+                  class="ui-field profile-settings__input"
+                  type="hidden"
+                  name="date_of_birth"
+                  autocomplete="bday"
+                  data-profile-settings-date-of-birth
+                >
+                <span class="profile-settings__date-grid" data-profile-settings-date-grid>
+                  <span class="ui-inline-dropdown profile-settings__select-control">
+                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="month">Month</span>
+                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                      <select
+                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                        data-profile-settings-date-control="month"
+                        aria-label="Birth month"
+                      >
+                        <option value="">Month</option>
+                      </select>
+                    </span>
+                  </span>
+                  <span class="ui-inline-dropdown profile-settings__select-control">
+                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="day">Day</span>
+                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                      <select
+                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                        data-profile-settings-date-control="day"
+                        aria-label="Birth day"
+                      >
+                        <option value="">Day</option>
+                      </select>
+                    </span>
+                  </span>
+                  <span class="ui-inline-dropdown profile-settings__select-control">
+                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="year">Year</span>
+                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
+                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
+                      <select
+                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
+                        data-profile-settings-date-control="year"
+                        aria-label="Birth year"
+                      >
+                        <option value="">Year</option>
+                      </select>
+                    </span>
+                  </span>
+                </span>
+              </label>
+
+              <label class="profile-settings__field profile-settings__field--full">
+                <span class="profile-settings__label">Gender</span>
+                <span class="ui-inline-dropdown profile-settings__dropdown">
+                  <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-select-label="gender">Male</span>
                   <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
                     <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                    <select
-                      class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                      data-profile-settings-date-control="month"
-                      aria-label="Birth month"
-                    >
-                      <option value="">Month</option>
+                    <select class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select" name="gender" aria-label="Gender">
+                      <option value="female">Female</option>
+                      <option value="male" selected>Male</option>
                     </select>
                   </span>
                 </span>
-                <span class="ui-inline-dropdown profile-settings__select-control">
-                  <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="day">Day</span>
-                  <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                    <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                    <select
-                      class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                      data-profile-settings-date-control="day"
-                      aria-label="Birth day"
-                    >
-                      <option value="">Day</option>
-                    </select>
-                  </span>
-                </span>
-                <span class="ui-inline-dropdown profile-settings__select-control">
-                  <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="year">Year</span>
-                  <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                    <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                    <select
-                      class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                      data-profile-settings-date-control="year"
-                      aria-label="Birth year"
-                    >
-                      <option value="">Year</option>
-                    </select>
-                  </span>
-                </span>
-              </span>
-            </label>
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--full">
-              <span class="profile-settings__label">Gender</span>
-              <span class="ui-inline-dropdown profile-settings__dropdown">
-                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-select-label="gender">Male</span>
-                <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                  <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                  <select class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select" name="gender" aria-label="Gender">
-                    <option value="female">Female</option>
-                    <option value="male" selected>Male</option>
-                  </select>
-                </span>
-              </span>
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Country / region</span>
+                <input class="ui-field profile-settings__input" type="text" name="locale_country_label" autocomplete="country-name" placeholder="Country or region" aria-label="Country or region">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Country / region</span>
-              <input class="ui-field profile-settings__input" type="text" name="locale_country_label" autocomplete="country-name" placeholder="Country or region" aria-label="Country or region">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Time zone</span>
+                <input class="ui-field profile-settings__input" type="text" name="timezone" placeholder="Time zone" aria-label="Time zone">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Time zone</span>
-              <input class="ui-field profile-settings__input" type="text" name="timezone" placeholder="Time zone" aria-label="Time zone">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Primary language</span>
+                <input class="ui-field profile-settings__input" type="text" name="preferred_language" placeholder="Primary language" aria-label="Primary language">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Primary language</span>
-              <input class="ui-field profile-settings__input" type="text" name="preferred_language" placeholder="Primary language" aria-label="Primary language">
-            </label>
-
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Additional languages</span>
-              <input class="ui-field profile-settings__input" type="text" name="locale_languages" placeholder="Additional languages" aria-label="Additional languages">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Additional languages</span>
+                <input class="ui-field profile-settings__input" type="text" name="locale_languages" placeholder="Additional languages" aria-label="Additional languages">
+              </label>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="profile-settings__section" data-profile-settings-section="professional-identity">
-          <h3 class="profile-settings__section-title">Professional identity</h3>
-          <div class="profile-settings__field-grid">
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Professional role</span>
-              <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Role or professional focus" aria-label="Professional role">
-            </label>
+        <section class="home-platform-theme__section" aria-labelledby="profile-settings-professional-identity-title" data-home-platform-theme-section data-home-platform-theme-section-collapsed="true">
+          <button class="home-platform-theme__section-eyebrow" type="button" aria-expanded="false" aria-controls="profile-settings-professional-identity-body" data-home-platform-theme-section-toggle>
+            <span class="home-platform-theme__section-title" id="profile-settings-professional-identity-title">Professional identity</span>
+            <span class="home-platform-theme__section-toggle-icon" aria-hidden="true"></span>
+          </button>
+          <div class="home-platform-theme__section-content" id="profile-settings-professional-identity-body" data-home-platform-theme-section-content hidden>
+            <div class="profile-settings__field-grid">
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Professional role</span>
+                <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Role or professional focus" aria-label="Professional role">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Organization / company</span>
-              <input class="ui-field profile-settings__input" type="text" name="organization_name" placeholder="Organization or company" aria-label="Organization or company">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Organization / company</span>
+                <input class="ui-field profile-settings__input" type="text" name="organization_name" placeholder="Organization or company" aria-label="Organization or company">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet">
-              <span class="profile-settings__label">Professional field</span>
-              <input class="ui-field profile-settings__input" type="text" name="professional_field" placeholder="Field or domain" aria-label="Professional field">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Professional field</span>
+                <input class="ui-field profile-settings__input" type="text" name="professional_field" placeholder="Field or domain" aria-label="Professional field">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Expertise areas</span>
-              <input class="ui-field profile-settings__input" type="text" name="expertise_areas" placeholder="Areas of expertise" aria-label="Expertise areas">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Expertise areas</span>
+                <input class="ui-field profile-settings__input" type="text" name="expertise_areas" placeholder="Areas of expertise" aria-label="Expertise areas">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Current focus</span>
-              <input class="ui-field profile-settings__input" type="text" name="current_focus" placeholder="Current focus" aria-label="Current focus">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Current focus</span>
+                <input class="ui-field profile-settings__input" type="text" name="current_focus" placeholder="Current focus" aria-label="Current focus">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Location</span>
-              <input class="ui-field profile-settings__input" type="hidden" name="public_location" data-profile-settings-location>
-              <button class="profile-settings__location-action" type="button" data-profile-settings-location-action>
-                <span data-profile-settings-location-label>Use current location</span>
-              </button>
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Credentials / education</span>
+                <input class="ui-field profile-settings__input" type="text" name="credentials_education" placeholder="Credentials or education" aria-label="Credentials or education">
+              </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Website</span>
-              <input class="ui-field profile-settings__input" type="url" name="website_url" placeholder="https://example.com" aria-label="Website">
-            </label>
+              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+                <span class="profile-settings__label">Portfolio / work links</span>
+                <input class="ui-field profile-settings__input" type="text" name="portfolio_links" placeholder="Portfolio or work links" aria-label="Portfolio or work links">
+              </label>
+
+              <label class="profile-settings__field profile-settings__field--quiet">
+                <span class="profile-settings__label">Industry / sector</span>
+                <input class="ui-field profile-settings__input" type="text" name="industry_sector" placeholder="Industry or sector" aria-label="Industry or sector">
+              </label>
+            </div>
           </div>
-        </div>
+        </section>
 
         <div class="profile-settings__status" data-profile-save-status="identity" aria-live="polite"></div>
 
-        <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="identity">
+        <div class="profile-settings__actions model-management__identity-actions">
+          <button class="ui-button ui-button--ghost" type="button" data-profile-settings-close>
             <span class="ui-button__icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/close/close.svg" alt="">
             </span>
+            <span>Cancel</span>
+          </button>
+          <button class="model-management__button" type="submit" data-profile-save-submit="identity">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
             <span>Save</span>
           </button>
         </div>
       </form>
+    </section>
+  </div>
+
+  <div class="profile-settings__social-overlay" data-profile-settings-social-overlay hidden>
+    <div class="profile-settings__social-overlay-backdrop" data-profile-settings-social-close></div>
+    <section class="profile-settings__social-panel" role="dialog" aria-modal="true" aria-label="Social links">
+      <button
+        class="profile-settings__social-close global-close-button"
+        type="button"
+        data-profile-settings-social-close
+        aria-label="Close social links"
+      >
+        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+      </button>
+
+      <header class="profile-settings__social-header">
+        <h2 class="profile-settings__social-title">Social links</h2>
+      </header>
+
+      <div class="profile-settings__social-list" data-profile-settings-social-list></div>
+
+      <footer class="profile-settings__social-actions">
+        <button class="ui-button ui-button--secondary" type="button" data-profile-settings-social-apply>
+          <span class="ui-button__icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+          </span>
+          <span>Save</span>
+        </button>
+      </footer>
     </section>
   </div>
 </div>

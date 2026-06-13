@@ -15,7 +15,7 @@ import { recordProfileChangelogEvent } from '../../../../system/profile/profile-
 
 const ACCOUNT_DETAIL_STORAGE_KEY = 'neuroartan.home.settings.account.detail';
 const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
-const ACCOUNT_DETAILS = new Set(['password']);
+const ACCOUNT_DETAILS = new Set(['password', 'verification']);
 
 const ACCOUNT_PRIVACY_FIELDS = [
   'public_profile_enabled',
@@ -125,24 +125,22 @@ async function loadAccountProfile() {
 
 async function renderAccountPrivacyState(root) {
   const form = root.querySelector('[data-account-privacy-form]');
-  if (!(form instanceof HTMLFormElement)) return;
+  if (!(form instanceof HTMLElement)) return;
+
+  setAccountPrivacyControlsDisabled(root, true);
 
   try {
     const profile = await loadAccountProfile();
     ACCOUNT_PRIVACY_FIELDS.forEach((key) => {
       setPrivacyToggleState(root, key, normalizeBoolean(profile[key], ACCOUNT_PRIVACY_DEFAULTS[key]));
     });
-    setStatus(root, '[data-account-privacy-status]', 'Privacy and visibility settings are current.', 'ready');
   } catch (error) {
     ACCOUNT_PRIVACY_FIELDS.forEach((key) => {
       setPrivacyToggleState(root, key, ACCOUNT_PRIVACY_DEFAULTS[key]);
     });
-    const code = normalizeString(error?.message || '');
-    const message = code === 'PROFILE_REQUIRED'
-      ? 'Create and save your profile before editing privacy settings.'
-      : 'Privacy and visibility settings could not be loaded.';
-    setStatus(root, '[data-account-privacy-status]', message, 'error');
     console.error('[account-settings] Privacy state failed.', error);
+  } finally {
+    setAccountPrivacyControlsDisabled(root, false);
   }
 }
 
@@ -150,7 +148,6 @@ async function updateAccountPrivacyField(root, key, value) {
   if (!ACCOUNT_PRIVACY_FIELDS.includes(key)) return;
 
   setAccountPrivacyControlsDisabled(root, true);
-  setStatus(root, '[data-account-privacy-status]', 'Saving privacy and visibility settings...', 'pending');
 
   try {
     const supabase = getSupabaseClient();
@@ -165,7 +162,6 @@ async function updateAccountPrivacyField(root, key, value) {
     if (error) throw error;
 
     setPrivacyToggleState(root, key, value === true);
-    setStatus(root, '[data-account-privacy-status]', 'Privacy and visibility settings saved.', 'success');
     void recordProfileChangelogEvent({
       area: 'account.privacy_visibility',
       action: 'privacy_visibility_updated',
@@ -173,7 +169,6 @@ async function updateAccountPrivacyField(root, key, value) {
       detail: `Account privacy setting updated: ${key}.`
     });
   } catch (error) {
-    setStatus(root, '[data-account-privacy-status]', 'Privacy and visibility settings could not be saved.', 'error');
     void renderAccountPrivacyState(root);
     console.error('[account-settings] Privacy update failed.', error);
   } finally {
@@ -192,8 +187,12 @@ function setActiveDetail(root, detail = '', options = {}) {
   if (options.persist !== false) {
     writeStoredDetail(normalized);
   }
-  void renderVerificationState(root);
-  void renderAccountPrivacyState(root);
+  if (!normalized) {
+    void renderAccountPrivacyState(root);
+  }
+  if (!normalized || normalized === 'verification') {
+    void renderVerificationState(root);
+  }
 }
 
 async function getCurrentAuthUser() {
@@ -333,7 +332,6 @@ async function handleVerificationSubmit(root, form) {
 export function mountHomePlatformDestination(root, options = {}) {
   mountSettingsCategory(root, options);
   setActiveDetail(root, readStoredDetail(), { persist: false });
-  void renderAccountPrivacyState(root);
 
   root.addEventListener('click', (event) => {
     const trigger = event.target.closest('[data-account-settings-detail]');
@@ -355,11 +353,6 @@ export function mountHomePlatformDestination(root, options = {}) {
     const form = event.target;
     if (!(form instanceof HTMLFormElement)) return;
 
-    if (form.matches('[data-account-privacy-form]')) {
-      event.preventDefault();
-      return;
-    }
-
     if (form.matches('[data-account-password-form]')) {
       event.preventDefault();
       void handlePasswordSubmit(root, form);
@@ -377,8 +370,13 @@ export function mountHomePlatformDestination(root, options = {}) {
 
 export function updateHomePlatformDestination(root) {
   if (root instanceof Element) {
-    void renderVerificationState(root);
-    void renderAccountPrivacyState(root);
+    const detail = root.dataset.accountSettingsDetail || '';
+    if (!detail) {
+      void renderAccountPrivacyState(root);
+    }
+    if (!detail || detail === 'verification') {
+      void renderVerificationState(root);
+    }
   }
 }
 

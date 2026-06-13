@@ -78,6 +78,7 @@
   border-top:var(--spacing-none);
 }
 
+
 .home-platform-settings-category__section-header{
   display:flex;
   flex-direction:column;

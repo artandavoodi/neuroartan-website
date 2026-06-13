@@ -10,6 +10,10 @@ const recorderState = new WeakMap();
 const voiceUiState = new WeakMap();
 const VOICE_WORKSPACE_STORAGE_KEY = 'neuroartan.model.voiceTraining.workspace';
 const FINE_TUNE_STORAGE_KEY = 'neuroartan.model.voiceTraining.fineTune';
+const VOICE_MODE_ICONS = Object.freeze({
+  guided: '/registry/icons/public/assets/core/actions/guided-voice-capture/guided-voice-capture.svg',
+  casual: '/registry/icons/public/assets/core/actions/casual-voice-capture/casual-voice-capture.svg',
+});
 
 const SAMPLE_ORIGIN_LABELS = Object.freeze({
   guided_recording: 'Guided recording',
@@ -127,6 +131,52 @@ function scoreTranscriptMatch(expected = '', actual = '') {
   return hits / expectedWords.length;
 }
 
+function getOrderedPromptMatchCount(expected = '', actual = '') {
+  const expectedWords = normalizeSpeechText(expected).split(' ').filter(Boolean);
+  const actualWords = normalizeSpeechText(actual).split(' ').filter(Boolean);
+  if (!expectedWords.length || !actualWords.length) return 0;
+
+  let actualIndex = 0;
+  let matchedCount = 0;
+  for (const expectedWord of expectedWords) {
+    while (actualIndex < actualWords.length && actualWords[actualIndex] !== expectedWord) {
+      actualIndex += 1;
+    }
+    if (actualIndex >= actualWords.length) break;
+    matchedCount += 1;
+    actualIndex += 1;
+  }
+
+  return matchedCount;
+}
+
+function getPromptCompletionRatio(expected = '', actual = '') {
+  const expectedWords = normalizeSpeechText(expected).split(' ').filter(Boolean);
+  if (!expectedWords.length) return 0;
+  return getOrderedPromptMatchCount(expected, actual) / expectedWords.length;
+}
+
+function renderPromptProgress(root, transcript = '') {
+  const prompt = queryVoice(root, '[data-model-voice-training-live-prompt]');
+  if (!(prompt instanceof HTMLElement)) return;
+  const expected = getVoiceUiState(root).captureMode === 'guided'
+    ? getPromptByIndex(getVoiceUiState(root).livePromptIndex).text
+    : prompt.textContent;
+  const matchedCount = getOrderedPromptMatchCount(expected, transcript);
+
+  prompt.innerHTML = '';
+  normalizeString(expected).split(/(\s+)/).forEach((part) => {
+    const span = document.createElement('span');
+    span.textContent = part;
+    if (normalizeSpeechText(part)) {
+      const wordIndex = prompt.querySelectorAll('[data-voice-prompt-word]').length;
+      span.dataset.voicePromptWord = String(wordIndex);
+      if (wordIndex < matchedCount) span.dataset.voicePromptMatched = 'true';
+    }
+    prompt.append(span);
+  });
+}
+
 function getVoiceUiState(root) {
   const state = voiceUiState.get(root) || {};
   return {
@@ -142,6 +192,13 @@ function setVoiceUiState(root, nextState = {}) {
     ...getVoiceUiState(root),
     ...nextState,
   });
+}
+
+function getActivePromptText(root) {
+  const state = getVoiceUiState(root);
+  return state.captureMode === 'guided'
+    ? getPromptByIndex(state.livePromptIndex).text
+    : normalizeString(queryVoice(root, '[data-model-voice-training-live-prompt]')?.textContent);
 }
 
 function titleCase(value = '') {
@@ -173,6 +230,17 @@ function setText(root, selector, value = '') {
   if (element) element.textContent = value;
 }
 
+function setCaptureStatus(root, message = '', tone = 'neutral') {
+  const status = queryVoice(root, '[data-model-voice-training-recording-status]');
+  if (!(status instanceof HTMLElement)) return;
+  const text = status.querySelector('[data-model-voice-training-recording-status-text]');
+  const icon = status.querySelector('[data-model-voice-training-recording-status-icon]');
+  status.dataset.captureStatus = tone;
+  if (text instanceof HTMLElement) text.textContent = message;
+  else status.textContent = message;
+  setElementHidden(icon, !['captured', 'saving'].includes(tone));
+}
+
 function setTextFromRootOrDocument(root, selector, value = '') {
   const element = queryVoice(root, selector);
   if (element) element.textContent = value;
@@ -189,6 +257,7 @@ function setStatus(root, message = '', tone = 'neutral') {
 function setElementHidden(element, hidden = true) {
   if (!(element instanceof HTMLElement)) return;
   element.hidden = Boolean(hidden);
+  element.style.display = hidden ? 'none' : '';
 }
 
 function storageAvailable() {
@@ -397,7 +466,7 @@ function applyLivePrompt(root, index = getVoiceUiState(root).livePromptIndex) {
     setText(root, '[data-model-voice-training-live-transcript]', 'Transcript appears here when browser speech recognition is available.');
     setText(root, '[data-model-voice-training-validation]', '');
     setElementHidden(queryVoice(root, '[data-model-voice-training-validation]'), true);
-    setText(root, '[data-model-voice-training-recording-status]', 'Ready for capture');
+    setCaptureStatus(root, 'Ready for capture');
     updateDropdownLabels(root);
     return;
   }
@@ -414,10 +483,11 @@ function applyLivePrompt(root, index = getVoiceUiState(root).livePromptIndex) {
   setText(root, '[data-model-voice-training-live-tone]', `${toneLabel} voice`);
   setText(root, '[data-model-voice-training-live-instruction]', `Say this sentence in a ${toneLabel.toLowerCase()} voice.`);
   setText(root, '[data-model-voice-training-live-prompt]', prompt.text);
+  renderPromptProgress(root, '');
   setText(root, '[data-model-voice-training-live-transcript]', 'Transcript appears here when browser speech recognition is available.');
   setText(root, '[data-model-voice-training-validation]', '');
   setElementHidden(queryVoice(root, '[data-model-voice-training-validation]'), true);
-  setText(root, '[data-model-voice-training-recording-status]', 'Ready for capture');
+  setCaptureStatus(root, 'Ready for capture');
   setVoiceUiState(root, { livePromptIndex: index, liveTranscript: '' });
   updateDropdownLabels(root);
 }
@@ -426,11 +496,19 @@ function setCaptureMode(root, mode = 'guided') {
   const captureMode = mode === 'casual' ? 'casual' : 'guided';
   setVoiceUiState(root, { captureMode });
   queryVoice(root, '[data-model-voice-training-close-confirmation]')?.setAttribute('hidden', '');
-  document.querySelectorAll('[data-model-voice-training-mode]').forEach((button) => {
-    if (!(button instanceof HTMLButtonElement)) return;
-    const isActive = button.dataset.modelVoiceTrainingMode === captureMode;
-    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-  });
+  const toggle = queryVoice(root, '[data-model-voice-training-mode-toggle]');
+  const icon = queryVoice(root, '[data-model-voice-training-mode-icon]');
+  const label = queryVoice(root, '[data-model-voice-training-mode-label]');
+  if (toggle instanceof HTMLButtonElement) {
+    toggle.dataset.modelVoiceTrainingMode = captureMode;
+    toggle.setAttribute('aria-pressed', captureMode === 'guided' ? 'true' : 'false');
+  }
+  if (icon instanceof HTMLImageElement) {
+    icon.src = VOICE_MODE_ICONS[captureMode] || VOICE_MODE_ICONS.guided;
+  }
+  if (label instanceof HTMLElement) {
+    label.textContent = captureMode === 'guided' ? 'Guided capture' : 'Casual capture';
+  }
   applyLivePrompt(root);
   setCapturePhase(root, 'idle');
 }
@@ -438,7 +516,10 @@ function setCaptureMode(root, mode = 'guided') {
 function setCapturePhase(root, phase = 'idle') {
   const capturePhase = ['idle', 'recording', 'captured', 'saving'].includes(phase) ? phase : 'idle';
   setVoiceUiState(root, { capturePhase });
-  const hasPrevious = getVoiceUiState(root).captureMode === 'guided' && getVoiceUiState(root).livePromptIndex > 0;
+  const state = getVoiceUiState(root);
+  const isGuided = state.captureMode === 'guided';
+  const hasPrevious = isGuided && state.livePromptIndex > 0;
+  const promptVisible = capturePhase !== 'idle';
   const phaseLabel = capturePhase === 'recording'
     ? 'Recording'
     : capturePhase === 'captured'
@@ -448,6 +529,11 @@ function setCapturePhase(root, phase = 'idle') {
         : 'Ready';
 
   setText(root, '[data-model-voice-training-step-state]', phaseLabel);
+  setElementHidden(queryVoice(root, '.model-voice-training__training-nav'), capturePhase === 'idle' && !hasPrevious);
+  setElementHidden(queryVoice(root, '[data-model-voice-training-live-instruction]'), !promptVisible);
+  setElementHidden(queryVoice(root, '[data-model-voice-training-live-prompt]'), !promptVisible);
+  setElementHidden(queryVoice(root, '[data-model-voice-training-live-transcript]'), !promptVisible || isGuided);
+  setElementHidden(queryVoice(root, '[data-model-voice-training-waveform]'), !promptVisible);
   setElementHidden(queryVoice(root, '[data-model-voice-training-record]'), capturePhase !== 'idle');
   setElementHidden(queryVoice(root, '[data-model-voice-training-stop]'), capturePhase !== 'recording');
   setElementHidden(queryVoice(root, '[data-model-voice-training-save-recording]'), capturePhase !== 'captured');
@@ -462,8 +548,6 @@ function validateGuidedCapture(root) {
   const transcript = state.liveTranscript;
 
   if (!transcript) {
-    setText(root, '[data-model-voice-training-validation]', 'Transcript was not available. Save manually or reset and try again.');
-    setElementHidden(queryVoice(root, '[data-model-voice-training-validation]'), false);
     return { accepted: true, score: 0, transcriptRequired: false };
   }
 
@@ -496,9 +580,16 @@ function openWorkspace(root, selector) {
   if (workspace.parentElement !== document.body) {
     document.body.append(workspace);
   }
+  if (selector === '[data-model-voice-training-live-overlay]') {
+    clearCurrentCapture(root);
+    applyLivePrompt(root);
+    setCapturePhase(root, 'idle');
+  }
   workspace.hidden = false;
+  workspace.style.display = '';
   workspace.setAttribute('aria-hidden', 'false');
-  writeStoredWorkspace(selector);
+  if (selector === '[data-model-voice-training-live-overlay]') writeStoredWorkspace('');
+  else writeStoredWorkspace(selector);
   setWorkspaceOpen(root, true);
   if (selector === '[data-model-voice-training-fine-tune-overlay]') {
     restoreFineTuneControls(root);
@@ -506,17 +597,22 @@ function openWorkspace(root, selector) {
 }
 
 function hasUnsavedCapture(root) {
-  return Boolean(recorderState.get(root)?.file);
+  const state = recorderState.get(root) || {};
+  return Boolean(state.file || state.recorder?.state === 'recording' || state.chunks?.length);
 }
 
 function closeWorkspace(root, selector, options = {}) {
   if (selector === '[data-model-voice-training-live-overlay]' && !options.force && hasUnsavedCapture(root)) {
+    const state = recorderState.get(root) || {};
+    recorderState.set(root, { ...state, closeRequested: true });
+    stopRecording(root);
     queryVoice(root, '[data-model-voice-training-close-confirmation]')?.removeAttribute('hidden');
     return false;
   }
   const workspace = getWorkspace(root, selector);
   if (!(workspace instanceof HTMLElement)) return;
   workspace.hidden = true;
+  workspace.style.display = 'none';
   workspace.setAttribute('aria-hidden', 'true');
   if (!document.querySelector('.model-voice-training__workspace:not([hidden])')) {
     writeStoredWorkspace('');
@@ -530,6 +626,7 @@ function closeAllWorkspaces(root) {
   document.querySelectorAll('.model-voice-training__workspace').forEach((workspace) => {
     if (!(workspace instanceof HTMLElement)) return;
     workspace.hidden = true;
+    workspace.style.display = 'none';
     workspace.setAttribute('aria-hidden', 'true');
   });
   writeStoredWorkspace('');
@@ -565,15 +662,10 @@ function drawWaveform(root) {
 
   analyser.getByteTimeDomainData(buffer);
   const primary = resolveCanvasColor(root);
-  const secondary = window.getComputedStyle(root).getPropertyValue('--digital-brain-layer-voice').trim() || primary;
   context.clearRect(0, 0, width, height);
-  const gradient = context.createLinearGradient(0, 0, width, 0);
-  gradient.addColorStop(0, secondary);
-  gradient.addColorStop(0.5, primary);
-  gradient.addColorStop(1, secondary);
   context.lineWidth = 2;
-  context.strokeStyle = gradient;
-  context.globalAlpha = 0.92;
+  context.strokeStyle = primary;
+  context.globalAlpha = 0.72;
   context.beginPath();
 
   const slice = width / Math.max(1, buffer.length - 1);
@@ -587,7 +679,7 @@ function drawWaveform(root) {
   });
 
   context.stroke();
-  context.globalAlpha = 0.18;
+  context.globalAlpha = 0.12;
   context.lineWidth = 10;
   context.stroke();
   context.globalAlpha = 1;
@@ -602,20 +694,15 @@ function drawStaticFineTuneWaveform(root) {
   const { width, height, context } = resizeCanvas(canvas);
   if (!context) return;
   const primary = resolveCanvasColor(root);
-  const voice = window.getComputedStyle(root).getPropertyValue('--digital-brain-layer-voice').trim() || primary;
   const controls = readStoredFineTuneControls();
   const prosody = Number.isFinite(Number(controls.prosodyContour)) ? Number(controls.prosodyContour) : 0.64;
   const pitch = Number.isFinite(Number(controls.pitchStability)) ? Number(controls.pitchStability) : 0.58;
   const noise = Number.isFinite(Number(controls.noiseFloor)) ? Number(controls.noiseFloor) : 0.22;
   const center = height / 2;
-  const gradient = context.createLinearGradient(0, 0, width, 0);
-  gradient.addColorStop(0, voice);
-  gradient.addColorStop(0.5, primary);
-  gradient.addColorStop(1, voice);
   context.clearRect(0, 0, width, height);
-  context.strokeStyle = gradient;
+  context.strokeStyle = primary;
   context.lineWidth = 1.5;
-  context.globalAlpha = 0.86;
+  context.globalAlpha = 0.72;
   context.beginPath();
   for (let x = 0; x <= width; x += 8) {
     const phase = x / Math.max(width, 1);
@@ -665,7 +752,17 @@ function startLiveTranscription(root) {
     }
     const nextTranscript = normalizeString(`${getVoiceUiState(root).liveTranscript} ${finalText}`);
     if (finalText) setVoiceUiState(root, { liveTranscript: nextTranscript });
-    setText(root, '[data-model-voice-training-live-transcript]', normalizeString(`${nextTranscript} ${interimText}`) || 'Listening…');
+    const visibleTranscript = normalizeString(`${nextTranscript} ${interimText}`);
+    renderPromptProgress(root, visibleTranscript);
+    setText(root, '[data-model-voice-training-live-transcript]', visibleTranscript || 'Listening…');
+    const state = getVoiceUiState(root);
+    const recorder = recorderState.get(root)?.recorder;
+    const isGuidedRecording = state.captureMode === 'guided' && state.capturePhase === 'recording' && recorder?.state === 'recording';
+    if (isGuidedRecording && getPromptCompletionRatio(getActivePromptText(root), visibleTranscript) >= 0.96) {
+      recorderState.set(root, { ...(recorderState.get(root) || {}), autoSaveOnStop: true });
+      setCaptureStatus(root, 'Sentence complete · saving…', 'saving');
+      stopRecording(root);
+    }
   });
 
   recognition.addEventListener('error', () => {
@@ -692,17 +789,17 @@ function stopLiveTranscription(state = {}) {
 async function startRecording(root) {
   if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
     setStatus(root, 'Microphone recording is not available in this browser.', 'warning');
-    setText(root, '[data-model-voice-training-recording-status]', 'Microphone recording is not available in this browser.');
+    setCaptureStatus(root, 'Microphone recording is not available in this browser.', 'warning');
     return;
   }
 
-  setText(root, '[data-model-voice-training-recording-status]', 'Requesting microphone permission…');
+  setCaptureStatus(root, 'Requesting microphone permission…');
   let stream = null;
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch (error) {
     console.warn('[Neuroartan][Model Voice] Microphone permission failed.', error);
-    setText(root, '[data-model-voice-training-recording-status]', 'Microphone permission was not granted.');
+    setCaptureStatus(root, 'Microphone permission was not granted.', 'warning');
     return;
   }
 
@@ -726,6 +823,7 @@ async function startRecording(root) {
     source,
     analyser,
     recognition,
+    transcriptionAvailable: Boolean(recognition),
     waveformBuffer: analyser ? new Uint8Array(analyser.fftSize) : null,
   });
   if (analyser) drawWaveform(root);
@@ -742,19 +840,25 @@ async function startRecording(root) {
     stopLiveTranscription(currentState);
     clearWaveform(root);
     currentState.audioContext?.close?.();
-    setText(root, '[data-model-voice-training-recording-status]', `Recording ready · ${Math.round(file.size / 1024)} KB`);
+    setCaptureStatus(root, `Captured · ${Math.round(file.size / 1024)} KB`, 'captured');
     const validation = validateGuidedCapture(root);
     if (!validation.accepted) {
       recorderState.set(root, {});
-      setText(root, '[data-model-voice-training-recording-status]', `Retry required · ${Math.round(validation.score * 100)}% prompt match`);
+      setCaptureStatus(root, `Retry required · ${Math.round(validation.score * 100)}% prompt match`, 'warning');
       setCapturePhase(root, 'idle');
       return;
     }
     setCapturePhase(root, 'captured');
+    const shouldAutoSaveGuidedCapture = getVoiceUiState(root).captureMode === 'guided'
+      && !currentState.closeRequested
+      && (currentState.autoSaveOnStop || !currentState.transcriptionAvailable);
+    if (shouldAutoSaveGuidedCapture) {
+      void saveCurrentSample(root);
+    }
   });
 
   recorder.start();
-  setText(root, '[data-model-voice-training-recording-status]', 'Recording…');
+  setCaptureStatus(root, 'Recording…');
   setCapturePhase(root, 'recording');
 }
 
@@ -814,7 +918,7 @@ async function saveCurrentSample(root) {
     if (getControl(root, 'audioFile')) getControl(root, 'audioFile').value = '';
     if (getControl(root, 'audioReference')) getControl(root, 'audioReference').value = '';
     if (getControl(root, 'transcriptText')) getControl(root, 'transcriptText').value = '';
-    setText(root, '[data-model-voice-training-recording-status]', 'No recording captured');
+    setCaptureStatus(root, 'No recording captured');
     setText(root, '[data-model-voice-training-file-status]', 'No audio selected');
     queryVoice(root, '[data-model-voice-training-close-confirmation]')?.setAttribute('hidden', '');
     applyLivePrompt(root, nextPromptIndex);
@@ -833,7 +937,7 @@ function clearCurrentCapture(root) {
   stopRecording(root);
   recorderState.set(root, {});
   setVoiceUiState(root, { liveTranscript: '' });
-  setText(root, '[data-model-voice-training-recording-status]', 'Ready for capture');
+  setCaptureStatus(root, 'Ready for capture');
   setText(root, '[data-model-voice-training-live-transcript]', 'Transcript appears here when browser speech recognition is available.');
   setText(root, '[data-model-voice-training-validation]', '');
   setElementHidden(queryVoice(root, '[data-model-voice-training-validation]'), true);
@@ -852,7 +956,6 @@ function previousGuidedPrompt(root) {
 function bindVoiceTraining(root) {
   root.querySelectorAll('[data-model-voice-training-close-live]').forEach((control) => {
     control.addEventListener('click', () => {
-      stopRecording(root);
       closeWorkspace(root, '[data-model-voice-training-live-overlay]');
     });
   });
@@ -922,7 +1025,6 @@ function bindVoiceTraining(root) {
     }
 
     if (target.closest('[data-model-voice-training-close-live]')) {
-      stopRecording(root);
       closeWorkspace(root, '[data-model-voice-training-live-overlay]');
       return;
     }
@@ -942,9 +1044,10 @@ function bindVoiceTraining(root) {
       return;
     }
 
-    const modeButton = target.closest('[data-model-voice-training-mode]');
+    const modeButton = target.closest('[data-model-voice-training-mode-toggle]');
     if (modeButton instanceof HTMLElement) {
-      setCaptureMode(root, modeButton.dataset.modelVoiceTrainingMode);
+      const nextMode = modeButton.dataset.modelVoiceTrainingMode === 'guided' ? 'casual' : 'guided';
+      setCaptureMode(root, nextMode);
       return;
     }
 
@@ -1024,7 +1127,6 @@ function bindVoiceTraining(root) {
     if (target.closest('[data-model-voice-training-close-live]')) {
       event.preventDefault();
       event.stopPropagation();
-      stopRecording(root);
       closeWorkspace(root, '[data-model-voice-training-live-overlay]');
       return;
     }
@@ -1072,9 +1174,10 @@ function bindVoiceTraining(root) {
       return;
     }
 
-    const modeButton = target.closest('[data-model-voice-training-mode]');
+    const modeButton = target.closest('[data-model-voice-training-mode-toggle]');
     if (modeButton instanceof HTMLElement) {
-      setCaptureMode(root, modeButton.dataset.modelVoiceTrainingMode);
+      const nextMode = modeButton.dataset.modelVoiceTrainingMode === 'guided' ? 'casual' : 'guided';
+      setCaptureMode(root, nextMode);
       return;
     }
 
@@ -1117,10 +1220,11 @@ function bindVoiceTraining(root) {
 function restoreStoredWorkspace(root) {
   const selector = readStoredWorkspace();
   if (!selector || !selector.startsWith('[data-model-voice-training-')) return;
+  if (selector === '[data-model-voice-training-live-overlay]') {
+    writeStoredWorkspace('');
+    return;
+  }
   window.requestAnimationFrame(() => {
-    if (selector === '[data-model-voice-training-live-overlay]') {
-      setCaptureMode(root, getVoiceUiState(root).captureMode);
-    }
     openWorkspace(root, selector);
   });
 }

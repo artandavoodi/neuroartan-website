@@ -96,7 +96,7 @@ function isModelRoute() {
 function renderSidebar(root, state = getProfileNavigationState()){
   const editProfilePanes = new Set(['identity', 'route', 'privacy']);
   const settingsPanes = new Set(['password', 'verification']);
-  const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
+  const profileSections = new Set(['profile', 'posts', 'thoughts', 'organizations']);
   const primaryNav = root.querySelector('[data-profile-sidebar-primary-nav]');
   const modelNav = root.querySelector('[data-profile-sidebar-model-nav]');
   const useModelNav = isModelRoute();

@@ -32,8 +32,6 @@ function updateNowDisplay(root) {
     if (value) {
       value.textContent = data.currentView || 'Sessions';
     }
-  }).catch(err => {
-    console.error('Failed to fetch now data:', err);
   });
 }
 
@@ -41,9 +39,9 @@ function updateNowDisplay(root) {
 async function fetchNowData() {
   try {
     const response = await fetch('/assets/data/home/now-data.json');
-    if (!response.ok) throw new Error('Failed to fetch now data');
+    if (!response.ok) return getEmptyNowData();
     const data = await response.json();
-    
+
     return {
       currentView: 'Sessions',
       sessionCount: data.metadata?.sessionCount || 0,
@@ -51,14 +49,17 @@ async function fetchNowData() {
       reflectionCount: data.metadata?.reflectionCount || 0
     };
   } catch (error) {
-    console.error('Error fetching now data:', error);
-    return {
-      currentView: 'Sessions',
-      sessionCount: 0,
-      conversationCount: 0,
-      reflectionCount: 0
-    };
+    return getEmptyNowData();
   }
+}
+
+function getEmptyNowData() {
+  return {
+    currentView: 'Sessions',
+    sessionCount: 0,
+    conversationCount: 0,
+    reflectionCount: 0
+  };
 }
 
 // Listen for home configuration changes

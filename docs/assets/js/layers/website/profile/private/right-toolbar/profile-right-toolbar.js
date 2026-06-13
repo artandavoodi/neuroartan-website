@@ -379,7 +379,6 @@ const CONTEXT_ACTIONS = Object.freeze({
   overview: ['editProfile', 'createPost', 'filterPosts'],
   posts: ['editProfile', 'createPost', 'filterPosts'],
   thoughts: ['editProfile', 'createThought', 'filterThoughts', 'thoughtMemory'],
-  models: ['editProfile', 'modelTraining', 'modelInteraction', 'modelReadiness', 'filterModels'],
   'model-foundation': ['modelLearn', 'modelReset', 'modelChangelog'],
   'model-training': ['modelLearn', 'modelReset', 'modelChangelog'],
   'model-personalization': ['modelPersonalization', 'modelMemory', 'modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
@@ -929,8 +928,8 @@ function requestProfileToolAction(action){
       }));
       return;
     case 'filter-models':
-      document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
-        detail: { context: 'models', source: 'profile-right-toolbar' }
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'model-foundation', modelPane: 'overview' }
       }));
       return;
     case 'filter-dashboard':

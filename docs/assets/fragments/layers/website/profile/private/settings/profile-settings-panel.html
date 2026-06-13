@@ -4,7 +4,19 @@
      03) SETTINGS NAVIGATION
      04) SETTINGS PANES
 ============================================================================= -->
-<div class="profile-settings" data-profile-settings-panel data-profile-surface="private">
+<div class="profile-settings" data-profile-settings-panel data-profile-surface="private" role="dialog" aria-modal="true" aria-label="Edit profile">
+  <button
+    class="profile-settings__close global-close-button"
+    type="button"
+    data-profile-settings-close
+    aria-label="Close edit profile"
+  >
+    <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+    <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+  </button>
+
+  <div class="profile-settings__hero-mount" data-include="profile-private-hero"></div>
+
   <div class="profile-settings__panes">
     <section class="profile-settings__pane" data-profile-settings-pane="identity">
       <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="identity" novalidate>

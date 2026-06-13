@@ -11,6 +11,11 @@
   display:none !important;
 }
 
+.model-voice-training__workspace[hidden],
+.model-voice-training__workspace [hidden]{
+  display:none !important;
+}
+
 .model-voice-training__header,
 .model-voice-training__samples-header{
   display:flex;
@@ -56,6 +61,13 @@
 .model-voice-training__summary{
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
+}
+
+.model-voice-training__capture-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--spacing-sm);
 }
 
 .model-voice-training__metrics{
@@ -192,6 +204,11 @@
   background:var(--panel-surface-dropdown-unified);
 }
 
+.model-voice-training__workspace .model-source-calibration-workspace__header .global-close-button{
+  position:relative;
+  z-index:var(--z-overlay-control);
+}
+
 .model-voice-training__overlay-label,
 .model-voice-training__training-kicker{
   color:var(--text-secondary-color);
@@ -207,10 +224,11 @@
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:var(--spacing-lg);
+  gap:var(--spacing-xl);
   inline-size:min(860px, var(--size-full));
   min-block-size:var(--size-full);
   margin-inline:auto;
+  text-align:center;
 }
 
 .model-voice-training__mode-switch,
@@ -223,13 +241,14 @@
 }
 
 .model-voice-training__mode-switch{
-  justify-content:flex-start;
+  justify-content:center;
 }
 
 .model-voice-training__mode-button{
   display:inline-flex;
   align-items:center;
   justify-content:center;
+  gap:var(--spacing-sm);
   min-block-size:var(--control-size-sm);
   padding-inline:var(--spacing-md);
   border:var(--border-width-none);
@@ -242,7 +261,6 @@
 
 .model-voice-training__mode-button[aria-pressed="true"]{
   color:var(--text-primary-color);
-  background:color-mix(in srgb, var(--text-primary-color) 10%, transparent);
 }
 
 .model-voice-training__training-title,
@@ -252,21 +270,33 @@
 }
 
 .model-voice-training__training-title{
-  font-size:var(--heading-3-size);
+  font-size:var(--heading-4-size);
   font-weight:var(--font-weight-semibold);
-  line-height:var(--heading-3-line-height);
+  line-height:var(--heading-4-line-height);
 }
 
 .model-voice-training__training-prompt{
-  max-inline-size:720px;
-  font-size:var(--heading-4-size);
-  line-height:var(--heading-4-line-height);
+  max-inline-size:820px;
+  margin-inline:auto;
+  font-size:var(--heading-2-size);
+  line-height:var(--heading-2-line-height);
+}
+
+.model-voice-training__training-prompt [data-voice-prompt-word]{
+  color:var(--text-secondary-color);
+  opacity:var(--opacity-muted);
+  transition:color var(--interaction-motion-medium) var(--interaction-ease-standard);
+}
+
+.model-voice-training__training-prompt [data-voice-prompt-matched="true"]{
+  color:var(--text-primary-color);
+  opacity:var(--opacity-full);
 }
 
 .model-voice-training__waveform{
   display:block;
   inline-size:var(--size-full);
-  block-size:180px;
+  block-size:120px;
   border:var(--border-width-none);
   border-radius:var(--radius-lg);
   background:transparent;
@@ -290,6 +320,7 @@
   color:var(--text-secondary-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
+  text-align:center;
 }
 
 .model-voice-training__validation{
@@ -300,11 +331,34 @@
 }
 
 .model-voice-training__close-confirmation{
-  display:flex;
-  flex-direction:column;
+  position:absolute;
+  inset:var(--spacing-none);
+  z-index:var(--z-overlay-control);
+  display:grid;
+  place-items:center;
   gap:var(--spacing-md);
   min-width:var(--spacing-none);
-  padding-block-start:var(--spacing-md);
+  padding:var(--spacing-xl);
+  background:color-mix(in srgb, var(--bg-color) 82%, transparent);
+  backdrop-filter:blur(var(--glass-overlay-backdrop-blur));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-backdrop-blur));
+}
+
+.model-voice-training__close-confirmation-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:var(--spacing-sm);
+  max-inline-size:min(520px, var(--size-full));
+  text-align:center;
+}
+
+.model-voice-training__close-confirmation-title{
+  margin:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--heading-4-size);
+  font-weight:var(--font-weight-semibold);
+  line-height:var(--heading-4-line-height);
 }
 
 .model-voice-training__fine-tune{
@@ -394,8 +448,8 @@
   }
 
   .model-voice-training__training-prompt{
-    font-size:var(--body-1-size);
-    line-height:var(--body-1-line-height);
+    font-size:var(--heading-3-size);
+    line-height:var(--heading-3-line-height);
   }
 
   .model-voice-training__waveform{

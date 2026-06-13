@@ -21,7 +21,7 @@ import {
    01) MODULE IDENTITY
 ============================================================================= */
 const MODULE_ID = 'profile-private-hero';
-const PROFILE_IDENTITY_TAB_SECTIONS = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
+const PROFILE_IDENTITY_TAB_SECTIONS = new Set(['profile', 'posts', 'thoughts', 'organizations']);
 const PROFILE_MODEL_TAB_SECTIONS = MODEL_TAB_SECTIONS;
 const PROFILE_MODEL_DASHBOARD_SECTIONS = MODEL_DASHBOARD_SECTIONS;
 const PROFILE_MODEL_SETTINGS_SECTIONS = MODEL_SETTINGS_SECTIONS;
@@ -38,8 +38,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
     label: 'Profile sections',
     tabs: [
       { key: 'posts', label: 'Posts', section: 'posts' },
-      { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
-      { key: 'models', label: 'Model', section: 'models' },
+      { key: 'thoughts', label: 'Tasks', section: 'thoughts' },
       { key: 'organizations', label: 'Organizations', section: 'organizations' }
     ]
   },
@@ -111,6 +110,14 @@ function getHeroRoot() {
   return document.querySelector('[data-profile-private-hero]');
 }
 
+function getHeroRoots() {
+  return Array.from(document.querySelectorAll('[data-profile-private-hero]'));
+}
+
+function getProfileTabRoots() {
+  return Array.from(document.querySelectorAll('[data-profile-hero-tabs], [data-profile-workspace-tabs]'));
+}
+
 function setText(root, selector, value) {
   const node = root?.querySelector(selector);
   if (!node) return;
@@ -140,7 +147,6 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
     case 'profile':
     case 'posts':
     case 'thoughts':
-    case 'models':
     case 'organizations':
       return 'profile';
     case 'settings':
@@ -184,7 +190,6 @@ function getActiveTabKey(navigationState = getProfileNavigationState()) {
       return 'posts';
     case 'posts':
     case 'thoughts':
-    case 'models':
     case 'organizations':
       return navigationState.section;
     case 'settings':
@@ -223,7 +228,7 @@ function readRootLengthToken(name, fallback = 0) {
 function syncProfileMobileSidebarTop(root = getHeroRoot()) {
   if (!(root instanceof HTMLElement)) return;
 
-  const tabsRoot = root.querySelector('[data-profile-hero-tabs]');
+  const tabsRoot = document.querySelector('[data-profile-workspace-tabs]') || root.querySelector('[data-profile-hero-tabs]');
   if (!(tabsRoot instanceof HTMLElement)) return;
 
   const tabsRect = tabsRoot.getBoundingClientRect();
@@ -264,100 +269,105 @@ function scheduleProfileHeroLayoutSync(root = getHeroRoot()) {
    04) HERO STATE RENDERING
 ============================================================================= */
 function renderProfilePrivateHero(state = getProfileRuntimeState()) {
-  const root = getHeroRoot();
-  if (!root) return;
+  const roots = getHeroRoots();
+  if (!roots.length) return;
 
-  const profile = state.profile || {};
-  const username = String(profile.username || '').trim();
-  const displayName = String(profile.display_name || profile.displayName || '').trim();
-  const profileComplete = profile.profile_complete === true || state.profileComplete === true;
+  roots.forEach((root) => {
+    const profile = state.profile || {};
+    const username = String(profile.username || '').trim();
+    const displayName = String(profile.display_name || profile.displayName || '').trim();
+    const profileComplete = profile.profile_complete === true || state.profileComplete === true;
 
-  setImage(root, '[data-profile-avatar-image]', state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
-  const placeholderIcon = root.querySelector('[data-profile-avatar-placeholder-icon]');
-  if (placeholderIcon instanceof HTMLElement) {
-    placeholderIcon.hidden = state.avatarHasImage === true;
-  }
-
-  const cover = root.querySelector('[data-profile-cover]');
-  if (cover instanceof HTMLElement) {
-    const selectedCoverUrl = state.coverUrl || '';
-    const coverUrl = state.coverDisplayUrl || selectedCoverUrl || '';
-    if (coverUrl) {
-      cover.style.backgroundImage = `url("${coverUrl}")`;
-      cover.dataset.profileCoverImage = selectedCoverUrl ? 'true' : 'default';
-    } else {
-      cover.style.removeProperty('background-image');
-      cover.dataset.profileCoverImage = 'false';
+    setImage(root, '[data-profile-avatar-image]', state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
+    const placeholderIcon = root.querySelector('[data-profile-avatar-placeholder-icon]');
+    if (placeholderIcon instanceof HTMLElement) {
+      placeholderIcon.hidden = state.avatarHasImage === true;
     }
-  }
-  setText(root, '[data-profile-display-name]', displayName || '');
-  setText(root, '[data-profile-username]', username ? `@${username}` : '');
-  const verifiedBlock = root.querySelector('[data-profile-verified-block]');
-  if (verifiedBlock instanceof HTMLElement) {
-    verifiedBlock.hidden = state.verification?.badgeVisible !== true;
-  }
-  const bio = String(
-    state.bio
-    || profile.bio
-    || profile.public_bio
-    || profile.public_summary
-    || ''
-  ).trim();
-  const bioNode = root.querySelector('[data-profile-bio]');
-  if (bioNode instanceof HTMLElement) {
-    bioNode.textContent = bio;
-    bioNode.hidden = !bio;
-  }
-  setText(root, '[data-profile-location]', String(profile.location || profile.public_location || '').trim() || 'Not set');
-  setText(root, '[data-profile-role]', String(profile.role || profile.public_identity_label || '').trim() || 'Not set');
-  setText(
-    root,
-    '[data-profile-hero-description]',
-    profileComplete
-      ? 'Your private profile foundation is active. Public identity, organizations, models, and workspace layers can be activated from controlled modules.'
-      : 'Complete your private identity layer before activating public profile, organizations, models, or workspace access.'
-  );
-  setText(root, '[data-profile-followers-count]', String(Number(profile.followers_count || profile.follower_count || 0) || 0));
-  setText(root, '[data-profile-following-count]', String(Number(profile.following_count || 0) || 0));
 
-  void renderProfilePrivateHeroSocialGraph(profile);
+    const cover = root.querySelector('[data-profile-cover]');
+    if (cover instanceof HTMLElement) {
+      const selectedCoverUrl = state.coverUrl || '';
+      const coverUrl = state.coverDisplayUrl || selectedCoverUrl || '';
+      if (coverUrl) {
+        cover.style.backgroundImage = `url("${coverUrl}")`;
+        cover.dataset.profileCoverImage = selectedCoverUrl ? 'true' : 'default';
+      } else {
+        cover.style.removeProperty('background-image');
+        cover.dataset.profileCoverImage = 'false';
+      }
+    }
+    setText(root, '[data-profile-display-name]', displayName || '');
+    setText(root, '[data-profile-username]', username ? `@${username}` : '');
+    const verifiedBlock = root.querySelector('[data-profile-verified-block]');
+    if (verifiedBlock instanceof HTMLElement) {
+      verifiedBlock.hidden = state.verification?.badgeVisible !== true;
+    }
+    const bio = String(
+      state.bio
+      || profile.bio
+      || profile.public_bio
+      || profile.public_summary
+      || ''
+    ).trim();
+    const bioNode = root.querySelector('[data-profile-bio]');
+    if (bioNode instanceof HTMLElement) {
+      bioNode.textContent = bio;
+      bioNode.hidden = !bio;
+    }
+    setText(root, '[data-profile-location]', String(profile.location || profile.public_location || '').trim() || 'Not set');
+    setText(root, '[data-profile-role]', String(profile.role || profile.public_identity_label || '').trim() || 'Not set');
+    setText(
+      root,
+      '[data-profile-hero-description]',
+      profileComplete
+        ? 'Your private profile foundation is active. Public identity, organizations, models, and workspace layers can be activated from controlled modules.'
+        : 'Complete your private identity layer before activating public profile, organizations, models, or workspace access.'
+    );
+    setText(root, '[data-profile-followers-count]', String(Number(profile.followers_count || profile.follower_count || 0) || 0));
+    setText(root, '[data-profile-following-count]', String(Number(profile.following_count || 0) || 0));
+
+    void renderProfilePrivateHeroSocialGraph(profile);
+  });
 
   renderProfilePrivateHeroTabs(getProfileNavigationState());
 }
 
 async function renderProfilePrivateHeroSocialGraph(profile = {}) {
-  const root = getHeroRoot();
   const profileId = String(profile?.id || '').trim();
-  if (!root || !profileId) return;
+  const roots = getHeroRoots();
+  if (!roots.length || !profileId) return;
 
   try {
     const graph = await getProfileSocialGraphState(profileId);
-    setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
-    setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
-    root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
+    roots.forEach((root) => {
+      setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
+      setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
+      root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
+    });
   } catch (error) {
     console.error('[profile-private-hero] Social graph render failed.', error);
-    root.dataset.profileSocialGraphBackend = 'error';
+    roots.forEach((root) => {
+      root.dataset.profileSocialGraphBackend = 'error';
+    });
   }
 }
 
 function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationState()) {
-  const root = getHeroRoot();
-  if (!root) return;
-
   const isProfileIdentitySection = PROFILE_IDENTITY_TAB_SECTIONS.has(navigationState.section);
-  root.dataset.profileModelSurface = (
-    PROFILE_MODEL_TAB_SECTIONS.has(navigationState.section)
-    || PROFILE_MODEL_DASHBOARD_SECTIONS.has(navigationState.section)
-    || PROFILE_MODEL_SETTINGS_SECTIONS.has(navigationState.section)
-  ) ? 'true' : 'false';
-  const surface = root.querySelector('.profile-private-hero__surface');
-  if (surface instanceof HTMLElement) {
-    surface.dataset.profileHeroVisible = isProfileIdentitySection ? 'true' : 'false';
-  }
+  getHeroRoots().forEach((root) => {
+    root.dataset.profileModelSurface = (
+      PROFILE_MODEL_TAB_SECTIONS.has(navigationState.section)
+      || PROFILE_MODEL_DASHBOARD_SECTIONS.has(navigationState.section)
+      || PROFILE_MODEL_SETTINGS_SECTIONS.has(navigationState.section)
+    ) ? 'true' : 'false';
+    const surface = root.querySelector('.profile-private-hero__surface');
+    if (surface instanceof HTMLElement) {
+      surface.dataset.profileHeroVisible = isProfileIdentitySection || navigationState.section === 'settings' ? 'true' : 'false';
+    }
+  });
 
-  const tabsRoot = root.querySelector('[data-profile-hero-tabs]');
-  if (!(tabsRoot instanceof HTMLElement)) return;
+  const tabRoots = getProfileTabRoots();
+  if (!tabRoots.length) return;
 
   const group = getCurrentTabGroup(navigationState);
   const activeTab = getActiveTabKey(navigationState);
@@ -367,124 +377,160 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
   const hasUserTabs = group.tabs.some((tabConfig) => tabConfig.authState === 'user');
 
   if (authPending && hasUserTabs) {
-    tabsRoot.dataset.profileHeroAuthState = 'resolving';
+    tabRoots.forEach((tabsRoot) => {
+      tabsRoot.dataset.profileHeroAuthState = 'resolving';
+    });
     return;
   }
 
-  tabsRoot.dataset.profileHeroAuthState = 'ready';
   const visibleTabs = getVisibleModelContextTabs(group.tabs, authenticated);
   const nextSignature = `${getTabGroupKey(navigationState)}:${activeTab}:${authenticated ? 'user' : 'guest'}`;
 
-  tabsRoot.setAttribute('aria-label', group.label);
-  if (tabsRoot.dataset.profileHeroTabsSignature !== nextSignature) {
-    tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
-    tabsRoot.replaceChildren();
+  tabRoots.forEach((tabsRoot) => {
+    tabsRoot.dataset.profileHeroAuthState = 'ready';
+    tabsRoot.setAttribute('aria-label', group.label);
+    if (tabsRoot.dataset.profileHeroTabsSignature !== nextSignature) {
+      tabsRoot.dataset.profileHeroTabsSignature = nextSignature;
+      tabsRoot.replaceChildren();
 
-    visibleTabs.forEach((tabConfig) => {
-      const button = document.createElement('button');
-      button.className = 'profile-private-hero__tab';
-      button.type = 'button';
-      button.dataset.profileTab = tabConfig.key;
-      button.dataset.profileTabSection = tabConfig.section;
-      if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
-      if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
-      if (tabConfig.modelPane) button.dataset.profileTabModelPane = tabConfig.modelPane;
-      if (tabConfig.authState) button.dataset.authState = tabConfig.authState;
-      const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
-      if (iconPath) {
-        const iconWrap = document.createElement('span');
-        iconWrap.className = 'profile-private-hero__tab-icon-wrap';
-        iconWrap.setAttribute('aria-hidden', 'true');
+      visibleTabs.forEach((tabConfig) => {
+        const button = document.createElement('button');
+        button.className = 'profile-private-hero__tab';
+        button.type = 'button';
+        button.dataset.profileTab = tabConfig.key;
+        button.dataset.profileTabSection = tabConfig.section;
+        if (tabConfig.settingsPane) button.dataset.profileTabSettingsPane = tabConfig.settingsPane;
+        if (tabConfig.dashboardPane) button.dataset.profileTabDashboardPane = tabConfig.dashboardPane;
+        if (tabConfig.modelPane) button.dataset.profileTabModelPane = tabConfig.modelPane;
+        if (tabConfig.authState) button.dataset.authState = tabConfig.authState;
+        const iconPath = PROFILE_CONTEXT_TAB_ICONS[tabConfig.key] || '';
+        if (iconPath) {
+          const iconWrap = document.createElement('span');
+          iconWrap.className = 'profile-private-hero__tab-icon-wrap';
+          iconWrap.setAttribute('aria-hidden', 'true');
 
-        const icon = document.createElement('img');
-        icon.className = tabConfig.key === 'verification'
-          ? 'profile-private-hero__tab-icon'
-          : 'profile-private-hero__tab-icon ui-icon-theme-aware';
-        icon.src = iconPath;
-        icon.alt = '';
-        icon.setAttribute('aria-hidden', 'true');
-        iconWrap.appendChild(icon);
-        button.appendChild(iconWrap);
-      }
-      const label = document.createElement('span');
-      label.className = 'profile-private-hero__tab-label';
-      label.textContent = tabConfig.label;
-      button.appendChild(label);
-      tabsRoot.appendChild(button);
+          const icon = document.createElement('img');
+          icon.className = tabConfig.key === 'verification'
+            ? 'profile-private-hero__tab-icon'
+            : 'profile-private-hero__tab-icon ui-icon-theme-aware';
+          icon.src = iconPath;
+          icon.alt = '';
+          icon.setAttribute('aria-hidden', 'true');
+          iconWrap.appendChild(icon);
+          button.appendChild(iconWrap);
+        }
+        const label = document.createElement('span');
+        label.className = 'profile-private-hero__tab-label';
+        label.textContent = tabConfig.label;
+        button.appendChild(label);
+        tabsRoot.appendChild(button);
+      });
+    }
+
+    tabsRoot.querySelectorAll('[data-profile-tab]').forEach((tab) => {
+      const key = tab.getAttribute('data-profile-tab') || '';
+      const active = key === activeTab;
+      tab.setAttribute('aria-current', active ? 'page' : 'false');
+      tab.dataset.profileTabActive = active ? 'true' : 'false';
     });
-  }
-
-  tabsRoot.querySelectorAll('[data-profile-tab]').forEach((tab) => {
-    const key = tab.getAttribute('data-profile-tab') || '';
-    const active = key === activeTab;
-    tab.setAttribute('aria-current', active ? 'page' : 'false');
-    tab.dataset.profileTabActive = active ? 'true' : 'false';
   });
 
-  scheduleProfileHeroLayoutSync(root);
+  const root = getHeroRoot();
+  if (root instanceof HTMLElement) {
+    scheduleProfileHeroLayoutSync(root);
+  } else {
+    syncProfileMobileSidebarTop();
+  }
 }
 
 /* =============================================================================
    05) HERO ACTIONS
 ============================================================================= */
 function bindProfilePrivateHeroActions() {
-  const root = getHeroRoot();
-  if (!root || root.dataset.profilePrivateHeroBound === 'true') return;
+  getHeroRoots().forEach((root) => {
+    if (root.dataset.profilePrivateHeroBound === 'true') return;
 
-  root.dataset.profilePrivateHeroBound = 'true';
-  root.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-profile-action]');
-    const tab = event.target.closest('[data-profile-tab]');
-    const infoToggle = event.target.closest('[data-profile-hero-info-toggle]');
+    root.dataset.profilePrivateHeroBound = 'true';
+    root.addEventListener('click', (event) => {
+      const trigger = event.target.closest('[data-profile-action]');
+      const tab = event.target.closest('[data-profile-tab]');
+      const infoToggle = event.target.closest('[data-profile-hero-info-toggle]');
 
-    if (infoToggle) {
-      event.preventDefault();
-      const popover = root.querySelector('[data-profile-hero-info-popover]');
-      const isOpen = infoToggle.getAttribute('aria-expanded') === 'true';
-      infoToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-      if (popover instanceof HTMLElement) {
-        popover.hidden = isOpen;
-      }
-      return;
-    }
-
-    if (tab) {
-      event.preventDefault();
-      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: {
-          section: tab.getAttribute('data-profile-tab-section') || 'overview',
-          settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
-          dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined,
-          modelPane: tab.getAttribute('data-profile-tab-model-pane') || undefined
+      if (infoToggle) {
+        event.preventDefault();
+        const popover = root.querySelector('[data-profile-hero-info-popover]');
+        const isOpen = infoToggle.getAttribute('aria-expanded') === 'true';
+        infoToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        if (popover instanceof HTMLElement) {
+          popover.hidden = isOpen;
         }
-      }));
-      return;
-    }
+        return;
+      }
 
-    if (!trigger) return;
+      if (tab) {
+        event.preventDefault();
+        event.stopPropagation();
+        document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+          detail: {
+            section: tab.getAttribute('data-profile-tab-section') || 'overview',
+            settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
+            dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined,
+            modelPane: tab.getAttribute('data-profile-tab-model-pane') || undefined
+          }
+        }));
+        return;
+      }
 
-    event.preventDefault();
-    event.stopPropagation();
-    requestProfileAction(trigger.dataset.profileAction || '', {
-      source: MODULE_ID,
-      mediaKind: trigger.dataset.profileAction === 'edit-cover' ? 'cover' : 'avatar'
+      if (!trigger) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      requestProfileAction(trigger.dataset.profileAction || '', {
+        source: MODULE_ID,
+        mediaKind: trigger.dataset.profileAction === 'edit-cover' ? 'cover' : 'avatar'
+      });
     });
   });
 
-  document.addEventListener('click', (event) => {
-    if (!root.contains(event.target)) {
-      closeProfileHeroInfo(root);
-      return;
-    }
+  if (document.documentElement.dataset.profileHeroGlobalDismissBound === 'true') return;
+  document.documentElement.dataset.profileHeroGlobalDismissBound = 'true';
 
-    if (event.target.closest('[data-profile-hero-info-toggle]')) return;
-    if (event.target.closest('[data-profile-hero-info-popover]')) return;
-    closeProfileHeroInfo(root);
+  document.addEventListener('click', (event) => {
+    getHeroRoots().forEach((root) => {
+      if (!root.contains(event.target)) {
+        closeProfileHeroInfo(root);
+        return;
+      }
+
+      if (event.target.closest('[data-profile-hero-info-toggle]')) return;
+      if (event.target.closest('[data-profile-hero-info-popover]')) return;
+      closeProfileHeroInfo(root);
+    });
   });
 
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
-    closeProfileHeroInfo(root);
+    getHeroRoots().forEach((root) => closeProfileHeroInfo(root));
+  });
+}
+
+function bindProfileWorkspaceTabs() {
+  if (document.documentElement.dataset.profileWorkspaceTabsBound === 'true') return;
+  document.documentElement.dataset.profileWorkspaceTabsBound = 'true';
+
+  document.addEventListener('click', (event) => {
+    const tab = event.target.closest('[data-profile-workspace-tabs] [data-profile-tab]');
+    if (!(tab instanceof HTMLElement)) return;
+
+    event.preventDefault();
+    document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+      detail: {
+        section: tab.getAttribute('data-profile-tab-section') || 'profile',
+        settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
+        dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined,
+        modelPane: tab.getAttribute('data-profile-tab-model-pane') || undefined
+      }
+    }));
   });
 }
 
@@ -502,13 +548,15 @@ function closeProfileHeroInfo(root = getHeroRoot()) {
    07) INITIALIZATION
 ============================================================================= */
 function initProfilePrivateHero() {
+  bindProfileWorkspaceTabs();
   bindProfilePrivateHeroActions();
   renderProfilePrivateHero();
   subscribeProfileRuntime(renderProfilePrivateHero);
   subscribeProfileNavigation(renderProfilePrivateHeroTabs);
 
   document.addEventListener('fragment:mounted', (event) => {
-    if (event?.detail?.name !== 'profile-private-hero') return;
+    if (event?.detail?.name !== 'profile-private-hero' && event?.detail?.name !== 'profile-private-workspace') return;
+    bindProfileWorkspaceTabs();
     bindProfilePrivateHeroActions();
     renderProfilePrivateHero();
     scheduleProfileHeroLayoutSync();

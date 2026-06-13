@@ -88,12 +88,66 @@
 
 .profile-workspace__content{
   display:grid;
-  gap:var(--spacing-lg);
+  gap:var(--spacing-none);
   padding-inline:var(--spacing-none);
   padding-block:var(--spacing-none);
 }
 
+.profile-workspace__tabs-row{
+  position:sticky;
+  top:var(--spacing-none);
+  z-index:var(--z-raised);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  min-height:var(--profile-private-hero-tab-band-height);
+  margin:var(--spacing-none);
+  background:var(--bg-color);
+}
+
+.profile-shell[data-profile-surface="private"]:is(
+  [data-profile-section="profile"],
+  [data-profile-section="posts"],
+  [data-profile-section="thoughts"],
+  [data-profile-section="organizations"]
+) .profile-workspace__tabs-row{
+  display:flex;
+}
+
+.profile-workspace__tabs-row::after{
+  content:"";
+  position:absolute;
+  left:calc(50% - 50vw);
+  right:calc(50% - 50vw);
+  bottom:0;
+  height:var(--border-width-hairline);
+  background:var(--border-color);
+  pointer-events:none;
+}
+
+.profile-workspace__tabs{
+  width:auto;
+}
+
+.profile-workspace__panel{
+  padding-top:var(--spacing-lg);
+}
+
 .profile-workspace__panel[hidden]{
+  display:none;
+}
+
+.profile-workspace__panel[data-profile-section-panel="settings"]{
+  position:fixed;
+  inset:var(--spacing-none);
+  z-index:var(--z-overlay-surface);
+  display:block;
+  padding:var(--spacing-none);
+  background:var(--bg-color);
+  overflow:hidden;
+}
+
+.profile-workspace__panel[data-profile-section-panel="settings"][hidden]{
   display:none;
 }
 

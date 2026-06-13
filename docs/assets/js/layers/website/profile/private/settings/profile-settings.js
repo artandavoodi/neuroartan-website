@@ -616,6 +616,27 @@ function initProfileSettings() {
   });
 
   document.addEventListener('click', (event) => {
+    const closeButton = event.target.closest('[data-profile-settings-close]');
+    if (closeButton instanceof HTMLElement) {
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: { section: 'posts' }
+      }));
+      return;
+    }
+
+    const paneButton = event.target.closest('[data-profile-settings-pane-target]');
+    if (paneButton instanceof HTMLElement) {
+      event.preventDefault();
+      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
+        detail: {
+          section: 'settings',
+          settingsPane: paneButton.getAttribute('data-profile-settings-pane-target') || 'identity'
+        }
+      }));
+      return;
+    }
+
     const button = event.target.closest('[data-profile-settings-info-toggle]');
     if (!(button instanceof HTMLElement)) return;
     const root = button.closest('[data-profile-settings-panel]');

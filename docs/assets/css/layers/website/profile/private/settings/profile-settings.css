@@ -33,8 +33,34 @@
    ============================================================================= */
 
 .profile-settings{
+  position:relative;
   display:grid;
-  gap:var(--profile-settings-shell-gap);
+  grid-template-rows:auto minmax(var(--spacing-none), 1fr);
+  gap:var(--spacing-none);
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
+  background:var(--bg-color);
+}
+
+.profile-settings__close{
+  position:fixed;
+  top:calc(env(safe-area-inset-top, 0px) + var(--spacing-lg));
+  right:calc(env(safe-area-inset-right, 0px) + var(--spacing-lg));
+  z-index:var(--z-overlay-control);
+}
+
+.profile-settings__hero-mount{
+  position:sticky;
+  top:0;
+  z-index:var(--z-raised);
+  width:100%;
+  background:var(--bg-color);
+}
+
+.profile-settings__hero-mount .profile-private-hero{
+  width:min(var(--site-rail-width), 100%);
+  margin-inline:auto;
 }
 
 .profile-settings__pane{
@@ -65,6 +91,17 @@
 .profile-settings__panes{
   display:grid;
   gap:var(--profile-settings-shell-gap);
+  width:min(var(--site-rail-width), 100%);
+  margin-inline:auto;
+  min-height:var(--spacing-none);
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.profile-settings__panes::-webkit-scrollbar{
+  display:none;
 }
 
 .profile-settings__pane[hidden]{

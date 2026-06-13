@@ -306,7 +306,12 @@ async function resolveSupabaseClient(timeoutMs = 4000) {
 export function isSupabaseRelationMissingError(error) {
   const code = normalizeString(error?.code || '').toUpperCase();
   const message = normalizeString(error?.message || '').toLowerCase();
-  return code === '42P01' || message.includes('does not exist');
+  const details = normalizeString(error?.details || '').toLowerCase();
+  return code === '42P01'
+    || code === 'PGRST205'
+    || message.includes('does not exist')
+    || message.includes('schema cache')
+    || details.includes('schema cache');
 }
 
 function isSupabaseColumnMissingError(error) {

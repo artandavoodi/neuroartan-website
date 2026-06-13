@@ -22,7 +22,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    ============================================================================= */
 
 const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', 'model-personalization', 'model-sources', 'model-memory', 'model-voice', 'model-readiness', 'model-runtime', 'model-discovery', 'model-settings']);
-const VALID_SECTIONS = new Set(['home', 'feed', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'models', 'organizations', 'settings', ...MODEL_SECTIONS]);
+const VALID_SECTIONS = new Set(['home', 'feed', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'organizations', 'settings', ...MODEL_SECTIONS]);
 const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
 const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'logics', 'provenance', 'evaluation', 'cognition', 'communication', 'memory', 'personality', 'emotion', 'behavior', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
@@ -184,7 +184,7 @@ function getRouteContext() {
 function constrainStateToRoute(state) {
   const routeContext = getRouteContext();
   const homeSections = new Set(['home']);
-  const profileSections = new Set(['profile', 'posts', 'thoughts', 'models', 'organizations']);
+  const profileSections = new Set(['profile', 'posts', 'thoughts', 'organizations']);
 
   if (routeContext === 'home' && !homeSections.has(state.section)) {
     return createDefaultState();

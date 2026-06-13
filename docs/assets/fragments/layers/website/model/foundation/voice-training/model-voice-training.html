@@ -145,7 +145,7 @@
   </section>
 
   <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-live-overlay hidden aria-hidden="true">
-    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-live></div>
+    <div class="model-source-calibration-workspace__backdrop" aria-hidden="true"></div>
     <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Live Voice Training">
       <header class="model-source-calibration-workspace__header">
         <span class="model-voice-training__overlay-label" data-model-voice-training-live-progress>Live Voice Training</span>
@@ -157,12 +157,10 @@
 
       <div class="model-source-calibration-workspace__body model-voice-training__overlay-body">
         <section class="model-voice-training__training-stage" aria-label="Guided voice prompt">
-          <div class="model-voice-training__mode-switch" role="group" aria-label="Voice capture mode">
-            <button class="model-voice-training__mode-button" type="button" data-model-voice-training-mode="guided" aria-pressed="true">
-              Guided capture
-            </button>
-            <button class="model-voice-training__mode-button" type="button" data-model-voice-training-mode="casual" aria-pressed="false">
-              Casual capture
+          <div class="model-voice-training__mode-switch">
+            <button class="model-voice-training__mode-button" type="button" data-model-voice-training-mode-toggle data-model-voice-training-mode="guided" aria-pressed="true">
+              <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/guided-voice-capture/guided-voice-capture.svg" alt="" data-model-voice-training-mode-icon>
+              <span data-model-voice-training-mode-label>Guided capture</span>
             </button>
           </div>
           <p class="model-voice-training__training-kicker" data-model-voice-training-live-tone>Natural voice</p>
@@ -193,9 +191,15 @@
               Reset
             </button>
           </div>
-          <p class="model-voice-training__capture-status" data-model-voice-training-recording-status>No recording captured</p>
+          <p class="model-voice-training__capture-status" data-model-voice-training-recording-status>
+            <img class="model-management__card-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/check-circle/check-circle.svg" alt="" data-model-voice-training-recording-status-icon hidden>
+            <span data-model-voice-training-recording-status-text>No recording captured</span>
+          </p>
           <section class="model-voice-training__close-confirmation" data-model-voice-training-close-confirmation hidden aria-live="polite">
-            <p class="model-voice-training__summary">This capture has not been saved.</p>
+            <div class="model-voice-training__close-confirmation-copy">
+              <h5 class="model-voice-training__close-confirmation-title">Close this capture?</h5>
+              <p class="model-voice-training__summary">Save the captured voice sample, restart this sentence, or discard it and close.</p>
+            </div>
             <div class="model-voice-training__live-controls">
               <button class="model-management__button model-voice-training__control-button model-voice-training__control-button--save" type="button" data-model-voice-training-save-draft>Save draft</button>
               <button class="model-management__button" type="button" data-model-voice-training-restart-capture>Restart</button>
@@ -208,7 +212,7 @@
   </aside>
 
   <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-samples-overlay hidden aria-hidden="true">
-    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-samples></div>
+    <div class="model-source-calibration-workspace__backdrop" aria-hidden="true"></div>
     <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Voice Samples">
       <header class="model-source-calibration-workspace__header">
         <span class="model-voice-training__overlay-label">Voice samples</span>
@@ -230,7 +234,7 @@
   </aside>
 
   <aside class="model-source-calibration-workspace model-voice-training__workspace" data-model-voice-training-fine-tune-overlay hidden aria-hidden="true">
-    <div class="model-source-calibration-workspace__backdrop" data-model-voice-training-close-fine-tune></div>
+    <div class="model-source-calibration-workspace__backdrop" aria-hidden="true"></div>
     <article class="model-source-calibration-workspace__surface" role="dialog" aria-modal="true" aria-label="Voice Fine Tune">
       <header class="model-source-calibration-workspace__header">
         <span class="model-voice-training__overlay-label">Voice fine tune</span>

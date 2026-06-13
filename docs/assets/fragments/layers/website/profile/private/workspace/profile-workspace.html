@@ -3,6 +3,14 @@
      02) PRIVATE PROFILE PANEL STACK
 ============================================================================= -->
 <div class="profile-workspace__content" data-profile-workspace-content>
+  <div class="profile-workspace__tabs-row" data-profile-workspace-tabs-row>
+    <nav
+      class="profile-private-hero__tabs profile-workspace__tabs"
+      aria-label="Profile sections"
+      data-profile-workspace-tabs
+    ></nav>
+  </div>
+
   <section class="profile-workspace__panel" data-profile-section-panel="feed" aria-label="Feed" hidden>
     <div data-include="profile-private-home-feed"></div>
   </section>
@@ -17,10 +25,6 @@
 
   <section class="profile-workspace__panel" data-profile-section-panel="dashboard" aria-label="Dashboard" hidden>
     <div data-include="profile-private-dashboard-panel"></div>
-  </section>
-
-  <section class="profile-workspace__panel" data-profile-section-panel="models" aria-label="Models" hidden>
-    <div data-include="profile-private-models"></div>
   </section>
 
   <section class="profile-workspace__panel" data-profile-section-panel="model-management" aria-label="Model management" hidden>

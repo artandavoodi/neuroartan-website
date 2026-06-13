@@ -16,6 +16,123 @@
       </div>
     </section>
 
+    <section class="home-platform-theme__section" data-account-settings-view="overview" aria-labelledby="settings-account-privacy" data-home-platform-theme-section>
+      <div class="home-platform-theme__section-eyebrow">
+        <span class="home-platform-theme__section-title" id="settings-account-privacy">Privacy &amp; visibility</span>
+      </div>
+      <div class="home-platform-theme__section-content" id="settings-account-privacy-content">
+        <form class="profile-settings__form" data-account-privacy-form novalidate>
+          <div class="profile-settings__section">
+            <h3 class="profile-settings__section-title">Profile privacy</h3>
+            <div class="profile-settings__toggle-list">
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Public profile</p>
+                  <p class="profile-settings__toggle-caption">Make your public route visible.</p>
+                </div>
+                <input type="hidden" name="public_profile_enabled" data-account-privacy-toggle-input="public_profile_enabled">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="public_profile_enabled" data-toggle-scope="profile-visibility" data-toggle-key="public_profile_enabled">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Discovery</p>
+                  <p class="profile-settings__toggle-caption">Allow search and profile discovery.</p>
+                </div>
+                <input type="hidden" name="public_profile_discoverable" data-account-privacy-toggle-input="public_profile_discoverable">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="public_profile_discoverable" data-toggle-scope="profile-visibility" data-toggle-key="public_profile_discoverable">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-settings__section">
+            <h3 class="profile-settings__section-title">Discovery</h3>
+            <div class="profile-settings__toggle-list">
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Search visibility</p>
+                  <p class="profile-settings__toggle-caption">Allow this profile to appear in search.</p>
+                </div>
+                <input type="hidden" name="profile_search_visible" data-account-privacy-toggle-input="profile_search_visible">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="profile_search_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_search_visible">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Models visibility</p>
+                  <p class="profile-settings__toggle-caption">Show public model associations.</p>
+                </div>
+                <input type="hidden" name="profile_models_visible" data-account-privacy-toggle-input="profile_models_visible">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="profile_models_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_models_visible">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-settings__section">
+            <h3 class="profile-settings__section-title">Profile content visibility</h3>
+            <div class="profile-settings__toggle-list">
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Follower counts</p>
+                  <p class="profile-settings__toggle-caption">Show follower and following counts.</p>
+                </div>
+                <input type="hidden" name="profile_followers_visible" data-account-privacy-toggle-input="profile_followers_visible">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="profile_followers_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_followers_visible">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Posts visibility</p>
+                  <p class="profile-settings__toggle-caption">Show public posts on your profile.</p>
+                </div>
+                <input type="hidden" name="profile_posts_visible" data-account-privacy-toggle-input="profile_posts_visible">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="profile_posts_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_posts_visible">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+
+              <div class="profile-settings__toggle-row">
+                <div class="profile-settings__toggle-copy">
+                  <p class="profile-settings__toggle-title">Thought Bank privacy</p>
+                  <p class="profile-settings__toggle-caption">Thoughts remain private and do not publish to your public profile.</p>
+                </div>
+                <input type="hidden" name="profile_thoughts_visible" data-account-privacy-toggle-input="profile_thoughts_visible">
+                <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-account-privacy-toggle="profile_thoughts_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_thoughts_visible">
+                  <span class="na-toggle__track" aria-hidden="true">
+                    <span class="na-toggle__thumb"></span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p class="profile-settings__status" data-account-privacy-status role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <section class="profile-settings__pane" data-account-settings-view="password" hidden aria-label="Change password">
       <form class="profile-settings__form" data-account-password-form>
         <div class="profile-settings__field-grid">

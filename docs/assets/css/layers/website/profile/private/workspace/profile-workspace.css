@@ -140,7 +140,7 @@
 .profile-workspace__panel[data-profile-section-panel="settings"]{
   position:fixed;
   inset:var(--spacing-none);
-  z-index:var(--z-overlay-surface);
+  z-index:var(--z-overlay-control);
   display:block;
   padding:var(--spacing-none);
   background:var(--bg-color);
@@ -148,6 +148,30 @@
 }
 
 .profile-workspace__panel[data-profile-section-panel="settings"][hidden]{
+  display:none;
+}
+
+.profile-shell[data-profile-section="settings"] .profile-workspace__layout{
+  grid-template-columns:minmax(var(--spacing-none), 1fr);
+}
+
+.profile-shell[data-profile-section="settings"] .profile-workspace__sidebar-mount,
+.profile-shell[data-profile-section="settings"] .profile-workspace__right-toolbar-mount{
+  display:none;
+}
+
+.profile-shell[data-profile-section="settings"] .profile-workspace__content-mount{
+  grid-column:1;
+  padding-block:var(--spacing-none);
+  z-index:var(--z-overlay-control);
+  overflow:visible;
+}
+
+.profile-shell[data-profile-section="settings"] .profile-workspace__content{
+  display:block;
+}
+
+.profile-shell[data-profile-section="settings"] .profile-workspace__tabs-row{
   display:none;
 }
 

@@ -23,7 +23,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
 
 const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', 'model-personalization', 'model-sources', 'model-memory', 'model-voice', 'model-readiness', 'model-runtime', 'model-discovery', 'model-settings']);
 const VALID_SECTIONS = new Set(['home', 'feed', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'organizations', 'settings', ...MODEL_SECTIONS]);
-const VALID_SETTINGS_PANES = new Set(['identity', 'route', 'privacy', 'password', 'verification']);
+const VALID_SETTINGS_PANES = new Set(['identity', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
 const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'logics', 'provenance', 'evaluation', 'cognition', 'communication', 'memory', 'personality', 'emotion', 'behavior', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
 
@@ -87,6 +87,7 @@ function normalizeSection(value) {
 
 function normalizeSettingsPane(value) {
   const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'route') return 'identity';
   return VALID_SETTINGS_PANES.has(normalized) ? normalized : 'identity';
 }
 
@@ -211,7 +212,7 @@ function constrainStateToRoute(state) {
       return createDefaultState();
     }
 
-    if (state.section === 'settings' && !['identity', 'route', 'privacy', 'password', 'verification'].includes(state.settingsPane)) {
+    if (state.section === 'settings' && !['identity', 'privacy', 'password', 'verification'].includes(state.settingsPane)) {
       return createDefaultState();
     }
 

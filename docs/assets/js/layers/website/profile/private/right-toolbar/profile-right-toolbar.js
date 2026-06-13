@@ -326,12 +326,6 @@ const ACTIONS = Object.freeze({
     tooltip: 'Changelog',
     icon: ACTION_ICONS.changelog
   },
-  routeSettings: {
-    id: 'route-settings',
-    label: 'Public route settings',
-    tooltip: 'Public route',
-    icon: ACTION_ICONS.route
-  },
   identitySettings: {
     id: 'identity-settings',
     label: 'Personal info',
@@ -946,11 +940,6 @@ function requestProfileToolAction(action){
             area: resolveSettingsChangelogArea()
           }
         }
-      }));
-      return;
-    case 'route-settings':
-      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'settings', settingsPane: 'route' }
       }));
       return;
     case 'identity-settings':

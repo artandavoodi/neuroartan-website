@@ -38,7 +38,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
     label: 'Profile sections',
     tabs: [
       { key: 'posts', label: 'Posts', section: 'posts' },
-      { key: 'thoughts', label: 'Tasks', section: 'thoughts' },
+      { key: 'thoughts', label: 'Thoughts', section: 'thoughts' },
       { key: 'organizations', label: 'Organizations', section: 'organizations' }
     ]
   },
@@ -55,9 +55,7 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
   editProfile: {
     label: 'Edit Profile',
     tabs: [
-      { key: 'identity', label: 'Personal Info', section: 'settings', settingsPane: 'identity' },
-      { key: 'route', label: 'Public Route', section: 'settings', settingsPane: 'route' },
-      { key: 'privacy', label: 'Privacy & Visibility', section: 'settings', settingsPane: 'privacy' }
+      { key: 'identity', label: 'Profile', section: 'settings', settingsPane: 'identity' }
     ]
   },
   settings: {
@@ -152,8 +150,6 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
     case 'settings':
       if (
         navigationState.settingsPane === 'identity'
-        || navigationState.settingsPane === 'route'
-        || navigationState.settingsPane === 'privacy'
       ) {
         return 'editProfile';
       }

@@ -33,14 +33,21 @@
    ============================================================================= */
 
 .profile-settings{
-  position:relative;
-  display:grid;
-  grid-template-rows:auto minmax(var(--spacing-none), 1fr);
-  gap:var(--spacing-none);
+  position:fixed;
+  inset:0;
+  z-index:var(--z-overlay-control);
+  display:block;
   width:100%;
   height:100dvh;
-  overflow:hidden;
+  overflow-y:auto;
+  overflow-x:hidden;
   background:var(--bg-color);
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.profile-settings::-webkit-scrollbar{
+  display:none;
 }
 
 .profile-settings__close{
@@ -51,16 +58,27 @@
 }
 
 .profile-settings__hero-mount{
-  position:sticky;
-  top:0;
-  z-index:var(--z-raised);
+  position:relative;
+  z-index:var(--z-base);
   width:100%;
   background:var(--bg-color);
+  border-bottom:var(--border-width-hairline) solid var(--panel-border-unified);
 }
 
 .profile-settings__hero-mount .profile-private-hero{
   width:min(var(--site-rail-width), 100%);
   margin-inline:auto;
+}
+
+.profile-settings__hero-mount,
+.profile-settings__hero-mount .profile-private-hero,
+.profile-settings__hero-mount .profile-private-hero__surface,
+.profile-settings__hero-mount .profile-private-hero__content,
+.profile-settings__hero-mount .profile-private-hero__identity,
+.profile-settings__hero-mount .profile-private-hero__banner,
+.profile-settings__hero-mount .profile-private-hero__avatar-wrap{
+  position:relative;
+  top:auto;
 }
 
 .profile-settings__pane{
@@ -84,6 +102,13 @@
   opacity:var(--profile-settings-caption-opacity);
 }
 
+.profile-settings__label,
+.profile-settings__input::placeholder,
+.profile-settings__textarea::placeholder{
+  color:var(--profile-settings-muted-color);
+  opacity:var(--profile-settings-caption-opacity);
+}
+
 /* =============================================================================
    02) PROFILE SETTINGS FORMS
    ============================================================================= */
@@ -94,14 +119,8 @@
   width:min(var(--site-rail-width), 100%);
   margin-inline:auto;
   min-height:var(--spacing-none);
-  overflow-y:auto;
-  overflow-x:hidden;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-}
-
-.profile-settings__panes::-webkit-scrollbar{
-  display:none;
+  padding-block:var(--dialog-overlay-panel-padding-y);
+  overflow:visible;
 }
 
 .profile-settings__pane[hidden]{
@@ -388,6 +407,7 @@
   background:transparent;
   border-radius:0;
   padding:0;
+  color:var(--text-primary-color);
   box-shadow:none;
 }
 
@@ -474,6 +494,7 @@
   border:none;
   background:transparent;
   min-height:calc(var(--control-height-lg) * 2);
+  color:var(--text-primary-color);
   resize:none;
 }
 

@@ -505,7 +505,13 @@
   min-height:var(--profile-private-hero-tab-band-height);
   padding-block:var(--spacing-none);
   position:relative;
-  z-index:1000;
+  z-index:var(--z-raised);
+  background:var(--bg-color);
+}
+
+.profile-settings .profile-private-hero__social-row{
+  position:sticky;
+  top:var(--spacing-none);
 }
 
 .profile-private-hero__social-row::after{
@@ -637,13 +643,27 @@
    12) PRIVATE PROFILE HERO SURFACE LAYER STATES
 ============================================================================= */
 
+
 .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__cover,
 .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__identity-row{
   display:none;
 }
 
+.profile-settings .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__cover{
+  display:block;
+}
+
+.profile-settings .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__identity-row{
+  display:grid;
+}
+
 .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__social-row{
   position:relative;
+}
+
+.profile-settings .profile-private-hero__surface[data-profile-hero-visible="false"] .profile-private-hero__social-row{
+  position:sticky;
+  top:var(--spacing-none);
 }
 
 /* =============================================================================

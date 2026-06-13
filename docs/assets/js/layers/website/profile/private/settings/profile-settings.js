@@ -305,7 +305,6 @@ function renderStatus(root, scope, saveState) {
 function renderSaveStatuses(saveState = getPrivateProfileSaveState()) {
   getSettingsRoots().forEach((root) => {
     renderStatus(root, 'identity', saveState);
-    renderStatus(root, 'route', saveState);
     renderStatus(root, 'privacy', saveState);
   });
 }
@@ -347,9 +346,13 @@ function setVerificationStatus(root, message, state = 'idle') {
 }
 
 function renderPaneState(root, navigationState) {
+  const activeSettingsPane = navigationState.settingsPane === 'route'
+    ? 'identity'
+    : navigationState.settingsPane;
+
   root.querySelectorAll('[data-profile-settings-pane-target]').forEach((button) => {
     const pane = button.getAttribute('data-profile-settings-pane-target') || '';
-    const active = pane === navigationState.settingsPane;
+    const active = pane === activeSettingsPane;
     button.dataset.profileSettingsActive = active ? 'true' : 'false';
     button.setAttribute('aria-selected', active ? 'true' : 'false');
     button.setAttribute('aria-current', active ? 'page' : 'false');
@@ -357,7 +360,7 @@ function renderPaneState(root, navigationState) {
 
   root.querySelectorAll('[data-profile-settings-pane]').forEach((pane) => {
     const paneKey = pane.getAttribute('data-profile-settings-pane') || '';
-    pane.hidden = paneKey !== navigationState.settingsPane;
+    pane.hidden = paneKey !== activeSettingsPane;
   });
 }
 
@@ -381,7 +384,6 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'public_summary', state.bio || state.profile?.public_summary || state.profile?.public_bio || '');
 
     setValue(root, 'username', state.username.raw || state.username.normalized);
-    setValue(root, 'public_display_name', state.profile?.public_display_name || state.displayName);
     setValue(root, 'public_identity_label', state.profile?.public_identity_label || '');
     setValue(root, 'public_primary_link', state.profile?.public_primary_link || '');
     setValue(root, 'public_profile_enabled', state.visibility.publicEnabled);
@@ -422,7 +424,6 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     }
 
     renderStatus(root, 'identity', saveState);
-    renderStatus(root, 'route', saveState);
     renderStatus(root, 'privacy', saveState);
     setSelectLabel(root, 'gender', 'Optional');
     syncProfileSettingsDateLabels(root);

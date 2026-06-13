@@ -105,24 +105,7 @@
           <label class="profile-settings__field profile-settings__field--full">
             <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Bio"></textarea>
           </label>
-        </div>
 
-        <div class="profile-settings__status" data-profile-save-status="identity" aria-live="polite"></div>
-
-        <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="identity">
-            <span class="ui-button__icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
-            </span>
-            <span>Save</span>
-          </button>
-        </div>
-      </form>
-    </section>
-
-    <section class="profile-settings__pane" data-profile-settings-pane="route" hidden>
-      <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="route" novalidate>
-        <div class="profile-settings__field-grid">
           <label class="profile-settings__field profile-settings__field--with-info">
             <div class="profile-settings__label-row">
               <span class="profile-settings__label">Username</span>
@@ -143,11 +126,6 @@
           </label>
 
           <label class="profile-settings__field">
-            <span class="profile-settings__label">Public display name</span>
-            <input class="ui-field profile-settings__input" type="text" name="public_display_name">
-          </label>
-
-          <label class="profile-settings__field">
             <span class="profile-settings__label">Identity label</span>
             <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Your role">
           </label>
@@ -156,128 +134,17 @@
             <span class="profile-settings__label">Primary public link</span>
             <input class="ui-field profile-settings__input" type="url" name="public_primary_link" placeholder="https://">
           </label>
-
         </div>
 
-        <div class="profile-settings__status" data-profile-save-status="route" aria-live="polite"></div>
+        <div class="profile-settings__status" data-profile-save-status="identity" aria-live="polite"></div>
 
         <div class="profile-settings__actions">
-          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="route">
+          <button class="ui-button ui-button--secondary" type="submit" data-profile-save-submit="identity">
             <span class="ui-button__icon" aria-hidden="true">
-              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/visibility/public-route.svg" alt="">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
             </span>
             <span>Save</span>
           </button>
-        </div>
-      </form>
-    </section>
-
-    <section class="profile-settings__pane" data-profile-settings-pane="privacy" hidden>
-      <form class="profile-settings__form" data-profile-save-form data-profile-save-scope="privacy" novalidate>
-        <div class="profile-settings__section">
-          <h3 class="profile-settings__section-title">Profile Visibility</h3>
-          <div class="profile-settings__toggle-list">
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Public profile</p>
-                <p class="profile-settings__toggle-caption">Make your public route visible.</p>
-              </div>
-              <input type="hidden" name="public_profile_enabled" data-profile-settings-toggle-input="public_profile_enabled">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="public_profile_enabled" data-toggle-scope="profile-visibility" data-toggle-key="public_profile_enabled">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Discovery</p>
-                <p class="profile-settings__toggle-caption">Allow search and profile discovery.</p>
-              </div>
-              <input type="hidden" name="public_profile_discoverable" data-profile-settings-toggle-input="public_profile_discoverable">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="public_profile_discoverable" data-toggle-scope="profile-visibility" data-toggle-key="public_profile_discoverable">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-settings__section">
-          <h3 class="profile-settings__section-title">Search & Discovery</h3>
-          <div class="profile-settings__toggle-list">
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Search visibility</p>
-                <p class="profile-settings__toggle-caption">Allow this profile to appear in search.</p>
-              </div>
-              <input type="hidden" name="profile_search_visible" data-profile-settings-toggle-input="profile_search_visible">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="profile_search_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_search_visible">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Models visibility</p>
-                <p class="profile-settings__toggle-caption">Show public model associations.</p>
-              </div>
-              <input type="hidden" name="profile_models_visible" data-profile-settings-toggle-input="profile_models_visible">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="profile_models_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_models_visible">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-settings__section">
-          <h3 class="profile-settings__section-title">Content Sharing</h3>
-          <div class="profile-settings__toggle-list">
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Follower counts</p>
-                <p class="profile-settings__toggle-caption">Show follower and following counts.</p>
-              </div>
-              <input type="hidden" name="profile_followers_visible" data-profile-settings-toggle-input="profile_followers_visible">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="profile_followers_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_followers_visible">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Posts visibility</p>
-                <p class="profile-settings__toggle-caption">Show public posts on your profile.</p>
-              </div>
-              <input type="hidden" name="profile_posts_visible" data-profile-settings-toggle-input="profile_posts_visible">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="profile_posts_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_posts_visible">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-
-            <div class="profile-settings__toggle-row">
-              <div class="profile-settings__toggle-copy">
-                <p class="profile-settings__toggle-title">Thought Bank privacy</p>
-                <p class="profile-settings__toggle-caption">Thoughts remain private and do not publish to your public profile.</p>
-              </div>
-              <input type="hidden" name="profile_thoughts_visible" data-profile-settings-toggle-input="profile_thoughts_visible">
-              <button class="na-toggle" type="button" role="switch" aria-checked="false" data-na-toggle data-profile-settings-toggle="profile_thoughts_visible" data-toggle-scope="profile-visibility" data-toggle-key="profile_thoughts_visible">
-                <span class="na-toggle__track" aria-hidden="true">
-                  <span class="na-toggle__thumb"></span>
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
       </form>
     </section>

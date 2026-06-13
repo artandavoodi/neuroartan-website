@@ -1,1 +1,39 @@
-<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Facebook</title><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   role="img"
+   viewBox="0 0 24 24"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="facebook.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="6.35492"
+     inkscape:cx="1.8883007"
+     inkscape:cy="4.7207518"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <title
+     id="title1">Facebook</title>
+  <path
+     d="M 9.7089223,21.239387 V 14.9328 H 7.7537217 v -2.898028 h 1.9552006 v -1.248673 c 0,-3.2283732 1.4604727,-4.7244098 4.6295737,-4.7244098 0.31691,0 0.754736,0.033192 1.160159,0.081401 a 6.8597983,6.8597983 0 0 1 0.901732,0.1541084 v 2.6277453 a 6.8147512,6.8147512 0 0 0 -0.516066,-0.028451 21.183974,21.183974 0 0 0 -0.579289,-0.00711 c -0.558742,0 -0.994987,0.075869 -1.323751,0.2442025 A 1.3324447,1.3324447 0 0 0 13.444667,9.6251516 C 13.24077,9.9570773 13.149095,10.411499 13.149095,11.009756 v 1.025018 h 3.097183 l -0.305055,1.662001 -0.226816,1.236027 h -2.565312 v 6.516018 c 4.695959,-0.567438 8.334497,-4.565561 8.334497,-9.414048 0,-5.2373141 -4.246278,-9.4835925 -9.483592,-9.4835925 -5.2373136,0 -9.483592,4.2462784 -9.483592,9.4835925 0,4.447804 3.0616196,8.179597 7.1925143,9.204615 z"
+     id="path1"
+     style="stroke-width:0.999997" />
+</svg>

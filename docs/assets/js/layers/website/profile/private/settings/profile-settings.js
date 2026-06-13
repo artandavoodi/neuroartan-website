@@ -68,6 +68,30 @@ function buildLocalizedMonthLabel(monthIndex) {
   }
 }
 
+function formatProfileSettingsBirthDate(value = '') {
+  const normalizedValue = normalizeString(value);
+  const match = normalizedValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return 'Not set';
+
+  try {
+    return new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC'
+    }).format(new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]))));
+  } catch (_) {
+    return normalizedValue;
+  }
+}
+
+function setProfileSettingsBirthDateDisplay(root, value = '') {
+  const display = root.querySelector('[data-profile-settings-date-of-birth-display]');
+  if (display instanceof HTMLElement) {
+    display.textContent = formatProfileSettingsBirthDate(value);
+  }
+}
+
 function buildOption(value, label) {
   const option = document.createElement('option');
   option.value = String(value);
@@ -174,6 +198,8 @@ function syncProfileSettingsDateControls(root, value = '') {
   if (hiddenInput instanceof HTMLInputElement) {
     hiddenInput.value = value || '';
   }
+
+  setProfileSettingsBirthDateDisplay(root, value || '');
 
   if (!(monthSelect instanceof HTMLSelectElement) || !(daySelect instanceof HTMLSelectElement) || !(yearSelect instanceof HTMLSelectElement)) {
     return;
@@ -298,6 +324,30 @@ function setProfileSettingsSocialLinksState(root, value = []) {
   if (summary instanceof HTMLElement) {
     summary.textContent = getProfileSettingsSocialSummary(links);
   }
+}
+
+function setProfileSettingsCountryRegionState(root, value = '') {
+  const normalizedValue = normalizeString(value);
+  const input = root.querySelector('[data-profile-settings-country-region-input]');
+  const label = root.querySelector('[data-profile-settings-country-region-label]');
+
+  if (input instanceof HTMLInputElement) {
+    input.value = normalizedValue;
+  }
+
+  if (label instanceof HTMLElement) {
+    label.textContent = normalizedValue || 'Country or region';
+  }
+}
+
+function openProfileSettingsCountryRegionOverlay(root) {
+  if (!(root instanceof HTMLElement)) return;
+  document.dispatchEvent(new CustomEvent('neuroartan:country-overlay-open-requested', {
+    detail: {
+      source: 'profile-settings-country-region',
+      field: 'locale_country_label'
+    }
+  }));
 }
 
 async function loadProfileSettingsSocialLinksConfig() {
@@ -682,7 +732,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'public_tagline', state.profile?.public_tagline || '');
     setValue(root, 'date_of_birth', state.birthDate || state.profile?.date_of_birth || '');
     setValue(root, 'gender', state.gender);
-    setValue(root, 'locale_country_label', state.profile?.locale_country_label || '');
+    setProfileSettingsCountryRegionState(root, state.profile?.locale_country_label || '');
     setValue(root, 'timezone', state.profile?.timezone || '');
     setValue(root, 'preferred_language', state.profile?.preferred_language || '');
     setValue(root, 'locale_languages', formatProfileSettingsListValue(state.profile?.locale_languages));
@@ -950,6 +1000,16 @@ function initProfileSettings() {
       return;
     }
 
+    const countryRegionButton = event.target.closest('[data-profile-settings-country-region-open]');
+    if (countryRegionButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = countryRegionButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        openProfileSettingsCountryRegionOverlay(root);
+      }
+      return;
+    }
+
     const socialOpenButton = event.target.closest('[data-profile-settings-social-links-open]');
     if (socialOpenButton instanceof HTMLElement) {
       event.preventDefault();
@@ -980,6 +1040,20 @@ function initProfileSettings() {
       return;
     }
 
+
+    const birthDateChangeRequestButton = event.target.closest('[data-profile-settings-date-of-birth-change-request]');
+    if (birthDateChangeRequestButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = birthDateChangeRequestButton.closest('[data-profile-settings-panel]');
+      if (!(root instanceof HTMLElement)) return;
+      const infoButton = root.querySelector('[data-profile-settings-info-toggle][aria-label="Date of birth information"]');
+      const popover = root.querySelector('[data-profile-settings-info-popover]');
+      if (infoButton instanceof HTMLElement && popover instanceof HTMLElement) {
+        infoButton.setAttribute('aria-expanded', 'true');
+        popover.hidden = false;
+      }
+      return;
+    }
 
     const paneButton = event.target.closest('[data-profile-settings-pane-target]');
     if (paneButton instanceof HTMLElement) {

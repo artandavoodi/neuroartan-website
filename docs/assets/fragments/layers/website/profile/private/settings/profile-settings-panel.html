@@ -97,8 +97,22 @@
                 <input class="ui-field profile-settings__input" type="text" name="preferred_name" autocomplete="nickname" placeholder="Name you prefer to be addressed by" aria-label="Preferred name">
               </label>
 
-              <label class="profile-settings__field">
-                <span class="profile-settings__label">Date of birth</span>
+              <label class="profile-settings__field profile-settings__field--with-info profile-settings__field--full">
+                <div class="profile-settings__label-row">
+                  <span class="profile-settings__label">Date of birth</span>
+                  <span class="profile-settings__field-info">
+                    <button class="profile-settings__info-button" type="button" data-profile-settings-info-toggle aria-expanded="false" aria-label="Date of birth information">
+                      <span class="profile-settings__icon-wrap" aria-hidden="true">
+                        <img class="profile-settings__icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/for-more-information-about/for-more-information-about.svg" alt="" aria-hidden="true">
+                      </span>
+                    </button>
+                    <span class="profile-settings__info-popover" data-profile-settings-info-popover hidden>
+                      <span class="profile-settings__info-content">
+                        Date of birth is a protected identity field. Changes require review before they are applied.
+                      </span>
+                    </span>
+                  </span>
+                </div>
                 <input
                   class="ui-field profile-settings__input"
                   type="hidden"
@@ -106,47 +120,12 @@
                   autocomplete="bday"
                   data-profile-settings-date-of-birth
                 >
-                <span class="profile-settings__date-grid" data-profile-settings-date-grid>
-                  <span class="ui-inline-dropdown profile-settings__select-control">
-                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="month">Month</span>
-                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                      <select
-                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                        data-profile-settings-date-control="month"
-                        aria-label="Birth month"
-                      >
-                        <option value="">Month</option>
-                      </select>
-                    </span>
-                  </span>
-                  <span class="ui-inline-dropdown profile-settings__select-control">
-                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="day">Day</span>
-                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                      <select
-                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                        data-profile-settings-date-control="day"
-                        aria-label="Birth day"
-                      >
-                        <option value="">Day</option>
-                      </select>
-                    </span>
-                  </span>
-                  <span class="ui-inline-dropdown profile-settings__select-control">
-                    <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-date-label="year">Year</span>
-                    <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
-                      <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
-                      <select
-                        class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select profile-settings__date-select"
-                        data-profile-settings-date-control="year"
-                        aria-label="Birth year"
-                      >
-                        <option value="">Year</option>
-                      </select>
-                    </span>
-                  </span>
-                </span>
+                <div class="profile-settings__locked-field">
+                  <span class="profile-settings__locked-value" data-profile-settings-date-of-birth-display>Not set</span>
+                  <button class="profile-settings__locked-action" type="button" data-profile-settings-date-of-birth-change-request>
+                    <span>Request change</span>
+                  </button>
+                </div>
               </label>
 
               <label class="profile-settings__field profile-settings__field--full">
@@ -163,10 +142,13 @@
                 </span>
               </label>
 
-              <label class="profile-settings__field profile-settings__field--quiet">
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-country-region-field>
                 <span class="profile-settings__label">Country / region</span>
-                <input class="ui-field profile-settings__input" type="text" name="locale_country_label" autocomplete="country-name" placeholder="Country or region" aria-label="Country or region">
-              </label>
+                <input class="ui-field profile-settings__input" type="hidden" name="locale_country_label" autocomplete="country-name" data-profile-settings-country-region-input>
+                <button class="profile-settings__country-region-action" type="button" data-profile-settings-country-region-open>
+                  <span data-profile-settings-country-region-label>Country or region</span>
+                </button>
+              </div>
 
               <label class="profile-settings__field profile-settings__field--quiet">
                 <span class="profile-settings__label">Time zone</span>

@@ -125,7 +125,7 @@
   align-items: flex-start;
 
   overflow-y: auto;
-  z-index: 200000;
+  z-index:calc(var(--z-country-overlay) + 100000);
   padding: var(--country-overlay-padding-block) var(--spacing-none);
   box-sizing: border-box;
 
@@ -429,7 +429,7 @@ body.country-active .stage-circle{
   top: var(--spacing-none);
   right: var(--spacing-none);
   margin-inline-end:var(--global-close-button-optical-end-offset);
-  z-index:var(--z-overlay-modal);
+  z-index:calc(var(--z-country-overlay) + 100001);
 }
 
 /* Close button inherits global close-button geometry, surface, hover, and motion. */

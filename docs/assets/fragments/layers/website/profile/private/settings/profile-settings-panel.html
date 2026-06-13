@@ -28,9 +28,9 @@
               <input class="ui-field profile-settings__input" type="text" name="display_name" autocomplete="nickname" placeholder="Name shown on your profile" aria-label="Display name">
             </label>
 
-            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
-              <span class="profile-settings__label">Bio</span>
-              <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Short public bio" aria-label="Bio"></textarea>
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Profile headline</span>
+              <input class="ui-field profile-settings__input" type="text" name="public_tagline" placeholder="Short headline shown under your name" aria-label="Profile headline">
             </label>
 
             <label class="profile-settings__field profile-settings__field--with-info profile-settings__field--full">
@@ -51,6 +51,11 @@
               </div>
               <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false" placeholder="username" aria-label="Username">
             </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+              <span class="profile-settings__label">Bio</span>
+              <textarea class="ui-field profile-settings__input profile-settings__textarea profile-settings__textarea--minimal" rows="4" maxlength="180" name="public_summary" placeholder="Short public bio" aria-label="Bio"></textarea>
+            </label>
           </div>
         </div>
 
@@ -65,6 +70,11 @@
             <label class="profile-settings__field profile-settings__field--quiet">
               <span class="profile-settings__label">Last name</span>
               <input class="ui-field profile-settings__input" type="text" name="last_name" autocomplete="family-name" placeholder="Family name" aria-label="Last name">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Preferred name</span>
+              <input class="ui-field profile-settings__input" type="text" name="preferred_name" autocomplete="nickname" placeholder="Name you prefer to be addressed by" aria-label="Preferred name">
             </label>
 
             <label class="profile-settings__field">
@@ -122,15 +132,35 @@
             <label class="profile-settings__field profile-settings__field--full">
               <span class="profile-settings__label">Gender</span>
               <span class="ui-inline-dropdown profile-settings__dropdown">
-                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-select-label="gender">Man</span>
+                <span class="ui-inline-dropdown__value profile-settings__select-value" data-profile-settings-select-label="gender">Male</span>
                 <span class="ui-inline-dropdown__icon-wrapper profile-settings__dropdown-icon-wrapper">
                   <img class="ui-icon-theme-aware ui-inline-dropdown__icon profile-settings__dropdown-icon" src="/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg" alt="" width="16" height="16">
                   <select class="ui-dropdown ui-dropdown--icon-only profile-settings__dropdown-select" name="gender" aria-label="Gender">
-                    <option value="woman">Woman</option>
-                    <option value="man" selected>Man</option>
+                    <option value="female">Female</option>
+                    <option value="male" selected>Male</option>
                   </select>
                 </span>
               </span>
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Country / region</span>
+              <input class="ui-field profile-settings__input" type="text" name="locale_country_label" autocomplete="country-name" placeholder="Country or region" aria-label="Country or region">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Time zone</span>
+              <input class="ui-field profile-settings__input" type="text" name="timezone" placeholder="Time zone" aria-label="Time zone">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Primary language</span>
+              <input class="ui-field profile-settings__input" type="text" name="preferred_language" placeholder="Primary language" aria-label="Primary language">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+              <span class="profile-settings__label">Additional languages</span>
+              <input class="ui-field profile-settings__input" type="text" name="locale_languages" placeholder="Additional languages" aria-label="Additional languages">
             </label>
           </div>
         </div>
@@ -143,9 +173,29 @@
               <input class="ui-field profile-settings__input" type="text" name="public_identity_label" placeholder="Role or professional focus" aria-label="Professional role">
             </label>
 
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Organization / company</span>
+              <input class="ui-field profile-settings__input" type="text" name="organization_name" placeholder="Organization or company" aria-label="Organization or company">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet">
+              <span class="profile-settings__label">Professional field</span>
+              <input class="ui-field profile-settings__input" type="text" name="professional_field" placeholder="Field or domain" aria-label="Professional field">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+              <span class="profile-settings__label">Expertise areas</span>
+              <input class="ui-field profile-settings__input" type="text" name="expertise_areas" placeholder="Areas of expertise" aria-label="Expertise areas">
+            </label>
+
+            <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+              <span class="profile-settings__label">Current focus</span>
+              <input class="ui-field profile-settings__input" type="text" name="current_focus" placeholder="Current focus" aria-label="Current focus">
+            </label>
+
             <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
               <span class="profile-settings__label">Location</span>
-              <input class="ui-field profile-settings__input" type="hidden" name="location" data-profile-settings-location>
+              <input class="ui-field profile-settings__input" type="hidden" name="public_location" data-profile-settings-location>
               <button class="profile-settings__location-action" type="button" data-profile-settings-location-action>
                 <span data-profile-settings-location-label>Use current location</span>
               </button>
@@ -153,7 +203,7 @@
 
             <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
               <span class="profile-settings__label">Website</span>
-              <input class="ui-field profile-settings__input" type="url" name="public_primary_link" placeholder="https://example.com" aria-label="Website">
+              <input class="ui-field profile-settings__input" type="url" name="website_url" placeholder="https://example.com" aria-label="Website">
             </label>
           </div>
         </div>

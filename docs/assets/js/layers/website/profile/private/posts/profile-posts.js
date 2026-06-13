@@ -63,6 +63,7 @@ const STORE = (window.__NEUROARTAN_PROFILE_POSTS__ ||= {
   policy: null,
   loading: true,
   posts: [],
+  renderSequence: 0,
   selectedMediaFile: null,
   selectedMediaKind: '',
   editingPostId: '',
@@ -387,9 +388,16 @@ async function renderPosts() {
   const root = getRoot();
   if (!root) return;
 
+  const renderSequence = STORE.renderSequence + 1;
+  STORE.renderSequence = renderSequence;
   const state = getProfileRuntimeState();
   STORE.loading = true;
   renderPostList(root);
+
+  if (state.authResolved !== true) {
+    return;
+  }
+
   const policy = await loadPolicy();
   try {
     await syncStoreWithRuntime(state);
@@ -397,6 +405,11 @@ async function renderPosts() {
     console.error('[profile-posts] Failed to load profile feed posts.', error);
     STORE.posts = [];
   }
+
+  if (STORE.renderSequence !== renderSequence) {
+    return;
+  }
+
   STORE.loading = false;
 
   root.dataset.profileViewerState = state.viewerState;

@@ -7,12 +7,22 @@ alter table public.profiles
   add column if not exists public_location text,
   add column if not exists website_url text,
   add column if not exists timezone text,
+  add column if not exists organization_name text,
   add column if not exists professional_field text,
   add column if not exists expertise_areas jsonb not null default '[]'::jsonb,
   add column if not exists current_focus text;
 
 alter table public.profiles
   drop constraint if exists profiles_gender_supported_check;
+
+update public.profiles
+set gender = null
+where gender is not null
+  and lower(trim(gender)) not in ('male', 'female');
+
+update public.profiles
+set gender = lower(trim(gender))
+where gender is not null;
 
 alter table public.profiles
   add constraint profiles_gender_supported_check
@@ -153,6 +163,7 @@ comment on column public.profiles.preferred_name is 'User-approved preferred per
 comment on column public.profiles.public_location is 'Public profile location shown on user-facing profile surfaces.';
 comment on column public.profiles.website_url is 'Primary public website URL for the profile.';
 comment on column public.profiles.timezone is 'User profile timezone for locale-aware profile behavior.';
+comment on column public.profiles.organization_name is 'Primary public or professional organization name shown on profile-owned surfaces.';
 comment on column public.profiles.professional_field is 'User professional field or domain.';
 comment on column public.profiles.expertise_areas is 'User-approved public/professional expertise areas.';
 comment on column public.profiles.current_focus is 'User-approved current professional or creative focus.';

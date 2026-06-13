@@ -117,15 +117,6 @@
   [data-profile-section="thoughts"],
   [data-profile-section="organizations"]
 ) .profile-shell__mount--hero{
-  display:none;
-}
-
-.profile-shell[data-profile-surface="private"]:is(
-  [data-profile-section="profile"],
-  [data-profile-section="posts"],
-  [data-profile-section="thoughts"],
-  [data-profile-section="organizations"]
-) .profile-shell__mount--hero{
   top:calc(
     var(--profile-shell-home-tab-sticky-target-top)
     - var(--profile-shell-home-tab-sticky-travel)

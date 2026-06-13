@@ -111,7 +111,7 @@ function getHeroRoots() {
 }
 
 function getProfileTabRoots() {
-  return Array.from(document.querySelectorAll('[data-profile-hero-tabs], [data-profile-workspace-tabs]'));
+  return Array.from(document.querySelectorAll('[data-profile-hero-tabs]'));
 }
 
 function setText(root, selector, value) {
@@ -285,7 +285,7 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
   roots.forEach((root) => {
     const profile = state.profile || {};
     const username = String(profile.username || '').trim();
-    const displayName = String(profile.display_name || profile.displayName || '').trim();
+    const displayName = String(profile.public_display_name || profile.display_name || profile.displayName || profile.preferred_name || '').trim();
     const profileComplete = profile.profile_complete === true || state.profileComplete === true;
 
     setImage(root, '[data-profile-avatar-image]', state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
@@ -324,8 +324,8 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
       bioNode.textContent = bio;
       bioNode.hidden = !bio;
     }
-    setProfileInfoText(root, '[data-profile-location]', readProfileText(profile, ['location', 'public_location', 'profile_location']));
-    setProfileInfoText(root, '[data-profile-role]', readProfileText(profile, ['public_identity_label', 'role', 'professional_role', 'identity_label']));
+    setProfileInfoText(root, '[data-profile-location]', readProfileText(profile, ['public_location', 'locale_country_label', 'location', 'profile_location']));
+    setProfileInfoText(root, '[data-profile-role]', readProfileText(profile, ['public_identity_label', 'professional_field', 'current_focus', 'role', 'professional_role', 'identity_label']));
     setText(
       root,
       '[data-profile-hero-description]',
@@ -372,7 +372,7 @@ function renderProfilePrivateHeroTabs(navigationState = getProfileNavigationStat
     ) ? 'true' : 'false';
     const surface = root.querySelector('.profile-private-hero__surface');
     if (surface instanceof HTMLElement) {
-      surface.dataset.profileHeroVisible = isProfileIdentitySection || navigationState.section === 'settings' ? 'true' : 'false';
+      surface.dataset.profileHeroVisible = navigationState.section === 'settings' ? 'true' : 'false';
     }
   });
 

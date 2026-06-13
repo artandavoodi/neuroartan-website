@@ -209,6 +209,14 @@ function setValue(root, name, value) {
   }
 }
 
+function formatProfileSettingsListValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeString(item)).filter(Boolean).join(', ');
+  }
+  if (typeof value === 'string') return normalizeString(value);
+  return '';
+}
+
 function getProfileSettingsCoordinates(position) {
   const latitude = Number(position?.coords?.latitude);
   const longitude = Number(position?.coords?.longitude);
@@ -476,15 +484,25 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
 
     setValue(root, 'first_name', state.firstName);
     setValue(root, 'last_name', state.lastName);
+    setValue(root, 'preferred_name', state.profile?.preferred_name || '');
     setValue(root, 'display_name', state.displayName);
-    setValue(root, 'date_of_birth', state.birthDate);
+    setValue(root, 'public_tagline', state.profile?.public_tagline || '');
+    setValue(root, 'date_of_birth', state.birthDate || state.profile?.date_of_birth || '');
     setValue(root, 'gender', state.gender);
+    setValue(root, 'locale_country_label', state.profile?.locale_country_label || '');
+    setValue(root, 'timezone', state.profile?.timezone || '');
+    setValue(root, 'preferred_language', state.profile?.preferred_language || '');
+    setValue(root, 'locale_languages', formatProfileSettingsListValue(state.profile?.locale_languages));
     setValue(root, 'public_summary', state.bio || state.profile?.public_summary || state.profile?.public_bio || '');
 
     setValue(root, 'username', state.username.raw || state.username.normalized);
     setValue(root, 'public_identity_label', state.profile?.public_identity_label || '');
-    setProfileSettingsLocationState(root, state.profile?.location || state.profile?.public_location || '', 'idle');
-    setValue(root, 'public_primary_link', state.profile?.public_primary_link || '');
+    setValue(root, 'organization_name', state.profile?.organization_name || '');
+    setValue(root, 'professional_field', state.profile?.professional_field || '');
+    setValue(root, 'expertise_areas', formatProfileSettingsListValue(state.profile?.expertise_areas));
+    setValue(root, 'current_focus', state.profile?.current_focus || '');
+    setProfileSettingsLocationState(root, state.profile?.public_location || state.profile?.location || '', 'idle');
+    setValue(root, 'website_url', state.profile?.website_url || state.profile?.public_primary_link || '');
     setValue(root, 'public_profile_enabled', state.visibility.publicEnabled);
     setValue(root, 'public_profile_discoverable', state.visibility.discoverable);
     setValue(root, 'profile_search_visible', state.profile?.profile_search_visible !== false);

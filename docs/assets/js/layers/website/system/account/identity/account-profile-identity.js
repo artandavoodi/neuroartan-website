@@ -589,6 +589,16 @@ export async function reserveSupabaseUsernameProfile({
     public_tagline: payload.public_tagline,
     public_links: payload.public_links,
     public_primary_link: payload.public_primary_link,
+    preferred_name: payload.preferred_name,
+    public_location: payload.public_location,
+    website_url: payload.website_url,
+    locale_country_label: payload.locale_country_label,
+    timezone: payload.timezone,
+    preferred_language: payload.preferred_language,
+    locale_languages: payload.locale_languages,
+    professional_field: payload.professional_field,
+    expertise_areas: payload.expertise_areas,
+    current_focus: payload.current_focus,
     public_modules: payload.public_modules,
     public_feature_flags: payload.public_feature_flags,
     first_name: payload.first_name,
@@ -743,10 +753,10 @@ export function normalizeGenderValue(value) {
   switch (normalized) {
     case 'female':
     case 'woman':
-      return 'woman';
+      return 'female';
     case 'male':
     case 'man':
-      return 'man';
+      return 'male';
     default:
       return '';
   }
@@ -1341,7 +1351,8 @@ export function buildPublicProfileModel(profile, policy = getProfileIdentityPoli
   const publicLinks = normalizePublicLinks(profile.public_links);
   const publicProfileEnabled = profile.public_profile_enabled === true;
   const publicPrimaryLink = normalizeString(
-    profile.public_primary_link
+    profile.website_url
+    || profile.public_primary_link
     || publicLinks[0]?.url
     || ''
   );
@@ -1368,7 +1379,18 @@ export function buildPublicProfileModel(profile, policy = getProfileIdentityPoli
       || ''
     ),
     public_preferred_name: normalizeString(profile.public_preferred_name || ''),
+    preferred_name: normalizeString(profile.preferred_name || ''),
     public_identity_label: normalizeString(profile.public_identity_label || ''),
+    public_location: normalizeString(profile.public_location || profile.locale_country_label || ''),
+    website_url: normalizeString(profile.website_url || ''),
+    locale_country_code: normalizeString(profile.locale_country_code || ''),
+    locale_country_label: normalizeString(profile.locale_country_label || ''),
+    timezone: normalizeString(profile.timezone || ''),
+    preferred_language: normalizeString(profile.preferred_language || ''),
+    locale_languages: Array.isArray(profile.locale_languages) ? profile.locale_languages : [],
+    professional_field: normalizeString(profile.professional_field || ''),
+    expertise_areas: Array.isArray(profile.expertise_areas) ? profile.expertise_areas : [],
+    current_focus: normalizeString(profile.current_focus || ''),
     public_route_path: normalizeString(
       profile.public_route_path
       || profile.public_profile_path
@@ -1389,11 +1411,6 @@ export function buildPublicProfileModel(profile, policy = getProfileIdentityPoli
     public_tagline: normalizeString(profile.public_tagline || ''),
     public_links: publicLinks,
     public_primary_link: publicPrimaryLink,
-    public_modules: Array.isArray(profile.public_modules) ? profile.public_modules : [],
-    public_feature_flags: Array.isArray(profile.public_feature_flags) ? profile.public_feature_flags : [],
-    public_verification_status: normalizeString(profile.public_verification_status || profile.verification_status || 'unverified'),
-    profile_verified: profile.profile_verified === true,
-    verified_at: normalizeString(profile.verified_at || profile.profile_verified_at || '')
   };
 }
 
@@ -1668,7 +1685,9 @@ export function buildProfilePayload({
   const usernameReservedAt = existingProfile?.username_reserved_at || timestamp;
   const publicLinks = resolvePublicLinks(values, existingProfile);
   const publicPrimaryLink = normalizeString(
-    values.public_primary_link
+    values.website_url
+    || values.public_primary_link
+    || existingProfile?.website_url
     || existingProfile?.public_primary_link
     || publicLinks[0]?.url
     || ''
@@ -1736,6 +1755,16 @@ export function buildProfilePayload({
     public_tagline: normalizeString(values.public_tagline || existingProfile?.public_tagline || ''),
     public_links: publicLinks,
     public_primary_link: publicPrimaryLink,
+    preferred_name: normalizeString(values.preferred_name || existingProfile?.preferred_name || ''),
+    public_location: normalizeString(values.public_location || existingProfile?.public_location || ''),
+    website_url: publicPrimaryLink,
+    locale_country_label: normalizeString(values.locale_country_label || existingProfile?.locale_country_label || ''),
+    timezone: normalizeString(values.timezone || existingProfile?.timezone || ''),
+    preferred_language: normalizeString(values.preferred_language || existingProfile?.preferred_language || 'en'),
+    locale_languages: Array.isArray(values.locale_languages) ? values.locale_languages : (Array.isArray(existingProfile?.locale_languages) ? existingProfile.locale_languages : ['en']),
+    professional_field: normalizeString(values.professional_field || existingProfile?.professional_field || ''),
+    expertise_areas: Array.isArray(values.expertise_areas) ? values.expertise_areas : (Array.isArray(existingProfile?.expertise_areas) ? existingProfile.expertise_areas : []),
+    current_focus: normalizeString(values.current_focus || existingProfile?.current_focus || ''),
     public_modules: Array.isArray(values.public_modules)
       ? values.public_modules
       : (Array.isArray(existingProfile?.public_modules) ? existingProfile.public_modules : []),

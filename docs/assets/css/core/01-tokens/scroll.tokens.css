@@ -1,0 +1,37 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) SCROLL STRIP TOKENS
+   03) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/01-tokens/scroll.tokens.css */
+
+/* =============================================================================
+   02) SCROLL STRIP TOKENS
+============================================================================= */
+:root{
+  --scroll-strip-size:0.1875rem;
+  --scroll-strip-hit-size:0.5rem;
+  --scroll-strip-inset-block:10%;
+  --scroll-strip-inset-inline:0;
+  --scroll-strip-thumb-min:1.75rem;
+  --scroll-strip-thumb-max:8.75rem;
+  --scroll-strip-radius:var(--radius-pill);
+  --scroll-strip-track-color:transparent;
+  --scroll-strip-thumb-color:color-mix(in srgb, var(--text-primary-color) 30%, transparent);
+  --scroll-strip-thumb-hover-color:color-mix(in srgb, var(--text-primary-color) 48%, transparent);
+  --scroll-strip-native-thumb-color:color-mix(in srgb, var(--text-primary-color) 22%, transparent);
+  --scroll-strip-native-thumb-hover-color:color-mix(in srgb, var(--text-primary-color) 42%, transparent);
+  --scroll-strip-opacity-idle:0;
+  --scroll-strip-opacity-active:0.62;
+  --scroll-strip-transition:opacity 280ms var(--ease-standard), background-color var(--duration-base) var(--ease-standard);
+  --scroll-strip-z-index:var(--z-above);
+}
+
+/* =============================================================================
+   03) END OF FILE
+============================================================================= */

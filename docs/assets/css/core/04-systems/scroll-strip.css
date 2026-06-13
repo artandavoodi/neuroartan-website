@@ -1,0 +1,138 @@
+/* =============================================================================
+   00) FILE INDEX
+   01) MODULE IDENTITY
+   02) NATIVE SCROLLBAR BASELINE
+   03) CUSTOM SCROLL STRIP
+   04) ACCESSIBILITY
+   05) END OF FILE
+============================================================================= */
+
+/* =============================================================================
+   01) MODULE IDENTITY
+============================================================================= */
+/* /website/docs/assets/css/core/04-systems/scroll-strip.css */
+
+/* =============================================================================
+   02) NATIVE SCROLLBAR BASELINE
+============================================================================= */
+html,
+body,
+.na-scroll-strip-native,
+[data-na-scroll-strip="true"]{
+  scrollbar-width:none;
+  scrollbar-color:transparent transparent;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.na-scroll-strip-native::-webkit-scrollbar,
+[data-na-scroll-strip="true"]::-webkit-scrollbar{
+  width:0;
+  height:0;
+  display:none;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.na-scroll-strip-native::-webkit-scrollbar-track,
+[data-na-scroll-strip="true"]::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.na-scroll-strip-native::-webkit-scrollbar-thumb,
+[data-na-scroll-strip="true"]::-webkit-scrollbar-thumb{
+  border-radius:var(--scroll-strip-radius);
+  background:var(--scroll-strip-native-thumb-color);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.na-scroll-strip-native::-webkit-scrollbar-thumb:hover,
+[data-na-scroll-strip="true"]::-webkit-scrollbar-thumb:hover{
+  background:var(--scroll-strip-native-thumb-hover-color);
+}
+
+/* =============================================================================
+   03) CUSTOM SCROLL STRIP
+============================================================================= */
+.na-scroll-strip-host{
+  position:relative;
+}
+
+.na-scroll-strip{
+  position:absolute;
+  z-index:var(--scroll-strip-z-index);
+  top:var(--scroll-strip-inset-block);
+  right:var(--scroll-strip-inset-inline);
+  bottom:var(--scroll-strip-inset-block);
+  width:var(--scroll-strip-hit-size);
+  pointer-events:none;
+  opacity:0;
+  transition:var(--scroll-strip-transition);
+}
+
+.na-scroll-strip--viewport{
+  position:fixed;
+}
+
+.na-scroll-strip[data-scroll-strip-visible="true"]{
+  opacity:var(--scroll-strip-opacity-idle);
+}
+
+.na-scroll-strip[data-scroll-strip-active="true"],
+[data-na-scroll-strip="true"]:focus-within > .na-scroll-strip,
+[data-na-scroll-strip="true"]:hover > .na-scroll-strip,
+.na-scroll-strip-host:hover > .na-scroll-strip{
+  opacity:var(--scroll-strip-opacity-active);
+}
+
+.na-scroll-strip__track{
+  position:absolute;
+  inset:0;
+  width:var(--scroll-strip-size);
+  margin-inline:auto;
+  border-radius:var(--scroll-strip-radius);
+  background:var(--scroll-strip-track-color);
+}
+
+.na-scroll-strip__thumb{
+  position:absolute;
+  left:50%;
+  width:var(--scroll-strip-size);
+  min-height:var(--scroll-strip-thumb-min);
+  max-height:var(--scroll-strip-thumb-max);
+  border-radius:var(--scroll-strip-radius);
+  background:var(--scroll-strip-thumb-color);
+  transform:translate3d(-50%, 0, 0);
+  transition:var(--scroll-strip-transition);
+  will-change:transform, height;
+}
+
+.na-scroll-strip[data-scroll-strip-active="true"] .na-scroll-strip__thumb,
+[data-na-scroll-strip="true"]:focus-within > .na-scroll-strip .na-scroll-strip__thumb,
+[data-na-scroll-strip="true"]:hover > .na-scroll-strip .na-scroll-strip__thumb,
+.na-scroll-strip-host:hover > .na-scroll-strip .na-scroll-strip__thumb{
+  background:var(--scroll-strip-thumb-hover-color);
+}
+
+[data-na-scroll-strip="off"] > .na-scroll-strip,
+[data-na-scroll-strip="hidden"] > .na-scroll-strip,
+.na-scroll-strip[hidden]{
+  display:none;
+}
+
+/* =============================================================================
+   04) ACCESSIBILITY
+============================================================================= */
+@media (prefers-reduced-motion: reduce){
+  .na-scroll-strip,
+  .na-scroll-strip__thumb{
+    transition:none;
+  }
+}
+
+/* =============================================================================
+   05) END OF FILE
+============================================================================= */

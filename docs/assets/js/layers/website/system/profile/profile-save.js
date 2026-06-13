@@ -48,6 +48,7 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_SAVE__ ||= {
 ============================================================================= */
 const PROFILE_COLLECTION = 'profiles';
 const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
+const PROFILE_ORGANIZATIONS_COLLECTION = 'profile_organizations';
 const SUPABASE_PROFILE_SELECT_FIELDS = '*';
 const SAVE_SCOPES = Object.freeze(['identity', 'route', 'privacy', 'visibility', 'media']);
 const BOOLEAN_PROFILE_FIELDS = new Set([
@@ -63,7 +64,9 @@ const BOOLEAN_PROFILE_FIELDS = new Set([
 const PROFILE_CHANGELOG_FIELD_LABELS = Object.freeze({
   first_name: 'First name',
   last_name: 'Last name',
+  preferred_name: 'Preferred name',
   display_name: 'Display name',
+  public_tagline: 'Profile headline',
   date_of_birth: 'Date of birth',
   gender: 'Gender',
   public_summary: 'Bio',
@@ -71,7 +74,16 @@ const PROFILE_CHANGELOG_FIELD_LABELS = Object.freeze({
   username: 'Username',
   public_display_name: 'Public display name',
   public_identity_label: 'Identity label',
-  public_primary_link: 'Primary public link',
+  public_location: 'Location',
+  website_url: 'Website',
+  locale_country_label: 'Country / region',
+  timezone: 'Time zone',
+  preferred_language: 'Primary language',
+  locale_languages: 'Additional languages',
+  organization_name: 'Organization / company',
+  professional_field: 'Professional field',
+  expertise_areas: 'Expertise areas',
+  current_focus: 'Current focus',
   public_profile_enabled: 'Public profile visibility',
   public_profile_discoverable: 'Public discovery',
   profile_search_visible: 'Search visibility',
@@ -330,14 +342,25 @@ function getExistingProfileSeed(existingProfile = null, user = null) {
     email: normalizeEmail(existingProfile?.email || user?.email || user?.user_metadata?.email || ''),
     first_name: normalizeString(existingProfile?.first_name || ''),
     last_name: normalizeString(existingProfile?.last_name || ''),
+    preferred_name: normalizeString(existingProfile?.preferred_name || ''),
     display_name: normalizeString(existingProfile?.display_name || userDisplayName),
     date_of_birth: normalizeString(existingProfile?.date_of_birth || existingProfile?.birth_date || ''),
     gender: normalizeString(existingProfile?.gender || ''),
     username: normalizeString(existingProfile?.username || existingProfile?.username_normalized || existingProfile?.username_lower || ''),
     public_display_name: normalizeString(existingProfile?.public_display_name || existingProfile?.display_name || userDisplayName),
     public_identity_label: normalizeString(existingProfile?.public_identity_label || ''),
+    public_tagline: normalizeString(existingProfile?.public_tagline || ''),
     public_summary: normalizeString(existingProfile?.public_summary || existingProfile?.public_bio || existingProfile?.bio || ''),
-    public_primary_link: normalizeString(existingProfile?.public_primary_link || ''),
+    public_location: normalizeString(existingProfile?.public_location || existingProfile?.location || ''),
+    website_url: normalizeString(existingProfile?.website_url || existingProfile?.public_primary_link || ''),
+    locale_country_label: normalizeString(existingProfile?.locale_country_label || ''),
+    timezone: normalizeString(existingProfile?.timezone || ''),
+    preferred_language: normalizeString(existingProfile?.preferred_language || 'en'),
+    locale_languages: Array.isArray(existingProfile?.locale_languages) ? existingProfile.locale_languages : ['en'],
+    organization_name: normalizeString(existingProfile?.organization_name || ''),
+    professional_field: normalizeString(existingProfile?.professional_field || ''),
+    expertise_areas: Array.isArray(existingProfile?.expertise_areas) ? existingProfile.expertise_areas : [],
+    current_focus: normalizeString(existingProfile?.current_focus || ''),
     public_profile_enabled: existingProfile?.public_profile_enabled === true,
     public_profile_discoverable: existingProfile?.public_profile_discoverable === true,
     profile_search_visible: existingProfile?.profile_search_visible !== false,
@@ -384,6 +407,13 @@ function readOptionalCheckboxValue(formData, name, fallback = false) {
   return formData.has(name) ? formData.get(name) === 'on' : fallback === true;
 }
 
+function readDelimitedListValue(formData, name) {
+  return normalizeString(formData.get(name) || '')
+    .split(',')
+    .map((entry) => normalizeString(entry))
+    .filter(Boolean);
+}
+
 function readUploadableFile(source, name) {
   const file = source?.get?.(name) || source?.[name] || null;
   return typeof File !== 'undefined' && file instanceof File && file.size > 0 ? file : null;
@@ -411,11 +441,26 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         ...seed,
         first_name: normalizeString(formData.get('first_name') || ''),
         last_name: normalizeString(formData.get('last_name') || ''),
+        preferred_name: normalizeString(formData.get('preferred_name') || ''),
         display_name: normalizeString(formData.get('display_name') || ''),
-        date_of_birth: normalizeString(formData.get('date_of_birth') || ''),
+        username: normalizeString(formData.get('username') || seed.username || ''),
+        public_display_name: normalizeString(formData.get('public_display_name') || formData.get('display_name') || seed.public_display_name || ''),
+        public_identity_label: normalizeString(formData.get('public_identity_label') || seed.public_identity_label || ''),
+        public_tagline: normalizeString(formData.get('public_tagline') || seed.public_tagline || ''),
+        date_of_birth: normalizeString(formData.get('date_of_birth') || seed.date_of_birth || ''),
         gender: normalizeString(formData.get('gender') || ''),
+        locale_country_label: normalizeString(formData.get('locale_country_label') || seed.locale_country_label || ''),
+        timezone: normalizeString(formData.get('timezone') || seed.timezone || ''),
+        preferred_language: normalizeString(formData.get('preferred_language') || seed.preferred_language || 'en'),
+        locale_languages: readDelimitedListValue(formData, 'locale_languages'),
         public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
-        public_bio: normalizeString(formData.get('public_summary') || seed.public_summary || seed.public_bio || '')
+        public_bio: normalizeString(formData.get('public_summary') || seed.public_summary || seed.public_bio || ''),
+        organization_name: normalizeString(formData.get('organization_name') || seed.organization_name || ''),
+        professional_field: normalizeString(formData.get('professional_field') || seed.professional_field || ''),
+        expertise_areas: readDelimitedListValue(formData, 'expertise_areas'),
+        current_focus: normalizeString(formData.get('current_focus') || seed.current_focus || ''),
+        public_location: normalizeString(formData.get('public_location') || seed.public_location || ''),
+        website_url: normalizeString(formData.get('website_url') || seed.website_url || '')
       };
     case 'route':
       return {
@@ -423,8 +468,13 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
         username: normalizeString(formData.get('username') || seed.username || ''),
         public_display_name: normalizeString(formData.get('public_display_name') || ''),
         public_identity_label: normalizeString(formData.get('public_identity_label') || ''),
-        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || ''),
-        public_primary_link: normalizeString(formData.get('public_primary_link') || '')
+        organization_name: normalizeString(formData.get('organization_name') || seed.organization_name || ''),
+        professional_field: normalizeString(formData.get('professional_field') || seed.professional_field || ''),
+        expertise_areas: readDelimitedListValue(formData, 'expertise_areas'),
+        current_focus: normalizeString(formData.get('current_focus') || seed.current_focus || ''),
+        public_location: normalizeString(formData.get('public_location') || seed.public_location || ''),
+        website_url: normalizeString(formData.get('website_url') || seed.website_url || ''),
+        public_summary: normalizeString(formData.get('public_summary') || seed.public_summary || '')
       };
     case 'privacy':
     case 'visibility':
@@ -454,6 +504,62 @@ function buildScopedValues(scope, form, existingProfile = null, user = null) {
     default:
       return seed;
   }
+}
+async function persistPrimaryProfileOrganization({ supabase, profile, user, values = {} } = {}) {
+  const organizationName = normalizeString(values.organization_name || '');
+  const profileId = normalizeString(profile?.id || '');
+  const authUserId = normalizeString(user?.id || user?.uid || '');
+
+  if (!supabase || !profileId || !authUserId || !organizationName) return null;
+
+  const organizationPayload = {
+    profile_id: profileId,
+    auth_user_id: authUserId,
+    organization_name: organizationName,
+    organization_role: normalizeString(values.public_identity_label || ''),
+    organization_field: normalizeString(values.professional_field || ''),
+    organization_website_url: normalizeString(values.website_url || ''),
+    organization_status: 'active',
+    organization_metadata: {
+      source: 'profile_settings'
+    }
+  };
+
+  const { data: existingOrganization, error: lookupError } = await supabase
+    .from(PROFILE_ORGANIZATIONS_COLLECTION)
+    .select('id')
+    .eq('profile_id', profileId)
+    .eq('auth_user_id', authUserId)
+    .eq('organization_status', 'active')
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (lookupError) {
+    if (isSupabaseRelationMissingError(lookupError)) return null;
+    throw lookupError;
+  }
+
+  if (existingOrganization?.id) {
+    const { data, error } = await supabase
+      .from(PROFILE_ORGANIZATIONS_COLLECTION)
+      .update(organizationPayload)
+      .eq('id', existingOrganization.id)
+      .select('*')
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  const { data, error } = await supabase
+    .from(PROFILE_ORGANIZATIONS_COLLECTION)
+    .insert(organizationPayload)
+    .select('*')
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
 function getProfileChangelogAreaForScope(scope = '') {
@@ -717,9 +823,23 @@ function buildProfileRoutePayload(payload = {}, normalizedUsername = '', user = 
     public_route_status: payload.public_route_status || '',
     public_display_name: payload.public_display_name || '',
     public_identity_label: payload.public_identity_label || '',
-    public_primary_link: payload.public_primary_link || '',
+    website_url: payload.website_url || '',
     public_avatar_url: payload.public_avatar_url || payload.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
   };
+}
+
+function normalizeProfileGender(value = '') {
+  const normalized = normalizeString(value).toLowerCase();
+  return normalized === 'male' || normalized === 'female' ? normalized : null;
+}
+
+function resolveIntegerValue(...values) {
+  for (const value of values) {
+    if (value === null || value === undefined || value === '') continue;
+    const number = Number(value);
+    if (Number.isFinite(number)) return Math.round(number);
+  }
+  return 0;
 }
 
 /* =============================================================================
@@ -791,21 +911,24 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     email: payload.email || normalizeEmail(user.email || currentProfile?.email || ''),
     first_name: payload.first_name || currentProfile?.first_name || '',
     last_name: payload.last_name || currentProfile?.last_name || '',
+    preferred_name: payload.preferred_name || currentProfile?.preferred_name || '',
     date_of_birth: payload.date_of_birth || payload.birth_date || currentProfile?.date_of_birth || null,
-    gender: payload.gender || currentProfile?.gender || '',
+    gender: normalizeProfileGender(payload.gender || currentProfile?.gender || ''),
     username_lower: normalizeUsername(routePayload.username || normalizedUsername || currentProfile?.username || ''),
     username_normalized: normalizeUsername(routePayload.username || normalizedUsername || currentProfile?.username || ''),
     profile_exists: true,
     profile_complete: payload.profile_complete === true,
-    profile_completion_status: payload.profile_completion_status || currentProfile?.profile_completion_status || '',
-    profile_completion_percent: Number.isFinite(payload.profile_completion_percent) ? payload.profile_completion_percent : currentProfile?.profile_completion_percent || null,
+    profile_completion_status: payload.profile_completion_status || currentProfile?.profile_completion_status || 'incomplete',
+    profile_completion_percent: resolveIntegerValue(payload.profile_completion_percent, currentProfile?.profile_completion_percent),
     missing_required_fields: Array.isArray(payload.missing_required_fields) ? payload.missing_required_fields : currentProfile?.missing_required_fields || [],
     public_profile_enabled: visibilityPayload.public_profile_enabled === true,
     public_profile_discoverable: visibilityPayload.public_profile_discoverable === true,
     public_profile_visibility: visibilityPayload.public_profile_visibility || currentProfile?.public_profile_visibility || 'private',
     public_route_path: routePayload.public_route_path || currentProfile?.public_route_path || '',
     public_route_url: routePayload.public_route_url || currentProfile?.public_route_url || '',
-    public_route_status: routePayload.public_route_status || payload.public_route_status || currentProfile?.public_route_status || '',
+    public_route_status: routePayload.public_route_status || payload.public_route_status || currentProfile?.public_route_status || 'pending',
+    public_display_name: routePayload.public_display_name || payload.public_display_name || currentProfile?.public_display_name || '',
+    public_identity_label: routePayload.public_identity_label || payload.public_identity_label || currentProfile?.public_identity_label || '',
     verification_status: payload.verification_status || currentProfile?.verification_status || null,
     public_verification_status: payload.public_verification_status || currentProfile?.public_verification_status || null,
     profile_verified: payload.profile_verified === true || currentProfile?.profile_verified === true,
@@ -813,10 +936,20 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     profile_verified_at: payload.profile_verified_at || currentProfile?.profile_verified_at || null,
     public_bio: payload.public_bio || payload.public_summary || currentProfile?.public_bio || '',
     public_tagline: payload.public_tagline || currentProfile?.public_tagline || '',
+    public_location: payload.public_location || currentProfile?.public_location || '',
+    website_url: payload.website_url || currentProfile?.website_url || '',
+    locale_country_label: payload.locale_country_label || currentProfile?.locale_country_label || '',
+    timezone: payload.timezone || currentProfile?.timezone || '',
+    preferred_language: payload.preferred_language || currentProfile?.preferred_language || 'en',
+    locale_languages: Array.isArray(payload.locale_languages) ? payload.locale_languages : currentProfile?.locale_languages || ['en'],
+    organization_name: values.organization_name || currentProfile?.organization_name || '',
+    professional_field: payload.professional_field || currentProfile?.professional_field || '',
+    expertise_areas: Array.isArray(payload.expertise_areas) ? payload.expertise_areas : currentProfile?.expertise_areas || [],
+    current_focus: payload.current_focus || currentProfile?.current_focus || '',
     cover_url: normalizedScope === 'media' && values.cover_url === ''
       ? ''
       : (payload.cover_url || currentProfile?.cover_url || ''),
-    username_status: routePayload.username_status || payload.username_status || currentProfile?.username_status || '',
+    username_status: routePayload.username_status || payload.username_status || currentProfile?.username_status || 'missing',
     profile_image_storage_bucket: (normalizedScope === 'media' && Object.prototype.hasOwnProperty.call(values, 'profile_image_storage_bucket'))
       ? values.profile_image_storage_bucket
       : (values.profile_image_storage_bucket || payload.profile_image_storage_bucket || currentProfile?.profile_image_storage_bucket || ''),
@@ -835,7 +968,6 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
     efficiency_preference: Number.isFinite(payload.efficiency_preference) ? payload.efficiency_preference : currentProfile?.efficiency_preference || null,
     creativity_level: Number.isFinite(payload.creativity_level) ? payload.creativity_level : currentProfile?.creativity_level || null,
     risk_tolerance: Number.isFinite(payload.risk_tolerance) ? payload.risk_tolerance : currentProfile?.risk_tolerance || null,
-    created_at: currentProfile?.created_at || null,
     updated_at: new Date().toISOString()
   };
 
@@ -846,11 +978,26 @@ export async function persistProfileWithSupabase(scope, values, existingProfile,
         created_at: new Date().toISOString()
       };
 
-  return executeSupabaseProfileMutation({
+  const savedProfile = await executeSupabaseProfileMutation({
     supabase,
     existingRecordId,
     payload:mutationPayload
   });
+
+  if (normalizedScope === 'identity' || normalizedScope === 'route') {
+    try {
+      await persistPrimaryProfileOrganization({
+        supabase,
+        profile: savedProfile,
+        user,
+        values
+      });
+    } catch (error) {
+      console.warn('[profile-save] Primary organization mirror could not be saved.', error);
+    }
+  }
+
+  return savedProfile;
 }
 
 async function handleSaveRequest(form) {
@@ -903,6 +1050,16 @@ async function handleSaveRequest(form) {
       code: '',
       message: 'Profile settings saved'
     });
+
+    document.dispatchEvent(new CustomEvent('account:profile-state-changed', {
+      detail: {
+        user,
+        profile: savedProfile,
+        profileComplete: savedProfile?.profile_complete === true,
+        authResolved:true,
+        source:'profile-save'
+      }
+    }));
 
     document.dispatchEvent(new CustomEvent('account:profile-refresh-request', {
       detail: {

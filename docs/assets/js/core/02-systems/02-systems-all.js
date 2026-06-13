@@ -39,6 +39,7 @@ import './countries.js';
 import './locale.js';
 import './country-language.js';
 import './scroll-to-top.js';
+import './scroll-strip.js';
 import './theme.js';
 
 /* =============================================================================

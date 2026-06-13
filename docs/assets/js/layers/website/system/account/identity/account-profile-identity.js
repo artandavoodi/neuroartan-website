@@ -1411,6 +1411,11 @@ export function buildPublicProfileModel(profile, policy = getProfileIdentityPoli
     public_tagline: normalizeString(profile.public_tagline || ''),
     public_links: publicLinks,
     public_primary_link: publicPrimaryLink,
+    public_modules: Array.isArray(profile.public_modules) ? profile.public_modules : [],
+    public_feature_flags: Array.isArray(profile.public_feature_flags) ? profile.public_feature_flags : [],
+    public_verification_status: normalizeString(profile.public_verification_status || profile.verification_status || 'unverified'),
+    profile_verified: profile.profile_verified === true,
+    verified_at: normalizeString(profile.verified_at || profile.profile_verified_at || '')
   };
 }
 

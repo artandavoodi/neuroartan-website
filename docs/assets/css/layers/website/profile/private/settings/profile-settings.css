@@ -1170,6 +1170,15 @@ body.profile-settings-industry-overlay-open .profile-settings__industry-panel{
 }
 
 @media (max-width:820px){
+  .profile-settings__hero-mount .profile-private-hero{
+    width:min(var(--site-rail-width-mobile), 100%);
+  }
+
+  .profile-settings__panes{
+    width:min(var(--site-rail-width-mobile), 100%);
+    margin-inline:auto;
+  }
+
   .profile-settings__field-grid{
     grid-template-columns:minmax(0, 1fr);
   }

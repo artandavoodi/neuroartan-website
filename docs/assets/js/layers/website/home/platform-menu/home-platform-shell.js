@@ -1583,6 +1583,7 @@ async function routeHomePlatformSettingsRequest(event) {
   HOME_PLATFORM_SHELL_STATE.pendingRouteRequest = {
     destination: 'settings',
     subdestination: requested,
+    detail: event?.detail?.detail || '',
   };
 
   await consumePendingHomePlatformRouteRequest();
@@ -1596,6 +1597,7 @@ async function consumePendingHomePlatformRouteRequest() {
   HOME_PLATFORM_SHELL_STATE.pendingRouteRequest = null;
   openHomePlatformShell(pending.destination, pending.subdestination, {
     mobileStackLevel: isHomePlatformMobileView() ? 'content' : 'root',
+    detail: pending.detail || '',
   });
   return true;
 }
@@ -1658,7 +1660,7 @@ function closeConflictingHomeChrome() {
 function openHomePlatformShell(
   destination = HOME_PLATFORM_SHELL_STATE.activeDestination,
   subdestination = '',
-  { mobileStackLevel = 'root' } = {}
+  { mobileStackLevel = 'root', detail = '' } = {}
 ) {
   const root = getHomePlatformShellRoot();
   if (!root) return;
@@ -1704,6 +1706,13 @@ function openHomePlatformShell(
   void setHomePlatformDestination(destination, subdestination).then((didRender) => {
     if (HOME_PLATFORM_SHELL_STATE.shellSession !== shellSession || root.hidden) {
       return;
+    }
+
+    if (detail && destination === 'settings') {
+      const contentRoot = getHomePlatformShellContentRoot();
+      if (contentRoot instanceof HTMLElement) {
+        contentRoot.setAttribute('data-account-settings-detail', detail);
+      }
     }
 
     if (!didRender) {

@@ -149,16 +149,36 @@ export function bindProfileMenuActions(root) {
       ? event.target.closest('[data-profile-action]')
       : null;
 
-    if (!(button instanceof HTMLElement)) {
-      return;
+    if (button instanceof HTMLElement) {
+      const action = button.getAttribute('data-profile-action') || '';
+      if (action) {
+        event.preventDefault();
+        routeProfileMenuAction(action);
+        return;
+      }
     }
 
-    const action = button.getAttribute('data-profile-action') || '';
-    if (!action) {
-      return;
-    }
+    const settingsButton = event.target instanceof Element
+      ? event.target.closest('[data-home-platform-settings-route], [data-home-platform-settings-subdestination]')
+      : null;
 
-    event.preventDefault();
-    routeProfileMenuAction(action);
+    if (settingsButton instanceof HTMLElement) {
+      const subdestination = settingsButton.getAttribute('data-home-platform-settings-route') 
+        || settingsButton.getAttribute('data-home-platform-settings-subdestination') 
+        || '';
+      const detail = settingsButton.getAttribute('data-home-platform-settings-detail') || '';
+      
+      if (subdestination) {
+        event.preventDefault();
+        document.dispatchEvent(new CustomEvent('home:platform-shell-open-request', {
+          detail: {
+            destination: 'settings',
+            subdestination,
+            detail,
+            source: 'profile-menu'
+          }
+        }));
+      }
+    }
   });
 }

@@ -45,8 +45,6 @@ export const MODEL_CONTEXT_TAB_GROUPS = Object.freeze({
     label: 'Model foundation',
     tabs: [
       { key: 'overview', label: 'Overview', section: 'model-foundation', modelPane: 'overview' },
-      { key: 'identity', label: 'Identity', section: 'model-foundation', modelPane: 'identity' },
-      { key: 'consent', label: 'Consent', section: 'model-foundation', modelPane: 'consent' },
       { key: 'sources', label: 'Source', section: 'model-foundation', modelPane: 'sources' },
       { key: 'memory', label: 'Memory', section: 'model-foundation', modelPane: 'memory' },
       { key: 'personality', label: 'Personality', section: 'model-foundation', modelPane: 'personality' },
@@ -119,8 +117,6 @@ export const MODEL_CONTEXT_TAB_ICONS = Object.freeze({
   'model-readiness': '/registry/icons/public/assets/layers/website/model/sidebar/dashboard.svg',
   'model-runtime': '/registry/icons/public/assets/layers/website/model/tabs/provider.svg',
   overview: '/registry/icons/public/assets/layers/website/model/tabs/overview.svg',
-  identity: '/registry/icons/public/assets/layers/website/model/tabs/identity.svg',
-  consent: '/registry/icons/public/assets/layers/website/model/tabs/consent.svg',
   sources: '/registry/icons/public/assets/layers/website/model/tabs/source.svg',
   'source-summary': '/registry/icons/public/assets/core/model/source-summary/source-summary.svg',
   'source-profile': '/registry/icons/public/assets/core/model/source-profile/source-profile.svg',

@@ -422,8 +422,8 @@ const MODEL_PANE_ACTIONS = Object.freeze({
 });
 
 const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
-  overview: ['modelKeys', 'modelInfo', 'modelLearn', 'modelReset', 'modelChangelog'],
-  identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
+  overview: ['modelKeys', 'modelInfo', 'modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
+  identity: ['modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSourceDatabase', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelLearn', 'modelReset', 'modelChangelog'],

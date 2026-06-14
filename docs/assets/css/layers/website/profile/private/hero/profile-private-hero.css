@@ -497,6 +497,15 @@
 /* =============================================================================
    09) PRIVATE PROFILE HERO SOCIAL ROW
 ============================================================================= */
+.profile-private-hero__separator{
+  width:100%;
+  height:var(--border-width-hairline);
+  border:0;
+  margin:0;
+  padding:0;
+  background:var(--border-color);
+}
+
 .profile-private-hero__social-row{
   display:flex;
   align-items:center;

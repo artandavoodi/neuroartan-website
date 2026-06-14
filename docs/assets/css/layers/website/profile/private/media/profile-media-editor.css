@@ -13,6 +13,7 @@
 :root{
   --profile-media-editor-z-index:var(--z-language-dropdown);
   --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
+  --profile-media-editor-cover-dialog-width:min(var(--site-rail-width), calc(100vw - (var(--site-shell-inline-padding) * 2)));
   --profile-media-editor-dialog-radius:var(--dialog-overlay-radius);
   --profile-media-editor-dialog-padding:var(--spacing-lg);
   --profile-media-editor-backdrop-bg:var(--glass-overlay-backdrop-bg);
@@ -20,7 +21,7 @@
   --profile-media-editor-shell-bg:var(--glass-overlay-shell-bg);
   --profile-media-editor-shell-blur:var(--glass-overlay-shell-blur);
   --profile-media-editor-preview-size:calc(13rem * var(--accessibility-density-scale));
-  --profile-media-editor-cover-preview-ratio:16 / 9;
+  --profile-media-editor-cover-preview-height:var(--profile-private-hero-cover-height, calc(13.5rem * var(--accessibility-density-scale)));
   --profile-media-editor-avatar-radius:var(--control-radius-pill);
   --profile-media-editor-cover-radius:var(--shape-card-radius);
   --profile-media-editor-status-min-height:var(--body-3-line-height);
@@ -60,7 +61,7 @@ body.profile-media-editor-open{
 }
 
 .profile-media-editor[data-profile-media-editor-kind="cover"]{
-  --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
+  --profile-media-editor-dialog-width:var(--profile-media-editor-cover-dialog-width);
 }
 
 .profile-media-editor__backdrop{
@@ -155,7 +156,8 @@ body.profile-media-editor-open{
 
 .profile-media-editor__stage[data-profile-media-editor-stage="cover"] .profile-media-editor__preview{
   width:100%;
-  aspect-ratio:var(--profile-media-editor-cover-preview-ratio);
+  height:var(--profile-media-editor-cover-preview-height);
+  aspect-ratio:auto;
   border-radius:var(--profile-media-editor-cover-radius);
 }
 
@@ -393,8 +395,10 @@ body.profile-media-editor-open{
 @media (max-width:720px){
   :root{
     --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width-mobile));
+    --profile-media-editor-cover-dialog-width:min(var(--site-rail-width-mobile), calc(100vw - (var(--site-shell-inline-padding-mobile) * 2)));
     --profile-media-editor-dialog-padding:var(--spacing-md);
     --profile-media-editor-preview-size:calc(11rem * var(--accessibility-density-scale));
+    --profile-media-editor-cover-preview-height:var(--profile-private-hero-cover-height-mobile, calc(6rem * var(--accessibility-density-scale)));
   }
 
   .profile-media-editor{

@@ -12,6 +12,12 @@
    04) RADIO LIST INDICATOR
    05) RADIO LIST CONTENT
    06) RADIO LIST STATES
+   07) CHECKBOX LIST TOKENS
+   08) CHECKBOX LIST ROOT
+   09) CHECKBOX LIST ITEM
+   10) CHECKBOX LIST INDICATOR
+   11) CHECKBOX LIST CONTENT
+   12) CHECKBOX LIST STATES
 ============================================================================= */
 
 /* =============================================================================
@@ -38,6 +44,32 @@
   --ui-radio-list-indicator-bg:transparent;
   --ui-radio-list-indicator-bg-active:var(--color-primary1);
   --ui-radio-list-transition:var(--interaction-transition-control);
+}
+
+/* =============================================================================
+   07) CHECKBOX LIST TOKENS
+============================================================================= */
+:root{
+  --ui-checkbox-list-gap:var(--spacing-2xs);
+  --ui-checkbox-list-item-gap:var(--spacing-sm);
+  --ui-checkbox-list-item-padding-y:var(--spacing-xs);
+  --ui-checkbox-list-item-padding-x:var(--spacing-none);
+  --ui-checkbox-list-item-radius:var(--spacing-none);
+  --ui-checkbox-list-item-border:transparent;
+  --ui-checkbox-list-item-border-active:transparent;
+  --ui-checkbox-list-item-bg:transparent;
+  --ui-checkbox-list-item-bg-hover:transparent;
+  --ui-checkbox-list-item-bg-active:transparent;
+  --ui-checkbox-list-item-color:var(--text-secondary-color);
+  --ui-checkbox-list-item-color-hover:var(--text-primary-color);
+  --ui-checkbox-list-item-color-active:var(--text-primary-color);
+  --ui-checkbox-list-indicator-size:var(--icon-size-sm);
+  --ui-checkbox-list-indicator-check-size:calc(var(--ui-checkbox-list-indicator-size) * 0.6);
+  --ui-checkbox-list-indicator-border:var(--panel-border-unified);
+  --ui-checkbox-list-indicator-border-active:var(--color-primary1);
+  --ui-checkbox-list-indicator-bg:transparent;
+  --ui-checkbox-list-indicator-bg-active:var(--color-primary1);
+  --ui-checkbox-list-transition:var(--interaction-transition-control);
 }
 
 /* =============================================================================
@@ -147,4 +179,122 @@
 .ui-radio-list__item[aria-pressed="true"] .ui-radio-list__indicator::after{
   opacity:var(--overlay-opacity-open);
   transform:scale(1);
+}
+
+/* =============================================================================
+   08) CHECKBOX LIST ROOT
+============================================================================= */
+.ui-checkbox-list{
+  display:grid;
+  gap:var(--ui-checkbox-list-gap);
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  border:var(--spacing-none);
+}
+
+/* =============================================================================
+   09) CHECKBOX LIST ITEM
+============================================================================= */
+.ui-checkbox-list__item{
+  -webkit-appearance:none;
+  appearance:none;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) auto;
+  align-items:center;
+  gap:var(--ui-checkbox-list-item-gap);
+  width:var(--size-full);
+  margin:var(--spacing-none);
+  padding:var(--ui-checkbox-list-item-padding-y) var(--ui-checkbox-list-item-padding-x);
+  border:var(--border-width-hairline) solid var(--ui-checkbox-list-item-border);
+  border-radius:var(--ui-checkbox-list-item-radius);
+  background:var(--ui-checkbox-list-item-bg);
+  color:var(--ui-checkbox-list-item-color);
+  text-align:left;
+  outline:none;
+  text-decoration:none;
+  box-shadow:none;
+  transition:var(--ui-checkbox-list-transition);
+}
+
+/* =============================================================================
+   10) CHECKBOX LIST INDICATOR
+============================================================================= */
+.ui-checkbox-list__indicator{
+  -webkit-appearance:none;
+  appearance:none;
+  margin:var(--spacing-none);
+  padding:var(--spacing-none);
+  outline:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--ui-checkbox-list-indicator-size);
+  height:var(--ui-checkbox-list-indicator-size);
+  border:var(--border-width-hairline) solid var(--ui-checkbox-list-indicator-border);
+  border-radius:var(--control-radius-pill);
+  background:var(--ui-checkbox-list-indicator-bg);
+  transition:var(--ui-checkbox-list-transition);
+  grid-column:2;
+  grid-row:1;
+}
+
+.ui-checkbox-list__indicator::after{
+  content:"";
+  width:var(--ui-checkbox-list-indicator-check-size);
+  height:var(--ui-checkbox-list-indicator-check-size);
+  background:var(--ui-checkbox-list-indicator-bg-active);
+  opacity:var(--overlay-opacity-closed);
+  transform:scale(0.8);
+  transition:var(--ui-checkbox-list-transition);
+  mask-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+  -webkit-mask-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>');
+  mask-size:contain;
+  mask-repeat:no-repeat;
+  mask-position:center;
+  -webkit-mask-size:contain;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+}
+
+/* =============================================================================
+   11) CHECKBOX LIST CONTENT
+============================================================================= */
+.ui-checkbox-list__content{
+  display:grid;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+  grid-column:1;
+  grid-row:1;
+}
+
+.ui-checkbox-list__label{
+  color:currentColor;
+  font-size:var(--type-label-size);
+}
+
+.ui-checkbox-list__description{
+  color:currentColor;
+}
+
+/* =============================================================================
+   12) CHECKBOX LIST STATES
+============================================================================= */
+
+.ui-checkbox-list__item[aria-checked="true"],
+.ui-checkbox-list__item[aria-pressed="true"]{
+  background:var(--ui-checkbox-list-item-bg-active);
+  color:var(--ui-checkbox-list-item-color-active);
+}
+
+.ui-checkbox-list__item[aria-checked="true"] .ui-checkbox-list__indicator,
+.ui-checkbox-list__item[aria-pressed="true"] .ui-checkbox-list__indicator{
+  border-color:var(--ui-checkbox-list-indicator-border);
+  background:var(--ui-checkbox-list-indicator-bg-active);
+}
+
+.ui-checkbox-list__item[aria-checked="true"] .ui-checkbox-list__indicator::after,
+.ui-checkbox-list__item[aria-pressed="true"] .ui-checkbox-list__indicator::after{
+  opacity:var(--overlay-opacity-open);
+  transform:scale(1);
+  background:var(--text-color-on-accent);
 }

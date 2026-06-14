@@ -42,8 +42,7 @@ const CROP_OUTPUT = Object.freeze({
     height:1024
   },
   cover:{
-    width:1600,
-    height:900
+    width:2400
   }
 });
 
@@ -162,7 +161,8 @@ function resetEditorTransform() {
 }
 
 function getPanLimit(zoom = RUNTIME.zoom) {
-  const safeZoom = Math.max(1, Number.isFinite(zoom) ? zoom : 1);
+  const safeZoom = Math.max(0.75, Number.isFinite(zoom) ? zoom : 1);
+  if (safeZoom <= 1) return 0;
   return ((safeZoom - 1) / (safeZoom * 2)) * 100;
 }
 
@@ -180,7 +180,7 @@ function setEditorOpenState(open) {
 function updateRangeProgress(root = getEditorRoot()) {
   const range = root?.querySelector('[data-profile-media-editor-zoom]');
   if (!(range instanceof HTMLInputElement)) return;
-  const min = Number.parseFloat(range.min || '1');
+  const min = Number.parseFloat(range.min || '0.75');
   const max = Number.parseFloat(range.max || '2.4');
   const value = Number.parseFloat(range.value || '1');
   const progress = max > min ? ((value - min) / (max - min)) * 100 : 0;
@@ -411,9 +411,39 @@ function loadImageElement(file) {
   });
 }
 
+function getCropPreviewRatio(kind = RUNTIME.kind) {
+  if (kind !== 'cover') return 1;
+  const preview = getEditorRoot()?.querySelector('[data-profile-media-editor-preview]');
+  const rect = preview instanceof HTMLElement ? preview.getBoundingClientRect() : null;
+  const width = rect?.width || 0;
+  const height = rect?.height || 0;
+  if (width > 0 && height > 0) return width / height;
+  return 2400 / 450;
+}
+
+function getCropOutput(kind = RUNTIME.kind) {
+  const baseOutput = CROP_OUTPUT[kind] || CROP_OUTPUT.avatar;
+  if (kind !== 'cover') return baseOutput;
+  const width = baseOutput.width;
+  const ratio = getCropPreviewRatio(kind);
+  return {
+    width,
+    height:Math.max(1, Math.round(width / ratio))
+  };
+}
+
+function getCropBackgroundColor(kind = RUNTIME.kind) {
+  const preview = getEditorRoot()?.querySelector('[data-profile-media-editor-preview]');
+  if (preview instanceof HTMLElement) {
+    const color = window.getComputedStyle(preview).backgroundColor;
+    if (color && color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') return color;
+  }
+  return kind === 'cover' ? '#000000' : '#000000';
+}
+
 async function createCroppedFile(file, kind = RUNTIME.kind, zoom = RUNTIME.zoom, panX = RUNTIME.panX, panY = RUNTIME.panY, filter = RUNTIME.filter) {
   const image = await loadImageElement(file);
-  const output = CROP_OUTPUT[kind] || CROP_OUTPUT.avatar;
+  const output = getCropOutput(kind);
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
 
@@ -425,6 +455,8 @@ async function createCroppedFile(file, kind = RUNTIME.kind, zoom = RUNTIME.zoom,
 
   canvas.width = output.width;
   canvas.height = output.height;
+  context.fillStyle = getCropBackgroundColor(kind);
+  context.fillRect(0, 0, output.width, output.height);
   context.filter = (FILTER_PRESETS[filter] || FILTER_PRESETS.original).css;
 
   const sourceRatio = image.naturalWidth / image.naturalHeight;
@@ -438,11 +470,35 @@ async function createCroppedFile(file, kind = RUNTIME.kind, zoom = RUNTIME.zoom,
     sourceHeight = image.naturalWidth / targetRatio;
   }
 
-  const safeZoom = Math.max(1, Number.isFinite(zoom) ? zoom : 1);
-  const cropWidth = sourceWidth / safeZoom;
-  const cropHeight = sourceHeight / safeZoom;
   const fittedX = (image.naturalWidth - sourceWidth) / 2;
   const fittedY = (image.naturalHeight - sourceHeight) / 2;
+  const safeZoom = Math.max(0.75, Number.isFinite(zoom) ? zoom : 1);
+
+  if (safeZoom < 1) {
+    const drawWidth = output.width * safeZoom;
+    const drawHeight = output.height * safeZoom;
+    context.drawImage(
+      image,
+      fittedX,
+      fittedY,
+      sourceWidth,
+      sourceHeight,
+      (output.width - drawWidth) / 2,
+      (output.height - drawHeight) / 2,
+      drawWidth,
+      drawHeight
+    );
+
+    const blob = await createCroppedBlob(canvas);
+    const extension = kind === 'cover' ? 'cover.jpeg' : 'avatar.jpeg';
+    return new File([blob], `profile-${extension}`, {
+      type:'image/jpeg',
+      lastModified:Date.now()
+    });
+  }
+
+  const cropWidth = sourceWidth / safeZoom;
+  const cropHeight = sourceHeight / safeZoom;
   const maxOffsetX = (sourceWidth - cropWidth) / 2;
   const maxOffsetY = (sourceHeight - cropHeight) / 2;
   const panLimit = getPanLimit(safeZoom);

@@ -32,8 +32,13 @@ import { mountSettingsCategory } from '../../../home/platform-menu/settings/_sha
 
 const PASSWORD_RECOVERY_STORAGE_KEY = 'neuroartan_password_recovery';
 const SOCIAL_LINKS_CONFIG_URL = '/assets/data/layers/website/profile/social-links.json';
+const INDUSTRIES_CONFIG_URL = '/collections/config/industries.json';
+const PROFILE_IDENTITY_CHANGE_REQUESTS_TABLE = 'profile_identity_change_requests';
+const PROFILE_IDENTITY_CHANGE_REQUEST_COOLDOWN_HOURS = 70;
 let profileSettingsSocialLinksConfig = null;
 let profileSettingsSocialLinksConfigPromise = null;
+let profileSettingsIndustriesConfig = null;
+let profileSettingsIndustriesConfigPromise = null;
 
 /* =============================================================================
    02) SETTINGS HELPERS
@@ -426,8 +431,235 @@ function getProfileSettingsTimezoneOptions() {
   ];
 }
 
+const LANGUAGES_CONFIG_URL = '/collections/config/languages.json';
+let profileSettingsLanguagesConfig = null;
+let profileSettingsLanguagesConfigPromise = null;
+
+async function loadProfileSettingsLanguagesConfig() {
+  if (profileSettingsLanguagesConfig) return profileSettingsLanguagesConfig;
+  if (!profileSettingsLanguagesConfigPromise) {
+    profileSettingsLanguagesConfigPromise = fetch(LANGUAGES_CONFIG_URL, { headers: { Accept: 'application/json' } })
+      .then((response) => {
+        if (!response.ok) throw new Error('LANGUAGES_CONFIG_UNAVAILABLE');
+        return response.json();
+      })
+      .then((payload) => {
+        profileSettingsLanguagesConfig = Array.isArray(payload?.languages) ? payload.languages : [];
+        return profileSettingsLanguagesConfig;
+      })
+      .catch((error) => {
+        console.error('[profile-settings] Languages configuration could not be loaded.', error);
+        profileSettingsLanguagesConfig = [];
+        return profileSettingsLanguagesConfig;
+      });
+  }
+  return profileSettingsLanguagesConfigPromise;
+}
+
+function getProfileSettingsLanguageOptions() {
+  return profileSettingsLanguagesConfig?.map((lang) => lang.native) || [];
+}
+
+async function loadProfileSettingsIndustriesConfig() {
+  if (profileSettingsIndustriesConfig) return profileSettingsIndustriesConfig;
+  if (!profileSettingsIndustriesConfigPromise) {
+    profileSettingsIndustriesConfigPromise = fetch(INDUSTRIES_CONFIG_URL, { headers: { Accept: 'application/json' } })
+      .then((response) => {
+        if (!response.ok) throw new Error('INDUSTRIES_CONFIG_UNAVAILABLE');
+        return response.json();
+      })
+      .then((payload) => {
+        profileSettingsIndustriesConfig = Array.isArray(payload?.industries) ? payload.industries : [];
+        return profileSettingsIndustriesConfig;
+      })
+      .catch((error) => {
+        console.error('[profile-settings] Industries configuration could not be loaded.', error);
+        profileSettingsIndustriesConfig = [];
+        return profileSettingsIndustriesConfig;
+      });
+  }
+  return profileSettingsIndustriesConfigPromise;
+}
+
+function getProfileSettingsIndustryOptions() {
+  return profileSettingsIndustriesConfig || [];
+}
+
+function sortProfileSettingsSelectedFirst(values = [], isSelected = () => false) {
+  return values
+    .map((value, index) => ({ value, index, selected: isSelected(value) }))
+    .sort((a, b) => {
+      if (a.selected !== b.selected) return a.selected ? -1 : 1;
+      return a.index - b.index;
+    })
+    .map((entry) => entry.value);
+}
+
+function setProfileSettingsIndustryState(root, value = '', state = 'ready') {
+  const normalizedValue = normalizeString(value);
+  const input = root.querySelector('[data-profile-settings-industry-input]');
+  const label = root.querySelector('[data-profile-settings-industry-label]');
+  const action = root.querySelector('[data-profile-settings-industry-open]');
+
+  if (input instanceof HTMLInputElement) {
+    input.value = normalizedValue;
+  }
+
+  if (label instanceof HTMLElement) {
+    label.textContent = normalizedValue || 'Select industry or sector';
+  }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsIndustryReady = normalizedValue ? 'true' : 'false';
+    action.dataset.profileSettingsIndustryState = state;
+  }
+}
+
+function getProfileSettingsIndustryRootFromEventTarget(target) {
+  const overlay = target?.closest?.('[data-profile-settings-industry-overlay]');
+  const root = overlay?.profileSettingsIndustryRoot;
+  return root instanceof HTMLElement ? root : null;
+}
+
+function getProfileSettingsIndustryOverlay(root) {
+  const overlay = root.querySelector('[data-profile-settings-industry-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.profileSettingsIndustryRoot = root;
+  }
+  return overlay;
+}
+
+function buildProfileSettingsIndustryOption(optionData = {}, currentValue = '') {
+  const label = normalizeString(optionData.label || optionData.name || optionData.id || '');
+  const group = normalizeString(optionData.group || '');
+  const option = document.createElement('button');
+  option.className = 'profile-settings__selector-option profile-settings__industry-option ui-radio-list__item';
+  option.type = 'button';
+  option.dataset.profileSettingsIndustryOption = label;
+  const isActive = label === currentValue;
+  option.dataset.profileSettingsIndustryActive = isActive ? 'true' : 'false';
+  option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  if (isActive) {
+    option.classList.add('is-selected');
+  }
+
+  const copy = document.createElement('span');
+  copy.className = 'profile-settings__selector-option-copy profile-settings__industry-option-copy';
+  const strong = document.createElement('strong');
+  strong.textContent = label;
+  copy.appendChild(strong);
+  if (group) {
+    const caption = document.createElement('span');
+    caption.textContent = group;
+    copy.appendChild(caption);
+  }
+
+  const radio = document.createElement('span');
+  radio.className = 'profile-settings__selector-option-indicator profile-settings__industry-radio ui-radio-list__indicator';
+  radio.setAttribute('aria-hidden', 'true');
+
+  option.append(copy, radio);
+  return option;
+}
+
+async function renderProfileSettingsIndustryOptions(root, query = '') {
+  await loadProfileSettingsIndustriesConfig();
+  const overlay = getProfileSettingsIndustryOverlay(root);
+  if (!(overlay instanceof HTMLElement)) return;
+  const list = overlay.querySelector('[data-profile-settings-industry-list]');
+  const current = overlay.querySelector('[data-profile-settings-industry-current]');
+  const input = root.querySelector('[data-profile-settings-industry-input]');
+  const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+  const normalizedQuery = normalizeString(query).toLowerCase();
+  const options = sortProfileSettingsSelectedFirst(getProfileSettingsIndustryOptions()
+    .filter((optionData) => {
+      const label = normalizeString(optionData.label || optionData.name || optionData.id || '');
+      const group = normalizeString(optionData.group || '');
+      return !normalizedQuery || `${label} ${group}`.toLowerCase().includes(normalizedQuery);
+    }), (optionData) => normalizeString(optionData.label || optionData.name || optionData.id || '') === currentValue);
+
+  if (current instanceof HTMLElement) {
+    current.textContent = currentValue || 'Select industry or sector';
+  }
+
+  if (list instanceof HTMLElement) {
+    list.replaceChildren(...options.map((optionData) => buildProfileSettingsIndustryOption(optionData, currentValue)));
+  }
+}
+
+async function openProfileSettingsIndustryOverlay(root) {
+  if (!(root instanceof HTMLElement)) return;
+  setProfileSettingsIndustryState(root, root.querySelector('[data-profile-settings-industry-input]')?.value || '', 'ready');
+  const overlay = getProfileSettingsIndustryOverlay(root);
+  if (!(overlay instanceof HTMLElement)) return;
+  await renderProfileSettingsIndustryOptions(root);
+  document.body.classList.add('profile-settings-industry-overlay-open');
+  overlay.hidden = false;
+  const search = overlay.querySelector('[data-profile-settings-industry-search]');
+  if (search instanceof HTMLInputElement) {
+    search.value = '';
+    window.setTimeout(() => search.focus(), 0);
+  }
+}
+
+function closeProfileSettingsIndustryOverlay(root) {
+  const overlay = root instanceof HTMLElement
+    ? getProfileSettingsIndustryOverlay(root)
+    : document.querySelector('[data-profile-settings-industry-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.hidden = true;
+    overlay.profileSettingsIndustryRoot = root instanceof HTMLElement ? root : null;
+  }
+  document.body.classList.remove('profile-settings-industry-overlay-open');
+}
+
+function applyProfileSettingsIndustry(root, value = '') {
+  const normalizedValue = normalizeString(value);
+  if (!normalizedValue) return;
+  setProfileSettingsIndustryState(root, normalizedValue, 'ready');
+  closeProfileSettingsIndustryOverlay(root);
+
+  const form = root.querySelector('[data-profile-save-form]');
+  if (form instanceof HTMLFormElement) {
+    form.requestSubmit();
+  }
+}
+
 function getProfileSettingsInitialTimezone(value = '') {
   return normalizeString(value) || getProfileSettingsDetectedTimezone() || 'UTC';
+}
+
+function getProfileSettingsInitialLanguage(value = '') {
+  return normalizeString(value) || getProfileSettingsDetectedLanguage() || 'en';
+}
+
+function getProfileSettingsDetectedLanguage() {
+  try {
+    return normalizeString(navigator.language) || 'en';
+  } catch (_) {
+    return 'en';
+  }
+}
+
+function setProfileSettingsLanguageState(root, value = '', state = 'ready') {
+  const normalizedValue = getProfileSettingsInitialLanguage(value);
+  const input = root.querySelector('[data-profile-settings-language-input]');
+  const label = root.querySelector('[data-profile-settings-language-label]');
+  const action = root.querySelector('[data-profile-settings-language-open]');
+
+  if (input instanceof HTMLInputElement) {
+    input.value = normalizedValue;
+  }
+
+  if (label instanceof HTMLElement) {
+    const language = profileSettingsLanguagesConfig?.find((lang) => lang.code === normalizedValue);
+    label.textContent = language?.native || normalizedValue || 'Select language';
+  }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsLanguageReady = normalizedValue ? 'true' : 'false';
+    action.dataset.profileSettingsLanguageState = state;
+  }
 }
 
 function setProfileSettingsTimezoneState(root, value = '', state = 'ready') {
@@ -458,24 +690,61 @@ function getProfileSettingsTimezoneOverlay(root) {
   }
 
   overlay = document.createElement('section');
-  overlay.className = 'profile-settings__timezone-overlay';
+  overlay.className = 'profile-settings__selector-overlay profile-settings__timezone-overlay';
   overlay.dataset.profileSettingsTimezoneOverlay = '';
   overlay.hidden = true;
   overlay.profileSettingsTimezoneRoot = root;
   overlay.innerHTML = `
-    <section class="profile-settings__timezone-panel cookie-language-overlay" role="dialog" aria-modal="true" aria-label="Time zone selector" data-cookie-language-overlay="root">
-      <div class="cookie-language-overlay-inner" data-cookie-language-overlay-inner="true">
-        <button class="profile-settings__timezone-close global-close-button" type="button" data-profile-settings-timezone-close aria-label="Close time zone selector">
-          <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-          <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-        </button>
-        <div class="profile-settings__timezone-current cookie-language-overlay-heading" data-profile-settings-timezone-current></div>
-        <div class="profile-settings__timezone-search-wrap cookie-language-overlay-toolbar" data-cookie-language-overlay-toolbar="true">
-          <div class="cookie-language-overlay-search-shell">
-            <input class="profile-settings__timezone-search cookie-language-overlay-search" type="search" autocomplete="off" placeholder="Search time zone" aria-label="Search time zone" data-profile-settings-timezone-search>
+    <section class="profile-settings__selector-panel profile-settings__timezone-panel" role="dialog" aria-modal="true" aria-label="Time zone selector">
+      <div class="profile-settings__selector-inner">
+        <div class="profile-settings__selector-header">
+          <button class="profile-settings__timezone-close global-close-button" type="button" data-profile-settings-timezone-close aria-label="Close time zone selector">
+            <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+            <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+          </button>
+          <div class="profile-settings__selector-heading profile-settings__timezone-current" data-profile-settings-timezone-current></div>
+        </div>
+        <div class="profile-settings__selector-toolbar profile-settings__timezone-search-wrap">
+          <div class="profile-settings__selector-search-shell">
+            <input class="profile-settings__selector-search profile-settings__timezone-search" type="search" autocomplete="off" placeholder="Search time zone" aria-label="Search time zone" data-profile-settings-timezone-search>
           </div>
         </div>
-        <div class="profile-settings__timezone-list cookie-language-overlay-regions" data-profile-settings-timezone-list data-cookie-language-overlay-regions="true"></div>
+        <div class="profile-settings__selector-list profile-settings__timezone-list" data-profile-settings-timezone-list></div>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+function getProfileSettingsLanguageOverlay(root) {
+  let overlay = document.querySelector('[data-profile-settings-language-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.profileSettingsLanguageRoot = root;
+    return overlay;
+  }
+
+  overlay = document.createElement('section');
+  overlay.className = 'profile-settings__selector-overlay profile-settings__language-overlay';
+  overlay.dataset.profileSettingsLanguageOverlay = '';
+  overlay.hidden = true;
+  overlay.profileSettingsLanguageRoot = root;
+  overlay.innerHTML = `
+    <section class="profile-settings__selector-panel profile-settings__language-panel" role="dialog" aria-modal="true" aria-label="Language selector">
+      <div class="profile-settings__selector-inner">
+        <div class="profile-settings__selector-header">
+          <button class="profile-settings__language-close global-close-button" type="button" data-profile-settings-language-close aria-label="Close language selector">
+            <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+            <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+          </button>
+          <div class="profile-settings__selector-heading profile-settings__language-current" data-profile-settings-language-current></div>
+        </div>
+        <div class="profile-settings__selector-toolbar profile-settings__language-search-wrap">
+          <div class="profile-settings__selector-search-shell">
+            <input class="profile-settings__selector-search profile-settings__language-search" type="search" autocomplete="off" placeholder="Search language" aria-label="Search language" data-profile-settings-language-search>
+          </div>
+        </div>
+        <div class="profile-settings__selector-list profile-settings__language-list" data-profile-settings-language-list></div>
       </div>
     </section>
   `;
@@ -489,9 +758,261 @@ function getProfileSettingsTimezoneRootFromEventTarget(target) {
   return root instanceof HTMLElement ? root : null;
 }
 
+function getProfileSettingsLanguageRootFromEventTarget(target) {
+  const overlay = target?.closest?.('[data-profile-settings-language-overlay]');
+  const root = overlay?.profileSettingsLanguageRoot;
+  return root instanceof HTMLElement ? root : null;
+}
+
+function buildProfileSettingsLanguageOption(value, currentValue) {
+  const option = document.createElement('button');
+  option.className = 'profile-settings__selector-option profile-settings__language-option ui-radio-list__item';
+  option.type = 'button';
+  option.dataset.profileSettingsLanguageOption = value;
+  const language = profileSettingsLanguagesConfig?.find((lang) => lang.native === value);
+  const languageCode = language?.code || value;
+  const isActive = languageCode === currentValue;
+  option.dataset.profileSettingsLanguageActive = isActive ? 'true' : 'false';
+  option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  if (isActive) {
+    option.classList.add('is-selected');
+  }
+
+  const copy = document.createElement('span');
+  copy.className = 'profile-settings__selector-option-copy profile-settings__language-option-copy';
+  const strong = document.createElement('strong');
+  strong.textContent = value;
+  copy.appendChild(strong);
+
+  const radio = document.createElement('span');
+  radio.className = 'profile-settings__selector-option-indicator profile-settings__language-radio ui-radio-list__indicator';
+  radio.setAttribute('aria-hidden', 'true');
+
+  option.append(copy, radio);
+  return option;
+}
+
+async function renderProfileSettingsLanguageOptions(root, query = '') {
+  await loadProfileSettingsLanguagesConfig();
+  const overlay = getProfileSettingsLanguageOverlay(root);
+  const list = overlay.querySelector('[data-profile-settings-language-list]');
+  const current = overlay.querySelector('[data-profile-settings-language-current]');
+  const input = root.querySelector('[data-profile-settings-language-input]');
+  const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+  const normalizedQuery = normalizeString(query).toLowerCase();
+  const options = sortProfileSettingsSelectedFirst(
+    getProfileSettingsLanguageOptions()
+      .filter((value) => !normalizedQuery || value.toLowerCase().includes(normalizedQuery)),
+    (value) => {
+      const language = profileSettingsLanguagesConfig?.find((lang) => lang.native === value);
+      return (language?.code || value) === currentValue;
+    }
+  );
+
+  if (current instanceof HTMLElement) {
+    current.textContent = '';
+  }
+
+  if (list instanceof HTMLElement) {
+    list.replaceChildren(...options.map((value) => buildProfileSettingsLanguageOption(value, currentValue)));
+  }
+}
+
+async function openProfileSettingsLanguageOverlay(root) {
+  if (!(root instanceof HTMLElement)) return;
+  setProfileSettingsLanguageState(root, root.querySelector('[data-profile-settings-language-input]')?.value || '', 'ready');
+  const overlay = getProfileSettingsLanguageOverlay(root);
+  await renderProfileSettingsLanguageOptions(root);
+  document.body.classList.add('profile-settings-language-overlay-open');
+  overlay.hidden = false;
+  const search = overlay.querySelector('[data-profile-settings-language-search]');
+  if (search instanceof HTMLInputElement) {
+    search.value = '';
+    window.setTimeout(() => search.focus(), 0);
+  }
+}
+
+function closeProfileSettingsLanguageOverlay(root) {
+  const overlay = document.querySelector('[data-profile-settings-language-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.hidden = true;
+    overlay.profileSettingsLanguageRoot = root instanceof HTMLElement ? root : null;
+  }
+  document.body.classList.remove('profile-settings-language-overlay-open');
+}
+
+function applyProfileSettingsLanguage(root, value = '') {
+  const normalizedValue = normalizeString(value);
+  if (!normalizedValue) return;
+  const language = profileSettingsLanguagesConfig?.find((lang) => lang.native === normalizedValue);
+  const code = language?.code || normalizedValue;
+  setProfileSettingsLanguageState(root, code, 'ready');
+  closeProfileSettingsLanguageOverlay(root);
+
+  const form = root.querySelector('[data-profile-save-form]');
+  if (form instanceof HTMLFormElement) {
+    form.requestSubmit();
+  }
+}
+
+function getProfileSettingsAdditionalLanguagesRootFromEventTarget(target) {
+  const overlay = target?.closest?.('[data-profile-settings-additional-languages-overlay]');
+  const root = overlay?.profileSettingsAdditionalLanguagesRoot;
+  return root instanceof HTMLElement ? root : null;
+}
+
+function buildProfileSettingsAdditionalLanguagesOption(value, selectedValues) {
+  const option = document.createElement('label');
+  option.className = 'profile-settings__selector-option profile-settings__additional-languages-option ui-checkbox-list__item';
+  option.dataset.profileSettingsAdditionalLanguagesOption = value;
+  option.dataset.profileSettingsAdditionalLanguagesSelected = selectedValues.has(value) ? 'true' : 'false';
+  option.setAttribute('aria-checked', selectedValues.has(value) ? 'true' : 'false');
+
+  const content = document.createElement('div');
+  content.className = 'profile-settings__selector-option-copy ui-checkbox-list__content profile-settings__additional-languages-option-copy';
+  const strong = document.createElement('strong');
+  strong.textContent = value;
+  content.appendChild(strong);
+
+  const indicator = document.createElement('span');
+  indicator.className = 'profile-settings__selector-option-indicator ui-checkbox-list__indicator profile-settings__additional-languages-radio';
+  indicator.setAttribute('aria-hidden', 'true');
+
+  option.append(content, indicator);
+  return option;
+}
+
+function renderProfileSettingsAdditionalLanguagesOptions(root, query = '') {
+  const overlay = getProfileSettingsAdditionalLanguagesOverlay(root);
+  const list = overlay.querySelector('[data-profile-settings-additional-languages-list]');
+  const input = root.querySelector('[data-profile-settings-additional-languages-input]');
+  const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+  const selectedValues = currentValue ? new Set(currentValue.split(',').map((v) => normalizeString(v)).filter(Boolean)) : new Set();
+  const normalizedQuery = normalizeString(query).toLowerCase();
+  const options = sortProfileSettingsSelectedFirst(
+    getProfileSettingsLanguageOptions()
+      .filter((value) => !normalizedQuery || value.toLowerCase().includes(normalizedQuery)),
+    (value) => selectedValues.has(value)
+  );
+
+  if (list instanceof HTMLElement) {
+    list.replaceChildren(...options.map((value) => buildProfileSettingsAdditionalLanguagesOption(value, selectedValues)));
+  }
+}
+
+function getProfileSettingsAdditionalLanguagesOverlay(root) {
+  let overlay = document.querySelector('[data-profile-settings-additional-languages-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.profileSettingsAdditionalLanguagesRoot = root;
+    return overlay;
+  }
+
+  overlay = document.createElement('section');
+  overlay.className = 'profile-settings__selector-overlay profile-settings__additional-languages-overlay';
+  overlay.dataset.profileSettingsAdditionalLanguagesOverlay = '';
+  overlay.hidden = true;
+  overlay.profileSettingsAdditionalLanguagesRoot = root;
+  overlay.innerHTML = `
+    <section class="profile-settings__selector-panel profile-settings__additional-languages-panel" role="dialog" aria-modal="true" aria-label="Additional languages selector">
+      <div class="profile-settings__selector-inner">
+        <div class="profile-settings__selector-header">
+          <button class="profile-settings__additional-languages-close global-close-button" type="button" data-profile-settings-additional-languages-close aria-label="Close additional languages selector">
+            <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+            <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+          </button>
+          <div class="profile-settings__selector-heading profile-settings__additional-languages-current" data-profile-settings-additional-languages-current></div>
+        </div>
+        <div class="profile-settings__selector-toolbar profile-settings__additional-languages-search-wrap">
+          <div class="profile-settings__selector-search-shell">
+            <input class="profile-settings__selector-search profile-settings__additional-languages-search" type="search" autocomplete="off" placeholder="Search language" aria-label="Search language" data-profile-settings-additional-languages-search>
+          </div>
+        </div>
+        <div class="profile-settings__selector-list profile-settings__additional-languages-list" data-profile-settings-additional-languages-list></div>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+async function openProfileSettingsAdditionalLanguagesOverlay(root) {
+  if (!(root instanceof HTMLElement)) return;
+  setProfileSettingsAdditionalLanguagesState(root, root.querySelector('[data-profile-settings-additional-languages-input]')?.value || '', 'ready');
+  const overlay = getProfileSettingsAdditionalLanguagesOverlay(root);
+  await renderProfileSettingsAdditionalLanguagesOptions(root);
+  document.body.classList.add('profile-settings-additional-languages-overlay-open');
+  overlay.hidden = false;
+  const search = overlay.querySelector('[data-profile-settings-additional-languages-search]');
+  if (search instanceof HTMLInputElement) {
+    search.value = '';
+    window.setTimeout(() => search.focus(), 0);
+  }
+}
+
+function closeProfileSettingsAdditionalLanguagesOverlay(root) {
+  const overlay = document.querySelector('[data-profile-settings-additional-languages-overlay]');
+  if (overlay instanceof HTMLElement) {
+    overlay.hidden = true;
+    overlay.profileSettingsAdditionalLanguagesRoot = root instanceof HTMLElement ? root : null;
+  }
+  document.body.classList.remove('profile-settings-additional-languages-overlay-open');
+}
+
+function setProfileSettingsAdditionalLanguagesState(root, value = '', state = 'ready') {
+  const input = root.querySelector('[data-profile-settings-additional-languages-input]');
+  const label = root.querySelector('[data-profile-settings-additional-languages-label]');
+  const action = root.querySelector('[data-profile-settings-additional-languages-open]');
+
+  if (input instanceof HTMLInputElement) {
+    input.value = value;
+  }
+
+  if (label instanceof HTMLElement) {
+    const selectedValues = value ? value.split(',').map((v) => normalizeString(v)).filter(Boolean) : [];
+    if (selectedValues.length === 0) {
+      label.textContent = 'Select additional languages';
+    } else if (selectedValues.length === 1) {
+      label.textContent = selectedValues[0];
+    } else {
+      label.textContent = `${selectedValues[0]} +${selectedValues.length - 1} more`;
+    }
+  }
+
+  if (action instanceof HTMLElement) {
+    action.dataset.profileSettingsAdditionalLanguagesReady = value ? 'true' : 'false';
+    action.dataset.profileSettingsAdditionalLanguagesState = state;
+  }
+}
+
+function applyProfileSettingsAdditionalLanguages(root, value = '') {
+  const input = root.querySelector('[data-profile-settings-additional-languages-input]');
+  const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+  const selectedValues = currentValue ? new Set(currentValue.split(',').map((v) => normalizeString(v)).filter(Boolean)) : new Set();
+  const normalizedValue = normalizeString(value);
+
+  if (selectedValues.has(normalizedValue)) {
+    selectedValues.delete(normalizedValue);
+  } else {
+    selectedValues.add(normalizedValue);
+  }
+
+  const newValue = Array.from(selectedValues).join(',');
+  setProfileSettingsAdditionalLanguagesState(root, newValue, 'ready');
+
+  const overlay = document.querySelector('[data-profile-settings-additional-languages-overlay]');
+  if (overlay instanceof HTMLElement) {
+    renderProfileSettingsAdditionalLanguagesOptions(root, overlay.querySelector('[data-profile-settings-additional-languages-search]')?.value || '');
+  }
+
+  const form = root.querySelector('[data-profile-save-form]');
+  if (form instanceof HTMLFormElement) {
+    form.requestSubmit();
+  }
+}
+
 function buildProfileSettingsTimezoneOption(value, currentValue) {
   const option = document.createElement('button');
-  option.className = 'profile-settings__timezone-option cookie-language-overlay-country ui-radio-list__item';
+  option.className = 'profile-settings__selector-option profile-settings__timezone-option ui-radio-list__item';
   option.type = 'button';
   option.dataset.profileSettingsTimezoneOption = value;
   option.dataset.profileSettingsTimezoneActive = value === currentValue ? 'true' : 'false';
@@ -501,13 +1022,13 @@ function buildProfileSettingsTimezoneOption(value, currentValue) {
   }
 
   const copy = document.createElement('span');
-  copy.className = 'profile-settings__timezone-option-copy cookie-language-overlay-country-copy';
+  copy.className = 'profile-settings__selector-option-copy profile-settings__timezone-option-copy';
   const strong = document.createElement('strong');
   strong.textContent = value;
   copy.appendChild(strong);
 
   const radio = document.createElement('span');
-  radio.className = 'profile-settings__timezone-radio cookie-language-overlay-country-radio ui-radio-list__indicator';
+  radio.className = 'profile-settings__selector-option-indicator profile-settings__timezone-radio ui-radio-list__indicator';
   radio.setAttribute('aria-hidden', 'true');
 
   option.append(copy, radio);
@@ -522,8 +1043,11 @@ function renderProfileSettingsTimezoneOptions(root, query = '') {
   const currentValue = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
   const detectedValue = getProfileSettingsDetectedTimezone() || 'UTC';
   const normalizedQuery = normalizeString(query).toLowerCase();
-  const options = getProfileSettingsTimezoneOptions()
-    .filter((value) => !normalizedQuery || value.toLowerCase().includes(normalizedQuery));
+  const options = sortProfileSettingsSelectedFirst(
+    getProfileSettingsTimezoneOptions()
+      .filter((value) => !normalizedQuery || value.toLowerCase().includes(normalizedQuery)),
+    (value) => value === currentValue
+  );
 
   if (current instanceof HTMLElement) {
     current.textContent = `System detected · ${detectedValue}`;
@@ -638,13 +1162,22 @@ async function openProfileSettingsSocialOverlay(root) {
   const overlay = getProfileSettingsSocialOverlay(root);
   if (!(overlay instanceof HTMLElement)) return;
   const platforms = await loadProfileSettingsSocialLinksConfig();
+  const heading = overlay.querySelector('[data-profile-settings-social-current]');
+  const input = getProfileSettingsSocialInput(root);
+  const links = parseProfileSettingsSocialLinks(input?.value || '');
+  const count = links.length;
+  if (heading instanceof HTMLElement) {
+    heading.textContent = count > 0 ? `${count} public social profile${count !== 1 ? 's' : ''}` : 'Add public social profiles';
+  }
   renderProfileSettingsSocialRows(root, platforms);
+  document.body.classList.add('profile-settings-social-overlay-open');
   overlay.hidden = false;
 }
 
 function closeProfileSettingsSocialOverlay(root) {
   const overlay = getProfileSettingsSocialOverlay(root);
   if (overlay instanceof HTMLElement) {
+    document.body.classList.remove('profile-settings-social-overlay-open');
     overlay.hidden = true;
   }
 }
@@ -774,6 +1307,150 @@ function requestProfileSettingsLocation(root) {
       maximumAge: 300000
     }
   );
+}
+
+function getProfileSettingsInfoPopoverForButton(button) {
+  const fieldInfo = button?.closest?.('.profile-settings__field-info');
+  const popover = fieldInfo?.querySelector?.('[data-profile-settings-info-popover]');
+  return popover instanceof HTMLElement ? popover : null;
+}
+
+function positionProfileSettingsInfoPopover(button, popover) {
+  if (!(button instanceof HTMLElement) || !(popover instanceof HTMLElement)) return;
+
+  popover.hidden = false;
+  const viewportGap = 16;
+  const buttonRect = button.getBoundingClientRect();
+  const popoverRect = popover.getBoundingClientRect();
+  const preferredLeft = buttonRect.left;
+  const maxLeft = Math.max(viewportGap, window.innerWidth - popoverRect.width - viewportGap);
+  const left = Math.min(Math.max(viewportGap, preferredLeft), maxLeft);
+  const preferredTop = buttonRect.bottom + 8;
+  const maxTop = Math.max(viewportGap, window.innerHeight - popoverRect.height - viewportGap);
+  const top = Math.min(Math.max(viewportGap, preferredTop), maxTop);
+
+  popover.style.setProperty('--profile-settings-info-popover-left', `${Math.round(left)}px`);
+  popover.style.setProperty('--profile-settings-info-popover-top', `${Math.round(top)}px`);
+}
+
+function closeProfileSettingsInfoPopovers(exceptButton = null) {
+  document.querySelectorAll('[data-profile-settings-info-toggle][aria-expanded="true"]').forEach((expandedButton) => {
+    if (exceptButton instanceof HTMLElement && expandedButton === exceptButton) return;
+    expandedButton.setAttribute('aria-expanded', 'false');
+    const expandedPopover = getProfileSettingsInfoPopoverForButton(expandedButton);
+    if (expandedPopover instanceof HTMLElement) {
+      expandedPopover.hidden = true;
+    }
+  });
+}
+
+function setProfileSettingsIdentityRequestStatus(root, fieldName = '', message = '', state = 'idle') {
+  const normalizedFieldName = normalizeString(fieldName);
+  const status = root.querySelector(`[data-profile-settings-identity-request-status="${normalizedFieldName}"]`);
+  if (!(status instanceof HTMLElement)) return;
+  status.textContent = message;
+  status.dataset.profileSettingsIdentityRequestState = state;
+}
+
+function getProfileSettingsProtectedFieldCurrentValue(root, fieldName = '') {
+  const normalizedFieldName = normalizeString(fieldName);
+  if (normalizedFieldName === 'username') {
+    return root.querySelector('[name="username"]')?.value || '';
+  }
+  if (normalizedFieldName === 'date_of_birth') {
+    return root.querySelector('[name="date_of_birth"]')?.value || '';
+  }
+  return '';
+}
+
+function isProfileSettingsChangeRequestBackendMissing(error) {
+  const code = normalizeString(error?.code || '').toUpperCase();
+  const message = normalizeString(error?.message || '').toLowerCase();
+  return code === '42P01' || message.includes('does not exist');
+}
+
+async function requestProfileSettingsIdentityChange(root, fieldName = '') {
+  const normalizedFieldName = normalizeString(fieldName);
+  if (!normalizedFieldName) return;
+
+  setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Checking request window', 'pending');
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Identity request storage is not configured', 'error');
+    return;
+  }
+
+  try {
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) throw sessionError;
+    const user = sessionData?.session?.user || null;
+    const profileState = getProfileRuntimeState();
+    const profileId = normalizeString(profileState.profile?.id || '');
+    const authUserId = normalizeString(user?.id || user?.uid || '');
+
+    if (!authUserId) {
+      setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Sign in before requesting a protected-field change', 'error');
+      return;
+    }
+
+    const cooldownStart = new Date(Date.now() - (PROFILE_IDENTITY_CHANGE_REQUEST_COOLDOWN_HOURS * 60 * 60 * 1000)).toISOString();
+    const { data: recentRequests, error: lookupError } = await supabase
+      .from(PROFILE_IDENTITY_CHANGE_REQUESTS_TABLE)
+      .select('id, created_at, request_state')
+      .eq('owner_auth_user_id', authUserId)
+      .eq('field_name', normalizedFieldName)
+      .gte('created_at', cooldownStart)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (lookupError) throw lookupError;
+
+    if (Array.isArray(recentRequests) && recentRequests.length > 0) {
+      setProfileSettingsIdentityRequestStatus(
+        root,
+        normalizedFieldName,
+        `A request is already in review. New requests open after ${PROFILE_IDENTITY_CHANGE_REQUEST_COOLDOWN_HOURS} hours.`,
+        'locked'
+      );
+      return;
+    }
+
+    const payload = {
+      owner_auth_user_id: authUserId,
+      profile_id: profileId || null,
+      field_name: normalizedFieldName,
+      current_value: normalizeString(getProfileSettingsProtectedFieldCurrentValue(root, normalizedFieldName)),
+      requested_value: null,
+      request_state: 'submitted',
+      request_note: 'Requested from Edit Profile protected identity field.'
+    };
+
+    const { error: insertError } = await supabase
+      .from(PROFILE_IDENTITY_CHANGE_REQUESTS_TABLE)
+      .insert(payload);
+
+    if (insertError) throw insertError;
+
+    setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Request submitted for review', 'success');
+    void recordProfileChangelogEvent({
+      area: 'identity',
+      action: `${normalizedFieldName}_change_requested`,
+      title: normalizedFieldName === 'username' ? 'Username change requested' : 'Birth date change requested',
+      detail: 'A protected identity field change was requested',
+      profile_id: profileId,
+      metadata: {
+        field_name: normalizedFieldName
+      }
+    });
+  } catch (error) {
+    if (isProfileSettingsChangeRequestBackendMissing(error)) {
+      setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Identity request storage is not configured', 'error');
+      return;
+    }
+    console.error('[profile-settings] Identity change request failed.', error);
+    setProfileSettingsIdentityRequestStatus(root, normalizedFieldName, 'Request could not be submitted right now', 'error');
+  }
 }
 
 function getProfileSettingsToggle(root, name) {
@@ -953,8 +1630,10 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'gender', state.gender);
     setProfileSettingsCountryRegionState(root, state.profile?.locale_country_label || '');
     setProfileSettingsTimezoneState(root, state.profile?.timezone || '');
-    setValue(root, 'preferred_language', state.profile?.preferred_language || '');
-    setValue(root, 'locale_languages', formatProfileSettingsListValue(state.profile?.locale_languages));
+    loadProfileSettingsLanguagesConfig();
+    loadProfileSettingsIndustriesConfig();
+    setProfileSettingsLanguageState(root, state.profile?.preferred_language || '');
+    setProfileSettingsAdditionalLanguagesState(root, formatProfileSettingsListValue(state.profile?.locale_languages) || '');
     setValue(root, 'public_summary', state.bio || state.profile?.public_summary || state.profile?.public_bio || '');
 
     setValue(root, 'username', state.username.raw || state.username.normalized);
@@ -965,7 +1644,7 @@ function renderSettings(state = getProfileRuntimeState(), navigationState = getP
     setValue(root, 'current_focus', state.profile?.current_focus || '');
     setValue(root, 'credentials_education', state.profile?.credentials_education || '');
     setValue(root, 'portfolio_links', formatProfileSettingsListValue(state.profile?.portfolio_links));
-    setValue(root, 'industry_sector', state.profile?.industry_sector || '');
+    setProfileSettingsIndustryState(root, state.profile?.industry_sector || '');
     setProfileSettingsLocationState(root, state.profile?.public_location || state.profile?.location || '', 'idle');
     setValue(root, 'website_url', state.profile?.website_url || state.profile?.public_primary_link || '');
     setProfileSettingsSocialLinksState(root, state.profile?.social_links);
@@ -1212,7 +1891,34 @@ function initProfileSettings() {
     }
   });
 
-  document.addEventListener('click', (event) => {
+  document.addEventListener('input', async (event) => {
+    const search = event.target;
+    if (!(search instanceof HTMLInputElement) || !search.matches('[data-profile-settings-language-search]')) return;
+    const root = getProfileSettingsLanguageRootFromEventTarget(search);
+    if (root instanceof HTMLElement) {
+      await renderProfileSettingsLanguageOptions(root, search.value || '');
+    }
+  });
+
+  document.addEventListener('input', async (event) => {
+    const search = event.target;
+    if (!(search instanceof HTMLInputElement) || !search.matches('[data-profile-settings-additional-languages-search]')) return;
+    const root = getProfileSettingsAdditionalLanguagesRootFromEventTarget(search);
+    if (root instanceof HTMLElement) {
+      await renderProfileSettingsAdditionalLanguagesOptions(root, search.value || '');
+    }
+  });
+
+  document.addEventListener('input', async (event) => {
+    const search = event.target;
+    if (!(search instanceof HTMLInputElement) || !search.matches('[data-profile-settings-industry-search]')) return;
+    const root = getProfileSettingsIndustryRootFromEventTarget(search);
+    if (root instanceof HTMLElement) {
+      await renderProfileSettingsIndustryOptions(root, search.value || '');
+    }
+  });
+
+  document.addEventListener('click', async (event) => {
     const closeButton = event.target.closest('[data-profile-settings-close]');
     if (closeButton instanceof HTMLElement) {
       event.preventDefault();
@@ -1255,6 +1961,87 @@ function initProfileSettings() {
       const root = getProfileSettingsTimezoneRootFromEventTarget(timezoneOptionButton);
       if (root instanceof HTMLElement) {
         applyProfileSettingsTimezone(root, timezoneOptionButton.dataset.profileSettingsTimezoneOption || '');
+      }
+      return;
+    }
+
+    const languageButton = event.target.closest('[data-profile-settings-language-open]');
+    if (languageButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = languageButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        await openProfileSettingsLanguageOverlay(root);
+      }
+      return;
+    }
+
+    const additionalLanguagesButton = event.target.closest('[data-profile-settings-additional-languages-open]');
+    if (additionalLanguagesButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = additionalLanguagesButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        await openProfileSettingsAdditionalLanguagesOverlay(root);
+      }
+      return;
+    }
+
+    const languageCloseButton = event.target.closest('[data-profile-settings-language-close]');
+    if (languageCloseButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeProfileSettingsLanguageOverlay(getProfileSettingsLanguageRootFromEventTarget(languageCloseButton));
+      return;
+    }
+
+    const additionalLanguagesCloseButton = event.target.closest('[data-profile-settings-additional-languages-close]');
+    if (additionalLanguagesCloseButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeProfileSettingsAdditionalLanguagesOverlay(getProfileSettingsAdditionalLanguagesRootFromEventTarget(additionalLanguagesCloseButton));
+      return;
+    }
+
+    const languageOptionButton = event.target.closest('[data-profile-settings-language-option]');
+    if (languageOptionButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = getProfileSettingsLanguageRootFromEventTarget(languageOptionButton);
+      if (root instanceof HTMLElement) {
+        applyProfileSettingsLanguage(root, languageOptionButton.dataset.profileSettingsLanguageOption || '');
+      }
+      return;
+    }
+
+    const additionalLanguagesOption = event.target.closest('[data-profile-settings-additional-languages-option]');
+    if (additionalLanguagesOption instanceof HTMLElement) {
+      event.preventDefault();
+      const root = getProfileSettingsAdditionalLanguagesRootFromEventTarget(additionalLanguagesOption);
+      if (root instanceof HTMLElement) {
+        applyProfileSettingsAdditionalLanguages(root, additionalLanguagesOption.dataset.profileSettingsAdditionalLanguagesOption || '');
+      }
+      return;
+    }
+
+    const industryButton = event.target.closest('[data-profile-settings-industry-open]');
+    if (industryButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = industryButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        await openProfileSettingsIndustryOverlay(root);
+      }
+      return;
+    }
+
+    const industryCloseButton = event.target.closest('[data-profile-settings-industry-close]');
+    if (industryCloseButton instanceof HTMLElement) {
+      event.preventDefault();
+      closeProfileSettingsIndustryOverlay(getProfileSettingsIndustryRootFromEventTarget(industryCloseButton));
+      return;
+    }
+
+    const industryOptionButton = event.target.closest('[data-profile-settings-industry-option]');
+    if (industryOptionButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = getProfileSettingsIndustryRootFromEventTarget(industryOptionButton);
+      if (root instanceof HTMLElement) {
+        applyProfileSettingsIndustry(root, industryOptionButton.dataset.profileSettingsIndustryOption || '');
       }
       return;
     }
@@ -1306,10 +2093,21 @@ function initProfileSettings() {
       const root = birthDateChangeRequestButton.closest('[data-profile-settings-panel]');
       if (!(root instanceof HTMLElement)) return;
       const infoButton = root.querySelector('[data-profile-settings-info-toggle][aria-label="Date of birth information"]');
-      const popover = root.querySelector('[data-profile-settings-info-popover]');
-      if (infoButton instanceof HTMLElement && popover instanceof HTMLElement) {
-        infoButton.setAttribute('aria-expanded', 'true');
-        popover.hidden = false;
+      const popover = infoButton instanceof HTMLElement ? getProfileSettingsInfoPopoverForButton(infoButton) : null;
+    if (infoButton instanceof HTMLElement && popover instanceof HTMLElement) {
+      closeProfileSettingsInfoPopovers(infoButton);
+      infoButton.setAttribute('aria-expanded', 'true');
+      positionProfileSettingsInfoPopover(infoButton, popover);
+    }
+      return;
+    }
+
+    const identityChangeRequestButton = event.target.closest('[data-profile-settings-identity-change-request]');
+    if (identityChangeRequestButton instanceof HTMLElement) {
+      event.preventDefault();
+      const root = identityChangeRequestButton.closest('[data-profile-settings-panel]');
+      if (root instanceof HTMLElement) {
+        await requestProfileSettingsIdentityChange(root, identityChangeRequestButton.dataset.profileSettingsIdentityChangeRequest || '');
       }
       return;
     }
@@ -1330,11 +2128,16 @@ function initProfileSettings() {
     if (!(button instanceof HTMLElement)) return;
     const root = button.closest('[data-profile-settings-panel]');
     if (!(root instanceof HTMLElement)) return;
-    const popover = root.querySelector('[data-profile-settings-info-popover]');
+    const popover = getProfileSettingsInfoPopoverForButton(button);
     if (!(popover instanceof HTMLElement)) return;
     const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    closeProfileSettingsInfoPopovers(button);
     button.setAttribute('aria-expanded', (!isExpanded).toString());
-    popover.hidden = isExpanded;
+    if (isExpanded) {
+      popover.hidden = true;
+    } else {
+      positionProfileSettingsInfoPopover(button, popover);
+    }
   });
 
   document.addEventListener('click', (event) => {
@@ -1342,15 +2145,7 @@ function initProfileSettings() {
     const button = target.closest('[data-profile-settings-info-toggle]');
     const popover = target.closest('[data-profile-settings-info-popover]');
     if (button || popover) return;
-    document.querySelectorAll('[data-profile-settings-info-toggle][aria-expanded="true"]').forEach((expandedButton) => {
-      expandedButton.setAttribute('aria-expanded', 'false');
-      const root = expandedButton.closest('[data-profile-settings-panel]');
-      if (!(root instanceof HTMLElement)) return;
-      const expandedPopover = root.querySelector('[data-profile-settings-info-popover]');
-      if (expandedPopover instanceof HTMLElement) {
-        expandedPopover.hidden = true;
-      }
-    });
+    closeProfileSettingsInfoPopovers();
   });
 
   document.addEventListener('click', (event) => {

@@ -445,12 +445,14 @@
 
 
 .profile-private-hero__info-popover{
-  position:absolute;
-  top:calc(100% + var(--spacing-xs));
-  right:0;
+  position:fixed;
+  top:var(--profile-hero-info-popover-top, var(--spacing-none));
+  left:var(--profile-hero-info-popover-left, var(--spacing-none));
+  right:auto;
   z-index:var(--z-raised);
-  min-width:calc(12.5rem * var(--accessibility-density-scale));
-  max-width:calc(18.75rem * var(--accessibility-density-scale));
+  width:var(--profile-private-hero-info-popover-width);
+  min-width:min(calc(12.5rem * var(--accessibility-density-scale)), calc(100vw - (2 * var(--profile-workspace-content-row-padding-inline))));
+  max-width:calc(100vw - (2 * var(--profile-workspace-content-row-padding-inline)));
   display:grid;
   gap:var(--spacing-md);
   overflow:auto;

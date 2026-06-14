@@ -481,7 +481,11 @@ function bindProfilePrivateHeroActions() {
         const isOpen = infoToggle.getAttribute('aria-expanded') === 'true';
         infoToggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
         if (popover instanceof HTMLElement) {
-          popover.hidden = isOpen;
+          if (isOpen) {
+            popover.hidden = true;
+          } else {
+            positionProfileHeroInfoPopover(infoToggle, popover);
+          }
         }
         return;
       }
@@ -531,6 +535,24 @@ function bindProfilePrivateHeroActions() {
     if (event.key !== 'Escape') return;
     getHeroRoots().forEach((root) => closeProfileHeroInfo(root));
   });
+}
+
+function positionProfileHeroInfoPopover(button, popover) {
+  if (!(button instanceof HTMLElement) || !(popover instanceof HTMLElement)) return;
+
+  popover.hidden = false;
+  const viewportGap = 16;
+  const buttonRect = button.getBoundingClientRect();
+  const popoverRect = popover.getBoundingClientRect();
+  const preferredLeft = buttonRect.right - popoverRect.width;
+  const maxLeft = Math.max(viewportGap, window.innerWidth - popoverRect.width - viewportGap);
+  const left = Math.min(Math.max(viewportGap, preferredLeft), maxLeft);
+  const preferredTop = buttonRect.bottom + 8;
+  const maxTop = Math.max(viewportGap, window.innerHeight - popoverRect.height - viewportGap);
+  const top = Math.min(Math.max(viewportGap, preferredTop), maxTop);
+
+  popover.style.setProperty('--profile-hero-info-popover-left', `${Math.round(left)}px`);
+  popover.style.setProperty('--profile-hero-info-popover-top', `${Math.round(top)}px`);
 }
 
 function bindProfileWorkspaceTabs() {

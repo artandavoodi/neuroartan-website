@@ -40,10 +40,14 @@
                       <span class="profile-settings__info-content" data-profile-settings-username-note>
                         Username changes are governed by the canonical reservation policy.
                       </span>
+                      <button class="profile-settings__info-action" type="button" data-profile-settings-identity-change-request="username">
+                        <span>Request a change</span>
+                      </button>
+                      <span class="profile-settings__info-status" data-profile-settings-identity-request-status="username" aria-live="polite"></span>
                     </span>
                   </span>
                 </div>
-                <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false" placeholder="username" aria-label="Username">
+                <input class="ui-field profile-settings__input" type="text" name="username" autocapitalize="off" spellcheck="false" placeholder="Canonical handle" aria-label="Username">
               </label>
 
               <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
@@ -108,8 +112,12 @@
                     </button>
                     <span class="profile-settings__info-popover" data-profile-settings-info-popover hidden>
                       <span class="profile-settings__info-content">
-                        Date of birth is a protected identity field. Changes require review before they are applied.
+                        Birth date is saved as a protected identity field and can only be changed after review.
                       </span>
+                      <button class="profile-settings__info-action" type="button" data-profile-settings-identity-change-request="date_of_birth">
+                        <span>Request a change</span>
+                      </button>
+                      <span class="profile-settings__info-status" data-profile-settings-identity-request-status="date_of_birth" aria-live="polite"></span>
                     </span>
                   </span>
                 </div>
@@ -158,15 +166,21 @@
                 </button>
               </div>
 
-              <label class="profile-settings__field profile-settings__field--quiet">
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-language-field>
                 <span class="profile-settings__label">Primary language</span>
-                <input class="ui-field profile-settings__input" type="text" name="preferred_language" placeholder="Primary language" aria-label="Primary language">
-              </label>
+                <input class="ui-field profile-settings__input" type="hidden" name="preferred_language" autocomplete="off" data-profile-settings-language-input>
+                <button class="profile-settings__language-action" type="button" data-profile-settings-language-open>
+                  <span data-profile-settings-language-label>Select language</span>
+                </button>
+              </div>
 
-              <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-additional-languages-field>
                 <span class="profile-settings__label">Additional languages</span>
-                <input class="ui-field profile-settings__input" type="text" name="locale_languages" placeholder="Additional languages" aria-label="Additional languages">
-              </label>
+                <input class="ui-field profile-settings__input" type="hidden" name="locale_languages" autocomplete="off" data-profile-settings-additional-languages-input>
+                <button class="profile-settings__additional-languages-action" type="button" data-profile-settings-additional-languages-open>
+                  <span data-profile-settings-additional-languages-label>Select additional languages</span>
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -185,7 +199,7 @@
 
               <label class="profile-settings__field profile-settings__field--quiet">
                 <span class="profile-settings__label">Organization / company</span>
-                <input class="ui-field profile-settings__input" type="text" name="organization_name" placeholder="Organization or company" aria-label="Organization or company">
+                <input class="ui-field profile-settings__input" type="text" name="organization_name" placeholder="Where you work or build" aria-label="Organization or company">
               </label>
 
               <label class="profile-settings__field profile-settings__field--quiet">
@@ -195,28 +209,31 @@
 
               <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
                 <span class="profile-settings__label">Expertise areas</span>
-                <input class="ui-field profile-settings__input" type="text" name="expertise_areas" placeholder="Areas of expertise" aria-label="Expertise areas">
+                <input class="ui-field profile-settings__input" type="text" name="expertise_areas" placeholder="Comma-separated strengths or domains" aria-label="Expertise areas">
               </label>
 
               <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
                 <span class="profile-settings__label">Current focus</span>
-                <input class="ui-field profile-settings__input" type="text" name="current_focus" placeholder="Current focus" aria-label="Current focus">
+                <input class="ui-field profile-settings__input" type="text" name="current_focus" placeholder="What you are working on now" aria-label="Current focus">
               </label>
 
               <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
                 <span class="profile-settings__label">Credentials / education</span>
-                <input class="ui-field profile-settings__input" type="text" name="credentials_education" placeholder="Credentials or education" aria-label="Credentials or education">
+                <input class="ui-field profile-settings__input" type="text" name="credentials_education" placeholder="Degrees, certifications, or training" aria-label="Credentials or education">
               </label>
 
               <label class="profile-settings__field profile-settings__field--quiet profile-settings__field--full">
                 <span class="profile-settings__label">Portfolio / work links</span>
-                <input class="ui-field profile-settings__input" type="text" name="portfolio_links" placeholder="Portfolio or work links" aria-label="Portfolio or work links">
+                <input class="ui-field profile-settings__input" type="text" name="portfolio_links" placeholder="Portfolio URLs separated by commas" aria-label="Portfolio or work links">
               </label>
 
-              <label class="profile-settings__field profile-settings__field--quiet">
+              <div class="profile-settings__field profile-settings__field--quiet profile-settings__field--full" data-profile-settings-industry-field>
                 <span class="profile-settings__label">Industry / sector</span>
-                <input class="ui-field profile-settings__input" type="text" name="industry_sector" placeholder="Industry or sector" aria-label="Industry or sector">
-              </label>
+                <input class="ui-field profile-settings__input" type="hidden" name="industry_sector" autocomplete="off" data-profile-settings-industry-input>
+                <button class="profile-settings__industry-action" type="button" data-profile-settings-industry-open>
+                  <span data-profile-settings-industry-label>Select industry or sector</span>
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -239,33 +256,50 @@
     </section>
   </div>
 
-  <div class="profile-settings__social-overlay" data-profile-settings-social-overlay hidden>
-    <div class="profile-settings__social-overlay-backdrop" data-profile-settings-social-close></div>
-    <section class="profile-settings__social-panel" role="dialog" aria-modal="true" aria-label="Social links">
-      <button
-        class="profile-settings__social-close global-close-button"
-        type="button"
-        data-profile-settings-social-close
-        aria-label="Close social links"
-      >
-        <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
-        <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
-      </button>
+  <section class="profile-settings__selector-overlay profile-settings__social-overlay" data-profile-settings-social-overlay hidden>
+    <section class="profile-settings__selector-panel profile-settings__social-panel" role="dialog" aria-modal="true" aria-label="Social links">
+      <div class="profile-settings__selector-inner">
+        <div class="profile-settings__selector-header">
+          <button class="profile-settings__social-close global-close-button" type="button" data-profile-settings-social-close aria-label="Close social links">
+            <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+            <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+          </button>
+          <div class="profile-settings__selector-heading profile-settings__social-current" data-profile-settings-social-current></div>
+        </div>
 
-      <header class="profile-settings__social-header">
-        <h2 class="profile-settings__social-title">Social links</h2>
-      </header>
+        <div class="profile-settings__selector-list profile-settings__social-list" data-profile-settings-social-list data-na-scroll-strip="true"></div>
 
-      <div class="profile-settings__social-list" data-profile-settings-social-list></div>
-
-      <footer class="profile-settings__social-actions">
-        <button class="ui-button ui-button--secondary" type="button" data-profile-settings-social-apply>
-          <span class="ui-button__icon" aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
-          </span>
-          <span>Save</span>
-        </button>
-      </footer>
+        <footer class="profile-settings__social-actions">
+          <button class="ui-button ui-button--secondary" type="button" data-profile-settings-social-apply>
+            <span class="ui-button__icon" aria-hidden="true">
+              <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/save/save.svg" alt="">
+            </span>
+            <span>Save</span>
+          </button>
+        </footer>
+      </div>
     </section>
-  </div>
+  </section>
+
+  <section class="profile-settings__selector-overlay profile-settings__industry-overlay" data-profile-settings-industry-overlay hidden>
+    <section class="profile-settings__selector-panel profile-settings__industry-panel" role="dialog" aria-modal="true" aria-label="Industry selector">
+      <div class="profile-settings__selector-inner">
+        <div class="profile-settings__selector-header">
+          <button class="profile-settings__industry-close global-close-button" type="button" data-profile-settings-industry-close aria-label="Close industry selector">
+            <span class="global-close-button__line global-close-button__line--first" aria-hidden="true"></span>
+            <span class="global-close-button__line global-close-button__line--second" aria-hidden="true"></span>
+          </button>
+          <div class="profile-settings__selector-heading profile-settings__industry-current" data-profile-settings-industry-current></div>
+        </div>
+
+        <div class="profile-settings__selector-toolbar profile-settings__industry-search-wrap">
+          <div class="profile-settings__selector-search-shell">
+            <input class="profile-settings__selector-search profile-settings__industry-search" type="search" autocomplete="off" placeholder="Search industry or sector" aria-label="Search industry or sector" data-profile-settings-industry-search>
+          </div>
+        </div>
+
+        <div class="profile-settings__selector-list profile-settings__industry-list" data-profile-settings-industry-list></div>
+      </div>
+    </section>
+  </section>
 </div>

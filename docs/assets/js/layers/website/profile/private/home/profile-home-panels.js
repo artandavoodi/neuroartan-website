@@ -75,8 +75,9 @@ function messagingRoots() {
 function renderFeedPost(post = {}) {
   const avatar = normalizeString(post.avatar || '');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
+  const postId = normalizeString(post.id || '');
   return `
-    <article class="profile-home-panel__item">
+    <article class="profile-home-panel__item" data-post-id="${escapeHtml(postId)}">
       <div class="profile-home-panel__item-header">
         <span class="profile-home-panel__item-avatar" aria-hidden="true">
           ${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : ''}
@@ -89,6 +90,32 @@ function renderFeedPost(post = {}) {
       </div>
       <p class="profile-home-panel__item-body">${escapeHtml(post.content || '')}</p>
       ${post.imageUrl ? `<img class="profile-home-panel__item-image" src="${escapeHtml(post.imageUrl)}" alt="">` : ''}
+      <div class="profile-home-panel__item-actions">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--like" type="button" data-profile-home-action="like" data-post-id="${escapeHtml(postId)}" aria-label="Like post">
+          <span class="profile-home-panel__action-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/like/like.svg" alt="">
+          </span>
+          <span class="profile-home-panel__action-label">Like</span>
+        </button>
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--comment" type="button" data-profile-home-action="comment" data-post-id="${escapeHtml(postId)}" aria-label="Comment on post">
+          <span class="profile-home-panel__action-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/comment/comment.svg" alt="">
+          </span>
+          <span class="profile-home-panel__action-label">Comment</span>
+        </button>
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--repost" type="button" data-profile-home-action="repost" data-post-id="${escapeHtml(postId)}" aria-label="Repost post">
+          <span class="profile-home-panel__action-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/repost/repost.svg" alt="">
+          </span>
+          <span class="profile-home-panel__action-label">Repost</span>
+        </button>
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--bookmark" type="button" data-profile-home-action="bookmark" data-post-id="${escapeHtml(postId)}" aria-label="Bookmark post">
+          <span class="profile-home-panel__action-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/bookmark/bookmark.svg" alt="">
+          </span>
+          <span class="profile-home-panel__action-label">Bookmark</span>
+        </button>
+      </div>
     </article>
   `;
 }
@@ -204,6 +231,13 @@ function bindEvents() {
       window.NEUROARTAN_NOTIFICATION_CENTER?.markRead?.(read.getAttribute('data-profile-home-notification-read') || '');
       renderNotifications();
     }
+
+    const actionButton = event.target.closest('[data-profile-home-action]');
+    if (actionButton instanceof HTMLButtonElement) {
+      const action = actionButton.getAttribute('data-profile-home-action') || '';
+      const postId = actionButton.getAttribute('data-post-id') || '';
+      handleSocialAction(action, postId, actionButton);
+    }
   });
 
   document.addEventListener('submit', (event) => {
@@ -223,6 +257,47 @@ function bindEvents() {
     form.reset();
     renderMessages();
   });
+}
+
+function handleSocialAction(action = '', postId = '', button = null) {
+  if (!button) return;
+
+  switch (action) {
+    case 'like':
+      toggleLikeState(button);
+      break;
+    case 'comment':
+      openCommentPanel(postId);
+      break;
+    case 'repost':
+      toggleRepostState(button);
+      break;
+    case 'bookmark':
+      toggleBookmarkState(button);
+      break;
+  }
+}
+
+function toggleLikeState(button) {
+  const isActive = button.getAttribute('aria-pressed') === 'true';
+  button.setAttribute('aria-pressed', (!isActive).toString());
+  button.setAttribute('data-active', (!isActive).toString());
+}
+
+function toggleRepostState(button) {
+  const isActive = button.getAttribute('aria-pressed') === 'true';
+  button.setAttribute('aria-pressed', (!isActive).toString());
+  button.setAttribute('data-active', (!isActive).toString());
+}
+
+function toggleBookmarkState(button) {
+  const isActive = button.getAttribute('aria-pressed') === 'true';
+  button.setAttribute('aria-pressed', (!isActive).toString());
+  button.setAttribute('data-active', (!isActive).toString());
+}
+
+function openCommentPanel(postId) {
+  console.log('Opening comment panel for post:', postId);
 }
 
 function renderAll() {

@@ -21,7 +21,6 @@
 .profile-home-panel__item-header{
   display:flex;
   align-items:center;
-  justify-content:space-between;
   gap:var(--spacing-md);
   min-width:0;
 }
@@ -44,7 +43,8 @@
 }
 
 .profile-home-panel__item-meta{
-  display:grid;
+  display:flex;
+  align-items:center;
   gap:var(--spacing-2xs);
   min-width:0;
   margin-right:auto;
@@ -58,6 +58,10 @@
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
   font-weight:var(--font-weight-heading-soft);
+}
+
+.profile-home-panel__item-meta > span{
+  display:none;
 }
 
 .profile-home-panel__item-header time{
@@ -129,4 +133,60 @@
 .profile-home-panel__action{
   flex:0 0 auto;
   font-weight:var(--font-weight-heading-soft);
+}
+
+.profile-home-panel__item-actions{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-md);
+  padding:var(--spacing-md) 0;
+}
+
+.profile-home-panel__action-button{
+  appearance:none;
+  -webkit-appearance:none;
+  border:none;
+  background:transparent;
+  color:var(--text-secondary-color);
+  font:inherit;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-xs);
+  padding:var(--spacing-xs);
+  border-radius:var(--control-radius-sm);
+  transition:background-color var(--transition-duration-fast) var(--transition-timing-default),
+              color var(--transition-duration-fast) var(--transition-timing-default);
+}
+
+.profile-home-panel__action-button:hover{
+  background-color:var(--panel-surface-hover);
+  color:var(--text-primary-color);
+}
+
+.profile-home-panel__action-button:active{
+  background-color:var(--panel-surface-active);
+}
+
+.profile-home-panel__action-button[aria-pressed="true"],
+.profile-home-panel__action-button[data-active="true"]{
+  color:var(--accent-primary-color);
+}
+
+.profile-home-panel__action-icon{
+  display:inline-grid;
+  place-items:center;
+  width:var(--icon-size-md);
+  height:var(--icon-size-md);
+}
+
+.profile-home-panel__action-icon img{
+  width:var(--icon-size-md);
+  height:var(--icon-size-md);
+}
+
+.profile-home-panel__action-label{
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  font-weight:var(--font-weight-body-regular);
 }

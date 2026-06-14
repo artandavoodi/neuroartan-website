@@ -32,11 +32,26 @@ const SELECTOR_SKIP = [
   '[contenteditable="true"]',
   '#home-platform-shell',
   '[data-home-platform-shell]',
+  '[data-model-management]',
+  '.model-management',
+  '.model-source-calibration-workspace',
+  '.model-personality-calibration-workspace',
+  '[data-model-source-summary-overlay]',
+  '[data-model-personality-summary-overlay]',
   '[data-na-scroll-strip="off"]',
   '[data-na-scroll-strip="hidden"]',
   '[data-scroll-strip-hidden]',
   '[data-scrollbar-hidden]',
   '[data-native-scroll-hidden]'
+].join(',');
+
+const SELECTOR_VIEWPORT_SKIP = [
+  '[data-model-management]',
+  '.model-management',
+  '.model-source-calibration-workspace',
+  '.model-personality-calibration-workspace',
+  '[data-model-source-summary-overlay]',
+  '[data-model-personality-summary-overlay]'
 ].join(',');
 
 /* =============================================================================
@@ -58,9 +73,21 @@ function hasHiddenScrollbar(target) {
   return target.matches?.('[data-na-scroll-strip="off"], [data-na-scroll-strip="hidden"], [data-scroll-strip-hidden], [data-scrollbar-hidden], [data-native-scroll-hidden]');
 }
 
+function isVisibleSkipSurface(node) {
+  if (!isElement(node) || node.closest?.('[hidden]')) return false;
+  const rect = node.getBoundingClientRect();
+  return rect.width > 0 && rect.height > 0;
+}
+
+function hasVisibleSkipSurface(root = document) {
+  return Array.from(root.querySelectorAll?.(SELECTOR_VIEWPORT_SKIP) || []).some(isVisibleSkipSurface);
+}
+
 function canOwnStrip(target) {
   if (!isElement(target)) return false;
   if ((target === document.documentElement || target === document.body) && target !== getScrollElement()) return false;
+  if (isViewportTarget(target) && hasVisibleSkipSurface()) return false;
+  if (!isViewportTarget(target) && hasVisibleSkipSurface(target)) return false;
   if (target.closest?.(SELECTOR_SKIP)) return false;
   if (target.classList.contains('na-scroll-strip') || target.classList.contains('na-scroll-strip__thumb')) return false;
 

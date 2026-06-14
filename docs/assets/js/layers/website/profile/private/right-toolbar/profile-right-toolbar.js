@@ -35,6 +35,10 @@ const ACTION_ICONS = Object.freeze({
   modelVoice: '/registry/icons/public/assets/core/actions/model-voice-training-panel/model-voice-training-panel.svg',
   modelVoiceSamples: '/registry/icons/public/assets/core/files/database/database.svg',
   modelVoiceFineTune: '/registry/icons/public/assets/core/media/audio/waveform.svg',
+  modelMemoryDatabase: '/registry/icons/public/assets/core/files/database/database.svg',
+  modelMemoryQueue: '/registry/icons/public/assets/layers/website/model/foundation/memory/memory-consolidation-queue.svg',
+  modelMemoryGraph: '/registry/icons/public/assets/core/cognition/graph/graph.svg',
+  modelMemoryControls: '/registry/icons/public/assets/layers/website/model/foundation/memory/memory-controls.svg',
   modelProvider: '/registry/icons/public/assets/core/actions/model-provider-panel/model-provider-panel.svg',
   modelIdentity: '/registry/icons/public/assets/core/actions/model-identity-panel/model-identity-panel.svg',
   modelKeys: '/registry/icons/public/assets/core/identity/security/key.svg',
@@ -146,6 +150,34 @@ const ACTIONS = Object.freeze({
     label: 'Model memory',
     tooltip: 'Memory',
     icon: ACTION_ICONS.thoughtMemory,
+    authState: 'user'
+  },
+  modelMemoryDatabase: {
+    id: 'model-memory-database',
+    label: 'Memory database',
+    tooltip: 'Database',
+    icon: ACTION_ICONS.modelMemoryDatabase,
+    authState: 'user'
+  },
+  modelMemoryQueue: {
+    id: 'model-memory-queue',
+    label: 'Memory queue',
+    tooltip: 'Queue',
+    icon: ACTION_ICONS.modelMemoryQueue,
+    authState: 'user'
+  },
+  modelMemoryGraph: {
+    id: 'model-memory-graph',
+    label: 'Memory graph',
+    tooltip: 'Graph',
+    icon: ACTION_ICONS.modelMemoryGraph,
+    authState: 'user'
+  },
+  modelMemoryControls: {
+    id: 'model-memory-controls',
+    label: 'Memory controls',
+    tooltip: 'Controls',
+    icon: ACTION_ICONS.modelMemoryControls,
     authState: 'user'
   },
   modelPersonalization: {
@@ -426,7 +458,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   identity: ['modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
   sources: ['modelSourceDatabase', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
-  memory: ['modelLearn', 'modelReset', 'modelChangelog'],
+  memory: ['modelMemoryDatabase', 'modelMemoryQueue', 'modelMemoryGraph', 'modelMemoryControls', 'modelLearn', 'modelReset', 'modelChangelog'],
   personality: ['modelPersonalitySummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelVoiceSamples', 'modelVoiceFineTune', 'modelLearn', 'modelReset', 'modelChangelog']
 });
@@ -763,6 +795,26 @@ function requestProfileToolAction(action){
     case 'model-memory':
       document.dispatchEvent(new CustomEvent('profile:navigate-request', {
         detail: { section: 'model-foundation', modelPane: 'memory' }
+      }));
+      return;
+    case 'model-memory-database':
+      document.dispatchEvent(new CustomEvent('model:memory-database-open-request', {
+        detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-memory-queue':
+      document.dispatchEvent(new CustomEvent('model:memory-queue-open-request', {
+        detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-memory-graph':
+      document.dispatchEvent(new CustomEvent('model:memory-graph-open-request', {
+        detail: { source: 'profile-right-toolbar' }
+      }));
+      return;
+    case 'model-memory-controls':
+      document.dispatchEvent(new CustomEvent('model:memory-controls-open-request', {
+        detail: { source: 'profile-right-toolbar' }
       }));
       return;
     case 'model-personalization':

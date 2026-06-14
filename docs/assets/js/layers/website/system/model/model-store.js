@@ -43,6 +43,10 @@ const ACTIVE_MODEL_PREFERENCES_TABLE = 'active_model_preferences';
 const MODEL_PERSONALIZATION_PREFERENCES_TABLE = 'model_personalization_preferences';
 const MODEL_VISIBILITY_PREFERENCES_TABLE = 'model_visibility_preferences';
 const MODEL_DIGITAL_BRAIN_PREFERENCES_TABLE = 'model_digital_brain_preferences';
+const MODEL_MEMORY_PREFERENCES_TABLE = 'model_memory_preferences';
+const MODEL_MEMORY_ITEMS_TABLE = 'model_memory_items';
+const MODEL_MEMORY_EDGES_TABLE = 'model_memory_edges';
+const MODEL_MEMORY_CONSOLIDATION_QUEUE_TABLE = 'model_memory_consolidation_queue';
 const MODEL_VOICE_TRAINING_STATE_TABLE = 'model_voice_training_state';
 const MODEL_VOICE_TRAINING_SAMPLES_TABLE = 'model_voice_training_samples';
 const MODEL_LOGIC_RECORDS_TABLE = 'model_logic_records';
@@ -222,6 +226,23 @@ const MODEL_DIGITAL_BRAIN_CHANGE_FIELDS = Object.freeze({
   rotateY: 'Brain map horizontal rotation',
 });
 
+const MODEL_MEMORY_CHANGE_FIELDS = Object.freeze({
+  contextWindowDays: 'Memory context window',
+  lookbackYears: 'Memory look-back period',
+  longevityYears: 'Memory longevity',
+  reviewCadenceDays: 'Memory review cadence',
+  decayPressure: 'Memory decay pressure',
+  salienceThreshold: 'Memory salience threshold',
+  recallStrictness: 'Memory recall strictness',
+  sensitiveRecallEnabled: 'Sensitive recall',
+  prospectiveRecallEnabled: 'Prospective recall',
+  indefiniteContinuityEnabled: 'Indefinite continuity',
+  socialMemoryIntakeEnabled: 'Social memory intake',
+  externalConnectorMemoryEnabled: 'External connector memory intake',
+  trainingMemoryPropagationEnabled: 'Training memory propagation',
+  memoryCompressionLevel: 'Memory compression level',
+});
+
 /* =============================================================================
    04) BACKEND HELPERS
 ============================================================================= */
@@ -237,6 +258,10 @@ export function getModelStoreBackendState() {
     activeModelPreferencesTable: ACTIVE_MODEL_PREFERENCES_TABLE,
     modelPersonalizationPreferencesTable: MODEL_PERSONALIZATION_PREFERENCES_TABLE,
     modelVisibilityPreferencesTable: MODEL_VISIBILITY_PREFERENCES_TABLE,
+    modelMemoryPreferencesTable: MODEL_MEMORY_PREFERENCES_TABLE,
+    modelMemoryItemsTable: MODEL_MEMORY_ITEMS_TABLE,
+    modelMemoryEdgesTable: MODEL_MEMORY_EDGES_TABLE,
+    modelMemoryConsolidationQueueTable: MODEL_MEMORY_CONSOLIDATION_QUEUE_TABLE,
     modelVoiceTrainingStateTable: MODEL_VOICE_TRAINING_STATE_TABLE,
     modelVoiceTrainingSamplesTable: MODEL_VOICE_TRAINING_SAMPLES_TABLE,
     modelVoiceSampleBucket: MODEL_VOICE_SAMPLE_BUCKET,
@@ -603,6 +628,148 @@ function buildModelDigitalBrainPreferencesPayload(model = {}, preferences = {}) 
       focus_atlas: normalizeString(preferences.focusAtlas || ''),
     },
     updated_at: new Date().toISOString(),
+  };
+}
+
+function normalizeModelMemoryNumber(value, fallback, min = 0, max = 100) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return fallback;
+  return Math.max(min, Math.min(max, Math.round(numericValue * 100) / 100));
+}
+
+function normalizeModelMemoryBoolean(value, fallback = false) {
+  if (value === true || value === 'true' || value === 1 || value === '1') return true;
+  if (value === false || value === 'false' || value === 0 || value === '0') return false;
+  return fallback;
+}
+
+function mapModelMemoryPreferences(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+  const payload = row.preferences_payload && typeof row.preferences_payload === 'object' ? row.preferences_payload : {};
+
+  return {
+    modelId: normalizeString(row.model_id || payload.model_id || ''),
+    profileId: normalizeString(row.profile_id || payload.profile_id || ''),
+    ownerAuthUserId: normalizeString(row.owner_auth_user_id || payload.owner_auth_user_id || ''),
+    contextWindowDays: normalizeModelMemoryNumber(row.context_window_days ?? payload.context_window_days, 30, 1, 365),
+    lookbackYears: normalizeModelMemoryNumber(row.lookback_years ?? payload.lookback_years, 10, 1, 100),
+    longevityYears: normalizeModelMemoryNumber(row.longevity_years ?? payload.longevity_years, 25, 1, 100),
+    reviewCadenceDays: normalizeModelMemoryNumber(row.review_cadence_days ?? payload.review_cadence_days, 90, 7, 365),
+    decayPressure: normalizeModelMemoryNumber(row.decay_pressure ?? payload.decay_pressure, 0.35, 0, 1),
+    salienceThreshold: normalizeModelMemoryNumber(row.salience_threshold ?? payload.salience_threshold, 0.55, 0, 1),
+    recallStrictness: normalizeModelMemoryNumber(row.recall_strictness ?? payload.recall_strictness, 0.70, 0, 1),
+    sensitiveRecallEnabled: normalizeModelMemoryBoolean(row.sensitive_recall_enabled ?? payload.sensitive_recall_enabled, false),
+    prospectiveRecallEnabled: normalizeModelMemoryBoolean(row.prospective_recall_enabled ?? payload.prospective_recall_enabled, true),
+    indefiniteContinuityEnabled: normalizeModelMemoryBoolean(row.indefinite_continuity_enabled ?? payload.indefinite_continuity_enabled, false),
+    socialMemoryIntakeEnabled: normalizeModelMemoryBoolean(row.social_memory_intake_enabled ?? payload.social_memory_intake_enabled, true),
+    externalConnectorMemoryEnabled: normalizeModelMemoryBoolean(row.external_connector_memory_enabled ?? payload.external_connector_memory_enabled, false),
+    trainingMemoryPropagationEnabled: normalizeModelMemoryBoolean(row.training_memory_propagation_enabled ?? payload.training_memory_propagation_enabled, true),
+    memoryCompressionLevel: normalizeModelMemoryNumber(row.memory_compression_level ?? payload.memory_compression_level, 0.65, 0, 1),
+    updatedAt: normalizeString(row.updated_at || ''),
+  };
+}
+
+function buildModelMemoryPreferencesPayload(model = {}, user = {}, preferences = {}) {
+  const contextWindowDays = Math.round(normalizeModelMemoryNumber(preferences.contextWindowDays, 30, 1, 365));
+  const lookbackYears = Math.round(normalizeModelMemoryNumber(preferences.lookbackYears, 10, 1, 100));
+  const longevityYears = Math.round(normalizeModelMemoryNumber(preferences.longevityYears, 25, 1, 100));
+  const reviewCadenceDays = Math.round(normalizeModelMemoryNumber(preferences.reviewCadenceDays, 90, 7, 365));
+  const decayPressure = normalizeModelMemoryNumber(preferences.decayPressure, 0.35, 0, 1);
+  const salienceThreshold = normalizeModelMemoryNumber(preferences.salienceThreshold, 0.55, 0, 1);
+  const recallStrictness = normalizeModelMemoryNumber(preferences.recallStrictness, 0.70, 0, 1);
+  const sensitiveRecallEnabled = normalizeModelMemoryBoolean(preferences.sensitiveRecallEnabled, false);
+  const prospectiveRecallEnabled = normalizeModelMemoryBoolean(preferences.prospectiveRecallEnabled, true);
+  const indefiniteContinuityEnabled = normalizeModelMemoryBoolean(preferences.indefiniteContinuityEnabled, false);
+  const socialMemoryIntakeEnabled = normalizeModelMemoryBoolean(preferences.socialMemoryIntakeEnabled, true);
+  const externalConnectorMemoryEnabled = normalizeModelMemoryBoolean(preferences.externalConnectorMemoryEnabled, false);
+  const trainingMemoryPropagationEnabled = normalizeModelMemoryBoolean(preferences.trainingMemoryPropagationEnabled, true);
+  const memoryCompressionLevel = normalizeModelMemoryNumber(preferences.memoryCompressionLevel, 0.65, 0, 1);
+
+  return {
+    model_id: normalizeString(model?.id || preferences.modelId || preferences.model_id || ''),
+    profile_id: normalizeString(model?.profile_id || preferences.profileId || preferences.profile_id || '') || null,
+    owner_auth_user_id: normalizeString(user?.id || preferences.ownerAuthUserId || preferences.owner_auth_user_id || ''),
+    context_window_days: contextWindowDays,
+    lookback_years: lookbackYears,
+    longevity_years: longevityYears,
+    review_cadence_days: reviewCadenceDays,
+    decay_pressure: decayPressure,
+    salience_threshold: salienceThreshold,
+    recall_strictness: recallStrictness,
+    sensitive_recall_enabled: sensitiveRecallEnabled,
+    prospective_recall_enabled: prospectiveRecallEnabled,
+    indefinite_continuity_enabled: indefiniteContinuityEnabled,
+    social_memory_intake_enabled: socialMemoryIntakeEnabled,
+    external_connector_memory_enabled: externalConnectorMemoryEnabled,
+    training_memory_propagation_enabled: trainingMemoryPropagationEnabled,
+    memory_compression_level: memoryCompressionLevel,
+    preferences_payload: {
+      context_window_days: contextWindowDays,
+      lookback_years: lookbackYears,
+      longevity_years: longevityYears,
+      review_cadence_days: reviewCadenceDays,
+      decay_pressure: decayPressure,
+      salience_threshold: salienceThreshold,
+      recall_strictness: recallStrictness,
+      sensitive_recall_enabled: sensitiveRecallEnabled,
+      prospective_recall_enabled: prospectiveRecallEnabled,
+      indefinite_continuity_enabled: indefiniteContinuityEnabled,
+      social_memory_intake_enabled: socialMemoryIntakeEnabled,
+      external_connector_memory_enabled: externalConnectorMemoryEnabled,
+      training_memory_propagation_enabled: trainingMemoryPropagationEnabled,
+      memory_compression_level: memoryCompressionLevel,
+    },
+  };
+}
+
+function normalizeModelMemoryItem(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    id: normalizeString(row.id),
+    modelId: normalizeString(row.model_id),
+    profileId: normalizeString(row.profile_id),
+    ownerAuthUserId: normalizeString(row.owner_auth_user_id),
+    privacyMemoryId: normalizeString(row.privacy_memory_id),
+    memoryType: normalizeString(row.memory_type || 'semantic'),
+    memoryTitle: normalizeString(row.memory_title || 'Memory'),
+    memoryBody: normalizeString(row.memory_body || ''),
+    sourceTable: normalizeString(row.source_table || ''),
+    sourceRecordId: normalizeString(row.source_record_id || ''),
+    confidenceScore: normalizeModelMemoryNumber(row.confidence_score, 0, 0, 1),
+    salienceScore: normalizeModelMemoryNumber(row.salience_score, 0, 0, 1),
+    sensitivityLevel: normalizeString(row.sensitivity_level || 'sensitive'),
+    retentionState: normalizeString(row.retention_state || 'active'),
+    recallState: normalizeString(row.recall_state || 'available'),
+    firstObservedAt: normalizeString(row.first_observed_at || ''),
+    lastRecalledAt: normalizeString(row.last_recalled_at || ''),
+    reviewAfterAt: normalizeString(row.review_after_at || ''),
+    memoryPayload: row.memory_payload && typeof row.memory_payload === 'object' ? row.memory_payload : {},
+    createdAt: normalizeString(row.created_at || ''),
+    updatedAt: normalizeString(row.updated_at || ''),
+  };
+}
+
+function normalizeModelMemoryQueueItem(row = {}) {
+  if (!row || typeof row !== 'object') return null;
+
+  return {
+    id: normalizeString(row.id),
+    modelId: normalizeString(row.model_id),
+    profileId: normalizeString(row.profile_id),
+    ownerAuthUserId: normalizeString(row.owner_auth_user_id),
+    candidateType: normalizeString(row.candidate_type || 'source'),
+    candidateTitle: normalizeString(row.candidate_title || 'Memory candidate'),
+    candidateBody: normalizeString(row.candidate_body || ''),
+    sourceTable: normalizeString(row.source_table || ''),
+    sourceRecordId: normalizeString(row.source_record_id || ''),
+    proposedMemoryType: normalizeString(row.proposed_memory_type || 'semantic'),
+    proposedConfidence: normalizeModelMemoryNumber(row.proposed_confidence, 0, 0, 1),
+    proposedSalience: normalizeModelMemoryNumber(row.proposed_salience, 0, 0, 1),
+    queueState: normalizeString(row.queue_state || 'pending'),
+    candidatePayload: row.candidate_payload && typeof row.candidate_payload === 'object' ? row.candidate_payload : {},
+    createdAt: normalizeString(row.created_at || ''),
+    updatedAt: normalizeString(row.updated_at || ''),
   };
 }
 
@@ -1963,6 +2130,138 @@ export async function readModelDigitalBrainPreferences(modelId) {
   }
 
   return mapModelDigitalBrainPreferences(data || {});
+}
+
+export async function readModelMemoryPreferences(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODEL_MEMORY_PREFERENCES_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  return mapModelMemoryPreferences(data || {});
+}
+
+export async function saveModelMemoryPreferences(modelId, preferences = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase) {
+    const error = new Error('MODEL_BACKEND_UNAVAILABLE');
+    error.code = 'MODEL_BACKEND_UNAVAILABLE';
+    throw error;
+  }
+  if (!normalizedModelId) {
+    const error = new Error('MODEL_ID_REQUIRED');
+    error.code = 'MODEL_ID_REQUIRED';
+    throw error;
+  }
+
+  const [model, user] = await Promise.all([
+    getModelById(normalizedModelId),
+    getCurrentSupabaseUser(),
+  ]);
+  if (!model || !user?.id) return null;
+
+  const previousPreferences = await readModelMemoryPreferences(normalizedModelId).catch(() => null);
+  const payload = buildModelMemoryPreferencesPayload(model, user, preferences);
+
+  const { data, error } = await supabase
+    .from(MODEL_MEMORY_PREFERENCES_TABLE)
+    .upsert(payload, { onConflict: 'model_id' })
+    .select('*')
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return null;
+    throw error;
+  }
+
+  const savedPreferences = mapModelMemoryPreferences(data || payload);
+  const changedFields = getChangedModelFields(previousPreferences || {}, savedPreferences || {}, MODEL_MEMORY_CHANGE_FIELDS);
+  if (changedFields.length) {
+    await recordChangedModelFields(model, changedFields, MODEL_MEMORY_CHANGE_FIELDS, {
+      area: 'model.foundation.memory',
+    });
+  }
+
+  dispatchModelProjectionUpdated(normalizedModelId);
+  return savedPreferences;
+}
+
+export async function listModelMemoryItems(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(MODEL_MEMORY_ITEMS_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('updated_at', { ascending: false });
+
+  const memoryType = normalizeString(filters.memoryType || filters.memory_type || '');
+  const retentionState = normalizeString(filters.retentionState || filters.retention_state || '');
+  if (memoryType && memoryType !== 'all') query = query.eq('memory_type', memoryType);
+  if (retentionState && retentionState !== 'all') query = query.eq('retention_state', retentionState);
+
+  const { data, error } = await query;
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data.map(normalizeModelMemoryItem).filter(Boolean) : [];
+}
+
+export async function listModelMemoryConsolidationQueue(modelId, filters = {}) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  let query = supabase
+    .from(MODEL_MEMORY_CONSOLIDATION_QUEUE_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('created_at', { ascending: false });
+
+  const queueState = normalizeString(filters.queueState || filters.queue_state || 'pending');
+  if (queueState && queueState !== 'all') query = query.eq('queue_state', queueState);
+
+  const { data, error } = await query;
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data.map(normalizeModelMemoryQueueItem).filter(Boolean) : [];
+}
+
+export async function listModelMemoryEdges(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return [];
+
+  const { data, error } = await supabase
+    .from(MODEL_MEMORY_EDGES_TABLE)
+    .select('*')
+    .eq('model_id', normalizedModelId)
+    .order('updated_at', { ascending: false });
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  return Array.isArray(data) ? data : [];
 }
 
 export async function saveModelDigitalBrainPreferences(modelId, preferences = {}) {

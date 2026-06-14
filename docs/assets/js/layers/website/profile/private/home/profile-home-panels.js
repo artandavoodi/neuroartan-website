@@ -91,29 +91,30 @@ function renderFeedPost(post = {}) {
       <p class="profile-home-panel__item-body">${escapeHtml(post.content || '')}</p>
       ${post.imageUrl ? `<img class="profile-home-panel__item-image" src="${escapeHtml(post.imageUrl)}" alt="">` : ''}
       <div class="profile-home-panel__item-actions">
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--like" type="button" data-profile-home-action="like" data-post-id="${escapeHtml(postId)}" aria-label="Like post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--like" type="button" data-profile-home-action="like" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Like" aria-label="Like post">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/like/like.svg" alt="">
           </span>
-          <span class="profile-home-panel__action-label">Like</span>
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--comment" type="button" data-profile-home-action="comment" data-post-id="${escapeHtml(postId)}" aria-label="Comment on post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--reply" type="button" data-profile-home-action="reply" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Reply" aria-label="Reply to post">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
-            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/comment/comment.svg" alt="">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/comment/reply.svg" alt="">
           </span>
-          <span class="profile-home-panel__action-label">Comment</span>
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--repost" type="button" data-profile-home-action="repost" data-post-id="${escapeHtml(postId)}" aria-label="Repost post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--repost" type="button" data-profile-home-action="repost" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Repost" aria-label="Repost post">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/repost/repost.svg" alt="">
           </span>
-          <span class="profile-home-panel__action-label">Repost</span>
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--bookmark" type="button" data-profile-home-action="bookmark" data-post-id="${escapeHtml(postId)}" aria-label="Bookmark post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--share" type="button" data-profile-home-action="share" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Share" aria-label="Share post">
+          <span class="profile-home-panel__action-icon" aria-hidden="true">
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/share/share.svg" alt="">
+          </span>
+        </button>
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--bookmark" type="button" data-profile-home-action="bookmark" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Bookmark" aria-label="Bookmark post">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/bookmark/bookmark.svg" alt="">
           </span>
-          <span class="profile-home-panel__action-label">Bookmark</span>
         </button>
       </div>
     </article>
@@ -266,16 +267,23 @@ function handleSocialAction(action = '', postId = '', button = null) {
     case 'like':
       toggleLikeState(button);
       break;
-    case 'comment':
+    case 'reply':
       openCommentPanel(postId);
       break;
     case 'repost':
       toggleRepostState(button);
       break;
+    case 'share':
+      handleShare(postId);
+      break;
     case 'bookmark':
       toggleBookmarkState(button);
       break;
   }
+}
+
+function handleShare(postId) {
+  console.log('Sharing post:', postId);
 }
 
 function toggleLikeState(button) {

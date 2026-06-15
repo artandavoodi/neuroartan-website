@@ -212,6 +212,14 @@ function setSidebarRail(root, state, options = {}){
   if(options.persist !== false){
     writeStoredSidebarRail(normalized);
   }
+
+  if(normalized === 'expanded' && window.matchMedia?.('(max-width: 980px)').matches){
+    const rightToolbarRoot = document.querySelector('[data-profile-right-toolbar]');
+    if(rightToolbarRoot){
+      rightToolbarRoot.setAttribute('data-profile-right-toolbar-rail', 'collapsed');
+      layout?.setAttribute('data-profile-right-toolbar-rail', 'collapsed');
+    }
+  }
 }
 
 function bindSidebar(){
@@ -328,5 +336,13 @@ window.addEventListener('resize', () => {
   if(window.matchMedia?.('(max-width: 980px)').matches !== true) return;
   sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed', { persist:false }));
 }, { passive:true });
+
+document.addEventListener('profile:right-toolbar-rail-change', (event) => {
+  if(!window.matchMedia?.('(max-width: 980px)').matches) return;
+  const state = event?.detail?.state;
+  if(state === 'expanded'){
+    sidebarRoots().forEach((root) => setSidebarRail(root, 'collapsed', { persist:false }));
+  }
+});
 
 initProfileSidebar();

@@ -721,6 +721,10 @@ function setRightToolbarRail(root, state, options = {}){
   if(options.persist !== false){
     writeStoredRightToolbarRail(normalized);
   }
+
+  document.dispatchEvent(new CustomEvent('profile:right-toolbar-rail-change', {
+    detail: { state: normalized }
+  }));
 }
 
 function requestProfileToolAction(action){
@@ -1094,6 +1098,14 @@ subscribeProfileRuntime(() => {
 document.addEventListener('fragment:mounted', (event) => {
   if(event?.detail?.name !== 'profile-private-right-toolbar') return;
   initProfileRightToolbar();
+});
+
+document.addEventListener('profile:sidebar-rail-change', (event) => {
+  if(!window.matchMedia?.('(max-width: 980px)').matches) return;
+  const state = event?.detail?.state;
+  if(state === 'expanded'){
+    toolbarRoots().forEach((root) => setRightToolbarRail(root, 'collapsed', { persist:false }));
+  }
 });
 
 initProfileRightToolbar();

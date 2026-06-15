@@ -73,6 +73,7 @@
 .profile-home-panel__item-body,
 .profile-home-panel__empty{
   margin:0;
+  padding-left:calc(var(--icon-size-lg) + var(--spacing-md));
   color:var(--text-primary-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
@@ -85,9 +86,10 @@
 
 .profile-home-panel__item-image{
   display:block;
-  width:100%;
-  max-width:100%;
+  width:calc(100% - (var(--icon-size-lg) + var(--spacing-md)));
+  max-width:calc(100% - (var(--icon-size-lg) + var(--spacing-md)));
   max-height:calc(28rem * var(--accessibility-density-scale));
+  margin-left:calc(var(--icon-size-lg) + var(--spacing-md));
   object-fit:cover;
   border:var(--border-width-hairline) solid var(--border-color);
   border-radius:var(--radius-lg);

@@ -14,14 +14,14 @@
   display:grid;
   gap:var(--spacing-md);
   min-width:0;
-  padding:var(--spacing-lg) var(--profile-workspace-content-row-padding-inline);
+  padding:var(--spacing-lg) var(--spacing-none);
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
 
 .profile-home-panel__item-header{
   display:flex;
   align-items:center;
-  gap:var(--spacing-md);
+  gap:var(--spacing-sm);
   min-width:0;
 }
 
@@ -73,23 +73,23 @@
 .profile-home-panel__item-body,
 .profile-home-panel__empty{
   margin:0;
-  padding-left:calc(var(--icon-size-lg) + var(--spacing-md));
+  padding-left:var(--spacing-none);
   color:var(--text-primary-color);
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
 }
 
 .profile-home-panel__empty{
-  padding:var(--spacing-xl) var(--profile-workspace-content-row-padding-inline);
+  padding:var(--spacing-xl) var(--spacing-none);
   color:var(--text-secondary-color);
 }
 
 .profile-home-panel__item-image{
   display:block;
-  width:calc(100% - (var(--icon-size-lg) + var(--spacing-md)));
-  max-width:calc(100% - (var(--icon-size-lg) + var(--spacing-md)));
+  width:100%;
+  max-width:100%;
   max-height:calc(28rem * var(--accessibility-density-scale));
-  margin-left:calc(var(--icon-size-lg) + var(--spacing-md));
+  margin-left:var(--spacing-none);
   object-fit:cover;
   border:var(--border-width-hairline) solid var(--border-color);
   border-radius:var(--radius-lg);
@@ -124,7 +124,7 @@
   display:flex;
   align-items:center;
   gap:var(--spacing-md);
-  padding:var(--spacing-lg) var(--profile-workspace-content-row-padding-inline);
+  padding:var(--spacing-lg) var(--spacing-none);
 }
 
 .profile-home-panel__input{
@@ -142,7 +142,7 @@
   align-items:center;
   justify-content:space-between;
   gap:var(--spacing-md);
-  padding:var(--spacing-md) 0;
+  padding:0;
 }
 
 .profile-home-panel__action-button{
@@ -156,7 +156,7 @@
   display:flex;
   align-items:center;
   gap:var(--spacing-xs);
-  padding:var(--spacing-xs);
+  padding:0;
   border-radius:var(--control-radius-sm);
   transition:background-color var(--transition-duration-fast) var(--transition-timing-default),
               color var(--transition-duration-fast) var(--transition-timing-default);

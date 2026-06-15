@@ -54,7 +54,13 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   display:grid;
   gap:var(--spacing-xl);
   min-width:0;
-  padding:var(--spacing-none) var(--profile-workspace-content-row-padding-inline);
+  padding:var(--spacing-none);
+}
+
+@media (max-width:980px){
+  .model-management{
+    padding-inline:var(--spacing-none);
+  }
 }
 
 .model-management__header,

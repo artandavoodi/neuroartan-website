@@ -101,6 +101,17 @@
     }
     writeStoredState(LEFT_STORAGE_KEY, leftActive);
     updateLeftSidebarVisibility(leftActive);
+
+    if(leftActive){
+      rightActive = false;
+      const rightButton = getRightButton();
+      if(rightButton){
+        rightButton.classList.remove('active');
+      }
+      writeStoredState(RIGHT_STORAGE_KEY, false);
+      updateRightToolbarVisibility(false);
+    }
+
     document.dispatchEvent(new CustomEvent('sidebar-icon-overlay:left-toggled', {
       detail: { active: leftActive }
     }));
@@ -114,6 +125,17 @@
     }
     writeStoredState(RIGHT_STORAGE_KEY, rightActive);
     updateRightToolbarVisibility(rightActive);
+
+    if(rightActive){
+      leftActive = false;
+      const leftButton = getLeftButton();
+      if(leftButton){
+        leftButton.classList.remove('active');
+      }
+      writeStoredState(LEFT_STORAGE_KEY, false);
+      updateLeftSidebarVisibility(false);
+    }
+
     document.dispatchEvent(new CustomEvent('sidebar-icon-overlay:right-toggled', {
       detail: { active: rightActive }
     }));

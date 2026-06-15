@@ -280,4 +280,11 @@
     overflow-x:hidden;
     overflow-y:auto;
   }
+
+  .profile-workspace__layout[data-profile-sidebar-rail="expanded"][data-profile-right-toolbar-rail="expanded"]{
+    grid-template-columns:
+      var(--profile-workspace-sidebar-expanded-width)
+      minmax(0, 1fr)
+      var(--profile-workspace-right-toolbar-compact-width);
+  }
 }

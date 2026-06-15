@@ -1040,12 +1040,28 @@ function bindRightToolbar(){
       const root = toggle.closest('[data-profile-right-toolbar]');
       if(!root) return;
 
-      setRightToolbarRail(
-        root,
-        root.getAttribute('data-profile-right-toolbar-rail') === 'collapsed'
-          ? 'expanded'
-          : 'collapsed'
-      );
+      const currentState = root.getAttribute('data-profile-right-toolbar-rail');
+      const newState = currentState === 'collapsed' ? 'expanded' : 'collapsed';
+
+      setRightToolbarRail(root, newState);
+
+      if(newState === 'expanded' && window.innerWidth <= 980){
+        requestAnimationFrame(() => {
+          const sidebarRoot = document.querySelector('[data-profile-private-sidebar]');
+          if(sidebarRoot){
+            sidebarRoot.setAttribute('data-profile-sidebar-rail', 'collapsed');
+            const layout = root.closest('.profile-workspace__layout');
+            if(layout){
+              layout.setAttribute('data-profile-sidebar-rail', 'collapsed');
+            }
+            const sidebarToggle = sidebarRoot.querySelector('[data-profile-sidebar-rail-toggle]');
+            if(sidebarToggle){
+              sidebarToggle.setAttribute('aria-pressed', 'false');
+              sidebarToggle.setAttribute('aria-label', 'Expand profile sidebar');
+            }
+          }
+        });
+      }
       return;
     }
 
@@ -1098,14 +1114,6 @@ subscribeProfileRuntime(() => {
 document.addEventListener('fragment:mounted', (event) => {
   if(event?.detail?.name !== 'profile-private-right-toolbar') return;
   initProfileRightToolbar();
-});
-
-document.addEventListener('profile:sidebar-rail-change', (event) => {
-  if(!window.matchMedia?.('(max-width: 980px)').matches) return;
-  const state = event?.detail?.state;
-  if(state === 'expanded'){
-    toolbarRoots().forEach((root) => setRightToolbarRail(root, 'collapsed', { persist:false }));
-  }
 });
 
 initProfileRightToolbar();

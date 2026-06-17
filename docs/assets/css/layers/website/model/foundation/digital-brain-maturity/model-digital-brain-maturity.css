@@ -308,7 +308,7 @@
 .model-digital-brain-maturity__stage{
   position:relative;
   inline-size:100%;
-  min-block-size:clamp(26rem, 46vw, 44rem);
+  min-block-size:0;
   border:var(--border-width-none);
   border-radius:var(--radius-none);
   background:var(--digital-brain-stage-bg);
@@ -332,7 +332,7 @@
   display:block;
   inline-size:100%;
   block-size:100%;
-  min-block-size:inherit;
+  min-block-size:100%;
   cursor:inherit;
 }
 

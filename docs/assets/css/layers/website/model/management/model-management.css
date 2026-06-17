@@ -52,15 +52,8 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 .model-management{
   display:grid;
-  gap:var(--spacing-xl);
+  gap:var(--spacing-lg);
   min-width:0;
-  padding:var(--spacing-none);
-}
-
-@media (max-width:980px){
-  .model-management{
-    padding-inline:var(--spacing-none);
-  }
 }
 
 .model-management__header,
@@ -183,31 +176,6 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 
 .model-management__section[hidden]{
   display:none;
-}
-
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"]{
-  block-size:calc(var(--profile-workspace-viewport-block-size) - (var(--profile-workspace-content-padding-block) * 2));
-  gap:var(--spacing-none);
-  padding-block:var(--spacing-none);
-}
-
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__sections,
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__section,
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] [data-model-foundation-group="overview"],
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity,
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity__surface{
-  block-size:100%;
-  min-block-size:var(--spacing-none);
-}
-
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__section{
-  padding-block:var(--spacing-none);
-}
-
-.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-digital-brain-maturity__stage{
-  block-size:100%;
-  min-block-size:30rem;
-  max-block-size:none;
 }
 
 .model-management__foundation-group,
@@ -1675,9 +1643,12 @@ body.model-management-identity-editor-open{
   }
 
   .model-management__header{
-    display:grid;
-    gap:var(--spacing-none);
-    padding-block-end:var(--spacing-sm);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:var(--spacing-md);
+    padding:var(--spacing-none);
+    margin-bottom:var(--spacing-md);
   }
 
   .model-management__title{
@@ -1790,4 +1761,22 @@ body.model-management-identity-editor-open{
   .model-management__directory-controls{
     justify-content:flex-start;
   }
+}
+
+/* Add inset padding to model articles when sidebars are open */
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .model-management__section,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__section,
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .model-management__card,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__card,
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .model-management__knowledge-item,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__knowledge-item,
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .model-management__directory-card,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__directory-card{
+  padding-inline:var(--spacing-sm);
+}
+
+/* Add sidebar-aware spacing to model header */
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .model-management__header,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__header{
+  padding-inline:var(--spacing-sm);
 }

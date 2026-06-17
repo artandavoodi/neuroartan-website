@@ -78,7 +78,7 @@
 
 .profile-workspace__content-mount{
   min-width:0;
-  padding-block:var(--profile-workspace-content-padding-block);
+  padding-block:var(--spacing-none);
   padding-inline:var(--profile-workspace-content-row-padding-inline);
   position:relative;
   z-index:0;
@@ -101,7 +101,7 @@
 }
 
 .profile-workspace__panel{
-  padding:var(--spacing-lg) var(--spacing-none);
+  padding:var(--spacing-none);
 }
 
 @media (max-width:980px){

@@ -758,7 +758,19 @@ function bindDigitalBrainMaturity3D(instance) {
   window.addEventListener('resize', onResize);
 
   instance.resizeObserver = new ResizeObserver(onResize);
-  instance.resizeObserver.observe(graph);
+
+  const modelManagement = surface.closest('[data-model-hydration-state]');
+  if (modelManagement instanceof HTMLElement && modelManagement.dataset.modelHydrationState === 'resolving') {
+    const observer = new MutationObserver(() => {
+      if (modelManagement.dataset.modelHydrationState === 'ready') {
+        instance.resizeObserver.observe(graph);
+        observer.disconnect();
+      }
+    });
+    observer.observe(modelManagement, { attributes: true, attributeFilter: ['data-model-hydration-state'] });
+  } else {
+    instance.resizeObserver.observe(graph);
+  }
   instance.cleanup.push(
     () => canvas.removeEventListener('pointerdown', onPointerDown),
     () => canvas.removeEventListener('pointermove', onPointerMove),

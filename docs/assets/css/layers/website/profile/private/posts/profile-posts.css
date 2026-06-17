@@ -688,6 +688,12 @@ body.profile-posts-overlay-open{
   color:var(--status-success-color);
 }
 
+/* Add inset padding to articles when sidebars are open */
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .profile-posts__item,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .profile-posts__item{
+  padding-inline:var(--spacing-sm);
+}
+
 @media (max-width:820px){
   .profile-posts{
     --profile-posts-fab-bottom:calc(var(--site-shell-inline-padding-mobile) + var(--nav-glass-surface-height));

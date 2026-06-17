@@ -66,6 +66,13 @@
   --button-hover-scale-subtle:1;
 }
 
+:root{
+  --button-bg:transparent;
+  --button-bg-hover:transparent;
+  --button-bg-active:color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --button-bg-active-full:color-mix(in srgb, var(--text-primary-color) 12%, transparent);
+}
+
 /* =============================================================================
    04) FIELD TOKENS
 ============================================================================= */

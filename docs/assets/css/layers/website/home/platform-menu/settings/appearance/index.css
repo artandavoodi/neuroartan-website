@@ -123,9 +123,9 @@
   width:var(--size-full);
   min-width:var(--spacing-none);
   padding:var(--home-platform-theme-mode-option-padding-y) var(--home-platform-theme-mode-option-padding-x);
-  border:var(--border-width-hairline) solid transparent;
+  border:none;
   border-radius:var(--home-platform-theme-mode-option-radius);
-  background:transparent;
+  background:var(--button-bg);
   color:var(--text-color);
   text-align:center;
   transition:var(--interaction-transition-control);
@@ -133,13 +133,13 @@
 
 .home-platform-theme__mode-option:hover,
 .home-platform-theme__mode-option:focus-visible{
-  background:transparent;
+  background:var(--button-bg-hover);
   outline:none;
 }
 
 .home-platform-theme__mode-option[aria-pressed="true"]{
-  border:var(--border-width-hairline) solid var(--field-border);
-  background:transparent;
+  background:var(--button-bg-active);
+  border:none;
 }
 
 

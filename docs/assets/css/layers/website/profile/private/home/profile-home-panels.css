@@ -229,3 +229,9 @@
   line-height:var(--body-3-line-height);
   font-weight:var(--font-weight-body-regular);
 }
+
+/* Add inset padding to articles when sidebars are open */
+.profile-workspace__layout:not([data-sidebar-left-hidden="true"]) .profile-home-panel__item,
+.profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .profile-home-panel__item{
+  padding-inline:var(--spacing-sm);
+}

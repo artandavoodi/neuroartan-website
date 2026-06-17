@@ -178,6 +178,10 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   display:none;
 }
 
+.model-management[data-model-section="model-foundation"][data-model-pane="overview"] .model-management__section{
+  padding-block:var(--spacing-none);
+}
+
 .model-management__foundation-group,
 .model-management__training-group,
 .model-management__discovery-group{

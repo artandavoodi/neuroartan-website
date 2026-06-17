@@ -2,10 +2,12 @@
 
 .model-digital-brain-maturity{
   inline-size:100%;
+  block-size:100%;
 }
 
 .model-digital-brain-maturity[aria-busy="true"] .model-digital-brain-maturity__surface{
-  display:none;
+  visibility:hidden;
+  pointer-events:none;
 }
 
 .model-digital-brain-maturity__surface{
@@ -13,6 +15,8 @@
   display:grid;
   gap:var(--spacing-lg);
   inline-size:100%;
+  block-size:var(--profile-workspace-viewport-block-size, calc(100dvh - var(--nav-glass-surface-height, 0px)));
+  min-block-size:32rem;
   padding:var(--spacing-none);
   border:var(--border-width-none);
   border-radius:var(--radius-none);
@@ -308,7 +312,8 @@
 .model-digital-brain-maturity__stage{
   position:relative;
   inline-size:100%;
-  min-block-size:0;
+  block-size:100%;
+  min-block-size:100%;
   border:var(--border-width-none);
   border-radius:var(--radius-none);
   background:var(--digital-brain-stage-bg);
@@ -794,6 +799,8 @@
 @media (max-width:760px){
   .model-digital-brain-maturity__surface{
     gap:var(--spacing-md);
+    block-size:auto;
+    min-block-size:0;
   }
 
   .model-digital-brain-maturity__controls{
@@ -822,6 +829,7 @@
   }
 
   .model-digital-brain-maturity__stage{
+    block-size:auto;
     min-block-size:24rem;
     max-block-size:none;
   }

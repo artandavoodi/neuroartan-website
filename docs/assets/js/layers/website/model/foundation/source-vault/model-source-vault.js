@@ -38,14 +38,52 @@ const SOURCE_TYPE_CONNECTORS = Object.freeze({
   google_workspace: ['gmail', 'calendar', 'contacts'],
 });
 
-const CONNECTOR_IMPORT_LIMIT_OPTIONS = Object.freeze([
-  { value: 0, label: 'All available' },
-  { value: 100, label: '100 posts' },
-  { value: 500, label: '500 posts' },
-  { value: 1000, label: '1,000 posts' },
-  { value: 2500, label: '2,500 posts' },
-  { value: 5000, label: '5,000 posts' },
-]);
+const CONNECTOR_IMPORT_CONTROL_OPTIONS = Object.freeze({
+  default: [
+    { value: 0, label: 'All available items' },
+    { value: 100, label: '100 items' },
+    { value: 500, label: '500 items' },
+    { value: 1000, label: '1,000 items' },
+  ],
+  x: [
+    { value: 0, label: 'All available posts' },
+    { value: 100, label: '100 posts' },
+    { value: 500, label: '500 posts' },
+    { value: 1000, label: '1,000 posts' },
+    { value: 2500, label: '2,500 posts' },
+    { value: 5000, label: '5,000 posts' },
+  ],
+});
+
+const CONNECTOR_REPOSITORY_SELECTION_SERVICES = Object.freeze(['github', 'gitlab']);
+
+const CONNECTOR_TERMINOLOGY = Object.freeze({
+  default: {
+    accountLabel: 'Connected account',
+    importControlLabel: 'Import limit',
+    allAvailableLabel: 'All available items',
+    unitSingular: 'item',
+    unitPlural: 'items',
+    selectionLabel: 'Source selection',
+  },
+  x: {
+    accountLabel: 'Connected profile',
+    importControlLabel: 'Post import limit',
+    allAvailableLabel: 'All available posts',
+    unitSingular: 'post',
+    unitPlural: 'posts',
+    selectionLabel: 'Post source',
+  },
+  github: {
+    accountLabel: 'Connected account',
+    importControlLabel: 'Repository selection',
+    allAvailableLabel: 'All repositories',
+    unitSingular: 'repository',
+    unitPlural: 'repositories',
+    selectionLabel: 'Repository source',
+    selectionMode: 'repository-list',
+  },
+});
 
 const FILE_MANAGER_SORT_LABELS = Object.freeze({
   'name-ascending': 'Name A–Z',
@@ -74,6 +112,7 @@ const CONNECTOR_LABELS = Object.freeze({
   contacts: 'Contacts',
 });
 const CONNECTOR_ICONS = Object.freeze({
+  github: '/registry/icons/public/assets/system/social/github.svg',
   x: '/registry/icons/public/assets/system/social/x.svg',
 });
 
@@ -101,12 +140,83 @@ function createConnectorLogo(service = '', label = '') {
   return logo;
 }
 
+function getConnectorTerminology(service = '') {
+  const normalizedService = normalizeString(service);
+  return CONNECTOR_TERMINOLOGY[normalizedService] || CONNECTOR_TERMINOLOGY.default;
+}
+
+function getConnectorImportControlOptions(service = '') {
+  const normalizedService = normalizeString(service);
+  return CONNECTOR_IMPORT_CONTROL_OPTIONS[normalizedService] || CONNECTOR_IMPORT_CONTROL_OPTIONS.default;
+}
+
+function usesRepositorySelection(service = '') {
+  return CONNECTOR_REPOSITORY_SELECTION_SERVICES.includes(normalizeString(service));
+}
+
 function readConnectorState() {
   try {
     return JSON.parse(window.localStorage?.getItem(NEUROARTAN_CONNECTOR_STATE_KEY) || '{}') || {};
   } catch (error) {
     return {};
   }
+}
+
+function writeConnectorState(state = {}) {
+  safeWriteJsonStorage(NEUROARTAN_CONNECTOR_STATE_KEY, state);
+}
+
+function normalizeBackendConnectorState(record = {}) {
+  const service = normalizeString(record.connector_service);
+  if (!service) return null;
+  const connectionState = normalizeString(record.connection_state || 'not-connected') || 'not-connected';
+  const metadata = record.metadata && typeof record.metadata === 'object' ? record.metadata : {};
+  return {
+    service,
+    label: normalizeString(record.connector_label) || CONNECTOR_LABELS[service] || service,
+    category: normalizeString(record.connector_category),
+    runtime: normalizeString(record.runtime) || 'oauth-required',
+    connectionState,
+    connected: connectionState === 'connected',
+    sourceVaultReady: record.source_vault_ready === true,
+    metadata,
+    updatedAt: normalizeString(record.updated_at),
+  };
+}
+
+function getConnectorAuthClient() {
+  if (window.NeuroartanAuth?.getClient) return window.NeuroartanAuth.getClient();
+  if (window.NeuroartanAuth?.client) return window.NeuroartanAuth.client;
+  return null;
+}
+
+async function hydrateSourceVaultConnectorStateFromBackend(root = mountedRoot) {
+  const supabase = getConnectorAuthClient();
+  if (!supabase?.from) return false;
+
+  const { data, error } = await supabase
+    .from('privacy_connector_state')
+    .select('connector_service, connector_label, connector_category, runtime, connection_state, source_vault_ready, metadata, updated_at')
+    .in('connector_service', Object.keys(CONNECTOR_LABELS));
+
+  if (error || !Array.isArray(data)) return false;
+
+  const nextState = { ...readConnectorState() };
+  data.forEach((record) => {
+    const normalized = normalizeBackendConnectorState(record);
+    if (normalized?.service) nextState[normalized.service] = normalized;
+  });
+  writeConnectorState(nextState);
+
+  if (root instanceof HTMLElement) {
+    renderConnectorOptions(root, getSelectedSourceType(root));
+    syncSourceVaultActions(root);
+    const sourceType = getSelectedSourceType(root);
+    if (SOURCE_TYPE_CONNECTORS[sourceType] && getSelectableConnectorRecords(sourceType).length) {
+      setStatus(root, '');
+    }
+  }
+  return true;
 }
 
 function getConnectorConnectionState(service = '') {
@@ -136,7 +246,7 @@ function getConnectorRecords(sourceType = '') {
       : {};
     return {
       service,
-      label: CONNECTOR_LABELS[service] || service,
+      label: state.label || CONNECTOR_LABELS[service] || service,
       connectionState: getConnectorConnectionState(service),
       sourceVaultReady: state.sourceVaultReady === true,
       metadata: state.metadata && typeof state.metadata === 'object' ? state.metadata : {},
@@ -158,7 +268,7 @@ function getSelectedConnectorRecords(root, sourceType = '') {
         : {};
       return {
         service: control.value,
-        label: CONNECTOR_LABELS[control.value] || control.value,
+        label: state.label || CONNECTOR_LABELS[control.value] || control.value,
         connectionState: getConnectorConnectionState(control.value),
         sourceVaultReady: state.sourceVaultReady === true,
         metadata: state.metadata && typeof state.metadata === 'object' ? state.metadata : {},
@@ -169,14 +279,18 @@ function getSelectedConnectorRecords(root, sourceType = '') {
 function getConnectorImportLimit(root = mountedRoot, service = '') {
   if (!(root instanceof HTMLElement)) return 0;
   const normalizedService = normalizeString(service);
+  if (usesRepositorySelection(normalizedService)) return 0;
   const control = root.querySelector(`[data-model-source-vault-connector-import-limit="${normalizedService}"]`);
   const rawValue = control instanceof HTMLSelectElement ? control.value : '0';
   const parsed = Number.parseInt(String(rawValue || '0'), 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
-function getConnectorImportLimitLabel(limit = 0) {
-  return limit > 0 ? `${limit.toLocaleString()} posts` : 'All available';
+function getConnectorImportLimitLabel(limit = 0, service = '') {
+  const terminology = getConnectorTerminology(service);
+  const normalizedLimit = Number(limit) || 0;
+  const unit = normalizedLimit === 1 ? terminology.unitSingular : terminology.unitPlural;
+  return normalizedLimit > 0 ? `${normalizedLimit.toLocaleString()} ${unit}` : terminology.allAvailableLabel;
 }
 
 function getConnectorImportStatusLabel(record = {}) {
@@ -196,17 +310,28 @@ function setConnectorImportLimitLabel(root = mountedRoot, service = '', limit = 
   const normalizedService = normalizeString(service);
   const labelElement = root.querySelector(`[data-model-source-vault-connector-import-limit-label="${normalizedService}"]`);
   if (labelElement instanceof HTMLElement) {
-    labelElement.textContent = getConnectorImportLimitLabel(limit);
+    labelElement.textContent = getConnectorImportLimitLabel(limit, normalizedService);
   }
 }
 
 function getSelectedConnectorImportControls(root = mountedRoot, sourceType = '') {
   return getSelectedConnectorRecords(root, sourceType).map((record) => {
+    if (usesRepositorySelection(record.service)) {
+      return {
+        ...record,
+        importLimit: 0,
+        importLimitLabel: getConnectorTerminology(record.service).allAvailableLabel,
+        importUnit: getConnectorTerminology(record.service).unitPlural,
+        selectionMode: 'repository-list',
+        selectedRepositories: getSelectedConnectorRepositories(root, record.service),
+      };
+    }
     const importLimit = getConnectorImportLimit(root, record.service);
     return {
       ...record,
       importLimit,
-      importLimitLabel: getConnectorImportLimitLabel(importLimit),
+      importLimitLabel: getConnectorImportLimitLabel(importLimit, record.service),
+      importUnit: getConnectorTerminology(record.service).unitPlural,
     };
   });
 }
@@ -219,6 +344,110 @@ function syncConnectorImportLimitVisibility(root = mountedRoot, sourceType = get
     const control = root.querySelector(`[data-model-source-vault-connector-option="${sourceType}"][value="${service}"]`);
     fieldElement.hidden = !(control instanceof HTMLInputElement && control.checked);
   });
+}
+
+function getConnectorRepositoryCacheKey(service = '') {
+  return normalizeString(service);
+}
+
+function getSelectedConnectorRepositories(root = mountedRoot, service = '') {
+  if (!(root instanceof HTMLElement)) return [];
+  const normalizedService = normalizeString(service);
+  return Array.from(root.querySelectorAll(`[data-model-source-vault-repository-option="${normalizedService}"]:checked`))
+    .filter((control) => control instanceof HTMLInputElement)
+    .map((control) => safeReadJsonStorage(control.dataset.modelSourceVaultRepositoryPayloadKey || '', null))
+    .filter((record) => record && typeof record === 'object');
+}
+
+function renderRepositorySelectionRows(root = mountedRoot, service = '', container = null, repositories = []) {
+  if (!(root instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
+  const normalizedService = normalizeString(service);
+  container.replaceChildren();
+
+  if (!repositories.length) {
+    const empty = document.createElement('span');
+    empty.className = 'model-source-vault__field-status';
+    empty.textContent = 'No repositories available for this connected account.';
+    container.append(empty);
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'model-source-vault__repository-list';
+
+  repositories.forEach((repository) => {
+    const payloadKey = `neuroartan.model.source-vault.repository.${normalizedService}.${repository.id || repository.fullName || repository.name}`;
+    safeWriteJsonStorage(payloadKey, repository);
+
+    const option = document.createElement('label');
+    option.className = 'model-source-vault__repository-option';
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.dataset.modelSourceVaultRepositoryOption = normalizedService;
+    input.dataset.modelSourceVaultRepositoryPayloadKey = payloadKey;
+    input.value = String(repository.fullName || repository.name || repository.id || '');
+
+    const copy = document.createElement('span');
+    copy.className = 'model-source-vault__repository-copy';
+
+    const title = document.createElement('span');
+    title.className = 'model-source-vault__repository-title';
+    title.textContent = repository.fullName || repository.name || 'Repository';
+
+    const meta = document.createElement('span');
+    meta.className = 'model-source-vault__repository-meta';
+    const visibility = repository.private ? 'Private' : 'Public';
+    const language = repository.language ? ` · ${repository.language}` : '';
+    const permission = repository.permissions?.push ? 'write access' : 'read access';
+    meta.textContent = `${visibility}${language} · ${permission}`;
+
+    copy.append(title, meta);
+    option.append(input, copy);
+    list.append(option);
+  });
+
+  list.addEventListener('change', () => {
+    clearAnalysisUI(root);
+    syncSourceVaultActions(root);
+    saveSourceVaultDraft(root);
+  });
+
+  container.append(list);
+}
+
+async function renderConnectorRepositorySelection(root = mountedRoot, sourceType = getSelectedSourceType(root), record = {}, container = null) {
+  if (!(root instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
+  const service = normalizeString(record.service);
+  if (!usesRepositorySelection(service)) return;
+
+  const cacheKey = getConnectorRepositoryCacheKey(service);
+  const cached = connectorRepositoryCache.get(cacheKey);
+  if (Array.isArray(cached)) {
+    renderRepositorySelectionRows(root, service, container, cached);
+    return;
+  }
+
+  container.textContent = 'Loading repositories…';
+
+  const supabase = getConnectorAuthClient();
+  if (!supabase?.functions?.invoke) {
+    container.textContent = 'Repository discovery requires an active authenticated session.';
+    return;
+  }
+
+  const { data, error } = await supabase.functions.invoke('connectors-github-repositories', {
+    body: { connectorService: service },
+  });
+
+  if (error || data?.ok !== true || !Array.isArray(data.repositories)) {
+    container.textContent = 'Repository discovery failed. Refresh the GitHub connector and try again.';
+    return;
+  }
+
+  connectorRepositoryCache.set(cacheKey, data.repositories);
+  renderRepositorySelectionRows(root, service, container, data.repositories);
+  syncSourceVaultActions(root);
 }
 
 function getConnectorCategoryLabel(sourceType = '') {
@@ -241,6 +470,7 @@ function requestSettingsConnectors() {
 let mountedRoot = null;
 let latestAnalysis = null;
 let selectedFileKeys = new Set();
+let connectorRepositoryCache = new Map();
 let fileManagerSortMode = 'name-ascending';
 let restoredDraftPendingFileReconnect = false;
 let sourceVaultLifecyclePersistenceBound = false;
@@ -1151,10 +1381,38 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
     input.dataset.modelSourceVaultConnectorOption = sourceType;
     input.checked = selectedServices.has(record.service);
 
-    const text = createConnectorLogo(record.service, record.label);
+    const text = createConnectorLogo(record.service, record.metadata?.provider_account_handle || record.label);
 
     labelElement.append(input, text);
     list.append(labelElement);
+
+    if (usesRepositorySelection(record.service)) {
+      const repositoryStatus = document.createElement('div');
+      repositoryStatus.className = 'model-management__field model-source-vault__connector-repository-field';
+      repositoryStatus.dataset.modelSourceVaultConnectorImportLimitField = sourceType;
+      repositoryStatus.dataset.modelSourceVaultConnectorImportLimitService = record.service;
+      repositoryStatus.hidden = !input.checked;
+
+      const repositoryLabel = document.createElement('span');
+      repositoryLabel.className = 'model-management__label model-source-vault__connector-limit-copy';
+      repositoryLabel.textContent = getConnectorTerminology(record.service).importControlLabel;
+
+      const repositoryCopy = document.createElement('span');
+      repositoryCopy.className = 'model-management__control model-source-vault__connector-repository-copy';
+      repositoryCopy.textContent = 'Loading repositories…';
+
+      repositoryStatus.append(repositoryLabel, repositoryCopy);
+      list.append(repositoryStatus);
+      if (input.checked) void renderConnectorRepositorySelection(root, sourceType, record, repositoryCopy);
+
+      input.addEventListener('change', () => {
+        syncConnectorImportLimitVisibility(root, sourceType);
+        if (input.checked) void renderConnectorRepositorySelection(root, sourceType, record, repositoryCopy);
+        clearAnalysisUI(root);
+        syncSourceVaultActions(root);
+      });
+      return;
+    }
 
     const limitLabel = document.createElement('label');
     limitLabel.className = 'model-management__field model-source-vault__connector-limit-field';
@@ -1164,7 +1422,7 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
 
     const limitCopy = document.createElement('span');
     limitCopy.className = 'model-management__label model-source-vault__connector-limit-copy';
-    limitCopy.textContent = 'Import limit';
+    limitCopy.textContent = getConnectorTerminology(record.service).importControlLabel;
 
     const inlineDropdown = document.createElement('span');
     inlineDropdown.className = 'ui-inline-dropdown model-source-vault__connector-limit-dropdown';
@@ -1184,9 +1442,9 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
     const limitSelect = document.createElement('select');
     limitSelect.className = 'ui-dropdown ui-dropdown--icon-only model-source-vault__connector-limit-select';
     limitSelect.dataset.modelSourceVaultConnectorImportLimit = record.service;
-    limitSelect.setAttribute('aria-label', `${record.label} import limit`);
+    limitSelect.setAttribute('aria-label', `${record.label} ${getConnectorTerminology(record.service).importControlLabel}`);
 
-    CONNECTOR_IMPORT_LIMIT_OPTIONS.forEach((optionRecord) => {
+    getConnectorImportControlOptions(record.service).forEach((optionRecord) => {
       const option = document.createElement('option');
       option.value = String(optionRecord.value);
       option.textContent = optionRecord.label;
@@ -1195,7 +1453,7 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
 
     const restoredControl = sourceVaultState.connectorImportControls.find((control) => control.service === record.service);
     if (restoredControl) limitSelect.value = String(restoredControl.importLimit || 0);
-    limitValue.textContent = getConnectorImportLimitLabel(Number.parseInt(limitSelect.value || '0', 10) || 0);
+    limitValue.textContent = getConnectorImportLimitLabel(Number.parseInt(limitSelect.value || '0', 10) || 0, record.service);
 
     iconWrapper.append(icon, limitSelect);
     inlineDropdown.append(limitValue, iconWrapper);
@@ -1297,7 +1555,12 @@ function hasSelectedSourceForAnalysis(root = mountedRoot) {
     return getSelectedFiles(root).length > 0;
   }
   if (SOURCE_TYPE_CONNECTORS[sourceType]) {
-    return getSelectedConnectorRecords(root, sourceType).length > 0;
+    const selectedConnectors = getSelectedConnectorRecords(root, sourceType);
+    const repositoryConnectors = selectedConnectors.filter((record) => usesRepositorySelection(record.service));
+    if (repositoryConnectors.length) {
+      return repositoryConnectors.some((record) => getSelectedConnectorRepositories(root, record.service).length > 0);
+    }
+    return selectedConnectors.length > 0;
   }
   return false;
 }
@@ -1715,7 +1978,7 @@ function syncSourceTypeUI(root = mountedRoot) {
     return;
   }
 
-  if (sourceType === 'repository_reference' && !isPermissionEnabled('repositoryReference')) {
+  if (sourceType === 'repository_reference' && !SOURCE_TYPE_CONNECTORS[sourceType] && !isPermissionEnabled('repositoryReference')) {
     setStatus(root, '');
     syncSourceVaultActions(root);
     return;
@@ -1723,6 +1986,7 @@ function syncSourceTypeUI(root = mountedRoot) {
 
   if (SOURCE_TYPE_CONNECTORS[sourceType]) {
     renderConnectorOptions(root, sourceType);
+    void hydrateSourceVaultConnectorStateFromBackend(root);
     const selectable = getSelectableConnectorRecords(sourceType);
     const authorizationRequired = getAuthorizationRequiredConnectorLabels(sourceType);
     if (selectable.length) {
@@ -2235,6 +2499,7 @@ function handleFileManagerSearchPointerDown(event) {
 
 export function mountModelSourceVault(root = document) {
   mountedRoot = root?.querySelector?.('[data-model-source-vault]') || root;
+  void hydrateSourceVaultConnectorStateFromBackend(mountedRoot);
   if (!(mountedRoot instanceof HTMLElement)) return null;
 
   mountFileManagerOverlay(mountedRoot);

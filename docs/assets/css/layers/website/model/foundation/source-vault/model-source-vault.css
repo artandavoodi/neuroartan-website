@@ -266,6 +266,73 @@
   font:inherit;
 }
 
+.model-source-vault__connector-repository-field{
+  align-items:flex-start;
+}
+
+.model-source-vault__connector-repository-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.model-source-vault__repository-list{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  inline-size:100%;
+}
+
+.model-source-vault__repository-option{
+  display:grid;
+  grid-template-columns:auto minmax(var(--spacing-none),1fr);
+  align-items:start;
+  column-gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  color:var(--text-primary-color);
+  cursor:pointer;
+}
+
+.model-source-vault__repository-option input{
+  inline-size:var(--spacing-md);
+  block-size:var(--spacing-md);
+  margin:var(--spacing-none);
+  accent-color:var(--text-primary-color);
+}
+
+.model-source-vault__repository-copy{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+}
+
+.model-source-vault__repository-title{
+  min-width:var(--spacing-none);
+  overflow:hidden;
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.model-source-vault__repository-meta{
+  min-width:var(--spacing-none);
+  overflow:hidden;
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 .model-source-vault__format-list{
   display:flex;
   flex-wrap:wrap;
@@ -646,5 +713,13 @@
 
   .model-source-vault__file-size{
     grid-column:2;
+  }
+
+  .model-source-vault__connector-repository-field{
+    align-items:stretch;
+  }
+
+  .model-source-vault__repository-option{
+    grid-template-columns:auto minmax(var(--spacing-none),1fr);
   }
 }

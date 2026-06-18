@@ -14,6 +14,11 @@ const PROVIDERS = {
     profileMethod: 'GET',
     profileId: 'id',
     profileHandle: 'login',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'Neuroartan-Connector-OAuth',
+    },
   },
   gitlab: {
     label: 'GitLab',
@@ -234,6 +239,7 @@ async function exchangeCodeForToken(provider: Record<string, unknown>, session: 
   }
 
   headers.Accept = 'application/json';
+  Object.assign(headers, provider.headers || {});
   return fetchJson(String(provider.tokenUrl), {
     method: 'POST',
     headers,
@@ -248,6 +254,7 @@ async function readProviderProfile(provider: Record<string, unknown>, accessToke
     headers: {
       Authorization: `Bearer ${accessToken}`,
       Accept: 'application/json',
+      ...(provider.headers || {}),
     },
   });
 }

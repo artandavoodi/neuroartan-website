@@ -660,12 +660,18 @@ function bindConnectorClicks(root) {
     }
   });
 
-  root.addEventListener('click', (event) => {
+  root.addEventListener('click', async (event) => {
     const item = event.target?.closest?.('[data-home-platform-connector-service]');
     if (!item || !root.contains(item)) return;
 
     const service = normalizeConnectorService(item.dataset.homePlatformConnectorService);
-    const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+    let currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+
+    if (currentState.runtime === 'oauth-required') {
+      await hydrateConnectorStateFromBackend(root);
+      currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+      updateConnectorStatus(root, service, currentState);
+    }
 
     if (currentState.connected) {
       openConnectorManagementDestination(root, service, currentState);

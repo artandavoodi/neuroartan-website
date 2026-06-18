@@ -115,7 +115,7 @@
       "id": "documentation",
       "label": "Documentation",
       "type": "resource",
-      "path": "/pages/software/docs/index.html",
+      "path": "https://docs.neuroartan.com",
       "keywords": [
         "documentation",
         "docs",

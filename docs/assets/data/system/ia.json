@@ -7,7 +7,7 @@
   "sections": [
     { "id": "home", "path": "/index.html" },
     { "id": "company", "path": "/pages/company/index.html" },
-    { "id": "brand", "path": "/pages/brand/index.html" },
+    { "id": "brand", "path": "https://brand.neuroartan.com" },
     { "id": "foundation", "path": "/pages/foundation/index.html" },
     { "id": "charter", "path": "/pages/charter/index.html" },
     { "id": "careers", "path": "/pages/careers/index.html" },
@@ -30,7 +30,7 @@
     { "id": "product_capabilities", "path": "/pages/products/capabilities/index.html" },
     { "id": "product_workflows", "path": "/pages/products/workflows/index.html" },
     { "id": "software_downloads", "path": "/pages/software/downloads/index.html" },
-    { "id": "software_docs", "path": "/pages/software/docs/index.html" },
+    { "id": "software_docs", "path": "https://docs.neuroartan.com" },
     { "id": "business", "path": "/pages/business/index.html" },
     { "id": "pricing", "path": "/pages/pricing/index.html" },
     { "id": "enterprise", "path": "/pages/business/enterprise/index.html" },

@@ -12,7 +12,7 @@
     {
       "id": "brand",
       "title": "Brand",
-      "path": "/pages/brand/index.html",
+      "path": "https://brand.neuroartan.com",
       "scope": "institutional",
       "keywords": ["brand", "identity", "aesthetic", "neuroartan"]
     },
@@ -103,7 +103,7 @@
     {
       "id": "software_docs",
       "title": "Documentation",
-      "path": "/pages/software/docs/index.html",
+      "path": "https://docs.neuroartan.com",
       "scope": "software",
       "keywords": ["documentation", "docs", "software", "guides"]
     },

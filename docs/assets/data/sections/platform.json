@@ -33,8 +33,8 @@
     {
       "id": "software_docs",
       "title": "Documentation",
-      "path": "/pages/software/docs/index.html",
-      "type": "page"
+      "path": "https://docs.neuroartan.com",
+      "type": "external"
     },
     {
       "id": "software_downloads",

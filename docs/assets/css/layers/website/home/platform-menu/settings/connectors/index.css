@@ -162,35 +162,46 @@
 
 
 .home-platform-theme__connector-management-status-title{
-  display:flex;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:max-content;
   align-items:center;
-  gap:var(--layout-home-platform-theme-toggle-row-gap);
+  justify-content:flex-start;
+  column-gap:var(--layout-home-platform-theme-toggle-row-gap);
   min-width:var(--spacing-none);
+  margin:var(--spacing-none);
+  line-height:1;
 }
 
 .home-platform-theme__connector-management-status-title > span:not(.home-platform-theme__connector-management-logo):not(.home-platform-theme__connector-management-status-dot){
-  display:inline-flex;
+  display:flex;
   align-items:center;
+  justify-content:center;
   min-width:var(--spacing-none);
+  height:var(--home-platform-shell-nav-icon-size);
+  line-height:1;
 }
 
 .home-platform-theme__connector-management-status-dot{
-  display:inline-block;
-  flex:0 0 auto;
+  display:block;
   width:var(--layout-home-platform-theme-section-header-gap);
   height:var(--layout-home-platform-theme-section-header-gap);
   border-radius:50%;
   background-color:var(--color-primary8);
+  align-self:center;
+  justify-self:center;
 }
 
 .home-platform-theme__connector-management-logo{
-  display:inline-flex;
+  display:flex;
   align-items:center;
   justify-content:center;
-  flex:0 0 auto;
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
+  min-width:var(--home-platform-shell-nav-icon-size);
   color:var(--text-color);
+  align-self:center;
+  justify-self:center;
 }
 
 .home-platform-theme__connector-management-logo img{
@@ -198,6 +209,7 @@
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
   object-fit:contain;
+  flex:0 0 auto;
 }
 
 .home-platform-theme__connector-management-source-summary,
@@ -206,8 +218,12 @@
   min-width:var(--spacing-none);
 }
 
+.home-platform-theme__connector-management-source-summary + .home-platform-theme__connector-management-source-summary,
 .home-platform-theme__connector-management-source-detail{
   margin-block-start:var(--layout-home-platform-theme-section-header-gap);
+}
+
+.home-platform-theme__connector-management-source-detail{
   color:var(--text-color-muted);
 }
 

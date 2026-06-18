@@ -152,6 +152,91 @@ const CONNECTOR_CATALOG = Object.freeze({
   },
 });
 
+const CONNECTOR_ICONS = Object.freeze({
+  github: '/registry/icons/public/assets/system/social/github.svg',
+  x: '/registry/icons/public/assets/system/social/x.svg',
+});
+
+const CONNECTOR_MANAGEMENT_LANGUAGE = Object.freeze({
+  default: {
+    connectedTitle: 'Connected',
+    disconnectedTitle: 'Not connected',
+    statusCopyConnected: 'Authorization is active. This connector can be refreshed or disconnected from this management view.',
+    statusCopyDisconnected: 'Authorization is not active. Return to connectors and authorize this source before use.',
+    accountHeading: 'Connected account',
+    sourceHeading: 'Source vault',
+    readyLabel: 'Ready',
+    notReadyLabel: 'Not ready',
+    receivedLabel: 'Received',
+    importedLabel: 'Imported',
+    existingLabel: 'Existing',
+    limitLabel: 'Limit',
+    allAvailableLabel: 'All available items',
+    noImportRecordLabel: 'No source import record has been received yet.',
+  },
+  x: {
+    connectedTitle: 'Connected',
+    disconnectedTitle: 'Not connected',
+    statusCopyConnected: 'Authorization is active. X posts can be refreshed or disconnected from this management view.',
+    statusCopyDisconnected: 'Authorization is not active. Return to connectors and authorize X before use.',
+    accountHeading: 'Connected profile',
+    sourceHeading: 'Post source vault',
+    readyLabel: 'Ready',
+    notReadyLabel: 'Not ready',
+    receivedLabel: 'Posts received',
+    importedLabel: 'Posts imported',
+    existingLabel: 'Existing posts',
+    limitLabel: 'Post limit',
+    allAvailableLabel: 'All available posts',
+    noImportRecordLabel: 'No X post import record has been received yet.',
+  },
+  github: {
+    connectedTitle: 'Connected',
+    disconnectedTitle: 'Not connected',
+    statusCopyConnected: 'Authorization is active. GitHub repositories can be refreshed or disconnected from this management view.',
+    statusCopyDisconnected: 'Authorization is not active. Return to connectors and authorize GitHub before repository intake.',
+    accountHeading: 'Connected account',
+    sourceHeading: 'Repository source vault',
+    readyLabel: 'Ready',
+    notReadyLabel: 'Not ready',
+    receivedLabel: 'Repositories discovered',
+    importedLabel: 'Repositories imported',
+    existingLabel: 'Existing repositories',
+    limitLabel: 'Repository selection',
+    allAvailableLabel: 'Selected repositories',
+    noImportRecordLabel: 'No GitHub repository import record has been received yet.',
+  },
+});
+
+function getConnectorManagementLanguage(service = '') {
+  const normalizedService = normalizeConnectorService(service);
+  return CONNECTOR_MANAGEMENT_LANGUAGE[normalizedService] || CONNECTOR_MANAGEMENT_LANGUAGE.default;
+}
+
+function createConnectorManagementLogo(service = '', label = '') {
+  const normalizedService = normalizeConnectorService(service);
+  const iconPath = CONNECTOR_ICONS[normalizedService];
+  const logo = document.createElement('span');
+  logo.className = 'home-platform-theme__connector-management-logo';
+  logo.setAttribute('aria-label', label || CONNECTOR_CATALOG[normalizedService]?.label || normalizedService);
+
+  if (!iconPath) {
+    logo.textContent = label || CONNECTOR_CATALOG[normalizedService]?.label || normalizedService;
+    return logo;
+  }
+
+  const image = document.createElement('img');
+  image.className = 'ui-icon-theme-aware';
+  image.src = iconPath;
+  image.alt = '';
+  image.width = 18;
+  image.height = 18;
+  image.setAttribute('aria-hidden', 'true');
+
+  logo.append(image);
+  return logo;
+}
+
 function normalizeConnectorState(service, state = {}) {
   const normalizedService = normalizeConnectorService(service);
   const catalog = CONNECTOR_CATALOG[normalizedService] || {};
@@ -282,8 +367,9 @@ function getConnectorImportLimit(root, service) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
-function getConnectorImportLimitLabel(limit = 0) {
-  return limit > 0 ? `${limit} posts` : 'All available posts';
+function getConnectorImportLimitLabel(limit = 0, service = '') {
+  const language = getConnectorManagementLanguage(service);
+  return limit > 0 ? `${limit.toLocaleString()} ${language.limitLabel.toLowerCase()}` : language.allAvailableLabel;
 }
 
 function formatConnectorDate(value = '') {
@@ -292,15 +378,47 @@ function formatConnectorDate(value = '') {
   return new Date(timestamp).toLocaleString();
 }
 
+function getConnectorSourceSummary(normalizedState, language) {
+  const metadata = normalizedState.metadata || {};
+  const sourceVaultReady = normalizedState.sourceVaultReady === true;
+  if (!sourceVaultReady) return `${language.notReadyLabel}.`;
+
+  const hasImportRecord = ['received_count', 'imported_count', 'existing_count', 'requested_post_limit'].some((key) => (
+    Object.prototype.hasOwnProperty.call(metadata, key)
+    && metadata[key] !== null
+    && metadata[key] !== ''
+    && Number.isFinite(Number(metadata[key]))
+  ));
+
+  if (!hasImportRecord) return `${language.readyLabel}. ${language.noImportRecordLabel}`;
+
+  const receivedCount = Number.isFinite(Number(metadata.received_count)) ? Number(metadata.received_count) : null;
+  const importedCount = Number.isFinite(Number(metadata.imported_count)) ? Number(metadata.imported_count) : null;
+  const existingCount = Number.isFinite(Number(metadata.existing_count)) ? Number(metadata.existing_count) : null;
+  const requestedPostLimit = Number.isFinite(Number(metadata.requested_post_limit)) ? Number(metadata.requested_post_limit) : 0;
+
+  const parts = [`${language.readyLabel}.`];
+  if (receivedCount !== null) parts.push(`${language.receivedLabel}: ${receivedCount}.`);
+  if (importedCount !== null) parts.push(`${language.importedLabel}: ${importedCount}.`);
+  if (existingCount !== null) parts.push(`${language.existingLabel}: ${existingCount}.`);
+  if (Object.prototype.hasOwnProperty.call(metadata, 'requested_post_limit')) {
+    parts.push(`${language.limitLabel}: ${getConnectorImportLimitLabel(requestedPostLimit, normalizedState.service)}.`);
+  }
+
+  return parts.join(' ');
+}
+
 function setConnectorStatusTitle(statusTitle, normalizedState) {
   if (!statusTitle) return;
 
+  const language = getConnectorManagementLanguage(normalizedState.service);
   statusTitle.textContent = '';
+  statusTitle.append(createConnectorManagementLogo(normalizedState.service, normalizedState.label));
 
   const label = document.createElement('span');
   label.textContent = normalizedState.connected
-    ? `${normalizedState.label} is connected`
-    : `${normalizedState.label} is not connected`;
+    ? language.connectedTitle
+    : language.disconnectedTitle;
 
   statusTitle.append(label);
 
@@ -361,23 +479,12 @@ function closeConnectorManagementDestination(root) {
 function openConnectorManagementDestination(root, service, state = {}) {
   const normalizedService = normalizeConnectorService(service);
   const normalizedState = normalizeConnectorState(normalizedService, state);
+  const language = getConnectorManagementLanguage(normalizedService);
   const { management } = getConnectorViews(root);
   if (!management) return;
 
   const providerHandle = normalizedState.metadata?.provider_account_handle || normalizedState.metadata?.providerAccountHandle || '';
   const connectedAt = normalizedState.metadata?.connected_at || normalizedState.metadata?.connectedAt || '';
-  const importedCount = Number.isFinite(Number(normalizedState.metadata?.imported_count))
-    ? Number(normalizedState.metadata.imported_count)
-    : 0;
-  const receivedCount = Number.isFinite(Number(normalizedState.metadata?.received_count))
-    ? Number(normalizedState.metadata.received_count)
-    : importedCount;
-  const existingCount = Number.isFinite(Number(normalizedState.metadata?.existing_count))
-    ? Number(normalizedState.metadata.existing_count)
-    : 0;
-  const requestedPostLimit = Number.isFinite(Number(normalizedState.metadata?.requested_post_limit))
-    ? Number(normalizedState.metadata.requested_post_limit)
-    : 0;
 
   root.dataset.connectorSettingsDetail = normalizedService;
   management.dataset.connectorService = normalizedService;
@@ -393,8 +500,8 @@ function openConnectorManagementDestination(root, service, state = {}) {
 
   if (statusCopy) {
     statusCopy.textContent = normalizedState.connected
-      ? 'Authorization is active. This connector can be refreshed or disconnected from this management view.'
-      : 'Authorization is not active. Return to connectors and authorize this source before use.';
+      ? language.statusCopyConnected
+      : language.statusCopyDisconnected;
   }
 
   if (account) {
@@ -406,9 +513,8 @@ function openConnectorManagementDestination(root, service, state = {}) {
     source.textContent = '';
 
     const summary = document.createElement('span');
-    summary.textContent = normalizedState.sourceVaultReady
-      ? `Ready. Received: ${receivedCount}. Imported: ${importedCount}. Existing: ${existingCount}. Limit: ${getConnectorImportLimitLabel(requestedPostLimit)}.`
-      : 'Not ready.';
+    summary.className = 'home-platform-theme__connector-management-source-summary';
+    summary.textContent = getConnectorSourceSummary(normalizedState, language);
     source.append(summary);
 
     if (connectedLabel) {
@@ -459,7 +565,7 @@ async function startXConnectorAuthorization(root, service) {
     metadata: {
       ...(currentState.metadata || {}),
       requested_import_limit: requestedImportLimit,
-      import_limit_label: getConnectorImportLimitLabel(requestedImportLimit),
+      import_limit_label: getConnectorImportLimitLabel(requestedImportLimit, normalizedService),
     },
   });
   updateConnectorStatus(root, normalizedService, authorizingState);

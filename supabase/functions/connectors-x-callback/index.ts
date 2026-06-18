@@ -259,7 +259,17 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
   const profileId = String(session.profile_id || '');
   const modelId = String(session.model_id || '');
   const xUserId = String(xUser.id || '');
-  if (!userId || !modelId || !xUserId) return { importedCount: 0, receivedCount: 0, existingCount: 0, skipped: true };
+  if (!userId || !modelId || !xUserId) {
+    return {
+      importedCount: 0,
+      receivedCount: 0,
+      existingCount: 0,
+      skipped: true,
+      importAttempted: false,
+      importCompleted: false,
+      importFailed: false,
+    };
+  }
 
   const sourceRegistryPayload = {
     user_id: userId,
@@ -323,6 +333,9 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
       receivedCount: 0,
       existingCount: 0,
       skipped: false,
+      importAttempted: true,
+      importCompleted: true,
+      importFailed: false,
       requestedPostLimit: postsPayload.requestedPostLimit,
       reachedRequestedLimit: postsPayload.reachedRequestedLimit,
       reachedApiEnd: postsPayload.reachedApiEnd,
@@ -432,6 +445,9 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
     receivedCount: posts.length,
     existingCount,
     skipped: false,
+    importAttempted: true,
+    importCompleted: true,
+    importFailed: false,
     requestedPostLimit: postsPayload.requestedPostLimit,
     reachedRequestedLimit: postsPayload.reachedRequestedLimit,
     reachedApiEnd: postsPayload.reachedApiEnd,
@@ -533,11 +549,22 @@ Deno.serve(async (req: Request) => {
       reachedRequestedLimit: false,
       reachedApiEnd: false,
       skipped: true,
+      importAttempted: false,
+      importCompleted: false,
+      importFailed: false,
+      importError: '',
     };
     try {
       importSummary = await importInitialPosts(supabase, session, connector?.id || null, xUser, accessToken);
     } catch (importError) {
       console.warn('[connectors-x-callback] Initial import failed.', importError);
+      importSummary = {
+        ...importSummary,
+        importAttempted: true,
+        importCompleted: false,
+        importFailed: true,
+        importError: importError instanceof Error ? importError.message : 'X_IMPORT_FAILED',
+      };
       await supabase
         .from('privacy_processing_ledger')
         .insert({
@@ -550,9 +577,35 @@ Deno.serve(async (req: Request) => {
           processor_type: 'internal',
           job_state: 'failed',
           error_message: importError instanceof Error ? importError.message : 'X_IMPORT_FAILED',
-          output_metadata: { provider: 'x' },
+          output_metadata: {
+            provider: 'x',
+            requested_post_limit: importSummary.requestedPostLimit,
+            import_attempted: importSummary.importAttempted,
+            import_completed: importSummary.importCompleted,
+            import_failed: importSummary.importFailed,
+          },
         });
     }
+
+    const importMetadata = importSummary.importCompleted
+      ? {
+        import_attempted: true,
+        import_completed: true,
+        import_failed: false,
+        imported_count: importSummary.importedCount,
+        received_count: importSummary.receivedCount,
+        existing_count: importSummary.existingCount,
+        requested_post_limit: importSummary.requestedPostLimit,
+        reached_requested_limit: importSummary.reachedRequestedLimit,
+        reached_api_end: importSummary.reachedApiEnd,
+      }
+      : {
+        import_attempted: importSummary.importAttempted,
+        import_completed: false,
+        import_failed: importSummary.importFailed,
+        requested_post_limit: importSummary.requestedPostLimit,
+        last_import_error: importSummary.importError || '',
+      };
 
     const connectedConnectorState = {
       user_id: session.user_id,
@@ -563,18 +616,13 @@ Deno.serve(async (req: Request) => {
       connector_category: 'social',
       runtime: 'oauth-required',
       connection_state: 'connected',
-      source_vault_ready: true,
+      source_vault_ready: importSummary.importCompleted === true,
       metadata: {
         provider: 'x',
         provider_account_id: xUser.id,
         provider_account_handle: xUser.username || '',
         scopes: session.requested_scopes || [],
-        imported_count: importSummary.importedCount,
-        received_count: importSummary.receivedCount,
-        existing_count: importSummary.existingCount,
-        requested_post_limit: importSummary.requestedPostLimit,
-        reached_requested_limit: importSummary.reachedRequestedLimit,
-        reached_api_end: importSummary.reachedApiEnd,
+        ...importMetadata,
         connected_at: new Date().toISOString(),
       },
     };

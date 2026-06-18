@@ -161,6 +161,56 @@
 }
 
 
+.home-platform-theme__connector-management-status-title{
+  display:flex;
+  align-items:center;
+  gap:var(--layout-home-platform-theme-toggle-row-gap);
+  min-width:var(--spacing-none);
+}
+
+.home-platform-theme__connector-management-status-title > span:not(.home-platform-theme__connector-management-logo):not(.home-platform-theme__connector-management-status-dot){
+  display:inline-flex;
+  align-items:center;
+  min-width:var(--spacing-none);
+}
+
+.home-platform-theme__connector-management-status-dot{
+  display:inline-block;
+  flex:0 0 auto;
+  width:var(--layout-home-platform-theme-section-header-gap);
+  height:var(--layout-home-platform-theme-section-header-gap);
+  border-radius:50%;
+  background-color:var(--color-primary8);
+}
+
+.home-platform-theme__connector-management-logo{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  color:var(--text-color);
+}
+
+.home-platform-theme__connector-management-logo img{
+  display:block;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  object-fit:contain;
+}
+
+.home-platform-theme__connector-management-source-summary,
+.home-platform-theme__connector-management-source-detail{
+  display:block;
+  min-width:var(--spacing-none);
+}
+
+.home-platform-theme__connector-management-source-detail{
+  margin-block-start:var(--layout-home-platform-theme-section-header-gap);
+  color:var(--text-color-muted);
+}
+
 .home-platform-theme__connector-management-action-main{
   display:flex;
   align-items:center;

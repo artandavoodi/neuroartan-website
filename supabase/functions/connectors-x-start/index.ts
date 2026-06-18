@@ -1,3 +1,5 @@
+// @ts-nocheck
+/// <reference path="../types.d.ts" />
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const X_AUTHORIZATION_URL = 'https://x.com/i/oauth2/authorize';
@@ -62,7 +64,34 @@ function getBearerToken(req: Request) {
   return match?.[1] || '';
 }
 
-Deno.serve(async (req) => {
+async function readRequestJson(req: Request) {
+  try {
+    return await req.json();
+  } catch (_) {
+    return {};
+  }
+}
+
+function readRequestedImportLimit(payload: Record<string, unknown>) {
+  const rawValue = payload.requested_import_limit
+    ?? payload.import_limit
+    ?? payload.post_limit
+    ?? payload.limit
+    ?? 0;
+
+  const parsed = Number.parseInt(String(rawValue || '0'), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function buildConnectorSessionMetadata(requestedImportLimit: number) {
+  return {
+    import_control: 'user_selected_or_unlimited',
+    requested_import_limit: requestedImportLimit,
+    import_limit_label: requestedImportLimit > 0 ? String(requestedImportLimit) : 'all_available',
+  };
+}
+
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
@@ -74,6 +103,10 @@ Deno.serve(async (req) => {
   try {
     const token = getBearerToken(req);
     if (!token) return jsonResponse({ error: 'AUTH_REQUIRED' }, 401);
+
+    const requestPayload = await readRequestJson(req);
+    const requestedImportLimit = readRequestedImportLimit(requestPayload as Record<string, unknown>);
+    const connectorSessionMetadata = buildConnectorSessionMetadata(requestedImportLimit);
 
     const supabaseUrl = requiredEnv('SUPABASE_URL');
     const clientId = requiredEnv('X_CLIENT_ID');
@@ -109,6 +142,16 @@ Deno.serve(async (req) => {
     const codeVerifier = randomUrlToken(64);
     const codeChallenge = await createCodeChallenge(codeVerifier);
 
+    await supabase
+      .from('connector_oauth_sessions')
+      .update({
+        session_status: 'expired',
+        error_message: 'REPLACED_BY_NEW_AUTHORIZATION_ATTEMPT',
+      })
+      .eq('user_id', userId)
+      .eq('connector_service', 'x')
+      .in('session_status', ['pending', 'failed']);
+
     const { error: sessionError } = await supabase
       .from('connector_oauth_sessions')
       .insert({
@@ -120,6 +163,7 @@ Deno.serve(async (req) => {
         code_verifier: codeVerifier,
         redirect_uri: redirectUri,
         requested_scopes: X_SCOPES,
+        metadata: connectorSessionMetadata,
       });
 
     if (sessionError) throw sessionError;
@@ -138,6 +182,8 @@ Deno.serve(async (req) => {
         source_vault_ready: false,
         metadata: {
           scopes: X_SCOPES,
+          requested_import_limit: requestedImportLimit,
+          import_limit_label: connectorSessionMetadata.import_limit_label,
           started_at: new Date().toISOString(),
         },
       }, { onConflict: 'user_id,connector_service' });
@@ -151,9 +197,17 @@ Deno.serve(async (req) => {
     authorizationUrl.searchParams.set('code_challenge', codeChallenge);
     authorizationUrl.searchParams.set('code_challenge_method', 'S256');
 
-    return jsonResponse({ authorizationUrl: authorizationUrl.toString() });
+    return jsonResponse({
+      authorizationUrl: authorizationUrl.toString(),
+      requestedImportLimit,
+      importLimitLabel: connectorSessionMetadata.import_limit_label,
+    });
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'X_CONNECTOR_START_FAILED';
     console.error('[connectors-x-start]', error);
-    return jsonResponse({ error: 'X_CONNECTOR_START_FAILED' }, 500);
+    return jsonResponse({
+      error: 'X_CONNECTOR_START_FAILED',
+      detail: errorMessage,
+    }, 500);
   }
 });

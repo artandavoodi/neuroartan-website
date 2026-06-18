@@ -120,11 +120,23 @@
   background-color:var(--color-primary7);
 }
 
+
 .home-platform-theme__connector-status[data-home-platform-connector-status="not-connected"]::before{
   background-color:var(--color-primary7);
 }
 
+.home-platform-theme__connector-status[data-home-platform-connector-status="error"]::before,
+.home-platform-theme__connector-status[data-home-platform-connector-status="authorizing"]::before{
+  background-color:var(--color-primary7);
+}
+
+
 .home-platform-theme__connector-status[data-home-platform-connector-status="connected"]::before{
+  background-color:var(--color-primary8);
+}
+
+.home-platform-theme__connector-item[data-connector-connection-state="connected"] .home-platform-theme__connector-status::before,
+.home-platform-theme__connector-item[data-connector-connected="true"] .home-platform-theme__connector-status::before{
   background-color:var(--color-primary8);
 }
 
@@ -146,4 +158,74 @@
 .home-platform-theme__connector-item[data-connector-connected="true"] .home-platform-theme__connector-status{
   color:var(--text-color);
   opacity:var(--state-opacity-high);
+}
+
+
+.home-platform-theme__connector-management-action-main{
+  display:flex;
+  align-items:center;
+  gap:var(--layout-home-platform-theme-toggle-row-gap);
+}
+
+.home-platform-theme__connector-management-action-icon{
+  flex:0 0 auto;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:var(--home-platform-shell-nav-opacity);
+}
+
+.home-platform-theme__connector-management-action-icon img{
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+}
+
+.home-platform-theme__connector-management-action:not(.home-platform-theme__connector-management-action--destructive):hover .home-platform-theme__connector-management-action-icon,
+.home-platform-theme__connector-management-action:not(.home-platform-theme__connector-management-action--destructive):focus-visible .home-platform-theme__connector-management-action-icon{
+  opacity:var(--home-platform-shell-nav-hover-opacity);
+}
+
+.home-platform-theme__connector-management-action--destructive,
+.home-platform-theme__connector-management-action--destructive:hover,
+.home-platform-theme__connector-management-action--destructive:focus-visible{
+  background:var(--feedback-static-error-action-bg);
+  border-color:var(--feedback-static-error-action-border-color);
+  box-shadow:var(--feedback-static-error-action-shadow);
+  transform:var(--feedback-static-error-action-transform);
+  opacity:var(--feedback-static-error-action-opacity);
+  color:var(--feedback-static-error-action-color);
+}
+
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__connector-management-action-main,
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__action-title,
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__connector-management-action-icon,
+.home-platform-theme__connector-management-action--destructive:hover .home-platform-theme__connector-management-action-main,
+.home-platform-theme__connector-management-action--destructive:hover .home-platform-theme__action-title,
+.home-platform-theme__connector-management-action--destructive:hover .home-platform-theme__connector-management-action-icon,
+.home-platform-theme__connector-management-action--destructive:focus-visible .home-platform-theme__connector-management-action-main,
+.home-platform-theme__connector-management-action--destructive:focus-visible .home-platform-theme__action-title,
+.home-platform-theme__connector-management-action--destructive:focus-visible .home-platform-theme__connector-management-action-icon{
+  opacity:var(--feedback-static-error-action-opacity);
+  color:var(--feedback-static-error-action-color);
+}
+
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__connector-management-action-icon{
+  color:var(--feedback-static-error-action-icon-color);
+}
+
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__connector-management-action-icon img{
+  opacity:0;
+}
+
+.home-platform-theme__connector-management-action--destructive .home-platform-theme__connector-management-action-icon::before{
+  content:'';
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  display:block;
+  opacity:var(--feedback-static-error-action-icon-opacity);
+  background-color:var(--feedback-static-error-action-icon-color);
+  -webkit-mask:url('/registry/icons/public/assets/layers/website/home/developer-mode/actions/disconnect.svg') center / contain no-repeat;
+  mask:url('/registry/icons/public/assets/layers/website/home/developer-mode/actions/disconnect.svg') center / contain no-repeat;
 }

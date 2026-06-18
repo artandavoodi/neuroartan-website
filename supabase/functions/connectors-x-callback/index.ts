@@ -1,3 +1,5 @@
+// @ts-nocheck
+/// <reference path="../types.d.ts" />
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const X_TOKEN_URL = 'https://api.x.com/2/oauth2/token';
@@ -49,6 +51,29 @@ function readServiceRoleKey() {
 
 function siteUrl() {
   return Deno.env.get('NEUROARTAN_SITE_URL') || 'http://localhost:8891';
+}
+
+function readPositiveIntegerEnv(name: string, fallback = 0) {
+  const rawValue = Deno.env.get(name);
+  if (!rawValue) return fallback;
+
+  const parsed = Number.parseInt(rawValue, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+function readRequestedImportLimit(session: Record<string, unknown>) {
+  const metadata = typeof session.metadata === 'object' && session.metadata !== null
+    ? session.metadata as Record<string, unknown>
+    : {};
+
+  const rawValue = session.requested_import_limit
+    ?? metadata.requested_import_limit
+    ?? metadata.import_limit
+    ?? metadata.post_limit
+    ?? 0;
+
+  const parsed = Number.parseInt(String(rawValue || '0'), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
 function redirect(status: string) {
@@ -130,16 +155,53 @@ async function readXProfile(accessToken: string) {
   });
 }
 
-async function readInitialPosts(accessToken: string, xUserId: string) {
+async function readInitialPosts(accessToken: string, xUserId: string, paginationToken = '') {
   const url = new URL(`https://api.x.com/2/users/${encodeURIComponent(xUserId)}/tweets`);
-  url.searchParams.set('max_results', '20');
+  url.searchParams.set('max_results', '100');
   url.searchParams.set('tweet.fields', X_TWEET_FIELDS);
-  url.searchParams.set('exclude', 'retweets,replies');
+  if (paginationToken) url.searchParams.set('pagination_token', paginationToken);
   return fetchJson(url.toString(), {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+}
+
+async function readInitialPostPages(accessToken: string, xUserId: string, requestedPostLimit = 0) {
+  const posts: Array<Record<string, unknown>> = [];
+  const pages: Array<Record<string, unknown>> = [];
+  let nextToken = '';
+  let reachedRequestedLimit = false;
+  const pageLimit = readPositiveIntegerEnv('CONNECTOR_X_IMPORT_PAGE_LIMIT', 0);
+
+  for (let pageIndex = 0; pageLimit === 0 || pageIndex < pageLimit; pageIndex += 1) {
+    const payload = await readInitialPosts(accessToken, xUserId, nextToken);
+    pages.push(payload?.meta || {});
+
+    if (Array.isArray(payload?.data)) {
+      for (const post of payload.data) {
+        if (requestedPostLimit > 0 && posts.length >= requestedPostLimit) {
+          reachedRequestedLimit = true;
+          break;
+        }
+        posts.push(post);
+      }
+    }
+
+    if (reachedRequestedLimit) break;
+
+    nextToken = String(payload?.meta?.next_token || '');
+    if (!nextToken) break;
+  }
+
+  return {
+    posts,
+    pages,
+    receivedCount: posts.length,
+    requestedPostLimit,
+    reachedRequestedLimit,
+    reachedApiEnd: !nextToken && !reachedRequestedLimit,
+  };
 }
 
 async function upsertSourceConnector(supabase: ReturnType<typeof createClient>, session: Record<string, unknown>, xUser: Record<string, unknown>, tokenReference: string | null) {
@@ -197,7 +259,7 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
   const profileId = String(session.profile_id || '');
   const modelId = String(session.model_id || '');
   const xUserId = String(xUser.id || '');
-  if (!userId || !modelId || !xUserId) return { importedCount: 0, skipped: true };
+  if (!userId || !modelId || !xUserId) return { importedCount: 0, receivedCount: 0, existingCount: 0, skipped: true };
 
   const sourceRegistryPayload = {
     user_id: userId,
@@ -225,9 +287,47 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
     .maybeSingle();
   if (sourceRegistryError) throw sourceRegistryError;
 
-  const postsPayload = await readInitialPosts(accessToken, xUserId);
-  const posts = Array.isArray(postsPayload?.data) ? postsPayload.data : [];
-  if (!posts.length) return { importedCount: 0, skipped: false };
+  const requestedPostLimit = readRequestedImportLimit(session);
+  const postsPayload = await readInitialPostPages(accessToken, xUserId, requestedPostLimit);
+  const posts = postsPayload.posts;
+  if (!posts.length) {
+    await supabase
+      .from('privacy_processing_ledger')
+      .insert({
+        user_id: userId,
+        profile_id: profileId || null,
+        model_id: modelId,
+        source_id: sourceRegistry?.id || null,
+        processing_type: 'cloud_parse',
+        processing_purpose: 'x_connector_initial_import',
+        processor_name: 'neuroartan_x_connector',
+        processor_type: 'internal',
+        job_state: 'completed',
+        started_at: new Date().toISOString(),
+        completed_at: new Date().toISOString(),
+        output_metadata: {
+          provider: 'x',
+          imported_count: 0,
+          received_count: 0,
+          existing_count: 0,
+          page_count: postsPayload.pages.length,
+          pages: postsPayload.pages,
+          requested_post_limit: postsPayload.requestedPostLimit,
+          reached_requested_limit: postsPayload.reachedRequestedLimit,
+          reached_api_end: postsPayload.reachedApiEnd,
+        },
+      });
+
+    return {
+      importedCount: 0,
+      receivedCount: 0,
+      existingCount: 0,
+      skipped: false,
+      requestedPostLimit: postsPayload.requestedPostLimit,
+      reachedRequestedLimit: postsPayload.reachedRequestedLimit,
+      reachedApiEnd: postsPayload.reachedApiEnd,
+    };
+  }
 
   const references = posts.map((post: Record<string, unknown>) => `x:tweet:${String(post.id || '')}`).filter(Boolean);
   const { data: existingRows } = await supabase
@@ -237,6 +337,7 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
     .in('source_reference', references);
 
   const existingReferences = new Set((Array.isArray(existingRows) ? existingRows : []).map((row) => row.source_reference));
+  const existingCount = existingReferences.size;
   const sourceObjects = posts
     .filter((post: Record<string, unknown>) => !existingReferences.has(`x:tweet:${String(post.id || '')}`))
     .map((post: Record<string, unknown>) => ({
@@ -288,6 +389,12 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
         provider: 'x',
         imported_count: insertedSourceObjects.length,
         received_count: posts.length,
+        existing_count: existingCount,
+        page_count: postsPayload.pages.length,
+        pages: postsPayload.pages,
+        requested_post_limit: postsPayload.requestedPostLimit,
+        reached_requested_limit: postsPayload.reachedRequestedLimit,
+        reached_api_end: postsPayload.reachedApiEnd,
       },
     });
 
@@ -320,10 +427,18 @@ async function importInitialPosts(supabase: ReturnType<typeof createClient>, ses
       })));
   }
 
-  return { importedCount: insertedSourceObjects.length, skipped: false };
+  return {
+    importedCount: insertedSourceObjects.length,
+    receivedCount: posts.length,
+    existingCount,
+    skipped: false,
+    requestedPostLimit: postsPayload.requestedPostLimit,
+    reachedRequestedLimit: postsPayload.reachedRequestedLimit,
+    reachedApiEnd: postsPayload.reachedApiEnd,
+  };
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   const requestUrl = new URL(req.url);
   const code = requestUrl.searchParams.get('code') || '';
   const state = requestUrl.searchParams.get('state') || '';
@@ -410,7 +525,15 @@ Deno.serve(async (req) => {
         .eq('id', tokenVault.id);
     }
 
-    let importSummary = { importedCount: 0, skipped: true };
+    let importSummary = {
+      importedCount: 0,
+      receivedCount: 0,
+      existingCount: 0,
+      requestedPostLimit: readRequestedImportLimit(session),
+      reachedRequestedLimit: false,
+      reachedApiEnd: false,
+      skipped: true,
+    };
     try {
       importSummary = await importInitialPosts(supabase, session, connector?.id || null, xUser, accessToken);
     } catch (importError) {
@@ -431,27 +554,47 @@ Deno.serve(async (req) => {
         });
     }
 
-    await supabase
+    const connectedConnectorState = {
+      user_id: session.user_id,
+      profile_id: session.profile_id,
+      model_id: session.model_id,
+      connector_service: 'x',
+      connector_label: 'X',
+      connector_category: 'social',
+      runtime: 'oauth-required',
+      connection_state: 'connected',
+      source_vault_ready: true,
+      metadata: {
+        provider: 'x',
+        provider_account_id: xUser.id,
+        provider_account_handle: xUser.username || '',
+        scopes: session.requested_scopes || [],
+        imported_count: importSummary.importedCount,
+        received_count: importSummary.receivedCount,
+        existing_count: importSummary.existingCount,
+        requested_post_limit: importSummary.requestedPostLimit,
+        reached_requested_limit: importSummary.reachedRequestedLimit,
+        reached_api_end: importSummary.reachedApiEnd,
+        connected_at: new Date().toISOString(),
+      },
+    };
+
+    const { data: updatedConnectedState, error: connectedStateUpdateError } = await supabase
       .from('privacy_connector_state')
-      .upsert({
-        user_id: session.user_id,
-        profile_id: session.profile_id,
-        model_id: session.model_id,
-        connector_service: 'x',
-        connector_label: 'X',
-        connector_category: 'social',
-        runtime: 'oauth-required',
-        connection_state: 'connected',
-        source_vault_ready: true,
-        metadata: {
-          provider: 'x',
-          provider_account_id: xUser.id,
-          provider_account_handle: xUser.username || '',
-          scopes: session.requested_scopes || [],
-          imported_count: importSummary.importedCount,
-          connected_at: new Date().toISOString(),
-        },
-      }, { onConflict: 'user_id,connector_service' });
+      .update(connectedConnectorState)
+      .eq('user_id', session.user_id)
+      .eq('connector_service', 'x')
+      .select('id')
+      .maybeSingle();
+
+    if (connectedStateUpdateError) throw connectedStateUpdateError;
+
+    if (!updatedConnectedState?.id) {
+      const { error: connectedStateInsertError } = await supabase
+        .from('privacy_connector_state')
+        .insert(connectedConnectorState);
+      if (connectedStateInsertError) throw connectedStateInsertError;
+    }
 
     await supabase
       .from('connector_oauth_sessions')
@@ -464,13 +607,69 @@ Deno.serve(async (req) => {
     return redirect('connected');
   } catch (error) {
     console.error('[connectors-x-callback]', error);
+
+    const errorMessage = error instanceof Error ? error.message : 'X_CONNECTOR_CALLBACK_FAILED';
+    const errorPayload = typeof error === 'object' && error && 'payload' in error
+      ? (error as Record<string, unknown>).payload
+      : null;
+
+    const { data: failedSession } = await supabase
+      .from('connector_oauth_sessions')
+      .select('id, user_id, profile_id, model_id, connector_service, requested_scopes')
+      .eq('oauth_state', state)
+      .maybeSingle();
+
     await supabase
       .from('connector_oauth_sessions')
       .update({
         session_status: 'failed',
-        error_message: error instanceof Error ? error.message : 'X_CONNECTOR_CALLBACK_FAILED',
+        error_message: errorMessage,
       })
       .eq('oauth_state', state);
+
+    if (failedSession?.user_id) {
+      const failedConnectorState = {
+        user_id: failedSession.user_id,
+        profile_id: failedSession.profile_id,
+        model_id: failedSession.model_id,
+        connector_service: 'x',
+        connector_label: 'X',
+        connector_category: 'social',
+        runtime: 'oauth-required',
+        connection_state: 'error',
+        source_vault_ready: false,
+        metadata: {
+          provider: 'x',
+          scopes: failedSession.requested_scopes || [],
+          last_error: errorMessage,
+          upstream_payload: errorPayload,
+          failed_at: new Date().toISOString(),
+        },
+      };
+
+      const { data: updatedFailedState, error: failedStateUpdateError } = await supabase
+        .from('privacy_connector_state')
+        .update(failedConnectorState)
+        .eq('user_id', failedSession.user_id)
+        .eq('connector_service', 'x')
+        .select('id')
+        .maybeSingle();
+
+      if (failedStateUpdateError) {
+        console.error('[connectors-x-callback] Failed to update connector error state.', failedStateUpdateError);
+      }
+
+      if (!updatedFailedState?.id) {
+        const { error: failedStateInsertError } = await supabase
+          .from('privacy_connector_state')
+          .insert(failedConnectorState);
+
+        if (failedStateInsertError) {
+          console.error('[connectors-x-callback] Failed to insert connector error state.', failedStateInsertError);
+        }
+      }
+    }
+
     return redirect('error');
   }
 });

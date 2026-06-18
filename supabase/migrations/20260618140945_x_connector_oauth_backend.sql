@@ -68,6 +68,7 @@ create table if not exists public.connector_oauth_sessions (
   code_verifier text not null,
   redirect_uri text not null,
   requested_scopes text[] not null default '{}'::text[],
+  metadata jsonb not null default '{}'::jsonb,
   session_status text not null default 'pending',
   error_message text,
   expires_at timestamptz not null default timezone('utc', now()) + interval '15 minutes',
@@ -75,6 +76,13 @@ create table if not exists public.connector_oauth_sessions (
   created_at timestamptz not null default timezone('utc', now()),
   updated_at timestamptz not null default timezone('utc', now())
 );
+
+alter table public.connector_oauth_sessions
+  add column if not exists profile_id uuid references public.profiles(id) on delete cascade,
+  add column if not exists model_id uuid references public.models(id) on delete cascade,
+  add column if not exists metadata jsonb not null default '{}'::jsonb,
+  add column if not exists completed_at timestamptz,
+  add column if not exists updated_at timestamptz not null default timezone('utc', now());
 
 create table if not exists public.connector_token_vault (
   id uuid primary key default gen_random_uuid(),
@@ -152,6 +160,49 @@ create policy privacy_connector_state_owner_update
 drop policy if exists privacy_connector_state_owner_delete on public.privacy_connector_state;
 create policy privacy_connector_state_owner_delete
   on public.privacy_connector_state for delete
+  using (auth.uid() = user_id);
+
+
+drop policy if exists connector_oauth_sessions_owner_select on public.connector_oauth_sessions;
+create policy connector_oauth_sessions_owner_select
+  on public.connector_oauth_sessions for select
+  using (auth.uid() = user_id);
+
+drop policy if exists connector_oauth_sessions_owner_insert on public.connector_oauth_sessions;
+create policy connector_oauth_sessions_owner_insert
+  on public.connector_oauth_sessions for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists connector_oauth_sessions_owner_update on public.connector_oauth_sessions;
+create policy connector_oauth_sessions_owner_update
+  on public.connector_oauth_sessions for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists connector_oauth_sessions_owner_delete on public.connector_oauth_sessions;
+create policy connector_oauth_sessions_owner_delete
+  on public.connector_oauth_sessions for delete
+  using (auth.uid() = user_id);
+
+drop policy if exists connector_token_vault_owner_select on public.connector_token_vault;
+create policy connector_token_vault_owner_select
+  on public.connector_token_vault for select
+  using (auth.uid() = user_id);
+
+drop policy if exists connector_token_vault_owner_insert on public.connector_token_vault;
+create policy connector_token_vault_owner_insert
+  on public.connector_token_vault for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists connector_token_vault_owner_update on public.connector_token_vault;
+create policy connector_token_vault_owner_update
+  on public.connector_token_vault for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists connector_token_vault_owner_delete on public.connector_token_vault;
+create policy connector_token_vault_owner_delete
+  on public.connector_token_vault for delete
   using (auth.uid() = user_id);
 
 commit;

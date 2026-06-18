@@ -990,6 +990,8 @@ function updateHomePlatformMountedContent(snapshot = HOME_PLATFORM_SHELL_STATE.s
     requestMicrophoneInteraction,
     setDestination: setHomePlatformDestination,
     setSubdestination: setHomePlatformSubdestination,
+    setHomePlatformDetailBackState,
+    setDetailBackState: setHomePlatformDetailBackState,
   });
 
   return true;
@@ -1171,6 +1173,8 @@ async function renderHomePlatformShellContent(destination, subdestination) {
         requestMicrophoneInteraction,
         setDestination: setHomePlatformDestination,
         setSubdestination: setHomePlatformSubdestination,
+        setHomePlatformDetailBackState,
+        setDetailBackState: setHomePlatformDetailBackState,
       });
 
       HOME_PLATFORM_SHELL_STATE.mountedCleanup = typeof cleanup === 'function'

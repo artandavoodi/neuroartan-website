@@ -322,6 +322,43 @@
     }));
   }
 
+  // ---------------------------------------------------------------------------
+  // Auth Bridge and Session Helpers
+  // ---------------------------------------------------------------------------
+
+  async function getCurrentSupabaseSession() {
+    const supabase = getSupabaseClient();
+    if (!supabase?.auth) return null;
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) return null;
+      return data?.session || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function requireSupabaseSession() {
+    const session = await getCurrentSupabaseSession();
+    if (session?.access_token && session?.user) return session;
+
+    return null;
+  }
+
+  function exposeAuthBridge() {
+    const supabase = getSupabaseClient();
+
+    window.NeuroartanAuth = Object.freeze({
+      client: supabase,
+      getClient: getSupabaseClient,
+      getSession: getCurrentSupabaseSession,
+      requireSession: requireSupabaseSession,
+      loginWithGoogle: requestGoogleLogin,
+      logout: requestLogout
+    });
+  }
+
   /* =============================================================================
      15) PROFILE STATE EVENTS
   ============================================================================= */
@@ -371,6 +408,7 @@
     bindSupabaseReadyEvents();
     bindProfileStateEvents();
     bindAuthState();
+    exposeAuthBridge();
     window.logout = requestLogout;
     window.loginWithGoogle = requestGoogleLogin;
   }

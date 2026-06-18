@@ -9,6 +9,56 @@ import {
 
 const CONNECTOR_STORAGE_KEY = 'neuroartan.connector-states';
 
+let connectorShellApi = null;
+
+function setConnectorDetailBackState(active = false, label = '') {
+  const detailState = {
+    active: active === true,
+    label,
+  };
+
+  if (connectorShellApi?.setHomePlatformDetailBackState) {
+    connectorShellApi.setHomePlatformDetailBackState(detailState.active, detailState.label);
+    return;
+  }
+
+  if (connectorShellApi?.setDetailBackState) {
+    connectorShellApi.setDetailBackState(detailState.active, detailState.label);
+    return;
+  }
+
+  document.dispatchEvent(new CustomEvent('home:platform-shell-detail-state-changed', {
+    detail: detailState,
+  }));
+}
+
+function getConnectorViews(root) {
+  return {
+    overview: root.querySelector('[data-connector-settings-view="overview"]'),
+    management: root.querySelector('[data-connector-settings-view="management"]'),
+  };
+}
+
+function setConnectorActiveView(root, viewName = 'overview') {
+  const normalizedView = viewName === 'management' ? 'management' : 'overview';
+  root.querySelectorAll('[data-connector-settings-view]').forEach((view) => {
+    view.hidden = view.getAttribute('data-connector-settings-view') !== normalizedView;
+  });
+
+  if (normalizedView === 'management') {
+    root.dataset.connectorSettingsDetail = 'management';
+    setConnectorDetailBackState(true, 'Back to connectors');
+    return;
+  }
+
+  delete root.dataset.connectorSettingsDetail;
+  setConnectorDetailBackState(false);
+}
+
+function normalizeConnectorService(service) {
+  return String(service || '').trim().toLowerCase();
+}
+
 const CONNECTOR_CATALOG = Object.freeze({
   github: {
     label: 'GitHub',
@@ -103,20 +153,27 @@ const CONNECTOR_CATALOG = Object.freeze({
 });
 
 function normalizeConnectorState(service, state = {}) {
-  const catalog = CONNECTOR_CATALOG[service] || {};
+  const normalizedService = normalizeConnectorService(service);
+  const catalog = CONNECTOR_CATALOG[normalizedService] || {};
   const legacyConnected = typeof state === 'boolean' ? state : state.connected === true;
-  const requestedState = state.connectionState || (legacyConnected ? 'authorization-required' : 'not-connected');
+  const requestedState = state.connectionState
+    || state.connection_state
+    || (legacyConnected ? 'connected' : 'not-connected');
   const connectionState = requestedState;
+  const sourceVaultReady = state.sourceVaultReady
+    ?? state.source_vault_ready
+    ?? catalog.sourceVaultReady;
 
   return {
-    service,
-    label: state.label || catalog.label || service,
-    category: state.category || catalog.category || 'general',
+    service: normalizedService,
+    label: state.label || state.connector_label || catalog.label || normalizedService,
+    category: state.category || state.connector_category || catalog.category || 'general',
     runtime: state.runtime || catalog.runtime || 'not-configured',
-    sourceVaultReady: Boolean(state.sourceVaultReady ?? catalog.sourceVaultReady),
+    sourceVaultReady: Boolean(sourceVaultReady),
     connectionState,
     connected: connectionState === 'connected',
-    updatedAt: state.updatedAt || '',
+    metadata: state.metadata && typeof state.metadata === 'object' ? state.metadata : {},
+    updatedAt: state.updatedAt || state.updated_at || '',
   };
 }
 
@@ -154,15 +211,18 @@ async function persistConnectorState(service, state = {}) {
   }
 }
 
-function writeConnectorStateEverywhere(service, state = {}) {
+function writeConnectorStateEverywhere(service, state = {}, options = {}) {
+  const normalizedService = normalizeConnectorService(service);
   const states = getConnectorStates();
-  states[service] = normalizeConnectorState(service, {
+  states[normalizedService] = normalizeConnectorState(normalizedService, {
     ...state,
     updatedAt: new Date().toISOString(),
   });
   writeConnectorStates(states);
-  void persistConnectorState(service, states[service]);
-  return states[service];
+  if (options.persist !== false) {
+    void persistConnectorState(normalizedService, states[normalizedService]);
+  }
+  return states[normalizedService];
 }
 
 function getConnectorUpdatedAt(state = {}) {
@@ -180,10 +240,7 @@ async function hydrateConnectorStateFromBackend(root) {
 
     Object.entries(backendState).forEach(([service, backendRecord]) => {
       const normalizedBackend = normalizeConnectorState(service, backendRecord || {});
-      const localRecord = normalizeConnectorState(service, current[service] || {});
-      next[service] = getConnectorUpdatedAt(localRecord) >= getConnectorUpdatedAt(normalizedBackend)
-        ? localRecord
-        : normalizedBackend;
+      next[service] = normalizedBackend;
     });
 
     writeConnectorStates(next);
@@ -194,8 +251,9 @@ async function hydrateConnectorStateFromBackend(root) {
 }
 
 function setConnectorState(service, connectionState) {
-  const current = normalizeConnectorState(service, getConnectorStates()[service]);
-  return writeConnectorStateEverywhere(service, {
+  const normalizedService = normalizeConnectorService(service);
+  const current = normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
+  return writeConnectorStateEverywhere(normalizedService, {
     ...current,
     connectionState,
   });
@@ -215,21 +273,208 @@ function getConnectorStatusLabel(state = {}) {
   return 'Not connected';
 }
 
+function getConnectorImportLimit(root, service) {
+  const normalizedService = normalizeConnectorService(service);
+  const scopedControl = root.querySelector(`[data-home-platform-connector-import-limit][data-connector-service="${normalizedService}"]`)
+    || root.querySelector('[data-home-platform-connector-import-limit]');
+  const rawValue = scopedControl?.value || scopedControl?.dataset?.value || '0';
+  const parsed = Number.parseInt(String(rawValue || '0'), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function getConnectorImportLimitLabel(limit = 0) {
+  return limit > 0 ? `${limit} posts` : 'All available posts';
+}
+
+function formatConnectorDate(value = '') {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return '';
+  return new Date(timestamp).toLocaleString();
+}
+
+function setConnectorStatusTitle(statusTitle, normalizedState) {
+  if (!statusTitle) return;
+
+  statusTitle.textContent = '';
+
+  const label = document.createElement('span');
+  label.textContent = normalizedState.connected
+    ? `${normalizedState.label} is connected`
+    : `${normalizedState.label} is not connected`;
+
+  statusTitle.append(label);
+
+  if (!normalizedState.connected) return;
+
+  const dot = document.createElement('span');
+  dot.className = 'home-platform-theme__connector-management-status-dot';
+  dot.setAttribute('aria-hidden', 'true');
+  statusTitle.append(dot);
+}
+
+// Helper to get the best available Supabase client for connectors.
+async function getConnectorSupabaseClient() {
+  if (window.NeuroartanAuth?.getClient) {
+    const client = window.NeuroartanAuth.getClient();
+    if (client?.from && client?.functions && client?.auth) return client;
+  }
+
+  if (window.NeuroartanAuth?.client?.from && window.NeuroartanAuth?.client?.functions && window.NeuroartanAuth?.client?.auth) {
+    return window.NeuroartanAuth.client;
+  }
+
+  const accountClient = getSupabaseClient();
+  if (accountClient?.from && accountClient?.functions && accountClient?.auth) return accountClient;
+
+  if (window.NeuroartanSupabase?.client?.from && window.NeuroartanSupabase?.client?.functions && window.NeuroartanSupabase?.client?.auth) {
+    return window.NeuroartanSupabase.client;
+  }
+
+  if (window.supabaseClient?.from && window.supabaseClient?.functions && window.supabaseClient?.auth) {
+    return window.supabaseClient;
+  }
+
+  if (window.supabase?.from && window.supabase?.functions && window.supabase?.auth) {
+    return window.supabase;
+  }
+
+  return null;
+}
+
+// Returns a Supabase session or null if not available or not authenticated.
+async function requireConnectorSession() {
+  const authSession = await window.NeuroartanAuth?.getSession?.();
+  if (authSession?.access_token) return authSession;
+
+  const client = await getConnectorSupabaseClient();
+  const sessionResult = await client?.auth?.getSession?.();
+  const session = sessionResult?.data?.session || null;
+  if (session?.access_token) return session;
+
+  return null;
+}
+
+function closeConnectorManagementDestination(root) {
+  setConnectorActiveView(root, 'overview');
+}
+
+function openConnectorManagementDestination(root, service, state = {}) {
+  const normalizedService = normalizeConnectorService(service);
+  const normalizedState = normalizeConnectorState(normalizedService, state);
+  const { management } = getConnectorViews(root);
+  if (!management) return;
+
+  const providerHandle = normalizedState.metadata?.provider_account_handle || normalizedState.metadata?.providerAccountHandle || '';
+  const connectedAt = normalizedState.metadata?.connected_at || normalizedState.metadata?.connectedAt || '';
+  const importedCount = Number.isFinite(Number(normalizedState.metadata?.imported_count))
+    ? Number(normalizedState.metadata.imported_count)
+    : 0;
+  const receivedCount = Number.isFinite(Number(normalizedState.metadata?.received_count))
+    ? Number(normalizedState.metadata.received_count)
+    : importedCount;
+  const existingCount = Number.isFinite(Number(normalizedState.metadata?.existing_count))
+    ? Number(normalizedState.metadata.existing_count)
+    : 0;
+  const requestedPostLimit = Number.isFinite(Number(normalizedState.metadata?.requested_post_limit))
+    ? Number(normalizedState.metadata.requested_post_limit)
+    : 0;
+
+  root.dataset.connectorSettingsDetail = normalizedService;
+  management.dataset.connectorService = normalizedService;
+  management.dataset.connectorConnectionState = normalizedState.connectionState;
+  management.dataset.connectorSourceVaultReady = normalizedState.sourceVaultReady ? 'true' : 'false';
+
+  const statusTitle = management.querySelector('[data-home-platform-connector-management-status-title]');
+  const statusCopy = management.querySelector('[data-home-platform-connector-management-status-copy]');
+  const account = management.querySelector('[data-home-platform-connector-management-account]');
+  const source = management.querySelector('[data-home-platform-connector-management-source]');
+
+  setConnectorStatusTitle(statusTitle, normalizedState);
+
+  if (statusCopy) {
+    statusCopy.textContent = normalizedState.connected
+      ? 'Authorization is active. This connector can be refreshed or disconnected from this management view.'
+      : 'Authorization is not active. Return to connectors and authorize this source before use.';
+  }
+
+  if (account) {
+    account.textContent = providerHandle ? `@${providerHandle}` : 'No connected account handle available.';
+  }
+
+  if (source) {
+    const connectedLabel = formatConnectorDate(connectedAt);
+    source.textContent = '';
+
+    const summary = document.createElement('span');
+    summary.textContent = normalizedState.sourceVaultReady
+      ? `Ready. Received: ${receivedCount}. Imported: ${importedCount}. Existing: ${existingCount}. Limit: ${getConnectorImportLimitLabel(requestedPostLimit)}.`
+      : 'Not ready.';
+    source.append(summary);
+
+    if (connectedLabel) {
+      const detail = document.createElement('span');
+      detail.className = 'home-platform-theme__connector-management-source-detail';
+      detail.textContent = `Connected at ${connectedLabel}.`;
+      source.append(detail);
+    }
+  }
+
+  setConnectorActiveView(root, 'management');
+  management.querySelector('[data-home-platform-connector-management-action="refresh"]')?.focus({ preventScroll: true });
+}
+
+
+export function handleHomePlatformBack(root) {
+  if (root.querySelector('[data-connector-settings-view="management"]')?.hidden !== false) return false;
+  closeConnectorManagementDestination(root);
+  return true;
+}
+
 async function startXConnectorAuthorization(root, service) {
-  const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
-  const authorizingState = writeConnectorStateEverywhere(service, {
+  const normalizedService = normalizeConnectorService(service);
+  const currentState = normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
+  const session = await requireConnectorSession();
+  const requestedImportLimit = getConnectorImportLimit(root, normalizedService);
+
+  if (!session?.access_token) {
+    const loginRequiredState = writeConnectorStateEverywhere(normalizedService, {
+      ...currentState,
+      connected: false,
+      connectionState: 'authorization-required',
+      sourceVaultReady: false,
+      metadata: {
+        ...(currentState.metadata || {}),
+        last_error: 'SUPABASE_SESSION_REQUIRED',
+        required_action: 'sign_in_with_active_site_auth_session',
+        failed_at: new Date().toISOString(),
+      },
+    }, { persist: false });
+    updateConnectorStatus(root, normalizedService, loginRequiredState);
+    return;
+  }
+
+  const authorizingState = writeConnectorStateEverywhere(normalizedService, {
     ...currentState,
     connectionState: 'authorizing',
+    metadata: {
+      ...(currentState.metadata || {}),
+      requested_import_limit: requestedImportLimit,
+      import_limit_label: getConnectorImportLimitLabel(requestedImportLimit),
+    },
   });
-  updateConnectorStatus(root, service, authorizingState);
+  updateConnectorStatus(root, normalizedService, authorizingState);
 
   try {
-    const supabase = getSupabaseClient();
-    if (!supabase?.functions) throw new Error('SUPABASE_FUNCTIONS_UNAVAILABLE');
+    const supabase = await getConnectorSupabaseClient();
+    if (!supabase?.functions?.invoke) throw new Error('SUPABASE_CLIENT_UNAVAILABLE');
 
     const { data, error } = await supabase.functions.invoke('connectors-x-start', {
-      method: 'POST',
-      body: {},
+      body: {
+        requested_import_limit: requestedImportLimit,
+      },
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
     });
 
     if (error) throw error;
@@ -238,7 +483,7 @@ async function startXConnectorAuthorization(root, service) {
     window.location.assign(data.authorizationUrl);
   } catch (error) {
     console.warn('[Neuroartan][Settings] X connector authorization failed.', error);
-    const failedState = writeConnectorStateEverywhere(service, {
+    const failedState = writeConnectorStateEverywhere(normalizedService, {
       ...currentState,
       connectionState: 'error',
       metadata: {
@@ -246,15 +491,85 @@ async function startXConnectorAuthorization(root, service) {
         error: error?.message || 'X connector authorization failed.',
       },
     });
-    updateConnectorStatus(root, service, failedState);
+    updateConnectorStatus(root, normalizedService, failedState);
+  }
+}
+
+async function startOAuthConnectorAuthorization(root, service) {
+  const normalizedService = normalizeConnectorService(service);
+  if (normalizedService === 'x') {
+    await startXConnectorAuthorization(root, normalizedService);
+    return;
+  }
+
+  const currentState = normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
+  const session = await requireConnectorSession();
+
+  if (!session?.access_token) {
+    const loginRequiredState = writeConnectorStateEverywhere(normalizedService, {
+      ...currentState,
+      connected: false,
+      connectionState: 'authorization-required',
+      sourceVaultReady: false,
+      metadata: {
+        ...(currentState.metadata || {}),
+        last_error: 'SUPABASE_SESSION_REQUIRED',
+        required_action: 'sign_in_with_active_site_auth_session',
+        failed_at: new Date().toISOString(),
+      },
+    }, { persist: false });
+    updateConnectorStatus(root, normalizedService, loginRequiredState);
+    return;
+  }
+
+  const authorizingState = writeConnectorStateEverywhere(normalizedService, {
+    ...currentState,
+    connectionState: 'authorizing',
+    metadata: {
+      ...(currentState.metadata || {}),
+      started_at: new Date().toISOString(),
+    },
+  });
+  updateConnectorStatus(root, normalizedService, authorizingState);
+
+  try {
+    const supabase = await getConnectorSupabaseClient();
+    if (!supabase?.functions?.invoke) throw new Error('SUPABASE_CLIENT_UNAVAILABLE');
+
+    const { data, error } = await supabase.functions.invoke('connectors-oauth-start', {
+      body: {
+        service: normalizedService,
+      },
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
+
+    if (error) throw error;
+    if (!data?.authorizationUrl) throw new Error('CONNECTOR_AUTHORIZATION_URL_MISSING');
+
+    window.location.assign(data.authorizationUrl);
+  } catch (error) {
+    console.warn('[Neuroartan][Settings] Connector authorization failed.', error);
+    const failedState = writeConnectorStateEverywhere(normalizedService, {
+      ...currentState,
+      connectionState: 'error',
+      metadata: {
+        ...(currentState.metadata || {}),
+        error: error?.message || 'Connector authorization failed.',
+      },
+    });
+    updateConnectorStatus(root, normalizedService, failedState);
   }
 }
 
 function updateConnectorStatus(root, service, state = {}) {
-  const connectorItem = root.querySelector(`[data-home-platform-connector-service="${service}"]`);
+  const normalizedService = normalizeConnectorService(service);
+  const connectorItem = Array.from(root.querySelectorAll('[data-home-platform-connector-service]'))
+    .find((item) => normalizeConnectorService(item.dataset.homePlatformConnectorService) === normalizedService);
   if (!connectorItem) return;
 
-  const normalizedState = normalizeConnectorState(service, state);
+  const normalizedState = normalizeConnectorState(normalizedService, state);
   const statusElement = connectorItem.querySelector('.home-platform-theme__connector-status');
 
   if (statusElement) {
@@ -268,7 +583,12 @@ function updateConnectorStatus(root, service, state = {}) {
   connectorItem.dataset.connectorCategory = normalizedState.category;
   connectorItem.dataset.connectorSourceVaultReady = normalizedState.sourceVaultReady ? 'true' : 'false';
 
-  connectorItem.removeAttribute('data-connector-connected');
+  if (normalizedState.connected) {
+    connectorItem.dataset.connectorConnected = 'true';
+  } else {
+    connectorItem.removeAttribute('data-connector-connected');
+  }
+
   connectorItem.dataset.connectorConnectionState = normalizedState.connectionState;
 }
 
@@ -294,32 +614,74 @@ function loadConnectorStates(root) {
   const storedStates = getConnectorStates();
 
   root.querySelectorAll('[data-home-platform-connector-service]').forEach((item) => {
-    const service = item.dataset.homePlatformConnectorService;
+    const service = normalizeConnectorService(item.dataset.homePlatformConnectorService);
     const state = normalizeConnectorState(service, storedStates[service]);
     updateConnectorStatus(root, service, state);
   });
 }
 
 function bindConnectorClicks(root) {
-  const connectorItems = root.querySelectorAll('[data-home-platform-connector-service]');
-  connectorItems.forEach((item) => {
-    if (item.dataset.connectorBound === 'true') return;
+  if (root.dataset.connectorClickDelegateBound === 'true') return;
+  root.dataset.connectorClickDelegateBound = 'true';
 
-    item.dataset.connectorBound = 'true';
-    item.addEventListener('click', () => {
-      const service = item.dataset.homePlatformConnectorService;
+  root.addEventListener('click', async (event) => {
+    const action = event.target?.closest?.('[data-home-platform-connector-management-action]');
+    if (!action || !root.contains(action)) return;
+
+    const actionName = action.getAttribute('data-home-platform-connector-management-action') || '';
+    const service = normalizeConnectorService(root.querySelector('[data-connector-settings-view="management"]')?.dataset.connectorService || 'x');
+
+    if (actionName === 'close') {
+      closeConnectorManagementDestination(root);
+      return;
+    }
+
+    if (actionName === 'refresh') {
+      await hydrateConnectorStateFromBackend(root);
+      const refreshedState = normalizeConnectorState(service, getConnectorStates()[service]);
+      updateConnectorStatus(root, service, refreshedState);
+      openConnectorManagementDestination(root, service, refreshedState);
+      return;
+    }
+
+    if (actionName === 'disconnect') {
       const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
-      if (service === 'x') {
-        void startXConnectorAuthorization(root, service);
-        return;
-      }
+      const disconnectedState = writeConnectorStateEverywhere(service, {
+        ...currentState,
+        connectionState: 'not-connected',
+        sourceVaultReady: false,
+        metadata: {
+          ...(currentState.metadata || {}),
+          disconnectedAt: new Date().toISOString(),
+        },
+      });
+      updateConnectorStatus(root, service, disconnectedState);
+      openConnectorManagementDestination(root, service, disconnectedState);
+    }
+  });
 
-      const nextState = currentState.connectionState === 'authorization-required'
-        ? 'not-connected'
-        : 'authorization-required';
-      const savedState = setConnectorState(service, nextState);
-      updateConnectorStatus(root, service, savedState);
-    });
+  root.addEventListener('click', (event) => {
+    const item = event.target?.closest?.('[data-home-platform-connector-service]');
+    if (!item || !root.contains(item)) return;
+
+    const service = normalizeConnectorService(item.dataset.homePlatformConnectorService);
+    const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+
+    if (currentState.connected) {
+      openConnectorManagementDestination(root, service, currentState);
+      return;
+    }
+
+    if (currentState.runtime === 'oauth-required') {
+      void startOAuthConnectorAuthorization(root, service);
+      return;
+    }
+
+    const nextState = currentState.connectionState === 'authorization-required'
+      ? 'not-connected'
+      : 'authorization-required';
+    const savedState = setConnectorState(service, nextState);
+    updateConnectorStatus(root, service, savedState);
   });
 }
 
@@ -328,10 +690,28 @@ export function getHomePlatformConnectorStates() {
 }
 
 export function mountHomePlatformDestination(root, options = {}) {
+  connectorShellApi = options;
   mountSettingsCategory(root, options);
 
   seedConnectorCatalog(root);
   loadConnectorStates(root);
   void hydrateConnectorStateFromBackend(root).then(() => seedConnectorCatalog(root));
+
+  if (document.documentElement.dataset.connectorHydrationBound !== 'true') {
+    document.documentElement.dataset.connectorHydrationBound = 'true';
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        document.querySelectorAll('[data-home-platform-destination-root]').forEach((destinationRoot) => {
+          void hydrateConnectorStateFromBackend(destinationRoot);
+        });
+      }
+    });
+    window.addEventListener('focus', () => {
+      document.querySelectorAll('[data-home-platform-destination-root]').forEach((destinationRoot) => {
+        void hydrateConnectorStateFromBackend(destinationRoot);
+      });
+    });
+  }
+
   bindConnectorClicks(root);
 }

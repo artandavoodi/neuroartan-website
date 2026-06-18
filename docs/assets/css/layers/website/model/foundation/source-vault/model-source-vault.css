@@ -215,6 +215,33 @@
   color:var(--text-primary-color);
 }
 
+.model-source-vault__connector-limit{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+}
+
+.model-source-vault__connector-limit-copy{
+  color:var(--text-primary-color);
+}
+
+.model-source-vault__connector-limit-dropdown{
+  gap:var(--spacing-xs);
+}
+
+.model-source-vault__connector-limit-icon-wrapper{
+  inline-size:var(--icon-size-xs);
+  block-size:var(--icon-size-xs);
+}
+
+.model-source-vault__connector-limit-select{
+  font:inherit;
+}
+
 .model-source-vault__format-list{
   display:flex;
   flex-wrap:wrap;

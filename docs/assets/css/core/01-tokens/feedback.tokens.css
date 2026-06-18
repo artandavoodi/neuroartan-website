@@ -103,6 +103,16 @@
   --feedback-icon-size-lg:1.12rem;
   --feedback-icon-opacity:0.82;
   --feedback-icon-opacity-strong:1;
+
+  /* Static semantic action treatment: color-only, no hover mutation. */
+  --feedback-static-error-action-color:var(--feedback-error-text);
+  --feedback-static-error-action-icon-color:var(--feedback-error-text);
+  --feedback-static-error-action-opacity:1;
+  --feedback-static-error-action-icon-opacity:1;
+  --feedback-static-error-action-bg:transparent;
+  --feedback-static-error-action-border-color:transparent;
+  --feedback-static-error-action-shadow:none;
+  --feedback-static-error-action-transform:none;
 }
 
 /* =============================================================================

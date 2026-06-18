@@ -1,6 +1,8 @@
 <section class="home-platform-destination home-platform-destination--settings-connectors" data-home-platform-destination-root aria-label="Connectors settings destination">
   <div class="home-platform-destination__surface home-platform-theme" data-home-platform-destination-surface>
-    <section class="home-platform-theme__section" aria-labelledby="settings-connectors-services" data-home-platform-theme-section>
+    <div class="profile-settings__pane" data-connector-settings-view="overview">
+      
+      <section class="home-platform-theme__section" aria-labelledby="settings-connectors-services" data-home-platform-theme-section>
       <div class="home-platform-theme__section-eyebrow">
         <span class="home-platform-theme__section-title" id="settings-connectors-services">Connected services</span>
       </div>
@@ -189,5 +191,62 @@
       </div>
       </div>
     </section>
+    </div>
+
+    <div class="profile-settings__pane" data-connector-settings-view="management" hidden>
+      <section class="home-platform-theme__section" aria-labelledby="settings-connectors-management-status" data-home-platform-theme-section>
+        <header class="home-platform-theme__section-header">
+          <span class="home-platform-theme__section-title" id="settings-connectors-management-status">Connector status</span>
+        </header>
+        <div class="home-platform-theme__section-content" id="settings-connectors-management-status-content">
+          <div class="home-platform-theme__toggle-list" role="list">
+            <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
+              <div class="home-platform-theme__toggle-copy">
+                <p class="home-platform-theme__toggle-title" data-home-platform-connector-management-status-title>X is connected</p>
+                <p class="home-platform-theme__toggle-description" data-home-platform-connector-management-status-copy>Authorization is active. This connector can be refreshed or disconnected from this management view.</p>
+              </div>
+            </div>
+            <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
+              <div class="home-platform-theme__toggle-copy">
+                <p class="home-platform-theme__toggle-title">Connected account</p>
+                <p class="home-platform-theme__toggle-description" data-home-platform-connector-management-account>No connected account handle available.</p>
+              </div>
+            </div>
+            <div class="home-platform-theme__toggle-row" role="listitem" data-home-platform-theme-toggle-row>
+              <div class="home-platform-theme__toggle-copy">
+                <p class="home-platform-theme__toggle-title">Source vault</p>
+                <p class="home-platform-theme__toggle-description" data-home-platform-connector-management-source>Not ready.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-platform-theme__section" aria-labelledby="settings-connectors-management-actions" data-home-platform-theme-section>
+        <header class="home-platform-theme__section-header">
+          <span class="home-platform-theme__section-title" id="settings-connectors-management-actions">Connector management</span>
+        </header>
+        <div class="home-platform-theme__section-content" id="settings-connectors-management-actions-content">
+          <div class="home-platform-theme__action-list">
+            <button class="home-platform-theme__action-button home-platform-theme__connector-management-action" type="button" data-home-platform-connector-management-action="refresh">
+              <span class="home-platform-theme__action-main home-platform-theme__connector-management-action-main">
+                <span class="home-platform-theme__connector-management-action-icon" aria-hidden="true">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/refresh/refresh.svg" alt="" width="18" height="18">
+                </span>
+                <span class="home-platform-theme__action-title">Refresh</span>
+              </span>
+            </button>
+            <button class="home-platform-theme__action-button home-platform-theme__connector-management-action home-platform-theme__connector-management-action--destructive" type="button" data-home-platform-connector-management-action="disconnect">
+              <span class="home-platform-theme__action-main home-platform-theme__connector-management-action-main">
+                <span class="home-platform-theme__connector-management-action-icon" aria-hidden="true">
+                  <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/layers/website/home/developer-mode/actions/disconnect.svg" alt="" width="18" height="18">
+                </span>
+                <span class="home-platform-theme__action-title">Disconnect</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </section>

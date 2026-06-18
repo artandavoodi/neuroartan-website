@@ -19,5 +19,8 @@
     "express": "^5.2.1",
     "stripe": "^22.2.0",
     "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "supabase": "^2.107.0"
   }
 }

@@ -38,6 +38,15 @@ const SOURCE_TYPE_CONNECTORS = Object.freeze({
   google_workspace: ['gmail', 'calendar', 'contacts'],
 });
 
+const CONNECTOR_IMPORT_LIMIT_OPTIONS = Object.freeze([
+  { value: 0, label: 'All available' },
+  { value: 100, label: '100 posts' },
+  { value: 500, label: '500 posts' },
+  { value: 1000, label: '1,000 posts' },
+  { value: 2500, label: '2,500 posts' },
+  { value: 5000, label: '5,000 posts' },
+]);
+
 const FILE_MANAGER_SORT_LABELS = Object.freeze({
   'name-ascending': 'Name A–Z',
   'name-descending': 'Name Z–A',
@@ -93,12 +102,18 @@ function getAuthorizationRequiredConnectorLabels(sourceType = '') {
 
 function getConnectorRecords(sourceType = '') {
   const connectorState = readConnectorState();
-  return (SOURCE_TYPE_CONNECTORS[sourceType] || []).map((service) => ({
-    service,
-    label: CONNECTOR_LABELS[service] || service,
-    connectionState: getConnectorConnectionState(service),
-    sourceVaultReady: connectorState?.[service]?.sourceVaultReady === true,
-  }));
+  return (SOURCE_TYPE_CONNECTORS[sourceType] || []).map((service) => {
+    const state = connectorState?.[service] && typeof connectorState[service] === 'object'
+      ? connectorState[service]
+      : {};
+    return {
+      service,
+      label: CONNECTOR_LABELS[service] || service,
+      connectionState: getConnectorConnectionState(service),
+      sourceVaultReady: state.sourceVaultReady === true,
+      metadata: state.metadata && typeof state.metadata === 'object' ? state.metadata : {},
+    };
+  });
 }
 
 function getSelectableConnectorRecords(sourceType = '') {
@@ -106,13 +121,66 @@ function getSelectableConnectorRecords(sourceType = '') {
 }
 
 function getSelectedConnectorRecords(root, sourceType = '') {
+  const connectorState = readConnectorState();
   return Array.from(root?.querySelectorAll?.(`[data-model-source-vault-connector-option="${sourceType}"]:checked`) || [])
     .filter((control) => control instanceof HTMLInputElement)
-    .map((control) => ({
-      service: control.value,
-      label: CONNECTOR_LABELS[control.value] || control.value,
-      connectionState: getConnectorConnectionState(control.value),
-    }));
+    .map((control) => {
+      const state = connectorState?.[control.value] && typeof connectorState[control.value] === 'object'
+        ? connectorState[control.value]
+        : {};
+      return {
+        service: control.value,
+        label: CONNECTOR_LABELS[control.value] || control.value,
+        connectionState: getConnectorConnectionState(control.value),
+        sourceVaultReady: state.sourceVaultReady === true,
+        metadata: state.metadata && typeof state.metadata === 'object' ? state.metadata : {},
+      };
+    });
+}
+
+function getConnectorImportLimit(root = mountedRoot, service = '') {
+  if (!(root instanceof HTMLElement)) return 0;
+  const normalizedService = normalizeString(service);
+  const control = root.querySelector(`[data-model-source-vault-connector-import-limit="${normalizedService}"]`);
+  const rawValue = control instanceof HTMLSelectElement ? control.value : '0';
+  const parsed = Number.parseInt(String(rawValue || '0'), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function getConnectorImportLimitLabel(limit = 0) {
+  return limit > 0 ? `${limit.toLocaleString()} posts` : 'All available';
+}
+
+function getConnectorImportStatusLabel(record = {}) {
+  const metadata = record.metadata && typeof record.metadata === 'object' ? record.metadata : {};
+  const importedCount = Number.isFinite(Number(metadata.imported_count)) ? Number(metadata.imported_count) : null;
+  const receivedCount = Number.isFinite(Number(metadata.received_count)) ? Number(metadata.received_count) : importedCount;
+  const existingCount = Number.isFinite(Number(metadata.existing_count)) ? Number(metadata.existing_count) : 0;
+  const parts = [];
+  if (receivedCount !== null) parts.push(`${receivedCount.toLocaleString()} received`);
+  if (importedCount !== null) parts.push(`${importedCount.toLocaleString()} imported`);
+  if (existingCount > 0) parts.push(`${existingCount.toLocaleString()} existing`);
+  return parts.length ? `${record.label || record.service}: ${parts.join(', ')}` : '';
+}
+
+function setConnectorImportLimitLabel(root = mountedRoot, service = '', limit = 0) {
+  if (!(root instanceof HTMLElement)) return;
+  const normalizedService = normalizeString(service);
+  const labelElement = root.querySelector(`[data-model-source-vault-connector-import-limit-label="${normalizedService}"]`);
+  if (labelElement instanceof HTMLElement) {
+    labelElement.textContent = getConnectorImportLimitLabel(limit);
+  }
+}
+
+function getSelectedConnectorImportControls(root = mountedRoot, sourceType = '') {
+  return getSelectedConnectorRecords(root, sourceType).map((record) => {
+    const importLimit = getConnectorImportLimit(root, record.service);
+    return {
+      ...record,
+      importLimit,
+      importLimitLabel: getConnectorImportLimitLabel(importLimit),
+    };
+  });
 }
 
 function getConnectorCategoryLabel(sourceType = '') {
@@ -156,6 +224,7 @@ function createSourceVaultState(overrides = {}) {
     activeWorkspaceOpen: false,
     sourceSelection: null,
     selectedConnectorValues: [],
+    connectorImportControls: [],
     selectedFormats: [],
     latestAnalysis: null,
     selectedFileKeys: [],
@@ -431,6 +500,7 @@ function normalizeSourceVaultPackage(packageRecord = null) {
   const acceptedFiles = Array.isArray(packageRecord.acceptedFiles) ? packageRecord.acceptedFiles : [];
   const excludedFiles = Array.isArray(packageRecord.excludedFiles) ? packageRecord.excludedFiles : [];
   const selectedConnectors = Array.isArray(packageRecord.selectedConnectors) ? packageRecord.selectedConnectors : [];
+  const connectorImportControls = Array.isArray(packageRecord.connectorImportControls) ? packageRecord.connectorImportControls : [];
   const selectedFileKeysValue = Array.isArray(packageRecord.selectedFileKeys) ? packageRecord.selectedFileKeys : [];
   const contentFiles = Array.isArray(packageRecord.contentFiles) ? packageRecord.contentFiles : [];
   const id = normalizeString(packageRecord.id) || createSourceVaultPackageId(sourceType);
@@ -451,6 +521,7 @@ function normalizeSourceVaultPackage(packageRecord = null) {
     excludedFiles,
     selectedFileKeys: selectedFileKeysValue,
     selectedConnectors,
+    connectorImportControls,
     sourceContent: normalizeString(packageRecord.sourceContent),
     contentFiles,
     contentFileCount: Number(packageRecord.contentFileCount ?? contentFiles.length ?? 0),
@@ -475,6 +546,7 @@ function createSourceVaultPackageFromAnalysis(root = mountedRoot, analysis = lat
   const selection = getSourceSelectionMetadata(root) || sourceVaultState.sourceSelection || {};
   const sourceType = analysis.sourceType || getSelectedSourceType(root);
   const selectedConnectors = Array.isArray(analysis.selectedConnectors) ? analysis.selectedConnectors : [];
+  const connectorImportControls = Array.isArray(analysis.connectorImportControls) ? analysis.connectorImportControls : [];
   const existingId = sourceVaultState.activePackageId || null;
   return normalizeSourceVaultPackage({
     id: existingId || createSourceVaultPackageId(sourceType),
@@ -494,6 +566,7 @@ function createSourceVaultPackageFromAnalysis(root = mountedRoot, analysis = lat
     planLimitStatus: analysis.planLimitStatus || null,
     selectedFileKeys: Array.from(selectedFileKeys),
     selectedConnectors,
+    connectorImportControls,
     acceptedCount: analysis.acceptedCount,
     excludedCount: analysis.excludedCount,
     totalAcceptedBytes: analysis.totalAcceptedBytes,
@@ -705,6 +778,9 @@ function getSourceVaultDraft(root = mountedRoot) {
     selectedConnectorValues: Array.from(root.querySelectorAll(`[data-model-source-vault-connector-option]:checked`))
       .filter((control) => control instanceof HTMLInputElement)
       .map((control) => ({ sourceType: control.dataset.modelSourceVaultConnectorOption || '', value: control.value })),
+    connectorImportControls: Array.from(root.querySelectorAll('[data-model-source-vault-connector-import-limit]'))
+      .filter((control) => control instanceof HTMLSelectElement)
+      .map((control) => ({ service: control.dataset.modelSourceVaultConnectorImportLimit || '', importLimit: Number.parseInt(control.value || '0', 10) || 0 })),
     selectedFormats: getSelectedReadableFormats(root),
     latestAnalysis: getSerializableAnalysis(latestAnalysis),
     selectedFileKeys: selectedKeys,
@@ -759,6 +835,7 @@ function normalizeSourceVaultDraft(rawDraft = null) {
     activeWorkspaceOpen: rawDraft.activeWorkspaceOpen === true || rawDraft.fileManagerOpen === true || fileManager.open === true,
     sourceSelection: rawDraft.sourceSelection && typeof rawDraft.sourceSelection === 'object' ? rawDraft.sourceSelection : null,
     selectedConnectorValues: Array.isArray(rawDraft.selectedConnectorValues) ? rawDraft.selectedConnectorValues : [],
+    connectorImportControls: Array.isArray(rawDraft.connectorImportControls) ? rawDraft.connectorImportControls : [],
     selectedFormats: Array.isArray(rawDraft.selectedFormats) ? rawDraft.selectedFormats : [],
     selectedFileKeys: Array.isArray(rawDraft.selectedFileKeys) ? rawDraft.selectedFileKeys : [],
     fileManagerSortMode: FILE_MANAGER_SORT_LABELS[rawDraft.fileManagerSortMode || fileManager.sortMode] ? (rawDraft.fileManagerSortMode || fileManager.sortMode) : 'name-ascending',
@@ -816,6 +893,7 @@ function mergeSourceVaultDraft(nextDraft = null) {
     activePackageId: nextDraft.activePackageId || existingAnalysisDraft.activePackageId || null,
     activeWorkspaceOpen: nextDraft.activeWorkspaceOpen === true,
     selectedConnectorValues: nextDraft.selectedConnectorValues || existingAnalysisDraft.selectedConnectorValues || [],
+    connectorImportControls: nextDraft.connectorImportControls || existingAnalysisDraft.connectorImportControls || [],
     selectedFormats: nextDraftClearedActiveSelection ? [] : nextDraft.selectedFormats?.length ? nextDraft.selectedFormats : existingAnalysisDraft.selectedFormats || [],
     selectedFileKeys: nextDraftClearedActiveSelection ? [] : nextDraft.selectedFileKeys?.length ? nextDraft.selectedFileKeys : existingAnalysisDraft.selectedFileKeys || [],
     latestAnalysis: nextDraftClearedActiveSelection ? null : nextDraft.latestAnalysis || existingAnalysisDraft.latestAnalysis || null,
@@ -911,6 +989,14 @@ function restoreSourceVaultDraft(root = mountedRoot) {
     if (control instanceof HTMLInputElement) control.checked = true;
   });
 
+  (draft.connectorImportControls || []).forEach((record) => {
+    const control = root.querySelector(`[data-model-source-vault-connector-import-limit="${record.service}"]`);
+    if (control instanceof HTMLSelectElement) {
+      control.value = String(record.importLimit || 0);
+      setConnectorImportLimitLabel(root, record.service, record.importLimit || 0);
+    }
+  });
+
   if (isSourceVaultAnalysisDraft(draft)) {
     latestAnalysis = draft.latestAnalysis;
     restoredDraftPendingFileReconnect = true;
@@ -998,6 +1084,15 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
   const list = root.querySelector(`[data-model-source-vault-connector-list="${sourceType}"]`);
   if (!(list instanceof HTMLElement)) return;
 
+  const selectedServices = new Set(
+    Array.from(root.querySelectorAll(`[data-model-source-vault-connector-option="${sourceType}"]:checked`))
+      .filter((control) => control instanceof HTMLInputElement)
+      .map((control) => control.value)
+  );
+  (sourceVaultState.selectedConnectorValues || [])
+    .filter((record) => record.sourceType === sourceType && record.value)
+    .forEach((record) => selectedServices.add(record.value));
+
   const records = getConnectorRecords(sourceType);
   const connectedRecords = records.filter((record) => record.connectionState === 'connected');
   const authorizationRequiredRecords = records.filter((record) => record.connectionState === 'authorization-required');
@@ -1014,12 +1109,56 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
     input.type = 'checkbox';
     input.value = record.service;
     input.dataset.modelSourceVaultConnectorOption = sourceType;
+    input.checked = selectedServices.has(record.service);
 
     const text = document.createElement('span');
     text.textContent = record.label;
 
     labelElement.append(input, text);
     list.append(labelElement);
+
+    const limitLabel = document.createElement('label');
+    limitLabel.className = 'model-source-vault__connector-limit';
+
+    const limitCopy = document.createElement('span');
+    limitCopy.className = 'model-source-vault__connector-limit-copy';
+    limitCopy.textContent = `${record.label} import limit`;
+
+    const inlineDropdown = document.createElement('span');
+    inlineDropdown.className = 'ui-inline-dropdown model-source-vault__connector-limit-dropdown';
+
+    const limitValue = document.createElement('span');
+    limitValue.className = 'ui-inline-dropdown__value model-source-vault__connector-limit-value';
+    limitValue.dataset.modelSourceVaultConnectorImportLimitLabel = record.service;
+
+    const iconWrapper = document.createElement('span');
+    iconWrapper.className = 'ui-inline-dropdown__icon-wrapper model-source-vault__connector-limit-icon-wrapper';
+
+    const icon = document.createElement('img');
+    icon.className = 'ui-inline-dropdown__icon ui-icon-theme-aware';
+    icon.src = '/registry/icons/public/assets/core/navigation/chevron/chevron-down.svg';
+    icon.alt = '';
+
+    const limitSelect = document.createElement('select');
+    limitSelect.className = 'ui-dropdown ui-dropdown--icon-only model-source-vault__connector-limit-select';
+    limitSelect.dataset.modelSourceVaultConnectorImportLimit = record.service;
+    limitSelect.setAttribute('aria-label', `${record.label} import limit`);
+
+    CONNECTOR_IMPORT_LIMIT_OPTIONS.forEach((optionRecord) => {
+      const option = document.createElement('option');
+      option.value = String(optionRecord.value);
+      option.textContent = optionRecord.label;
+      limitSelect.append(option);
+    });
+
+    const restoredControl = sourceVaultState.connectorImportControls.find((control) => control.service === record.service);
+    if (restoredControl) limitSelect.value = String(restoredControl.importLimit || 0);
+    limitValue.textContent = getConnectorImportLimitLabel(Number.parseInt(limitSelect.value || '0', 10) || 0);
+
+    iconWrapper.append(icon, limitSelect);
+    inlineDropdown.append(limitValue, iconWrapper);
+    limitLabel.append(limitCopy, inlineDropdown);
+    list.append(limitLabel);
   });
 
   if (connectedRecords.length) return;
@@ -1463,13 +1602,16 @@ function readVaultConfig(root) {
     ? normalizeString(sourceTypeControl.value || 'local_folder')
     : 'local_folder';
 
-  const sourceConnectors = getSelectedConnectorRecords(root, sourceTypeControl instanceof HTMLSelectElement ? normalizeString(sourceTypeControl.value || 'local_folder') : 'local_folder');
+  const normalizedSourceType = sourceTypeControl instanceof HTMLSelectElement ? normalizeString(sourceTypeControl.value || 'local_folder') : 'local_folder';
+  const sourceConnectors = getSelectedConnectorRecords(root, normalizedSourceType);
+  const connectorImportControls = getSelectedConnectorImportControls(root, normalizedSourceType);
 
   return {
     sourceType,
     sourceTypeLabel: SOURCE_TYPE_LABELS[sourceType] || sourceType,
     sourceReference: sourceConnectors.map((record) => record.service).join(','),
     sourceConnectors,
+    connectorImportControls,
     allowedFormats: getSelectedReadableFormats(root),
     selectedFiles: getSelectedFiles(root),
   };
@@ -1572,6 +1714,7 @@ function analyzeSourceVault(root = mountedRoot) {
       availableConnectors: getAvailableConnectorLabels(config.sourceType),
       authorizationRequiredConnectors: getAuthorizationRequiredConnectorLabels(config.sourceType),
       selectedConnectors: config.sourceConnectors,
+      connectorImportControls: config.connectorImportControls,
       createdAt: new Date().toISOString(),
     };
     renderAnalysis(root, latestAnalysis);
@@ -1714,7 +1857,14 @@ function renderAnalysis(root = mountedRoot, analysis = latestAnalysis) {
 
   if (analysis.requiresConnectorListing) {
     if (analysis.selectedConnectors?.length) {
-      setStatus(root, `${analysis.selectedConnectors.map((record) => record.label).join(', ')} selected. Connector listing is the next required backend step.`);
+      const importSummary = (analysis.connectorImportControls || [])
+        .map((record) => `${record.label}: ${record.importLimitLabel}`)
+        .join(' · ');
+      const sourceSummary = (analysis.selectedConnectors || [])
+        .map(getConnectorImportStatusLabel)
+        .filter(Boolean)
+        .join(' · ');
+      setStatus(root, `${analysis.selectedConnectors.map((record) => record.label).join(', ')} selected. ${sourceSummary || importSummary || 'All available'} will be prepared for source-vault intake.`);
       return;
     }
     if (analysis.authorizationRequiredConnectors?.length) {
@@ -1749,6 +1899,7 @@ async function confirmSourceVaultIntake(root = mountedRoot) {
   const acceptedFiles = packages.flatMap((packageRecord) => packageRecord.acceptedFiles || []);
   const excludedFiles = packages.flatMap((packageRecord) => packageRecord.excludedFiles || []);
   const selectedConnectors = packages.flatMap((packageRecord) => packageRecord.selectedConnectors || []);
+  const connectorImportControls = packages.flatMap((packageRecord) => packageRecord.connectorImportControls || []);
   const reconnectRequired = restoredDraftPendingFileReconnect || packages.some((packageRecord) => packageRecord.reconnectRequired);
   const planLimitedPackage = packages.find(isSourceVaultPlanLimited);
 
@@ -1859,7 +2010,20 @@ function handleChange(event) {
   if (target.closest('[data-model-source-vault-connector-option]')) {
     latestAnalysis = null;
     clearAnalysisUI(root);
-    setStatus(root, 'Connected source selected. Run Analyze Source Vault to prepare intake.');
+    setStatus(root, 'Connected source selected. Choose the import limit, then run Analyze Source Vault to prepare intake.');
+    syncSourceVaultActions(root);
+    saveSourceVaultDraft(root);
+    return;
+  }
+
+  if (target.closest('[data-model-source-vault-connector-import-limit]')) {
+    const control = target.closest('[data-model-source-vault-connector-import-limit]');
+    if (control instanceof HTMLSelectElement) {
+      setConnectorImportLimitLabel(root, control.dataset.modelSourceVaultConnectorImportLimit || '', Number.parseInt(control.value || '0', 10) || 0);
+    }
+    latestAnalysis = null;
+    clearAnalysisUI(root);
+    setStatus(root, 'Connector import limit updated. Run Analyze Source Vault to prepare intake.');
     syncSourceVaultActions(root);
     saveSourceVaultDraft(root);
     return;

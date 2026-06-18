@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>GitHub Connector Callback · Neuroartan</title>
+</head>
+<body>
+  <main aria-live="polite">
+    <p>Completing GitHub authorization…</p>
+  </main>
+
+  <script type="module">
+    const CALLBACK_FUNCTION_URL = 'https://dwlgvujubkpycrvhngku.supabase.co/functions/v1/connectors-oauth-callback';
+    const FALLBACK_RETURN_URL = '/';
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+
+    function finishWithError(message) {
+      const target = new URL(FALLBACK_RETURN_URL, window.location.origin);
+      target.searchParams.set('connector_service', 'github');
+      target.searchParams.set('connector_status', 'error');
+      target.searchParams.set('connector_error', message || 'authorization_failed');
+      window.location.replace(target.toString());
+    }
+
+    if (error) {
+      finishWithError(errorDescription || error);
+    } else if (!code || !state) {
+      finishWithError('missing_code_or_state');
+    } else {
+      const callbackUrl = new URL(CALLBACK_FUNCTION_URL);
+      callbackUrl.searchParams.set('code', code);
+      callbackUrl.searchParams.set('state', state);
+      window.location.replace(callbackUrl.toString());
+    }
+  </script>
+</body>
+</html>

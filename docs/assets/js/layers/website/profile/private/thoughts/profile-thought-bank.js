@@ -343,6 +343,7 @@ function setThoughtOverlayOpen(open) {
   if (!(overlay instanceof HTMLElement)) return;
   overlay.hidden = !open;
   document.body?.classList.toggle('profile-thought-overlay-open', open);
+  document.documentElement?.classList.toggle('profile-thought-overlay-open', open);
 }
 
 /* =============================================================================

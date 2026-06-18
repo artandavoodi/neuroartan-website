@@ -73,6 +73,34 @@ const CONNECTOR_LABELS = Object.freeze({
   calendar: 'Calendar',
   contacts: 'Contacts',
 });
+const CONNECTOR_ICONS = Object.freeze({
+  x: '/registry/icons/public/assets/system/social/x.svg',
+});
+
+function createConnectorLogo(service = '', label = '') {
+  const normalizedService = normalizeString(service);
+  const iconPath = CONNECTOR_ICONS[normalizedService];
+  const logo = document.createElement('span');
+  logo.className = 'model-source-vault__connector-logo';
+  logo.setAttribute('aria-label', label || CONNECTOR_LABELS[normalizedService] || normalizedService);
+
+  if (!iconPath) {
+    logo.textContent = label || CONNECTOR_LABELS[normalizedService] || normalizedService;
+    return logo;
+  }
+
+  const image = document.createElement('img');
+  image.className = 'ui-icon-theme-aware';
+  image.src = iconPath;
+  image.alt = '';
+  image.width = 18;
+  image.height = 18;
+  image.setAttribute('aria-hidden', 'true');
+
+  logo.append(image);
+  return logo;
+}
+
 function readConnectorState() {
   try {
     return JSON.parse(window.localStorage?.getItem(NEUROARTAN_CONNECTOR_STATE_KEY) || '{}') || {};
@@ -180,6 +208,16 @@ function getSelectedConnectorImportControls(root = mountedRoot, sourceType = '')
       importLimit,
       importLimitLabel: getConnectorImportLimitLabel(importLimit),
     };
+  });
+}
+
+function syncConnectorImportLimitVisibility(root = mountedRoot, sourceType = getSelectedSourceType(root)) {
+  if (!(root instanceof HTMLElement)) return;
+  root.querySelectorAll(`[data-model-source-vault-connector-import-limit-field="${sourceType}"]`).forEach((fieldElement) => {
+    if (!(fieldElement instanceof HTMLElement)) return;
+    const service = normalizeString(fieldElement.dataset.modelSourceVaultConnectorImportLimitService || '');
+    const control = root.querySelector(`[data-model-source-vault-connector-option="${sourceType}"][value="${service}"]`);
+    fieldElement.hidden = !(control instanceof HTMLInputElement && control.checked);
   });
 }
 
@@ -989,6 +1027,8 @@ function restoreSourceVaultDraft(root = mountedRoot) {
     if (control instanceof HTMLInputElement) control.checked = true;
   });
 
+  syncConnectorImportLimitVisibility(root, getSelectedSourceType(root));
+
   (draft.connectorImportControls || []).forEach((record) => {
     const control = root.querySelector(`[data-model-source-vault-connector-import-limit="${record.service}"]`);
     if (control instanceof HTMLSelectElement) {
@@ -1111,18 +1151,20 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
     input.dataset.modelSourceVaultConnectorOption = sourceType;
     input.checked = selectedServices.has(record.service);
 
-    const text = document.createElement('span');
-    text.textContent = record.label;
+    const text = createConnectorLogo(record.service, record.label);
 
     labelElement.append(input, text);
     list.append(labelElement);
 
     const limitLabel = document.createElement('label');
-    limitLabel.className = 'model-source-vault__connector-limit';
+    limitLabel.className = 'model-management__field model-source-vault__connector-limit-field';
+    limitLabel.dataset.modelSourceVaultConnectorImportLimitField = sourceType;
+    limitLabel.dataset.modelSourceVaultConnectorImportLimitService = record.service;
+    limitLabel.hidden = !input.checked;
 
     const limitCopy = document.createElement('span');
-    limitCopy.className = 'model-source-vault__connector-limit-copy';
-    limitCopy.textContent = `${record.label} import limit`;
+    limitCopy.className = 'model-management__label model-source-vault__connector-limit-copy';
+    limitCopy.textContent = 'Import limit';
 
     const inlineDropdown = document.createElement('span');
     inlineDropdown.className = 'ui-inline-dropdown model-source-vault__connector-limit-dropdown';
@@ -1157,9 +1199,19 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
 
     iconWrapper.append(icon, limitSelect);
     inlineDropdown.append(limitValue, iconWrapper);
-    limitLabel.append(limitCopy, inlineDropdown);
+    const limitControl = document.createElement('span');
+    limitControl.className = 'model-management__control model-source-vault__connector-limit-control';
+
+    limitControl.append(inlineDropdown);
+    limitLabel.append(limitCopy, limitControl);
     list.append(limitLabel);
+
+    input.addEventListener('change', () => {
+      syncConnectorImportLimitVisibility(root, sourceType);
+    });
   });
+
+  syncConnectorImportLimitVisibility(root, sourceType);
 
   if (connectedRecords.length) return;
 

@@ -3,6 +3,8 @@
   gap:var(--spacing-lg);
   padding:var(--spacing-lg);
   border-radius:0;
+  border:none;
+  background:transparent;
   box-shadow:none;
   backdrop-filter:none;
   -webkit-backdrop-filter:none;
@@ -72,6 +74,8 @@
 
 .profile-thought-bank__overlay .profile-thought-composer{
   border-radius:var(--radius-dialog);
+  border:none;
+  background:transparent;
 }
 
 .profile-thought-composer__visibility{
@@ -243,7 +247,7 @@
   min-height:calc(var(--control-height-lg) * 2);
   resize:none;
   border:var(--input-minimal-border);
-  background:var(--input-minimal-background);
+  background:transparent;
   padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
   border-radius:var(--input-minimal-radius);
   outline:var(--input-minimal-outline);
@@ -254,7 +258,7 @@
 .profile-thought-composer__textarea:focus,
 .profile-thought-composer__textarea:focus-visible{
   border:var(--input-minimal-border-focus);
-  background:var(--input-minimal-background);
+  background:transparent;
   outline:var(--input-minimal-outline);
   box-shadow:var(--input-minimal-box-shadow);
 }

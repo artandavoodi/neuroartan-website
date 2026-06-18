@@ -351,7 +351,7 @@ function renderPostList(root) {
         <p class="profile-posts__item-body"></p>
         ${post.mediaUrl && post.mediaType === 'video' ? '<video class="profile-posts__item-media" controls></video>' : ''}
         ${post.mediaUrl && post.mediaType === 'audio' ? '<audio class="profile-posts__item-media" controls></audio>' : ''}
-        ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<div class="profile-posts__item-image-wrapper"><img class="profile-posts__item-image" alt="Post image"></div>' : ''}
+        ${post.mediaUrl && post.mediaType !== 'video' && post.mediaType !== 'audio' ? '<div class="profile-posts__item-image-wrapper" data-profile-post-media-state="loading"><img class="profile-posts__item-image" alt="Post image"></div>' : ''}
       </div>
     `;
     const badge = item.querySelector('.ui-badge');
@@ -371,12 +371,24 @@ function renderPostList(root) {
     }
     const image = item.querySelector('.profile-posts__item-image');
     if (image instanceof HTMLImageElement) {
+      const imageWrapper = image.closest('.profile-posts__item-image-wrapper');
+      const setMediaState = (state) => {
+        if (imageWrapper instanceof HTMLElement) {
+          imageWrapper.dataset.profilePostMediaState = state;
+        }
+      };
       image.loading = 'lazy';
       image.decoding = 'async';
       image.src = post.mediaUrl;
 
+      if (image.complete && image.naturalWidth > 0) {
+        setMediaState('loaded');
+      } else {
+        image.addEventListener('load', () => setMediaState('loaded'), { once: true });
+      }
+
       image.addEventListener('error', () => {
-        image.hidden = true;
+        setMediaState('error');
       }, { once: true });
     }
     item.querySelector('.profile-posts__item-meta').textContent = formatDate(post.createdAt);
@@ -460,6 +472,7 @@ function setPostOverlayOpen(root, open) {
   }
   overlay.hidden = !open;
   document.body?.classList.toggle('profile-posts-overlay-open', open);
+  document.documentElement?.classList.toggle('profile-posts-overlay-open', open);
   if (!open) {
     restorePostPanelAfterOverlay(root);
   }

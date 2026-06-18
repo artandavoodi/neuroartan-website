@@ -83,6 +83,7 @@
   --home-platform-shell-rail-toggle-margin-left:var(--layout-home-platform-rail-toggle-margin-left);
   --home-platform-shell-rail-toggle-icon-size:var(--layout-home-platform-rail-toggle-icon-size);
   --home-platform-shell-rail-width-token:var(--layout-home-platform-rail-width);
+  --home-platform-shell-primary-rail-width-token:var(--layout-home-platform-primary-rail-width);
   --home-platform-shell-subrail-width-token:var(--layout-home-platform-subrail-width);
   --home-platform-shell-rail-compact-width:var(--layout-home-platform-rail-compact-width);
   --home-platform-shell-tablet-rail-min:var(--layout-home-platform-tablet-rail-min);
@@ -450,6 +451,12 @@ body.home-platform-shell-open .home-platform-shell{
     minmax(var(--spacing-none), 1fr);
 }
 
+@media (min-width:761px){
+  .home-platform-shell:not([data-home-platform-rail="collapsed"]){
+    --home-platform-shell-rail-width:var(--home-platform-shell-primary-rail-width-token);
+  }
+}
+
 .home-platform-shell[data-home-platform-rail="collapsed"] .home-platform-shell__subrail{
   grid-column:2;
 }
@@ -727,7 +734,7 @@ body[data-auth-state="resolving"] [data-profile-auth-visible]{
   justify-content:center;
   min-width:var(--home-platform-shell-nav-indicator-min-size);
   min-height:var(--home-platform-shell-nav-indicator-min-size);
-  margin-left:auto;
+  margin-left:var(--spacing-xs);
   padding:var(--spacing-none) var(--home-platform-shell-nav-indicator-padding-x);
   border-radius:var(--control-radius-composer);
   background:var(--home-platform-shell-nav-indicator-bg);

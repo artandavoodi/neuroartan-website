@@ -457,7 +457,9 @@
   --layout-home-platform-rail-toggle-margin-left:var(--spacing-lg);
   --layout-home-platform-rail-toggle-icon-size:calc(1.05rem * var(--accessibility-icon-scale));
   --layout-home-platform-rail-width:18rem;
+  --layout-home-platform-primary-rail-width:13rem;
   --layout-home-platform-subrail-width:15rem;
+  --layout-platform-expanded-rail-end-rhythm:3rem;
   --layout-home-platform-rail-compact-width:3.25rem;
   --layout-home-platform-tablet-rail-min:12rem;
   --layout-home-platform-tablet-rail-max:15rem;
@@ -1338,9 +1340,9 @@
   --layout-feed-badge-weight:600;
   --layout-feed-badge-icon-size:0.82rem;
   --layout-feed-copy-line-height:1.72;
-  --layout-feed-post-action-min-height:2.35rem;
-  --layout-feed-post-action-padding-x:0.92rem;
-  --layout-feed-post-action-size:0.76rem;
+  --layout-feed-post-action-min-height:1.75rem;
+  --layout-feed-post-action-padding-x:0.48rem;
+  --layout-feed-post-action-size:0.68rem;
 }
 
 /* =============================================================================

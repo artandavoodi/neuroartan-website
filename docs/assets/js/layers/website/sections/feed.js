@@ -130,6 +130,7 @@ function getFeedInteractionState(postId = '') {
       repost: false,
       like: false,
       save: false,
+      share: false,
     };
   }
 
@@ -322,7 +323,10 @@ function renderFeedPost(post = {}) {
       <p class="feed-post__copy">${escapeHtml(post.content || '')}</p>
 
       ${post.imageUrl ? `
-        <img class="feed-post__image" src="${escapeHtml(post.imageUrl)}" alt="">
+        <div class="feed-post__media-frame" data-feed-media-state="loading">
+          <span class="feed-post__media-loader" aria-hidden="true"></span>
+          <img class="feed-post__image" src="${escapeHtml(post.imageUrl)}" alt="" loading="lazy" decoding="async">
+        </div>
       ` : ''}
 
       <div class="feed-post__metadata">
@@ -334,13 +338,35 @@ function renderFeedPost(post = {}) {
         <button class="feed-post__action" type="button" data-feed-post-action="reply" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.reply ? 'true' : 'false'}">Reply</button>
         <button class="feed-post__action" type="button" data-feed-post-action="repost" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.repost ? 'true' : 'false'}">Repost</button>
         <button class="feed-post__action" type="button" data-feed-post-action="like" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.like ? 'true' : 'false'}">Like</button>
-        <button class="feed-post__action" type="button" data-feed-post-action="save" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.save ? 'true' : 'false'}">Save</button>
+        <button class="feed-post__action" type="button" data-feed-post-action="share" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.share ? 'true' : 'false'}">Share</button>
+        <button class="feed-post__action" type="button" data-feed-post-action="save" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.save ? 'true' : 'false'}">Bookmark</button>
         <a class="feed-post__action feed-post__action--link" href="${escapeHtml(post.publicRoute || post.href || '/pages/profiles/index.html')}">View</a>
         ${post.ownedByCurrentUser ? `<button class="feed-post__action" type="button" data-feed-delete-post="${escapeHtml(post.feedPostId || post.id)}">Delete</button>` : ''}
         ${post.modelId ? `<button class="feed-post__action feed-post__action--primary" type="button" data-feed-post-model="${escapeHtml(post.modelId)}">${post.modelId === activeModelId ? 'Active on Homepage' : 'Interact'}</button>` : ''}
       </div>
     </article>
   `;
+}
+
+function hydrateFeedMedia(root = FEED_PAGE_STATE.root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  root.querySelectorAll('.feed-post__media-frame').forEach((frame) => {
+    const image = frame.querySelector('.feed-post__image');
+    if (!(frame instanceof HTMLElement) || !(image instanceof HTMLImageElement)) return;
+
+    const setState = (state) => {
+      frame.dataset.feedMediaState = state;
+    };
+
+    if (image.complete && image.naturalWidth > 0) {
+      setState('loaded');
+      return;
+    }
+
+    image.addEventListener('load', () => setState('loaded'), { once: true });
+    image.addEventListener('error', () => setState('error'), { once: true });
+  });
 }
 
 function renderFeedPage() {
@@ -454,6 +480,8 @@ function renderFeedPage() {
       </div>
     </section>
   `;
+
+  hydrateFeedMedia(FEED_PAGE_STATE.root);
 }
 
 /* =============================================================================

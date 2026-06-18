@@ -42,6 +42,12 @@
     var(--profile-workspace-right-toolbar-expanded-width);
 }
 
+@media (min-width:981px){
+  .profile-workspace__layout[data-profile-sidebar-rail="expanded"]{
+    --profile-workspace-sidebar-edge-padding:var(--layout-platform-expanded-rail-end-rhythm);
+  }
+}
+
 .profile-workspace__layout[data-profile-right-toolbar-rail="collapsed"]{
   grid-template-columns:
     var(--profile-workspace-sidebar-expanded-width)

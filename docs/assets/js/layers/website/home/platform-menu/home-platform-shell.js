@@ -1434,8 +1434,8 @@ function syncHomePlatformCommunicationIndicators(snapshot = HOME_PLATFORM_SHELL_
     const showCount = Number.isFinite(unreadCount) && unreadCount > 0;
 
     node.setAttribute('data-home-platform-nav-indicator-state', state);
-    node.hidden = state === 'idle';
-    node.textContent = showCount ? String(Math.min(unreadCount, 99)) : 'New';
+    node.hidden = !showCount;
+    node.textContent = showCount ? String(Math.min(unreadCount, 99)) : '';
   });
 }
 

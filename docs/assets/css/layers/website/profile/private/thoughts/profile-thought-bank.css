@@ -188,6 +188,7 @@
   color:var(--text-secondary-color);
 }
 
+html.profile-thought-overlay-open,
 body.profile-thought-overlay-open{
   overflow:hidden;
   overscroll-behavior:none;
@@ -231,6 +232,11 @@ body.profile-thought-overlay-open{
   max-height:calc(100dvh - (var(--site-shell-inline-padding) * 2));
   overflow:auto;
   border-radius:var(--radius-dialog);
+  border:none;
+  background:var(--glass-overlay-shell-bg);
+  box-shadow:none;
+  backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
+  -webkit-backdrop-filter:blur(var(--glass-overlay-shell-blur)) saturate(var(--glass-overlay-shell-saturate));
 }
 
 .profile-thought-composer__title,
@@ -405,7 +411,7 @@ body.profile-thought-overlay-open{
 }
 
 .profile-thought-stream__entry-content-wrapper{
-  padding:var(--spacing-none);
+  padding:var(--spacing-lg) var(--spacing-none);
 }
 
 .profile-thought-stream__entry-header{
@@ -592,6 +598,10 @@ body.profile-thought-overlay-open{
   .profile-thought-composer,
   .profile-thought-bank__stream{
     padding:var(--spacing-none);
+  }
+
+  .profile-thought-stream__entry-content-wrapper{
+    padding:var(--spacing-md) var(--spacing-none);
   }
 
   .profile-thought-stream__lane-header{

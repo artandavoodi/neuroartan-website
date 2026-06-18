@@ -2,12 +2,12 @@
   "version": "2026-05-03",
   "canonicalStatus": "homepage_developer_mode_registry",
   "topbarItems": [
-    { "id": "code", "label": "Code", "workspace": "code", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/files/code/code.svg", "active": true },
-    { "id": "app", "label": "App", "workspace": "app", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/layers/software/app/app.svg", "active": false },
-    { "id": "docs", "label": "Docs", "workspace": "docs", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/layers/developer/docs/docs.svg", "active": false },
-    { "id": "notifications", "label": "Notifications", "utility": "notifications", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/system/notifications/bell.svg" },
-    { "id": "settings", "label": "Settings", "utility": "settings", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/layers/website/home/developer-mode/topbar/developer-mode-developer-settings.svg" },
-    { "id": "account", "label": "Account", "utility": "account", "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/identity/account/account.svg" }
+    { "id": "code", "label": "Code", "workspace": "code", "icon": "/registry/icons/public/assets/core/files/code/code.svg", "active": true },
+    { "id": "app", "label": "App", "workspace": "app", "icon": "/registry/icons/public/assets/layers/software/app/app.svg", "active": false },
+    { "id": "docs", "label": "Docs", "workspace": "docs", "icon": "/registry/icons/public/assets/layers/developer/docs/docs.svg", "active": false },
+    { "id": "notifications", "label": "Notifications", "utility": "notifications", "icon": "/registry/icons/public/assets/core/system/notifications/bell.svg" },
+    { "id": "settings", "label": "Settings", "utility": "settings", "icon": "/registry/icons/public/assets/layers/website/home/developer-mode/topbar/developer-mode-developer-settings.svg" },
+    { "id": "account", "label": "Account", "utility": "account", "icon": "/registry/icons/public/assets/core/identity/account/account.svg" }
   ],
   "sidebarItems": [],
   "commandModes": [

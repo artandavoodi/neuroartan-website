@@ -1,17 +1,4 @@
-import {
-  getCurrentSupabaseUser,
-  getModelStoreBackendState,
-  getOwnedCanonicalModel,
-  listModelPersonalityCalibrationSessions,
-  listModelSourceCalibrationSessions,
-} from '../../../system/model/model-store.js';
-import {
-  listModelKnowledgeEntries,
-  listModelLogicRecords,
-  listModelSourceVaultIndexEntries,
-  listModelTrainingDatasetEntries,
-  readLatestTrainingRecipe,
-} from '../../../system/model/model-training-store.js';
+import { readHomeOverviewSnapshot } from './home-overview-snapshot.js';
 
 const HOME_MODEL_DEFAULT_CONFIG = Object.freeze({
   showReadiness: true,
@@ -21,8 +8,6 @@ const HOME_MODEL_DEFAULT_CONFIG = Object.freeze({
   showVisibilityState: true,
 });
 
-const HOME_MODEL_READ_TIMEOUT_MS = 6500;
-const HOME_MODEL_READ_TIMEOUT = Object.freeze({ __homeModelReadTimeout: true });
 const HOME_MODEL_RETRY_TIMERS = new WeakMap();
 
 function getHomeConfig() {
@@ -75,32 +60,6 @@ function titleize(value = '') {
     .replace(/\b\w/g, (letter) => letter.toUpperCase()) || 'Pending';
 }
 
-function getRecordAggregateCount(record = {}) {
-  const metadata = record?.source_metadata && typeof record.source_metadata === 'object'
-    ? record.source_metadata
-    : {};
-  return Math.max(
-    1,
-    normalizeNumber(metadata.source_vault_file_count)
-      || normalizeNumber(metadata.file_count)
-      || normalizeNumber(metadata.content_file_count)
-      || normalizeNumber(record.aggregate_count)
-      || 1
-  );
-}
-
-function calculateModelReadiness(snapshot = {}) {
-  const checks = [
-    Boolean(snapshot.model?.id),
-    snapshot.sourceInputCount > 0 || snapshot.sourceSessionCount > 0,
-    snapshot.memoryInputCount > 0,
-    snapshot.personalitySessionCount > 0,
-    Boolean(snapshot.recipe?.id),
-  ];
-  const complete = checks.filter(Boolean).length;
-  return Math.round((complete / checks.length) * 100);
-}
-
 function getTrainingProgress(recipe = null) {
   const state = normalizeString(recipe?.readinessState || recipe?.recipeState || '').toLowerCase();
   if (['ready', 'complete', 'completed', 'trained', 'active'].includes(state)) return 1;
@@ -116,119 +75,6 @@ function getVisibilityState(model = {}) {
   if (visibility === 'public') return 'partial';
   if (['friends', 'followers', 'family', 'subscribers'].includes(visibility)) return 'limited';
   return 'private';
-}
-
-async function safeRead(label, reader, fallback) {
-  try {
-    return await reader();
-  } catch (error) {
-    console.warn(`[home-model] ${label} unavailable.`, error);
-    return fallback;
-  }
-}
-
-async function withReadTimeout(promise, fallback, timeoutMs = HOME_MODEL_READ_TIMEOUT_MS) {
-  if (!timeoutMs || timeoutMs < 1) return promise;
-
-  let timeoutId = null;
-  const timeout = new Promise((resolve) => {
-    timeoutId = window.setTimeout(() => resolve(fallback), timeoutMs);
-  });
-
-  try {
-    return await Promise.race([promise, timeout]);
-  } finally {
-    if (timeoutId) window.clearTimeout(timeoutId);
-  }
-}
-
-async function readHomeModelSnapshot() {
-  const backend = getModelStoreBackendState();
-  const user = await withReadTimeout(
-    safeRead('Current user', () => getCurrentSupabaseUser(), null),
-    HOME_MODEL_READ_TIMEOUT
-  );
-  if (user === HOME_MODEL_READ_TIMEOUT) {
-    return { backend, resolving: true };
-  }
-
-  if (!user?.id) {
-    return {
-      backend,
-      model: null,
-      sourceInputCount: 0,
-      memoryInputCount: 0,
-      sourceSessionCount: 0,
-      personalitySessionCount: 0,
-      recipe: null,
-      readiness: 0,
-    };
-  }
-
-  const ownedModel = await withReadTimeout(
-    safeRead('Canonical model', () => getOwnedCanonicalModel(), null),
-    HOME_MODEL_READ_TIMEOUT
-  );
-  if (ownedModel === HOME_MODEL_READ_TIMEOUT) {
-    return { backend, resolving: true };
-  }
-
-  const model = ownedModel || null;
-  if (!model?.id) {
-    return {
-      backend,
-      model: null,
-      sourceInputCount: 0,
-      memoryInputCount: 0,
-      sourceSessionCount: 0,
-      personalitySessionCount: 0,
-      recipe: null,
-      readiness: 0,
-    };
-  }
-
-  const [
-    sourceVaultRecords,
-    trainingDatasets,
-    knowledgeEntries,
-    logicRecords,
-    sourceSessions,
-    personalitySessions,
-    recipe,
-  ] = await Promise.all([
-    withReadTimeout(safeRead('Source Vault records', () => listModelSourceVaultIndexEntries(), []), []),
-    withReadTimeout(safeRead('Training datasets', () => listModelTrainingDatasetEntries(), []), []),
-    withReadTimeout(safeRead('Knowledge entries', () => listModelKnowledgeEntries(), []), []),
-    withReadTimeout(safeRead('Logic records', () => listModelLogicRecords(), []), []),
-    withReadTimeout(safeRead('Source calibration sessions', () => listModelSourceCalibrationSessions(model.id), []), []),
-    withReadTimeout(safeRead('Personality calibration sessions', () => listModelPersonalityCalibrationSessions(model.id), []), []),
-    withReadTimeout(safeRead('Training recipe', () => readLatestTrainingRecipe(), null), null),
-  ]);
-
-  const sourceVaultCount = sourceVaultRecords.reduce((total, record) => total + getRecordAggregateCount(record), 0);
-  const trainingDatasetCount = trainingDatasets.length;
-  const knowledgeEntryCount = knowledgeEntries.length;
-  const logicRecordCount = logicRecords.length;
-  const sourceInputCount = sourceVaultCount + trainingDatasetCount;
-  const memoryInputCount = knowledgeEntryCount + logicRecordCount + trainingDatasetCount;
-  const snapshot = {
-    backend,
-    model,
-    sourceVaultCount,
-    trainingDatasetCount,
-    knowledgeEntryCount,
-    logicRecordCount,
-    sourceInputCount,
-    memoryInputCount,
-    sourceSessionCount: sourceSessions.length,
-    personalitySessionCount: personalitySessions.length,
-    recipe,
-  };
-
-  return {
-    ...snapshot,
-    readiness: calculateModelReadiness(snapshot),
-  };
 }
 
 function scheduleHomeModelRetry(scope) {
@@ -275,15 +121,10 @@ function createActivityRing(label, progress = 0, tone = 'identity', index = 0) {
 }
 
 function renderSummary(scope, snapshot, settings) {
-  const modelName = scope.querySelector('[data-home-model-field="modelName"]');
   const modelState = scope.querySelector('[data-home-model-field="modelState"]');
   const modelVisibility = scope.querySelector('[data-home-model-field="modelVisibility"]');
   const metrics = scope.querySelector('[data-home-model-metrics]');
   const model = snapshot.model;
-
-  if (modelName) {
-    modelName.textContent = model?.model_name || model?.display_name || 'No active model';
-  }
 
   if (modelState) {
     modelState.hidden = Boolean(model?.id);
@@ -307,9 +148,9 @@ function renderSummary(scope, snapshot, settings) {
   if (metrics instanceof HTMLElement) {
     const inputProgress = Math.min(1, Math.log10(Math.max(1, snapshot.sourceInputCount)) / 3);
     const trainingLabel = titleize(snapshot.recipe?.readinessState || snapshot.recipe?.recipeState || 'draft');
-    const trainingProgress = getTrainingProgress(snapshot.recipe);
-    const activityCount = snapshot.sourceInputCount + snapshot.memoryInputCount + snapshot.sourceSessionCount + snapshot.personalitySessionCount;
-    const activityProgress = Math.min(1, Math.log10(Math.max(1, activityCount)) / 3);
+    const trainingProgress = clampNumber(snapshot.trainingProgress ?? getTrainingProgress(snapshot.recipe), 0, 1);
+    const memoryCount = normalizeNumber(snapshot.memorySignalCount || snapshot.memoryInputCount || 0);
+    const memoryProgress = Math.min(1, Math.log10(Math.max(1, memoryCount)) / 3);
     metrics.innerHTML = [
       `<div class="home-model-overview__activity-rings" aria-label="Model activity rings">
         ${createActivityRing('Readiness', snapshot.readiness / 100, 'identity', 0)}
@@ -319,8 +160,8 @@ function renderSummary(scope, snapshot, settings) {
       `<div class="home-model-overview__activity-stack">
         ${createActivityMetric('Readiness', `${snapshot.readiness}%`, snapshot.readiness / 100, 'identity', settings.showReadiness)}
         ${createActivityMetric('Inputs', snapshot.sourceInputCount.toLocaleString(), inputProgress, 'source', settings.showSourceCoverage)}
+        ${createActivityMetric('Memory', memoryCount.toLocaleString(), memoryProgress, 'personality', settings.showActivityState)}
         ${createActivityMetric('Training', trainingLabel, trainingProgress, 'memory', settings.showTrainingState)}
-        ${createActivityMetric('Signals', activityCount.toLocaleString(), activityProgress, 'personality', settings.showActivityState)}
       </div>`,
     ].join('');
   }
@@ -346,7 +187,7 @@ async function updateModelDisplay(scope) {
 
   let keepLoading = false;
   try {
-    const snapshot = await readHomeModelSnapshot();
+    const snapshot = await readHomeOverviewSnapshot();
     if (snapshot.resolving) {
       if (content instanceof HTMLElement) content.hidden = !hasRenderedContent;
       if (empty instanceof HTMLElement) empty.hidden = true;

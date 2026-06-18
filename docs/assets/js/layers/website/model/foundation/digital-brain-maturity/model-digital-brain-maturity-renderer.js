@@ -248,7 +248,7 @@ function renderDigitalBrainMaturityControls(surface) {
           <span>Pause motion</span>
         </button>
         <button class="model-digital-brain-maturity__settings-toggle" type="button" data-digital-brain-motion-direction-toggle aria-pressed="false" aria-label="Rotate left">
-          <img class="model-digital-brain-maturity__control-icon ui-icon-theme-aware" src="${DIGITAL_BRAIN_ICON_BASE}/brain-motion-speed.svg" alt="">
+          <img class="model-digital-brain-maturity__control-icon ui-icon-theme-aware" src="${DIGITAL_BRAIN_ICON_BASE}/brain-motion-rotate-right.svg" alt="">
           <span>Rotate right</span>
         </button>
         <button class="model-digital-brain-maturity__settings-toggle" type="button" data-digital-brain-subnodes-toggle aria-pressed="true" aria-label="Hide construct nodes">
@@ -625,11 +625,13 @@ function syncDigitalBrainControls(surface) {
   const motionDirectionToggle = surface.querySelector('[data-digital-brain-motion-direction-toggle]');
   if (motionDirectionToggle instanceof HTMLButtonElement) {
     const counterclockwise = surface.dataset.digitalBrainMotionDirection === 'counterclockwise';
+    const currentDirection = counterclockwise ? 'left' : 'right';
+    const currentDirectionLabel = counterclockwise ? 'Rotate left' : 'Rotate right';
     motionDirectionToggle.setAttribute('aria-pressed', String(counterclockwise));
-    motionDirectionToggle.setAttribute('aria-label', counterclockwise ? 'Rotate right' : 'Rotate left');
+    motionDirectionToggle.setAttribute('aria-label', currentDirectionLabel);
     motionDirectionToggle.innerHTML = `
-      <img class="model-digital-brain-maturity__control-icon ui-icon-theme-aware" src="${DIGITAL_BRAIN_ICON_BASE}/brain-motion-speed.svg" alt="">
-      <span>${counterclockwise ? 'Rotate left' : 'Rotate right'}</span>
+      <img class="model-digital-brain-maturity__control-icon ui-icon-theme-aware" src="${DIGITAL_BRAIN_ICON_BASE}/brain-motion-rotate-${currentDirection}.svg" alt="">
+      <span>${currentDirectionLabel}</span>
     `;
   }
 

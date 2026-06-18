@@ -1,5 +1,85 @@
 /* ========================================================================== 
    Home System State Styles
-   Module-level ownership reserved.
+   Operational health of active environment.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-system-state-overview,
+.home-system-state-overview__grid{
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-system-state-overview[hidden],
+.home-system-state-overview__loading[hidden]{
+  display:none;
+}
+
+.home-system-state-overview__grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:var(--spacing-lg) var(--spacing-xl);
+}
+
+.home-system-state-overview__item{
+  display:grid;
+  grid-template-columns:auto minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+}
+
+.home-system-state-overview__dot{
+  inline-size:var(--space-2);
+  block-size:var(--space-2);
+  border-radius:var(--radius-circle);
+  background:var(--text-tertiary-color);
+}
+
+.home-system-state-overview__item[data-home-system-state-tone="ready"] .home-system-state-overview__dot{
+  background:var(--semantic-success-color, var(--digital-brain-signal-stable));
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--semantic-success-color, var(--digital-brain-signal-stable)) 24%, transparent);
+}
+
+.home-system-state-overview__item[data-home-system-state-tone="forming"] .home-system-state-overview__dot{
+  background:var(--semantic-warning-color, var(--digital-brain-signal-forming));
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--semantic-warning-color, var(--digital-brain-signal-forming)) 24%, transparent);
+}
+
+.home-system-state-overview__copy{
+  display:grid;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+}
+
+.home-system-state-overview__label,
+.home-system-state-overview__value{
+  margin:var(--spacing-none);
+}
+
+.home-system-state-overview__label{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.home-system-state-overview__value{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+@media (max-width: 760px){
+  .home-system-state-overview__grid{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px){
+  .home-system-state-overview__grid{
+    grid-template-columns:1fr;
+  }
+}

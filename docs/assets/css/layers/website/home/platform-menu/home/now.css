@@ -1,5 +1,120 @@
 /* ========================================================================== 
    Home Now Styles
-   Module-level ownership reserved.
+   Live activity and immediate working context.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-now-overview,
+.home-now-overview__stream{
+  display:grid;
+  gap:var(--spacing-lg);
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-now-overview[hidden],
+.home-now-overview__loading[hidden]{
+  display:none;
+}
+
+.home-now-overview__grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:var(--spacing-xl);
+  min-width:var(--spacing-none);
+}
+
+.home-now-overview__metric,
+.home-now-overview__activity{
+  min-width:var(--spacing-none);
+}
+
+.home-now-overview__metric{
+  --home-now-tone-color:var(--digital-brain-layer-identity);
+  display:grid;
+  gap:var(--spacing-2xs);
+}
+
+.home-now-overview__metric[data-home-now-tone="source"]{
+  --home-now-tone-color:var(--digital-brain-layer-source);
+}
+
+.home-now-overview__metric[data-home-now-tone="memory"]{
+  --home-now-tone-color:var(--digital-brain-layer-memory);
+}
+
+.home-now-overview__metric-value,
+.home-now-overview__metric-label,
+.home-now-overview__activity-label,
+.home-now-overview__activity-meta,
+.home-now-overview__quiet{
+  margin:var(--spacing-none);
+}
+
+.home-now-overview__metric-value{
+  color:var(--home-now-tone-color);
+  font-size:var(--headline-4-size);
+  line-height:var(--headline-4-line-height);
+  font-weight:var(--font-weight-semibold);
+}
+
+.home-now-overview__metric-label,
+.home-now-overview__activity-meta,
+.home-now-overview__quiet{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.home-now-overview__stream{
+  gap:var(--spacing-md);
+}
+
+.home-now-overview__activity{
+  display:grid;
+  grid-template-columns:auto minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
+.home-now-overview__activity-dot{
+  inline-size:var(--space-2);
+  block-size:var(--space-2);
+  border-radius:var(--radius-circle);
+  background:var(--digital-brain-layer-identity);
+  box-shadow:0 0 var(--space-4) color-mix(in srgb, var(--digital-brain-layer-identity) 28%, transparent);
+}
+
+.home-now-overview__activity-dot[data-home-now-activity-type="post"]{
+  background:var(--digital-brain-layer-source);
+}
+
+.home-now-overview__activity-dot[data-home-now-activity-type="thought"]{
+  background:var(--digital-brain-layer-memory);
+}
+
+.home-now-overview__activity-dot[data-home-now-activity-type="change"]{
+  background:var(--digital-brain-layer-personality);
+}
+
+.home-now-overview__activity-copy{
+  display:grid;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+}
+
+.home-now-overview__activity-label{
+  color:var(--text-primary-color);
+  font-size:var(--body-2-size);
+  line-height:var(--body-2-line-height);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+@media (max-width: 640px){
+  .home-now-overview__grid{
+    grid-template-columns:1fr;
+    gap:var(--spacing-lg);
+  }
+}

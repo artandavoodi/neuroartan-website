@@ -1,127 +1,140 @@
-// Direction Module - Priority Actions
-// Provides actionable guidance items and priority actions
+import { readHomeOverviewSnapshot } from './home-overview-snapshot.js';
 
-// Get home configuration
+const HOME_DIRECTION_RETRY_TIMERS = new WeakMap();
+
 function getHomeConfig() {
-  const stored = localStorage.getItem('neuroartan-home-config');
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      console.error('Failed to parse home config:', e);
-    }
-  }
-  return null;
-}
-
-// Update direction display
-function updateDirectionDisplay(root) {
-  const config = getHomeConfig();
-  
-  // Check if module is visible
-  if (config && config.visibility && config.visibility['direction'] === false) {
-    root.style.display = 'none';
-    return;
-  }
-  
-  root.style.display = '';
-  
-  // Fetch guidance data from backend
-  fetchGuidanceData().then(data => {
-    const value = root.querySelector('[data-home-guidance-value]');
-    if (value) {
-      value.textContent = data.priorityAction || 'Strengthen Voice';
-    }
-  }).catch(err => {
-    console.error('Failed to fetch guidance data:', err);
-  });
-}
-
-// Fetch guidance data from backend
-async function fetchGuidanceData() {
   try {
-    const response = await fetch('/assets/data/home/home-config.json');
-    if (!response.ok) throw new Error('Failed to fetch home config');
-    const config = await response.json();
-    
-    // Determine priority action based on config state
-    let priorityAction = 'Strengthen Voice';
-    if (!config.model.enableDashboard) {
-      priorityAction = 'Complete Profile';
-    } else if (!config.analytics.enableTracking) {
-      priorityAction = 'Connect Sources';
-    }
-    
+    const parsed = JSON.parse(localStorage.getItem('neuroartan-home-config') || '{}');
     return {
-      priorityAction,
-      guidanceItems: [
-        'Strengthen Voice',
-        'Complete Profile',
-        'Connect Sources'
-      ]
+      ...parsed,
+      visibility: {
+        direction: true,
+        ...(parsed.visibility || {}),
+      },
     };
   } catch (error) {
-    console.error('Error fetching guidance data:', error);
-    return {
-      priorityAction: 'Strengthen Voice',
-      guidanceItems: [
-        'Strengthen Voice',
-        'Complete Profile',
-        'Connect Sources'
-      ]
-    };
+    console.error('[home-direction] Failed to parse Home config.', error);
+    return { visibility: { direction: true } };
   }
 }
 
-// Listen for home configuration changes
-function listenForConfigChanges(root) {
-  const controller = new AbortController();
-  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'direction') {
-      updateDirectionDisplay(root);
+function escapeHtml(value = '') {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderDirectionItem(item = {}, index = 0) {
+  return `
+    <a class="home-direction-overview__item" href="${escapeHtml(item.href || '#')}" data-home-direction-priority="${index + 1}">
+      <span class="home-direction-overview__priority">${index + 1}</span>
+      <span class="home-direction-overview__copy">
+        <span class="home-direction-overview__label">${escapeHtml(item.label || 'Review model')}</span>
+        <span class="home-direction-overview__detail">${escapeHtml(item.detail || '')}</span>
+      </span>
+    </a>
+  `;
+}
+
+function renderDirection(scope, snapshot = {}) {
+  const content = scope.querySelector('[data-home-direction-content]');
+  if (!(content instanceof HTMLElement)) return;
+
+  const items = Array.isArray(snapshot.directionItems) ? snapshot.directionItems : [];
+  content.innerHTML = `
+    <div class="home-direction-overview__list">
+      ${items.map(renderDirectionItem).join('')}
+    </div>
+  `;
+}
+
+function scheduleRetry(scope) {
+  const existing = HOME_DIRECTION_RETRY_TIMERS.get(scope);
+  if (existing) window.clearTimeout(existing);
+  const timer = window.setTimeout(() => {
+    HOME_DIRECTION_RETRY_TIMERS.delete(scope);
+    void updateDirectionDisplay(scope);
+  }, 900);
+  HOME_DIRECTION_RETRY_TIMERS.set(scope, timer);
+}
+
+function clearRetry(scope) {
+  const timer = HOME_DIRECTION_RETRY_TIMERS.get(scope);
+  if (timer) window.clearTimeout(timer);
+  HOME_DIRECTION_RETRY_TIMERS.delete(scope);
+}
+
+async function updateDirectionDisplay(scope) {
+  const config = getHomeConfig();
+  const content = scope.querySelector('[data-home-direction-content]');
+  const loading = scope.querySelector('[data-home-direction-loading]');
+  const empty = scope.querySelector('[data-home-module-empty-state]');
+
+  if (config.visibility?.direction === false) {
+    scope.hidden = true;
+    return;
+  }
+
+  scope.hidden = false;
+  if (content instanceof HTMLElement) content.hidden = true;
+  if (empty instanceof HTMLElement) empty.hidden = true;
+  if (loading instanceof HTMLElement) loading.hidden = false;
+  scope.setAttribute('aria-busy', 'true');
+
+  let keepLoading = false;
+  try {
+    const snapshot = await readHomeOverviewSnapshot();
+    if (snapshot.resolving) {
+      keepLoading = true;
+      scheduleRetry(scope);
+      return;
     }
+
+    clearRetry(scope);
+    const hasDirection = Array.isArray(snapshot.directionItems) && snapshot.directionItems.length > 0;
+    if (!hasDirection) {
+      if (empty instanceof HTMLElement) empty.hidden = false;
+      return;
+    }
+
+    renderDirection(scope, snapshot);
+    if (content instanceof HTMLElement) content.hidden = false;
+  } finally {
+    if (!keepLoading) {
+      if (loading instanceof HTMLElement) loading.hidden = true;
+      scope.setAttribute('aria-busy', 'false');
+    }
+  }
+}
+
+function listenForChanges(scope) {
+  const controller = new AbortController();
+  const rerender = () => void updateDirectionDisplay(scope);
+  document.addEventListener('neuroartan:home:visibility:changed', (event) => {
+    if (event.detail?.moduleId === 'direction') rerender();
   }, { signal: controller.signal });
-  
-  document.addEventListener('neuroartan:home:initialized', () => {
-    updateDirectionDisplay(root);
-  }, { signal: controller.signal });
-  
-  document.addEventListener('neuroartan:home:model:changed', () => {
-    updateDirectionDisplay(root);
-  }, { signal: controller.signal });
+  document.addEventListener('neuroartan:home:initialized', rerender, { signal: controller.signal });
+  document.addEventListener('neuroartan:supabase-ready', rerender, { signal: controller.signal });
+  document.addEventListener('model:projection-updated', rerender, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount direction module
 export function mountHomeDirection(root) {
   const scope = root?.querySelector?.('[data-home-overview-module="direction"]')
-    || root?.matches?.('[data-home-overview-module="direction"]') && root;
+    || (root?.matches?.('[data-home-overview-module="direction"]') ? root : null);
 
-  if (!(scope instanceof Element)) return;
+  if (!(scope instanceof Element)) return null;
 
-  const value = scope.querySelector('[data-home-guidance-value]');
-  const nodes = [...scope.querySelectorAll('[data-home-guidance-action]')];
+  void updateDirectionDisplay(scope);
+  const cleanup = listenForChanges(scope);
+  const interval = window.setInterval(() => void updateDirectionDisplay(scope), 45000);
 
-  // Initialize display
-  updateDirectionDisplay(scope);
-  const cleanupConfigChanges = listenForConfigChanges(scope);
-
-  // Handle action selection
-  nodes.forEach((node) => {
-    node.addEventListener("click", () => {
-      nodes.forEach((item) => item.classList.toggle("is-active", item === node));
-      if (value) value.textContent = node.textContent.trim();
-    });
-  });
-  
-  // Set up periodic updates
-  const updateInterval = setInterval(() => {
-    updateDirectionDisplay(scope);
-  }, 30000); // Update every 30 seconds
-  
-  // Return cleanup function
   return () => {
-    cleanupConfigChanges?.();
-    clearInterval(updateInterval);
+    clearRetry(scope);
+    cleanup?.();
+    window.clearInterval(interval);
   };
 }

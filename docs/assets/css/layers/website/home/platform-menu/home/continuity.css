@@ -1,5 +1,130 @@
 /* ========================================================================== 
    Home Continuity Styles
-   Module-level ownership reserved.
+   Memory persistence and continuity state.
    Home canvas rhythm is owned by overview-canvas.css.
    ========================================================================== */
+
+.home-continuity-overview,
+.home-continuity-overview__summary{
+  width:var(--size-full);
+  min-width:var(--spacing-none);
+}
+
+.home-continuity-overview[hidden],
+.home-continuity-overview__loading[hidden]{
+  display:none;
+}
+
+.home-continuity-overview__summary{
+  display:grid;
+  grid-template-columns:auto minmax(0, 1fr);
+  align-items:center;
+  gap:var(--spacing-xl);
+}
+
+.home-continuity-overview__dial{
+  display:grid;
+  place-items:center;
+  inline-size:clamp(6.25rem, 12vw, 8rem);
+  aspect-ratio:1;
+  border-radius:var(--radius-circle);
+  background:
+    conic-gradient(
+      var(--digital-brain-layer-memory) calc(var(--home-continuity-dial-progress, 0) * 1turn),
+      color-mix(in srgb, var(--text-primary-color) 9%, transparent) 0
+    );
+  box-shadow:0 0 var(--space-7) color-mix(in srgb, var(--digital-brain-layer-memory) 14%, transparent);
+}
+
+.home-continuity-overview__dial-value{
+  display:grid;
+  place-items:center;
+  inline-size:62%;
+  aspect-ratio:1;
+  border-radius:var(--radius-circle);
+  color:var(--text-primary-color);
+  background:var(--bg-color);
+  font-size:var(--headline-4-size);
+  line-height:var(--headline-4-line-height);
+  font-weight:var(--font-weight-semibold);
+}
+
+.home-continuity-overview__stack{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:var(--spacing-lg);
+  min-width:var(--spacing-none);
+}
+
+.home-continuity-overview__metric{
+  --home-continuity-tone-color:var(--digital-brain-layer-memory);
+  display:grid;
+  gap:var(--spacing-xs);
+  min-width:var(--spacing-none);
+}
+
+.home-continuity-overview__metric::before{
+  content:"";
+  inline-size:var(--size-full);
+  block-size:var(--border-width-thin);
+  border-radius:var(--radius-pill);
+  background:
+    linear-gradient(
+      90deg,
+      var(--home-continuity-tone-color) calc(var(--home-continuity-progress, 0) * 100%),
+      color-mix(in srgb, var(--text-primary-color) 10%, transparent) 0
+    );
+}
+
+.home-continuity-overview__metric[data-home-continuity-tone="identity"]{
+  --home-continuity-tone-color:var(--digital-brain-layer-identity);
+}
+
+.home-continuity-overview__metric[data-home-continuity-tone="source"]{
+  --home-continuity-tone-color:var(--digital-brain-layer-source);
+}
+
+.home-continuity-overview__metric[data-home-continuity-tone="personality"]{
+  --home-continuity-tone-color:var(--digital-brain-layer-personality);
+}
+
+.home-continuity-overview__metric[data-home-continuity-tone="voice"]{
+  --home-continuity-tone-color:var(--digital-brain-layer-voice);
+}
+
+.home-continuity-overview__metric-value,
+.home-continuity-overview__metric-label{
+  margin:var(--spacing-none);
+}
+
+.home-continuity-overview__metric-value{
+  color:var(--home-continuity-tone-color);
+  font-size:var(--body-1-size);
+  line-height:var(--body-1-line-height);
+  font-weight:var(--font-weight-semibold);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.home-continuity-overview__metric-label{
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+@media (max-width: 860px){
+  .home-continuity-overview__summary{
+    grid-template-columns:1fr;
+  }
+
+  .home-continuity-overview__stack{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px){
+  .home-continuity-overview__stack{
+    grid-template-columns:1fr;
+  }
+}

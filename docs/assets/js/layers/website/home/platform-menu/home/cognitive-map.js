@@ -1,6 +1,7 @@
 import {
   getCurrentSupabaseUser,
   getOwnedCanonicalModel,
+  listModelVoiceTrainingSamples,
   listModelPersonalityCalibrationSessions,
   listModelSourceCalibrationSessions,
   readModelDigitalBrainPreferences,
@@ -11,6 +12,9 @@ import {
   listModelSourceVaultIndexEntries,
   listModelTrainingDatasetEntries,
 } from '../../../system/model/model-training-store.js';
+import { listProfilePosts } from '../../../system/profile/profile-post-store.js';
+import { listProfileThoughts } from '../../../system/profile/profile-thought-store.js';
+import { listFeedPosts } from '../../../system/feed/feed-store.js';
 
 const HOME_COGNITIVE_MAP_READ_TIMEOUT_MS = 6500;
 const HOME_COGNITIVE_MAP_READ_TIMEOUT = Object.freeze({ __homeCognitiveMapReadTimeout: true });
@@ -18,11 +22,11 @@ const HOME_COGNITIVE_MAP_LIVE_PREFERENCES = new Map();
 const HOME_COGNITIVE_MAP_PULSE_FRAMES = new WeakMap();
 const HOME_COGNITIVE_MAP_RETRY_TIMERS = new WeakMap();
 const HOME_COGNITIVE_MAP_LAYERS = Object.freeze([
-  { id: 'identity', label: 'Identity', x: 50, y: 18, tone: 'identity' },
-  { id: 'source', label: 'Source', x: 74, y: 36, tone: 'source' },
-  { id: 'memory', label: 'Memory', x: 25, y: 62, tone: 'memory' },
-  { id: 'personality', label: 'Personality', x: 55, y: 50, tone: 'personality' },
-  { id: 'voice', label: 'Voice', x: 76, y: 70, tone: 'voice' },
+  { id: 'identity', label: 'Self schema', x: 50, y: 18, tone: 'identity' },
+  { id: 'source', label: 'Semantic knowledge', x: 74, y: 36, tone: 'source' },
+  { id: 'memory', label: 'Episodic continuity', x: 25, y: 62, tone: 'memory' },
+  { id: 'personality', label: 'Social-affective pattern', x: 55, y: 50, tone: 'personality' },
+  { id: 'voice', label: 'Expression system', x: 76, y: 70, tone: 'voice' },
 ]);
 
 function getHomeConfig() {
@@ -172,11 +176,11 @@ function getLayerStrength(layerId, snapshot = {}) {
     case 'source':
       return Math.min(1, (snapshot.sourceInputCount + snapshot.sourceSessionCount) / 12);
     case 'memory':
-      return Math.min(1, snapshot.memoryInputCount / 12);
+      return Math.min(1, (snapshot.memoryInputCount + snapshot.profilePostCount + snapshot.profileThoughtCount) / 18);
     case 'personality':
-      return Math.min(1, snapshot.personalitySessionCount / 3);
+      return Math.min(1, (snapshot.personalitySessionCount + snapshot.feedPostCount + snapshot.profileThoughtCount) / 9);
     case 'voice':
-      return snapshot.model?.model_image_url ? 0.75 : 0.22;
+      return Math.min(1, snapshot.voiceSampleCount / 12);
     default:
       return 0.2;
   }
@@ -204,22 +208,23 @@ function getLayerConstructs(layerId, snapshot = {}) {
     case 'source':
       return [
         { id: 'source-vault', label: 'Source vault', value: snapshot.sourceVaultCount },
-        { id: 'source-calibration', label: 'Source calibration', value: snapshot.sourceSessionCount },
+        { id: 'semantic-sources', label: 'Semantic sources', value: snapshot.sourceSessionCount + snapshot.trainingDatasetCount },
       ].filter((item) => normalizeNumber(item.value) > 0);
     case 'memory':
       return [
-        { id: 'datasets', label: 'Datasets', value: snapshot.trainingDatasetCount },
+        { id: 'episodic-records', label: 'Episodic records', value: snapshot.profilePostCount + snapshot.profileThoughtCount },
         { id: 'knowledge', label: 'Knowledge', value: snapshot.knowledgeEntryCount },
         { id: 'logic', label: 'Logic', value: snapshot.logicRecordCount },
       ].filter((item) => normalizeNumber(item.value) > 0);
     case 'personality':
       return [
         { id: 'personality-calibration', label: 'Calibration', value: snapshot.personalitySessionCount },
+        { id: 'social-context', label: 'Social context', value: snapshot.feedPostCount + snapshot.profileThoughtCount },
       ].filter((item) => normalizeNumber(item.value) > 0);
     case 'voice':
       return [
-        { id: 'voice-identity', label: 'Voice identity', value: snapshot.model?.model_image_url || '' },
-      ].filter((item) => normalizeString(item.value));
+        { id: 'voice-samples', label: 'Voice samples', value: snapshot.voiceSampleCount },
+      ].filter((item) => normalizeNumber(item.value) > 0);
     default:
       return [];
   }
@@ -285,6 +290,10 @@ async function readCognitiveMapSnapshot() {
     logicRecords,
     sourceSessions,
     personalitySessions,
+    voiceSamples,
+    profilePosts,
+    profileThoughts,
+    feedPosts,
     digitalBrainPreferences,
   ] = await Promise.all([
     withReadTimeout(safeRead('Source Vault records', () => listModelSourceVaultIndexEntries(), []), []),
@@ -293,6 +302,10 @@ async function readCognitiveMapSnapshot() {
     withReadTimeout(safeRead('Logic records', () => listModelLogicRecords(), []), []),
     withReadTimeout(safeRead('Source calibration sessions', () => listModelSourceCalibrationSessions(model.id), []), []),
     withReadTimeout(safeRead('Personality calibration sessions', () => listModelPersonalityCalibrationSessions(model.id), []), []),
+    withReadTimeout(safeRead('Voice samples', () => listModelVoiceTrainingSamples(model.id), []), []),
+    withReadTimeout(safeRead('Profile posts', () => listProfilePosts(), []), []),
+    withReadTimeout(safeRead('Profile thoughts', () => listProfileThoughts(), []), []),
+    withReadTimeout(safeRead('Feed posts', () => listFeedPosts(), []), []),
     withReadTimeout(safeRead('Digital Brain preferences', () => readModelDigitalBrainPreferences(model.id), null), null),
   ]);
   const livePreferences = HOME_COGNITIVE_MAP_LIVE_PREFERENCES.get(model.id) || null;
@@ -315,6 +328,10 @@ async function readCognitiveMapSnapshot() {
     memoryInputCount,
     sourceSessionCount: sourceSessions.length,
     personalitySessionCount: personalitySessions.length,
+    voiceSampleCount: voiceSamples.length,
+    profilePostCount: profilePosts.length,
+    profileThoughtCount: profileThoughts.length,
+    feedPostCount: feedPosts.length,
   };
   const layers = HOME_COGNITIVE_MAP_LAYERS.map((layer) => {
     const strength = getLayerStrength(layer.id, snapshot);
@@ -386,6 +403,12 @@ function createSignalMetric(label, value, tone = 'source', progress = 0) {
       <span class="home-cognitive-map__signal-label">${label}</span>
     </article>
   `;
+}
+
+function getMapSalience(layers = []) {
+  if (!Array.isArray(layers) || !layers.length) return 0;
+  const total = layers.reduce((sum, layer) => sum + clampNumber(layer.strength || 0, 0, 1), 0);
+  return total / layers.length;
 }
 
 function stopHomeCognitiveMapPulse(scope) {
@@ -523,15 +546,15 @@ function renderCognitiveMap(scope, snapshot) {
   if (stats instanceof HTMLElement) {
     const activeDomainCount = snapshot.layers.filter((layer) => layer.strength > 0.12).length;
     const constructCount = snapshot.layers.reduce((total, layer) => total + layer.constructs.length, 0);
-    const signalProgress = Math.min(1, Math.log10(Math.max(1, snapshot.totalSignals)) / 3);
     const relationProgress = Math.min(1, Math.log10(Math.max(1, snapshot.totalRelations)) / 2);
     const domainProgress = activeDomainCount / HOME_COGNITIVE_MAP_LAYERS.length;
     const constructProgress = Math.min(1, constructCount / 12);
+    const salience = getMapSalience(snapshot.layers);
     stats.innerHTML = [
-      createSignalMetric('Signals', snapshot.totalSignals.toLocaleString(), 'source', signalProgress),
+      createSignalMetric('Domains', activeDomainCount.toLocaleString(), 'source', domainProgress),
       createSignalMetric('Constructs', constructCount.toLocaleString(), 'personality', constructProgress),
-      createSignalMetric('Domains', `${Math.round(domainProgress * 100)}%`, 'voice', domainProgress),
       createSignalMetric('Relations', snapshot.totalRelations.toLocaleString(), 'memory', relationProgress),
+      createSignalMetric('Salience', `${Math.round(salience * 100)}%`, 'voice', salience),
     ].join('');
   }
 }

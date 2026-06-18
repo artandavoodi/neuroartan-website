@@ -28,7 +28,7 @@
       "href": "/products/#reflection-loop",
       "slug": "voice-reflection",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/reflection/reflection.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/reflection/reflection.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -42,7 +42,7 @@
       "href": "/products/#voice-training",
       "slug": "thought-capture",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/capture/capture.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/capture/capture.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -56,7 +56,7 @@
       "href": "/products/#profile-intelligence",
       "slug": "pattern-mapping",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/patterning/patterning.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/patterning/patterning.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -70,7 +70,7 @@
       "href": "/products/#discovery-selection",
       "slug": "cognitive-graph",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/structure/structure.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/structure/structure.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -84,7 +84,7 @@
       "href": "/products/#verification-permissions",
       "slug": "emotional-tracking",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/signals/signals.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/signals/signals.svg",
       "theme": "dark",
       "visibility": "public"
     },
@@ -98,7 +98,7 @@
       "href": "/products/#workspace-shell",
       "slug": "longitudinal-continuity",
       "image": "",
-      "icon": "https://studio.neuroartan.com/registry/icons/public/assets/core/cognition/cognition/cognition.svg",
+      "icon": "/registry/icons/public/assets/core/cognition/cognition/cognition.svg",
       "theme": "dark",
       "visibility": "public"
     }

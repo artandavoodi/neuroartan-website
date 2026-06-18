@@ -1,5 +1,8 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
 import {
+  getSupabaseClient,
+} from '../../../../system/account/identity/account-profile-identity.js';
+import {
   readUserConnectorState,
   saveUserConnectorState
 } from '../../../../system/model/model-store.js';
@@ -103,7 +106,7 @@ function normalizeConnectorState(service, state = {}) {
   const catalog = CONNECTOR_CATALOG[service] || {};
   const legacyConnected = typeof state === 'boolean' ? state : state.connected === true;
   const requestedState = state.connectionState || (legacyConnected ? 'authorization-required' : 'not-connected');
-  const connectionState = requestedState === 'connected' ? 'authorization-required' : requestedState;
+  const connectionState = requestedState;
 
   return {
     service,
@@ -112,7 +115,7 @@ function normalizeConnectorState(service, state = {}) {
     runtime: state.runtime || catalog.runtime || 'not-configured',
     sourceVaultReady: Boolean(state.sourceVaultReady ?? catalog.sourceVaultReady),
     connectionState,
-    connected: false,
+    connected: connectionState === 'connected',
     updatedAt: state.updatedAt || '',
   };
 }
@@ -199,6 +202,8 @@ function setConnectorState(service, connectionState) {
 }
 
 function getConnectorStatusLabel(state = {}) {
+  if (state.connectionState === 'connected') return 'Connected';
+  if (state.connectionState === 'authorizing') return 'Authorizing';
   if (state.connectionState === 'authorization-required') return 'Authorization required';
   if (state.connectionState === 'setup-required') return 'Setup required';
   if (state.connectionState === 'revoked') return 'Revoked';
@@ -208,6 +213,41 @@ function getConnectorStatusLabel(state = {}) {
   if (state.runtime === 'mobile-document-picker-required') return 'Mobile picker required';
   if (state.runtime === 'browser-file-picker') return 'Available';
   return 'Not connected';
+}
+
+async function startXConnectorAuthorization(root, service) {
+  const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+  const authorizingState = writeConnectorStateEverywhere(service, {
+    ...currentState,
+    connectionState: 'authorizing',
+  });
+  updateConnectorStatus(root, service, authorizingState);
+
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase?.functions) throw new Error('SUPABASE_FUNCTIONS_UNAVAILABLE');
+
+    const { data, error } = await supabase.functions.invoke('connectors-x-start', {
+      method: 'POST',
+      body: {},
+    });
+
+    if (error) throw error;
+    if (!data?.authorizationUrl) throw new Error('X_AUTHORIZATION_URL_MISSING');
+
+    window.location.assign(data.authorizationUrl);
+  } catch (error) {
+    console.warn('[Neuroartan][Settings] X connector authorization failed.', error);
+    const failedState = writeConnectorStateEverywhere(service, {
+      ...currentState,
+      connectionState: 'error',
+      metadata: {
+        ...(currentState.metadata || {}),
+        error: error?.message || 'X connector authorization failed.',
+      },
+    });
+    updateConnectorStatus(root, service, failedState);
+  }
 }
 
 function updateConnectorStatus(root, service, state = {}) {
@@ -269,6 +309,11 @@ function bindConnectorClicks(root) {
     item.addEventListener('click', () => {
       const service = item.dataset.homePlatformConnectorService;
       const currentState = normalizeConnectorState(service, getConnectorStates()[service]);
+      if (service === 'x') {
+        void startXConnectorAuthorization(root, service);
+        return;
+      }
+
       const nextState = currentState.connectionState === 'authorization-required'
         ? 'not-connected'
         : 'authorization-required';

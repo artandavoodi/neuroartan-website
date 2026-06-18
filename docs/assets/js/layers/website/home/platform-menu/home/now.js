@@ -1,112 +1,176 @@
-// Now Module
-// Provides usage metrics and interaction data
+import {
+  readHomeOverviewSnapshot,
+  titleizeHomeOverview,
+} from './home-overview-snapshot.js';
 
-// Get home configuration
+const HOME_NOW_RETRY_TIMERS = new WeakMap();
+
 function getHomeConfig() {
-  const stored = localStorage.getItem('neuroartan-home-config');
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      console.error('Failed to parse home config:', e);
-    }
-  }
-  return null;
-}
-
-// Update now display
-function updateNowDisplay(root) {
-  const config = getHomeConfig();
-  
-  // Check if module is visible
-  if (config && config.visibility && config.visibility['now'] === false) {
-    root.style.display = 'none';
-    return;
-  }
-  
-  root.style.display = '';
-  
-  // Fetch now data from backend
-  fetchNowData().then(data => {
-    const value = root.querySelector('[data-home-usage-value]');
-    if (value) {
-      value.textContent = data.currentView || 'Sessions';
-    }
-  });
-}
-
-// Fetch now data from backend
-async function fetchNowData() {
   try {
-    const response = await fetch('/assets/data/home/now-data.json');
-    if (!response.ok) return getEmptyNowData();
-    const data = await response.json();
-
+    const parsed = JSON.parse(localStorage.getItem('neuroartan-home-config') || '{}');
     return {
-      currentView: 'Sessions',
-      sessionCount: data.metadata?.sessionCount || 0,
-      conversationCount: data.metadata?.conversationCount || 0,
-      reflectionCount: data.metadata?.reflectionCount || 0
+      ...parsed,
+      visibility: {
+        now: true,
+        ...(parsed.visibility || {}),
+      },
     };
   } catch (error) {
-    return getEmptyNowData();
+    console.error('[home-now] Failed to parse Home config.', error);
+    return { visibility: { now: true } };
   }
 }
 
-function getEmptyNowData() {
-  return {
-    currentView: 'Sessions',
-    sessionCount: 0,
-    conversationCount: 0,
-    reflectionCount: 0
-  };
+function escapeHtml(value = '') {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-// Listen for home configuration changes
-function listenForConfigChanges(root) {
-  const controller = new AbortController();
-  document.addEventListener('neuroartan:home:visibility:changed', (e) => {
-    if (e.detail.moduleId === 'now') {
-      updateNowDisplay(root);
+function formatTime(value = '') {
+  const time = Date.parse(value || '');
+  if (!time) return 'Now';
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(time));
+}
+
+function renderActivityItem(item = {}) {
+  return `
+    <article class="home-now-overview__activity">
+      <span class="home-now-overview__activity-dot" data-home-now-activity-type="${escapeHtml(item.type || 'activity')}"></span>
+      <span class="home-now-overview__activity-copy">
+        <span class="home-now-overview__activity-label">${escapeHtml(item.label || 'Activity')}</span>
+        <span class="home-now-overview__activity-meta">${escapeHtml(item.area || 'System')} · ${escapeHtml(formatTime(item.createdAt))}</span>
+      </span>
+    </article>
+  `;
+}
+
+function renderNow(scope, snapshot = {}) {
+  const content = scope.querySelector('[data-home-now-content]');
+  if (!(content instanceof HTMLElement)) return;
+
+  const activity = Array.isArray(snapshot.recentActivity) ? snapshot.recentActivity : [];
+  const totalLiveSignals = snapshot.profilePostCount
+    + snapshot.profileThoughtCount
+    + snapshot.feedPostCount;
+
+  content.innerHTML = `
+    <div class="home-now-overview__grid">
+      <article class="home-now-overview__metric" data-home-now-tone="activity">
+        <span class="home-now-overview__metric-value">${Number(totalLiveSignals || 0).toLocaleString()}</span>
+        <span class="home-now-overview__metric-label">Live activity</span>
+      </article>
+      <article class="home-now-overview__metric" data-home-now-tone="source">
+        <span class="home-now-overview__metric-value">${Number(snapshot.sourceInputCount || 0).toLocaleString()}</span>
+        <span class="home-now-overview__metric-label">Source inputs</span>
+      </article>
+      <article class="home-now-overview__metric" data-home-now-tone="memory">
+        <span class="home-now-overview__metric-value">${Number(snapshot.memorySignalCount || 0).toLocaleString()}</span>
+        <span class="home-now-overview__metric-label">Memory signals</span>
+      </article>
+    </div>
+    <div class="home-now-overview__stream" aria-label="Recent live activity">
+      ${activity.length
+        ? activity.map(renderActivityItem).join('')
+        : `<p class="home-now-overview__quiet">The workspace is ready. New changes, thoughts, posts, and source activity will appear here.</p>`}
+    </div>
+  `;
+}
+
+function scheduleRetry(scope) {
+  const existing = HOME_NOW_RETRY_TIMERS.get(scope);
+  if (existing) window.clearTimeout(existing);
+  const timer = window.setTimeout(() => {
+    HOME_NOW_RETRY_TIMERS.delete(scope);
+    void updateNowDisplay(scope);
+  }, 900);
+  HOME_NOW_RETRY_TIMERS.set(scope, timer);
+}
+
+function clearRetry(scope) {
+  const timer = HOME_NOW_RETRY_TIMERS.get(scope);
+  if (timer) window.clearTimeout(timer);
+  HOME_NOW_RETRY_TIMERS.delete(scope);
+}
+
+async function updateNowDisplay(scope) {
+  const config = getHomeConfig();
+  const content = scope.querySelector('[data-home-now-content]');
+  const loading = scope.querySelector('[data-home-now-loading]');
+  const empty = scope.querySelector('[data-home-module-empty-state]');
+
+  if (config.visibility?.now === false) {
+    scope.hidden = true;
+    return;
+  }
+
+  scope.hidden = false;
+  if (content instanceof HTMLElement) content.hidden = true;
+  if (empty instanceof HTMLElement) empty.hidden = true;
+  if (loading instanceof HTMLElement) loading.hidden = false;
+  scope.setAttribute('aria-busy', 'true');
+
+  let keepLoading = false;
+  try {
+    const snapshot = await readHomeOverviewSnapshot();
+    if (snapshot.resolving) {
+      keepLoading = true;
+      scheduleRetry(scope);
+      return;
     }
+
+    clearRetry(scope);
+    const hasModel = Boolean(snapshot.model?.id);
+    if (!hasModel) {
+      if (empty instanceof HTMLElement) empty.hidden = false;
+      return;
+    }
+
+    renderNow(scope, snapshot);
+    if (content instanceof HTMLElement) content.hidden = false;
+    scope.dataset.homeNowState = titleizeHomeOverview(snapshot.recentActivity?.[0]?.area || 'Ready');
+  } finally {
+    if (!keepLoading) {
+      if (loading instanceof HTMLElement) loading.hidden = true;
+      scope.setAttribute('aria-busy', 'false');
+    }
+  }
+}
+
+function listenForChanges(scope) {
+  const controller = new AbortController();
+  const rerender = () => void updateNowDisplay(scope);
+  document.addEventListener('neuroartan:home:visibility:changed', (event) => {
+    if (event.detail?.moduleId === 'now') rerender();
   }, { signal: controller.signal });
-  
-  document.addEventListener('neuroartan:home:initialized', () => {
-    updateNowDisplay(root);
-  }, { signal: controller.signal });
+  document.addEventListener('neuroartan:home:initialized', rerender, { signal: controller.signal });
+  document.addEventListener('neuroartan:supabase-ready', rerender, { signal: controller.signal });
+  document.addEventListener('model:projection-updated', rerender, { signal: controller.signal });
+  document.addEventListener('model:digital-brain-refresh-request', rerender, { signal: controller.signal });
   return () => controller.abort();
 }
 
-// Mount now module
 export function mountHomeNow(root) {
   const scope = root?.querySelector?.('[data-home-overview-module="now"]')
-    || root?.matches?.('[data-home-overview-module="now"]') && root;
+    || (root?.matches?.('[data-home-overview-module="now"]') ? root : null);
 
-  if (!(scope instanceof Element)) return;
+  if (!(scope instanceof Element)) return null;
 
-  const value = scope.querySelector('[data-home-usage-value]');
-  const nodes = [...scope.querySelectorAll('[data-home-usage-view]')];
+  void updateNowDisplay(scope);
+  const cleanup = listenForChanges(scope);
+  const interval = window.setInterval(() => void updateNowDisplay(scope), 45000);
 
-  // Initialize display
-  updateNowDisplay(scope);
-  const cleanupConfigChanges = listenForConfigChanges(scope);
-
-  // Handle view selection
-  nodes.forEach((node) => {
-    node.addEventListener("click", () => {
-      nodes.forEach((item) => item.classList.toggle("is-active", item === node));
-      if (value) value.textContent = node.textContent.trim();
-    });
-  });
-  
-  // Set up periodic updates
-  const updateInterval = setInterval(() => {
-    updateNowDisplay(scope);
-  }, 30000); // Update every 30 seconds
-  
-  // Return cleanup function
   return () => {
-    cleanupConfigChanges?.();
-    clearInterval(updateInterval);
+    clearRetry(scope);
+    cleanup?.();
+    window.clearInterval(interval);
   };
 }

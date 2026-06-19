@@ -1,0 +1,18 @@
+{
+  "version": "5",
+  "remote": {
+    "https://esm.sh/@supabase/supabase-js@2.48.1": "b9a3a846ddbe85569795a9a2055336f1353c6eea2f5ca05bd6a6c14284dfe20a"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:cors@^2.8.6",
+        "npm:dotenv@^17.4.2",
+        "npm:express@^5.2.1",
+        "npm:stripe@^22.2.0",
+        "npm:supabase@^2.107.0",
+        "npm:three@0.184"
+      ]
+    }
+  }
+}

@@ -416,6 +416,9 @@ let modelDataManagerPane = 'datasets';
 let modelDataManagerFilter = '';
 let modelDataManagerSort = 'name-ascending';
 let modelDataManagerMoreOpen = false;
+let modelDataManagerPostInventory = [];
+let modelDataManagerSelectedPostKeys = new Set();
+let modelDataManagerPostContext = {};
 let modelTrainingSubstrateBackendLoaded = false;
 let publicModelDirectory = [];
 let publicModelDirectoryLoaded = false;
@@ -3193,7 +3196,31 @@ function sortModelDataManagerEntries(entries = []) {
 }
 
 function getModelDataManagerEntries(pane = modelDataManagerPane) {
-  if (isModelDataManagerPostMode()) return getModelPostManagerEntries(pane);
+  if (isModelDataManagerPostMode()) {
+    const normalizedPostPane = normalizeModelPostManagerPane(pane);
+
+    if (normalizedPostPane === 'posts') {
+      const entries = Array.isArray(modelDataManagerPostInventory) ? modelDataManagerPostInventory : [];
+      const query = String(modelDataManagerFilter || '').trim().toLowerCase();
+
+      if (!query) return sortModelDataManagerEntries(entries);
+
+      return sortModelDataManagerEntries(entries.filter((entry) => {
+        const searchable = [
+          entry.title,
+          entry.text,
+          entry.body,
+          entry.id,
+          entry.publicUrl,
+          entry.provider,
+        ].filter(Boolean).join(' ').toLowerCase();
+        return searchable.includes(query);
+      }));
+    }
+
+    return getModelPostManagerEntries(normalizedPostPane);
+  }
+
   const normalizedPane = normalizeModelDataManagerPane(pane);
   let entries = modelDatasetEntries.filter((entry) => !isModelSourceVaultDatasetEntry(entry));
   if (normalizedPane === 'source-vault') {
@@ -3341,6 +3368,12 @@ function createModelDataManagerItem(entry = {}, pane = modelDataManagerPane) {
   const selectionInput = document.createElement('input');
   selectionInput.type = 'checkbox';
   selectionInput.dataset.modelDataManagerSelect = entry.id;
+  if (isModelDataManagerPostMode()) {
+    const postKey = getModelDataManagerPostKey(entry);
+    selectionInput.value = postKey;
+    selectionInput.dataset.modelDataManagerPostKey = postKey;
+    selectionInput.checked = modelDataManagerSelectedPostKeys.has(postKey);
+  }
   selectionInput.setAttribute('aria-label', `Select ${entry.title || copy.titleLabel}`);
   selection.append(selectionInput);
 
@@ -3460,7 +3493,9 @@ function renderModelDataManager(root) {
   if (!(list instanceof HTMLElement)) return;
   list.replaceChildren();
 
-  const entries = getModelDataManagerEntries(modelDataManagerPane);
+  const entries = isModelDataManagerPostMode() && normalizeModelPostManagerPane(modelDataManagerPane) === 'posts'
+    ? modelDataManagerPostInventory
+    : getModelDataManagerEntries(modelDataManagerPane);
   if (!entries.length) {
     const empty = document.createElement('p');
     empty.className = 'model-management__note';
@@ -4370,6 +4405,73 @@ function restoreModelManagementInterfaceState() {
   });
 }
 
+function normalizeModelDataManagerPostRecord(post = {}) {
+  if (!post || typeof post !== 'object') return null;
+
+  const id = String(post.id || post.post_id || post.tweet_id || '').trim();
+  const text = String(post.text || post.body || post.content || post.title || '').trim();
+  const publicUrl = String(post.publicUrl || post.public_url || post.url || '').trim();
+
+  if (!id && !text && !publicUrl) return null;
+
+  return {
+    id,
+    provider: String(post.provider || post.service || 'x').trim() || 'x',
+    sourceType: String(post.sourceType || post.source_type || 'social_post').trim() || 'social_post',
+    title: String(post.title || text.slice(0, 96) || 'Post').trim(),
+    body: text,
+    text,
+    createdAt: String(post.createdAt || post.created_at || '').trim(),
+    publicUrl,
+    metrics: post.metrics && typeof post.metrics === 'object' ? post.metrics : {},
+    raw: post.raw && typeof post.raw === 'object' ? post.raw : post,
+  };
+}
+
+function getModelDataManagerPostKey(post = {}) {
+  return String(post?.id || post?.publicUrl || post?.text || '').trim();
+}
+
+function setModelDataManagerPostInventory(detail = {}) {
+  const posts = Array.isArray(detail.posts)
+    ? detail.posts
+    : Array.isArray(detail.items)
+      ? detail.items
+      : [];
+  const selectedPosts = Array.isArray(detail.selectedPosts) ? detail.selectedPosts : [];
+  const selectedIds = Array.isArray(detail.selectedIds) ? detail.selectedIds : [];
+
+  modelDataManagerPostInventory = posts
+    .map((post) => normalizeModelDataManagerPostRecord(post))
+    .filter(Boolean);
+
+  modelDataManagerSelectedPostKeys = new Set([
+    ...selectedIds.map((id) => String(id || '').trim()).filter(Boolean),
+    ...selectedPosts
+      .map((post) => normalizeModelDataManagerPostRecord(post))
+      .filter(Boolean)
+      .map(getModelDataManagerPostKey)
+      .filter(Boolean),
+  ]);
+
+  modelDataManagerPostContext = detail.filters && typeof detail.filters === 'object'
+    ? { ...detail.filters }
+    : {};
+}
+
+function dispatchModelDataManagerPostSelection() {
+  const selectedPosts = modelDataManagerPostInventory.filter((post) => modelDataManagerSelectedPostKeys.has(getModelDataManagerPostKey(post)));
+
+  document.dispatchEvent(new CustomEvent('model:post-manager-selection-change', {
+    detail: {
+      connectorService: modelDataManagerPostContext.connectorService || 'x',
+      service: modelDataManagerPostContext.connectorService || 'x',
+      selectedPosts,
+      posts: selectedPosts,
+    },
+  }));
+}
+
 function handleModelDataManagerOpenRequest(event) {
   const detail = event instanceof CustomEvent ? event.detail || {} : {};
   const mode = normalizeModelDataManagerMode(detail.mode || detail.filters?.mode || 'database');
@@ -4378,6 +4480,9 @@ function handleModelDataManagerOpenRequest(event) {
     : normalizeModelDataManagerPane(detail.filters?.pane || detail.filters?.managerPane || getProfileNavigationState().modelPane);
   const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;
+  if (mode === 'post-manager') {
+    setModelDataManagerPostInventory(detail);
+  }
   overlay.dataset.modelDataManagerMode = mode;
   document.body.appendChild(overlay);
   setModelDataManagerOpen(true, pane, { mode });
@@ -4457,6 +4562,13 @@ function handleModelDataManagerClick(event) {
     overlay?.querySelectorAll?.('[data-model-data-manager-select]')?.forEach((input) => {
       if (input instanceof HTMLInputElement) input.checked = true;
     });
+    if (isModelDataManagerPostMode()) {
+      modelDataManagerPostInventory.forEach((post) => {
+        const key = getModelDataManagerPostKey(post);
+        if (key) modelDataManagerSelectedPostKeys.add(key);
+      });
+      dispatchModelDataManagerPostSelection();
+    }
     syncModelDataManagerControls(overlay);
     return;
   }
@@ -4467,6 +4579,10 @@ function handleModelDataManagerClick(event) {
     overlay?.querySelectorAll?.('[data-model-data-manager-select]')?.forEach((input) => {
       if (input instanceof HTMLInputElement) input.checked = false;
     });
+    if (isModelDataManagerPostMode()) {
+      modelDataManagerSelectedPostKeys.clear();
+      dispatchModelDataManagerPostSelection();
+    }
     syncModelDataManagerControls(overlay);
     return;
   }
@@ -4493,6 +4609,16 @@ function handleModelDataManagerClick(event) {
 function handleModelDataManagerSelectionChange(event) {
   const input = event.target?.closest?.('[data-model-data-manager-select]');
   if (!(input instanceof HTMLInputElement)) return;
+
+  if (isModelDataManagerPostMode()) {
+    const key = String(input.value || input.dataset.modelDataManagerPostKey || '').trim();
+    if (key) {
+      if (input.checked) modelDataManagerSelectedPostKeys.add(key);
+      else modelDataManagerSelectedPostKeys.delete(key);
+      dispatchModelDataManagerPostSelection();
+    }
+  }
+
   syncModelDataManagerControls(input.closest('[data-model-data-manager]'));
 }
 

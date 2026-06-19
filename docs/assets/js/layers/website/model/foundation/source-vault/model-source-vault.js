@@ -526,6 +526,92 @@ function renderConnectorPostManagerSelection(root = mountedRoot, sourceType = ge
   container.append(summary);
 }
 
+function normalizeConnectorPostRecord(post = {}, service = 'x') {
+  if (!post || typeof post !== 'object') return null;
+  const id = normalizeString(post.id || post.post_id || post.tweet_id || post.url || post.public_url);
+  const textValue = normalizeString(post.text || post.body || post.content || post.title);
+  if (!id && !textValue) return null;
+
+  return {
+    id,
+    provider: normalizeString(post.provider || service),
+    sourceType: normalizeString(post.source_type || 'social_post'),
+    title: normalizeString(post.title) || textValue.slice(0, 96) || 'Post',
+    body: textValue,
+    text: textValue,
+    createdAt: normalizeString(post.created_at || post.createdAt),
+    publicUrl: normalizeString(post.public_url || post.publicUrl || post.url),
+    metrics: post.metrics && typeof post.metrics === 'object' ? post.metrics : {},
+    raw: post,
+  };
+}
+
+function getConnectorPostInventoryCacheKey(service = '') {
+  return normalizeString(service);
+}
+
+async function fetchConnectorPostInventory(service = 'x') {
+  const normalizedService = normalizeString(service) || 'x';
+  const cacheKey = getConnectorPostInventoryCacheKey(normalizedService);
+  const cached = connectorPostInventoryCache.get(cacheKey);
+  if (Array.isArray(cached)) return cached;
+
+  const supabase = getConnectorAuthClient();
+  if (!supabase?.functions?.invoke) {
+    throw new Error('Post inventory requires an active authenticated session.');
+  }
+
+  const functionName = normalizedService === 'x' ? 'connectors-x-inventory' : `connectors-${normalizedService}-inventory`;
+  const { data, error } = await supabase.functions.invoke(functionName, {
+    body: { connectorService: normalizedService, inventoryType: 'post' },
+  });
+
+  if (error || data?.ok !== true) {
+    throw new Error(data?.error || error?.message || 'Post inventory request failed.');
+  }
+
+  const posts = (Array.isArray(data.posts) ? data.posts : Array.isArray(data.items) ? data.items : [])
+    .map((post) => normalizeConnectorPostRecord(post, normalizedService))
+    .filter(Boolean);
+
+  connectorPostInventoryCache.set(cacheKey, posts);
+  return posts;
+}
+
+async function openConnectorPostManager(root = mountedRoot, service = 'x') {
+  if (!(root instanceof HTMLElement)) return;
+  const normalizedService = normalizeString(service) || 'x';
+  setStatus(root, 'Loading post inventory…');
+
+  try {
+    const posts = await fetchConnectorPostInventory(normalizedService);
+    const selectedPosts = getSelectedPostManagerPosts(normalizedService);
+    const selectedIds = new Set(selectedPosts.map((post) => normalizeString(post.id || post.publicUrl || post.text)).filter(Boolean));
+
+    document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
+      detail: {
+        source: 'source-vault-post-manager',
+        mode: 'post-manager',
+        posts,
+        items: posts,
+        selectedPosts,
+        selectedIds: Array.from(selectedIds),
+        filters: {
+          sourceArea: 'foundation',
+          pane: 'source-vault',
+          sourceType: getSelectedSourceType(root),
+          connectorService: normalizedService,
+          inventoryType: 'post',
+        },
+      },
+    }));
+
+    setStatus(root, posts.length ? `${posts.length.toLocaleString()} posts loaded for review.` : 'No posts were returned by the connected account.');
+  } catch (error) {
+    setStatus(root, error instanceof Error ? error.message : 'Post inventory could not be loaded.');
+  }
+}
+
 function getPostManagerRecord(service = '') {
   const normalizedService = normalizeString(service);
   return getConnectorRecords('social_sources').find((record) => record.service === normalizedService) || null;
@@ -661,6 +747,7 @@ let mountedRoot = null;
 let latestAnalysis = null;
 let selectedFileKeys = new Set();
 let connectorRepositoryCache = new Map();
+let connectorPostInventoryCache = new Map();
 let fileManagerSortMode = 'name-ascending';
 let restoredDraftPendingFileReconnect = false;
 let sourceVaultLifecyclePersistenceBound = false;
@@ -960,6 +1047,7 @@ function normalizeSourceVaultPackage(packageRecord = null) {
   const excludedFiles = Array.isArray(packageRecord.excludedFiles) ? packageRecord.excludedFiles : [];
   const selectedConnectors = Array.isArray(packageRecord.selectedConnectors) ? packageRecord.selectedConnectors : [];
   const connectorImportControls = Array.isArray(packageRecord.connectorImportControls) ? packageRecord.connectorImportControls : [];
+  const selectedConnectorPosts = Array.isArray(packageRecord.selectedConnectorPosts) ? packageRecord.selectedConnectorPosts : [];
   const selectedFileKeysValue = Array.isArray(packageRecord.selectedFileKeys) ? packageRecord.selectedFileKeys : [];
   const contentFiles = Array.isArray(packageRecord.contentFiles) ? packageRecord.contentFiles : [];
   const id = normalizeString(packageRecord.id) || createSourceVaultPackageId(sourceType);
@@ -981,6 +1069,7 @@ function normalizeSourceVaultPackage(packageRecord = null) {
     selectedFileKeys: selectedFileKeysValue,
     selectedConnectors,
     connectorImportControls,
+    selectedConnectorPosts,
     sourceContent: normalizeString(packageRecord.sourceContent),
     contentFiles,
     contentFileCount: Number(packageRecord.contentFileCount ?? contentFiles.length ?? 0),
@@ -1006,6 +1095,7 @@ function createSourceVaultPackageFromAnalysis(root = mountedRoot, analysis = lat
   const sourceType = analysis.sourceType || getSelectedSourceType(root);
   const selectedConnectors = Array.isArray(analysis.selectedConnectors) ? analysis.selectedConnectors : [];
   const connectorImportControls = Array.isArray(analysis.connectorImportControls) ? analysis.connectorImportControls : [];
+  const selectedConnectorPosts = Array.isArray(analysis.selectedConnectorPosts) ? analysis.selectedConnectorPosts : [];
   const existingId = sourceVaultState.activePackageId || null;
   return normalizeSourceVaultPackage({
     id: existingId || createSourceVaultPackageId(sourceType),
@@ -1026,7 +1116,8 @@ function createSourceVaultPackageFromAnalysis(root = mountedRoot, analysis = lat
     selectedFileKeys: Array.from(selectedFileKeys),
     selectedConnectors,
     connectorImportControls,
-    acceptedCount: analysis.acceptedCount,
+    selectedConnectorPosts,
+    acceptedCount: Number(analysis.acceptedCount || 0) + selectedConnectorPosts.length,
     excludedCount: analysis.excludedCount,
     totalAcceptedBytes: analysis.totalAcceptedBytes,
     reconnectRequired: restoredDraftPendingFileReconnect === true,
@@ -1433,21 +1524,21 @@ function bindSourceVaultPostManagerRequest() {
       || getConnectorRecords(sourceType).find((record) => usesPostManagerSelection(record.service) && record.connectionState === 'connected')
       || null;
 
-    document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
-      detail: {
-        source: 'source-vault-post-manager',
-        mode: 'post-manager',
-        filters: {
-          sourceArea: 'foundation',
-          pane: 'source-vault',
-          sourceType,
-          connectorService: selectedConnector?.service || 'x',
-          inventoryType: 'post',
-        },
-      },
-    }));
+    void openConnectorPostManager(mountedRoot, selectedConnector?.service || 'x');
   });
 }
+
+document.addEventListener('model:post-manager-selection-change', (event) => {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  const service = normalizeString(detail.connectorService || detail.service || 'x') || 'x';
+  const posts = Array.isArray(detail.selectedPosts) ? detail.selectedPosts : Array.isArray(detail.posts) ? detail.posts : [];
+  setSelectedPostManagerPosts(service, posts.map((post) => normalizeConnectorPostRecord(post, service)).filter(Boolean));
+  if (mountedRoot instanceof HTMLElement) {
+    clearAnalysisUI(mountedRoot);
+    syncSourceVaultActions(mountedRoot);
+    saveSourceVaultDraft(mountedRoot);
+  }
+});
 
 function selectAllFileManagerFiles(root = mountedRoot) {
   const allAcceptedFiles = latestAnalysis?.allAcceptedFiles || latestAnalysis?.acceptedFiles || [];
@@ -2311,6 +2402,14 @@ function analyzeSourceVault(root = mountedRoot) {
     };
     renderAnalysis(root, latestAnalysis);
     saveSourceVaultDraft(root);
+
+    if (isSocialSourceType(config.sourceType)) {
+      const selectedConnector = config.sourceConnectors.find((record) => usesPostManagerSelection(record.service))
+        || getConnectorRecords(config.sourceType).find((record) => usesPostManagerSelection(record.service) && record.connectionState === 'connected')
+        || null;
+      void openConnectorPostManager(root, selectedConnector?.service || 'x');
+    }
+
     return latestAnalysis;
   }
 
@@ -2503,11 +2602,12 @@ async function confirmSourceVaultIntake(root = mountedRoot) {
   const excludedFiles = packages.flatMap((packageRecord) => packageRecord.excludedFiles || []);
   const selectedConnectors = packages.flatMap((packageRecord) => packageRecord.selectedConnectors || []);
   const connectorImportControls = packages.flatMap((packageRecord) => packageRecord.connectorImportControls || []);
+  const selectedConnectorPosts = packages.flatMap((packageRecord) => packageRecord.selectedConnectorPosts || []);
   const reconnectRequired = restoredDraftPendingFileReconnect || packages.some((packageRecord) => packageRecord.reconnectRequired);
   const planLimitedPackage = packages.find(isSourceVaultPlanLimited);
 
-  if (!packages.length || !acceptedFiles.length && !selectedConnectors.length) {
-    setStatus(root, 'Analyze a source vault with accepted files or connected sources before confirming intake.');
+  if (!packages.length || !acceptedFiles.length && !selectedConnectors.length && !selectedConnectorPosts.length) {
+    setStatus(root, 'Analyze a source vault with accepted files, selected posts, or connected sources before confirming intake.');
     return null;
   }
 
@@ -2527,12 +2627,14 @@ async function confirmSourceVaultIntake(root = mountedRoot) {
     sourceReference: packages.map((packageRecord) => packageRecord.sourceReference).filter(Boolean).join(','),
     sourcePackages: packages,
     selectedConnectors,
+    selectedConnectorPosts,
+    connectorImportControls,
     availableConnectors: latestAnalysis?.availableConnectors || [],
     authorizationRequiredConnectors: latestAnalysis?.authorizationRequiredConnectors || [],
     allowedFormats: Array.from(new Set(packages.flatMap((packageRecord) => packageRecord.selectedFormats || []))),
     acceptedFiles,
     excludedFiles,
-    acceptedCount: acceptedFiles.length + selectedConnectors.length,
+    acceptedCount: acceptedFiles.length + selectedConnectors.length + selectedConnectorPosts.length,
     excludedCount: excludedFiles.length,
     totalAcceptedBytes: packages.reduce((sum, packageRecord) => sum + (Number(packageRecord.totalAcceptedBytes) || 0), 0),
     createdAt: packages[0]?.createdAt || latestAnalysis?.createdAt || new Date().toISOString(),

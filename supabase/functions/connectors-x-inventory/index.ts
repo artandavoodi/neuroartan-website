@@ -26,6 +26,49 @@ function jsonResponse(payload: Record<string, unknown>, status = 200) {
   });
 }
 
+function normalizeRuntimeError(error: unknown) {
+  const message = error instanceof Error ? error.message : "X_INVENTORY_FAILED";
+
+  if (
+    message.includes("CreditsDepleted") || message.includes("/problems/credits")
+  ) {
+    return {
+      ok: false,
+      error: "X_API_CREDITS_DEPLETED",
+      message:
+        "X API credits are depleted for the connected developer account. Post inventory cannot be extracted until X API credits are restored.",
+      diagnostic: "x-api-credits-depleted",
+    };
+  }
+
+  if (message.includes("X_POSTS_REQUEST_FAILED_403")) {
+    return {
+      ok: false,
+      error: "X_POSTS_ACCESS_FORBIDDEN",
+      message:
+        "X denied access to post inventory for the current token or app access level.",
+      diagnostic: "x-posts-access-forbidden",
+    };
+  }
+
+  if (message.includes("X_POSTS_REQUEST_FAILED_401")) {
+    return {
+      ok: false,
+      error: "X_TOKEN_EXPIRED_OR_INVALID",
+      message:
+        "The X connection token is expired or invalid. Reconnect X and try again.",
+      diagnostic: "x-token-invalid",
+    };
+  }
+
+  return {
+    ok: false,
+    error: message,
+    message,
+    diagnostic: "connectors-x-inventory-runtime",
+  };
+}
+
 function readBearerToken(request: Request) {
   const header = request.headers.get("authorization") || "";
   return header.startsWith("Bearer ") ? header.slice(7) : "";
@@ -412,10 +455,8 @@ Deno.serve(async (request: Request) => {
       items: normalizedPosts,
     });
   } catch (error) {
-    console.error("[connectors-x-inventory] Failed.", error);
-    return jsonResponse({
-      ok: false,
-      error: error instanceof Error ? error.message : "X_INVENTORY_FAILED",
-    }, 500);
+    const payload = normalizeRuntimeError(error);
+    console.error("[connectors-x-inventory] Failed.", payload.error);
+    return jsonResponse(payload, 200);
   }
 });

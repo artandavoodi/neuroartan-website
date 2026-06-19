@@ -7,3 +7,6 @@ development/__pycache__/
 .aider*
 .DS_Store
 **/.DS_Store
+
+# Supabase local temp state
+supabase/.temp/

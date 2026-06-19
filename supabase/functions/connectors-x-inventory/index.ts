@@ -35,8 +35,7 @@ function normalizeRuntimeError(error: unknown) {
     return {
       ok: false,
       error: "SUBSCRIPTION_REQUIRED",
-      message:
-        "Post inventory extraction requires an active subscription. This action uses external provider API capacity and is available on supported subscription plans.",
+      message: "Post inventory extraction requires an active subscription.",
       diagnostic: "provider-api-capacity-subscription-required",
       reason: "provider_api_capacity_required",
       upgradeRequired: true,

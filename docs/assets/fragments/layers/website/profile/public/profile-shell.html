@@ -2,14 +2,23 @@
      01) PUBLIC PROFILE SHELL
      02) PUBLIC PROFILE SHELL RAIL
      03) PUBLIC PROFILE SHELL SURFACE
-     04) PUBLIC PROFILE INNER COMPOSITION
+     04) PUBLIC PROFILE HEADER MOUNT
+     05) PUBLIC PROFILE WORKSPACE MOUNT
 ============================================================================= -->
-<section class="profile-shell" data-profile-shell data-profile-surface="public" aria-label="Public profile shell">
+<section class="profile-shell" data-profile-shell data-profile-surface="public" data-home-platform-theme aria-label="Public profile shell">
   <div class="profile-shell__rail">
     <div class="profile-shell__surface">
       <div class="profile-shell__inner">
-        <div class="profile-shell__mount" data-include="profile-public-header"></div>
+        <!-- =====================================================================
+        04) PUBLIC PROFILE HEADER MOUNT
+        ====================================================================== -->
+        <div class="profile-shell__mount profile-shell__mount--hero" data-include="profile-public-header"></div>
+
+        <!-- =====================================================================
+        05) PUBLIC PROFILE WORKSPACE MOUNT
+        ====================================================================== -->
         <div class="profile-shell__mount" data-include="profile-public-sections"></div>
+
         <div class="profile-shell__mount" data-include="profile-public-footer"></div>
       </div>
     </div>

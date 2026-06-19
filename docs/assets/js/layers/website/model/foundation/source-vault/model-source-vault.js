@@ -567,7 +567,7 @@ async function fetchConnectorPostInventory(service = 'x') {
   });
 
   if (error || data?.ok !== true) {
-    throw new Error(data?.error || error?.message || 'Post inventory request failed.');
+    throw new Error(data?.message || data?.error || error?.message || 'Post inventory request failed.');
   }
 
   const posts = (Array.isArray(data.posts) ? data.posts : Array.isArray(data.items) ? data.items : [])

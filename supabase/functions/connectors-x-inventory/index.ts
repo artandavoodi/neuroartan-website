@@ -34,10 +34,12 @@ function normalizeRuntimeError(error: unknown) {
   ) {
     return {
       ok: false,
-      error: "X_API_CREDITS_DEPLETED",
+      error: "SUBSCRIPTION_REQUIRED",
       message:
-        "X API credits are depleted for the connected developer account. Post inventory cannot be extracted until X API credits are restored.",
-      diagnostic: "x-api-credits-depleted",
+        "Post inventory extraction requires an active subscription. This action uses external provider API capacity and is available on supported subscription plans.",
+      diagnostic: "provider-api-capacity-subscription-required",
+      reason: "provider_api_capacity_required",
+      upgradeRequired: true,
     };
   }
 

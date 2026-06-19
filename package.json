@@ -10,8 +10,9 @@
     "localization:sync": "node docs/assets/utilities/localization/sync-locales.mjs",
     "localization:check": "node --check docs/assets/js/core/02-systems/locale.js && node docs/assets/utilities/localization/sync-locales.mjs",
     "check:duplicate-icons": "node scripts/quality/check-duplicate-icons.mjs",
-    "check:quality": "npm run check:duplicate-icons",
-    "prepare": "node scripts/quality/install-git-hooks.mjs"
+    "check:quality": "npm run clean:duplicate-icons && npm run check:duplicate-icons",
+    "prepare": "node scripts/quality/install-git-hooks.mjs",
+    "clean:duplicate-icons": "node scripts/quality/clean-duplicate-icons.mjs"
   },
   "engines": {
     "node": ">=20"

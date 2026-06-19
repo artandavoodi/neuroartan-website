@@ -3,7 +3,6 @@ import { join } from "node:path";
 
 const gitDirectory = join(process.cwd(), ".git");
 const hooksDirectory = join(gitDirectory, "hooks");
-const preCommitPath = join(hooksDirectory, "pre-commit");
 
 if (!existsSync(gitDirectory)) {
   console.log("Git directory not found. Skipping hook installation.");
@@ -12,15 +11,18 @@ if (!existsSync(gitDirectory)) {
 
 mkdirSync(hooksDirectory, { recursive: true });
 
-writeFileSync(
-  preCommitPath,
-  `#!/bin/sh
+const hookBody = `#!/bin/sh
 
-echo "Running Neuroartan quality gate..."
-npm run check:quality
-`,
-);
+echo "Running Neuroartan duplicate icon cleaner..."
+npm run clean:duplicate-icons
 
-chmodSync(preCommitPath, 0o755);
+echo "Running Neuroartan duplicate icon quality gate..."
+npm run check:duplicate-icons
+`;
 
-console.log("Neuroartan pre-commit quality gate installed.");
+for (const hookName of ["pre-commit", "pre-push"]) {
+  const hookPath = join(hooksDirectory, hookName);
+  writeFileSync(hookPath, hookBody);
+  chmodSync(hookPath, 0o755);
+  console.log(`Installed Neuroartan ${hookName} quality gate.`);
+}

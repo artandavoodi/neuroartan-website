@@ -49,6 +49,7 @@ const ACTION_ICONS = Object.freeze({
   modelEconomy: '/registry/icons/public/assets/core/commerce/finance/valuation.svg',
   modelLearn: '/registry/icons/public/assets/layers/website/model/actions/learn.svg',
   modelDataManager: '/registry/icons/public/assets/layers/website/model/actions/data-manager.svg',
+  modelPostManager: '/registry/icons/public/assets/layers/website/model/foundation/source-vault/post-manager/post-manager.svg',
   modelReset: '/registry/icons/public/assets/core/actions/reset/reset.svg',
   thoughtMemory: '/registry/icons/public/assets/core/actions/model-memory-sources-panel/model-memory-sources-panel.svg',
   createOrganization: '/registry/icons/public/assets/layers/website/profile/actions/create-organization.svg',
@@ -236,6 +237,13 @@ const ACTIONS = Object.freeze({
     icon: ACTION_ICONS.modelDataManager,
     authState: 'user'
   },
+  modelPostManager: {
+    id: 'model-post-manager',
+    label: 'Post Manager',
+    tooltip: 'Post Manager',
+    icon: ACTION_ICONS.modelPostManager,
+    authState: 'user'
+  },
   modelSourceDatabase: {
     id: 'model-source-database',
     label: 'Database',
@@ -415,7 +423,7 @@ const CONTEXT_ACTIONS = Object.freeze({
   'model-runtime': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-settings': ['modelLearn', 'modelReset', 'modelChangelog'],
-  organizations: ['editProfile', 'createOrganization', 'organizationSettings'],
+  organizations: ['editProfile'],
   dashboard: ['filterDashboard'],
   settings: ['settingsChangelog']
 });
@@ -457,7 +465,7 @@ const MODEL_FOUNDATION_PANE_ACTIONS = Object.freeze({
   overview: ['modelKeys', 'modelInfo', 'modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
   identity: ['modelLearn', 'modelReset', 'modelChangelog'],
   consent: ['modelLearn', 'modelReset', 'modelChangelog'],
-  sources: ['modelSourceDatabase', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
+  sources: ['modelSourceDatabase', 'modelPostManager', 'modelSourceSummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   memory: ['modelMemoryDatabase', 'modelMemoryQueue', 'modelMemoryGraph', 'modelMemoryControls', 'modelLearn', 'modelReset', 'modelChangelog'],
   personality: ['modelPersonalitySummary', 'modelLearn', 'modelReset', 'modelChangelog'],
   voice: ['modelVoiceSamples', 'modelVoiceFineTune', 'modelLearn', 'modelReset', 'modelChangelog']
@@ -490,6 +498,59 @@ function toolbarRoots(){
   return Array.from(document.querySelectorAll('[data-profile-right-toolbar]'));
 }
 
+function resolveActiveSourceVaultSourceType(){
+  const publishedSourceType = String(
+    document.documentElement.dataset.modelSourceVaultSourceType
+    || document.body?.dataset.modelSourceVaultSourceType
+    || ''
+  ).trim();
+  if(publishedSourceType) return publishedSourceType;
+
+  const sourceSelect = document.querySelector('[data-model-source-vault-field="sourceType"]');
+  if(sourceSelect instanceof HTMLSelectElement){
+    return String(sourceSelect.value || '').trim();
+  }
+
+  const legacySourceSelect = document.querySelector('select[data-model-source-vault-source-type], select[data-model-source-vault-source-select]');
+  if(legacySourceSelect instanceof HTMLSelectElement){
+    return String(legacySourceSelect.value || '').trim();
+  }
+
+  const checkedInput = document.querySelector('[data-model-source-vault-source-type]:checked');
+  if(checkedInput instanceof HTMLInputElement){
+    return String(checkedInput.value || checkedInput.getAttribute('data-model-source-vault-source-type') || '').trim();
+  }
+
+  const activeSource = document.querySelector('[data-model-source-vault-source-type][aria-selected="true"], [data-model-source-vault-source-type].is-active');
+  if(activeSource instanceof HTMLElement){
+    return String(activeSource.getAttribute('data-model-source-vault-source-type') || '').trim();
+  }
+
+  const sourceRoot = document.querySelector('[data-model-source-vault-active-source-type], [data-model-source-vault-source-type-active]');
+  if(sourceRoot instanceof HTMLElement){
+    return String(
+      sourceRoot.getAttribute('data-model-source-vault-active-source-type')
+      || sourceRoot.getAttribute('data-model-source-vault-source-type-active')
+      || ''
+    ).trim();
+  }
+
+  return '';
+}
+
+function filterContextualActionKeys(actionKeys = []){
+  const activeSourceType = resolveActiveSourceVaultSourceType();
+  return actionKeys.filter((key) => {
+    if(key !== 'modelPostManager') return true;
+    return activeSourceType === 'social_sources';
+  });
+}
+
+function refreshRightToolbarActions(){
+  const state = getProfileNavigationState();
+  toolbarRoots().forEach((root) => renderToolbarActions(root, state));
+}
+
 function resolveActionKeys(state = getProfileNavigationState()){
   if (state.section === 'model-personalization') {
     return MODEL_PERSONALIZATION_PANE_ACTIONS[resolveModelPersonalizationPane(state)];
@@ -497,7 +558,7 @@ function resolveActionKeys(state = getProfileNavigationState()){
 
   if (state.section === 'model-foundation') {
     const foundationPane = String(state.modelPane || 'overview').trim() || 'overview';
-    return MODEL_FOUNDATION_PANE_ACTIONS[foundationPane] || MODEL_FOUNDATION_PANE_ACTIONS.overview;
+    return filterContextualActionKeys(MODEL_FOUNDATION_PANE_ACTIONS[foundationPane] || MODEL_FOUNDATION_PANE_ACTIONS.overview);
   }
 
   if (String(state.section || '').startsWith('model-') && MODEL_PANE_ACTIONS[state.modelPane]) {
@@ -934,6 +995,7 @@ function requestProfileToolAction(action){
       document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
         detail: {
           source: 'profile-right-toolbar',
+          mode: 'database',
           filters: resolveModelOverlayFilters()
         }
       }));
@@ -942,9 +1004,24 @@ function requestProfileToolAction(action){
       document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
         detail: {
           source: 'profile-right-toolbar',
+          mode: 'database',
           filters: {
             ...resolveModelOverlayFilters(),
             pane: 'source-vault'
+          }
+        }
+      }));
+      return;
+    case 'model-post-manager':
+      document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
+        detail: {
+          source: 'profile-right-toolbar',
+          mode: 'post-manager',
+          filters: {
+            ...resolveModelOverlayFilters(),
+            mode: 'post-manager',
+            pane: 'posts',
+            postPane: 'posts'
           }
         }
       }));
@@ -1034,37 +1111,16 @@ function bindRightToolbar(){
   if(document.documentElement.dataset.profileRightToolbarBound === 'true') return;
   document.documentElement.dataset.profileRightToolbarBound = 'true';
 
+  document.addEventListener('model-source-vault:source-type-changed', refreshRightToolbarActions);
+
+  document.addEventListener('change', (event) => {
+    const target = event.target;
+    if(!(target instanceof Element)) return;
+    if(!target.closest('[data-model-source-vault-field="sourceType"]')) return;
+    window.requestAnimationFrame(refreshRightToolbarActions);
+  });
+
   document.addEventListener('click', (event) => {
-    const toggle = event.target.closest('[data-profile-right-toolbar-rail-toggle]');
-    if(toggle){
-      const root = toggle.closest('[data-profile-right-toolbar]');
-      if(!root) return;
-
-      const currentState = root.getAttribute('data-profile-right-toolbar-rail');
-      const newState = currentState === 'collapsed' ? 'expanded' : 'collapsed';
-
-      setRightToolbarRail(root, newState);
-
-      if(newState === 'expanded' && window.innerWidth <= 980){
-        requestAnimationFrame(() => {
-          const sidebarRoot = document.querySelector('[data-profile-private-sidebar]');
-          if(sidebarRoot){
-            sidebarRoot.setAttribute('data-profile-sidebar-rail', 'collapsed');
-            const layout = root.closest('.profile-workspace__layout');
-            if(layout){
-              layout.setAttribute('data-profile-sidebar-rail', 'collapsed');
-            }
-            const sidebarToggle = sidebarRoot.querySelector('[data-profile-sidebar-rail-toggle]');
-            if(sidebarToggle){
-              sidebarToggle.setAttribute('aria-pressed', 'false');
-              sidebarToggle.setAttribute('aria-label', 'Expand profile sidebar');
-            }
-          }
-        });
-      }
-      return;
-    }
-
     const action = event.target.closest('[data-profile-right-toolbar-action]');
     if(!action) return;
 
@@ -1077,19 +1133,7 @@ function bindRightToolbar(){
 function bootRightToolbar(){
   toolbarRoots().forEach((root) => {
     renderToolbarActions(root, getProfileNavigationState());
-    const storedState = readStoredRightToolbarRail();
-    setRightToolbarRail(
-      root,
-      window.matchMedia?.('(max-width: 980px)').matches === true
-        ? 'expanded'
-        : storedState
-          || (root.getAttribute('data-profile-right-toolbar-rail') === 'collapsed'
-            ? 'collapsed'
-            : 'expanded'),
-      {
-        persist: window.matchMedia?.('(max-width: 980px)').matches !== true
-      }
-    );
+    setRightToolbarRail(root, 'expanded', { persist:false });
   });
 }
 

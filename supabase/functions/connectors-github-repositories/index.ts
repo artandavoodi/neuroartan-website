@@ -1,3 +1,4 @@
+/// <reference lib="deno.ns" />
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const CORS_HEADERS = {
@@ -97,6 +98,36 @@ function normalizeRepository(record: Record<string, unknown>) {
   };
 }
 
+function summarizeRepositoryInventory(repositories: Record<string, unknown>[]) {
+  const privateCount = repositories.filter((repository) => repository.private === true).length;
+  const publicCount = repositories.length - privateCount;
+  const forkCount = repositories.filter((repository) => repository.fork === true).length;
+  const archivedCount = repositories.filter((repository) => repository.archived === true).length;
+  const writableCount = repositories.filter((repository) => {
+    const permissions = repository.permissions && typeof repository.permissions === 'object'
+      ? repository.permissions as Record<string, unknown>
+      : {};
+    return permissions.admin === true || permissions.maintain === true || permissions.push === true;
+  }).length;
+  const readableCount = repositories.filter((repository) => {
+    const permissions = repository.permissions && typeof repository.permissions === 'object'
+      ? repository.permissions as Record<string, unknown>
+      : {};
+    return permissions.pull === true || permissions.triage === true || permissions.push === true || permissions.maintain === true || permissions.admin === true;
+  }).length;
+
+  return {
+    repository_count: repositories.length,
+    public_repository_count: publicCount,
+    private_repository_count: privateCount,
+    fork_repository_count: forkCount,
+    archived_repository_count: archivedCount,
+    readable_repository_count: readableCount,
+    writable_repository_count: writableCount,
+    repository_inventory_scanned_at: new Date().toISOString(),
+  };
+}
+
 async function fetchAllGitHubRepositories(accessToken: string) {
   const repositories: Record<string, unknown>[] = [];
   let page = 1;
@@ -136,7 +167,7 @@ async function fetchAllGitHubRepositories(accessToken: string) {
   return repositories;
 }
 
-Deno.serve(async (request) => {
+Deno.serve(async (request: Request) => {
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
@@ -186,12 +217,45 @@ Deno.serve(async (request) => {
     const accessToken = await decryptToken(String(tokenRecord.encrypted_access_token));
     const repositories = await fetchAllGitHubRepositories(accessToken);
 
+    const repositoryInventory = summarizeRepositoryInventory(repositories);
+    const existingMetadata = tokenRecord.metadata && typeof tokenRecord.metadata === 'object'
+      ? tokenRecord.metadata as Record<string, unknown>
+      : {};
+
+    const connectorState = {
+      user_id: userData.user.id,
+      profile_id: tokenRecord.profile_id,
+      model_id: tokenRecord.model_id,
+      connector_service: 'github',
+      connector_label: 'GitHub',
+      connector_category: 'repository',
+      runtime: 'oauth-required',
+      connection_state: 'connected',
+      source_vault_ready: true,
+      metadata: {
+        ...existingMetadata,
+        provider: 'github',
+        provider_account_id: tokenRecord.provider_account_id,
+        provider_account_handle: tokenRecord.provider_account_handle,
+        inventory_type: 'repository',
+        inventory_ready: true,
+        ...repositoryInventory,
+      },
+    };
+
+    const { error: connectorStateError } = await serviceClient
+      .from('privacy_connector_state')
+      .upsert(connectorState, { onConflict: 'user_id,connector_service' });
+
+    if (connectorStateError) throw connectorStateError;
+
     return jsonResponse({
       ok: true,
       connectorService: 'github',
       providerAccountId: tokenRecord.provider_account_id,
       providerAccountHandle: tokenRecord.provider_account_handle,
-      repositoryCount: repositories.length,
+      repositoryCount: repositoryInventory.repository_count,
+      repositoryInventory,
       repositories,
     });
   } catch (error) {

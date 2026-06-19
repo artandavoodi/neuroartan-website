@@ -164,7 +164,7 @@ const CONNECTOR_MANAGEMENT_LANGUAGE = Object.freeze({
     statusCopyConnected: 'Refresh or disconnect from this view',
     statusCopyDisconnected: 'Return to connectors to authorize this source',
     accountHeading: 'Connected account',
-    sourceHeading: 'Source vault',
+    sourceHeading: 'Source inventory',
     readyLabel: 'Ready',
     notReadyLabel: 'Not ready',
     receivedLabel: 'Received',
@@ -180,7 +180,7 @@ const CONNECTOR_MANAGEMENT_LANGUAGE = Object.freeze({
     statusCopyConnected: 'Refresh X posts or disconnect from this view',
     statusCopyDisconnected: 'Return to connectors to authorize X',
     accountHeading: 'Connected profile',
-    sourceHeading: 'Post source vault',
+    sourceHeading: 'Post inventory',
     readyLabel: 'Ready',
     notReadyLabel: 'Not ready',
     receivedLabel: 'Posts received',
@@ -196,7 +196,7 @@ const CONNECTOR_MANAGEMENT_LANGUAGE = Object.freeze({
     statusCopyConnected: 'Refresh GitHub repositories or disconnect from this view',
     statusCopyDisconnected: 'Return to connectors to authorize GitHub',
     accountHeading: 'Connected account',
-    sourceHeading: 'Repository source vault',
+    sourceHeading: 'Repository inventory',
     readyLabel: 'Ready',
     notReadyLabel: 'Not ready',
     receivedLabel: 'Repositories discovered',
@@ -204,7 +204,7 @@ const CONNECTOR_MANAGEMENT_LANGUAGE = Object.freeze({
     existingLabel: 'Existing repositories',
     limitLabel: 'Repository selection',
     allAvailableLabel: 'Selected repositories',
-    noImportRecordLabel: 'No GitHub repository import record has been received yet',
+    noImportRecordLabel: 'Repository inventory has not been scanned yet',
   },
 });
 
@@ -378,10 +378,99 @@ function formatConnectorDate(value = '') {
   return new Date(timestamp).toLocaleString();
 }
 
+function readConnectorMetric(metadata = {}, keys = []) {
+  const key = keys.find((candidate) => (
+    Object.prototype.hasOwnProperty.call(metadata, candidate)
+    && metadata[candidate] !== null
+    && metadata[candidate] !== ''
+    && Number.isFinite(Number(metadata[candidate]))
+  ));
+
+  if (!key) return null;
+  return Number(metadata[key]);
+}
+
+function getGitHubInventorySummaryLines(metadata = {}, language) {
+  const repositoryCount = readConnectorMetric(metadata, ['repository_count', 'repositoryCount', 'public_repos']);
+  const publicRepositoryCount = readConnectorMetric(metadata, ['public_repository_count', 'publicRepositoryCount']);
+  const privateRepositoryCount = readConnectorMetric(metadata, ['private_repository_count', 'privateRepositoryCount', 'owned_private_repos']);
+  const readableRepositoryCount = readConnectorMetric(metadata, ['readable_repository_count', 'readableRepositoryCount']);
+  const writableRepositoryCount = readConnectorMetric(metadata, ['writable_repository_count', 'writableRepositoryCount']);
+  const inventoryScannedAt = metadata.repository_inventory_scanned_at || metadata.repositoryInventoryScannedAt || '';
+
+  if (repositoryCount === null && publicRepositoryCount === null && privateRepositoryCount === null) {
+    return [language.noImportRecordLabel];
+  }
+
+  const primaryParts = [];
+  if (repositoryCount !== null) primaryParts.push(`Repositories: ${repositoryCount}`);
+  if (publicRepositoryCount !== null) primaryParts.push(`Public: ${publicRepositoryCount}`);
+  if (privateRepositoryCount !== null) primaryParts.push(`Private: ${privateRepositoryCount}`);
+
+  const permissionParts = [];
+  if (readableRepositoryCount !== null) permissionParts.push(`Readable: ${readableRepositoryCount}`);
+  if (writableRepositoryCount !== null) permissionParts.push(`Writable: ${writableRepositoryCount}`);
+
+  const lines = [primaryParts.join(' · ')].filter(Boolean);
+  if (permissionParts.length) lines.push(permissionParts.join(' · '));
+
+  const scannedLabel = formatConnectorDate(inventoryScannedAt);
+  if (scannedLabel) lines.push(`Last sync: ${scannedLabel}`);
+
+  return lines;
+}
+
+function getXInventorySummaryLines(metadata = {}, language) {
+  const receivedCount = readConnectorMetric(metadata, ['received_count', 'receivedCount']);
+  const importedCount = readConnectorMetric(metadata, ['imported_count', 'importedCount']);
+  const existingCount = readConnectorMetric(metadata, ['existing_count', 'existingCount']);
+  const postCount = readConnectorMetric(metadata, ['post_count', 'postCount', 'tweet_count', 'tweetCount']);
+  const followersCount = readConnectorMetric(metadata, ['followers_count', 'followersCount']);
+  const followingCount = readConnectorMetric(metadata, ['following_count', 'followingCount']);
+  const likeCount = readConnectorMetric(metadata, ['like_count', 'likeCount']);
+  const replyCount = readConnectorMetric(metadata, ['reply_count', 'replyCount']);
+  const requestedPostLimit = readConnectorMetric(metadata, ['requested_post_limit', 'requestedPostLimit']);
+  const inventoryScannedAt = metadata.inventory_scanned_at || metadata.inventoryScannedAt || '';
+
+  const primaryParts = [];
+  if (postCount !== null) primaryParts.push(`Posts: ${postCount}`);
+  if (followersCount !== null) primaryParts.push(`Followers: ${followersCount}`);
+  if (followingCount !== null) primaryParts.push(`Following: ${followingCount}`);
+
+  const importParts = [];
+  if (receivedCount !== null) importParts.push(`${language.receivedLabel}: ${receivedCount}`);
+  if (importedCount !== null) importParts.push(`${language.importedLabel}: ${importedCount}`);
+  if (existingCount !== null) importParts.push(`${language.existingLabel}: ${existingCount}`);
+  if (requestedPostLimit !== null) importParts.push(`${language.limitLabel}: ${getConnectorImportLimitLabel(requestedPostLimit, 'x')}`);
+
+  const engagementParts = [];
+  if (likeCount !== null) engagementParts.push(`Likes: ${likeCount}`);
+  if (replyCount !== null) engagementParts.push(`Replies: ${replyCount}`);
+
+  const lines = [];
+  if (primaryParts.length) lines.push(primaryParts.join(' · '));
+  if (importParts.length) lines.push(importParts.join(' · '));
+  if (engagementParts.length) lines.push(engagementParts.join(' · '));
+
+  const scannedLabel = formatConnectorDate(inventoryScannedAt);
+  if (scannedLabel) lines.push(`Last sync: ${scannedLabel}`);
+
+  if (!lines.length) return [language.noImportRecordLabel];
+  return lines;
+}
+
 function getConnectorSourceSummaryLines(normalizedState, language) {
   const metadata = normalizedState.metadata || {};
   const sourceVaultReady = normalizedState.sourceVaultReady === true;
   if (!sourceVaultReady) return [language.notReadyLabel];
+
+  if (normalizedState.service === 'github') {
+    return getGitHubInventorySummaryLines(metadata, language);
+  }
+
+  if (normalizedState.service === 'x') {
+    return getXInventorySummaryLines(metadata, language);
+  }
 
   const hasImportRecord = ['received_count', 'imported_count', 'existing_count', 'requested_post_limit'].some((key) => (
     Object.prototype.hasOwnProperty.call(metadata, key)
@@ -495,6 +584,7 @@ function openConnectorManagementDestination(root, service, state = {}) {
   const statusCopy = management.querySelector('[data-home-platform-connector-management-status-copy]');
   const account = management.querySelector('[data-home-platform-connector-management-account]');
   const source = management.querySelector('[data-home-platform-connector-management-source]');
+  const sourceTitle = management.querySelector('[data-home-platform-connector-management-source-title]');
 
   setConnectorStatusTitle(statusTitle, normalizedState);
 
@@ -506,6 +596,10 @@ function openConnectorManagementDestination(root, service, state = {}) {
 
   if (account) {
     account.textContent = providerHandle ? `@${providerHandle}` : 'No connected account handle available.';
+  }
+
+  if (sourceTitle) {
+    sourceTitle.textContent = language.sourceHeading;
   }
 
   if (source) {
@@ -603,6 +697,7 @@ async function startXConnectorAuthorization(root, service) {
   }
 }
 
+
 async function startOAuthConnectorAuthorization(root, service) {
   const normalizedService = normalizeConnectorService(service);
   if (normalizedService === 'x') {
@@ -669,6 +764,41 @@ async function startOAuthConnectorAuthorization(root, service) {
     });
     updateConnectorStatus(root, normalizedService, failedState);
   }
+}
+
+async function refreshConnectorInventory(root, service) {
+  const normalizedService = normalizeConnectorService(service);
+  const currentState = normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
+  const inventoryFunctions = Object.freeze({
+    github: 'connectors-github-repositories',
+    x: 'connectors-x-inventory',
+  });
+  const functionName = inventoryFunctions[normalizedService];
+
+  if (!functionName) {
+    await hydrateConnectorStateFromBackend(root);
+    return normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
+  }
+
+  const session = await requireConnectorSession();
+  if (!session?.access_token) return currentState;
+
+  const supabase = await getConnectorSupabaseClient();
+  if (!supabase?.functions?.invoke) return currentState;
+
+  const { error } = await supabase.functions.invoke(functionName, {
+    body: {
+      connectorService: normalizedService,
+    },
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+    },
+  });
+
+  if (error) throw error;
+
+  await hydrateConnectorStateFromBackend(root);
+  return normalizeConnectorState(normalizedService, getConnectorStates()[normalizedService]);
 }
 
 function updateConnectorStatus(root, service, state = {}) {
@@ -745,8 +875,7 @@ function bindConnectorClicks(root) {
     }
 
     if (actionName === 'refresh') {
-      await hydrateConnectorStateFromBackend(root);
-      const refreshedState = normalizeConnectorState(service, getConnectorStates()[service]);
+      const refreshedState = await refreshConnectorInventory(root, service);
       updateConnectorStatus(root, service, refreshedState);
       openConnectorManagementDestination(root, service, refreshedState);
       return;

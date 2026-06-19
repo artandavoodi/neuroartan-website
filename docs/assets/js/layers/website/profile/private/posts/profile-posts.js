@@ -383,6 +383,8 @@ function renderPostList(root) {
 
       if (image.complete && image.naturalWidth > 0) {
         setMediaState('loaded');
+      } else if (image.complete) {
+        setMediaState('error');
       } else {
         image.addEventListener('load', () => setMediaState('loaded'), { once: true });
       }

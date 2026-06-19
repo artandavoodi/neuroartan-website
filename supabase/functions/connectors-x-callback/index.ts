@@ -76,6 +76,43 @@ function readRequestedImportLimit(session: Record<string, unknown>) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
 }
 
+function summarizeXInventory(xUser: Record<string, unknown>, importSummary: Record<string, unknown>) {
+  const publicMetrics = xUser.public_metrics && typeof xUser.public_metrics === 'object'
+    ? xUser.public_metrics as Record<string, unknown>
+    : {};
+
+  const tweetCount = Number.isFinite(Number(publicMetrics.tweet_count)) ? Number(publicMetrics.tweet_count) : null;
+  const followersCount = Number.isFinite(Number(publicMetrics.followers_count)) ? Number(publicMetrics.followers_count) : null;
+  const followingCount = Number.isFinite(Number(publicMetrics.following_count)) ? Number(publicMetrics.following_count) : null;
+  const listedCount = Number.isFinite(Number(publicMetrics.listed_count)) ? Number(publicMetrics.listed_count) : null;
+
+  const importedCount = Number.isFinite(Number(importSummary.importedCount)) ? Number(importSummary.importedCount) : null;
+  const receivedCount = Number.isFinite(Number(importSummary.receivedCount)) ? Number(importSummary.receivedCount) : null;
+  const existingCount = Number.isFinite(Number(importSummary.existingCount)) ? Number(importSummary.existingCount) : null;
+  const requestedPostLimit = Number.isFinite(Number(importSummary.requestedPostLimit)) ? Number(importSummary.requestedPostLimit) : null;
+
+  return {
+    inventory_type: 'post',
+    inventory_ready: true,
+    post_count: tweetCount,
+    tweet_count: tweetCount,
+    followers_count: followersCount,
+    following_count: followingCount,
+    listed_count: listedCount,
+    imported_count: importedCount,
+    received_count: receivedCount,
+    existing_count: existingCount,
+    requested_post_limit: requestedPostLimit,
+    reached_requested_limit: importSummary.reachedRequestedLimit === true,
+    reached_api_end: importSummary.reachedApiEnd === true,
+    import_attempted: importSummary.importAttempted === true,
+    import_completed: importSummary.importCompleted === true,
+    import_failed: importSummary.importFailed === true,
+    last_import_error: typeof importSummary.importError === 'string' ? importSummary.importError : '',
+    inventory_scanned_at: new Date().toISOString(),
+  };
+}
+
 function redirect(status: string) {
   const url = new URL(siteUrl());
   url.searchParams.set('connector', 'x');
@@ -587,25 +624,7 @@ Deno.serve(async (req: Request) => {
         });
     }
 
-    const importMetadata = importSummary.importCompleted
-      ? {
-        import_attempted: true,
-        import_completed: true,
-        import_failed: false,
-        imported_count: importSummary.importedCount,
-        received_count: importSummary.receivedCount,
-        existing_count: importSummary.existingCount,
-        requested_post_limit: importSummary.requestedPostLimit,
-        reached_requested_limit: importSummary.reachedRequestedLimit,
-        reached_api_end: importSummary.reachedApiEnd,
-      }
-      : {
-        import_attempted: importSummary.importAttempted,
-        import_completed: false,
-        import_failed: importSummary.importFailed,
-        requested_post_limit: importSummary.requestedPostLimit,
-        last_import_error: importSummary.importError || '',
-      };
+    const inventoryMetadata = summarizeXInventory(xUser, importSummary);
 
     const connectedConnectorState = {
       user_id: session.user_id,
@@ -616,13 +635,13 @@ Deno.serve(async (req: Request) => {
       connector_category: 'social',
       runtime: 'oauth-required',
       connection_state: 'connected',
-      source_vault_ready: importSummary.importCompleted === true,
+      source_vault_ready: inventoryMetadata.inventory_ready === true,
       metadata: {
         provider: 'x',
         provider_account_id: xUser.id,
         provider_account_handle: xUser.username || '',
         scopes: session.requested_scopes || [],
-        ...importMetadata,
+        ...inventoryMetadata,
         connected_at: new Date().toISOString(),
       },
     };

@@ -16,7 +16,7 @@
   align-items:center;
   justify-content:space-between;
   gap:var(--spacing-md);
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--profile-thought-composer-inline, var(--spacing-lg));
 }
 
 .profile-thought-composer__title,
@@ -28,7 +28,7 @@
 
 .profile-thought-composer__status{
   margin:0;
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--profile-thought-composer-inline, var(--spacing-lg));
 }
 
 .profile-thought-composer__title{
@@ -69,13 +69,17 @@
 }
 
 .profile-thought-composer__field--full:has(.profile-thought-composer__select-control){
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
+  padding:var(--spacing-none) var(--profile-thought-composer-inline, var(--spacing-lg));
 }
 
 .profile-thought-bank__overlay .profile-thought-composer{
   border-radius:var(--radius-dialog);
   border:none;
   background:transparent;
+}
+
+.profile-thought-bank__overlay .profile-thought-composer__visibility{
+  display:none;
 }
 
 .profile-thought-composer__visibility{
@@ -246,21 +250,21 @@
 .profile-thought-composer__textarea{
   min-height:calc(var(--control-height-lg) * 2);
   resize:none;
-  border:var(--input-minimal-border);
+  border:none;
   background:transparent;
-  padding:var(--spacing-none) var(--spacing-md) var(--spacing-none) var(--spacing-lg);
-  border-radius:var(--input-minimal-radius);
+  padding:var(--spacing-none) var(--profile-thought-composer-inline, var(--spacing-lg));
+  border-radius:0;
   outline:var(--input-minimal-outline);
-  box-shadow:var(--input-minimal-box-shadow);
+  box-shadow:none;
 }
 
 .profile-thought-composer__textarea:hover,
 .profile-thought-composer__textarea:focus,
 .profile-thought-composer__textarea:focus-visible{
-  border:var(--input-minimal-border-focus);
+  border:none;
   background:transparent;
   outline:var(--input-minimal-outline);
-  box-shadow:var(--input-minimal-box-shadow);
+  box-shadow:none;
 }
 
 .profile-thought-composer__attachment-button{
@@ -278,6 +282,13 @@
   color:var(--text-primary-color);
   cursor:pointer;
   transition:var(--interaction-transition-control);
+}
+
+.profile-thought-bank__overlay .profile-thought-composer__attachment-button{
+  min-height:auto;
+  padding:var(--spacing-none);
+  border-radius:0;
+  background:transparent;
 }
 
 .profile-thought-composer__attachment-button:hover,

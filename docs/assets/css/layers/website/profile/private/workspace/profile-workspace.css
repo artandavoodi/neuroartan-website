@@ -23,6 +23,8 @@
   --profile-workspace-content-row-padding-inline:var(--spacing-lg);
   --profile-workspace-content-padding-block:var(--layout-profile-workspace-content-padding-block);
   --profile-workspace-viewport-block-size:calc(100dvh - var(--nav-glass-surface-height, 3.55rem));
+  --profile-workspace-rail-sticky-top:8rem;
+  --profile-workspace-sidebar-rail-start-offset:calc(var(--home-platform-shell-nav-item-padding-y) + var(--spacing-3xs));
   display:grid;
   grid-template-columns:
     var(--profile-workspace-sidebar-expanded-width)

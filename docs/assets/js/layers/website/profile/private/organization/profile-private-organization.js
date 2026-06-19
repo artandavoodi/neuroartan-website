@@ -1,19 +1,12 @@
 /* =============================================================================
-   01) MODULE IDENTITY
-   02) IMPORTS
-   03) DOM HELPERS
-   04) ORGANIZATION STATE RENDERING
-   05) ORGANIZATION ACTIONS
-   06) INITIALIZATION
+   01) IMPORTS
+   02) DOM HELPERS
+   03) ORGANIZATION STATE RENDERING
+   04) INITIALIZATION
 ============================================================================= */
 
 /* =============================================================================
-   01) MODULE IDENTITY
-============================================================================= */
-const MODULE_ID = 'profile-private-organization';
-
-/* =============================================================================
-   02) IMPORTS
+   01) IMPORTS
 ============================================================================= */
 import {
   getProfileRuntimeState,
@@ -21,7 +14,7 @@ import {
 } from '../shell/profile-runtime.js';
 
 /* =============================================================================
-   03) DOM HELPERS
+   02) DOM HELPERS
 ============================================================================= */
 function getOrganizationRoot() {
   return document.querySelector('[data-profile-private-organization]');
@@ -33,15 +26,8 @@ function setText(root, selector, value) {
   node.textContent = value || '';
 }
 
-function setDisabled(root, selector, disabled) {
-  const node = root?.querySelector(selector);
-  if (!node) return;
-  node.disabled = !!disabled;
-  node.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-}
-
 /* =============================================================================
-   04) ORGANIZATION STATE RENDERING
+   03) ORGANIZATION STATE RENDERING
 ============================================================================= */
 function renderProfilePrivateOrganization(state = getProfileRuntimeState()) {
   const root = getOrganizationRoot();
@@ -57,39 +43,16 @@ function renderProfilePrivateOrganization(state = getProfileRuntimeState()) {
   setText(
     root,
     '[data-profile-organization-status]',
-    profileComplete
-      ? 'Organization controls are ready for the next account layer.'
-      : 'Organization controls unlock after private profile completion.'
+    hasCompanySpace
+      ? 'Organization records are connected to this profile.'
+      : 'Organization records are not active yet.'
   );
-  setDisabled(root, '[data-profile-action="create-organization"]', !profileComplete);
 }
 
 /* =============================================================================
-   05) ORGANIZATION ACTIONS
-============================================================================= */
-function bindProfilePrivateOrganizationActions() {
-  const root = getOrganizationRoot();
-  if (!root || root.dataset.profilePrivateOrganizationBound === 'true') return;
-
-  root.dataset.profilePrivateOrganizationBound = 'true';
-  root.addEventListener('click', (event) => {
-    const trigger = event.target.closest('[data-profile-action]');
-    if (!trigger || trigger.disabled) return;
-
-    document.dispatchEvent(new CustomEvent('profile:action-request', {
-      detail: {
-        source: MODULE_ID,
-        action: trigger.dataset.profileAction || ''
-      }
-    }));
-  });
-}
-
-/* =============================================================================
-   06) INITIALIZATION
+   04) INITIALIZATION
 ============================================================================= */
 function initProfilePrivateOrganization() {
-  bindProfilePrivateOrganizationActions();
   renderProfilePrivateOrganization();
   subscribeProfileRuntime(renderProfilePrivateOrganization);
 }

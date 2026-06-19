@@ -10,7 +10,7 @@
 
 .profile-sidebar__surface{
   position:sticky;
-  top:8rem;
+  top:var(--profile-workspace-rail-sticky-top);
   align-self:start;
   width:max-content;
   min-width:var(--spacing-none);
@@ -23,7 +23,7 @@
   flex-direction:column;
   gap:var(--home-platform-shell-rail-gap);
   padding:
-    0
+    var(--spacing-none)
     var(--home-platform-shell-rail-padding-inline)
     var(--spacing-lg);
 }
@@ -40,10 +40,10 @@
 }
 
 .profile-sidebar__rail-toggle{
-  width:var(--home-platform-shell-rail-toggle-size);
-  height:var(--home-platform-shell-rail-toggle-size);
-  min-width:var(--home-platform-shell-rail-toggle-size);
-  min-height:var(--home-platform-shell-rail-toggle-size);
+  width:calc(var(--home-platform-shell-nav-icon-size) + (var(--border-width-hairline) * 2));
+  height:calc(var(--home-platform-shell-nav-icon-size) + (var(--border-width-hairline) * 2));
+  min-width:calc(var(--home-platform-shell-nav-icon-size) + (var(--border-width-hairline) * 2));
+  min-height:calc(var(--home-platform-shell-nav-icon-size) + (var(--border-width-hairline) * 2));
   display:inline-grid;
   place-items:center;
   padding:var(--spacing-none);
@@ -68,9 +68,12 @@
 }
 
 .profile-sidebar__rail-toggle-icon{
-  width:var(--home-platform-shell-rail-toggle-icon-size);
-  height:var(--home-platform-shell-rail-toggle-icon-size);
-  display:block;
+  width:var(--home-platform-shell-nav-icon-size);
+  height:var(--home-platform-shell-nav-icon-size);
+  flex:0 0 var(--home-platform-shell-nav-icon-size);
+  display:grid;
+  place-items:center;
+  line-height:0;
   color:currentColor;
 }
 
@@ -89,7 +92,7 @@
   display:flex;
   flex-direction:column;
   gap:var(--home-platform-shell-nav-gap);
-  margin-top:var(--spacing-sm);
+  margin-top:var(--spacing-none);
   padding-top:var(--home-platform-shell-rail-padding-top);
   padding-bottom:var(--home-platform-shell-rail-padding-bottom);
 }
@@ -223,5 +226,11 @@ body.model-page [data-profile-sidebar-model-nav]:not([hidden]){
 
   .profile-sidebar__nav-text{
     display:none;
+  }
+}
+
+@media (min-width:981px){
+  .profile-sidebar__surface{
+    top:calc(var(--profile-workspace-rail-sticky-top) + var(--profile-workspace-sidebar-rail-start-offset));
   }
 }

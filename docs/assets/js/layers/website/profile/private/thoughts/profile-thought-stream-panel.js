@@ -61,24 +61,28 @@ function renderEntry(entry) {
   const article = document.createElement('article');
   article.className = 'profile-thought-bank__item';
   article.innerHTML = `
-    <div class="profile-thought-bank__item-header">
-      <span class="ui-badge ui-badge--outline"></span>
-      <span class="profile-thought-bank__item-meta"></span>
-      <button class="profile-thought-bank__item-more" type="button" data-profile-thought-more="${entry.id}" aria-label="More options">
-        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
-      </button>
-      <div class="profile-thought-bank__more-dropdown ui-card ui-surface--glass" data-profile-thought-more-dropdown hidden aria-label="Thought options">
-        <button class="profile-thought-bank__more-dropdown-item" type="button" data-profile-thought-more-dropdown-edit>
-          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
-          <span>Edit</span>
+    <div class="profile-thought-bank__item-content-wrapper">
+      <div class="profile-thought-bank__item-header">
+        <span class="profile-thought-bank__item-meta-group">
+          <span class="ui-badge ui-badge--outline"></span>
+          <span class="profile-thought-bank__item-meta"></span>
+        </span>
+        <button class="profile-thought-bank__item-more" type="button" data-profile-thought-more="${entry.id}" aria-label="More options">
+          <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
         </button>
-        <button class="profile-thought-bank__more-dropdown-item profile-thought-bank__more-dropdown-item--danger" type="button" data-profile-thought-more-dropdown-delete>
-          <img class="profile-thought-bank__more-dropdown-item-icon" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
-          <span>Delete</span>
-        </button>
+        <div class="profile-thought-bank__more-dropdown ui-card ui-surface--glass" data-profile-thought-more-dropdown hidden aria-label="Thought options">
+          <button class="profile-thought-bank__more-dropdown-item" type="button" data-profile-thought-more-dropdown-edit>
+            <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/editing/edit.svg" alt="" aria-hidden="true">
+            <span>Edit</span>
+          </button>
+          <button class="profile-thought-bank__more-dropdown-item profile-thought-bank__more-dropdown-item--danger" type="button" data-profile-thought-more-dropdown-delete>
+            <img class="profile-thought-bank__more-dropdown-item-icon" src="/registry/icons/public/assets/core/actions/delete/delete.svg" alt="" aria-hidden="true">
+            <span>Delete</span>
+          </button>
+        </div>
       </div>
+      <p class="profile-thought-bank__item-body"></p>
     </div>
-    <p class="profile-thought-bank__item-body"></p>
   `;
   const badge = article.querySelector('.ui-badge');
   if (badge instanceof HTMLElement) {

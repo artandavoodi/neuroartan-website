@@ -48,13 +48,17 @@
 
 .profile-thought-bank__item{
   display:grid;
-  gap:var(--spacing-sm);
+  gap:var(--spacing-md);
   padding:0;
   border-top:var(--border-width-hairline) solid var(--data-surface-border);
 }
 
 .profile-thought-bank__item:first-child{
   border-top:none;
+}
+
+.profile-thought-bank__item-content-wrapper{
+  padding:var(--spacing-lg) var(--spacing-none);
 }
 
 .profile-thought-bank__item-header{
@@ -64,6 +68,15 @@
   gap:var(--spacing-md);
   position:relative;
   padding:var(--spacing-none);
+  margin-bottom:var(--spacing-md);
+}
+
+.profile-thought-bank__item-meta-group{
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--spacing-md);
+  min-width:0;
 }
 
 .profile-thought-bank__empty,
@@ -78,6 +91,7 @@
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
   padding:var(--spacing-none);
+  margin-bottom:var(--spacing-md);
 }
 
 .profile-thought-bank__item .ui-badge{
@@ -194,10 +208,9 @@ body.profile-thought-overlay-open{
   overscroll-behavior:none;
 }
 
-.profile-thought-stream__lane{
-  padding:var(--spacing-lg);
-  border-radius:var(--radius-xl);
-  border:none;
+html.profile-thought-overlay-open .profile-workspace__content-mount{
+  z-index:var(--z-language-dropdown);
+  overflow:visible;
 }
 
 .profile-thought-stream__lane{
@@ -226,6 +239,7 @@ body.profile-thought-overlay-open{
 }
 
 .profile-thought-bank__overlay-dialog{
+  --profile-thought-composer-inline:var(--spacing-xl);
   position:relative;
   z-index:var(--z-raised);
   width:min(calc(42rem * var(--accessibility-density-scale)), var(--site-rail-width));
@@ -439,6 +453,7 @@ body.profile-thought-overlay-open{
   color:var(--text-color);
   white-space:pre-wrap;
   padding:0;
+  margin-bottom:var(--spacing-md);
 }
 
 .profile-thought-stream__list{
@@ -449,7 +464,7 @@ body.profile-thought-overlay-open{
 
 .profile-thought-stream__entry{
   display:grid;
-  gap:var(--spacing-sm);
+  gap:var(--spacing-md);
   padding:0;
   border-top:var(--border-width-hairline) solid var(--data-surface-border);
   background:transparent;

@@ -47,15 +47,12 @@ const CONNECTOR_IMPORT_CONTROL_OPTIONS = Object.freeze({
   ],
   x: [
     { value: 0, label: 'All available posts' },
-    { value: 100, label: '100 posts' },
-    { value: 500, label: '500 posts' },
-    { value: 1000, label: '1,000 posts' },
-    { value: 2500, label: '2,500 posts' },
-    { value: 5000, label: '5,000 posts' },
   ],
 });
 
 const CONNECTOR_REPOSITORY_SELECTION_SERVICES = Object.freeze(['github', 'gitlab']);
+
+const CONNECTOR_POST_MANAGER_SERVICES = Object.freeze(['x']);
 
 const CONNECTOR_TERMINOLOGY = Object.freeze({
   default: {
@@ -68,11 +65,13 @@ const CONNECTOR_TERMINOLOGY = Object.freeze({
   },
   x: {
     accountLabel: 'Connected profile',
-    importControlLabel: 'Post import limit',
+    importControlLabel: 'Post selection',
     allAvailableLabel: 'All available posts',
     unitSingular: 'post',
     unitPlural: 'posts',
     selectionLabel: 'Post source',
+    selectionMode: 'post-manager',
+    managerLabel: 'Post Manager',
   },
   github: {
     accountLabel: 'Connected account',
@@ -154,6 +153,10 @@ function usesRepositorySelection(service = '') {
   return CONNECTOR_REPOSITORY_SELECTION_SERVICES.includes(normalizeString(service));
 }
 
+function usesPostManagerSelection(service = '') {
+  return CONNECTOR_POST_MANAGER_SERVICES.includes(normalizeString(service));
+}
+
 function readConnectorState() {
   try {
     return JSON.parse(window.localStorage?.getItem(NEUROARTAN_CONNECTOR_STATE_KEY) || '{}') || {};
@@ -210,6 +213,7 @@ async function hydrateSourceVaultConnectorStateFromBackend(root = mountedRoot) {
 
   if (root instanceof HTMLElement) {
     renderConnectorOptions(root, getSelectedSourceType(root));
+    syncSourceVaultContractVisibility(root);
     syncSourceVaultActions(root);
     const sourceType = getSelectedSourceType(root);
     if (SOURCE_TYPE_CONNECTORS[sourceType] && getSelectableConnectorRecords(sourceType).length) {
@@ -279,7 +283,7 @@ function getSelectedConnectorRecords(root, sourceType = '') {
 function getConnectorImportLimit(root = mountedRoot, service = '') {
   if (!(root instanceof HTMLElement)) return 0;
   const normalizedService = normalizeString(service);
-  if (usesRepositorySelection(normalizedService)) return 0;
+  if (usesRepositorySelection(normalizedService) || usesPostManagerSelection(normalizedService)) return 0;
   const control = root.querySelector(`[data-model-source-vault-connector-import-limit="${normalizedService}"]`);
   const rawValue = control instanceof HTMLSelectElement ? control.value : '0';
   const parsed = Number.parseInt(String(rawValue || '0'), 10);
@@ -324,6 +328,16 @@ function getSelectedConnectorImportControls(root = mountedRoot, sourceType = '')
         importUnit: getConnectorTerminology(record.service).unitPlural,
         selectionMode: 'repository-list',
         selectedRepositories: getSelectedConnectorRepositories(root, record.service),
+      };
+    }
+    if (usesPostManagerSelection(record.service)) {
+      return {
+        ...record,
+        importLimit: 0,
+        importLimitLabel: getConnectorTerminology(record.service).allAvailableLabel,
+        importUnit: getConnectorTerminology(record.service).unitPlural,
+        selectionMode: 'post-manager',
+        selectedPosts: getSelectedPostManagerPosts(record.service),
       };
     }
     const importLimit = getConnectorImportLimit(root, record.service);
@@ -416,6 +430,7 @@ function renderRepositorySelectionRows(root = mountedRoot, service = '', contain
   container.append(list);
 }
 
+
 async function renderConnectorRepositorySelection(root = mountedRoot, sourceType = getSelectedSourceType(root), record = {}, container = null) {
   if (!(root instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
   const service = normalizeString(record.service);
@@ -450,8 +465,183 @@ async function renderConnectorRepositorySelection(root = mountedRoot, sourceType
   syncSourceVaultActions(root);
 }
 
+// --- Post Manager Helpers ---
+function readConnectorMetric(metadata = {}, keys = []) {
+  const key = keys.find((candidate) => (
+    Object.prototype.hasOwnProperty.call(metadata, candidate)
+    && metadata[candidate] !== null
+    && metadata[candidate] !== ''
+    && Number.isFinite(Number(metadata[candidate]))
+  ));
+  return key ? Number(metadata[key]) : null;
+}
+
+function formatConnectorInventoryDate(value = '') {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return '';
+  return new Date(timestamp).toLocaleString();
+}
+
+function getPostManagerInventoryLines(record = {}) {
+  const metadata = record.metadata && typeof record.metadata === 'object' ? record.metadata : {};
+  const postCount = readConnectorMetric(metadata, ['post_count', 'postCount', 'tweet_count', 'tweetCount']);
+  const importedCount = readConnectorMetric(metadata, ['imported_count', 'importedCount']);
+  const receivedCount = readConnectorMetric(metadata, ['received_count', 'receivedCount']);
+  const scannedAt = metadata.inventory_scanned_at || metadata.inventoryScannedAt || '';
+
+  const primaryParts = [];
+  if (postCount !== null) primaryParts.push(`Posts: ${postCount.toLocaleString()}`);
+
+  const importParts = [];
+  if (receivedCount !== null) importParts.push(`Available for intake: ${receivedCount.toLocaleString()}`);
+  if (importedCount !== null) importParts.push(`Stored: ${importedCount.toLocaleString()}`);
+
+  const lines = [];
+  if (primaryParts.length) lines.push(primaryParts.join(' · '));
+  if (importParts.length) lines.push(importParts.join(' · '));
+
+  const syncLabel = formatConnectorInventoryDate(scannedAt);
+  if (syncLabel) lines.push(`Last sync: ${syncLabel}`);
+
+  return lines.length ? lines : ['Refresh the connector inventory before post intake'];
+}
+
+function renderConnectorPostManagerSelection(root = mountedRoot, sourceType = getSelectedSourceType(root), record = {}, container = null) {
+  if (!(root instanceof HTMLElement) || !(container instanceof HTMLElement)) return;
+  const service = normalizeString(record.service);
+  if (!usesPostManagerSelection(service)) return;
+
+  container.replaceChildren();
+
+  const summary = document.createElement('div');
+  summary.className = 'model-source-vault__post-manager-summary';
+
+  getPostManagerInventoryLines(record).forEach((line) => {
+    const item = document.createElement('span');
+    item.className = 'model-source-vault__post-manager-summary-line';
+    item.textContent = line;
+    summary.append(item);
+  });
+
+  container.append(summary);
+}
+
+function getPostManagerRecord(service = '') {
+  const normalizedService = normalizeString(service);
+  return getConnectorRecords('social_sources').find((record) => record.service === normalizedService) || null;
+}
+
+function getPostManagerSelectedStorageKey(service = '') {
+  return `neuroartan.model.source-vault.post-manager.${normalizeString(service)}.selected`;
+}
+
+function getSelectedPostManagerPosts(service = '') {
+  const selected = safeReadJsonStorage(getPostManagerSelectedStorageKey(service), []);
+  return Array.isArray(selected) ? selected : [];
+}
+
+function setSelectedPostManagerPosts(service = '', records = []) {
+  const normalizedRecords = Array.isArray(records) ? records.filter((record) => record && typeof record === 'object') : [];
+  safeWriteJsonStorage(getPostManagerSelectedStorageKey(service), normalizedRecords);
+}
+
 function getConnectorCategoryLabel(sourceType = '') {
   return SOURCE_TYPE_LABELS[sourceType] || 'source';
+}
+
+function isConnectorSourceType(sourceType = '') {
+  return Boolean(SOURCE_TYPE_CONNECTORS[normalizeString(sourceType)]);
+}
+
+function isSocialSourceType(sourceType = '') {
+  return normalizeString(sourceType) === 'social_sources';
+}
+
+function isLocalAnalysisSourceType(sourceType = '') {
+  const normalizedSourceType = normalizeString(sourceType);
+  return normalizedSourceType === 'local_folder' || normalizedSourceType === 'selected_files';
+}
+
+function publishSourceVaultSourceType(root = mountedRoot) {
+  if (!(root instanceof HTMLElement)) return '';
+  const sourceType = getSelectedSourceType(root);
+  root.dataset.modelSourceVaultActiveSourceType = sourceType;
+  document.documentElement.dataset.modelSourceVaultSourceType = sourceType;
+  if (document.body) document.body.dataset.modelSourceVaultSourceType = sourceType;
+  document.dispatchEvent(new CustomEvent('model-source-vault:source-type-changed', {
+    detail: { sourceType },
+  }));
+  return sourceType;
+}
+
+function analysisMatchesActiveSourceType(root = mountedRoot, analysis = latestAnalysis) {
+  if (!(root instanceof HTMLElement) || !analysis) return false;
+  const sourceType = getSelectedSourceType(root);
+  const analysisSourceType = normalizeString(analysis.sourceType || sourceType);
+  return analysisSourceType === sourceType;
+}
+
+function getActiveLocalAnalysis(root = mountedRoot, analysis = latestAnalysis) {
+  if (!analysisMatchesActiveSourceType(root, analysis)) return null;
+  return isLocalAnalysisSourceType(analysis?.sourceType || getSelectedSourceType(root)) ? analysis : null;
+}
+
+function getActiveAnalysis(root = mountedRoot, analysis = latestAnalysis) {
+  return analysisMatchesActiveSourceType(root, analysis) ? analysis : null;
+}
+
+function setSourceVaultActionText(button, text = '') {
+  if (!(button instanceof HTMLElement)) return;
+  const label = normalizeString(text);
+  if (!label) return;
+  Array.from(button.childNodes).forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) node.remove();
+  });
+  button.append(document.createTextNode(` ${label}`));
+}
+
+function getSourceVaultAnalyzeActionLabel(sourceType = '') {
+  const normalizedSourceType = normalizeString(sourceType);
+  if (normalizedSourceType === 'social_sources') return 'Analyze post inventory';
+  if (normalizedSourceType === 'repository_reference') return 'Analyze repositories';
+  if (isConnectorSourceType(normalizedSourceType)) {
+    return `Analyze ${SOURCE_TYPE_LABELS[normalizedSourceType] || 'source'}`;
+  }
+  return 'Analyze source vault';
+}
+
+function syncSourceVaultContractVisibility(root = mountedRoot) {
+  if (!(root instanceof HTMLElement)) return;
+  const sourceType = publishSourceVaultSourceType(root);
+  const connectorSourceType = isConnectorSourceType(sourceType);
+  const socialSourceType = isSocialSourceType(sourceType);
+  const activeLocalAnalysis = getActiveLocalAnalysis(root);
+  root.dataset.modelSourceVaultContract = socialSourceType
+    ? 'social'
+    : connectorSourceType
+      ? 'connector'
+      : 'local';
+
+  const summary = root.querySelector('[data-model-source-vault-summary]');
+  if (summary instanceof HTMLElement) summary.hidden = connectorSourceType || !activeLocalAnalysis;
+
+  const fileManager = root.querySelector('[data-model-source-vault-file-manager]');
+  if (fileManager instanceof HTMLElement) {
+    fileManager.hidden = connectorSourceType
+      || !activeLocalAnalysis
+      || !(activeLocalAnalysis.allAcceptedFiles || activeLocalAnalysis.acceptedFiles || []).length;
+  }
+
+  const packages = root.querySelector('[data-model-source-vault-packages]');
+  if (packages instanceof HTMLElement) packages.hidden = !getNormalizedSourceVaultPackages().length;
+
+  const addPackage = root.querySelector('[data-model-source-vault-add-package]');
+  if (addPackage instanceof HTMLElement) {
+    addPackage.setAttribute('aria-hidden', addPackage.hidden ? 'true' : 'false');
+  }
+
+  const formatControls = root.querySelector('[data-model-source-vault-format-controls]');
+  if (formatControls instanceof HTMLElement) formatControls.hidden = connectorSourceType;
 }
 
 function getConnectorCategoryProviderLabels(sourceType = '') {
@@ -475,6 +665,7 @@ let fileManagerSortMode = 'name-ascending';
 let restoredDraftPendingFileReconnect = false;
 let sourceVaultLifecyclePersistenceBound = false;
 let sourceVaultDatabaseResultBound = false;
+let sourceVaultPostManagerRequestBound = false;
 let sourceVaultState = createSourceVaultState();
 
 function createSourceVaultState(overrides = {}) {
@@ -984,6 +1175,7 @@ function getSourceSelectionMetadata(root = mountedRoot) {
   const input = getActiveFileInput(root);
   const files = input instanceof HTMLInputElement ? Array.from(input.files || []) : [];
   const connectors = getSelectedConnectorRecords(root, sourceType);
+  const connectorSourceType = isConnectorSourceType(sourceType);
 
   const existingSelection = sourceVaultState.sourceSelection;
   if (!files.length && !connectors.length) {
@@ -1012,17 +1204,17 @@ function getSourceSelectionMetadata(root = mountedRoot) {
     sourceType,
     sourceTypeLabel: SOURCE_TYPE_LABELS[sourceType] || sourceType,
     label: input instanceof HTMLInputElement ? getInputSelectionLabel(input, SOURCE_TYPE_LABELS[sourceType] || sourceType) : SOURCE_TYPE_LABELS[sourceType] || sourceType,
-    fileCount: files.length,
+    fileCount: connectorSourceType ? 0 : files.length,
     connectorCount: connectors.length,
     connectors,
-    files: files.slice(0, 200).map((file) => ({
+    files: connectorSourceType ? [] : files.slice(0, 200).map((file) => ({
       name: file.name,
       relativePath: file.webkitRelativePath || file.name,
       extension: getFileExtension(file.name),
       size: file.size || 0,
       sizeLabel: formatBytes(file.size || 0),
     })),
-    reconnectRequired: files.length > 0,
+    reconnectRequired: !connectorSourceType && files.length > 0,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -1224,6 +1416,39 @@ function bindSourceVaultDatabaseResult() {
   });
 }
 
+function bindSourceVaultPostManagerRequest() {
+  if (sourceVaultPostManagerRequestBound) return;
+  sourceVaultPostManagerRequestBound = true;
+  document.addEventListener('model:post-manager-open-request', () => {
+    if (!(mountedRoot instanceof HTMLElement)) return;
+    const sourceType = getSelectedSourceType(mountedRoot);
+    if (!isSocialSourceType(sourceType)) {
+      setStatus(mountedRoot, 'Post Manager is available only for social sources.');
+      return;
+    }
+
+    const selectedConnectors = getSelectedConnectorRecords(mountedRoot, sourceType)
+      .filter((record) => usesPostManagerSelection(record.service));
+    const selectedConnector = selectedConnectors[0]
+      || getConnectorRecords(sourceType).find((record) => usesPostManagerSelection(record.service) && record.connectionState === 'connected')
+      || null;
+
+    document.dispatchEvent(new CustomEvent('model:data-manager-open-request', {
+      detail: {
+        source: 'source-vault-post-manager',
+        mode: 'post-manager',
+        filters: {
+          sourceArea: 'foundation',
+          pane: 'source-vault',
+          sourceType,
+          connectorService: selectedConnector?.service || 'x',
+          inventoryType: 'post',
+        },
+      },
+    }));
+  });
+}
+
 function selectAllFileManagerFiles(root = mountedRoot) {
   const allAcceptedFiles = latestAnalysis?.allAcceptedFiles || latestAnalysis?.acceptedFiles || [];
   selectedFileKeys = new Set(allAcceptedFiles.map((file) => getFileRecordKey(file)));
@@ -1268,7 +1493,13 @@ function restoreSourceVaultDraft(root = mountedRoot) {
   });
 
   if (isSourceVaultAnalysisDraft(draft)) {
-    latestAnalysis = draft.latestAnalysis;
+    latestAnalysis = normalizeString(draft.latestAnalysis?.sourceType || '') === getSelectedSourceType(root)
+      ? draft.latestAnalysis
+      : null;
+    if (!latestAnalysis) {
+      syncSourceVaultActions(root);
+      return true;
+    }
     restoredDraftPendingFileReconnect = true;
     selectedFileKeys = new Set(draft.fileManager?.selectedFileKeys || draft.selectedFileKeys || []);
     fileManagerSortMode = normalizeString(draft.fileManager?.sortMode || draft.fileManagerSortMode || 'name-ascending') || 'name-ascending';
@@ -1408,6 +1639,34 @@ function renderConnectorOptions(root = mountedRoot, sourceType = getSelectedSour
       input.addEventListener('change', () => {
         syncConnectorImportLimitVisibility(root, sourceType);
         if (input.checked) void renderConnectorRepositorySelection(root, sourceType, record, repositoryCopy);
+        clearAnalysisUI(root);
+        syncSourceVaultActions(root);
+      });
+      return;
+    }
+
+    // --- Post Manager branch ---
+    if (usesPostManagerSelection(record.service)) {
+      const postManagerField = document.createElement('div');
+      postManagerField.className = 'model-management__field model-source-vault__post-manager-field';
+      postManagerField.dataset.modelSourceVaultConnectorImportLimitField = sourceType;
+      postManagerField.dataset.modelSourceVaultConnectorImportLimitService = record.service;
+      postManagerField.hidden = !input.checked;
+
+      const postManagerLabel = document.createElement('span');
+      postManagerLabel.className = 'model-management__label model-source-vault__connector-limit-copy';
+      postManagerLabel.textContent = 'Post inventory';
+
+      const postManagerControl = document.createElement('span');
+      postManagerControl.className = 'model-management__control model-source-vault__post-manager-control';
+
+      postManagerField.append(postManagerLabel, postManagerControl);
+      list.append(postManagerField);
+      if (input.checked) renderConnectorPostManagerSelection(root, sourceType, record, postManagerControl);
+
+      input.addEventListener('change', () => {
+        syncConnectorImportLimitVisibility(root, sourceType);
+        if (input.checked) renderConnectorPostManagerSelection(root, sourceType, record, postManagerControl);
         clearAnalysisUI(root);
         syncSourceVaultActions(root);
       });
@@ -1573,23 +1832,40 @@ function syncSourceVaultActions(root = mountedRoot) {
   const confirm = root.querySelector('[data-model-source-vault-confirm]');
   const fileManager = root.querySelector('[data-model-source-vault-file-manager]');
   const packages = getNormalizedSourceVaultPackages();
-  const hasAnalysis = !!latestAnalysis;
-  const hasAcceptedAnalysis = Number(latestAnalysis?.acceptedCount || 0) > 0;
+  const sourceType = getSelectedSourceType(root);
+  const socialSourceType = isSocialSourceType(sourceType);
+  syncSourceVaultContractVisibility(root);
+  const activeAnalysis = getActiveAnalysis(root);
+  const activeLocalAnalysis = getActiveLocalAnalysis(root, activeAnalysis);
+  const hasAnalysis = !!activeAnalysis;
+  const hasAcceptedAnalysis = Number(activeAnalysis?.acceptedCount || 0) > 0;
   const hasPackages = packages.length > 0;
-  const analysisLimited = isSourceVaultPlanLimited(latestAnalysis);
+  const analysisLimited = isSourceVaultPlanLimited(activeAnalysis);
   const packagesLimited = packages.some(isSourceVaultPlanLimited);
 
-  if (analyze instanceof HTMLElement) analyze.hidden = !hasSelectedSourceForAnalysis(root);
+  if (analyze instanceof HTMLElement) {
+    setSourceVaultActionText(analyze, getSourceVaultAnalyzeActionLabel(sourceType));
+    analyze.hidden = !hasSelectedSourceForAnalysis(root);
+    analyze.setAttribute('aria-hidden', analyze.hidden ? 'true' : 'false');
+  }
   if (saveDraft instanceof HTMLElement) saveDraft.hidden = !hasActiveSourceVaultDraft(root);
   if (addPackage instanceof HTMLElement) {
     addPackage.hidden = !hasAcceptedAnalysis || analysisLimited;
+    addPackage.setAttribute('aria-hidden', addPackage.hidden ? 'true' : 'false');
     if (addPackage instanceof HTMLButtonElement) addPackage.disabled = analysisLimited;
   }
   if (confirm instanceof HTMLElement) {
-    confirm.hidden = !(hasAcceptedAnalysis || hasPackages) || analysisLimited || packagesLimited;
+    confirm.hidden = (!(hasAcceptedAnalysis || hasPackages) || analysisLimited || packagesLimited);
+    confirm.setAttribute('aria-hidden', confirm.hidden ? 'true' : 'false');
     if (confirm instanceof HTMLButtonElement) confirm.disabled = analysisLimited || packagesLimited;
   }
-  if (!hasAnalysis && fileManager instanceof HTMLElement) fileManager.hidden = true;
+  if (fileManager instanceof HTMLElement) {
+    fileManager.hidden = socialSourceType
+      || !hasAnalysis
+      || !activeLocalAnalysis
+      || !(activeLocalAnalysis.allAcceptedFiles || activeLocalAnalysis.acceptedFiles || []).length;
+    fileManager.setAttribute('aria-hidden', fileManager.hidden ? 'true' : 'false');
+  }
 }
 
 function renderSourceVaultPackages(root = mountedRoot) {
@@ -1601,7 +1877,7 @@ function renderSourceVaultPackages(root = mountedRoot) {
 
   if (!(panel instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
 
-  panel.hidden = true;
+  panel.hidden = packages.length < 1;
   list.replaceChildren();
   if (count instanceof HTMLElement) count.textContent = `${packages.length} saved`;
 
@@ -1703,7 +1979,7 @@ function clearAnalysisUI(root = mountedRoot) {
   syncSourceVaultActions(root);
 }
 function recomputeLatestAnalysisFromFileSelection(root = mountedRoot) {
-  if (!latestAnalysis) return;
+  if (!getActiveLocalAnalysis(root)) return;
 
   const allAcceptedFiles = latestAnalysis.allAcceptedFiles || latestAnalysis.acceptedFiles || [];
   const acceptedFiles = allAcceptedFiles.filter((file) => selectedFileKeys.has(getFileRecordKey(file)));
@@ -1935,7 +2211,7 @@ function readVaultConfig(root) {
 function syncSourceTypeUI(root = mountedRoot) {
   if (!(root instanceof HTMLElement)) return;
 
-  const sourceType = getSelectedSourceType(root);
+  const sourceType = publishSourceVaultSourceType(root);
   const sourceTypeLabel = SOURCE_TYPE_LABELS[sourceType] || sourceType;
   const labelElement = label(root, 'sourceType');
   if (labelElement instanceof HTMLElement) {
@@ -2153,22 +2429,31 @@ function getSourceVaultConfirmationPackages(root = mountedRoot) {
 
 function renderAnalysis(root = mountedRoot, analysis = latestAnalysis) {
   if (!(root instanceof HTMLElement) || !analysis) return;
+  if (!analysisMatchesActiveSourceType(root, analysis)) {
+    syncSourceVaultContractVisibility(root);
+    syncSourceVaultActions(root);
+    return;
+  }
 
   const summary = root.querySelector('[data-model-source-vault-summary]');
+  const connectorAnalysis = isConnectorSourceType(analysis.sourceType || getSelectedSourceType(root));
   const report = root.querySelector('[data-model-source-vault-report]');
   const confirm = root.querySelector('[data-model-source-vault-confirm]');
   const fileManager = root.querySelector('[data-model-source-vault-file-manager]');
 
-  setText(root, '[data-model-source-vault-summary-accepted]', String(analysis.acceptedCount));
-  setText(root, '[data-model-source-vault-summary-excluded]', String(analysis.excludedCount));
-  setText(root, '[data-model-source-vault-summary-size]', formatBytes(analysis.totalAcceptedBytes));
+  if (!connectorAnalysis) {
+    setText(root, '[data-model-source-vault-summary-accepted]', String(analysis.acceptedCount));
+    setText(root, '[data-model-source-vault-summary-excluded]', String(analysis.excludedCount));
+    setText(root, '[data-model-source-vault-summary-size]', formatBytes(analysis.totalAcceptedBytes));
+  }
 
-  if (summary instanceof HTMLElement) summary.hidden = false;
+  if (summary instanceof HTMLElement) summary.hidden = connectorAnalysis;
+  syncSourceVaultContractVisibility(root);
   const planLimited = isSourceVaultPlanLimited(analysis);
   if (confirm instanceof HTMLElement) confirm.hidden = analysis.acceptedCount < 1 || planLimited;
   if (confirm instanceof HTMLButtonElement) confirm.disabled = planLimited;
-  if (fileManager instanceof HTMLElement) fileManager.hidden = (analysis.allAcceptedFiles || analysis.acceptedFiles || []).length < 1;
-  renderFileManager(root, analysis);
+  if (fileManager instanceof HTMLElement) fileManager.hidden = connectorAnalysis || (analysis.allAcceptedFiles || analysis.acceptedFiles || []).length < 1;
+  if (!connectorAnalysis) renderFileManager(root, analysis);
   syncSourceVaultActions(root);
 
   if (analysis.requiresConnectorListing) {
@@ -2180,7 +2465,9 @@ function renderAnalysis(root = mountedRoot, analysis = latestAnalysis) {
         .map(getConnectorImportStatusLabel)
         .filter(Boolean)
         .join(' · ');
-      setStatus(root, `${analysis.selectedConnectors.map((record) => record.label).join(', ')} selected. ${sourceSummary || importSummary || 'All available'} will be prepared for source-vault intake.`);
+      setStatus(root, isSocialSourceType(analysis.sourceType)
+        ? `${analysis.selectedConnectors.map((record) => record.label).join(', ')} selected. Post inventory is ready for contextual post selection.`
+        : `${analysis.selectedConnectors.map((record) => record.label).join(', ')} selected. ${sourceSummary || importSummary || 'All available'} will be prepared for source-vault intake.`);
       return;
     }
     if (analysis.authorizationRequiredConnectors?.length) {
@@ -2326,7 +2613,9 @@ function handleChange(event) {
   if (target.closest('[data-model-source-vault-connector-option]')) {
     latestAnalysis = null;
     clearAnalysisUI(root);
-    setStatus(root, 'Connected source selected. Choose the import limit, then run Analyze Source Vault to prepare intake.');
+    setStatus(root, getSelectedSourceType(root) === 'social_sources'
+      ? 'Social source selected. Use the contextual Post Manager tool to select posts, then confirm intake.'
+      : 'Connected source selected. Choose the import limit, then run Analyze Source Vault to prepare intake.');
     syncSourceVaultActions(root);
     saveSourceVaultDraft(root);
     return;
@@ -2339,7 +2628,9 @@ function handleChange(event) {
     }
     latestAnalysis = null;
     clearAnalysisUI(root);
-    setStatus(root, 'Connector import limit updated. Run Analyze Source Vault to prepare intake.');
+    setStatus(root, getSelectedSourceType(root) === 'social_sources'
+      ? 'Social source selection updated. Use the contextual Post Manager tool to select posts.'
+      : 'Connector import limit updated. Run Analyze Source Vault to prepare intake.');
     syncSourceVaultActions(root);
     saveSourceVaultDraft(root);
     return;
@@ -2506,6 +2797,7 @@ export function mountModelSourceVault(root = document) {
   bindFileManagerOverlayEvents(mountedRoot);
   bindSourceVaultDraftLifecyclePersistence();
   bindSourceVaultDatabaseResult();
+  bindSourceVaultPostManagerRequest();
 
   mountedRoot.addEventListener('change', handleChange);
   mountedRoot.addEventListener('pointerdown', handleFileManagerSearchPointerDown, true);

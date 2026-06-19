@@ -281,6 +281,37 @@
   line-height:var(--body-3-line-height);
 }
 
+.model-source-vault__post-manager-field{
+  align-items:flex-start;
+}
+
+.model-source-vault__post-manager-control{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:var(--spacing-sm);
+  min-width:var(--spacing-none);
+}
+
+.model-source-vault__post-manager-summary{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.model-source-vault__post-manager-summary-line{
+  min-width:var(--spacing-none);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+
+
 .model-source-vault__repository-list{
   display:flex;
   flex-direction:column;
@@ -718,6 +749,11 @@
   .model-source-vault__connector-repository-field{
     align-items:stretch;
   }
+
+  .model-source-vault__post-manager-field{
+    align-items:stretch;
+  }
+
 
   .model-source-vault__repository-option{
     grid-template-columns:auto minmax(var(--spacing-none),1fr);

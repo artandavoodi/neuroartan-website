@@ -14,8 +14,8 @@
 
 .profile-right-toolbar__surface{
   position:sticky;
-  top:8rem;
-  align-self:end;
+  top:var(--profile-workspace-rail-sticky-top);
+  align-self:start;
   width:var(--profile-workspace-right-toolbar-compact-width, var(--layout-home-platform-rail-compact-width));
   min-width:var(--spacing-none);
   margin-inline-start:auto;
@@ -31,36 +31,6 @@
     0
     var(--home-platform-shell-rail-padding-inline)
     var(--spacing-lg);
-}
-
-.profile-right-toolbar__header{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  width:var(--home-platform-shell-rail-toggle-size);
-  min-width:var(--home-platform-shell-rail-toggle-size);
-  height:var(--home-platform-shell-rail-toggle-size);
-  flex:0 0 var(--home-platform-shell-rail-toggle-size);
-  padding-top:var(--spacing-none);
-}
-
-.profile-right-toolbar__rail-toggle{
-  position:relative;
-  width:var(--home-platform-shell-rail-toggle-size);
-  height:var(--home-platform-shell-rail-toggle-size);
-  min-width:var(--home-platform-shell-rail-toggle-size);
-  min-height:var(--home-platform-shell-rail-toggle-size);
-  flex:0 0 var(--home-platform-shell-rail-toggle-size);
-  display:inline-grid;
-  place-items:center;
-  padding:var(--spacing-none);
-  border:var(--border-width-hairline) solid transparent;
-  border-radius:var(--home-platform-shell-nav-item-radius);
-  background:transparent;
-  color:var(--home-platform-shell-nav-item-color);
-  opacity:var(--home-platform-shell-nav-base-opacity);
-  cursor:pointer;
-  transition:var(--interaction-transition-control);
 }
 
 .profile-right-toolbar__nav-item{
@@ -119,9 +89,6 @@
   visibility:visible;
 }
 
-.profile-right-toolbar__rail-toggle:hover,
-.profile-right-toolbar__rail-toggle:focus-visible,
-.profile-right-toolbar__rail-toggle[aria-pressed="true"],
 .profile-right-toolbar__nav-item:hover,
 .profile-right-toolbar__nav-item:focus-visible,
 .profile-right-toolbar__nav-item:active{
@@ -144,7 +111,6 @@
   transform:none !important;
 }
 
-.profile-right-toolbar__rail-toggle-icon,
 .profile-right-toolbar__nav-icon{
   width:var(--home-platform-shell-nav-icon-size);
   height:var(--home-platform-shell-nav-icon-size);
@@ -154,16 +120,6 @@
   transform:none !important;
 }
 
-.profile-right-toolbar__rail-toggle-icon{
-  width:var(--home-platform-shell-rail-toggle-icon-size);
-  height:var(--home-platform-shell-rail-toggle-icon-size);
-  flex:0 0 var(--home-platform-shell-rail-toggle-icon-size);
-  display:grid;
-  place-items:center;
-}
-
-.profile-right-toolbar__rail-toggle-icon img,
-.profile-right-toolbar__rail-toggle-icon svg,
 .profile-right-toolbar__nav-icon img,
 .profile-right-toolbar__nav-icon svg{
   width:var(--size-full);
@@ -175,12 +131,6 @@
   transform:none;
 }
 
-.profile-right-toolbar__rail-toggle:hover .profile-right-toolbar__rail-toggle-icon img,
-.profile-right-toolbar__rail-toggle:hover .profile-right-toolbar__rail-toggle-icon svg,
-.profile-right-toolbar__rail-toggle:focus-visible .profile-right-toolbar__rail-toggle-icon img,
-.profile-right-toolbar__rail-toggle:focus-visible .profile-right-toolbar__rail-toggle-icon svg,
-.profile-right-toolbar__rail-toggle[aria-pressed="true"] .profile-right-toolbar__rail-toggle-icon img,
-.profile-right-toolbar__rail-toggle[aria-pressed="true"] .profile-right-toolbar__rail-toggle-icon svg,
 .profile-right-toolbar__nav-item:hover .profile-right-toolbar__nav-icon img,
 .profile-right-toolbar__nav-item:hover .profile-right-toolbar__nav-icon svg,
 .profile-right-toolbar__nav-item:focus-visible .profile-right-toolbar__nav-icon img,
@@ -205,13 +155,13 @@
   flex-direction:column;
   align-items:center;
   gap:var(--home-platform-shell-nav-gap);
-  margin-top:var(--spacing-sm);
-  padding-top:var(--home-platform-shell-rail-padding-top);
+  margin-top:var(--spacing-none);
+  padding-top:var(--spacing-none);
   padding-bottom:var(--home-platform-shell-rail-padding-bottom);
 }
 
 .profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__nav{
-  display:none;
+  display:flex;
 }
 
 .profile-right-toolbar[data-profile-right-toolbar-rail="collapsed"] .profile-right-toolbar__nav-item{
@@ -222,10 +172,6 @@
 }
 
 @media (max-width:980px){
-  .profile-right-toolbar__rail-toggle{
-    display:none;
-  }
-
   .profile-right-toolbar__surface{
     width:100%;
   }

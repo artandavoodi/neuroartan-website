@@ -411,6 +411,7 @@ let modelLogicRecords = loadStoredModelLogicRecords();
 let modelLogicQuestionRegistry = null;
 let modelLogicQuestionRegistryLoading = null;
 let modelDataManagerOpen = false;
+let modelDataManagerMode = 'database';
 let modelDataManagerPane = 'datasets';
 let modelDataManagerFilter = '';
 let modelDataManagerSort = 'name-ascending';
@@ -3049,7 +3050,34 @@ function renderModelLogicRecords(root) {
   });
 }
 
+function normalizeModelDataManagerMode(value = '') {
+  return String(value || '').trim() === 'post-manager' ? 'post-manager' : 'database';
+}
+
+function isModelDataManagerPostMode() {
+  return modelDataManagerMode === 'post-manager';
+}
+
+function setModelDataManagerTabLabel(tab, label = '') {
+  if (!(tab instanceof HTMLElement)) return;
+  const labelNode = tab.querySelector('span');
+  if (labelNode instanceof HTMLElement) {
+    labelNode.textContent = label;
+    return;
+  }
+  tab.textContent = label;
+}
+
+function normalizeModelPostManagerPane(value = '') {
+  const normalizedValue = String(value || '').trim();
+  if (normalizedValue === 'comments') return 'comments';
+  if (normalizedValue === 'replies') return 'replies';
+  if (normalizedValue === 'mentions') return 'mentions';
+  return 'posts';
+}
+
 function normalizeModelDataManagerPane(value = '') {
+  if (isModelDataManagerPostMode()) return normalizeModelPostManagerPane(value);
   const normalizedValue = String(value || '').trim();
   if (normalizedValue === 'source-vault' || normalizedValue === 'sources') return 'source-vault';
   if (normalizedValue === 'knowledge-base') return 'knowledge-base';
@@ -3059,7 +3087,79 @@ function normalizeModelDataManagerPane(value = '') {
 
 function isModelSourceVaultDatasetEntry(entry = {}) {
   const metadata = entry?.metadata && typeof entry.metadata === 'object' ? entry.metadata : {};
-  return metadata.intake_owner === 'model_source_vault' || Boolean(metadata.source_vault_package_id);
+  return metadata.intake_owner === 'model_source_vault'
+    || Boolean(metadata.source_vault_package_id)
+    || isModelSocialSourceEntry(entry);
+}
+
+function getModelSocialSourceTweet(entry = {}) {
+  const metadata = entry?.metadata && typeof entry.metadata === 'object' ? entry.metadata : {};
+  const tweet = metadata.tweet && typeof metadata.tweet === 'object' ? metadata.tweet : null;
+  return tweet || metadata.post || metadata;
+}
+
+function isModelSocialSourceEntry(entry = {}) {
+  const metadata = entry?.metadata && typeof entry.metadata === 'object' ? entry.metadata : {};
+  const kind = String(entry.kind || metadata.candidate_type || '').trim().toLowerCase();
+  return kind === 'x_post'
+    || kind === 'x_reply'
+    || kind === 'x_comment'
+    || kind === 'x_mention'
+    || metadata.provider === 'x'
+    || metadata.connector_service === 'x'
+    || String(entry.sourceReference || '').startsWith('x:tweet:');
+}
+
+function getModelSocialSourceReferences(entry = {}) {
+  const tweet = getModelSocialSourceTweet(entry);
+  const references = Array.isArray(tweet?.referenced_tweets) ? tweet.referenced_tweets : [];
+  return references.map((reference) => String(reference?.type || '').trim().toLowerCase()).filter(Boolean);
+}
+
+function isModelSocialReplyEntry(entry = {}) {
+  const kind = String(entry.kind || entry.metadata?.candidate_type || '').trim().toLowerCase();
+  return kind === 'x_reply' || getModelSocialSourceReferences(entry).includes('replied_to');
+}
+
+function isModelSocialMentionEntry(entry = {}) {
+  const kind = String(entry.kind || entry.metadata?.candidate_type || '').trim().toLowerCase();
+  const tweet = getModelSocialSourceTweet(entry);
+  return kind === 'x_mention' || /\B@[A-Za-z0-9_]{1,15}\b/.test(String(tweet?.text || entry.text || ''));
+}
+
+function isModelSocialCommentEntry(entry = {}) {
+  const kind = String(entry.kind || entry.metadata?.candidate_type || '').trim().toLowerCase();
+  return kind === 'x_comment';
+}
+
+function getModelPostManagerEntries(pane = modelDataManagerPane) {
+  const normalizedPane = normalizeModelPostManagerPane(pane);
+  const entries = modelDatasetEntries.filter(isModelSocialSourceEntry);
+  const filteredEntries = entries.filter((entry) => {
+    const isReply = isModelSocialReplyEntry(entry);
+    const isMention = isModelSocialMentionEntry(entry);
+    const isComment = isModelSocialCommentEntry(entry);
+    if (normalizedPane === 'replies') return isReply;
+    if (normalizedPane === 'mentions') return isMention;
+    if (normalizedPane === 'comments') return isComment;
+    return !isReply && !isComment;
+  });
+
+  const query = String(modelDataManagerFilter || '').trim().toLowerCase();
+  if (!query) return sortModelDataManagerEntries(filteredEntries);
+
+  return sortModelDataManagerEntries(filteredEntries.filter((entry) => {
+    const tweet = getModelSocialSourceTweet(entry);
+    const searchable = [
+      entry.title,
+      entry.text,
+      tweet?.text,
+      tweet?.id,
+      entry.sourceReference,
+      entry.kind,
+    ].filter(Boolean).join(' ').toLowerCase();
+    return searchable.includes(query);
+  }));
 }
 
 function getModelDataManagerEntryTime(entry = {}) {
@@ -3093,6 +3193,7 @@ function sortModelDataManagerEntries(entries = []) {
 }
 
 function getModelDataManagerEntries(pane = modelDataManagerPane) {
+  if (isModelDataManagerPostMode()) return getModelPostManagerEntries(pane);
   const normalizedPane = normalizeModelDataManagerPane(pane);
   let entries = modelDatasetEntries.filter((entry) => !isModelSourceVaultDatasetEntry(entry));
   if (normalizedPane === 'source-vault') {
@@ -3118,6 +3219,23 @@ function getModelDataManagerEntries(pane = modelDataManagerPane) {
 }
 
 function getModelDataManagerCopy(pane = modelDataManagerPane) {
+  if (isModelDataManagerPostMode()) {
+    const normalizedPostPane = normalizeModelPostManagerPane(pane);
+    const postCopy = {
+      posts: ['No post inventory loaded yet.', 'Post', 'Post content'],
+      comments: ['No comment inventory loaded yet.', 'Comment', 'Comment content'],
+      replies: ['No reply inventory loaded yet.', 'Reply', 'Reply content'],
+      mentions: ['No mention inventory loaded yet.', 'Mention', 'Mention content'],
+    }[normalizedPostPane] || ['No post inventory loaded yet.', 'Post', 'Post content'];
+    return {
+      title: 'Post Manager',
+      empty: postCopy[0],
+      titleLabel: postCopy[1],
+      bodyLabel: postCopy[2],
+      removeAttribute: 'modelDataManagerDatasetRemove',
+      saveAttribute: 'modelDataManagerDatasetSave',
+    };
+  }
   const normalizedPane = normalizeModelDataManagerPane(pane);
   if (normalizedPane === 'source-vault') {
     return {
@@ -3161,9 +3279,50 @@ function getModelDataManagerCopy(pane = modelDataManagerPane) {
 
 function renderModelDataManagerTabs(overlay, pane = modelDataManagerPane) {
   const tabs = overlay.querySelectorAll('[data-model-data-manager-pane]');
+  const databaseModeLabels = {
+    'source-vault': 'Source database',
+    datasets: 'Datasets',
+    'knowledge-base': 'Knowledge',
+    logics: 'Logics',
+  };
+  const postModeLabels = {
+    'source-vault': 'Posts',
+    datasets: 'Comments',
+    'knowledge-base': 'Replies',
+    logics: 'Mentions',
+  };
+  const postModePanes = {
+    'source-vault': 'posts',
+    datasets: 'comments',
+    'knowledge-base': 'replies',
+    logics: 'mentions',
+  };
+
   tabs.forEach((tab) => {
     if (!(tab instanceof HTMLButtonElement)) return;
-    const isActive = normalizeModelDataManagerPane(tab.dataset.modelDataManagerPane) === normalizeModelDataManagerPane(pane);
+    const rawPane = String(tab.dataset.modelDataManagerPane || '').trim();
+
+    if (isModelDataManagerPostMode()) {
+      const postPane = postModePanes[rawPane] || '';
+      const supported = Boolean(postPane);
+      tab.hidden = !supported;
+      tab.setAttribute('aria-hidden', supported ? 'false' : 'true');
+      if (!supported) return;
+      setModelDataManagerTabLabel(tab, postModeLabels[rawPane] || 'Posts');
+      tab.dataset.modelDataManagerPostPane = postPane;
+      const isActive = normalizeModelPostManagerPane(postPane) === normalizeModelPostManagerPane(pane);
+      tab.setAttribute('aria-pressed', String(isActive));
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+      tab.dataset.active = isActive ? 'true' : 'false';
+      return;
+    }
+
+    tab.hidden = false;
+    tab.removeAttribute('aria-hidden');
+    tab.removeAttribute('data-model-data-manager-post-pane');
+    setModelDataManagerTabLabel(tab, databaseModeLabels[rawPane] || tab.textContent);
+    const isActive = normalizeModelDataManagerPane(rawPane) === normalizeModelDataManagerPane(pane);
     tab.setAttribute('aria-pressed', String(isActive));
     tab.setAttribute('aria-selected', String(isActive));
     tab.tabIndex = isActive ? 0 : -1;
@@ -4167,11 +4326,15 @@ function setModelDataManagerStatus(message = '', state = 'idle') {
 
 function setModelDataManagerOpen(open, pane = modelDataManagerPane, options = {}) {
   modelDataManagerOpen = open === true;
-  modelDataManagerPane = normalizeModelDataManagerPane(pane);
+  modelDataManagerMode = normalizeModelDataManagerMode(options.mode || modelDataManagerMode);
+  modelDataManagerPane = modelDataManagerMode === 'post-manager'
+    ? normalizeModelPostManagerPane(pane)
+    : normalizeModelDataManagerPane(pane);
   if (!modelDataManagerOpen) modelDataManagerMoreOpen = false;
 
   if (options.persist !== false) {
     updateModelInterfaceState('modelDataManagerOpen', modelDataManagerOpen);
+    updateModelInterfaceState('modelDataManagerMode', modelDataManagerMode);
     updateModelInterfaceState('modelDataManagerPane', modelDataManagerPane);
   }
 
@@ -4196,7 +4359,10 @@ function applyModelIdentityEditorInterfaceState(open) {
 function restoreModelManagementInterfaceState() {
   const interfaceState = readModelInterfaceState();
   modelDataManagerOpen = interfaceState.modelDataManagerOpen === true;
-  modelDataManagerPane = normalizeModelDataManagerPane(interfaceState.modelDataManagerPane || modelDataManagerPane);
+  modelDataManagerMode = normalizeModelDataManagerMode(interfaceState.modelDataManagerMode || 'database');
+  modelDataManagerPane = modelDataManagerMode === 'post-manager'
+    ? normalizeModelPostManagerPane(interfaceState.modelDataManagerPane || modelDataManagerPane)
+    : normalizeModelDataManagerPane(interfaceState.modelDataManagerPane || modelDataManagerPane);
 
   window.requestAnimationFrame(() => {
     applyModelIdentityEditorInterfaceState(interfaceState.modelIdentityEditorOpen);
@@ -4206,11 +4372,15 @@ function restoreModelManagementInterfaceState() {
 
 function handleModelDataManagerOpenRequest(event) {
   const detail = event instanceof CustomEvent ? event.detail || {} : {};
-  const pane = normalizeModelDataManagerPane(detail.filters?.pane || detail.filters?.managerPane || getProfileNavigationState().modelPane);
+  const mode = normalizeModelDataManagerMode(detail.mode || detail.filters?.mode || 'database');
+  const pane = mode === 'post-manager'
+    ? normalizeModelPostManagerPane(detail.filters?.postPane || detail.filters?.pane || 'posts')
+    : normalizeModelDataManagerPane(detail.filters?.pane || detail.filters?.managerPane || getProfileNavigationState().modelPane);
   const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;
+  overlay.dataset.modelDataManagerMode = mode;
   document.body.appendChild(overlay);
-  setModelDataManagerOpen(true, pane);
+  setModelDataManagerOpen(true, pane, { mode });
 }
 
 function handleModelDataManagerSearchPointerDown(event) {
@@ -4311,7 +4481,9 @@ function handleModelDataManagerClick(event) {
 
   const pane = event.target?.closest?.('[data-model-data-manager-pane]');
   if (pane instanceof HTMLElement) {
-    modelDataManagerPane = normalizeModelDataManagerPane(pane.dataset.modelDataManagerPane);
+    modelDataManagerPane = isModelDataManagerPostMode()
+      ? normalizeModelPostManagerPane(pane.dataset.modelDataManagerPostPane || pane.dataset.modelDataManagerPane)
+      : normalizeModelDataManagerPane(pane.dataset.modelDataManagerPane);
     modelDataManagerMoreOpen = false;
     updateModelInterfaceState('modelDataManagerPane', modelDataManagerPane);
     renderAllModelManagement();

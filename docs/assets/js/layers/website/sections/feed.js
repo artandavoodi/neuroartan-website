@@ -45,6 +45,13 @@ import { listFollowedProfileIds } from '../system/profile/profile-social-graph.j
    02) CONSTANTS
 ============================================================================= */
 const FEED_SECTION_URL = '/assets/data/sections/feed.json';
+const FEED_POST_ACTION_ICONS = Object.freeze({
+  reply: '/registry/icons/public/assets/core/actions/reply/reply.svg',
+  repost: '/registry/icons/public/assets/core/actions/repost/repost.svg',
+  like: '/registry/icons/public/assets/core/actions/like/like.svg',
+  share: '/registry/icons/public/assets/core/actions/share/share.svg',
+  save: '/registry/icons/public/assets/core/actions/bookmark/bookmark.svg'
+});
 
 /* =============================================================================
    03) STATE
@@ -296,6 +303,15 @@ function renderFeedPost(post = {}) {
   const activeModelId = getActiveModelState().activeModelId;
   const avatar = normalizeString(post.avatar);
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
+  const renderAction = (action, label, pressed = false) => {
+    const icon = FEED_POST_ACTION_ICONS[action] || '';
+    return `
+      <button class="feed-post__action" type="button" data-feed-post-action="${escapeHtml(action)}" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${pressed ? 'true' : 'false'}">
+        ${icon ? `<img class="feed-post__action-icon ui-icon-theme-aware" src="${icon}" alt="" aria-hidden="true">` : ''}
+        <span>${escapeHtml(label)}</span>
+      </button>
+    `;
+  };
 
   return `
     <article class="feed-post">
@@ -335,11 +351,11 @@ function renderFeedPost(post = {}) {
       </div>
 
       <div class="feed-post__actions">
-        <button class="feed-post__action" type="button" data-feed-post-action="reply" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.reply ? 'true' : 'false'}">Reply</button>
-        <button class="feed-post__action" type="button" data-feed-post-action="repost" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.repost ? 'true' : 'false'}">Repost</button>
-        <button class="feed-post__action" type="button" data-feed-post-action="like" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.like ? 'true' : 'false'}">Like</button>
-        <button class="feed-post__action" type="button" data-feed-post-action="share" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.share ? 'true' : 'false'}">Share</button>
-        <button class="feed-post__action" type="button" data-feed-post-action="save" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${interactionState.save ? 'true' : 'false'}">Bookmark</button>
+        ${renderAction('reply', 'Reply', interactionState.reply)}
+        ${renderAction('repost', 'Repost', interactionState.repost)}
+        ${renderAction('like', 'Like', interactionState.like)}
+        ${renderAction('share', 'Share', interactionState.share)}
+        ${renderAction('save', 'Bookmark', interactionState.save)}
         <a class="feed-post__action feed-post__action--link" href="${escapeHtml(post.publicRoute || post.href || '/pages/profiles/index.html')}">View</a>
         ${post.ownedByCurrentUser ? `<button class="feed-post__action" type="button" data-feed-delete-post="${escapeHtml(post.feedPostId || post.id)}">Delete</button>` : ''}
         ${post.modelId ? `<button class="feed-post__action feed-post__action--primary" type="button" data-feed-post-model="${escapeHtml(post.modelId)}">${post.modelId === activeModelId ? 'Active on Homepage' : 'Interact'}</button>` : ''}
@@ -361,6 +377,10 @@ function hydrateFeedMedia(root = FEED_PAGE_STATE.root) {
 
     if (image.complete && image.naturalWidth > 0) {
       setState('loaded');
+      return;
+    }
+    if (image.complete) {
+      setState('error');
       return;
     }
 

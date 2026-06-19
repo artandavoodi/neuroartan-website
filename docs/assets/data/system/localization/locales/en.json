@@ -6,10 +6,10 @@
   "entries": {
     "404.actions.back": "Back",
     "404.actions.home": "Home",
-    "404.body.1": "This page is intentionally routed here while Neuroartan quietly develops the next public layers of the platform and institutional website.",
+    "404.body.1": "The path you requested could not be found.",
     "404.body.2": "Please continue through the currently active public surfaces until additional sections are formally released.",
-    "404.heading": "This destination is under active development.",
-    "404.meta.description": "This destination is intentionally unavailable while Neuroartan is under active development and selected public sections are being prepared.",
+    "404.heading": "This page does not exist.",
+    "404.meta.description": "The path you requested could not be found.",
     "404.meta.title": "Page Not Found · Neuroartan",
     "about_featured_functions_controls_aria_label": "Featured functions controls",
     "about_featured_functions_next_aria_label": "Next featured function",

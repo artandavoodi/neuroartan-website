@@ -308,6 +308,7 @@ function renderFeedPost(post = {}) {
   const counts = socialState.counts || {};
   const activeModelId = getActiveModelState().activeModelId;
   const avatar = normalizeString(post.avatar);
+  const publicProfileRoute = normalizeString(post.publicRoute || post.href || '/pages/profiles/index.html');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
   const renderAction = (action, label, pressed = false) => {
     const icon = FEED_POST_ACTION_ICONS[action] || '';
@@ -324,15 +325,15 @@ function renderFeedPost(post = {}) {
   return `
     <article class="feed-post" data-feed-post-view-id="${escapeHtml(post.id)}">
       <div class="feed-post__identity">
-        <div class="feed-post__avatar" aria-hidden="true">
+        <a class="feed-post__avatar" href="${escapeHtml(publicProfileRoute)}" aria-label="View ${escapeHtml(post.entityLabel || 'profile')} profile">
           ${avatar
             ? `<img class="feed-post__avatar-image" src="${escapeHtml(avatar)}" alt="">`
             : `<span class="feed-post__avatar-fallback">${escapeHtml((post.entityLabel || 'N').charAt(0).toUpperCase())}</span>`}
-        </div>
+        </a>
 
         <div class="feed-post__identity-copy">
           <div class="feed-post__identity-row">
-            <h2 class="feed-post__entity">${escapeHtml(post.entityLabel || 'Entity')}</h2>
+            <h2 class="feed-post__entity"><a class="feed-post__profile-link" href="${escapeHtml(publicProfileRoute)}">${escapeHtml(post.entityLabel || 'Entity')}</a></h2>
             ${post.verified ? `
               <span class="feed-post__badge" aria-label="Verified entity">
                 <img class="feed-post__badge-icon" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">

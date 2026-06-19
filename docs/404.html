@@ -27,7 +27,7 @@
   <meta
     name="description"
     data-i18n-key="404.meta.description"
-    content="This destination is intentionally unavailable while Neuroartan is under active development and selected public sections are being prepared."
+    content="The path you requested could not be found."
   >
   <meta name="robots" content="noindex, follow">
   <meta name="theme-color" content="#0a0a0a">
@@ -43,7 +43,7 @@
   <meta property="og:title" content="Page Not Found · Neuroartan">
   <meta
     property="og:description"
-    content="This destination is intentionally unavailable while Neuroartan is under active development and selected public sections are being prepared."
+    content="The path you requested could not be found."
   >
   <meta property="og:url" content="https://neuroartan.com/404.html">
   <meta property="og:site_name" content="Neuroartan">
@@ -52,7 +52,7 @@
   <meta name="twitter:title" content="Page Not Found · Neuroartan">
   <meta
     name="twitter:description"
-    content="This destination is intentionally unavailable while Neuroartan is under active development and selected public sections are being prepared."
+    content="The path you requested could not be found."
   >
 </head>
 
@@ -120,7 +120,7 @@
   <!-- ==========================================================================
   06) NOT FOUND ROOT
   ========================================================================== -->
-  <div id="not-found-root" data-not-found-root>
+  <div id="not-found-root" data-not-found-root hidden aria-hidden="true">
     <!-- ========================================================================
     06A) SHADER MOUNT
     ======================================================================== -->
@@ -132,18 +132,18 @@
     <main class="page-404-content" aria-labelledby="error404-title">
       <div class="page-404-wrapper">
         <section class="error404-shell">
-          <div class="error404-mark">404</div>
+          <div class="error404-mark" data-404-mark>404</div>
 
           <div class="error404-copy">
-            <p class="error404-eyebrow">Neuroartan</p>
-            <h1 id="error404-title" class="error404-title" data-i18n-key="404.heading">This destination is under active development.</h1>
-            <p class="error404-description" data-i18n-key="404.body.1">
-              This page is intentionally routed here while Neuroartan quietly develops the next public layers of the platform and institutional website.
+            <p class="error404-eyebrow" data-404-eyebrow>Neuroartan</p>
+            <h1 id="error404-title" class="error404-title" data-404-title data-i18n-key="404.heading">This page does not exist.</h1>
+            <p class="error404-description" data-404-description data-i18n-key="404.body.1">
+              The path you requested could not be found.
             </p>
           </div>
 
           <div class="error404-actions" aria-label="404 recovery actions" data-i18n-aria-label="404.actions.ariaLabel">
-            <a href="/" class="ui-button ui-button--brand error404-action error404-action--home" data-404-home-link>
+            <a href="/" class="ui-button ui-button--secondary error404-action error404-action--home" data-404-home-link>
               <span class="error404-action__icon error404-action__icon--home" aria-hidden="true"></span>
               <span data-i18n-key="404.actions.home">Home</span>
             </a>

@@ -23,7 +23,6 @@
   --error404-shell-padding-y:calc(56px * var(--accessibility-density-scale));
   --error404-shell-padding-x:calc(40px * var(--accessibility-density-scale));
   --error404-shell-radius:calc(28px * var(--accessibility-density-scale));
-  --error404-shell-border:var(--control-border);
   --error404-shell-surface:var(--control-bg);
   --error404-mark-color:color-mix(in srgb, var(--text-primary-color) 60%, transparent);
   --error404-eyebrow-color:color-mix(in srgb, var(--text-primary-color) 50%, transparent);
@@ -100,7 +99,7 @@
   position: relative;
   z-index: 2;
   padding: var(--error404-shell-padding-y) var(--error404-shell-padding-x);
-  border: calc(1px * var(--accessibility-density-scale)) solid var(--error404-shell-border);
+  border: none;
   border-radius: var(--error404-shell-radius);
   background: var(--error404-shell-surface);
   box-sizing: border-box;

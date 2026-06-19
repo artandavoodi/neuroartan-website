@@ -11,7 +11,7 @@
    01) IMPORTS
 ============================================================================= */
 import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { developerModeConfig } from './config.mjs';
 import {
@@ -36,6 +36,8 @@ const CONTENT_TYPES = Object.freeze({
   '.ico':'image/x-icon',
   '.txt':'text/plain; charset=utf-8'
 });
+
+let publicProfileRoutePolicyPromise = null;
 
 /* =============================================================================
    03) RUNTIME STATIC INTELLIGENCE
@@ -107,6 +109,72 @@ function resolveStaticPath(urlPath) {
   return '';
 }
 
+async function getPublicProfileRoutePolicy() {
+  if (!publicProfileRoutePolicyPromise) {
+    const policyPath = path.join(
+      developerModeConfig.docsRoot,
+      'assets/data/accounts/profile-identity-policy.json'
+    );
+
+    publicProfileRoutePolicyPromise = readFile(policyPath, 'utf8')
+      .then((source) => JSON.parse(source))
+      .catch(() => null);
+  }
+
+  return publicProfileRoutePolicyPromise;
+}
+
+async function resolvePublicProfileFallbackPath(urlPath) {
+  const decodedPath = decodeURIComponent(urlPath.split('?')[0] || '/');
+  const segments = decodedPath.replace(/^\/+|\/+$/gu, '').split('/').filter(Boolean);
+
+  if (segments.length !== 1) return '';
+
+  const candidate = segments[0].toLowerCase();
+  const policy = await getPublicProfileRoutePolicy();
+  const publicRoute = policy?.public_route || {};
+  const username = policy?.username || {};
+  const protectedExact = new Set((publicRoute.protected_exact || []).map((value) => String(value).toLowerCase()));
+  const pattern = username.allowed_pattern ? new RegExp(username.allowed_pattern) : null;
+
+  if (
+    !candidate
+    || candidate.startsWith('_')
+    || protectedExact.has(candidate)
+    || !pattern?.test(candidate)
+    || candidate.length < Number(username.min_length || 3)
+    || candidate.length > Number(username.max_length || 32)
+  ) {
+    return '';
+  }
+
+  return path.join(developerModeConfig.docsRoot, '404.html');
+}
+
+function streamStaticFile(response, filePath, status = 200) {
+  const contentType = CONTENT_TYPES[path.extname(filePath)] || 'application/octet-stream';
+  response.writeHead(status, {
+    'content-type':contentType,
+    'cache-control':'no-store',
+    ...buildRuntimeHeaders()
+  });
+  const stream = createReadStream(filePath);
+  stream.on('error', () => {
+    if (!response.headersSent) {
+      sendText(response, 404, 'Not found');
+      return;
+    }
+
+    response.destroy();
+  });
+  stream.pipe(response);
+}
+
+function isHtmlNavigationRequest(request) {
+  return request.method === 'GET'
+    && String(request.headers.accept || '').includes('text/html');
+}
+
 export async function serveStatic(request, response, url) {
   let filePath = resolveStaticPath(url.pathname);
   if (!filePath) {
@@ -125,24 +193,21 @@ export async function serveStatic(request, response, url) {
       }
     }
 
-    const contentType = CONTENT_TYPES[path.extname(filePath)] || 'application/octet-stream';
-    response.writeHead(200, {
-      'content-type':contentType,
-      'cache-control':'no-store',
-      ...buildRuntimeHeaders()
-    });
-    const stream = createReadStream(filePath);
-    stream.on('error', () => {
-      if (!response.headersSent) {
-        sendText(response, 404, 'Not found');
-        return;
-      }
-
-      response.destroy();
-    });
-    stream.pipe(response);
+    streamStaticFile(response, filePath);
     return true;
   } catch (_) {
+    if (isHtmlNavigationRequest(request)) {
+      const fallbackPath = await resolvePublicProfileFallbackPath(url.pathname);
+
+      if (fallbackPath) {
+        streamStaticFile(response, fallbackPath);
+        return true;
+      }
+
+      streamStaticFile(response, path.join(developerModeConfig.docsRoot, '404.html'));
+      return true;
+    }
+
     sendText(response, 404, 'Not found');
     return true;
   }

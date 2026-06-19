@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "states": {
+    "not-found": {
+      "mark": "404",
+      "eyebrow": "Neuroartan",
+      "title": "This page does not exist.",
+      "description": "The path you requested could not be found."
+    },
+    "under-development": {
+      "mark": "Development",
+      "eyebrow": "Neuroartan",
+      "title": "This destination is under active development.",
+      "description": "This destination is intentionally reserved while its public surface is being prepared."
+    },
+    "profile-unavailable": {
+      "mark": "404",
+      "eyebrow": "Public profile",
+      "title": "This profile is unavailable.",
+      "description_template": "@{username} does not have an available public profile on Neuroartan."
+    }
+  },
+  "routes": [
+    {
+      "path": "/office/pages/internal-correspondence/",
+      "match": "prefix",
+      "state": "under-development"
+    }
+  ]
+}

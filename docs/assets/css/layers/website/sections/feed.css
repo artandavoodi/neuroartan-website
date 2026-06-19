@@ -244,6 +244,14 @@
   background:var(--control-bg-hover);
   overflow:hidden;
   flex:0 0 auto;
+  color:inherit;
+  text-decoration:none;
+}
+
+.feed-post__avatar:focus-visible,
+.feed-post__profile-link:focus-visible{
+  outline:var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset:var(--focus-ring-offset);
 }
 
 .feed-post__avatar-image{
@@ -287,6 +295,11 @@
   font-size:var(--feed-entity-size);
   font-weight:var(--feed-entity-weight);
   line-height:var(--feed-entity-line-height);
+}
+
+.feed-post__profile-link{
+  color:inherit;
+  text-decoration:none;
 }
 
 .feed-post__handle{

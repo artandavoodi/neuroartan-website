@@ -36,6 +36,7 @@ import {
    02) MODULE STATE
 ============================================================================= */
 const SUPABASE_PROFILES_TABLE = 'profiles';
+const PUBLIC_PROFILE_NOT_FOUND_RETRY_DELAYS_MS = Object.freeze([0, 400, 800, 1200]);
 
 const RUNTIME = (window.__NEUROARTAN_PROFILE_STATE__ ||= {
   initialized: false,
@@ -54,6 +55,11 @@ function getSupabaseClient() {
 
 function hasSupabaseClient() {
   return !!getSupabaseClient();
+}
+
+function isSupabaseClientInitializationPending() {
+  const supabase = window.NEUROARTAN_CONFIG?.supabase || {};
+  return Boolean(supabase.url && supabase.anonKey) && !hasSupabaseClient();
 }
 
 function getProfileStateBackendState() {
@@ -131,6 +137,7 @@ function buildBaseState(route = getPublicRouteState()) {
   return {
     route,
     loading: false,
+    resolved: false,
     outcome: route.outcome || 'not_candidate',
     username: route.routeCandidate || '',
     normalizedUsername: route.normalizedUsername || '',
@@ -149,6 +156,7 @@ function buildBaseState(route = getPublicRouteState()) {
 function buildErrorState(route, reason, errorMessage = '') {
   return {
     ...buildBaseState(route),
+    resolved: true,
     outcome: 'error',
     reason,
     error: normalizeString(errorMessage)
@@ -160,6 +168,7 @@ function buildRenderableState(baseState, resolution, model = null, creator = nul
     ...baseState,
     ...resolution,
     loading: false,
+    resolved: true,
     model,
     creator
   };
@@ -170,8 +179,27 @@ function buildResolutionState(baseState, resolution) {
     ...baseState,
     ...resolution,
     loading: false,
+    resolved: true,
     model: null,
     creator: null
+  };
+}
+
+async function resolveCanonicalPublicProfile(route, policy, requestId) {
+  for (const delay of PUBLIC_PROFILE_NOT_FOUND_RETRY_DELAYS_MS) {
+    if (delay > 0) {
+      await new Promise((resolve) => window.setTimeout(resolve, delay));
+    }
+
+    if (requestId !== RUNTIME.requestId) return null;
+
+    const resolution = await resolveSupabasePublicProfileByUsername(route, policy);
+    if (resolution?.outcome !== 'not_found') return resolution;
+  }
+
+  return {
+    outcome: 'not_found',
+    reason: 'PUBLIC_PROFILE_NOT_FOUND'
   };
 }
 
@@ -222,22 +250,33 @@ async function resolveStateForRoute(route) {
   const requestId = ++RUNTIME.requestId;
   const baseState = buildBaseState(route);
   RUNTIME.backendState = getProfileStateBackendState();
-  let registryModel = null;
-  let registryCreator = null;
-
-  try {
-    await loadPublicModelRegistry();
-    registryModel = getPublicModelByUsername(route.normalizedUsername || route.routeCandidate);
-    registryCreator = registryModel?.creator || null;
-  } catch (_) {}
 
   if (!route.handleAsPublicRoute) {
-    setState(baseState);
+    setState({
+      ...baseState,
+      resolved: true
+    });
+    return;
+  }
+
+  if (
+    isSupabaseClientInitializationPending()
+    && ['candidate', 'restricted_username'].includes(route.outcome)
+  ) {
+    setState({
+      ...baseState,
+      loading: true,
+      outcome: 'loading',
+      reason: 'SUPABASE_CLIENT_PENDING'
+    });
     return;
   }
 
   if (route.outcome !== 'candidate') {
-    setState(baseState);
+    setState({
+      ...baseState,
+      resolved: hasSupabaseClient()
+    });
     return;
   }
 
@@ -252,20 +291,21 @@ async function resolveStateForRoute(route) {
   if (requestId !== RUNTIME.requestId) return;
 
   try {
-    const supabaseResolution = await resolveSupabasePublicProfileByUsername(route, policy);
+    const supabaseResolution = await resolveCanonicalPublicProfile(route, policy, requestId);
 
     if (requestId !== RUNTIME.requestId) return;
 
     if (supabaseResolution?.outcome === 'found_renderable') {
-      setState(buildRenderableState(
+      const resolvedState = buildRenderableState(
         {
           ...baseState,
           route
         },
-        supabaseResolution,
-        registryModel || null,
-        registryCreator
-      ));
+        supabaseResolution
+      );
+
+      setState(resolvedState);
+      void enrichResolvedProfileWithPublicModel(resolvedState, requestId);
       return;
     }
 
@@ -306,6 +346,33 @@ async function resolveStateForRoute(route) {
   }
 }
 
+async function enrichResolvedProfileWithPublicModel(resolvedState, requestId) {
+  try {
+    await loadPublicModelRegistry();
+
+    if (requestId !== RUNTIME.requestId) return;
+
+    const currentState = getPublicProfileState();
+    if (
+      currentState.outcome !== 'found_renderable'
+      || currentState.normalizedUsername !== resolvedState.normalizedUsername
+    ) {
+      return;
+    }
+
+    const model = getPublicModelByUsername(resolvedState.normalizedUsername);
+    if (!model) return;
+
+    setState({
+      ...currentState,
+      model,
+      creator: model.creator || null
+    });
+  } catch (_) {
+    // Model registry enrichment is optional and must never block profile routing.
+  }
+}
+
 export async function refreshPublicProfileState(route = getPublicRouteState()) {
   await resolveStateForRoute(route);
   return getPublicProfileState();
@@ -321,6 +388,18 @@ function initProfileState() {
   setState(buildBaseState(getPublicRouteState()));
 
   subscribePublicRoute((route) => {
+    const currentState = getPublicProfileState();
+    const routeUsername = normalizeString(route?.normalizedUsername || route?.routeCandidate || '');
+
+    if (
+      currentState.outcome === 'found_renderable'
+      && currentState.resolved === true
+      && currentState.normalizedUsername === routeUsername
+      && route?.outcome === 'candidate'
+    ) {
+      return;
+    }
+
     void resolveStateForRoute(route);
   });
 }

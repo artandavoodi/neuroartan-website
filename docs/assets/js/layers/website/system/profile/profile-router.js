@@ -34,6 +34,7 @@ import {
    02) MODULE STATE
 ============================================================================= */
 const SUPABASE_PROFILES_TABLE = 'profiles';
+const CANONICAL_ROUTE_RETRY_DELAYS_MS = Object.freeze([0, 400, 800, 1200]);
 
 const RUNTIME = (window.__NEUROARTAN_PROFILE_ROUTER__ ||= {
   initialized: false,
@@ -72,22 +73,28 @@ async function hasCanonicalSupabasePublicRoute(username) {
     return false;
   }
 
-  const profile = await getSupabaseProfileByUsername({
-    supabase,
-    username: normalizedUsername
-  });
+  for (const delay of CANONICAL_ROUTE_RETRY_DELAYS_MS) {
+    if (delay > 0) {
+      await new Promise((resolve) => window.setTimeout(resolve, delay));
+    }
 
-  if (!profile) {
-    return false;
+    const profile = await getSupabaseProfileByUsername({
+      supabase,
+      username: normalizedUsername
+    });
+
+    if (!profile) continue;
+
+    const publicEnabled = profile.public_profile_enabled === true;
+    const publicVisibility = normalizeString(profile.public_profile_visibility || '').toLowerCase();
+    const routeStatus = normalizeString(profile.public_route_status || '').toLowerCase();
+
+    return publicEnabled
+      && !['hidden', 'private', 'owner_only', 'internal'].includes(publicVisibility)
+      && ['ready', 'renderable', 'active'].includes(routeStatus || 'ready');
   }
 
-  const publicEnabled = profile.public_profile_enabled === true;
-  const publicVisibility = normalizeString(profile.public_profile_visibility || '').toLowerCase();
-  const routeStatus = normalizeString(profile.public_route_status || '').toLowerCase();
-
-  return publicEnabled
-    && !['hidden', 'private', 'owner_only', 'internal'].includes(publicVisibility)
-    && ['ready', 'renderable', 'active'].includes(routeStatus || 'ready');
+  return false;
 }
 
 /* =============================================================================
@@ -259,6 +266,17 @@ export async function refreshPublicRoute(pathname = window.location.pathname) {
   const resolvedRoute = resolvePublicRoute(pathname, policy);
 
   if (resolvedRoute.handleAsPublicRoute && resolvedRoute.outcome === 'restricted_username') {
+    setRoute({
+      ...resolvedRoute,
+      outcome: 'candidate',
+      reason: 'CANONICAL_ROUTE_PENDING',
+      protectedCollision: false
+    });
+
+    if (!hasSupabaseClient()) {
+      return getPublicRouteState();
+    }
+
     try {
       const canonicalSupabaseRoute = await hasCanonicalSupabasePublicRoute(
         resolvedRoute.normalizedUsername || resolvedRoute.routeCandidate
@@ -274,6 +292,9 @@ export async function refreshPublicRoute(pathname = window.location.pathname) {
         return getPublicRouteState();
       }
     } catch (_) {}
+
+    setRoute(resolvedRoute);
+    return getPublicRouteState();
   }
 
   setRoute(resolvedRoute);
@@ -288,10 +309,24 @@ function initProfileRouter() {
   RUNTIME.initialized = true;
 
   RUNTIME.backendState = getProfileRouterBackendState();
-  setRoute(resolvePublicRoute(window.location.pathname, getProfileIdentityPolicy()));
+  const initialRoute = resolvePublicRoute(window.location.pathname, getProfileIdentityPolicy());
+  setRoute(
+    initialRoute.outcome === 'restricted_username'
+      ? {
+        ...initialRoute,
+        outcome: 'candidate',
+        reason: 'CANONICAL_ROUTE_PENDING',
+        protectedCollision: false
+      }
+      : initialRoute
+  );
   void refreshPublicRoute();
 
   window.addEventListener('popstate', () => {
+    void refreshPublicRoute();
+  });
+
+  window.addEventListener('neuroartan:supabase-ready', () => {
     void refreshPublicRoute();
   });
 

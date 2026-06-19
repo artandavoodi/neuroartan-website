@@ -139,13 +139,11 @@
      06) OVERLAY CONTROL
   ============================================================================= */
   const hideAfterSynchronizedPaint = () => {
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        if (activeReasons.size === 0 && visible) {
-          setVisible(false);
-        }
-      });
-    });
+    window.setTimeout(() => {
+      if (activeReasons.size === 0 && visible) {
+        setVisible(false);
+      }
+    }, 0);
   };
 
   const updateVisibility = () => {
@@ -250,11 +248,9 @@
   };
 
   const completeInitialLoad = () => {
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        stop(INITIAL_LOAD_REASON);
-      });
-    });
+    window.setTimeout(() => {
+      stop(INITIAL_LOAD_REASON);
+    }, 0);
   };
 
   const bindInitialLoad = () => {

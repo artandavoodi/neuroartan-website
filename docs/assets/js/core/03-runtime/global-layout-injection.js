@@ -469,11 +469,9 @@ async function injectGlobalLayout() {
       }
     }
   } finally {
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        dispatchRuntimeLoadingStop(loadingReason);
-      });
-    });
+    window.setTimeout(() => {
+      dispatchRuntimeLoadingStop(loadingReason);
+    }, 0);
   }
 
   NEURO_MAIN_RUNTIME.globalLayoutInjected = true;

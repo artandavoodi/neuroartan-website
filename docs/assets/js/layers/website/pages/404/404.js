@@ -41,6 +41,8 @@ import {
   const PAGE_READY_CLASS = 'page-404-ready';
   const PAGE_LEAVING_CLASS = 'page-404-leaving';
   const PUBLIC_ROUTE_ACTIVE_CLASS = 'public-profile-route-active';
+  const PUBLIC_PROFILE_LOADING_REASON = 'public-profile-route';
+  const ROUTE_INTENT_REGISTRY_PATH = '/assets/data/website/routing/route-intent-registry.json';
 
   const DEFAULT_META = {
     title: document.title,
@@ -53,6 +55,17 @@ import {
     twitterTitle: document.querySelector('meta[name="twitter:title"]')?.getAttribute('content') || '',
     twitterDescription: document.querySelector('meta[name="twitter:description"]')?.getAttribute('content') || ''
   };
+  const DEFAULT_NOT_FOUND_COPY = {
+    mark: document.querySelector('[data-404-mark]')?.textContent || '404',
+    eyebrow: document.querySelector('[data-404-eyebrow]')?.textContent || 'Neuroartan',
+    title: document.querySelector('[data-404-title]')?.textContent || 'This page does not exist.',
+    description: document.querySelector('[data-404-description]')?.textContent || ''
+  };
+  const ROUTE_INTENT_STATE = {
+    status: 'loading',
+    registry: null
+  };
+  let publicRouteLoading = false;
 
   /* =========================================================
      04. PAGE ACTIONS
@@ -123,10 +136,10 @@ import {
     const displayName = state.publicProfile?.public_display_name || `@${username}`;
     const title = state.outcome === 'found_renderable'
       ? `${displayName} (@${username}) | Neuroartan`
-      : `@${username} | Neuroartan`;
+      : `${getRouteCopy('profile-unavailable', username).title} | Neuroartan`;
     const description = state.outcome === 'found_renderable'
       ? state.publicProfile?.public_summary || 'Public continuity profile on Neuroartan.'
-      : 'Public profile route on Neuroartan.';
+      : getRouteCopy('profile-unavailable', username).description;
     const canonicalUrl = state.publicRouteUrl || `${window.location.origin}${window.location.pathname}`;
     const robots = state.outcome === 'found_renderable' && state.publicProfile?.public_profile_discoverable
       ? 'index,follow'
@@ -143,6 +156,22 @@ import {
     setMetaContent('meta[name="twitter:description"]', description);
   }
 
+  function applyRouteIntentMeta(intent = 'not-found') {
+    const copy = getRouteCopy(intent);
+    const title = `${copy.title} | Neuroartan`;
+    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
+
+    document.title = title;
+    setMetaContent('meta[name="description"]', copy.description);
+    setMetaContent('meta[name="robots"]', 'noindex,follow');
+    setCanonical(canonicalUrl);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', copy.description);
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', copy.description);
+  }
+
   /* =========================================================
      06. ROUTE ENTRY HELPERS
      ========================================================= */
@@ -153,6 +182,96 @@ import {
 
   function getNotFoundRoot() {
     return document.querySelector('[data-not-found-root]');
+  }
+
+  function normalizeRoutePath(value = '/') {
+    try {
+      return new URL(value, window.location.origin).pathname.replace(/\/+$/u, '') || '/';
+    } catch (_) {
+      return String(value || '/').split(/[?#]/u)[0].replace(/\/+$/u, '') || '/';
+    }
+  }
+
+  function getRouteIntent(pathname = window.location.pathname) {
+    const normalizedPath = normalizeRoutePath(pathname);
+    const routes = Array.isArray(ROUTE_INTENT_STATE.registry?.routes)
+      ? ROUTE_INTENT_STATE.registry.routes
+      : [];
+
+    const route = routes.find((entry) => {
+      const configuredPath = normalizeRoutePath(entry?.path || '');
+      if (!configuredPath || configuredPath === '/') return false;
+
+      return entry?.match === 'prefix'
+        ? normalizedPath === configuredPath || normalizedPath.startsWith(`${configuredPath}/`)
+        : normalizedPath === configuredPath;
+    });
+
+    return String(route?.state || 'not-found');
+  }
+
+  function getRouteCopy(intent = 'not-found', username = '') {
+    const configuredCopy = ROUTE_INTENT_STATE.registry?.states?.[intent] || {};
+    const descriptionTemplate = configuredCopy.description_template || configuredCopy.description || DEFAULT_NOT_FOUND_COPY.description;
+
+    return {
+      mark: configuredCopy.mark || DEFAULT_NOT_FOUND_COPY.mark,
+      eyebrow: configuredCopy.eyebrow || DEFAULT_NOT_FOUND_COPY.eyebrow,
+      title: configuredCopy.title || DEFAULT_NOT_FOUND_COPY.title,
+      description: String(descriptionTemplate).replace('{username}', username || 'this user')
+    };
+  }
+
+  async function loadRouteIntentRegistry() {
+    try {
+      const response = await fetch(ROUTE_INTENT_REGISTRY_PATH, {
+        credentials: 'same-origin',
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to load route intent registry: ${response.status}`);
+      }
+
+      ROUTE_INTENT_STATE.registry = await response.json();
+    } catch (error) {
+      ROUTE_INTENT_STATE.registry = null;
+      console.error('[404] Route intent registry unavailable.', error);
+    } finally {
+      ROUTE_INTENT_STATE.status = 'ready';
+      renderRouteEntry();
+    }
+  }
+
+  function setPublicRouteLoading(active) {
+    if (publicRouteLoading === active) return;
+    publicRouteLoading = active;
+
+    document.dispatchEvent(new CustomEvent(
+      active ? 'neuroartan:loading-start' : 'neuroartan:loading-stop',
+      {
+        detail: {
+          reason: PUBLIC_PROFILE_LOADING_REASON,
+          blocking: true
+        }
+      }
+    ));
+  }
+
+  function setNotFoundCopy(state = null, intent = 'not-found') {
+    const isProfileUnavailable = Boolean(state?.route?.handleAsPublicRoute || state?.publicRoutePath);
+    const username = state?.normalizedUsername || state?.username || state?.route?.normalizedUsername || '';
+    const mark = document.querySelector('[data-404-mark]');
+    const eyebrow = document.querySelector('[data-404-eyebrow]');
+    const title = document.querySelector('[data-404-title]');
+    const description = document.querySelector('[data-404-description]');
+
+    const copy = getRouteCopy(isProfileUnavailable ? 'profile-unavailable' : intent, username);
+
+    if (mark) mark.textContent = copy.mark;
+    if (eyebrow) eyebrow.textContent = copy.eyebrow;
+    if (title) title.textContent = copy.title;
+    if (description) description.textContent = copy.description;
   }
 
   function is404RouteEntryPage() {
@@ -168,6 +287,7 @@ import {
     document.body.dataset.profilePage = 'public';
     document.body.dataset.profileRouteOutcome = state.outcome || 'loading';
     document.documentElement.dataset.profileSurface = 'public';
+    setPublicRouteLoading(false);
 
     if (publicRoot instanceof HTMLElement) {
       publicRoot.hidden = false;
@@ -182,7 +302,7 @@ import {
     applyPublicMeta(state);
   }
 
-  function activateNotFoundShell() {
+  function activateNotFoundShell(state = null, intent = 'not-found') {
     const publicRoot = getPublicRouteRoot();
     const notFoundRoot = getNotFoundRoot();
 
@@ -191,6 +311,7 @@ import {
     delete document.body.dataset.profilePage;
     delete document.body.dataset.profileRouteOutcome;
     delete document.documentElement.dataset.profileSurface;
+    setPublicRouteLoading(false);
 
     if (publicRoot instanceof HTMLElement) {
       publicRoot.hidden = true;
@@ -202,19 +323,67 @@ import {
       notFoundRoot.setAttribute('aria-hidden', 'false');
     }
 
-    applyDefaultMeta();
+    setNotFoundCopy(state, intent);
+
+    if (state?.route?.handleAsPublicRoute || state?.publicRoutePath) {
+      applyPublicMeta(state);
+      return;
+    }
+
+    applyRouteIntentMeta(intent);
+  }
+
+  function activatePublicRouteLoadingShell() {
+    const publicRoot = getPublicRouteRoot();
+    const notFoundRoot = getNotFoundRoot();
+
+    document.body.classList.remove('page-404', 'profile-page', PUBLIC_ROUTE_ACTIVE_CLASS);
+    document.body.dataset.profileRouteOutcome = 'loading';
+    delete document.body.dataset.profilePage;
+    delete document.documentElement.dataset.profileSurface;
+
+    if (publicRoot instanceof HTMLElement) {
+      publicRoot.hidden = true;
+      publicRoot.setAttribute('aria-hidden', 'true');
+    }
+
+    if (notFoundRoot instanceof HTMLElement) {
+      notFoundRoot.hidden = true;
+      notFoundRoot.setAttribute('aria-hidden', 'true');
+    }
+
+    setPublicRouteLoading(true);
+  }
+
+  function isPublicRouteResolutionPending(route, state) {
+    if (!route.handleAsPublicRoute) return false;
+
+    return state.resolved !== true;
   }
 
   function renderRouteEntry() {
     const route = getPublicRouteState();
     const publicState = getPublicProfileState();
 
-    if (route.handleAsPublicRoute) {
+    if (ROUTE_INTENT_STATE.status !== 'ready') {
+      activatePublicRouteLoadingShell();
+      return;
+    }
+
+    if (isPublicRouteResolutionPending(route, publicState)) {
+      activatePublicRouteLoadingShell();
+      return;
+    }
+
+    if (route.handleAsPublicRoute && publicState.outcome === 'found_renderable') {
       activatePublicRouteShell(publicState);
       return;
     }
 
-    activateNotFoundShell();
+    activateNotFoundShell(
+      route.handleAsPublicRoute ? publicState : null,
+      route.handleAsPublicRoute ? 'profile-unavailable' : getRouteIntent()
+    );
   }
 
   /* =========================================================
@@ -223,6 +392,10 @@ import {
 
   function get404ShaderMount() {
     return document.querySelector(SHADER_MOUNT_SELECTOR);
+  }
+
+  function shouldMount404Shader() {
+    return getPublicProfileState().outcome !== 'found_renderable';
   }
 
   function has404ShaderFragment() {
@@ -254,7 +427,7 @@ import {
   }
 
   async function mount404ShaderLayer() {
-    if (getPublicRouteState().handleAsPublicRoute) {
+    if (!shouldMount404Shader()) {
       return;
     }
 
@@ -302,6 +475,7 @@ import {
     document.body.classList.add(PAGE_READY_CLASS);
     bind404Actions();
     renderRouteEntry();
+    void loadRouteIntentRegistry();
 
     subscribePublicRoute(() => {
       renderRouteEntry();
@@ -313,9 +487,13 @@ import {
 
     subscribePublicProfileState(() => {
       renderRouteEntry();
+
+      if (shouldMount404Shader()) {
+        void mount404ShaderLayer();
+      }
     });
 
-    if (!getPublicRouteState().handleAsPublicRoute) {
+    if (shouldMount404Shader()) {
       await mount404ShaderLayer();
     }
   }

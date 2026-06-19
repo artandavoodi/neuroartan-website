@@ -82,6 +82,7 @@ function messagingRoots() {
 
 function renderFeedPost(post = {}) {
   const avatar = normalizeString(post.avatar || '');
+  const publicProfileRoute = normalizeString(post.publicRoute || post.href || '/profile.html');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
   const postId = normalizeString(post.id || '');
   const social = STATE.feedSocialState[postId] || getEmptyFeedPostSocialState();
@@ -92,11 +93,11 @@ function renderFeedPost(post = {}) {
   return `
     <article class="profile-home-panel__item" data-post-id="${escapeHtml(postId)}">
       <div class="profile-home-panel__item-header">
-        <span class="profile-home-panel__item-avatar" aria-hidden="true">
+        <a class="profile-home-panel__item-avatar" href="${escapeHtml(publicProfileRoute)}" aria-label="View ${escapeHtml(post.entityLabel || 'profile')} profile">
           ${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : ''}
-        </span>
+        </a>
         <span class="profile-home-panel__item-meta">
-          <strong>${escapeHtml(post.entityLabel || 'Profile')}</strong>
+          <strong><a class="profile-home-panel__profile-link" href="${escapeHtml(publicProfileRoute)}">${escapeHtml(post.entityLabel || 'Profile')}</a></strong>
           ${handle ? `<span>${escapeHtml(handle)}</span>` : ''}
         </span>
         ${post.createdAt ? `<time>${escapeHtml(formatDate(post.createdAt))}</time>` : ''}

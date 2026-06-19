@@ -38,6 +38,8 @@
   border:var(--border-width-hairline) solid var(--border-color);
   border-radius:var(--control-radius-pill);
   background:var(--panel-surface-solid-unified);
+  color:inherit;
+  text-decoration:none;
 }
 
 .profile-home-panel__item-avatar img{
@@ -62,6 +64,17 @@
   font-size:var(--body-2-size);
   line-height:var(--body-2-line-height);
   font-weight:var(--font-weight-heading-soft);
+}
+
+.profile-home-panel__profile-link{
+  color:inherit;
+  text-decoration:none;
+}
+
+.profile-home-panel__item-avatar:focus-visible,
+.profile-home-panel__profile-link:focus-visible{
+  outline:var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset:var(--focus-ring-offset);
 }
 
 .profile-home-panel__item-meta > span{

@@ -4476,7 +4476,7 @@ function handleModelDataManagerOpenRequest(event) {
   const detail = event instanceof CustomEvent ? event.detail || {} : {};
   const mode = normalizeModelDataManagerMode(detail.mode || detail.filters?.mode || 'database');
   const pane = mode === 'post-manager'
-    ? normalizeModelPostManagerPane(detail.filters?.postPane || detail.filters?.pane || 'posts')
+    ? normalizeModelPostManagerPane(detail.filters?.postPane || 'posts')
     : normalizeModelDataManagerPane(detail.filters?.pane || detail.filters?.managerPane || getProfileNavigationState().modelPane);
   const overlay = document.querySelector('[data-model-data-manager]');
   if (!(overlay instanceof HTMLElement)) return;

@@ -467,6 +467,17 @@ function buildPublicProfileState(detail = {}) {
   const availability = normalizeString(model?.availability || '');
   const legacyState = normalizeString(model?.legacy_state || '');
   const modelMaturity = normalizeString(model?.model_maturity || '');
+  const modelAccessLabel = publicProfile?.public_profile_enabled === true
+    ? (publicProfile?.public_profile_discoverable === true ? 'Discoverable' : 'Direct access')
+    : outcome === 'found_renderable'
+      ? 'Owner-approved'
+      : 'Restricted';
+  const modelInteractionLabel = interactionEntry
+    || availability
+    || (outcome === 'found_renderable' ? 'Public-safe access' : 'Unavailable');
+  const modelReadinessLabel = modelMaturity
+    || trustClassification
+    || buildPublicStateBadge(outcome);
   const verification = resolveApprovedProfileVerification(publicProfile || {});
   const completion = buildCompletionState(null);
   const verificationVisible = outcome === 'found_renderable' && verification.verified;
@@ -524,6 +535,9 @@ function buildPublicProfileState(detail = {}) {
     creatorLine,
     joinedYearLabel: joinedYear ? `Joined ${joinedYear}` : 'Joined year pending',
     interactionModeLabel: interactionEntry || 'Interaction pending',
+    modelAccessLabel,
+    modelInteractionLabel,
+    modelReadinessLabel,
     availabilityLabel: availability || 'Availability pending',
     legacyStateLabel: legacyState || 'State pending',
     trustValue: verificationVisible ? 'Verified' : buildPublicStateBadge(outcome),

@@ -8,18 +8,36 @@
       <div class="profile-panel__inner">
         <div class="profile-panel__header">
           <div>
-            <h2 class="profile-panel__title" data-profile-section-title>Public Overview</h2>
+            <h2 class="profile-panel__title" data-profile-section-title>Public Model</h2>
             <p class="profile-panel__intro" data-profile-overview-copy>
-              This company-domain profile route presents the public-safe continuity surface for the resolved Neuroartan identity.
+              This public route presents the owner-approved profile surface and canonical personal model state.
             </p>
           </div>
-          <span class="ui-badge ui-badge--outline" data-profile-overview-badge>Public Route</span>
+          <span class="ui-badge ui-badge--outline" data-profile-overview-badge>Resolving</span>
         </div>
 
-        <div class="profile-panel__badge-list" data-profile-route-badge-list>
-          <span class="ui-badge ui-badge--outline">Public-safe model</span>
-          <span class="ui-badge ui-badge--outline">Username resolved</span>
-          <span class="ui-badge ui-badge--outline">Company domain</span>
+        <div class="profile-panel__metric-grid">
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Model access</p>
+            <p class="profile-panel__value" data-profile-model-access>Pending</p>
+          </div>
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Interaction</p>
+            <p class="profile-panel__value" data-profile-model-interaction>Pending</p>
+          </div>
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Readiness</p>
+            <p class="profile-panel__value" data-profile-model-readiness>Pending</p>
+          </div>
+        </div>
+
+        <div class="profile-panel__action-row">
+          <button class="ui-button ui-button--secondary" type="button" data-profile-action="view-profile-models">
+            <span>Open model</span>
+          </button>
+          <button class="ui-button ui-button--ghost" type="button" data-profile-action="copy-link">
+            <span>Copy profile link</span>
+          </button>
         </div>
       </div>
     </article>
@@ -58,8 +76,34 @@
       <div class="profile-panel__inner">
         <div class="profile-panel__header">
           <div>
+            <h2 class="profile-panel__title" data-profile-section-title>Social Graph</h2>
+            <p class="profile-panel__intro">Follower and subscriber state for this public profile.</p>
+          </div>
+        </div>
+
+        <div class="profile-panel__metric-grid profile-panel__metric-grid--compact">
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Followers</p>
+            <p class="profile-panel__value" data-profile-followers-count>0</p>
+          </div>
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Following</p>
+            <p class="profile-panel__value" data-profile-following-count>0</p>
+          </div>
+          <div class="profile-panel__metric">
+            <p class="profile-panel__label">Subscription</p>
+            <p class="profile-panel__value" data-profile-subscription-state>Available</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="profile-panel ui-card ui-surface--glass" data-profile-section-card>
+      <div class="profile-panel__inner">
+        <div class="profile-panel__header">
+          <div>
             <h2 class="profile-panel__title" data-profile-section-title>Public Links</h2>
-            <p class="profile-panel__intro">Approved public identity links and future route-connected endpoints.</p>
+            <p class="profile-panel__intro">Approved public identity links and route-connected endpoints.</p>
           </div>
         </div>
 
@@ -70,42 +114,12 @@
       </div>
     </article>
 
-    <article class="profile-panel ui-card ui-surface--glass" data-profile-section-card>
-      <div class="profile-panel__inner">
-        <div class="profile-panel__header">
-          <div>
-            <h2 class="profile-panel__title" data-profile-section-title>Public Route State</h2>
-            <p class="profile-panel__intro">Canonical route-readiness and public availability state.</p>
-          </div>
-        </div>
-
-        <div class="profile-panel__rows">
-          <div class="profile-panel__row">
-            <p class="profile-panel__label">Route outcome</p>
-            <p class="profile-panel__value" data-profile-public-route-outcome>Resolving</p>
-          </div>
-          <div class="profile-panel__row">
-            <p class="profile-panel__label">Visibility</p>
-            <p class="profile-panel__value" data-profile-public-visibility>Pending</p>
-          </div>
-          <div class="profile-panel__row">
-            <p class="profile-panel__label">Discoverable</p>
-            <p class="profile-panel__value" data-profile-public-discoverable>Pending</p>
-          </div>
-          <div class="profile-panel__row">
-            <p class="profile-panel__label">Canonical URL</p>
-            <p class="profile-panel__value" data-profile-public-route-url>https://neuroartan.com/username</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
     <article class="profile-panel profile-panel--wide ui-card ui-surface--glass" data-profile-section-card>
       <div class="profile-panel__inner">
         <div class="profile-panel__header">
           <div>
             <h2 class="profile-panel__title" data-profile-section-title>Continuity Presence</h2>
-            <p class="profile-panel__intro">Public identity on Neuroartan is the outward-facing surface of a deeper continuity architecture.</p>
+            <p class="profile-panel__intro">Public identity is the outward-facing surface of a deeper continuity architecture.</p>
           </div>
           <span class="ui-badge ui-badge--outline" data-profile-continuity-badge>Pending</span>
         </div>
@@ -119,6 +133,21 @@
             <span class="ui-badge ui-badge--outline">Identity</span>
             <span class="ui-badge ui-badge--outline">Route</span>
             <span class="ui-badge ui-badge--outline">Continuity</span>
+          </div>
+
+          <div class="profile-panel__rows">
+            <div class="profile-panel__row">
+              <p class="profile-panel__label">Visibility</p>
+              <p class="profile-panel__value" data-profile-public-visibility>Pending</p>
+            </div>
+            <div class="profile-panel__row">
+              <p class="profile-panel__label">Discoverable</p>
+              <p class="profile-panel__value" data-profile-public-discoverable>Pending</p>
+            </div>
+            <div class="profile-panel__row">
+              <p class="profile-panel__label">Canonical URL</p>
+              <p class="profile-panel__value" data-profile-public-route-url>https://neuroartan.com/username</p>
+            </div>
           </div>
         </div>
       </div>

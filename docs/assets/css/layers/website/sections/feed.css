@@ -437,6 +437,65 @@
   color:var(--text-primary-color);
 }
 
+.feed-post__comment-form{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
+.feed-post__comment-form[hidden]{
+  display:none;
+}
+
+.feed-post__comment-input{
+  min-width:0;
+  flex:1 1 auto;
+  min-height:var(--control-height-sm);
+  border:0;
+  border-bottom:var(--border-width-hairline) solid var(--field-border);
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+  outline:0;
+}
+
+.feed-post__comment-submit{
+  appearance:none;
+  -webkit-appearance:none;
+  min-height:var(--control-height-sm);
+  padding-inline:var(--control-padding-x-sm);
+  border:0;
+  border-radius:var(--radius-pill);
+  background:transparent;
+  color:var(--text-secondary-color);
+  font:inherit;
+  cursor:pointer;
+}
+
+.feed-post__comment-submit:hover,
+.feed-post__comment-submit:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.feed-post__comments{
+  display:grid;
+  gap:var(--spacing-xs);
+}
+
+.feed-post__comment{
+  display:grid;
+  gap:var(--spacing-2xs);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.feed-post__comment strong{
+  color:var(--text-primary-color);
+  font-weight:var(--font-weight-heading-soft);
+}
+
 /* =============================================================================
    06) DISCOVERY
 ============================================================================= */

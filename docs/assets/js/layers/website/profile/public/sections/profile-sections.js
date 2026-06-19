@@ -10,6 +10,10 @@
    ============================================================================= */
 
 import { getProfileRuntimeState, subscribeProfileRuntime } from '../../private/shell/profile-runtime.js';
+import {
+  getProfileSocialGraphState,
+  getProfileSubscriptionState
+} from '../../../system/profile/profile-social-graph.js';
 
 /* =============================================================================
    02) PUBLIC PROFILE SECTIONS HELPERS
@@ -80,6 +84,33 @@ function renderPublicLinks(root, state) {
   });
 }
 
+function resolveSubscriptionLabel(subscriptionState = {}) {
+  if (!subscriptionState.tableAvailable) return 'Unavailable';
+  return subscriptionState.viewerSubscribed ? 'Subscribed' : 'Available';
+}
+
+async function renderPublicSocialState(state = getProfileRuntimeState()) {
+  const profileId = state.profileId || '';
+  if (!profileId) return;
+
+  try {
+    const [graphState, subscriptionState] = await Promise.all([
+      getProfileSocialGraphState(profileId),
+      getProfileSubscriptionState(profileId)
+    ]);
+
+    getProfileSectionsRoots().forEach((root) => {
+      if (root.dataset.profileStateKey !== state.stateKey) return;
+
+      setText(root, '[data-profile-followers-count]', String(graphState.followersCount || 0));
+      setText(root, '[data-profile-following-count]', String(graphState.followingCount || 0));
+      setText(root, '[data-profile-subscription-state]', resolveSubscriptionLabel(subscriptionState));
+    });
+  } catch (error) {
+    console.warn('[Neuroartan][Public Profile Sections] Social graph hydration failed.', error);
+  }
+}
+
 /* =============================================================================
    03) PUBLIC PROFILE SECTIONS RENDER
    ============================================================================= */
@@ -92,6 +123,10 @@ function renderPublicSections(state = getProfileRuntimeState()) {
     setText(root, '[data-profile-overview-copy]', state.summary);
     setText(root, '[data-profile-overview-badge]', state.stateBadgeLabel);
     renderBadges(root, '[data-profile-route-badge-list]', state.routeBadges);
+
+    setText(root, '[data-profile-model-access]', state.modelAccessLabel);
+    setText(root, '[data-profile-model-interaction]', state.modelInteractionLabel);
+    setText(root, '[data-profile-model-readiness]', state.modelReadinessLabel);
 
     setText(root, '[data-profile-identity-display-name]', state.displayName);
     setText(root, '[data-profile-identity-username]', state.username.normalized ? `@${state.username.normalized}` : '@username');
@@ -109,6 +144,8 @@ function renderPublicSections(state = getProfileRuntimeState()) {
     setText(root, '[data-profile-continuity-copy]', state.continuityCopy);
     renderBadges(root, '[data-profile-continuity-badges]', state.continuityBadges);
   });
+
+  void renderPublicSocialState(state);
 }
 
 /* =============================================================================
@@ -121,6 +158,14 @@ function initPublicProfileSections() {
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-public-sections') return;
     renderPublicSections();
+  });
+
+  document.addEventListener('profile:social-graph-changed', () => {
+    void renderPublicSocialState();
+  });
+
+  document.addEventListener('profile:subscription-changed', () => {
+    void renderPublicSocialState();
   });
 
   renderPublicSections();

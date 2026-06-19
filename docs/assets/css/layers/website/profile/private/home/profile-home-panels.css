@@ -1,4 +1,8 @@
 .profile-home-panel{
+  --profile-home-panel-social-action-gap:var(--spacing-2xs);
+  --profile-home-panel-social-action-padding:calc(0.2rem * var(--accessibility-density-scale));
+  --profile-home-panel-social-action-icon-size:calc(0.9rem * var(--accessibility-icon-scale));
+  --profile-home-panel-social-action-text-size:calc(0.64rem * var(--accessibility-font-scale));
   display:grid;
   gap:var(--spacing-lg);
   min-width:0;
@@ -155,8 +159,8 @@
   cursor:pointer;
   display:flex;
   align-items:center;
-  gap:var(--spacing-xs);
-  padding:0;
+  gap:var(--profile-home-panel-social-action-gap);
+  padding:var(--profile-home-panel-social-action-padding);
   border-radius:var(--control-radius-sm);
   transition:background-color var(--transition-duration-fast) var(--transition-timing-default),
               color var(--transition-duration-fast) var(--transition-timing-default);
@@ -215,19 +219,80 @@
 .profile-home-panel__action-icon{
   display:inline-grid;
   place-items:center;
-  width:var(--icon-size-md);
-  height:var(--icon-size-md);
+  width:var(--profile-home-panel-social-action-icon-size);
+  height:var(--profile-home-panel-social-action-icon-size);
 }
 
 .profile-home-panel__action-icon img{
-  width:var(--icon-size-md);
-  height:var(--icon-size-md);
+  width:var(--profile-home-panel-social-action-icon-size);
+  height:var(--profile-home-panel-social-action-icon-size);
 }
 
 .profile-home-panel__action-label{
-  font-size:var(--body-3-size);
+  font-size:var(--profile-home-panel-social-action-text-size);
   line-height:var(--body-3-line-height);
   font-weight:var(--font-weight-body-regular);
+}
+
+.profile-home-panel__comment-form{
+  display:flex;
+  align-items:center;
+  gap:var(--spacing-sm);
+  padding-top:var(--spacing-sm);
+}
+
+.profile-home-panel__comment-form[hidden]{
+  display:none;
+}
+
+.profile-home-panel__comment-input{
+  min-width:0;
+  flex:1 1 auto;
+  min-height:var(--control-height-sm);
+  border:0;
+  border-bottom:var(--border-width-hairline) solid var(--field-border);
+  background:transparent;
+  color:var(--text-primary-color);
+  font:inherit;
+  outline:0;
+}
+
+.profile-home-panel__comment-submit{
+  appearance:none;
+  -webkit-appearance:none;
+  min-height:var(--control-height-sm);
+  padding-inline:var(--control-padding-x-sm);
+  border:0;
+  border-radius:var(--radius-pill);
+  background:transparent;
+  color:var(--text-secondary-color);
+  font:inherit;
+  cursor:pointer;
+}
+
+.profile-home-panel__comment-submit:hover,
+.profile-home-panel__comment-submit:focus-visible{
+  color:var(--text-primary-color);
+  outline:none;
+}
+
+.profile-home-panel__comments{
+  display:grid;
+  gap:var(--spacing-xs);
+  padding-top:var(--spacing-sm);
+}
+
+.profile-home-panel__comment{
+  display:grid;
+  gap:var(--spacing-2xs);
+  color:var(--text-secondary-color);
+  font-size:var(--body-3-size);
+  line-height:var(--body-3-line-height);
+}
+
+.profile-home-panel__comment strong{
+  color:var(--text-primary-color);
+  font-weight:var(--font-weight-heading-soft);
 }
 
 /* Add inset padding to articles when sidebars are open */

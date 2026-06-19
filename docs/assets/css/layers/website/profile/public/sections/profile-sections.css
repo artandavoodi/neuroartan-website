@@ -68,6 +68,29 @@
   gap:var(--spacing-sm);
 }
 
+.profile-sections[data-profile-surface="public"] .profile-panel__metric-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(var(--spacing-none), 1fr));
+  gap:var(--spacing-sm);
+}
+
+.profile-sections[data-profile-surface="public"] .profile-panel__metric-grid--compact{
+  grid-template-columns:repeat(3, minmax(var(--spacing-none), 1fr));
+}
+
+.profile-sections[data-profile-surface="public"] .profile-panel__metric{
+  display:grid;
+  gap:var(--spacing-2xs);
+  min-width:var(--spacing-none);
+}
+
+.profile-sections[data-profile-surface="public"] .profile-panel__action-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--spacing-sm);
+}
+
 .profile-sections[data-profile-surface="public"] .profile-panel__row{
   display:flex;
   justify-content:space-between;
@@ -113,6 +136,11 @@
   .profile-sections[data-profile-surface="public"] .profile-panel__row{
     flex-direction:column;
     align-items:flex-start;
+  }
+
+  .profile-sections[data-profile-surface="public"] .profile-panel__metric-grid,
+  .profile-sections[data-profile-surface="public"] .profile-panel__metric-grid--compact{
+    grid-template-columns:minmax(var(--spacing-none), 1fr);
   }
 
   .profile-sections[data-profile-surface="public"] .profile-panel__value{

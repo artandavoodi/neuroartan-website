@@ -38,6 +38,13 @@ import {
   getCurrentFeedAuthor,
   listFeedPosts
 } from '../system/feed/feed-store.js';
+import {
+  createFeedPostComment,
+  getEmptyFeedPostSocialState,
+  getFeedSocialState,
+  recordFeedPostView,
+  toggleFeedPostInteraction
+} from '../system/feed/feed-social-store.js';
 import { rankFeedPosts } from '../system/feed/feed-ranker.js';
 import { listFollowedProfileIds } from '../system/profile/profile-social-graph.js';
 
@@ -61,6 +68,7 @@ const FEED_PAGE_STATE = {
   root: null,
   isBound: false,
   runtimePosts: [],
+  feedSocialState: Object.create(null),
   followedProfileIds: [],
   feedAuthor: null,
   composerState: {
@@ -68,6 +76,9 @@ const FEED_PAGE_STATE = {
     message: ''
   },
   interactions: Object.create(null),
+  openCommentPostId: '',
+  viewObserver: null,
+  viewedPostIds: new Set(),
 };
 
 /* =============================================================================
@@ -131,17 +142,7 @@ function resolveFeedAvatar(model = {}) {
 }
 
 function getFeedInteractionState(postId = '') {
-  if (!FEED_PAGE_STATE.interactions[postId]) {
-    FEED_PAGE_STATE.interactions[postId] = {
-      reply: false,
-      repost: false,
-      like: false,
-      save: false,
-      share: false,
-    };
-  }
-
-  return FEED_PAGE_STATE.interactions[postId];
+  return FEED_PAGE_STATE.feedSocialState[postId] || getEmptyFeedPostSocialState();
 }
 
 function setComposerState(status = 'idle', message = '') {
@@ -161,10 +162,13 @@ async function loadFeedRuntime() {
     FEED_PAGE_STATE.feedAuthor = feedAuthor;
     FEED_PAGE_STATE.runtimePosts = Array.isArray(runtimePosts) ? runtimePosts : [];
     FEED_PAGE_STATE.followedProfileIds = await listFollowedProfileIds();
+    const social = await getFeedSocialState(FEED_PAGE_STATE.runtimePosts.map((post) => post.id));
+    FEED_PAGE_STATE.feedSocialState = social.state || Object.create(null);
     setComposerState('idle', '');
   } catch (error) {
     FEED_PAGE_STATE.feedAuthor = null;
     FEED_PAGE_STATE.runtimePosts = [];
+    FEED_PAGE_STATE.feedSocialState = Object.create(null);
     FEED_PAGE_STATE.followedProfileIds = [];
     setComposerState('error', 'Feed publishing is not available right now.');
     console.error('[feed] Runtime load failed.', error);
@@ -299,22 +303,26 @@ function renderDiscoverySection(title, values, formatter) {
 }
 
 function renderFeedPost(post = {}) {
-  const interactionState = getFeedInteractionState(post.id);
+  const socialState = getFeedInteractionState(post.id);
+  const interactionState = socialState.viewer || {};
+  const counts = socialState.counts || {};
   const activeModelId = getActiveModelState().activeModelId;
   const avatar = normalizeString(post.avatar);
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
   const renderAction = (action, label, pressed = false) => {
     const icon = FEED_POST_ACTION_ICONS[action] || '';
+    const countKey = action === 'save' ? 'bookmark' : action === 'reply' ? 'reply' : action;
+    const count = Number(counts[countKey] || 0);
     return `
       <button class="feed-post__action" type="button" data-feed-post-action="${escapeHtml(action)}" data-feed-post-id="${escapeHtml(post.id)}" aria-pressed="${pressed ? 'true' : 'false'}">
         ${icon ? `<img class="feed-post__action-icon ui-icon-theme-aware" src="${icon}" alt="" aria-hidden="true">` : ''}
-        <span>${escapeHtml(label)}</span>
+        <span>${escapeHtml(count > 0 ? `${label} ${count}` : label)}</span>
       </button>
     `;
   };
 
   return `
-    <article class="feed-post">
+    <article class="feed-post" data-feed-post-view-id="${escapeHtml(post.id)}">
       <div class="feed-post__identity">
         <div class="feed-post__avatar" aria-hidden="true">
           ${avatar
@@ -355,11 +363,25 @@ function renderFeedPost(post = {}) {
         ${renderAction('repost', 'Repost', interactionState.repost)}
         ${renderAction('like', 'Like', interactionState.like)}
         ${renderAction('share', 'Share', interactionState.share)}
-        ${renderAction('save', 'Bookmark', interactionState.save)}
+        ${renderAction('save', 'Bookmark', interactionState.bookmark)}
         <a class="feed-post__action feed-post__action--link" href="${escapeHtml(post.publicRoute || post.href || '/pages/profiles/index.html')}">View</a>
         ${post.ownedByCurrentUser ? `<button class="feed-post__action" type="button" data-feed-delete-post="${escapeHtml(post.feedPostId || post.id)}">Delete</button>` : ''}
         ${post.modelId ? `<button class="feed-post__action feed-post__action--primary" type="button" data-feed-post-model="${escapeHtml(post.modelId)}">${post.modelId === activeModelId ? 'Active on Homepage' : 'Interact'}</button>` : ''}
       </div>
+      <form class="feed-post__comment-form" data-feed-post-comment-form data-feed-post-id="${escapeHtml(post.id)}" ${FEED_PAGE_STATE.openCommentPostId === post.id ? '' : 'hidden'}>
+        <input class="feed-post__comment-input" name="comment" type="text" placeholder="Write a reply" autocomplete="off">
+        <button class="feed-post__comment-submit" type="submit">Reply</button>
+      </form>
+      ${FEED_PAGE_STATE.openCommentPostId === post.id && socialState.comments?.length ? `
+        <div class="feed-post__comments">
+          ${socialState.comments.slice(-4).map((comment) => `
+            <article class="feed-post__comment">
+              <strong>${escapeHtml(comment.authorDisplayName || 'Profile')}</strong>
+              <span>${escapeHtml(comment.body || '')}</span>
+            </article>
+          `).join('')}
+        </div>
+      ` : ''}
     </article>
   `;
 }
@@ -386,6 +408,48 @@ function hydrateFeedMedia(root = FEED_PAGE_STATE.root) {
 
     image.addEventListener('load', () => setState('loaded'), { once: true });
     image.addEventListener('error', () => setState('error'), { once: true });
+  });
+}
+
+function observeFeedPostViews(root = FEED_PAGE_STATE.root) {
+  if (!(root instanceof HTMLElement)) return;
+
+  const postNodes = Array.from(root.querySelectorAll('[data-feed-post-view-id]'))
+    .filter((node) => node instanceof HTMLElement);
+
+  if (!('IntersectionObserver' in window)) {
+    postNodes.forEach((node) => {
+      const postId = normalizeString(node.getAttribute('data-feed-post-view-id'));
+      if (!postId || FEED_PAGE_STATE.viewedPostIds.has(postId)) return;
+      FEED_PAGE_STATE.viewedPostIds.add(postId);
+      void recordFeedPostView(postId).catch(() => {});
+    });
+    return;
+  }
+
+  if (FEED_PAGE_STATE.viewObserver) {
+    FEED_PAGE_STATE.viewObserver.disconnect();
+  }
+
+  FEED_PAGE_STATE.viewObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting || !(entry.target instanceof HTMLElement)) return;
+
+      const postId = normalizeString(entry.target.getAttribute('data-feed-post-view-id'));
+      observer.unobserve(entry.target);
+      if (!postId || FEED_PAGE_STATE.viewedPostIds.has(postId)) return;
+
+      FEED_PAGE_STATE.viewedPostIds.add(postId);
+      void recordFeedPostView(postId).catch(() => {});
+    });
+  }, {
+    threshold: 0.5
+  });
+
+  postNodes.forEach((node) => {
+    const postId = normalizeString(node.getAttribute('data-feed-post-view-id'));
+    if (!postId || FEED_PAGE_STATE.viewedPostIds.has(postId)) return;
+    FEED_PAGE_STATE.viewObserver.observe(node);
   });
 }
 
@@ -502,6 +566,7 @@ function renderFeedPage() {
   `;
 
   hydrateFeedMedia(FEED_PAGE_STATE.root);
+  observeFeedPostViews(FEED_PAGE_STATE.root);
 }
 
 /* =============================================================================
@@ -602,9 +667,24 @@ function bindFeedEvents() {
         return;
       }
 
-      const state = getFeedInteractionState(postId);
-      state[action] = !state[action];
-      renderFeedPage();
+      if (action === 'reply') {
+        FEED_PAGE_STATE.openCommentPostId = FEED_PAGE_STATE.openCommentPostId === postId ? '' : postId;
+        renderFeedPage();
+        return;
+      }
+
+      postAction.disabled = true;
+      void toggleFeedPostInteraction(postId, action).then((snapshot) => {
+        FEED_PAGE_STATE.feedSocialState = {
+          ...FEED_PAGE_STATE.feedSocialState,
+          ...(snapshot.state || {})
+        };
+        renderFeedPage();
+      }).catch((error) => {
+        console.error('[feed] Social action failed.', error);
+      }).finally(() => {
+        postAction.disabled = false;
+      });
       return;
     }
 
@@ -632,7 +712,36 @@ function bindFeedEvents() {
     renderFeedPage();
   });
 
+  document.addEventListener('submit', (event) => {
+    if (!FEED_PAGE_STATE.root) return;
+    const form = event.target.closest('[data-feed-post-comment-form]');
+    if (!(form instanceof HTMLFormElement) || !FEED_PAGE_STATE.root.contains(form)) return;
+
+    event.preventDefault();
+    const postId = normalizeString(form.getAttribute('data-feed-post-id'));
+    const input = form.querySelector('input[name="comment"]');
+    const body = input instanceof HTMLInputElement ? normalizeString(input.value) : '';
+    if (!postId || !body) return;
+
+    void createFeedPostComment(postId, body).then((snapshot) => {
+      FEED_PAGE_STATE.feedSocialState = {
+        ...FEED_PAGE_STATE.feedSocialState,
+        ...(snapshot.state || {})
+      };
+      form.reset();
+      renderFeedPage();
+    }).catch((error) => {
+      console.error('[feed] Comment save failed.', error);
+    });
+  });
+
   window.addEventListener('popstate', renderFeedPage);
+  document.addEventListener('feed:social-state-changed', () => {
+    void getFeedSocialState(FEED_PAGE_STATE.runtimePosts.map((post) => post.id)).then((snapshot) => {
+      FEED_PAGE_STATE.feedSocialState = snapshot.state || Object.create(null);
+      renderFeedPage();
+    });
+  });
 }
 
 /* =============================================================================

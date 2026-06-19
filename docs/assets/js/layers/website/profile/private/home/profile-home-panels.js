@@ -2,6 +2,12 @@ import {
   listFeedPosts
 } from '../../../system/feed/feed-store.js';
 import {
+  createFeedPostComment,
+  getEmptyFeedPostSocialState,
+  getFeedSocialState,
+  toggleFeedPostInteraction
+} from '../../../system/feed/feed-social-store.js';
+import {
   listFollowedProfileIds
 } from '../../../system/profile/profile-social-graph.js';
 import {
@@ -18,7 +24,9 @@ const STATE = (window.__NEUROARTAN_PROFILE_HOME_PANELS__ ||= {
   initialized: false,
   feedLoading: true,
   feedPosts: [],
+  feedSocialState: Object.create(null),
   followedProfileIds: [],
+  openCommentPostId: '',
   messages: []
 });
 
@@ -76,6 +84,11 @@ function renderFeedPost(post = {}) {
   const avatar = normalizeString(post.avatar || '');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
   const postId = normalizeString(post.id || '');
+  const social = STATE.feedSocialState[postId] || getEmptyFeedPostSocialState();
+  const counts = social.counts || {};
+  const viewer = social.viewer || {};
+  const commentsOpen = STATE.openCommentPostId === postId;
+  const countLabel = (count) => Number(count || 0) > 0 ? `<span class="profile-home-panel__action-label">${escapeHtml(String(count))}</span>` : '';
   return `
     <article class="profile-home-panel__item" data-post-id="${escapeHtml(postId)}">
       <div class="profile-home-panel__item-header">
@@ -91,32 +104,51 @@ function renderFeedPost(post = {}) {
       <p class="profile-home-panel__item-body">${escapeHtml(post.content || '')}</p>
       ${post.imageUrl ? `<img class="profile-home-panel__item-image" src="${escapeHtml(post.imageUrl)}" alt="">` : ''}
       <div class="profile-home-panel__item-actions">
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--like" type="button" data-profile-home-action="like" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Like" aria-label="Like post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--like" type="button" data-profile-home-action="like" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Like" aria-label="Like post" aria-pressed="${viewer.like ? 'true' : 'false'}" data-active="${viewer.like ? 'true' : 'false'}">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/like/like.svg" alt="">
           </span>
+          ${countLabel(counts.like)}
         </button>
         <button class="profile-home-panel__action-button profile-home-panel__action-button--reply" type="button" data-profile-home-action="reply" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Reply" aria-label="Reply to post">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/comment/reply.svg" alt="">
           </span>
+          ${countLabel(counts.reply)}
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--repost" type="button" data-profile-home-action="repost" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Repost" aria-label="Repost post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--repost" type="button" data-profile-home-action="repost" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Repost" aria-label="Repost post" aria-pressed="${viewer.repost ? 'true' : 'false'}" data-active="${viewer.repost ? 'true' : 'false'}">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/repost/repost.svg" alt="">
           </span>
+          ${countLabel(counts.repost)}
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--share" type="button" data-profile-home-action="share" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Share" aria-label="Share post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--share" type="button" data-profile-home-action="share" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Share" aria-label="Share post" aria-pressed="${viewer.share ? 'true' : 'false'}" data-active="${viewer.share ? 'true' : 'false'}">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/share/share.svg" alt="">
           </span>
+          ${countLabel(counts.share)}
         </button>
-        <button class="profile-home-panel__action-button profile-home-panel__action-button--bookmark" type="button" data-profile-home-action="bookmark" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Bookmark" aria-label="Bookmark post">
+        <button class="profile-home-panel__action-button profile-home-panel__action-button--bookmark" type="button" data-profile-home-action="bookmark" data-post-id="${escapeHtml(postId)}" data-profile-home-tooltip="Bookmark" aria-label="Bookmark post" aria-pressed="${viewer.bookmark ? 'true' : 'false'}" data-active="${viewer.bookmark ? 'true' : 'false'}">
           <span class="profile-home-panel__action-icon" aria-hidden="true">
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/bookmark/bookmark.svg" alt="">
           </span>
+          ${countLabel(counts.bookmark)}
         </button>
       </div>
+      <form class="profile-home-panel__comment-form" data-profile-home-comment-form data-post-id="${escapeHtml(postId)}" ${commentsOpen ? '' : 'hidden'}>
+        <input class="profile-home-panel__comment-input" name="comment" type="text" placeholder="Write a reply" autocomplete="off">
+        <button class="profile-home-panel__comment-submit" type="submit">Reply</button>
+      </form>
+      ${commentsOpen && social.comments?.length ? `
+        <div class="profile-home-panel__comments" data-profile-home-comments>
+          ${social.comments.slice(-3).map((comment) => `
+            <article class="profile-home-panel__comment">
+              <strong>${escapeHtml(comment.authorDisplayName || 'Profile')}</strong>
+              <span>${escapeHtml(comment.body || '')}</span>
+            </article>
+          `).join('')}
+        </div>
+      ` : ''}
     </article>
   `;
 }
@@ -211,8 +243,11 @@ async function loadFeed() {
     ]);
     STATE.feedPosts = Array.isArray(posts) ? posts : [];
     STATE.followedProfileIds = Array.isArray(followedProfileIds) ? followedProfileIds : [];
+    const social = await getFeedSocialState(STATE.feedPosts.map((post) => post.id));
+    STATE.feedSocialState = social.state || Object.create(null);
   } catch (error) {
     STATE.feedPosts = [];
+    STATE.feedSocialState = Object.create(null);
     STATE.followedProfileIds = [];
     console.error('[profile-home-panels] Feed load failed.', error);
   }
@@ -237,11 +272,33 @@ function bindEvents() {
     if (actionButton instanceof HTMLButtonElement) {
       const action = actionButton.getAttribute('data-profile-home-action') || '';
       const postId = actionButton.getAttribute('data-post-id') || '';
-      handleSocialAction(action, postId, actionButton);
+      void handleSocialAction(action, postId, actionButton);
     }
   });
 
   document.addEventListener('submit', (event) => {
+    const commentForm = event.target.closest('[data-profile-home-comment-form]');
+    if (commentForm instanceof HTMLFormElement) {
+      event.preventDefault();
+      const postId = commentForm.getAttribute('data-post-id') || '';
+      const input = commentForm.querySelector('input[name="comment"]');
+      const body = normalizeString(input instanceof HTMLInputElement ? input.value : '');
+      if (!postId || !body) return;
+      void createFeedPostComment(postId, body)
+        .then((snapshot) => {
+          STATE.feedSocialState = {
+            ...STATE.feedSocialState,
+            ...(snapshot.state || {})
+          };
+          commentForm.reset();
+          renderFeed();
+        })
+        .catch((error) => {
+          console.error('[profile-home-panels] Comment save failed.', error);
+        });
+      return;
+    }
+
     const form = event.target.closest('[data-profile-home-message-form]');
     if (!(form instanceof HTMLFormElement)) return;
     event.preventDefault();
@@ -260,52 +317,34 @@ function bindEvents() {
   });
 }
 
-function handleSocialAction(action = '', postId = '', button = null) {
+async function handleSocialAction(action = '', postId = '', button = null) {
   if (!button) return;
 
   switch (action) {
     case 'like':
-      toggleLikeState(button);
-      break;
-    case 'reply':
-      openCommentPanel(postId);
-      break;
     case 'repost':
-      toggleRepostState(button);
-      break;
-    case 'share':
-      handleShare(postId);
-      break;
     case 'bookmark':
-      toggleBookmarkState(button);
+    case 'share': {
+      button.disabled = true;
+      try {
+        const snapshot = await toggleFeedPostInteraction(postId, action);
+        STATE.feedSocialState = {
+          ...STATE.feedSocialState,
+          ...(snapshot.state || {})
+        };
+        renderFeed();
+      } catch (error) {
+        console.error('[profile-home-panels] Feed interaction failed.', error);
+      } finally {
+        button.disabled = false;
+      }
+      break;
+    }
+    case 'reply':
+      STATE.openCommentPostId = STATE.openCommentPostId === postId ? '' : postId;
+      renderFeed();
       break;
   }
-}
-
-function handleShare(postId) {
-  console.log('Sharing post:', postId);
-}
-
-function toggleLikeState(button) {
-  const isActive = button.getAttribute('aria-pressed') === 'true';
-  button.setAttribute('aria-pressed', (!isActive).toString());
-  button.setAttribute('data-active', (!isActive).toString());
-}
-
-function toggleRepostState(button) {
-  const isActive = button.getAttribute('aria-pressed') === 'true';
-  button.setAttribute('aria-pressed', (!isActive).toString());
-  button.setAttribute('data-active', (!isActive).toString());
-}
-
-function toggleBookmarkState(button) {
-  const isActive = button.getAttribute('aria-pressed') === 'true';
-  button.setAttribute('aria-pressed', (!isActive).toString());
-  button.setAttribute('data-active', (!isActive).toString());
-}
-
-function openCommentPanel(postId) {
-  console.log('Opening comment panel for post:', postId);
 }
 
 function renderAll() {

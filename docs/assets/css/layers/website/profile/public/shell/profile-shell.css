@@ -1,15 +1,5 @@
 /* =============================================================================
-   01) PUBLIC PROFILE SHELL SOURCE BINDING
-   02) PUBLIC PROFILE ROUTE STATES
+   01) PUBLIC PROFILE FEED SHELL SOURCE BINDING
 ============================================================================= */
 
-@import url("../../private/shell/profile-shell.css");
-
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="reserved_but_hidden"] .profile-sections,
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="reserved_but_disabled"] .profile-sections,
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="reserved_but_not_ready"] .profile-sections,
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="restricted_username"] .profile-sections,
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="invalid_username"] .profile-sections,
-.profile-shell[data-profile-surface="public"][data-profile-route-outcome="not_found"] .profile-sections{
-  opacity:var(--profile-shell-disabled-opacity);
-}
+@import url("../../../sections/feed.css");

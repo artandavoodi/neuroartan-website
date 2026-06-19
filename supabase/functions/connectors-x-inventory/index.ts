@@ -4,7 +4,8 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
   "";
-const TOKEN_ENCRYPTION_SECRET = Deno.env.get("TOKEN_ENCRYPTION_SECRET") || "";
+const CONNECTOR_TOKEN_ENCRYPTION_KEY =
+  Deno.env.get("CONNECTOR_TOKEN_ENCRYPTION_KEY") || "";
 const X_CLIENT_ID = Deno.env.get("X_CLIENT_ID") || "";
 const X_CLIENT_SECRET = Deno.env.get("X_CLIENT_SECRET") || "";
 
@@ -31,10 +32,10 @@ function readBearerToken(request: Request) {
 }
 
 function requireEncryptionSecret() {
-  if (!TOKEN_ENCRYPTION_SECRET) {
-    throw new Error("TOKEN_ENCRYPTION_SECRET_MISSING");
+  if (!CONNECTOR_TOKEN_ENCRYPTION_KEY) {
+    throw new Error("CONNECTOR_TOKEN_ENCRYPTION_KEY_MISSING");
   }
-  return TOKEN_ENCRYPTION_SECRET;
+  return CONNECTOR_TOKEN_ENCRYPTION_KEY;
 }
 
 async function getEncryptionKey() {
@@ -49,11 +50,11 @@ async function getEncryptionKey() {
   ]);
 }
 
-function decodeBase64(value: string) {
+function fromBase64(value: string) {
   return Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
 }
 
-function encodeBase64(bytes: Uint8Array) {
+function toBase64(bytes: Uint8Array) {
   return btoa(String.fromCharCode(...bytes));
 }
 
@@ -68,22 +69,30 @@ async function encryptToken(token: string) {
     ),
   );
 
-  return `${encodeBase64(iv)}.${encodeBase64(encrypted)}`;
+  return JSON.stringify({
+    v: 1,
+    alg: "AES-GCM",
+    iv: toBase64(iv),
+    data: toBase64(encrypted),
+  });
 }
 
 async function decryptToken(encryptedToken: string) {
-  const [ivValue, encryptedValue] = encryptedToken.split(".");
-  if (!ivValue || !encryptedValue) throw new Error("TOKEN_FORMAT_INVALID");
+  const parsed = JSON.parse(encryptedToken);
+  if (parsed?.v !== 1 || parsed?.alg !== "AES-GCM") {
+    throw new Error("UNSUPPORTED_TOKEN_PAYLOAD");
+  }
+  if (!parsed?.iv || !parsed?.data) {
+    throw new Error("TOKEN_FORMAT_INVALID");
+  }
 
   const key = await getEncryptionKey();
-  const iv = decodeBase64(ivValue);
-  const encrypted = decodeBase64(encryptedValue);
-
   const decrypted = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
+    { name: "AES-GCM", iv: fromBase64(String(parsed.iv)) },
     key,
-    encrypted,
+    fromBase64(String(parsed.data)),
   );
+
   return new TextDecoder().decode(decrypted);
 }
 

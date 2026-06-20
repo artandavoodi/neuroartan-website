@@ -50,7 +50,7 @@ function setControlDisabled(control, disabled) {
 
 function setFollowMenuOpen(root, open) {
   const menu = root.querySelector('[data-profile-follow-menu]');
-  const toggle = root.querySelector('[data-profile-follow-menu-toggle]');
+  const toggle = null;
 
   if (menu instanceof HTMLElement) {
     menu.hidden = !open;
@@ -152,7 +152,7 @@ async function renderPublicFollowControl(root, state = getProfileRuntimeState())
     button.setAttribute('aria-pressed', graph.viewerFollowing ? 'true' : 'false');
     setFollowMenuOpen(root, false);
 
-    const menuToggle = root.querySelector('[data-profile-follow-menu-toggle]');
+    const menuToggle = null;
     if (menuToggle instanceof HTMLButtonElement) {
       menuToggle.hidden = true;
       menuToggle.setAttribute('aria-expanded', 'false');
@@ -228,20 +228,6 @@ function initPublicProfileHeader() {
   subscribeProfileRuntime(renderPublicHeader);
 
   document.addEventListener('click', (event) => {
-    const toggle = event.target instanceof Element
-      ? event.target.closest('[data-profile-follow-menu-toggle]')
-      : null;
-
-    if (toggle) {
-      const root = toggle.closest('[data-profile-header][data-profile-surface="public"]');
-      if (!root) return;
-
-      event.preventDefault();
-      const menu = root.querySelector('[data-profile-follow-menu]');
-      setFollowMenuOpen(root, menu?.hidden !== false);
-      return;
-    }
-
     document.querySelectorAll('[data-profile-header][data-profile-surface="public"]').forEach((root) => {
       if (event.target instanceof Node && root.contains(event.target)) return;
       setFollowMenuOpen(root, false);

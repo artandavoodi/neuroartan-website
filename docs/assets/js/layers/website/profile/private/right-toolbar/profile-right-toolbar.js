@@ -60,10 +60,25 @@ const ACTION_ICONS = Object.freeze({
   visibility: '/registry/icons/public/assets/core/identity/access/visibility-on.svg',
   verification: '/registry/icons/public/assets/core/identity/trust/verified.svg',
   identity: '/registry/icons/public/assets/layers/website/profile/actions/identity-account-state-route-readiness.svg',
-  edit: '/registry/icons/public/assets/core/actions/editing/edit.svg'
+  edit: '/registry/icons/public/assets/core/actions/editing/edit.svg',
+  follow: '/registry/icons/public/assets/layers/website/profile/social/Follow.svg'
 });
 
 const ACTIONS = Object.freeze({
+  followProfile: {
+    id: 'follow-profile',
+    label: 'Follow profile',
+    tooltip: 'Follow',
+    icon: ACTION_ICONS.follow,
+    surface: 'public'
+  },
+  profileInfo: {
+    id: 'profile-info',
+    label: 'Profile info',
+    tooltip: 'Info',
+    icon: ACTION_ICONS.modelInfo,
+    surface: 'public'
+  },
   createPost: {
     id: 'create-post',
     label: 'Create post',
@@ -428,6 +443,12 @@ const CONTEXT_ACTIONS = Object.freeze({
   settings: ['settingsChangelog']
 });
 
+const PUBLIC_CONTEXT_ACTIONS = Object.freeze({
+  profile: ['followProfile', 'profileInfo'],
+  overview: ['followProfile', 'profileInfo'],
+  posts: ['followProfile', 'profileInfo']
+});
+
 const MODEL_PANE_ACTIONS = Object.freeze({
   overview: ['modelIdentity', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
   identity: ['modelEditIdentity', 'modelLearn', 'modelReset', 'modelChangelog'],
@@ -556,7 +577,9 @@ function refreshRightToolbarActions(){
 }
 
 function resolveActionKeys(state = getProfileNavigationState()){
-  if (isPublicProfileSurface()) return [];
+  if (isPublicProfileSurface()) {
+    return PUBLIC_CONTEXT_ACTIONS[state.section] || [];
+  }
 
   if (state.section === 'model-personalization') {
     return MODEL_PERSONALIZATION_PANE_ACTIONS[resolveModelPersonalizationPane(state)];
@@ -796,6 +819,14 @@ function setRightToolbarRail(root, state, options = {}){
 
 function requestProfileToolAction(action){
   switch(action){
+    case 'follow-profile':
+      document.querySelector('[data-profile-header][data-profile-surface="public"] [data-profile-action="follow-profile"]')?.click();
+      return;
+    case 'profile-info':
+      document.dispatchEvent(new CustomEvent('profile:right-toolbar-action-request', {
+        detail: { action, source: 'profile-right-toolbar', surface: 'public' }
+      }));
+      return;
     case 'create-post':
       document.dispatchEvent(new CustomEvent('profile:post-compose-open-request', {
         detail: { source: 'profile-right-toolbar' }

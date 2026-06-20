@@ -30,7 +30,7 @@ Do not hardcode public tab buttons or bind a second tab event handler. The share
 ## Public Data Boundary
 
 - Posts are rendered through the existing feed renderer, filtered by the viewed profile's canonical profile id or username.
-- Model is limited to public development and interaction state. It must not mount `model-management`, preference controls, source data, memory, or other owner-private model surfaces.
+- Model is limited to public development and interaction state. It owns its own public hero, using only the canonical model name, description, image, optional cover, readiness, and interaction state. It must not mount `model-management`, preference controls, source data, memory, or other owner-private model surfaces.
 - Highlights are owner-selected public material. Until a highlights data source is available, the registered panel may show only its empty state.
 - The public right toolbar renders no owner actions. The rail itself remains mounted so the shared desktop and mobile shell stays structurally identical.
 
@@ -41,6 +41,7 @@ Do not hardcode public tab buttons or bind a second tab event handler. The share
 - The tab band uses the same shared tab classes and tokens as Profile, Feed, and Model, spans the full central workspace boundary, and is sticky inside the content stream.
 - Sidebars, toolbars, and phone/tablet sidebar switches come from the shared owners. Do not create public-specific replacements.
 - List separators appear only between adjacent content items. Never render a separator before the first item or after the last item.
+- Public panel scroll positions are retained per tab for the current browser session. Switching tabs must not reset the Posts position or dislodge the sticky tab band.
 
 ## Required Owners
 

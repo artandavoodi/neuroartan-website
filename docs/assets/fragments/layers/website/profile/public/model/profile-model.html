@@ -2,11 +2,45 @@
      01) PUBLIC PROFILE MODEL
 ============================================================================= -->
 <section class="profile-home-panel" data-profile-public-model aria-label="Public model">
+  <section class="profile-header" data-profile-public-model-header data-profile-surface="public-model" aria-label="Public model header">
+    <div class="profile-header__surface">
+      <div class="profile-header__cover" data-profile-public-model-cover aria-hidden="true"></div>
+
+      <div class="profile-header__identity-block">
+        <div class="profile-header__avatar-shell">
+          <div class="profile-header__avatar-surface">
+            <img
+              class="profile-header__avatar-image"
+              data-profile-public-model-avatar
+              src="/registry/icons/public/assets/core/cognition/model/model.svg"
+              alt="">
+          </div>
+        </div>
+
+        <div class="profile-header__copy">
+          <div class="profile-header__name-block">
+            <h2 class="profile-header__display-name" data-profile-public-model-name>Personal model</h2>
+            <p class="profile-header__username" data-profile-public-model-slug>Model</p>
+          </div>
+
+          <p class="profile-header__summary" data-profile-public-model-description>
+            This owner has not shared public model development details yet.
+          </p>
+
+          <div class="profile-header__stats" aria-label="Public model state">
+            <span><strong data-profile-public-model-development>Not shared</strong> Development</span>
+            <span><strong data-profile-public-model-interaction>Not available</strong> Interaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <article class="profile-home-panel__item">
     <div class="profile-home-panel__item-header">
       <span class="profile-home-panel__item-meta">
         <strong>Model development</strong>
-        <span data-profile-public-model-development>Not shared</span>
+        <span data-profile-public-model-development-detail>Not shared</span>
       </span>
     </div>
     <p class="profile-home-panel__item-body" data-profile-public-model-summary>
@@ -18,7 +52,7 @@
     <div class="profile-home-panel__item-header">
       <span class="profile-home-panel__item-meta">
         <strong>Interaction</strong>
-        <span data-profile-public-model-interaction>Not available</span>
+        <span data-profile-public-model-interaction-detail>Not available</span>
       </span>
     </div>
   </article>

@@ -93,6 +93,7 @@
   overflow-x:hidden;
   overflow-y:auto;
   overscroll-behavior:contain;
+  overflow-anchor:none;
 }
 
 @media (max-width:980px){

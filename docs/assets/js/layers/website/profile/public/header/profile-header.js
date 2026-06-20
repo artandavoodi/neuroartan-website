@@ -148,9 +148,18 @@ async function renderPublicFollowControl(root, state = getProfileRuntimeState())
     setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
     setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
     button.dataset.profileAction = graph.viewerFollowing ? 'unfollow-profile' : 'follow-profile';
+    button.dataset.profileFollowState = graph.viewerFollowing ? 'followed' : 'unfollowed';
+    button.setAttribute('aria-pressed', graph.viewerFollowing ? 'true' : 'false');
+    setFollowMenuOpen(root, false);
+
+    const menuToggle = root.querySelector('[data-profile-follow-menu-toggle]');
+    if (menuToggle instanceof HTMLButtonElement) {
+      menuToggle.hidden = true;
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
 
     if (label) {
-      label.textContent = graph.viewerFollowing ? 'Following' : 'Follow';
+      label.textContent = graph.viewerFollowing ? 'Followed' : 'Follow';
     }
   } catch (error) {
     console.error('[profile-public-header] Follow control render failed.', error);
@@ -175,23 +184,39 @@ async function renderPublicSubscribeControl(root, state = getProfileRuntimeState
   button.setAttribute('aria-disabled', available ? 'false' : 'true');
 
   if (!available) {
-    button.textContent = 'Subscribe';
+    button.textContent = '';
     return;
   }
 
   try {
+    const graph = await getProfileSocialGraphState(profileId);
+
+    if (!graph.viewerFollowing) {
+      button.hidden = true;
+      button.disabled = true;
+      button.removeAttribute('data-profile-action');
+      button.removeAttribute('data-profile-subscribe-state');
+      button.setAttribute('aria-disabled', 'true');
+      button.setAttribute('aria-pressed', 'false');
+      button.textContent = '';
+      return;
+    }
+
     const subscription = await getProfileSubscriptionState(profileId);
     root.dataset.profileSubscriptionBackend = subscription.tableAvailable ? 'ready' : 'pending';
+    button.hidden = false;
     button.disabled = !subscription.tableAvailable;
     button.setAttribute('aria-disabled', subscription.tableAvailable ? 'false' : 'true');
+    button.setAttribute('aria-pressed', subscription.viewerSubscribed ? 'true' : 'false');
     button.dataset.profileAction = subscription.viewerSubscribed ? 'unsubscribe-profile' : 'subscribe-profile';
-    button.textContent = subscription.viewerSubscribed ? 'Subscribed' : 'Subscribe';
+    button.dataset.profileSubscribeState = subscription.viewerSubscribed ? 'subscribed' : 'unsubscribed';
+    button.innerHTML = '<span class="profile-header__subscribe-icon" aria-hidden="true">✦</span><span class="sr-only">Subscribe</span>';
   } catch (error) {
     console.error('[profile-public-header] Subscribe control render failed.', error);
     root.dataset.profileSubscriptionBackend = 'error';
     button.disabled = true;
     button.setAttribute('aria-disabled', 'true');
-    button.textContent = 'Subscribe unavailable';
+    button.textContent = '';
   }
 }
 

@@ -210,6 +210,25 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   background:var(--color-primary1);
 }
 
+.model-management__cover-wrap{
+  position:relative;
+  inline-size:100%;
+  min-block-size:var(--profile-private-hero-cover-height);
+  overflow:hidden;
+  background:var(--surface-color);
+}
+
+.model-management__cover-preview,
+.model-management__cover-image{
+  display:block;
+  inline-size:100%;
+  block-size:100%;
+}
+
+.model-management__cover-image{
+  object-fit:cover;
+}
+
 .model-management__brain-map{
   display:grid;
   grid-template-columns:auto minmax(0, 1fr);

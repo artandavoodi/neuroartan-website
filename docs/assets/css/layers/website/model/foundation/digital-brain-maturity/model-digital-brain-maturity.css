@@ -12,8 +12,7 @@
 
 .model-digital-brain-maturity__surface{
   position:relative;
-  display:grid;
-  gap:var(--spacing-lg);
+  display:block;
   inline-size:100%;
   block-size:var(--profile-workspace-viewport-block-size, calc(100dvh - var(--nav-glass-surface-height, 0px)));
   min-block-size:32rem;
@@ -798,6 +797,7 @@
 
 @media (max-width:760px){
   .model-digital-brain-maturity__surface{
+    display:grid;
     gap:var(--spacing-md);
     block-size:auto;
     min-block-size:0;

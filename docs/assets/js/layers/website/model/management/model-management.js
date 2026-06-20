@@ -11,6 +11,7 @@ import {
   ensureOwnedCanonicalModel,
   getOwnedCanonicalModel,
   readModelFoundationIdentity,
+  readModelPublicMedia,
   readModelPersonalizationPreferences,
   readLatestModelSourceCalibrationResult,
   listModelDefaultRegistry,
@@ -18,8 +19,10 @@ import {
   recordModelAuditEvent,
   readModelVisibilityPreferences,
   resetOwnedCanonicalModelAvatar,
+  resetOwnedCanonicalModelCover,
   saveModelFoundationIdentity,
   saveOwnedCanonicalModelAvatar,
+  saveOwnedCanonicalModelCover,
   saveModelPersonalizationPreferences,
   saveModelVisibilityPreferences
 } from '../../system/model/model-store.js';
@@ -367,6 +370,7 @@ const MODEL_FOUNDATION_IDENTITY_DEFAULTS = Object.freeze({
   createdAt: '',
   updatedAt: '',
   modelAvatar: '',
+  modelCover: '',
   ownerRecordPolicy: 'fixed_owner_binding'
 });
 
@@ -1286,7 +1290,10 @@ async function hydrateModelFoundationIdentityFromBackend() {
     const model = await ensureOwnedCanonicalModel().catch(() => getOwnedCanonicalModel());
     if (!model?.id) return;
 
-    const identity = await readModelFoundationIdentity(model.id);
+    const [identity, publicMedia] = await Promise.all([
+      readModelFoundationIdentity(model.id),
+      readModelPublicMedia(model.id).catch(() => null)
+    ]);
     updateModelFoundationIdentity({
       modelId: identity?.modelId || model.id || 'Model record pending',
       modelNickname: identity?.modelNickname || model.model_name || model.display_name || '',
@@ -1297,7 +1304,7 @@ async function hydrateModelFoundationIdentityFromBackend() {
       publicSerialIdentity: identity?.publicSerialIdentity || 'Public identity not enabled',
       birthCertificateId: identity?.birthCertificateId || model.birth_certificate_id || 'Birth record pending',
       birthDate: identity?.birthDate || model.created_at || '',
-      modelType: identity?.modelType || 'Personal',
+      modelType: identity?.modelType || publicMedia?.modelType || 'Personal',
       lifecycleState: identity?.lifecycleState || model.lifecycle_state || 'created',
       readinessState: identity?.readinessState || model.readiness_state || 'uninitialized',
       verificationState: identity?.verificationState || model.verification_state || 'unverified',
@@ -1306,6 +1313,7 @@ async function hydrateModelFoundationIdentityFromBackend() {
       createdAt: identity?.createdAt || model.created_at || '',
       updatedAt: identity?.updatedAt || model.updated_at || '',
       modelAvatar: identity?.modelAvatar || model.model_image_url || '',
+      modelCover: publicMedia?.modelCover || model.model_cover_url || '',
       ownerRecordPolicy: identity?.ownerRecordPolicy || 'fixed_owner_binding'
     }, {
       source: 'model-management-backend',
@@ -3572,6 +3580,17 @@ function renderModelFoundationIdentityControls(root) {
       avatarImage.removeAttribute('src');
     }
   });
+
+  root.querySelectorAll('[data-model-cover-image]').forEach((coverImage) => {
+    if (!(coverImage instanceof HTMLImageElement)) return;
+    if (identity.modelCover) {
+      coverImage.src = identity.modelCover;
+      coverImage.hidden = false;
+    } else {
+      coverImage.hidden = true;
+      coverImage.removeAttribute('src');
+    }
+  });
 }
 
 function renderAllModelFoundationIdentityControls() {
@@ -3969,40 +3988,52 @@ function handleModelVisibilityInput(event) {
   });
 }
 
-function registerModelAvatarEditor() {
+function registerModelMediaEditor() {
   registerProfileMediaEditorTarget('model', {
-    getTitle: () => 'Edit Model Avatar',
-    getCurrentImageUrl: () => modelFoundationIdentity.modelAvatar || '',
-    save: async ({ file }) => {
-      const model = await saveOwnedCanonicalModelAvatar(file);
+    getTitle: ({ kind }) => kind === 'cover' ? 'Edit Model Header' : 'Edit Model Avatar',
+    getCurrentImageUrl: ({ kind }) => kind === 'cover'
+      ? modelFoundationIdentity.modelCover || ''
+      : modelFoundationIdentity.modelAvatar || '',
+    save: async ({ file, kind }) => {
+      const model = kind === 'cover'
+        ? await saveOwnedCanonicalModelCover(file)
+        : await saveOwnedCanonicalModelAvatar(file);
       updateModelFoundationIdentity({
-        modelAvatar:model?.model_image_url || ''
+        ...(kind === 'cover'
+          ? { modelCover:model?.model_cover_url || '' }
+          : { modelAvatar:model?.model_image_url || '' })
       }, {
-        source:'model-avatar-editor',
+        source:kind === 'cover' ? 'model-cover-editor' : 'model-avatar-editor',
         sync:false
       });
     },
-    reset: async () => {
-      await resetOwnedCanonicalModelAvatar();
+    reset: async ({ kind }) => {
+      if (kind === 'cover') {
+        await resetOwnedCanonicalModelCover();
+      } else {
+        await resetOwnedCanonicalModelAvatar();
+      }
       updateModelFoundationIdentity({
-        modelAvatar:''
+        ...(kind === 'cover' ? { modelCover:'' } : { modelAvatar:'' })
       }, {
-        source:'model-avatar-editor',
+        source:kind === 'cover' ? 'model-cover-editor' : 'model-avatar-editor',
         sync:false
       });
     }
   });
 }
 
-function handleModelAvatarClick(event) {
-  const trigger = event.target?.closest?.('[data-model-avatar-edit]');
+function handleModelMediaClick(event) {
+  const trigger = event.target?.closest?.('[data-model-avatar-edit], [data-model-cover-edit]');
   if (!(trigger instanceof HTMLElement)) return;
+
+  const kind = trigger.matches('[data-model-cover-edit]') ? 'cover' : 'avatar';
 
   document.dispatchEvent(new CustomEvent('profile:media-editor-open-request', {
     detail:{
       source:'model-management',
       target:'model',
-      kind:'avatar'
+      kind
     }
   }));
 }
@@ -4854,7 +4885,7 @@ function handleStatusMessageAutoDismiss() {
 }
 
 function initModelManagement() {
-  registerModelAvatarEditor();
+  registerModelMediaEditor();
   renderAllModelManagement();
   void hydratePublicModelDirectory();
   hydrateModelOwnerDataFromBackend();
@@ -4870,7 +4901,7 @@ function initModelManagement() {
   document.addEventListener('click', handleModelVisibilityInput);
   document.addEventListener('input', handleModelFoundationInput);
   document.addEventListener('change', handleModelFoundationInput);
-  document.addEventListener('click', handleModelAvatarClick);
+  document.addEventListener('click', handleModelMediaClick);
   document.addEventListener('input', handleModelDirectoryFilter);
   document.addEventListener('change', handleModelDirectoryFilter);
   document.addEventListener('click', handleModelDirectorySearchOpen);

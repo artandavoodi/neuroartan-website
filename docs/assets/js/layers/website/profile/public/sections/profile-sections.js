@@ -111,14 +111,46 @@ function restorePublicScrollPosition(root, activeSection) {
   schedulePublicScrollRestore(state, activeSection);
 }
 
+function formatPublicModelLabel(value = '', fallback = 'Not available') {
+  const normalized = String(value || '').trim().replace(/[_-]+/g, ' ');
+  if (!normalized) return fallback;
+  return normalized.replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+function formatPublicModelDate(value = '') {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return 'Not available';
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    year: 'numeric'
+  }).format(new Date(timestamp));
+}
+
+function formatPublicModelVerification(value = '') {
+  const normalized = String(value || '').trim().toLowerCase();
+  const allowedStates = new Set([
+    'verified',
+    'unverified',
+    'not_verified',
+    'pending',
+    'under_review',
+    'review_required'
+  ]);
+  return allowedStates.has(normalized)
+    ? formatPublicModelLabel(normalized)
+    : 'Unverified';
+}
+
 function renderPublicModelHeader(model, state) {
   const modelName = String(model?.model_name || model?.display_name || 'Personal model').trim();
   const modelSlug = normalizeUsername(model?.model_slug || model?.slug || '');
   const modelDescription = String(model?.description || state.modelPublicSummary || '').trim();
   const modelImage = String(model?.public_avatar_url || model?.model_image_url || '').trim();
   const modelCover = String(model?.public_cover_url || model?.model_cover_url || '').trim();
-  const development = String(state.modelReadinessLabel || state.modelAccessLabel || '').trim() || 'Not shared';
-  const interaction = String(state.modelInteractionLabel || state.availabilityLabel || '').trim() || 'Not available';
+  const modelType = formatPublicModelLabel(model?.model_type || model?.routing_class || 'personal');
+  const readiness = formatPublicModelLabel(model?.readiness_state || state.modelReadinessLabel || 'not shared');
+  const verification = formatPublicModelVerification(model?.verification_state || state.verification?.status || 'unverified');
+  const created = formatPublicModelDate(model?.created_at || '');
 
   document.querySelectorAll('[data-profile-public-model]').forEach((root) => {
     const name = root.querySelector('[data-profile-public-model-name]');
@@ -135,6 +167,11 @@ function renderPublicModelHeader(model, state) {
     if (avatar instanceof HTMLImageElement) {
       avatar.src = modelImage || '/registry/icons/public/assets/core/cognition/model/model.svg';
       avatar.alt = modelImage ? `${modelName} avatar` : '';
+      avatar.onerror = () => {
+        avatar.onerror = null;
+        avatar.src = '/registry/icons/public/assets/core/cognition/model/model.svg';
+        avatar.alt = '';
+      };
     }
     if (cover instanceof HTMLElement) {
       if (modelCover) {
@@ -146,11 +183,17 @@ function renderPublicModelHeader(model, state) {
       }
     }
 
-    root.querySelectorAll('[data-profile-public-model-development], [data-profile-public-model-development-detail]').forEach((node) => {
-      node.textContent = development;
+    root.querySelectorAll('[data-profile-public-model-type]').forEach((node) => {
+      node.textContent = modelType;
     });
-    root.querySelectorAll('[data-profile-public-model-interaction], [data-profile-public-model-interaction-detail]').forEach((node) => {
-      node.textContent = interaction;
+    root.querySelectorAll('[data-profile-public-model-created]').forEach((node) => {
+      node.textContent = created;
+    });
+    root.querySelectorAll('[data-profile-public-model-readiness]').forEach((node) => {
+      node.textContent = readiness;
+    });
+    root.querySelectorAll('[data-profile-public-model-verification]').forEach((node) => {
+      node.textContent = verification;
     });
   });
 }

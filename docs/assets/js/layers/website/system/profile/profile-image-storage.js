@@ -25,7 +25,7 @@ import {
 /* =============================================================================
    03) CONSTANTS
 ============================================================================= */
-const PROFILE_IMAGES_BUCKET = 'profile-images';
+const PROFILE_IMAGES_BUCKET = 'profile-media';
 const STORAGE_MODE = 'supabase_storage_profile_media';
 
 /* =============================================================================

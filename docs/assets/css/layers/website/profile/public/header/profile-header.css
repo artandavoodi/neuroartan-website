@@ -48,12 +48,13 @@
   align-items:start;
   gap:var(--spacing-lg);
   padding-inline:var(--profile-workspace-content-row-padding-inline);
-  margin-top:0;
+  margin-top:var(--spacing-none);
   position:relative;
 }
 
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__avatar-shell{
   z-index:var(--z-raised);
+  margin-top:calc(var(--profile-private-hero-avatar-size) / -2);
 }
 
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__avatar-surface{
@@ -66,7 +67,7 @@
 }
 
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__copy{
-  padding-top:calc((var(--profile-private-hero-avatar-size) / 2) + var(--spacing-xs));
+  padding-top:var(--spacing-none);
 }
 
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__identity-heading{
@@ -86,6 +87,12 @@
   display:grid;
   gap:var(--spacing-sm);
   min-width:var(--spacing-none);
+}
+
+.profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__handle,
+.profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__username{
+  color:var(--text-secondary-color);
+  opacity:var(--state-opacity-muted);
 }
 
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__stats{
@@ -121,13 +128,42 @@
 
 .profile-header[data-profile-surface="public"] .profile-header__follow-button{
   min-height:var(--control-height-sm);
+  padding-inline:var(--control-padding-x-sm);
+  border-color:var(--text-color);
+  border-radius:var(--control-radius-pill);
+  background:var(--text-color);
+  color:var(--bg-color);
+  box-sizing:border-box;
+}
+
+.profile-header[data-profile-surface="public"] .profile-header__follow-button[data-profile-follow-state="followed"]{
+  border-color:var(--border-color);
+  border-radius:var(--control-radius-pill);
+  background:transparent;
+  color:var(--text-color);
 }
 
 .profile-header[data-profile-surface="public"] .profile-header__follow-menu-button{
+  display:none;
+}
+
+.profile-header[data-profile-surface="public"] .profile-header__subscribe-button{
   width:var(--control-height-sm);
   height:var(--control-height-sm);
   min-width:var(--control-height-sm);
   min-height:var(--control-height-sm);
+  padding:var(--spacing-none);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.profile-header[data-profile-surface="public"] .profile-header__subscribe-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:var(--body-2-size);
+  line-height:1;
 }
 
 .profile-header[data-profile-surface="public"] .profile-header__follow-menu{
@@ -191,6 +227,7 @@
   .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__copy{
     padding-top:var(--spacing-none);
   }
+
 
   .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__identity-heading{
     align-items:flex-start;

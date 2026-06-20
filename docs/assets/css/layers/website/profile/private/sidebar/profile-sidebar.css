@@ -14,14 +14,21 @@
   align-self:start;
   width:max-content;
   min-width:var(--spacing-none);
+  min-block-size:calc(100dvh - var(--profile-workspace-rail-sticky-top));
+  display:flex;
+  flex-direction:column;
+  box-sizing:border-box;
   background:transparent;
   padding:0;
 }
 
 .profile-sidebar__rail-inner{
   display:flex;
+  flex:1 1 auto;
   flex-direction:column;
   gap:var(--home-platform-shell-rail-gap);
+  min-block-size:var(--size-full);
+  box-sizing:border-box;
   padding:
     var(--spacing-none)
     var(--home-platform-shell-rail-padding-inline)
@@ -232,5 +239,6 @@ body.model-page [data-profile-sidebar-model-nav]:not([hidden]){
 @media (min-width:981px){
   .profile-sidebar__surface{
     top:calc(var(--profile-workspace-rail-sticky-top) + var(--profile-workspace-sidebar-rail-start-offset));
+    min-block-size:calc(100dvh - var(--profile-workspace-rail-sticky-top) - var(--profile-workspace-sidebar-rail-start-offset));
   }
 }

@@ -80,6 +80,7 @@ const MODEL_SELECT_FIELDS = [
   'model_name',
   'description',
   'model_image_url',
+  'verification_state',
   'model_visibility',
   'model_status',
   'readiness_state',
@@ -388,7 +389,7 @@ function mapSupabaseModel(row = {}) {
     lifecycle_state: normalizeString(row.model_status || row.lifecycle_state || 'draft'),
     readiness_state: normalizeString(row.readiness_state || 'not_ready'),
     publication_state: normalizeString(row.publication_state || 'unpublished'),
-    verification_state: normalizeString(row.foundation_state || row.verification_state || 'private_foundation_created'),
+    verification_state: normalizeString(row.verification_state || 'unverified'),
     training_state: normalizeString(row.readiness_state || row.training_state || 'not_ready'),
     default_runtime_policy: row.runtime_policy || row.default_runtime_policy || {},
     runtime_policy: row.runtime_policy || row.default_runtime_policy || {},
@@ -865,7 +866,7 @@ function mapModelFoundationIdentity(records = {}, model = {}) {
     publicSerialIdentity: normalizeString(publicIdentity.id || 'Public identity not enabled'),
     birthCertificateId: normalizeString(birthCertificate.id || model.birth_certificate_id || 'Birth record pending'),
     birthDate: normalizeString(birthCertificate.created_at || model.created_at || ''),
-    modelType: 'Personal',
+    modelType: normalizeString(model.model_type || 'Personal'),
     lifecycleState: normalizeString(lifecycle.current_state || model.lifecycle_state || 'created'),
     readinessState: normalizeString(model.readiness_state || 'uninitialized'),
     verificationState: normalizeString(model.verification_state || 'unverified'),
@@ -875,6 +876,29 @@ function mapModelFoundationIdentity(records = {}, model = {}) {
     updatedAt: normalizeString(privateIdentity.updated_at || model.updated_at || ''),
     ownerRecordPolicy: normalizeString(privateIdentity.owner_visibility || 'owner_only'),
     modelAvatar: normalizeString(model.model_image_url || ''),
+    modelCover: normalizeString(model.model_cover_url || ''),
+  };
+}
+
+export async function readModelPublicMedia(modelId) {
+  const supabase = await resolveSupabaseClient();
+  const normalizedModelId = normalizeString(modelId);
+  if (!supabase || !normalizedModelId) return null;
+
+  const { data, error } = await supabase
+    .from(MODELS_TABLE)
+    .select('id, model_cover_url, model_type')
+    .eq('id', normalizedModelId)
+    .maybeSingle();
+
+  if (error) {
+    if (isSupabaseRelationMissingError(error) || isSupabaseColumnMissingError(error)) return null;
+    throw error;
+  }
+
+  return {
+    modelCover: normalizeString(data?.model_cover_url || ''),
+    modelType: normalizeString(data?.model_type || 'personal') || 'personal',
   };
 }
 
@@ -2885,6 +2909,44 @@ export async function saveOwnedCanonicalModelAvatar(file) {
   return mapSupabaseModel(data);
 }
 
+export async function saveOwnedCanonicalModelCover(file) {
+  const supabase = getSupabaseClient();
+  const model = await getOwnedCanonicalModel();
+  const user = await getCurrentSupabaseUser();
+  if (!supabase) throw new Error('MODEL_BACKEND_UNAVAILABLE');
+  if (!model?.id) throw new Error('CANONICAL_MODEL_REQUIRED');
+  if (!user?.id) throw new Error('AUTH_REQUIRED');
+
+  const uploaded = await uploadProfileImage({
+    file,
+    user,
+    kind:'cover',
+    supabase
+  });
+
+  const { error } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      model_cover_url:uploaded.publicUrl,
+      updated_at:new Date().toISOString()
+    })
+    .eq('id', model.id);
+
+  if (error) throw error;
+
+  await recordModelChangelogEvent(model, {
+    area: 'model.foundation.identity',
+    action: 'model_cover_changed',
+    title: 'Model header changed',
+    detail: 'Model public header image was updated.',
+  });
+  dispatchModelProjectionUpdated(model.id);
+  return {
+    ...model,
+    model_cover_url:uploaded.publicUrl
+  };
+}
+
 export async function resetOwnedCanonicalModelAvatar() {
   const supabase = getSupabaseClient();
   const model = await getOwnedCanonicalModel();
@@ -2923,6 +2985,35 @@ export async function resetOwnedCanonicalModelAvatar() {
   });
   dispatchModelProjectionUpdated(model.id);
   return mapSupabaseModel(data);
+}
+
+export async function resetOwnedCanonicalModelCover() {
+  const supabase = getSupabaseClient();
+  const model = await getOwnedCanonicalModel();
+  if (!supabase) throw new Error('MODEL_BACKEND_UNAVAILABLE');
+  if (!model?.id) throw new Error('CANONICAL_MODEL_REQUIRED');
+
+  const { error } = await supabase
+    .from(MODELS_TABLE)
+    .update({
+      model_cover_url:'',
+      updated_at:new Date().toISOString()
+    })
+    .eq('id', model.id);
+
+  if (error) throw error;
+
+  await recordModelChangelogEvent(model, {
+    area: 'model.foundation.identity',
+    action: 'model_cover_reset',
+    title: 'Model header reset',
+    detail: 'Model public header image was reset.',
+  });
+  dispatchModelProjectionUpdated(model.id);
+  return {
+    ...model,
+    model_cover_url:''
+  };
 }
 
 async function getModelById(modelId) {
@@ -2986,6 +3077,23 @@ export async function listPublishedModels() {
   if (!discoverableModels.length) return [];
 
   const discoverableModelIds = discoverableModels.map((model) => model.id).filter(Boolean);
+  const publicMediaResult = await supabase
+    .from(MODELS_TABLE)
+    .select('id, model_cover_url, model_type')
+    .in('id', discoverableModelIds);
+
+  if (
+    publicMediaResult.error
+    && !isSupabaseRelationMissingError(publicMediaResult.error)
+    && !isSupabaseColumnMissingError(publicMediaResult.error)
+  ) {
+    console.warn('[Neuroartan][Model] Public media projection unavailable for published models.', publicMediaResult.error);
+  }
+
+  const publicMediaByModel = new Map(
+    (!publicMediaResult.error && Array.isArray(publicMediaResult.data) ? publicMediaResult.data : [])
+      .map((media) => [normalizeString(media.id), media])
+  );
   const publicIdentityResult = await supabase
     .from(MODEL_FOUNDATION_TABLES.publicIdentities)
     .select(MODEL_PUBLIC_IDENTITY_SELECT_FIELDS)
@@ -3002,6 +3110,7 @@ export async function listPublishedModels() {
 
   return discoverableModels.map((model) => {
     const publicIdentity = publicIdentityByModel.get(model.id) || {};
+    const publicMedia = publicMediaByModel.get(model.id) || {};
     const displayName = normalizeString(
       publicIdentity.public_display_name
       || publicIdentity.display_name
@@ -3018,6 +3127,8 @@ export async function listPublishedModels() {
       public_display_name: normalizeString(publicIdentity.public_display_name || displayName),
       model_image_url: avatarUrl,
       public_avatar_url: avatarUrl,
+      model_cover_url: normalizeString(publicMedia.model_cover_url || ''),
+      model_type: normalizeString(publicMedia.model_type || 'personal'),
       public_identity_state: normalizeString(publicIdentity.public_identity_state || ''),
       public_visibility: normalizeString(publicIdentity.public_visibility || publicIdentity.public_visibility_state || model.model_visibility || ''),
     };

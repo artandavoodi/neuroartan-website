@@ -208,7 +208,8 @@
   font-weight:var(--body-2-weight);
   line-height:var(--body-2-line-height);
   letter-spacing:var(--body-2-tracking);
-  color:var(--text-secondary-color);
+  color:var(--text-color);
+  opacity:var(--state-opacity-full);
 }
 
 /* =============================================================================

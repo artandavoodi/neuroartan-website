@@ -1,18 +1,20 @@
 <!-- =============================================================================
-     01) PUBLIC PROFILE FEED SHELL BINDING
-     02) FEED LAYOUT AUTHORITY
-     03) FEED MAIN PROFILE SURFACE
-     04) FEED DISCOVERY SURFACE
+     01) PUBLIC PROFILE SHELL
+     02) PUBLIC PROFILE SHELL RAIL
+     03) PUBLIC PROFILE SHELL SURFACE
+     04) PUBLIC PROFILE WORKSPACE MOUNT
 ============================================================================= -->
-<section class="catalog-section" data-profile-shell data-profile-surface="public" aria-label="Public profile shell">
-  <div class="feed-layout" data-profile-public-feed-shell>
-    <div class="feed-main" data-profile-public-main>
-      <div class="profile-shell__mount" data-include="profile-public-header"></div>
-      <div class="profile-shell__mount" data-include="profile-public-sections"></div>
-    </div>
+<section class="profile-shell" data-profile-shell data-profile-surface="public" data-home-platform-theme aria-label="Public profile shell">
+  <div class="profile-shell__rail">
+    <div class="profile-shell__surface">
+      <div class="profile-shell__inner">
+        <!-- =====================================================================
+        04) PUBLIC PROFILE WORKSPACE MOUNT
+        ====================================================================== -->
+        <div class="profile-shell__mount" data-include="profile-public-sections"></div>
 
-    <aside class="feed-discovery" aria-label="Public profile discovery layer" data-profile-public-discovery>
-      <div class="profile-shell__mount" data-include="profile-public-footer"></div>
-    </aside>
+        <div data-include="sidebar-icon-overlay"></div>
+      </div>
+    </div>
   </div>
 </section>

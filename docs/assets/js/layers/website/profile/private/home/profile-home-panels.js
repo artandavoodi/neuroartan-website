@@ -72,6 +72,20 @@ function feedRoots() {
   return Array.from(document.querySelectorAll('[data-profile-home-feed]'));
 }
 
+function getPostsForFeedRoot(root, posts = []) {
+  if (root?.dataset.profilePublicPosts !== 'true') return posts;
+
+  const profileId = normalizeString(root.dataset.profilePublicProfileId);
+  const username = normalizeString(root.dataset.profilePublicUsername).replace(/^@/, '').toLowerCase();
+  if (!profileId && !username) return [];
+
+  return posts.filter((post) => {
+    const postProfileId = normalizeString(post.profileId);
+    const postUsername = normalizeString(post.username).replace(/^@/, '').toLowerCase();
+    return (profileId && postProfileId === profileId) || (username && postUsername === username);
+  });
+}
+
 function notificationRoots() {
   return Array.from(document.querySelectorAll('[data-profile-home-notifications]'));
 }
@@ -172,9 +186,10 @@ function renderFeed() {
     const empty = root.querySelector('[data-profile-home-feed-empty]');
     const loading = root.querySelector('[data-profile-home-feed-loading]');
     if (!(list instanceof HTMLElement) || !(empty instanceof HTMLElement)) return;
-    list.innerHTML = STATE.feedLoading ? '' : posts.map((post) => renderFeedPost(post)).join('');
+    const rootPosts = getPostsForFeedRoot(root, posts);
+    list.innerHTML = STATE.feedLoading ? '' : rootPosts.map((post) => renderFeedPost(post)).join('');
     if (loading instanceof HTMLElement) loading.hidden = !STATE.feedLoading;
-    empty.hidden = STATE.feedLoading || posts.length > 0;
+    empty.hidden = STATE.feedLoading || rootPosts.length > 0;
   });
 }
 
@@ -372,9 +387,16 @@ subscribeProfileFilters((state) => {
 });
 
 document.addEventListener('fragment:mounted', (event) => {
-  if (!['profile-private-home-feed', 'profile-private-home-notifications', 'profile-private-home-messaging'].includes(event?.detail?.name)) return;
+  if (![
+    'profile-private-home-feed',
+    'profile-private-home-notifications',
+    'profile-private-home-messaging',
+    'profile-public-posts'
+  ].includes(event?.detail?.name)) return;
   renderAll();
 });
+
+document.addEventListener('profile:public-posts-context-changed', renderFeed);
 
 window.addEventListener('neuroartan:supabase-ready', () => {
   void loadFeed();

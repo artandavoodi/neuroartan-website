@@ -19,6 +19,10 @@
   gap:var(--spacing-md);
   min-width:0;
   padding:var(--spacing-lg) var(--spacing-none);
+  border-bottom:0;
+}
+
+.profile-home-panel__item:not(:last-child){
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
 

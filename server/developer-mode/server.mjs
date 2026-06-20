@@ -1,8 +1,9 @@
 /* =============================================================================
    00) FILE INDEX
    01) IMPORTS
-   02) SERVER
-   03) END OF FILE
+   02) PUBLIC PROFILE ROUTE FALLBACK
+   03) SERVER
+   04) END OF FILE
 ============================================================================= */
 
 /* =============================================================================
@@ -15,7 +16,64 @@ import { serveStatic } from './static-server.mjs';
 import { createRuntimeManager } from './runtime-manager.mjs';
 
 /* =============================================================================
-   02) SERVER
+   02) PUBLIC PROFILE ROUTE FALLBACK
+============================================================================= */
+
+const PUBLIC_PROFILE_ROUTE_PROTECTED_SEGMENTS = new Set([
+  '404',
+  'about',
+  'admin',
+  'api',
+  'assets',
+  'brand',
+  'company',
+  'contact',
+  'cookie',
+  'cookies',
+  'css',
+  'docs',
+  'feed',
+  'home',
+  'index',
+  'js',
+  'legal',
+  'login',
+  'model',
+  'models',
+  'privacy',
+  'profile',
+  'profiles',
+  'publications',
+  'registry',
+  'robots.txt',
+  'settings',
+  'signin',
+  'signup',
+  'terms'
+]);
+
+function isPublicProfileRouteFallback(url) {
+  if (url.pathname === '/' || url.pathname.includes('.')) {
+    return false;
+  }
+
+  const segments = url.pathname.split('/').filter(Boolean);
+  if (segments.length !== 1) {
+    return false;
+  }
+
+  return !PUBLIC_PROFILE_ROUTE_PROTECTED_SEGMENTS.has(segments[0].toLowerCase());
+}
+
+function createPublicProfileFallbackUrl(url) {
+  const fallbackUrl = new URL(url.href);
+  fallbackUrl.pathname = '/404.html';
+  fallbackUrl.search = url.search;
+  return fallbackUrl;
+}
+
+/* =============================================================================
+   03) SERVER
 ============================================================================= */
 /* -----------------------------------------------------------------------------
    RUNTIME BOOTSTRAP
@@ -33,7 +91,11 @@ const server = http.createServer(async (request, response) => {
     return;
   }
 
-  await serveStatic(request, response, url);
+  await serveStatic(
+    request,
+    response,
+    isPublicProfileRouteFallback(url) ? createPublicProfileFallbackUrl(url) : url
+  );
 });
 
 /* -----------------------------------------------------------------------------
@@ -78,5 +140,5 @@ server.listen(developerModeConfig.port, developerModeConfig.host, () => {
 });
 
 /* =============================================================================
-   03) END OF FILE
+   04) END OF FILE
 ============================================================================= */

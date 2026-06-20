@@ -121,6 +121,10 @@
   gap:var(--spacing-md);
   min-width:var(--spacing-none);
   padding-block:var(--spacing-sm);
+  border-block-end:0;
+}
+
+.model-source-vault__package:not(:last-child){
   border-block-end:var(--border-width-hairline) solid var(--border-color);
 }
 

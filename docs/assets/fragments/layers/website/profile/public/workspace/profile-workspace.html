@@ -1,0 +1,26 @@
+<!-- =============================================================================
+     01) PUBLIC PROFILE WORKSPACE
+     02) REGISTERED PUBLIC PANEL STACK
+============================================================================= -->
+<div class="profile-workspace__content" data-profile-workspace-content>
+  <div data-include="profile-public-header"></div>
+
+  <nav
+    class="profile-private-hero__tabs profile-workspace__tabs"
+    data-profile-workspace-tabs
+    aria-label="Public profile sections"
+    hidden
+  ></nav>
+
+  <section class="profile-workspace__panel" data-profile-section-panel="posts" aria-label="Posts">
+    <div data-include="profile-public-posts"></div>
+  </section>
+
+  <section class="profile-workspace__panel" data-profile-section-panel="model" aria-label="Model" hidden>
+    <div data-include="profile-public-model"></div>
+  </section>
+
+  <section class="profile-workspace__panel" data-profile-section-panel="highlights" aria-label="Highlights" hidden>
+    <div data-include="profile-public-highlights"></div>
+  </section>
+</div>

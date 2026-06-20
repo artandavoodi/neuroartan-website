@@ -286,6 +286,9 @@
         || name === 'profile-private-sidebar'
         || name === 'profile-private-right-toolbar'
         || name === 'profile-private-workspace'
+        || name === 'profile-public-shell'
+        || name === 'profile-public-sections'
+        || name === 'profile-public-workspace'
       ) {
         applyCurrentState();
       }

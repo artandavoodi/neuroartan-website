@@ -83,6 +83,7 @@ function renderPrivateSections(root, state, navigationState) {
     'model-discovery': 'model-management',
     'model-settings': 'model-management'
   };
+
   const effectiveSection = effectiveSectionMap[navigationState.section] || navigationState.section;
 
   root.querySelectorAll('[data-profile-section-panel]').forEach((panel) => {

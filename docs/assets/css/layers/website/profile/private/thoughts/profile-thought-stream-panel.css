@@ -53,6 +53,10 @@
   border-top:var(--border-width-hairline) solid var(--data-surface-border);
 }
 
+.profile-thought-stream__entry:first-child{
+  border-top:none;
+}
+
 .profile-thought-stream__entry-text{
   white-space:pre-wrap;
   color:var(--text-color);

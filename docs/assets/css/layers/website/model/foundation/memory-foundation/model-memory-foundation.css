@@ -80,6 +80,10 @@
   gap:var(--spacing-md);
   min-width:0;
   padding-block:var(--spacing-md);
+  border-bottom:0;
+}
+
+.model-memory-foundation__class:not(:last-child){
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
 
@@ -206,6 +210,10 @@
   gap:var(--spacing-sm);
   min-width:0;
   padding-block:var(--spacing-sm);
+  border-bottom:0;
+}
+
+.model-memory-foundation__stream:not(:last-child){
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
 
@@ -234,6 +242,10 @@
   gap:var(--spacing-2xs);
   min-width:0;
   padding-block:var(--spacing-md);
+  border-bottom:0;
+}
+
+.model-memory-foundation__item:not(:last-child){
   border-bottom:var(--border-width-hairline) solid var(--border-color);
 }
 

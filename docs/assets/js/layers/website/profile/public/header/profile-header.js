@@ -61,35 +61,6 @@ function setFollowMenuOpen(root, open) {
   }
 }
 
-function applyBadgeTone(badge, tone) {
-  if (!(badge instanceof HTMLElement)) return;
-
-  badge.classList.remove('ui-badge--success', 'ui-badge--warning', 'ui-badge--danger', 'ui-badge--info');
-
-  if (tone) {
-    badge.classList.add(`ui-badge--${tone}`);
-  }
-}
-
-function resolvePublicBadgeTone(state) {
-  switch (state.routeOutcome) {
-    case 'found_renderable':
-      return 'success';
-    case 'invalid_username':
-    case 'restricted_username':
-    case 'not_found':
-    case 'error':
-      return 'danger';
-    case 'reserved_but_hidden':
-    case 'reserved_but_not_ready':
-    case 'reserved_but_disabled':
-    case 'loading':
-      return 'warning';
-    default:
-      return '';
-  }
-}
-
 function renderAvatar(root, state) {
   const image = root.querySelector('[data-profile-avatar-image]');
   const placeholder = root.querySelector('[data-profile-avatar-placeholder]');
@@ -127,23 +98,6 @@ function renderCover(root, state) {
   cover.dataset.profilePublicCoverState = 'empty';
 }
 
-function isProtectedPublicState(state) {
-  return !['found_renderable', 'loading'].includes(state.routeOutcome || '');
-}
-
-function renderProtectedNotice(root, state) {
-  const notice = root.querySelector('[data-profile-protected-notice]');
-  if (!(notice instanceof HTMLElement)) return;
-
-  const protectedState = isProtectedPublicState(state);
-  notice.hidden = !protectedState;
-
-  if (!protectedState) return;
-
-  setText(root, '[data-profile-protected-title]', state.stateBadgeLabel || 'Protected profile');
-  setText(root, '[data-profile-protected-copy]', state.stateLine || 'This profile is not publicly available.');
-}
-
 /* =============================================================================
    03) PUBLIC PROFILE HEADER RENDER
    ============================================================================= */
@@ -153,37 +107,14 @@ function renderPublicHeader(state = getProfileRuntimeState()) {
     root.dataset.profileViewerState = 'public';
     root.dataset.profileStateKey = state.stateKey;
 
-    const badge = root.querySelector('[data-profile-header-state-badge]');
-    if (badge) {
-      badge.textContent = state.stateBadgeLabel;
-      applyBadgeTone(badge, resolvePublicBadgeTone(state));
-    }
-
-    setText(root, '[data-profile-header-state-line]', state.stateLine);
     setText(root, '[data-profile-display-name]', state.displayName);
     setText(root, '[data-profile-username]', state.username.normalized ? `@${state.username.normalized}` : '@username');
-    setText(root, '[data-profile-route-display]', state.publicRouteDisplay || 'neuroartan.com/username');
     setText(root, '[data-profile-summary]', state.summary);
-    setText(root, '[data-profile-primary-action-label]', state.primaryActionLabel);
-    setText(root, '[data-profile-verified-label]', state.verificationLabel);
-    setText(root, '[data-profile-creator-line]', state.creatorLine);
-    setText(root, '[data-profile-joined-year]', state.joinedYearLabel);
-    setText(root, '[data-profile-interaction-mode]', state.interactionModeLabel);
-    setText(root, '[data-profile-availability-state]', state.availabilityLabel);
-    setText(root, '[data-profile-legacy-state]', state.legacyStateLabel);
-    setText(root, '[data-profile-trust-value]', state.trustValue);
-    setText(root, '[data-profile-trust-copy]', state.trustCopy);
-    setText(root, '[data-profile-availability-value]', state.availabilityValue);
-    setText(root, '[data-profile-availability-copy]', state.availabilityCopy);
-    setText(root, '[data-profile-route-metric-value]', state.routeOutcomeValue);
-    setText(root, '[data-profile-route-metric-copy]', state.visibilityCopy || state.routeOutcomeCopy);
 
     setHidden(root, '[data-profile-verified-block]', !state.verificationVisible);
-    setHidden(root, '[data-profile-creator-line]', !state.creatorLine);
 
     renderAvatar(root, state);
     renderCover(root, state);
-    renderProtectedNotice(root, state);
 
     const copyAction = root.querySelector('[data-profile-action="copy-link"]');
     setControlDisabled(copyAction, !state.publicRouteUrl);
@@ -214,6 +145,8 @@ async function renderPublicFollowControl(root, state = getProfileRuntimeState())
   try {
     const graph = await getProfileSocialGraphState(profileId);
     root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
+    setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
+    setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
     button.dataset.profileAction = graph.viewerFollowing ? 'unfollow-profile' : 'follow-profile';
 
     if (label) {

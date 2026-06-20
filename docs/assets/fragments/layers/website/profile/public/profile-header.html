@@ -1,8 +1,6 @@
 <!-- =============================================================================
      01) PUBLIC PROFILE HEADER
-     02) PUBLIC PROFILE HEADER SURFACE
-     03) PUBLIC PROFILE IDENTITY BLOCK
-     04) PUBLIC PROFILE METRICS
+     02) OWNER-APPROVED IDENTITY AND SOCIAL CONTROLS
 ============================================================================= -->
 <section class="profile-header" data-profile-header data-profile-surface="public" aria-label="Public profile header">
   <div class="profile-header__surface">
@@ -11,109 +9,49 @@
     <div class="profile-header__identity-block">
       <div class="profile-header__avatar-shell">
         <div class="profile-header__avatar-surface">
-          <img class="profile-header__avatar-image" data-profile-avatar-image src="/assets/images/layers/website/sections/home/hero/Salim%20Sky.jpg" alt="" aria-hidden="true">
+          <img class="profile-header__avatar-image" data-profile-avatar-image alt="">
         </div>
       </div>
 
       <div class="profile-header__copy">
-        <div class="profile-header__eyebrow-row">
-          <span class="ui-badge ui-badge--outline" data-profile-header-state-badge>Resolving</span>
-          <p class="profile-header__state-line" data-profile-header-state-line>Preparing the company-domain public identity surface.</p>
-        </div>
-
-        <div class="profile-header__identity">
-          <div class="profile-header__identity-heading">
-            <div class="profile-header__name-block">
-              <div class="profile-header__display-row">
-                <h1 class="profile-header__display-name" data-profile-display-name>Public Profile</h1>
-                <span class="profile-header__verified" data-profile-verified-block hidden>
-                  <img
-                    src="/registry/icons/public/assets/core/identity/trust/verified.svg"
-                    alt=""
-                    class="profile-header__verified-icon ui-icon-sm"
-                    aria-hidden="true">
-                </span>
-              </div>
-
-              <div class="profile-header__identity-line">
-                <p class="profile-header__username" data-profile-username>@username</p>
-                <span class="profile-header__identity-separator" aria-hidden="true">•</span>
-                <p class="profile-header__route" data-profile-route-display>neuroartan.com/username</p>
-              </div>
+        <div class="profile-header__identity-heading">
+          <div class="profile-header__name-block">
+            <div class="profile-header__display-row">
+              <h1 class="profile-header__display-name" data-profile-display-name>Public Profile</h1>
+              <span class="profile-header__verified" data-profile-verified-block hidden>
+                <img
+                  src="/registry/icons/public/assets/core/identity/trust/verified.svg"
+                  alt=""
+                  class="profile-header__verified-icon ui-icon-sm"
+                  aria-hidden="true">
+              </span>
             </div>
+            <p class="profile-header__username" data-profile-username>@username</p>
+          </div>
 
-            <div class="profile-header__follow-control" data-profile-follow-control hidden>
-              <button class="ui-button ui-button--secondary profile-header__follow-button" type="button" data-profile-action="follow-profile" data-profile-follow-primary>
-                <span data-profile-follow-label>Follow</span>
-              </button>
+          <div class="profile-header__follow-control" data-profile-follow-control hidden>
+            <button class="ui-button ui-button--secondary profile-header__follow-button" type="button" data-profile-action="follow-profile" data-profile-follow-primary>
+              <span data-profile-follow-label>Follow</span>
+            </button>
 
-              <button class="ui-icon-button profile-header__follow-menu-button" type="button" aria-label="Open profile actions" aria-expanded="false" data-profile-follow-menu-toggle>
-                <img class="ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/core/interface/navigation/drop-down.svg" alt="" aria-hidden="true">
-              </button>
+            <button class="ui-icon-button profile-header__follow-menu-button" type="button" aria-label="Open profile actions" aria-expanded="false" data-profile-follow-menu-toggle>
+              <img class="ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/core/interface/navigation/drop-down.svg" alt="" aria-hidden="true">
+            </button>
 
-              <div class="profile-header__follow-menu" data-profile-follow-menu hidden>
-                <button class="profile-header__follow-menu-item" type="button" data-profile-action="subscribe-profile" data-profile-subscribe-action>Subscribe</button>
-                <button class="profile-header__follow-menu-item" type="button" data-profile-action="view-profile-models">View models</button>
-                <button class="profile-header__follow-menu-item" type="button" data-profile-action="copy-link">Copy profile link</button>
-              </div>
+            <div class="profile-header__follow-menu" data-profile-follow-menu hidden>
+              <button class="profile-header__follow-menu-item" type="button" data-profile-action="subscribe-profile" data-profile-subscribe-action>Subscribe</button>
+              <button class="profile-header__follow-menu-item" type="button" data-profile-action="copy-link">Copy profile link</button>
             </div>
           </div>
         </div>
 
-        <div class="profile-header__trust-row">
-          <p class="profile-header__creator-line" data-profile-creator-line hidden>Artan Davoodi · Founder</p>
-          <div class="profile-header__meta-list" aria-label="Public profile trust metadata">
-            <span class="profile-header__meta-item" data-profile-joined-year>Joined year pending</span>
-            <span class="profile-header__meta-item" data-profile-interaction-mode>Interaction pending</span>
-            <span class="profile-header__meta-item" data-profile-availability-state>Availability pending</span>
-            <span class="profile-header__meta-item" data-profile-legacy-state>State pending</span>
-          </div>
-        </div>
+        <p class="profile-header__summary" data-profile-summary></p>
 
-        <p class="profile-header__summary" data-profile-summary>
-          The public continuity surface is being resolved through Neuroartan’s canonical username and route system.
-        </p>
-
-        <div class="profile-header__actions">
-          <button class="ui-button ui-button--secondary" type="button" data-profile-action="copy-link">
-            <span data-profile-primary-action-label>Copy Link</span>
-          </button>
-
-          <a class="ui-button ui-button--ghost" href="/">Back to Neuroartan</a>
+        <div class="profile-header__stats" aria-label="Profile social graph">
+          <span><strong data-profile-followers-count>0</strong> Followers</span>
+          <span><strong data-profile-following-count>0</strong> Following</span>
         </div>
       </div>
-    </div>
-
-    <article class="profile-header__protected" data-profile-protected-notice hidden>
-      <div class="profile-header__protected-icon" aria-hidden="true">
-        <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/legal/privacy/privacy.svg" alt="">
-      </div>
-      <div class="profile-header__protected-copy">
-        <h2 class="profile-header__protected-title" data-profile-protected-title>Protected profile</h2>
-        <p class="profile-header__protected-text" data-profile-protected-copy>
-          This profile exists, but its owner has limited public visibility.
-        </p>
-      </div>
-    </article>
-
-    <div class="profile-header__metrics">
-      <article class="profile-header__metric ui-card">
-        <p class="profile-header__metric-label">Trust</p>
-        <p class="profile-header__metric-value" data-profile-trust-value>Pending</p>
-        <p class="profile-header__metric-copy" data-profile-trust-copy>Verification data is loading.</p>
-      </article>
-
-      <article class="profile-header__metric ui-card">
-        <p class="profile-header__metric-label">Availability</p>
-        <p class="profile-header__metric-value" data-profile-availability-value>Pending</p>
-        <p class="profile-header__metric-copy" data-profile-availability-copy>Interaction availability is pending.</p>
-      </article>
-
-      <article class="profile-header__metric ui-card">
-        <p class="profile-header__metric-label">Route</p>
-        <p class="profile-header__metric-value" data-profile-route-metric-value>Resolving</p>
-        <p class="profile-header__metric-copy" data-profile-route-metric-copy>Canonical route state is loading.</p>
-      </article>
     </div>
   </div>
 </section>

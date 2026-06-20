@@ -22,13 +22,17 @@ const RUNTIME = (window.__NEUROARTAN_PROFILE_NAVIGATION__ ||= {
    ============================================================================= */
 
 const MODEL_SECTIONS = new Set(['model', 'model-foundation', 'model-training', 'model-personalization', 'model-sources', 'model-memory', 'model-voice', 'model-readiness', 'model-runtime', 'model-discovery', 'model-settings']);
-const VALID_SECTIONS = new Set(['home', 'feed', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'organizations', 'settings', ...MODEL_SECTIONS]);
+const VALID_SECTIONS = new Set(['home', 'feed', 'profile', 'overview', 'posts', 'thoughts', 'dashboard', 'organizations', 'settings', 'highlights', ...MODEL_SECTIONS]);
 const VALID_SETTINGS_PANES = new Set(['identity', 'privacy', 'password', 'verification']);
 const VALID_DASHBOARD_PANES = new Set(['overview', 'summary', 'metrics', 'graph']);
 const VALID_MODEL_PANES = new Set(['overview', 'identity', 'consent', 'sources', 'route', 'protocol', 'datasets', 'knowledge-base', 'logics', 'provenance', 'evaluation', 'cognition', 'communication', 'memory', 'personality', 'emotion', 'behavior', 'authorized', 'documents', 'thoughts', 'voice', 'private', 'continuity', 'retrieval', 'boundaries', 'samples', 'profile', 'activation', 'state', 'checks', 'blockers', 'history', 'directory', 'trending', 'expertise', 'monetization', 'eligibility', 'reputation', 'provider', 'routing', 'deployment', 'preferences', 'changelog', 'access', 'visibility']);
 
 function isPrivateProfileSurface() {
   return document.body?.dataset.profilePage === 'private';
+}
+
+function isPublicProfileSurface() {
+  return document.body?.dataset.profilePage === 'public';
 }
 
 function normalizeSection(value) {
@@ -75,6 +79,11 @@ function normalizeSection(value) {
       return 'profile';
     case 'posts':
       return 'posts';
+    case 'model-management':
+    case 'public-model':
+      return 'model-management';
+    case 'highlights':
+      return 'highlights';
     case 'thoughts':
     case 'thought-bank':
       return 'thoughts';
@@ -146,6 +155,14 @@ function createDefaultState() {
   const pathname = String(window.location.pathname || '').toLowerCase();
 
   if (pathname.includes('/model')) {
+    if (isPublicProfileSurface()) {
+      return buildNavigationState(
+        'model-management',
+        'identity',
+        'overview',
+        'overview'
+      );
+    }
     if (RUNTIME.state && MODEL_SECTIONS.has(RUNTIME.state.section)) {
       return buildNavigationState(
         RUNTIME.state.section,
@@ -157,6 +174,15 @@ function createDefaultState() {
 
     return buildNavigationState(
       'model-foundation',
+      'identity',
+      'overview',
+      'overview'
+    );
+  }
+
+  if (isPublicProfileSurface()) {
+    return buildNavigationState(
+      'posts',
       'identity',
       'overview',
       'overview'
@@ -175,6 +201,7 @@ function createDefaultState() {
 
 function getRouteContext() {
   const pathname = String(window.location.pathname || '').toLowerCase();
+  if (isPublicProfileSurface()) return 'public-profile';
   if (pathname.includes('/dashboard')) return 'dashboard';
   if (pathname.includes('/settings')) return 'settings';
   if (pathname.includes('/feed')) return 'feed';
@@ -186,6 +213,7 @@ function constrainStateToRoute(state) {
   const routeContext = getRouteContext();
   const homeSections = new Set(['home']);
   const profileSections = new Set(['profile', 'posts', 'thoughts', 'organizations']);
+  const publicProfileSections = new Set(['posts', 'model-management', 'highlights']);
 
   if (routeContext === 'home' && !homeSections.has(state.section)) {
     return createDefaultState();
@@ -204,6 +232,10 @@ function constrainStateToRoute(state) {
   }
 
   if (routeContext === 'model' && !MODEL_SECTIONS.has(state.section)) {
+    return createDefaultState();
+  }
+
+  if (routeContext === 'public-profile' && !publicProfileSections.has(state.section)) {
     return createDefaultState();
   }
 
@@ -326,7 +358,7 @@ function parseHash() {
 }
 
 function writeHash(state) {
-  if (!isPrivateProfileSurface()) return;
+  if (!isPrivateProfileSurface() && !isPublicProfileSurface()) return;
 
   const hash = buildHashRoute(state);
 
@@ -414,12 +446,12 @@ function initProfileNavigation() {
   setState(parseHash(), { writeHash: false });
 
   window.addEventListener('hashchange', () => {
-    if (!isPrivateProfileSurface()) return;
+    if (!isPrivateProfileSurface() && !isPublicProfileSurface()) return;
     setState(parseHash());
   });
 
   document.addEventListener('profile:navigate-request', (event) => {
-    if (!isPrivateProfileSurface()) return;
+    if (!isPrivateProfileSurface() && !isPublicProfileSurface()) return;
 
     const detail = event instanceof CustomEvent ? event.detail || {} : {};
     setState({

@@ -42,6 +42,14 @@ const PROFILE_CONTEXT_TAB_GROUPS = {
       { key: 'organizations', label: 'Organizations', section: 'organizations' }
     ]
   },
+  publicProfile: {
+    label: 'Public profile sections',
+    tabs: [
+      { key: 'posts', label: 'Posts', section: 'posts' },
+      { key: 'model', label: 'Model', section: 'model-management' },
+      { key: 'highlights', label: 'Highlights', section: 'highlights' }
+    ]
+  },
   dashboard: {
     label: 'Dashboard sections',
     tabs: [
@@ -71,6 +79,8 @@ const PROFILE_CONTEXT_TAB_ICONS = Object.freeze({
   posts: '/registry/icons/public/assets/layers/website/profile/actions/posts.svg',
   thoughts: '/registry/icons/public/assets/layers/website/profile/actions/thoughts.svg',
   models: '/registry/icons/public/assets/layers/website/profile/actions/models.svg',
+  model: '/registry/icons/public/assets/core/cognition/model/model.svg',
+  highlights: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-panel.svg',
   organizations: '/registry/icons/public/assets/layers/website/profile/actions/organizations.svg',
   summary: '/registry/icons/public/assets/layers/website/profile/actions/profile-overview-panel.svg',
   metrics: '/registry/icons/public/assets/layers/website/profile/actions/profile-dashboard-metrics-panel.svg',
@@ -93,6 +103,7 @@ import {
 } from '../shell/profile-runtime.js';
 import {
   getProfileNavigationState,
+  requestProfileNavigation,
   subscribeProfileNavigation
 } from '../navigation/profile-navigation.js';
 import {
@@ -110,8 +121,15 @@ function getHeroRoots() {
   return Array.from(document.querySelectorAll('[data-profile-private-hero]'));
 }
 
+function isPublicProfileSurface() {
+  return document.body?.dataset.profilePage === 'public';
+}
+
 function getProfileTabRoots() {
-  return Array.from(document.querySelectorAll('[data-profile-hero-tabs]'));
+  const selector = isPublicProfileSurface()
+    ? '[data-profile-workspace-tabs]'
+    : '[data-profile-hero-tabs]';
+  return Array.from(document.querySelectorAll(selector));
 }
 
 function setText(root, selector, value) {
@@ -153,6 +171,8 @@ function setImage(root, selector, src, alt = '') {
 }
 
 function getTabGroupKey(navigationState = getProfileNavigationState()) {
+  if (isPublicProfileSurface()) return 'publicProfile';
+
   switch (navigationState.section) {
     case 'feed':
       return 'feed';
@@ -193,6 +213,11 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
 }
 
 function getActiveTabKey(navigationState = getProfileNavigationState()) {
+  if (isPublicProfileSurface()) {
+    if (navigationState.section === 'model-management') return 'model';
+    return navigationState.section === 'highlights' ? 'highlights' : 'posts';
+  }
+
   switch (navigationState.section) {
     case 'feed':
       return 'feed';
@@ -280,7 +305,10 @@ function scheduleProfileHeroLayoutSync(root = getHeroRoot()) {
 ============================================================================= */
 function renderProfilePrivateHero(state = getProfileRuntimeState()) {
   const roots = getHeroRoots();
-  if (!roots.length) return;
+  if (!roots.length) {
+    renderProfilePrivateHeroTabs(getProfileNavigationState());
+    return;
+  }
 
   roots.forEach((root) => {
     const profile = state.profile || {};
@@ -564,14 +592,12 @@ function bindProfileWorkspaceTabs() {
     if (!(tab instanceof HTMLElement)) return;
 
     event.preventDefault();
-    document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-      detail: {
-        section: tab.getAttribute('data-profile-tab-section') || 'profile',
-        settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
-        dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined,
-        modelPane: tab.getAttribute('data-profile-tab-model-pane') || undefined
-      }
-    }));
+    requestProfileNavigation({
+      section: tab.getAttribute('data-profile-tab-section') || 'profile',
+      settingsPane: tab.getAttribute('data-profile-tab-settings-pane') || undefined,
+      dashboardPane: tab.getAttribute('data-profile-tab-dashboard-pane') || undefined,
+      modelPane: tab.getAttribute('data-profile-tab-model-pane') || undefined
+    });
   });
 }
 
@@ -596,7 +622,12 @@ function initProfilePrivateHero() {
   subscribeProfileNavigation(renderProfilePrivateHeroTabs);
 
   document.addEventListener('fragment:mounted', (event) => {
-    if (event?.detail?.name !== 'profile-private-hero' && event?.detail?.name !== 'profile-private-workspace') return;
+    if (![
+      'profile-private-hero',
+      'profile-private-workspace',
+      'profile-public-sections',
+      'profile-public-workspace'
+    ].includes(event?.detail?.name || '')) return;
     bindProfileWorkspaceTabs();
     bindProfilePrivateHeroActions();
     renderProfilePrivateHero();

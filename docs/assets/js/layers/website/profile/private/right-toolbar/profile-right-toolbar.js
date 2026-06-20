@@ -498,6 +498,10 @@ function toolbarRoots(){
   return Array.from(document.querySelectorAll('[data-profile-right-toolbar]'));
 }
 
+function isPublicProfileSurface() {
+  return document.body?.dataset.profilePage === 'public';
+}
+
 function resolveActiveSourceVaultSourceType(){
   const publishedSourceType = String(
     document.documentElement.dataset.modelSourceVaultSourceType
@@ -552,6 +556,8 @@ function refreshRightToolbarActions(){
 }
 
 function resolveActionKeys(state = getProfileNavigationState()){
+  if (isPublicProfileSurface()) return [];
+
   if (state.section === 'model-personalization') {
     return MODEL_PERSONALIZATION_PANE_ACTIONS[resolveModelPersonalizationPane(state)];
   }

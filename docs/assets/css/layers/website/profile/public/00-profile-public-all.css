@@ -12,6 +12,7 @@
    02. PUBLIC PROFILE CORE
    ============================================================================= */
 
+@import url('../../model/management/model-management.css');
 @import url('./shell/profile-shell.css');
 @import url('./header/profile-header.css');
 @import url('./menu/profile-menu.css');

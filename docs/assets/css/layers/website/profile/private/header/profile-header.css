@@ -227,8 +227,15 @@
   display:block;
   position:relative;
   border:var(--profile-header-border);
-  background:var(--profile-header-avatar-bg);
   overflow:hidden;
+}
+
+.profile-header__avatar-surface:not(.model-management__avatar){
+  background:var(--profile-header-avatar-bg);
+}
+
+.profile-header__avatar-surface.model-management__avatar{
+  background:transparent;
 }
 
 .profile-header__avatar-image{
@@ -332,7 +339,6 @@
   .profile-header__avatar-surface{
     width:calc(5.5rem * var(--accessibility-icon-scale));
     height:calc(5.5rem * var(--accessibility-icon-scale));
-    background:transparent;
     position:relative;
   }
 

@@ -120,6 +120,70 @@ function isVerifiedEntity(model = {}) {
   return /verified|governed|self-authored/i.test(trust);
 }
 
+function isVerifiedFeedPost(post = {}) {
+  const directStatus = [
+    post.verified,
+    post.profile_verified,
+    post.author_profile_verified,
+    post.public_profile?.profile_verified,
+    post.author?.profile_verified,
+    post.profile?.profile_verified
+  ].some(Boolean);
+
+  const verificationStatus = [
+    post.verification_status,
+    post.public_verification_status,
+    post.author_verification_status,
+    post.author_public_verification_status,
+    post.public_profile?.verification_status,
+    post.public_profile?.public_verification_status,
+    post.author?.verification_status,
+    post.author?.public_verification_status,
+    post.profile?.verification_status,
+    post.profile?.public_verification_status
+  ].map((value) => normalizeString(value).toLowerCase());
+
+  if (directStatus || verificationStatus.includes('verified')) return true;
+
+  const postUsername = normalizeString(post.username).toLowerCase();
+  const postRoute = normalizeString(post.publicRoute || post.href).toLowerCase();
+  const postProfileId = normalizeString(post.profile_id || post.author_profile_id || post.profileId || post.authorProfileId).toLowerCase();
+  const postAuthUserId = normalizeString(post.auth_user_id || post.author_auth_user_id || post.authUserId || post.authorAuthUserId).toLowerCase();
+  const postLabel = normalizeString(post.entityLabel || post.display_name || post.author_display_name).toLowerCase();
+
+  return getPublicModels().some((model) => {
+    const profile = model.public_profile || {};
+    const modelVerified = [
+      model.verified,
+      model.profile_verified,
+      model.public_profile?.profile_verified,
+      profile.profile_verified
+    ].some(Boolean);
+    const modelStatus = [
+      model.verification_status,
+      model.public_verification_status,
+      profile.verification_status,
+      profile.public_verification_status
+    ].map((value) => normalizeString(value).toLowerCase());
+    const verified = modelVerified || modelStatus.includes('verified');
+    if (!verified) return false;
+
+    const modelUsername = normalizeString(profile.public_username || profile.username || model.username).toLowerCase();
+    const modelRoute = normalizeString(profile.public_route_path || model.page_route || model.href).toLowerCase();
+    const modelProfileId = normalizeString(profile.id || profile.profile_id || model.profile_id || model.public_profile_id).toLowerCase();
+    const modelAuthUserId = normalizeString(profile.auth_user_id || model.auth_user_id).toLowerCase();
+    const modelLabel = normalizeString(profile.public_display_name || profile.display_name || model.display_name || model.search_title).toLowerCase();
+
+    return Boolean(
+      (postUsername && modelUsername && postUsername === modelUsername) ||
+      (postRoute && modelRoute && postRoute === modelRoute) ||
+      (postProfileId && modelProfileId && postProfileId === modelProfileId) ||
+      (postAuthUserId && modelAuthUserId && postAuthUserId === modelAuthUserId) ||
+      (postLabel && modelLabel && postLabel === modelLabel)
+    );
+  });
+}
+
 function getCurrentUser() {
   return FEED_PAGE_STATE.feedAuthor?.user || null;
 }
@@ -310,6 +374,7 @@ function renderFeedPost(post = {}) {
   const avatar = normalizeString(post.avatar);
   const publicProfileRoute = normalizeString(post.publicRoute || post.href || '/pages/profiles/index.html');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
+  const verified = isVerifiedFeedPost(post);
   const renderAction = (action, label, pressed = false) => {
     const icon = FEED_POST_ACTION_ICONS[action] || '';
     const countKey = action === 'save' ? 'bookmark' : action === 'reply' ? 'reply' : action;
@@ -334,7 +399,7 @@ function renderFeedPost(post = {}) {
         <div class="feed-post__identity-copy">
           <div class="feed-post__identity-row">
             <h2 class="feed-post__entity"><a class="feed-post__profile-link" href="${escapeHtml(publicProfileRoute)}">${escapeHtml(post.entityLabel || 'Entity')}</a></h2>
-            ${post.verified ? `
+            ${verified ? `
               <span class="feed-post__badge" aria-label="Verified entity">
                 <img class="feed-post__badge-icon" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
               </span>

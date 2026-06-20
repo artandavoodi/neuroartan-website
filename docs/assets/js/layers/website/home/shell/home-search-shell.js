@@ -449,6 +449,39 @@ function getLiveSearchShellRoot() {
   return document.querySelector('#home-search-shell');
 }
 
+async function ensureHomeSearchShellRoot() {
+  const existingRoot = getLiveSearchShellRoot();
+  if (existingRoot) return existingRoot;
+
+  let mount = document.querySelector('[data-home-search-shell-mount], #home-search-shell-mount');
+  if (!(mount instanceof HTMLElement)) {
+    mount = document.createElement('div');
+    mount.id = 'home-search-shell-mount';
+    mount.setAttribute('data-home-search-shell-mount', '');
+    document.body.appendChild(mount);
+  }
+
+  try {
+    const response = await fetch('/assets/fragments/layers/website/home/shell/home-search-shell.html', {
+      cache: 'no-store',
+      credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to load home search shell fragment: HTTP ${response.status}`);
+    }
+
+    mount.innerHTML = await response.text();
+    document.dispatchEvent(new CustomEvent('fragment:mounted', {
+      detail: { name:'home-search-shell', root:mount }
+    }));
+    return getLiveSearchShellRoot();
+  } catch (error) {
+    console.error('[home-search-shell] Failed to mount universal search shell.', error);
+    return null;
+  }
+}
+
 function dispatchHomeSearchEvent(name, detail = {}) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
 }
@@ -666,6 +699,13 @@ function getSearchScopeLabel(scope = '') {
 function getActiveModelLabel() {
   const activeModel = getActiveModelState().activeModel;
   return activeModel?.engine?.label || activeModel?.display_name || activeModel?.search_title || 'the active model';
+}
+
+function buildModelProfileModelTabRoute(publicRoute = '') {
+  const route = normalizeHomeSearchQuery(publicRoute);
+  if (!route) return '';
+  const [baseRoute] = route.split('#');
+  return `${baseRoute || route}#model-management`;
 }
 
 function isVerifiedHomeSearchModel(model = {}) {
@@ -1027,7 +1067,7 @@ function renderDefaultHomeModelResults() {
               ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="Interact on Stage" type="button" aria-label="Interact on Stage">
                 <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
               </button>` : ''}
-              ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
+              ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(buildModelProfileModelTabRoute(entry.publicRoute))}" data-home-search-tooltip="View model profile" aria-label="View model profile">
                 <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
               </a>` : ''}
             </div>
@@ -1060,7 +1100,7 @@ function renderDefaultHomeSearchResults() {
             <p class="home-search-shell__result-body">${escapeHomeSearchHtml(activeModelDescription)}</p>
           </div>
           <div class="home-search-shell__result-actions home-search-shell__result-actions--model">
-            ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(activeModel.public_profile.public_route_path)}" data-home-search-tooltip="View profile" aria-label="View profile">
+            ${activeModel?.public_profile?.public_route_path ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(buildModelProfileModelTabRoute(activeModel.public_profile.public_route_path))}" data-home-search-tooltip="View model profile" aria-label="View model profile">
               <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
             </a>` : ''}
           </div>
@@ -1120,7 +1160,7 @@ function renderQueryHomeSearchResults(query) {
                 ${entry.activateModelId ? `<button class="home-search-shell__result-icon-action" data-home-search-result-action="activate-model" data-home-search-model-id="${escapeHomeSearchHtml(entry.activateModelId)}" data-home-search-tooltip="Interact on Stage" type="button" aria-label="Interact on Stage">
                   <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/interact/interact.svg" alt="">
                 </button>` : ''}
-                ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(entry.publicRoute)}" data-home-search-tooltip="View profile" aria-label="View profile">
+                ${entry.publicRoute ? `<a class="home-search-shell__result-icon-action" href="${escapeHomeSearchHtml(buildModelProfileModelTabRoute(entry.publicRoute))}" data-home-search-tooltip="View model profile" aria-label="View model profile">
                   <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/open/open.svg" alt="">
                 </a>` : ''}
               </div>
@@ -1311,10 +1351,6 @@ function bindHomeSearchShell() {
     renderHomeSearchShell();
   });
 
-  document.addEventListener('neuroartan:home-search-shell-open-requested', (event) => {
-    openHomeSearchShell(event?.detail || {});
-  });
-
   document.addEventListener('neuroartan:home-model-selector-open-requested', (event) => {
     openHomeSearchShell({ mode: 'models', focus: 'models', scope: 'models', ...(event?.detail || {}) });
   });
@@ -1458,9 +1494,17 @@ function bindHomeSearchShell() {
         return;
       }
 
+      event.preventDefault();
       void activatePublicModel(modelId, { source: 'home-search-shell' }).then(() => {
-        renderHomeSearchShell();
         closeHomeSearchShell();
+        if (window.location.pathname !== '/' && !window.location.pathname.endsWith('/index.html')) {
+          window.location.assign('/');
+          return;
+        }
+        window.location.hash = '';
+        window.dispatchEvent(new CustomEvent('neuroartan:home-stage-focus-requested', {
+          detail:{ source:'home-search-shell', modelId }
+        }));
       });
       return;
     }
@@ -1518,6 +1562,22 @@ function bindHomeSearchShell() {
     }
   });
 }
+
+async function openHomeSearchShellWhenReady(detail = {}) {
+  const root = await ensureHomeSearchShellRoot();
+  if (!root) return false;
+  bootHomeSearchShell();
+  openHomeSearchShell(detail);
+  return true;
+}
+
+function handleHomeSearchShellOpenRequest(event = null) {
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  void openHomeSearchShellWhenReady(detail);
+}
+
+document.addEventListener('neuroartan:home-search-shell-open-requested', handleHomeSearchShellOpenRequest);
+window.addEventListener('neuroartan:home-search-shell-open-requested', handleHomeSearchShellOpenRequest);
 
 /* =========================================================
    08. MODULE BOOT

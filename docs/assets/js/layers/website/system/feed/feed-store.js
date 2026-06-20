@@ -38,6 +38,9 @@ const FEED_POST_SELECT_FIELDS = [
   'author_username',
   'author_display_name',
   'author_avatar_url',
+  'author_profile_verified',
+  'author_verification_status',
+  'author_public_verification_status',
   'post_body',
   'post_image_url',
   'post_image_storage_path',
@@ -151,7 +154,14 @@ function buildRenderableFeedPost(row = {}, currentUserId = '', canonicalProfile 
     imageStoragePath: normalizeString(row.post_image_storage_path || ''),
     postImageStoragePath: normalizeString(row.post_image_storage_path || ''),
     mediaType: normalizeString(row.post_media_type || ''),
-    verified: false,
+    verified: profile.profile_verified === true || row.author_profile_verified === true || normalizeString(profile.verification_status || profile.public_verification_status || row.author_verification_status || row.author_public_verification_status).toLowerCase() === 'verified',
+    profile_verified: profile.profile_verified === true || row.author_profile_verified === true,
+    verification_status: normalizeString(profile.verification_status || row.author_verification_status || ''),
+    public_verification_status: normalizeString(profile.public_verification_status || row.author_public_verification_status || ''),
+    author_profile_verified: row.author_profile_verified === true,
+    author_verification_status: normalizeString(row.author_verification_status || ''),
+    author_public_verification_status: normalizeString(row.author_public_verification_status || ''),
+    verified_at: normalizeString(profile.verified_at || profile.profile_verified_at || ''),
     content: normalizeString(row.post_body || ''),
     metadata: [
       'Profile post',
@@ -200,6 +210,9 @@ function buildFeedInsertPayload(profile = {}, user = {}, values = {}) {
     author_username: normalizeUsername(profile.username || profile.username_lower || profile.public_username || ''),
     author_display_name: normalizeString(profile.public_display_name || profile.display_name || user.user_metadata?.name || 'Neuroartan profile'),
     author_avatar_url: normalizeString(profile.public_avatar_url || profile.avatar_url || profile.photo_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''),
+    author_profile_verified: profile.profile_verified === true,
+    author_verification_status: normalizeString(profile.verification_status || ''),
+    author_public_verification_status: normalizeString(profile.public_verification_status || ''),
     post_body: postBody,
     post_state: 'published',
     visibility_state: 'public',
@@ -312,6 +325,50 @@ export async function listFeedPosts() {
 
   const { data, error } = queryResult;
 
+  if (error) {
+    if (isSupabaseRelationMissingError(error)) return [];
+    throw error;
+  }
+
+  if (!Array.isArray(data)) return [];
+  const profileById = await getCanonicalFeedAuthorProfiles(supabase, data);
+  return data
+    .map((row) => mapFeedPost(row, currentUserId, profileById.get(normalizeString(row.profile_id || ''))))
+    .filter(Boolean);
+}
+
+/**
+ * Private home surfaces must never reuse the public feed query. This helper is
+ * deliberately owner-scoped even though public feed rows are readable by all
+ * authenticated visitors.
+ */
+export async function listOwnedFeedPosts() {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  const user = await getCurrentSupabaseUser();
+  const currentUserId = getUserId(user);
+  if (!currentUserId) return [];
+
+  let queryResult = await supabase
+    .from(FEED_POSTS_TABLE)
+    .select(FEED_POST_SELECT_FIELDS)
+    .eq('owner_auth_user_id', currentUserId)
+    .eq('post_state', 'published')
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (queryResult.error && isFeedMediaColumnMissingError(queryResult.error)) {
+    queryResult = await supabase
+      .from(FEED_POSTS_TABLE)
+      .select(FEED_POST_FALLBACK_SELECT_FIELDS)
+      .eq('owner_auth_user_id', currentUserId)
+      .eq('post_state', 'published')
+      .order('created_at', { ascending: false })
+      .limit(50);
+  }
+
+  const { data, error } = queryResult;
   if (error) {
     if (isSupabaseRelationMissingError(error)) return [];
     throw error;

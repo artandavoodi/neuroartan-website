@@ -101,6 +101,17 @@
               placeholder="Create password"
             >
           </div>
+
+          <div class="account-sign-up-drawer-field-group">
+            <input
+              id="account-sign-up-password-confirm"
+              name="password_confirm"
+              type="password"
+              class="account-sign-up-drawer-input"
+              autocomplete="new-password"
+              placeholder="Confirm password"
+            >
+          </div>
         </div>
       </form>
 
@@ -111,6 +122,7 @@
         <button type="submit" form="account-sign-up-drawer-form" class="account-sign-up-drawer-action account-sign-up-drawer-action--primary" data-account-sign-up-submit="true">
           <span class="account-sign-up-drawer-action-label" data-i18n-key="account_sign_up_submit">Create account</span>
         </button>
+        <p class="account-sign-up-drawer-status" data-account-sign-up-status hidden aria-live="polite"></p>
       </div>
 
       <!-- ======================================================================

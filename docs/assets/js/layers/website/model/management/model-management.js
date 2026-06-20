@@ -65,6 +65,7 @@ import {
   readModelInterfaceState,
   updateModelInterfaceState,
 } from '../shared/interface-state/model-interface-state.js';
+import { listDeveloperApiKeys } from '../../system/developer/developer-api-key-store.js';
 
 
 import {
@@ -370,6 +371,7 @@ const MODEL_FOUNDATION_IDENTITY_DEFAULTS = Object.freeze({
   createdAt: '',
   updatedAt: '',
   modelAvatar: '',
+  modelAvatarColor: '',
   modelCover: '',
   ownerRecordPolicy: 'fixed_owner_binding'
 });
@@ -1313,6 +1315,7 @@ async function hydrateModelFoundationIdentityFromBackend() {
       createdAt: identity?.createdAt || model.created_at || '',
       updatedAt: identity?.updatedAt || model.updated_at || '',
       modelAvatar: identity?.modelAvatar || model.model_image_url || '',
+      modelAvatarColor: identity?.modelAvatarColor || publicMedia?.modelAvatarColor || model.model_avatar_color || '',
       modelCover: publicMedia?.modelCover || model.model_cover_url || '',
       ownerRecordPolicy: identity?.ownerRecordPolicy || 'fixed_owner_binding'
     }, {
@@ -1739,6 +1742,7 @@ function getModelKeyIcon(label = '') {
     'public serial identity': '/registry/icons/public/assets/layers/website/model/overview/public-serial-identity.svg',
     'legacy secret key': '/registry/icons/public/assets/core/identity/security/key.svg',
     'api key': '/registry/icons/public/assets/layers/software/api/api.svg',
+    'developer api key': '/registry/icons/public/assets/layers/software/api/api.svg',
   };
 
   return icons[normalizedLabel] || '/registry/icons/public/assets/core/identity/security/key.svg';
@@ -1842,15 +1846,9 @@ function createModelKeyRow(label = '', value = '', options = {}) {
   const payload = getModelKeyActionPayload(label, value);
   const disabledAttribute = payload.unavailable ? ' disabled aria-disabled="true"' : '';
   const icon = getModelKeyIcon(label);
-
-  return `
-    <div class="model-source-summary__metric model-source-summary__metric--key">
-      <dt>
-        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
-        <span>${options.secret === true ? `${label} · Protected` : `${label} · Private`}</span>
-      </dt>
-      <dd>
-        <code class="model-source-summary__key-box" data-model-key-value="${payload.value}" data-model-key-masked="${payload.masked}" data-model-key-preview="${payload.preview}" data-model-key-revealed="false">${payload.preview}</code>
+  const metadataOnly = options.metadataOnly === true;
+  const valueLabel = metadataOnly ? String(options.displayValue || payload.masked) : payload.preview;
+  const actions = metadataOnly ? '' : `
         <span class="model-source-summary__actions">
           <button class="model-source-summary__action" type="button" data-model-key-reveal${disabledAttribute} aria-label="Show ${label}">
             <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/access/visibility-on.svg" alt="">
@@ -1859,6 +1857,17 @@ function createModelKeyRow(label = '', value = '', options = {}) {
             <img class="model-source-summary__learn-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/actions/copy/copy.svg" alt="">
           </button>
         </span>
+  `;
+
+  return `
+    <div class="model-source-summary__metric model-source-summary__metric--key">
+      <dt>
+        <img class="model-management__card-icon ui-icon-theme-aware" src="${icon}" alt="">
+        <span>${options.secret === true ? `${label} · Protected` : `${label} · Private`}</span>
+      </dt>
+      <dd>
+        <code class="model-source-summary__key-box" data-model-key-value="${metadataOnly ? '' : payload.value}" data-model-key-masked="${payload.masked}" data-model-key-preview="${payload.preview}" data-model-key-revealed="false">${valueLabel}</code>
+        ${actions}
       </dd>
     </div>
   `;
@@ -1883,16 +1892,20 @@ function createModelInfoRow(label = '', value = '') {
 function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = {}) {
   const profile = runtimeState.profile || {};
   const displayName = String(runtimeState.displayName || profile.display_name || model?.creator_display_name || '').trim();
-  const username = String(runtimeState.username?.normalized || profile.username || model?.creator_username || '').trim();
+  const username = String(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || runtimeState.username?.normalized || model?.creator_username || '').trim();
   const modelName = String(identity.modelNickname || model?.model_name || displayName || 'Personal model').trim();
   const avatarUrl = String(identity.modelAvatar || model?.model_image_url || '').trim();
+  const avatarColor = String(identity.modelAvatarColor || model?.model_avatar_color || '').trim();
+  const avatarStyle = !avatarUrl && avatarColor
+    ? ` style="background-color:${escapeModelManagementText(avatarColor)}"`
+    : '';
   const avatarImage = avatarUrl
     ? `<img class="profile-private-hero__avatar-image" src="${escapeModelManagementText(avatarUrl)}" alt="" aria-hidden="true">`
     : '';
 
   return `
     <section class="model-source-summary__identity" aria-label="Model identity">
-      <div class="model-source-summary__avatar profile-private-hero__avatar" aria-hidden="true">
+      <div class="model-source-summary__avatar profile-private-hero__avatar"${avatarStyle} aria-hidden="true">
         ${avatarImage}
       </div>
       <div class="model-source-summary__identity-copy">
@@ -1937,9 +1950,13 @@ async function handleModelKeysOpenRequest() {
 
   try {
     const identity = normalizeModelFoundationIdentity(modelFoundationIdentity);
-    const model = await getOwnedCanonicalModel().catch(() => null);
+    const [model, developerApiKeys] = await Promise.all([
+      getOwnedCanonicalModel().catch(() => null),
+      listDeveloperApiKeys().catch(() => []),
+    ]);
     const modelId = identity.modelId && identity.modelId !== 'Model record pending' ? identity.modelId : model?.id || '';
     const ownerId = model?.profile_id || '';
+    const activeApiKey = developerApiKeys.find((key) => key.status === 'active') || null;
 
     body.innerHTML = `
       <section class="model-source-summary" aria-label="Model key dashboard">
@@ -1950,8 +1967,8 @@ async function handleModelKeysOpenRequest() {
           ${createModelKeyRow('Birth Certificate ID', identity.birthCertificateId)}
           ${createModelKeyRow('Private Serial ID', identity.privateSerialIdentity)}
           ${createModelKeyRow('Public Serial Identity', identity.publicSerialIdentity)}
-          ${createModelKeyRow('Legacy Secret Key', '', { secret: true })}
-          ${createModelKeyRow('API Key', '', { secret: true })}
+          ${createModelKeyRow('Legacy Secret Key', '', { secret: true, metadataOnly: true, displayValue: 'Server-managed continuity control' })}
+          ${createModelKeyRow('Developer API Key', activeApiKey?.keyPrefix || '', { secret: true, metadataOnly: true, displayValue: activeApiKey ? `${activeApiKey.keyPrefix}... · Active` : 'Not issued' })}
         </dl>
       </section>
     `;
@@ -1998,7 +2015,7 @@ async function handleModelInfoOpenRequest() {
     const model = await getOwnedCanonicalModel().catch(() => null);
     const runtimeState = getProfileRuntimeState();
     const profile = runtimeState.profile || {};
-    const username = String(runtimeState.username?.normalized || profile.username || model?.creator_username || '').trim();
+    const username = String(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || runtimeState.username?.normalized || model?.creator_username || '').trim();
     const profileComplete = runtimeState.profileComplete === true || profile.profile_complete === true || runtimeState.completion?.complete === true;
     const createdAt = identity.createdAt || model?.created_at || '';
     const updatedAt = identity.updatedAt || model?.updated_at || '';

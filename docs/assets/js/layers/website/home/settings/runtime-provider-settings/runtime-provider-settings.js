@@ -28,15 +28,9 @@ function bootRuntimeProviderSettings() {
   }
 
   if (apiInput instanceof HTMLInputElement) {
-    apiInput.value =
-      localStorage.getItem('neuroartan-provider-gemini-key') || '';
-
-    apiInput.addEventListener('change', () => {
-      localStorage.setItem(
-        'neuroartan-provider-gemini-key',
-        apiInput.value.trim()
-      );
-    });
+    apiInput.value = '';
+    apiInput.disabled = true;
+    apiInput.placeholder = 'Managed by the secure runtime service';
   }
 }
 

@@ -83,6 +83,10 @@
   --account-sign-up-text-action-font-size: var(--account-text-action-font-size);
   --account-sign-up-text-action-line-height: var(--account-text-action-line-height);
   --account-sign-up-text-action-letter-spacing: var(--account-text-action-letter-spacing);
+  --account-sign-up-status-font-size: var(--body-2-size);
+  --account-sign-up-status-line-height: var(--body-2-line-height);
+  --account-sign-up-status-letter-spacing: var(--body-2-tracking);
+  --account-sign-up-status-color: var(--text-secondary-color);
 
   --account-sign-up-back-control-size: var(--account-back-control-size);
   --account-sign-up-back-icon-size: var(--account-back-icon-size);
@@ -283,6 +287,25 @@ html[data-theme-effective="dark"]{
   letter-spacing: var(--account-sign-up-button-letter-spacing);
   line-height: var(--account-sign-up-button-line-height);
   text-align: center;
+}
+
+.account-sign-up-drawer-status{
+  margin: var(--spacing-none);
+  min-height: calc(var(--account-sign-up-status-line-height) * 1em);
+  color: var(--account-sign-up-status-color);
+  font-size: var(--account-sign-up-status-font-size);
+  font-weight: var(--type-body-regular-weight);
+  letter-spacing: var(--account-sign-up-status-letter-spacing);
+  line-height: var(--account-sign-up-status-line-height);
+  text-align: center;
+}
+
+.account-sign-up-drawer-status[data-account-sign-up-status="error"]{
+  color: var(--status-error-color);
+}
+
+.account-sign-up-drawer-status[data-account-sign-up-status="success"]{
+  color: var(--color-success);
 }
 
 .account-sign-up-drawer-action--primary:hover,

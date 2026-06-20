@@ -34,13 +34,15 @@
               <span data-profile-follow-label>Follow</span>
             </button>
 
-            <button class="ui-icon-button profile-header__follow-menu-button" type="button" aria-label="Open profile actions" aria-expanded="false" data-profile-follow-menu-toggle>
-              <img class="ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/core/interface/navigation/drop-down.svg" alt="" aria-hidden="true">
+            <button class="ui-icon-button profile-header__follow-menu-button" type="button" aria-label="Open profile actions" aria-expanded="false" data-profile-follow-menu-toggle hidden>
+              <img class="ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/core/actions/more/more.svg" alt="" aria-hidden="true">
             </button>
 
             <div class="profile-header__follow-menu" data-profile-follow-menu hidden>
-              <button class="profile-header__follow-menu-item" type="button" data-profile-action="subscribe-profile" data-profile-subscribe-action>Subscribe</button>
-              <button class="profile-header__follow-menu-item" type="button" data-profile-action="copy-link">Copy profile link</button>
+              <button class="profile-header__follow-menu-item" type="button" data-profile-action="unfollow-profile">
+                <img class="profile-header__follow-menu-item-icon ui-icon-theme-aware ui-icon-sm" src="/registry/icons/public/assets/layers/website/profile/social/Unfollow.svg" alt="" aria-hidden="true">
+                <span>Unfollow</span>
+              </button>
             </div>
           </div>
         </div>

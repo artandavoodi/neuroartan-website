@@ -14,7 +14,7 @@ import {
 } from '../../../system/model/model-training-store.js';
 import { listProfilePosts } from '../../../system/profile/profile-post-store.js';
 import { listProfileThoughts } from '../../../system/profile/profile-thought-store.js';
-import { listFeedPosts } from '../../../system/feed/feed-store.js';
+import { listOwnedFeedPosts } from '../../../system/feed/feed-store.js';
 
 const HOME_COGNITIVE_MAP_READ_TIMEOUT_MS = 6500;
 const HOME_COGNITIVE_MAP_READ_TIMEOUT = Object.freeze({ __homeCognitiveMapReadTimeout: true });
@@ -305,7 +305,7 @@ async function readCognitiveMapSnapshot() {
     withReadTimeout(safeRead('Voice samples', () => listModelVoiceTrainingSamples(model.id), []), []),
     withReadTimeout(safeRead('Profile posts', () => listProfilePosts(), []), []),
     withReadTimeout(safeRead('Profile thoughts', () => listProfileThoughts(), []), []),
-    withReadTimeout(safeRead('Feed posts', () => listFeedPosts(), []), []),
+    withReadTimeout(safeRead('Owned feed posts', () => listOwnedFeedPosts(), []), []),
     withReadTimeout(safeRead('Digital Brain preferences', () => readModelDigitalBrainPreferences(model.id), null), null),
   ]);
   const livePreferences = HOME_COGNITIVE_MAP_LIVE_PREFERENCES.get(model.id) || null;

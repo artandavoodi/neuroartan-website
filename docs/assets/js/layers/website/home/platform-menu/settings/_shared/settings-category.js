@@ -362,7 +362,7 @@ function exportLocalSettings(root) {
     permissions: readPermissionState(),
     localStorage: Object.fromEntries(
       Object.keys(window.localStorage || {})
-        .filter((key) => key.startsWith('neuroartan'))
+        .filter((key) => key.startsWith('neuroartan') && !/^neuroartan-provider-[a-z0-9_-]+-key$/i.test(key))
         .map((key) => [key, window.localStorage.getItem(key)])
     )
   };
@@ -398,7 +398,9 @@ function syncRuntimeProviderFields(root) {
   }
 
   if (apiKeyInput instanceof HTMLInputElement) {
-    apiKeyInput.value = window.localStorage.getItem(`neuroartan-provider-${state.activeProvider || 'gemini'}-key`) || '';
+    apiKeyInput.value = '';
+    apiKeyInput.disabled = true;
+    apiKeyInput.placeholder = 'Managed by the secure runtime service';
   }
 
   if (serverUrlInput instanceof HTMLInputElement) {
@@ -426,15 +428,6 @@ function bindRuntimeProviderFields(root) {
     modelInput.addEventListener('change', () => {
       setRuntimeProviderState({ activeModel: modelInput.value.trim() });
       setStatus(root, `Active model saved: ${modelInput.value.trim() || 'not set'}`, 'ok');
-    });
-  }
-
-  if (apiKeyInput instanceof HTMLInputElement && apiKeyInput.dataset.settingsRuntimeBound !== 'true') {
-    apiKeyInput.dataset.settingsRuntimeBound = 'true';
-    apiKeyInput.addEventListener('change', () => {
-      const provider = providerInput instanceof HTMLSelectElement ? providerInput.value : getRuntimeProviderState().activeProvider || 'gemini';
-      window.localStorage.setItem(`neuroartan-provider-${provider}-key`, apiKeyInput.value.trim());
-      setStatus(root, `${provider} credential saved in local browser storage`, 'ok');
     });
   }
 

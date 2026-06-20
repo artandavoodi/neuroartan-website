@@ -2,3 +2,11 @@
    Public profile panels inherit the shared profile workspace, tab, and feed
    systems. Public content must not introduce a parallel shell or tab style.
    ============================================================================= */
+
+.profile-public-model .profile-public-model__avatar-wrap{
+  margin:var(--spacing-none);
+}
+
+.profile-public-model [data-profile-public-model-avatar][hidden]{
+  display:none;
+}

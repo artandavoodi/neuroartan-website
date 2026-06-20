@@ -639,13 +639,18 @@ export async function reserveSupabaseUsernameProfile({
     payload:profilePayload
   });
 
-  await reserveModularUsername({
-    supabase,
-    username:normalizedUsername,
-    authUserId,
-    profileId:profile?.id || existingProfile?.id || null,
-    allowMissingTable:true
-  });
+  try {
+    await reserveModularUsername({
+      supabase,
+      username:normalizedUsername,
+      authUserId,
+      profileId:profile?.id || existingProfile?.id || null,
+      allowMissingTable:true
+    });
+  } catch (error) {
+    // The profile's unique username is authoritative; reconcile the mirror later.
+    console.warn('[account-profile-identity] Username reservation mirror could not be reconciled.', error);
+  }
 
   return profile || payload;
 }

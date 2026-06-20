@@ -75,6 +75,29 @@
   text-decoration:none;
 }
 
+.profile-home-panel__profile-name-line{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-2xs);
+  min-width:0;
+}
+
+.profile-home-panel__verified-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  inline-size:calc(0.92rem * var(--accessibility-icon-scale));
+  block-size:calc(0.92rem * var(--accessibility-icon-scale));
+  margin-inline-start:calc(var(--spacing-2xs) * -1);
+}
+
+.profile-home-panel__verified-badge-icon{
+  display:block;
+  inline-size:100%;
+  block-size:100%;
+}
+
 .profile-home-panel__item-avatar:focus-visible,
 .profile-home-panel__profile-link:focus-visible{
   outline:var(--focus-ring-width) solid var(--focus-ring-color);

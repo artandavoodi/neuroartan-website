@@ -24,8 +24,18 @@ function normalizeUsername(value = '') {
   return String(value || '').trim().replace(/^@/, '').toLowerCase();
 }
 
+function getPublicWorkspaceHashSection() {
+  const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
+  if (hash === 'model-management' || hash === 'model') return 'model';
+  if (hash === 'highlights') return 'highlights';
+  if (hash === 'posts') return 'posts';
+  return '';
+}
+
 function getPublicWorkspaceSection(navigationState = getProfileNavigationState()) {
-  if (navigationState.section === 'model-management') return 'model';
+  const hashSection = getPublicWorkspaceHashSection();
+  if (hashSection) return hashSection;
+  if (navigationState.section === 'model-management' || navigationState.section === 'model') return 'model';
   return navigationState.section === 'highlights' ? 'highlights' : 'posts';
 }
 
@@ -145,8 +155,6 @@ function renderPublicModelHeader(model, state) {
   const modelName = String(model?.model_name || model?.display_name || 'Personal model').trim();
   const modelSlug = normalizeUsername(model?.model_slug || model?.slug || '');
   const modelDescription = String(model?.description || state.modelPublicSummary || '').trim();
-  const modelImage = String(model?.public_avatar_url || model?.model_image_url || '').trim();
-  const modelCover = String(model?.public_cover_url || model?.model_cover_url || '').trim();
   const modelType = formatPublicModelLabel(model?.model_type || model?.routing_class || 'personal');
   const readiness = formatPublicModelLabel(model?.readiness_state || state.modelReadinessLabel || 'not shared');
   const verification = formatPublicModelVerification(model?.verification_state || state.verification?.status || 'unverified');
@@ -156,31 +164,11 @@ function renderPublicModelHeader(model, state) {
     const name = root.querySelector('[data-profile-public-model-name]');
     const slug = root.querySelector('[data-profile-public-model-slug]');
     const description = root.querySelector('[data-profile-public-model-description]');
-    const avatar = root.querySelector('[data-profile-public-model-avatar]');
-    const cover = root.querySelector('[data-profile-public-model-cover]');
 
     if (name) name.textContent = modelName;
     if (slug) slug.textContent = modelSlug ? `@${modelSlug}` : 'Model';
     if (description) {
       description.textContent = modelDescription || 'This owner has not shared public model development details yet.';
-    }
-    if (avatar instanceof HTMLImageElement) {
-      avatar.src = modelImage || '/registry/icons/public/assets/core/cognition/model/model.svg';
-      avatar.alt = modelImage ? `${modelName} avatar` : '';
-      avatar.onerror = () => {
-        avatar.onerror = null;
-        avatar.src = '/registry/icons/public/assets/core/cognition/model/model.svg';
-        avatar.alt = '';
-      };
-    }
-    if (cover instanceof HTMLElement) {
-      if (modelCover) {
-        cover.style.backgroundImage = `url("${modelCover}")`;
-        cover.dataset.profilePublicModelCoverState = 'custom';
-      } else {
-        cover.style.removeProperty('background-image');
-        cover.dataset.profilePublicModelCoverState = 'empty';
-      }
     }
 
     root.querySelectorAll('[data-profile-public-model-type]').forEach((node) => {
@@ -213,7 +201,8 @@ function renderPublicWorkspace(
 
     const header = root.querySelector('[data-profile-header][data-profile-surface="public"]');
     if (header instanceof HTMLElement) {
-      header.hidden = activeSection !== 'posts';
+      header.hidden = false;
+      header.dataset.profileActiveSection = activeSection;
     }
 
     root.querySelectorAll('[data-profile-section-panel]').forEach((panel) => {
@@ -241,6 +230,8 @@ function initPublicProfileSections() {
 
   subscribeProfileRuntime(render);
   subscribeProfileNavigation(render);
+  window.addEventListener('hashchange', render);
+  window.addEventListener('popstate', render);
 
   document.addEventListener('fragment:mounted', (event) => {
     if (![

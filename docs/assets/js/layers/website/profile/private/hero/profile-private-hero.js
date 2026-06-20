@@ -122,7 +122,18 @@ function getHeroRoots() {
 }
 
 function isPublicProfileSurface() {
-  return document.body?.dataset.profilePage === 'public';
+  return document.body?.dataset.profilePage === 'public'
+    || document.querySelector('[data-profile-shell][data-profile-surface="public"]') instanceof HTMLElement
+    || document.querySelector('[data-profile-header][data-profile-surface="public"]') instanceof HTMLElement
+    || document.querySelector('[data-profile-workspace-tabs]') instanceof HTMLElement;
+}
+
+function getPublicProfileHashTabKey() {
+  const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
+  if (hash === 'model-management' || hash === 'model') return 'model';
+  if (hash === 'highlights') return 'highlights';
+  if (hash === 'posts') return 'posts';
+  return '';
 }
 
 function getProfileTabRoots() {
@@ -141,6 +152,14 @@ function setText(root, selector, value) {
 function readProfileText(profile = {}, keys = []) {
   for (const key of keys) {
     const value = String(profile?.[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
+
+function readModelText(model = {}, keys = []) {
+  for (const key of keys) {
+    const value = String(model?.[key] || '').trim();
     if (value) return value;
   }
   return '';
@@ -214,7 +233,9 @@ function getTabGroupKey(navigationState = getProfileNavigationState()) {
 
 function getActiveTabKey(navigationState = getProfileNavigationState()) {
   if (isPublicProfileSurface()) {
-    if (navigationState.section === 'model-management') return 'model';
+    const hashTabKey = getPublicProfileHashTabKey();
+    if (hashTabKey) return hashTabKey;
+    if (navigationState.section === 'model-management' || navigationState.section === 'model') return 'model';
     return navigationState.section === 'highlights' ? 'highlights' : 'posts';
   }
 
@@ -312,11 +333,18 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
 
   roots.forEach((root) => {
     const profile = state.profile || {};
+    const model = state.model || {};
+    const navigationState = getProfileNavigationState();
+    const modelHeroActive = isPublicProfileSurface() && getActiveTabKey(navigationState) === 'model';
     const username = String(profile.username || '').trim();
-    const displayName = String(profile.public_display_name || profile.display_name || profile.displayName || profile.preferred_name || '').trim();
+    const profileDisplayName = String(profile.public_display_name || profile.display_name || profile.displayName || profile.preferred_name || '').trim();
+    const modelDisplayName = readModelText(model, ['modelNickname', 'model_nickname', 'nickname', 'model_name', 'display_name', 'name']);
+    const displayName = modelHeroActive ? (modelDisplayName || profileDisplayName) : profileDisplayName;
     const profileComplete = profile.profile_complete === true || state.profileComplete === true;
+    const modelAvatarUrl = modelHeroActive ? readModelText(model, ['public_avatar_url', 'model_image_url', 'modelAvatar', 'avatar_url']) : '';
+    const modelCoverUrl = modelHeroActive ? readModelText(model, ['public_cover_url', 'model_cover_url', 'modelCover', 'cover_url']) : '';
 
-    setImage(root, '[data-profile-avatar-image]', state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
+    setImage(root, '[data-profile-avatar-image]', modelAvatarUrl || state.avatarDisplayUrl || state.avatarUrl || '', `${displayName || 'Profile'} avatar`);
     const placeholderIcon = root.querySelector('[data-profile-avatar-placeholder-icon]');
     if (placeholderIcon instanceof HTMLElement) {
       placeholderIcon.hidden = state.avatarHasImage === true;
@@ -324,8 +352,8 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
 
     const cover = root.querySelector('[data-profile-cover]');
     if (cover instanceof HTMLElement) {
-      const selectedCoverUrl = state.coverUrl || '';
-      const coverUrl = state.coverDisplayUrl || selectedCoverUrl || '';
+      const selectedCoverUrl = modelCoverUrl || state.coverUrl || '';
+      const coverUrl = modelCoverUrl || state.coverDisplayUrl || selectedCoverUrl || '';
       if (coverUrl) {
         cover.style.backgroundImage = `url("${coverUrl}")`;
         cover.dataset.profileCoverImage = selectedCoverUrl ? 'true' : 'default';
@@ -341,11 +369,15 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
       verifiedBlock.hidden = state.verification?.badgeVisible !== true;
     }
     const bio = String(
-      state.bio
-      || profile.bio
-      || profile.public_bio
-      || profile.public_summary
-      || ''
+      modelHeroActive
+        ? readModelText(model, ['description', 'public_description', 'public_summary', 'modelPurposeDescription', 'model_purpose_description'])
+        : (
+          state.bio
+          || profile.bio
+          || profile.public_bio
+          || profile.public_summary
+          || ''
+        )
     ).trim();
     const bioNode = root.querySelector('[data-profile-bio]');
     if (bioNode instanceof HTMLElement) {
@@ -357,9 +389,11 @@ function renderProfilePrivateHero(state = getProfileRuntimeState()) {
     setText(
       root,
       '[data-profile-hero-description]',
-      profileComplete
-        ? 'Your private profile foundation is active. Public identity, organizations, models, and workspace layers can be activated from controlled modules.'
-        : 'Complete your private identity layer before activating public profile, organizations, models, or workspace access.'
+      modelHeroActive
+        ? bio
+        : profileComplete
+          ? 'Your private profile foundation is active. Public identity, organizations, models, and workspace layers can be activated from controlled modules.'
+          : 'Complete your private identity layer before activating public profile, organizations, models, or workspace access.'
     );
     setText(root, '[data-profile-followers-count]', String(Number(profile.followers_count || profile.follower_count || 0) || 0));
     setText(root, '[data-profile-following-count]', String(Number(profile.following_count || 0) || 0));
@@ -619,7 +653,10 @@ function initProfilePrivateHero() {
   bindProfilePrivateHeroActions();
   renderProfilePrivateHero();
   subscribeProfileRuntime(renderProfilePrivateHero);
+  subscribeProfileNavigation(renderProfilePrivateHero);
   subscribeProfileNavigation(renderProfilePrivateHeroTabs);
+  window.addEventListener('hashchange', () => renderProfilePrivateHero(getProfileRuntimeState()));
+  window.addEventListener('popstate', () => renderProfilePrivateHero(getProfileRuntimeState()));
 
   document.addEventListener('fragment:mounted', (event) => {
     if (![

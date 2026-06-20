@@ -69,6 +69,23 @@
     return document.getElementById('account-sign-up-password');
   }
 
+  function getPasswordConfirmInput() {
+    return document.getElementById('account-sign-up-password-confirm');
+  }
+
+  function getStatus() {
+    return document.querySelector('[data-account-sign-up-status]');
+  }
+
+  function setStatus(state = 'idle', message = '') {
+    const status = getStatus();
+    if (!(status instanceof HTMLElement)) return;
+
+    status.dataset.accountSignUpStatus = state;
+    status.textContent = message;
+    status.hidden = !message;
+  }
+
   /* =============================================================================
      05) HIDDEN CONTEXT FIELD HELPERS
   ============================================================================= */
@@ -114,6 +131,7 @@
     if (!drawer) return;
 
     syncHiddenContextFields({ method: 'email', auth_provider: 'email' });
+    setStatus('idle', '');
     window.clearTimeout(closeTimer);
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
@@ -314,9 +332,11 @@
       const nameInput = getNameInput();
       const emailInput = getEmailInput();
       const passwordInput = getPasswordInput();
+      const passwordConfirmInput = getPasswordConfirmInput();
       const name = nameInput?.value?.trim() || '';
       const email = emailInput?.value?.trim() || '';
       const password = passwordInput?.value || '';
+      const passwordConfirm = passwordConfirmInput?.value || '';
 
       if (!name) {
         nameInput?.setCustomValidity('Enter your name.');
@@ -336,14 +356,27 @@
         return;
       }
 
+      if (!passwordConfirm) {
+        passwordConfirmInput?.setCustomValidity('Confirm your password.');
+        passwordConfirmInput?.reportValidity();
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        passwordConfirmInput?.setCustomValidity('Passwords do not match.');
+        passwordConfirmInput?.reportValidity();
+        return;
+      }
+
       nameInput?.setCustomValidity('');
       emailInput?.setCustomValidity('');
       passwordInput?.setCustomValidity('');
+      passwordConfirmInput?.setCustomValidity('');
+      setStatus('idle', '');
 
-      document.dispatchEvent(new CustomEvent('account:profile-setup-open-request', {
+      document.dispatchEvent(new CustomEvent('account:sign-up-submit', {
         detail: {
           source: 'account-sign-up-drawer',
-          action: 'profile-setup',
           method: getHiddenMethodInput()?.value?.trim() || 'email',
           auth_provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
           provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
@@ -351,21 +384,19 @@
           display_name: name,
           email,
           password,
-          password_confirm: password
+          password_confirm: passwordConfirm
         }
       }));
+    });
+  }
 
-      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-        detail: {
-          source: 'account-sign-up-drawer',
-          state: 'guest',
-          surface: 'profile-setup',
-          method: getHiddenMethodInput()?.value?.trim() || 'email',
-          auth_provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
-          provider: getHiddenAuthProviderInput()?.value?.trim() || 'email',
-          email
-        }
-      }));
+  function bindStatusEvents() {
+    if (document.documentElement.dataset.accountSignUpDrawerStatusBound === 'true') return;
+    document.documentElement.dataset.accountSignUpDrawerStatusBound = 'true';
+
+    document.addEventListener('account:sign-up-status', (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      setStatus(detail.state || 'idle', String(detail.message || ''));
     });
   }
 
@@ -426,6 +457,7 @@
     bindRouteRequests();
     bindInnerRouteControls();
     bindFormSubmit();
+    bindStatusEvents();
     bindEscape();
   }
 

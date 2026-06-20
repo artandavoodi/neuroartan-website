@@ -30,6 +30,7 @@ import {
    03) MODULE STATE
 ============================================================================= */
 const STORAGE_KEY = 'neuroartan.active-model-id';
+const PENDING_STAGE_MODEL_KEY = 'neuroartan.pending-stage-model-id';
 const SUPABASE_MODELS_TABLE = 'models';
 
 const ACTIVE_MODEL_RUNTIME = (window.__NEUROARTAN_ACTIVE_MODEL__ ||= {
@@ -93,6 +94,29 @@ function storeActiveModelId(modelId) {
   } catch (_) {}
 }
 
+function storePendingStageModelId(modelId) {
+  try {
+    if (!modelId) {
+      window.sessionStorage.removeItem(PENDING_STAGE_MODEL_KEY);
+      return;
+    }
+
+    window.sessionStorage.setItem(PENDING_STAGE_MODEL_KEY, modelId);
+  } catch (_) {}
+}
+
+function consumePendingStageModelId() {
+  try {
+    const modelId = normalizeString(window.sessionStorage.getItem(PENDING_STAGE_MODEL_KEY) || '');
+    if (modelId) {
+      window.sessionStorage.removeItem(PENDING_STAGE_MODEL_KEY);
+    }
+    return modelId;
+  } catch (_) {
+    return '';
+  }
+}
+
 function buildSnapshot() {
   return {
     activeModelId: ACTIVE_MODEL_RUNTIME.activeModelId,
@@ -124,6 +148,13 @@ function notifySubscribers(source = 'runtime') {
     }
   }));
 
+  window.dispatchEvent(new CustomEvent('neuroartan:active-model-changed', {
+    detail: {
+      ...snapshot,
+      source
+    }
+  }));
+
   ACTIVE_MODEL_RUNTIME.subscribers.forEach((listener) => {
     try {
       listener(snapshot);
@@ -134,6 +165,11 @@ function notifySubscribers(source = 'runtime') {
 }
 
 function resolveInitialActiveModelId() {
+  const pendingStageModelId = consumePendingStageModelId();
+  if (pendingStageModelId && getPublicModelById(pendingStageModelId)) {
+    return pendingStageModelId;
+  }
+
   const storedId = getStoredActiveModelId();
   if (storedId && getPublicModelById(storedId)) {
     return storedId;
@@ -221,6 +257,9 @@ export async function activatePublicModel(modelId, { source = 'manual' } = {}) {
   ACTIVE_MODEL_RUNTIME.activeModelId = resolvedModel.id;
   ACTIVE_MODEL_RUNTIME.activeModel = resolvedModel;
   storeActiveModelId(resolvedModel.id);
+  if (source === 'home-search-shell') {
+    storePendingStageModelId(resolvedModel.id);
+  }
   notifySubscribers(source);
 
   return getActiveModelState();

@@ -12,28 +12,13 @@ import {
 
 export async function requestGeminiCompletion(payload = {}) {
   const runtime = getRuntimeProviderState();
-
-  const apiKey =
-    runtime.apiKey ||
-    localStorage.getItem('neuroartan-provider-gemini-key') ||
-    '';
-
-  if (!apiKey) {
-    throw new Error('Missing Gemini API key.');
-  }
-
-  const endpoint =
-    'https://generativelanguage.googleapis.com/v1beta/models/' +
-    runtime.activeModel +
-    ':generateContent?key=' +
-    apiKey;
-
   const response = await fetch(
-    endpoint,
+    '/functions/v1/runtime-gemini-completion',
     {
       method:'POST',
       headers:{
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        'X-Neuroartan-Runtime-Model': String(runtime.activeModel || '')
       },
       body:JSON.stringify({
         generationConfig:{
@@ -70,7 +55,7 @@ export async function requestGeminiCompletion(payload = {}) {
     const failure = await response.text();
 
     throw new Error(
-      'Gemini runtime error: ' + failure
+      'Gemini runtime proxy error: ' + failure
     );
   }
 

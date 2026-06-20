@@ -146,6 +146,68 @@ function waitForSupabaseConfigReady(timeoutMs = 3000) {
   });
 }
 
+function isSharedNeuroartanAuthHost() {
+  const hostname = String(window.location.hostname || '').toLowerCase();
+  return hostname === 'neuroartan.com'
+    || hostname.endsWith('.neuroartan.com')
+    || hostname === '127.0.0.1'
+    || hostname === 'localhost';
+}
+
+function readCookieValue(name) {
+  const encodedName = `${encodeURIComponent(name)}=`;
+  const match = String(document.cookie || '')
+    .split('; ')
+    .find((entry) => entry.startsWith(encodedName));
+  if (!match) return null;
+
+  try {
+    return decodeURIComponent(match.slice(encodedName.length));
+  } catch (_) {
+    return null;
+  }
+}
+
+function createNeuroartanAuthStorage() {
+  if (!isSharedNeuroartanAuthHost()) return window.localStorage;
+
+  const hostname = String(window.location.hostname || '').toLowerCase();
+  const productionDomain = hostname === 'neuroartan.com' || hostname.endsWith('.neuroartan.com');
+  const sharedCookieAttributes = productionDomain
+    ? ['Path=/', 'Domain=.neuroartan.com', 'SameSite=Lax', 'Secure']
+    : ['Path=/', 'SameSite=Lax'];
+
+  const writeCookie = (key, value, maxAge) => {
+    document.cookie = [
+      `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
+      ...sharedCookieAttributes,
+      `Max-Age=${maxAge}`,
+    ].join('; ');
+  };
+
+  return {
+    getItem(key) {
+      const cookieValue = readCookieValue(key);
+      if (cookieValue !== null) return cookieValue;
+
+      const legacyValue = window.localStorage.getItem(key);
+      if (legacyValue !== null) {
+        writeCookie(key, legacyValue, 31536000);
+        window.localStorage.removeItem(key);
+      }
+      return legacyValue;
+    },
+    setItem(key, value) {
+      writeCookie(key, value, 31536000);
+      window.localStorage.removeItem(key);
+    },
+    removeItem(key) {
+      writeCookie(key, '', 0);
+      window.localStorage.removeItem(key);
+    },
+  };
+}
+
 /* =============================================================================
    05) GLOBAL REGISTRATION
 ============================================================================= */
@@ -177,7 +239,8 @@ async function registerSupabaseClient() {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
-      detectSessionInUrl: true
+      detectSessionInUrl: true,
+      storage: createNeuroartanAuthStorage(),
     }
   });
 

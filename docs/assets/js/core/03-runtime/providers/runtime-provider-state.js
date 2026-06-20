@@ -13,12 +13,23 @@ const DEFAULT_STATE = {
   memory: true
 };
 
+function removeLegacyRuntimeProviderSecrets() {
+  try {
+    Object.keys(window.localStorage || {})
+      .filter((key) => /^neuroartan-provider-[a-z0-9_-]+-key$/i.test(key))
+      .forEach((key) => window.localStorage.removeItem(key));
+  } catch {
+    // Browser storage can be unavailable in privacy-restricted contexts.
+  }
+}
+
 function loadState() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      return { ...DEFAULT_STATE, ...parsed };
+      const { apiKey: _legacyApiKey, ...safeState } = parsed || {};
+      return { ...DEFAULT_STATE, ...safeState };
     }
   } catch {
   }
@@ -33,15 +44,17 @@ function saveState(state) {
 }
 
 let NEUROARTAN_RUNTIME_PROVIDER_STATE = loadState();
+removeLegacyRuntimeProviderSecrets();
 
 export function getRuntimeProviderState() {
   return NEUROARTAN_RUNTIME_PROVIDER_STATE;
 }
 
 export function setRuntimeProviderState(next = {}) {
+  const { apiKey: _legacyApiKey, ...safeNext } = next || {};
   Object.assign(
     NEUROARTAN_RUNTIME_PROVIDER_STATE,
-    next
+    safeNext
   );
   saveState(NEUROARTAN_RUNTIME_PROVIDER_STATE);
   return NEUROARTAN_RUNTIME_PROVIDER_STATE;

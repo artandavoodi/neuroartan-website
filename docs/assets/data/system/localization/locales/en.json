@@ -50,7 +50,7 @@
     "account_profile_setup_first_name_placeholder": "First name",
     "account_profile_setup_gender_man": "Man",
     "account_profile_setup_gender_note": "Optional and kept private by default.",
-    "account_profile_setup_gender_placeholder": "Optional",
+    "account_profile_setup_gender_placeholder": "Gender",
     "account_profile_setup_gender_woman": "Woman",
     "account_profile_setup_last_name_placeholder": "Last name",
     "account_profile_setup_password_confirm_placeholder": "Reenter password",

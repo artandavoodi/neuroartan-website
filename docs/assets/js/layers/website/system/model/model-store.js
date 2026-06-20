@@ -72,6 +72,7 @@ const PRIVACY_PROVIDER_REGISTRY_TABLE = 'privacy_provider_registry';
 const PRIVACY_PERMISSION_STATE_TABLE = 'privacy_permission_state';
 const PRIVACY_CONNECTOR_STATE_TABLE = 'privacy_connector_state';
 const MODEL_VOICE_SAMPLE_BUCKET = 'model-voice-samples';
+const PUBLIC_MODEL_DIRECTORY_VIEW = 'public_model_directory';
 
 const MODEL_SELECT_FIELDS = [
   'id',
@@ -80,6 +81,7 @@ const MODEL_SELECT_FIELDS = [
   'model_name',
   'description',
   'model_image_url',
+  'model_avatar_color',
   'verification_state',
   'model_visibility',
   'model_status',
@@ -381,9 +383,10 @@ function mapSupabaseModel(row = {}) {
     display_name: normalizeString(row.model_name || row.display_name || 'Untitled model'),
     description: normalizeString(row.description || ''),
     model_image_url: normalizeString(row.model_image_url || ''),
+    model_avatar_color: normalizeString(row.model_avatar_color || ''),
     model_cover_url: normalizeString(row.model_cover_url || ''),
     creator_display_name: normalizeString(row.creator_display_name || ''),
-    creator_username: normalizeUsername(row.creator_username || row.slug || row.model_slug || ''),
+    creator_username: normalizeUsername(row.creator_username || ''),
     model_visibility: normalizeString(row.model_visibility || 'private'),
     model_status: normalizeString(row.model_status || row.lifecycle_state || 'draft'),
     lifecycle_state: normalizeString(row.model_status || row.lifecycle_state || 'draft'),
@@ -876,6 +879,7 @@ function mapModelFoundationIdentity(records = {}, model = {}) {
     updatedAt: normalizeString(privateIdentity.updated_at || model.updated_at || ''),
     ownerRecordPolicy: normalizeString(privateIdentity.owner_visibility || 'owner_only'),
     modelAvatar: normalizeString(model.model_image_url || ''),
+    modelAvatarColor: normalizeString(model.model_avatar_color || ''),
     modelCover: normalizeString(model.model_cover_url || ''),
   };
 }
@@ -887,7 +891,7 @@ export async function readModelPublicMedia(modelId) {
 
   const { data, error } = await supabase
     .from(MODELS_TABLE)
-    .select('id, model_cover_url, model_type')
+    .select('id, model_image_url, model_avatar_color')
     .eq('id', normalizedModelId)
     .maybeSingle();
 
@@ -897,8 +901,10 @@ export async function readModelPublicMedia(modelId) {
   }
 
   return {
-    modelCover: normalizeString(data?.model_cover_url || ''),
-    modelType: normalizeString(data?.model_type || 'personal') || 'personal',
+    modelCover: '',
+    modelType: 'personal',
+    modelAvatar: normalizeString(data?.model_image_url || ''),
+    modelAvatarColor: normalizeString(data?.model_avatar_color || ''),
   };
 }
 
@@ -962,7 +968,7 @@ async function upsertModelPublicIdentityProjection(supabase, payload = {}) {
     model_id: payload.model_id,
     profile_id: payload.profile_id,
     public_display_name: payload.public_display_name,
-    public_slug: payload.public_slug,
+    public_slug: normalizeUsername(payload.public_slug || payload.creator_username || payload.public_username || payload.username || ''),
     public_description: payload.public_description,
     public_avatar_url: payload.public_avatar_url,
     public_visibility: payload.public_visibility,
@@ -984,7 +990,7 @@ async function upsertModelPublicIdentityProjection(supabase, payload = {}) {
     model_id: payload.model_id,
     profile_id: payload.profile_id,
     display_name: payload.public_display_name || payload.display_name,
-    public_slug: payload.public_slug,
+    public_slug: normalizeUsername(payload.public_slug || payload.creator_username || payload.public_username || payload.username || ''),
     public_description: payload.public_description,
     public_avatar_url: payload.public_avatar_url,
     public_visibility_state: payload.public_visibility || payload.public_visibility_state,
@@ -1088,8 +1094,10 @@ export async function getModelBySlug(modelSlug) {
 export async function listOwnedModels() {
   const supabase = await resolveSupabaseClient();
   const profile = await getCurrentModelOwnerProfile();
+  const user = await getCurrentSupabaseUser();
+  const ownerAuthUserId = getUserId(user);
 
-  if (!supabase || !profile?.id) {
+  if (!supabase || !profile?.id || !ownerAuthUserId) {
     return [];
   }
 
@@ -1097,6 +1105,7 @@ export async function listOwnedModels() {
     .from(MODELS_TABLE)
     .select(MODEL_SELECT_FIELDS)
     .eq('profile_id', profile.id)
+    .eq('owner_auth_user_id', ownerAuthUserId)
     .order('updated_at', { ascending: false });
 
   if (error) {
@@ -1111,8 +1120,11 @@ export async function getOwnedCanonicalModel() {
   const supabase = await resolveSupabaseClient();
   const user = await getCurrentSupabaseUser();
   const userId = getUserId(user);
+  const profile = await getCurrentModelOwnerProfile();
 
-  if (supabase && userId) {
+  if (!userId || !profile?.id) return null;
+
+  if (supabase) {
     const { data, error } = await supabase
       .from(ACTIVE_MODEL_PREFERENCES_TABLE)
       .select('model_id')
@@ -1122,7 +1134,7 @@ export async function getOwnedCanonicalModel() {
     if (error && !isSupabaseRelationMissingError(error)) throw error;
 
     const activeModel = data?.model_id
-      ? await getModelById(data.model_id)
+      ? await getOwnedModelById(data.model_id, { user, profile })
       : null;
 
     if (activeModel?.id) return activeModel;
@@ -1176,12 +1188,15 @@ export async function ensureOwnedCanonicalModel(values = {}) {
   }
 
   const username = normalizeUsername(
-    values.model_slug
-    || values.slug
-    || profile.username
+    profile.username
     || profile.username_lower
     || profile.username_normalized
     || profile.public_username
+    || values.creator_username
+    || values.public_username
+    || values.username
+    || values.model_slug
+    || values.slug
     || ''
   );
   const displayName = normalizeString(
@@ -2100,7 +2115,7 @@ export async function saveModelVisibilityPreferences(modelId, preferences = {}) 
     profile_id: savedModel.profile_id || undefined,
     public_display_name: savedModel.model_name || savedModel.display_name || '',
     display_name: savedModel.model_name || savedModel.display_name || '',
-    public_slug: savedModel.slug || savedModel.slug || '',
+    public_slug: normalizeUsername(savedModel.creator_username || savedModel.public_username || savedModel.username || ''),
     public_description: savedModel.description || '',
     public_visibility: modelVisibility,
     public_visibility_state: modelVisibility,
@@ -2839,7 +2854,7 @@ export async function saveModelFoundationIdentity(modelId, values = {}) {
     profile_id: model.profile_id || undefined,
     public_display_name: modelDisplayName,
     display_name: modelDisplayName,
-    public_slug: model.slug || model.slug || '',
+    public_slug: normalizeUsername(model.creator_username || model.public_username || model.username || ''),
     public_description: modelPurposeDescription,
     public_visibility: model.model_visibility || 'private',
     public_visibility_state: model.model_visibility || 'private',
@@ -2879,6 +2894,7 @@ export async function saveOwnedCanonicalModelAvatar(file) {
     .from(MODELS_TABLE)
     .update({
       model_image_url:uploaded.publicUrl,
+      model_avatar_color:'',
       updated_at:new Date().toISOString()
     })
     .eq('id', model.id)
@@ -2957,6 +2973,7 @@ export async function resetOwnedCanonicalModelAvatar() {
     .from(MODELS_TABLE)
     .update({
       model_image_url:'',
+      model_avatar_color: normalizeString(values.model_avatar_color || values.modelAvatarColor || values.avatarColor || ''),
       updated_at:new Date().toISOString()
     })
     .eq('id', model.id)
@@ -3017,14 +3034,23 @@ export async function resetOwnedCanonicalModelCover() {
 }
 
 async function getModelById(modelId) {
+  return getOwnedModelById(modelId);
+}
+
+async function getOwnedModelById(modelId, { user = null, profile = null } = {}) {
   const supabase = await resolveSupabaseClient();
   const normalizedModelId = normalizeString(modelId);
-  if (!supabase || !normalizedModelId) return null;
+  const ownerAuthUserId = getUserId(user) || getUserId(await getCurrentSupabaseUser());
+  const ownerProfile = profile || await getCurrentModelOwnerProfile();
+
+  if (!supabase || !normalizedModelId || !ownerAuthUserId || !ownerProfile?.id) return null;
 
   const { data, error } = await supabase
     .from(MODELS_TABLE)
     .select(MODEL_SELECT_FIELDS)
     .eq('id', normalizedModelId)
+    .eq('profile_id', ownerProfile.id)
+    .eq('owner_auth_user_id', ownerAuthUserId)
     .maybeSingle();
 
   if (error) {
@@ -3040,10 +3066,8 @@ export async function listPublishedModels() {
   if (!supabase) return [];
 
   const { data, error } = await supabase
-    .from(MODELS_TABLE)
-    .select(MODEL_SELECT_FIELDS)
-    .eq('model_visibility', 'public')
-    .eq('publication_state', 'published')
+    .from(PUBLIC_MODEL_DIRECTORY_VIEW)
+    .select('*')
     .order('updated_at', { ascending: false });
 
   if (error) {
@@ -3051,88 +3075,7 @@ export async function listPublishedModels() {
     throw error;
   }
 
-  const models = Array.isArray(data) ? data.map(mapSupabaseModel).filter(Boolean) : [];
-  if (!models.length) return [];
-
-  const modelIds = models.map((model) => model.id).filter(Boolean);
-  const visibilityResult = await supabase
-    .from(MODEL_VISIBILITY_PREFERENCES_TABLE)
-    .select('model_id, public_visible')
-    .in('model_id', modelIds);
-
-  if (visibilityResult.error && !isSupabaseRelationMissingError(visibilityResult.error)) {
-    console.warn('[Neuroartan][Model] Visibility preference projection unavailable for published models.', visibilityResult.error);
-  }
-
-  const visibilityByModel = new Map(
-    (!visibilityResult.error && Array.isArray(visibilityResult.data) ? visibilityResult.data : [])
-      .map((preference) => [normalizeString(preference.model_id), preference])
-  );
-
-  const discoverableModels = models.filter((model) => {
-    const preference = visibilityByModel.get(model.id);
-    return !preference || preference.public_visible === true;
-  });
-
-  if (!discoverableModels.length) return [];
-
-  const discoverableModelIds = discoverableModels.map((model) => model.id).filter(Boolean);
-  const publicMediaResult = await supabase
-    .from(MODELS_TABLE)
-    .select('id, model_cover_url, model_type')
-    .in('id', discoverableModelIds);
-
-  if (
-    publicMediaResult.error
-    && !isSupabaseRelationMissingError(publicMediaResult.error)
-    && !isSupabaseColumnMissingError(publicMediaResult.error)
-  ) {
-    console.warn('[Neuroartan][Model] Public media projection unavailable for published models.', publicMediaResult.error);
-  }
-
-  const publicMediaByModel = new Map(
-    (!publicMediaResult.error && Array.isArray(publicMediaResult.data) ? publicMediaResult.data : [])
-      .map((media) => [normalizeString(media.id), media])
-  );
-  const publicIdentityResult = await supabase
-    .from(MODEL_FOUNDATION_TABLES.publicIdentities)
-    .select(MODEL_PUBLIC_IDENTITY_SELECT_FIELDS)
-    .in('model_id', discoverableModelIds);
-
-  if (publicIdentityResult.error && !isSupabaseRelationMissingError(publicIdentityResult.error)) {
-    console.warn('[Neuroartan][Model] Public identity projection unavailable for published models.', publicIdentityResult.error);
-  }
-
-  const publicIdentityByModel = new Map(
-    (!publicIdentityResult.error && Array.isArray(publicIdentityResult.data) ? publicIdentityResult.data : [])
-      .map((identity) => [normalizeString(identity.model_id), identity])
-  );
-
-  return discoverableModels.map((model) => {
-    const publicIdentity = publicIdentityByModel.get(model.id) || {};
-    const publicMedia = publicMediaByModel.get(model.id) || {};
-    const displayName = normalizeString(
-      publicIdentity.public_display_name
-      || publicIdentity.display_name
-      || model.model_name
-      || model.creator_display_name
-    );
-    const avatarUrl = normalizeString(publicIdentity.public_avatar_url || model.model_image_url || '');
-
-    return {
-      ...model,
-      model_name: displayName || model.model_name,
-      display_name: displayName || model.display_name,
-      search_title: displayName || model.search_title,
-      public_display_name: normalizeString(publicIdentity.public_display_name || displayName),
-      model_image_url: avatarUrl,
-      public_avatar_url: avatarUrl,
-      model_cover_url: normalizeString(publicMedia.model_cover_url || ''),
-      model_type: normalizeString(publicMedia.model_type || 'personal'),
-      public_identity_state: normalizeString(publicIdentity.public_identity_state || ''),
-      public_visibility: normalizeString(publicIdentity.public_visibility || publicIdentity.public_visibility_state || model.model_visibility || ''),
-    };
-  });
+  return Array.isArray(data) ? data.map(mapSupabaseModel).filter(Boolean) : [];
 }
 
 /* =============================================================================
@@ -3189,7 +3132,7 @@ async function initializePrivateModelFoundation(supabase, model, values = {}) {
     model_id: modelId,
     public_identity_state: publicVisible ? 'published' : 'not_published',
     public_display_name: modelName,
-    public_slug: modelSlug,
+    public_slug: normalizeUsername(model.creator_username || profile.username || profile.username_lower || profile.username_normalized || profile.public_username || ''),
     public_description: description,
     public_avatar_url: '',
     public_visibility: publicVisible ? 'public' : 'private',
@@ -3389,7 +3332,7 @@ export async function createOwnedModel(values = {}) {
     model_name: modelName,
     description: normalizeString(values.description || ''),
     creator_display_name: normalizeString(values.creator_display_name || modelName),
-    creator_username: normalizeUsername(values.creator_username || modelSlug),
+    creator_username: normalizeUsername(values.creator_username || profile.username || profile.username_lower || profile.username_normalized || profile.public_username || ''),
     model_visibility: normalizeString(values.model_visibility || 'public'),
     model_status: normalizeString(values.model_status || values.lifecycle_state || 'draft'),
     readiness_state: normalizeString(values.readiness_state || 'not_ready'),

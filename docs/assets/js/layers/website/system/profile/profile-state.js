@@ -36,6 +36,7 @@ import {
    02) MODULE STATE
 ============================================================================= */
 const SUPABASE_PROFILES_TABLE = 'profiles';
+const PUBLIC_MODEL_DIRECTORY_VIEW = 'public_model_directory';
 const PUBLIC_PROFILE_NOT_FOUND_RETRY_DELAYS_MS = Object.freeze([0, 400, 800, 1200]);
 
 const RUNTIME = (window.__NEUROARTAN_PROFILE_STATE__ ||= {
@@ -99,6 +100,7 @@ async function resolveSupabasePublicProfileByUsername(route, policy) {
   }
 
   const publicProfile = buildPublicProfileModel(profile, policy);
+  const publicModel = await resolveSupabasePublicModelForProfile(profile, normalizedUsername);
   const publicEnabled = profile.public_profile_enabled === true;
   const publicVisibility = normalizeString(profile.public_profile_visibility || '').toLowerCase();
   const routeStatus = normalizeString(profile.public_route_status || '').toLowerCase();
@@ -117,8 +119,60 @@ async function resolveSupabasePublicProfileByUsername(route, policy) {
     publicRoutePath: route.publicRoutePath || '',
     publicRouteUrl: route.publicRouteUrl || '',
     publicRouteDisplay: route.publicRouteDisplay || '',
-    publicProfile: renderable ? publicProfile : null,
+    publicProfile: renderable ? {
+      ...publicProfile,
+      model: publicModel,
+      public_model: publicModel
+    } : null,
+    model: renderable ? publicModel : null,
     reason: renderable ? '' : 'PUBLIC_ROUTE_NOT_PUBLISHED'
+  };
+}
+
+async function resolveSupabasePublicModelForProfile(profile = {}, username = '') {
+  const supabase = getSupabaseClient();
+  const profileId = normalizeString(profile.id || profile.profile_id || '');
+  const normalizedUsername = normalizeString(username || profile.username || profile.username_lower || profile.username_normalized || profile.public_username || '');
+
+  if (!supabase || (!profileId && !normalizedUsername)) {
+    return null;
+  }
+
+  let query = supabase
+    .from('models')
+    .select('id, profile_id, model_name, description, model_visibility, publication_state, lifecycle_state, readiness_state, verification_state, routing_class, model_slug, model_image_url, model_avatar_color, creator_username, created_at, updated_at')
+    .eq('model_visibility', 'public')
+    .eq('publication_state', 'published')
+    .limit(1);
+
+  if (profileId) {
+    query = query.eq('profile_id', profileId);
+  } else {
+    query = query.eq('creator_username', normalizedUsername);
+  }
+
+  const { data, error } = await query.maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    ...data,
+    modelNickname: normalizeString(data.model_nickname || data.nickname || data.display_name || data.model_name || data.model_slug || ''),
+    model_nickname: normalizeString(data.model_nickname || data.nickname || data.display_name || data.model_name || data.model_slug || ''),
+    display_name: normalizeString(data.model_nickname || data.nickname || data.display_name || data.model_name || data.model_slug || ''),
+    description: normalizeString(data.description || data.public_description || data.public_summary || data.model_purpose_description || ''),
+    public_description: normalizeString(data.description || data.public_description || data.public_summary || data.model_purpose_description || ''),
+    public_summary: normalizeString(data.description || data.public_description || data.public_summary || data.model_purpose_description || ''),
+    public_avatar_url: normalizeString(data.public_avatar_url || data.model_image_url || data.avatar_url || ''),
+    model_image_url: normalizeString(data.model_image_url || data.public_avatar_url || data.avatar_url || ''),
+    model_avatar_color: normalizeString(data.model_avatar_color || ''),
+    avatar_url: normalizeString(data.avatar_url || data.model_image_url || data.public_avatar_url || ''),
+    modelAvatarColor: normalizeString(data.model_avatar_color || ''),
+    public_cover_url: normalizeString(data.public_cover_url || data.model_cover_url || data.cover_url || ''),
+    model_cover_url: normalizeString(data.model_cover_url || data.public_cover_url || data.cover_url || ''),
+    cover_url: normalizeString(data.cover_url || data.model_cover_url || data.public_cover_url || '')
   };
 }
 
@@ -171,6 +225,90 @@ function buildRenderableState(baseState, resolution, model = null, creator = nul
     resolved: true,
     model,
     creator
+  };
+}
+
+function mergePublicModelState(primaryModel = null, fallbackModel = null) {
+  const primary = primaryModel && typeof primaryModel === 'object' ? primaryModel : {};
+  const fallback = fallbackModel && typeof fallbackModel === 'object' ? fallbackModel : {};
+
+  const merged = {
+    ...fallback,
+    ...primary
+  };
+
+  const modelName = normalizeString(
+    primary.modelNickname
+    || primary.model_nickname
+    || primary.model_name
+    || primary.display_name
+    || primary.name
+    || fallback.modelNickname
+    || fallback.model_nickname
+    || fallback.model_name
+    || fallback.display_name
+    || fallback.name
+    || ''
+  );
+  const description = normalizeString(
+    primary.description
+    || primary.public_description
+    || primary.public_summary
+    || fallback.description
+    || fallback.public_description
+    || fallback.public_summary
+    || ''
+  );
+  const avatarUrl = normalizeString(
+    primary.model_image_url
+    || primary.public_avatar_url
+    || primary.avatar_url
+    || fallback.model_image_url
+    || fallback.public_avatar_url
+    || fallback.avatar_url
+    || ''
+  );
+  const avatarColor = normalizeString(
+    primary.model_avatar_color
+    || primary.modelAvatarColor
+    || primary.avatar_color
+    || fallback.model_avatar_color
+    || fallback.modelAvatarColor
+    || fallback.avatar_color
+    || ''
+  );
+
+  const coverUrl = normalizeString(
+    primary.model_cover_url
+    || primary.public_cover_url
+    || primary.cover_url
+    || fallback.model_cover_url
+    || fallback.public_cover_url
+    || fallback.cover_url
+    || ''
+  );
+
+  if (!Object.keys(merged).length && !modelName && !description && !avatarUrl && !avatarColor && !coverUrl) {
+    return null;
+  }
+
+  return {
+    ...merged,
+    modelNickname: modelName,
+    model_nickname: modelName,
+    display_name: modelName,
+    description,
+    public_description: description,
+    public_summary: description,
+    model_image_url: avatarUrl,
+    public_avatar_url: avatarUrl,
+    model_avatar_color: avatarColor,
+    modelAvatarColor: avatarColor,
+    avatar_color: avatarColor,
+    avatar_url: avatarUrl,
+    model_cover_url: coverUrl,
+    public_cover_url: coverUrl,
+    cover_url: coverUrl
   };
 }
 
@@ -301,7 +439,8 @@ async function resolveStateForRoute(route) {
           ...baseState,
           route
         },
-        supabaseResolution
+        supabaseResolution,
+        supabaseResolution.model || null
       );
 
       setState(resolvedState);
@@ -360,13 +499,22 @@ async function enrichResolvedProfileWithPublicModel(resolvedState, requestId) {
       return;
     }
 
-    const model = getPublicModelByUsername(resolvedState.normalizedUsername);
+    const registryModel = getPublicModelByUsername(resolvedState.normalizedUsername);
+    const model = mergePublicModelState(
+      currentState.model || resolvedState.model || resolvedState.publicProfile?.model || null,
+      registryModel || null
+    );
     if (!model) return;
 
     setState({
       ...currentState,
       model,
-      creator: model.creator || null
+      publicProfile: currentState.publicProfile ? {
+        ...currentState.publicProfile,
+        model,
+        public_model: model
+      } : currentState.publicProfile,
+      creator: model.creator || registryModel?.creator || null
     });
   } catch (_) {
     // Model registry enrichment is optional and must never block profile routing.

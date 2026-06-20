@@ -41,6 +41,9 @@ import {
 import {
   refreshAccountProfileState
 } from '../../../system/account/profile/account-profile-state.js';
+import {
+  getPublicModelByUsername
+} from '../../../system/model/public-model-registry.js';
 
 /* =============================================================================
    02) MODULE STATE
@@ -434,14 +437,145 @@ function buildPublicStateBadge(outcome) {
   }
 }
 
+function isPublicProfileRouteLocation() {
+  const pathname = normalizeString(window.location.pathname || '/');
+  if (!pathname || pathname === '/' || pathname.endsWith('/index.html')) return false;
+  if (pathname.startsWith('/pages/')) return false;
+  if (pathname.startsWith('/assets/')) return false;
+  if (pathname.startsWith('/registry/')) return false;
+  if (pathname.startsWith('/api/')) return false;
+  if (pathname.startsWith('/models/')) return false;
+  return /^\/[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?\/?$/i.test(pathname);
+}
+
+function buildPublicModelState(detail = {}, publicProfile = null) {
+  const publicUsername = normalizeUsername(
+    detail.normalizedUsername
+    || publicProfile?.public_username
+    || publicProfile?.username
+    || detail.username
+    || ''
+  );
+  const registryModel = publicUsername ? getPublicModelByUsername(publicUsername) : null;
+  const explicitModel = detail.model && typeof detail.model === 'object'
+    ? detail.model
+    : detail.publicModel && typeof detail.publicModel === 'object'
+      ? detail.publicModel
+      : publicProfile?.model && typeof publicProfile.model === 'object'
+        ? publicProfile.model
+        : publicProfile?.public_model && typeof publicProfile.public_model === 'object'
+          ? publicProfile.public_model
+          : publicProfile?.model_public_identity && typeof publicProfile.model_public_identity === 'object'
+            ? publicProfile.model_public_identity
+            : registryModel && typeof registryModel === 'object'
+              ? registryModel
+              : null;
+
+  const candidate = explicitModel || registryModel || publicProfile || {};
+  const modelName = normalizeString(
+    explicitModel?.modelNickname
+    || explicitModel?.model_nickname
+    || explicitModel?.nickname
+    || explicitModel?.model_name
+    || explicitModel?.display_name
+    || publicProfile?.modelNickname
+    || publicProfile?.model_nickname
+    || publicProfile?.model_name
+    || registryModel?.modelNickname
+    || registryModel?.model_nickname
+    || registryModel?.display_name
+    || registryModel?.search_title
+    || ''
+  );
+  const description = normalizeString(
+    explicitModel?.description
+    || explicitModel?.public_description
+    || explicitModel?.public_summary
+    || explicitModel?.modelPurposeDescription
+    || explicitModel?.model_purpose_description
+    || publicProfile?.model_description
+    || publicProfile?.model_public_summary
+    || publicProfile?.public_model_summary
+    || registryModel?.description
+    || registryModel?.public_summary
+    || registryModel?.modelPurposeDescription
+    || ''
+  );
+  const avatarUrl = normalizeString(
+    explicitModel?.public_avatar_url
+    || explicitModel?.model_image_url
+    || explicitModel?.modelAvatar
+    || explicitModel?.avatar_url
+    || publicProfile?.model_avatar_url
+    || publicProfile?.model_image_url
+    || registryModel?.public_avatar_url
+    || registryModel?.model_image_url
+    || registryModel?.avatar_url
+    || ''
+  );
+  const avatarColor = normalizeString(
+    explicitModel?.model_avatar_color
+    || explicitModel?.modelAvatarColor
+    || explicitModel?.avatar_color
+    || explicitModel?.avatarColor
+    || publicProfile?.model_avatar_color
+    || publicProfile?.modelAvatarColor
+    || publicProfile?.avatar_color
+    || publicProfile?.avatarColor
+    || registryModel?.model_avatar_color
+    || registryModel?.modelAvatarColor
+    || registryModel?.avatar_color
+    || registryModel?.avatarColor
+    || ''
+  );
+
+  const coverUrl = normalizeString(
+    explicitModel?.public_cover_url
+    || explicitModel?.model_cover_url
+    || explicitModel?.modelCover
+    || explicitModel?.cover_url
+    || publicProfile?.model_cover_url
+    || registryModel?.public_cover_url
+    || registryModel?.model_cover_url
+    || registryModel?.cover_url
+    || ''
+  );
+
+  if (!explicitModel && !modelName && !description && !avatarUrl && !avatarColor && !coverUrl) {
+    return null;
+  }
+
+  return {
+    ...candidate,
+    modelNickname: modelName,
+    model_nickname: modelName,
+    nickname: modelName,
+    model_name: modelName,
+    display_name: modelName || normalizeString(candidate.display_name || ''),
+    description,
+    public_description: description,
+    public_summary: description,
+    modelPurposeDescription: description,
+    model_purpose_description: description,
+    public_avatar_url: avatarUrl,
+    model_avatar_color: avatarColor,
+    modelAvatarColor: avatarColor,
+    avatar_color: avatarColor,
+    avatarColor,
+    model_image_url: avatarUrl,
+    avatar_url: avatarUrl,
+    public_cover_url: coverUrl,
+    model_cover_url: coverUrl,
+    cover_url: coverUrl
+  };
+}
+
 function buildPublicProfileState(detail = {}) {
   const outcome = normalizeString(detail.outcome || '') || (detail.loading ? 'loading' : 'idle');
   const publicProfile = detail.publicProfile && typeof detail.publicProfile === 'object'
     ? detail.publicProfile
     : null;
-  const model = detail.model && typeof detail.model === 'object'
-    ? detail.model
-    : null;
+  const model = buildPublicModelState(detail, publicProfile);
   const creator = detail.creator && typeof detail.creator === 'object'
     ? detail.creator
     : model?.creator && typeof model.creator === 'object'
@@ -594,6 +728,10 @@ function buildPublicProfileState(detail = {}) {
 function resolveInitialSurface() {
   return document.body?.dataset.profilePage === 'public'
     || document.body?.classList.contains('public-profile-route-active')
+    || document.documentElement?.dataset.profileSurface === 'public'
+    || document.querySelector('[data-profile-shell][data-profile-surface="public"]') instanceof HTMLElement
+    || document.querySelector('[data-profile-header][data-profile-surface="public"]') instanceof HTMLElement
+    || isPublicProfileRouteLocation()
     ? 'public'
     : 'private';
 }
@@ -601,7 +739,10 @@ function resolveInitialSurface() {
 function isPublicSurfaceActive() {
   return document.body?.dataset.profilePage === 'public'
     || document.body?.classList.contains('public-profile-route-active')
-    || document.documentElement?.dataset.profileSurface === 'public';
+    || document.documentElement?.dataset.profileSurface === 'public'
+    || document.querySelector('[data-profile-shell][data-profile-surface="public"]') instanceof HTMLElement
+    || document.querySelector('[data-profile-header][data-profile-surface="public"]') instanceof HTMLElement
+    || isPublicProfileRouteLocation();
 }
 
 function shouldApplyPublicState(detail = {}) {
@@ -817,7 +958,9 @@ export function requestProfileAction(action, detail = {}) {
       window.location.href = '/index.html';
       return;
     case 'explore':
-      window.location.href = '/index.html#search';
+      document.dispatchEvent(new CustomEvent('neuroartan:home-search-shell-open-requested', {
+        detail: { source:'profile-runtime', surface:state.surface || '' }
+      }));
       return;
     case 'library':
       window.location.href = '/pages/knowledge-research/index.html';
@@ -1004,7 +1147,9 @@ function initProfileRuntime() {
   if (RUNTIME.initialized) return;
   RUNTIME.initialized = true;
 
-  setRuntimeState(getDefaultState());
+  setRuntimeState(resolveInitialSurface() === 'public'
+    ? buildPublicProfileState({ outcome:'loading', loading:true })
+    : getDefaultState());
   bindActionDelegation();
   bindProfileStateEvents();
   bindProfileMediaDisplayResolver();

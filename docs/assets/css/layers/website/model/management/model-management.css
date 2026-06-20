@@ -207,8 +207,9 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 }
 
 .model-management__avatar{
-  background:var(--color-primary1);
+  background:transparent;
 }
+
 
 .model-management__cover-wrap{
   position:relative;
@@ -447,7 +448,7 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 .model-source-summary__avatar{
   inline-size:var(--profile-private-hero-avatar-size);
   block-size:var(--profile-private-hero-avatar-size);
-  background:var(--color-primary1);
+  background:transparent;
 }
 
 .model-source-summary__identity-copy{

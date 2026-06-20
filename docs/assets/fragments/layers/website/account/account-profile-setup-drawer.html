@@ -241,7 +241,7 @@
           </div>
 
           <!-- ==================================================================
-          10) OPTIONAL FIELDS
+          10) GENDER
           ================================================================== -->
           <div class="account-profile-setup-drawer-field-group">
             <select
@@ -249,14 +249,12 @@
               name="gender"
               class="account-profile-setup-drawer-select"
               data-account-profile-setup-field="gender"
+              required
             >
-              <option value="" data-i18n-key="account_profile_setup_gender_placeholder">Optional</option>
+              <option value="" selected disabled hidden data-i18n-key="account_profile_setup_gender_placeholder">Gender</option>
               <option value="woman" data-i18n-key="account_profile_setup_gender_woman">Woman</option>
               <option value="man" data-i18n-key="account_profile_setup_gender_man">Man</option>
             </select>
-            <div class="account-profile-setup-drawer-field-meta">
-              <p class="account-profile-setup-drawer-field-note" data-i18n-key="account_profile_setup_gender_note">Optional and kept private by default.</p>
-            </div>
           </div>
 
         </div>

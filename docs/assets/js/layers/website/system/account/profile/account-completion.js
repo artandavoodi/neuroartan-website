@@ -90,6 +90,7 @@ import {
     authSource: 'none',
     profileRequestId: 0,
     profileSaveInProgress: false,
+    signUpInProgress: false,
     onboardingContext: {},
     lastProviderContext: {},
     usernameValidationRequestId: 0,
@@ -178,13 +179,6 @@ import {
     }
 
     return data?.session || null;
-  }
-
-  function isSupabaseEmailVerificationPending(data = {}) {
-    const session = data?.session || null;
-    const user = data?.user || null;
-
-    return !!(user && !session && !user?.email_confirmed_at);
   }
 
   async function getSupabaseProfile(authUserId) {
@@ -384,15 +378,6 @@ import {
       detail: {
         source: MODULE_ID,
         action: 'profile-setup',
-        ...detail
-      }
-    }));
-
-    document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-      detail: {
-        source: MODULE_ID,
-        state: 'guest',
-        surface: 'profile-setup',
         ...detail
       }
     }));
@@ -597,6 +582,10 @@ import {
 
     if (code === 'invalid_credentials' || message.includes('invalid login credentials')) {
       return 'The email address or password is not correct.';
+    }
+
+    if (message.includes('user already registered') || message.includes('email already registered')) {
+      return 'This email address already has a Neuroartan account. Sign in instead.';
     }
 
     if (message.includes('email not confirmed')) {
@@ -873,12 +862,12 @@ import {
       method: onboarding.method || pending.method || providerContext.method || getPrimaryProviderId(user),
       provider: onboarding.provider || pending.provider || providerContext.provider || getPrimaryProviderId(user),
       email: onboarding.email || pending.email || providerContext.email || normalizeEmail(profile?.email || user?.email || ''),
-      first_name: profile?.first_name || onboarding.first_name || pending.first_name || providerContext.first_name || splitDisplayName.first_name || '',
-      last_name: profile?.last_name || onboarding.last_name || pending.last_name || providerContext.last_name || splitDisplayName.last_name || '',
+      first_name: profile?.first_name || onboarding.first_name || pending.first_name || user?.user_metadata?.first_name || providerContext.first_name || splitDisplayName.first_name || '',
+      last_name: profile?.last_name || onboarding.last_name || pending.last_name || user?.user_metadata?.last_name || providerContext.last_name || splitDisplayName.last_name || '',
       display_name: profile?.display_name || onboarding.display_name || pending.display_name || providerContext.display_name || normalizeString(user?.displayName || user?.user_metadata?.full_name || user?.user_metadata?.name || ''),
       username: profile?.username || onboarding.username || pending.username || providerContext.username || '',
-      password: onboarding.password || pending.password || '',
-      password_confirm: onboarding.password_confirm || onboarding.password || pending.password_confirm || pending.password || '',
+      password: '',
+      password_confirm: '',
       date_of_birth: profile?.date_of_birth || profile?.birth_date || onboarding.date_of_birth || pending.date_of_birth || '',
       gender: normalizeGenderValue(profile?.gender || onboarding.gender || pending.gender || '')
     };
@@ -979,6 +968,16 @@ import {
     }));
   }
 
+  function emitSignUpStatus(detail = {}) {
+    document.dispatchEvent(new CustomEvent('account:sign-up-status', {
+      detail: {
+        source: MODULE_ID,
+        state: detail.state || 'idle',
+        message: detail.message || ''
+      }
+    }));
+  }
+
   function resetAccountSurfaces(reason = 'session-transition') {
     document.dispatchEvent(new CustomEvent('account:close-all', {
       detail: {
@@ -1060,8 +1059,8 @@ import {
       return;
     }
 
-    if (!isIndexRoute()) {
-      redirectToIndex();
+    if (!isProfileRoute()) {
+      window.location.assign(`${PROFILE_ROUTE}?complete=account`);
     }
   }
 
@@ -1309,7 +1308,130 @@ import {
   }
 
   /* =============================================================================
-     18) EMAIL ONBOARDING FLOW
+     18) EMAIL SIGN-UP FLOW
+  ============================================================================= */
+  async function handleSignUpSubmit(detail = {}) {
+    const form = document.querySelector('[data-account-sign-up-form="true"]');
+    const nameField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-sign-up-name')
+      : null;
+    const emailField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-sign-up-email')
+      : null;
+    const passwordField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-sign-up-password')
+      : null;
+    const passwordConfirmField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-sign-up-password-confirm')
+      : null;
+
+    if (!(form instanceof HTMLFormElement)) return;
+
+    clearFormErrors(form);
+    const name = normalizeString(detail.name || nameField?.value || '');
+    const email = normalizeEmail(detail.email || emailField?.value || '');
+    const password = String(detail.password || passwordField?.value || '');
+    const passwordConfirm = String(detail.password_confirm || passwordConfirmField?.value || '');
+
+    if (!name) {
+      setFieldError(nameField, 'Enter your name.');
+      return;
+    }
+
+    if (!email) {
+      setFieldError(emailField, 'Enter your email address.');
+      return;
+    }
+
+    if (RUNTIME.signUpInProgress) return;
+    RUNTIME.signUpInProgress = true;
+
+    setFormBusy(form, true);
+    emitSignUpStatus({ state: 'saving', message: 'Creating your account…' });
+
+    try {
+      const passwordPolicy = await loadAccountPasswordPolicy();
+      const passwordEvaluation = evaluateAccountPassword(password, passwordPolicy);
+      if (!passwordEvaluation.ok) {
+        setFieldError(passwordField, passwordEvaluation.message);
+        return;
+      }
+
+      if (password !== passwordConfirm) {
+        setFieldError(passwordConfirmField, 'Passwords do not match.');
+        return;
+      }
+
+      const splitName = splitFullName(name);
+      const onboarding = {
+        method: 'email',
+        provider: 'email',
+        email,
+        first_name: splitName.first_name,
+        last_name: splitName.last_name,
+        display_name: name
+      };
+      const supabase = await waitForSupabaseClient();
+      if (!supabase) {
+        throw createUsernameError('AUTH_BACKEND_NOT_READY');
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}${PROFILE_ROUTE}?complete=account`,
+          data: {
+            first_name: splitName.first_name,
+            last_name: splitName.last_name,
+            full_name: name,
+            display_name: name,
+            onboarding_method: 'email'
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      patchOnboardingContext(onboarding);
+      writePendingProfileState(onboarding);
+      form.reset();
+      setFlowState({
+        resolveProfile: true,
+        redirectToProfile: false
+      });
+
+      if (!data?.session) {
+        emitSignUpStatus({
+          state: 'success',
+          message: 'Verification email sent. Confirm it to choose your username and complete your profile.'
+        });
+        return;
+      }
+
+      if (data?.user) {
+        emitSignUpStatus({ state: 'success', message: 'Account created. Opening profile setup…' });
+        await handleSignedInState(data.user);
+        return;
+      }
+
+      throw createUsernameError('EMAIL_VERIFICATION_REQUIRED');
+    } catch (error) {
+      const message = mapAuthError(error, 'Unable to create your account right now.');
+      emitSignUpStatus({ state: 'error', message });
+      setFieldError(emailField, message);
+      clearFlowState();
+      console.error('Email sign-up error:', error);
+    } finally {
+      RUNTIME.signUpInProgress = false;
+      setFormBusy(form, false);
+    }
+  }
+
+  /* =============================================================================
+     19) EMAIL ONBOARDING FLOW
   ============================================================================= */
   async function handleEmailOnboardingRequest(detail = {}) {
     const form = document.querySelector('[data-account-email-auth-form="true"]');
@@ -1340,7 +1462,7 @@ import {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}${INDEX_ROUTE}?account_return=profile_setup`,
+          emailRedirectTo: `${window.location.origin}${PROFILE_ROUTE}?complete=account`,
           shouldCreateUser: true
         }
       });
@@ -1547,6 +1669,9 @@ import {
     const passwordConfirmField = form instanceof HTMLFormElement
       ? getFieldFromForm(form, '#account-profile-setup-password-confirm')
       : null;
+    const genderField = form instanceof HTMLFormElement
+      ? getFieldFromForm(form, '#account-profile-setup-gender')
+      : null;
     const dateOfBirthField = form instanceof HTMLFormElement
       ? (
           getFieldFromForm(form, '[data-account-profile-setup-date-control="year"]')
@@ -1586,11 +1711,17 @@ import {
       gender: normalizeGenderValue(detail.gender || context.gender || '')
     };
 
-    writePendingProfileState(values);
+    writePendingProfileState({
+      ...values,
+      password: '',
+      password_confirm: ''
+    });
 
     patchOnboardingContext({
       ...context,
       ...values,
+      password: '',
+      password_confirm: '',
       display_name: values.display_name,
       first_name: values.first_name,
       last_name: values.last_name,
@@ -1621,6 +1752,11 @@ import {
 
     if (!values.date_of_birth) {
       setFieldError(dateOfBirthField, 'Enter your date of birth.');
+      return;
+    }
+
+    if (!values.gender) {
+      setFieldError(genderField, 'Select your gender.');
       return;
     }
 
@@ -1656,15 +1792,15 @@ import {
       return;
     }
 
-    if (method === 'email') {
-      if (!activeUser) {
-        emitProfileSetupSubmitStatus({
-          state: 'error',
-          message: 'Verify your email before completing your profile.'
-        });
-        return;
-      }
+    if (!activeUser) {
+      emitProfileSetupSubmitStatus({
+        state: 'error',
+        message: 'Verify your email before completing your profile.'
+      });
+      return;
+    }
 
+    if (method === 'email') {
       if (!values.password) {
         setFieldError(passwordField, 'Create a password.');
         return;
@@ -1681,6 +1817,8 @@ import {
         return;
       }
     }
+
+    if (RUNTIME.profileSaveInProgress) return;
 
     setFormBusy(form, true);
     RUNTIME.profileSaveInProgress = true;
@@ -1719,10 +1857,9 @@ import {
 
         await assertSupabaseUsernameAvailable(values, existingProfile, user);
 
-        const passwordEnteredThisSubmit = normalizeString(detail.password || '');
-        if (method === 'email' && passwordEnteredThisSubmit && !isProfileComplete(existingProfile)) {
+        if (method === 'email' && values.password) {
           const { error: passwordUpdateError } = await supabase.auth.updateUser({
-            password: passwordEnteredThisSubmit
+            password: values.password
           });
 
           if (passwordUpdateError) {
@@ -1746,7 +1883,11 @@ import {
           policy,
           supabase
         });
-        await ensureOwnedCanonicalModel();
+        try {
+          await ensureOwnedCanonicalModel();
+        } catch (modelError) {
+          console.error('Canonical model bootstrap deferred:', modelError);
+        }
 
         emitUsernameStatus({
           state: 'available',
@@ -2021,13 +2162,27 @@ import {
       void handleSignInSubmit(detail);
     });
 
+    document.addEventListener('account:sign-up-submit', (event) => {
+      const detail = event instanceof CustomEvent ? event.detail || {} : {};
+      void handleSignUpSubmit(detail);
+    });
+
     document.addEventListener('account:profile-setup-open-request', (event) => {
       const detail = event instanceof CustomEvent ? event.detail || {} : {};
       patchOnboardingContext(detail);
       setFlowState({
         resolveProfile: true,
-        redirectToProfile: true
+        redirectToProfile: false
       });
+
+      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+        detail: {
+          source: detail.source || MODULE_ID,
+          state: 'guest',
+          surface: 'profile-setup',
+          ...detail
+        }
+      }));
     });
 
     document.addEventListener('account:profile-setup-submit', (event) => {
@@ -2093,21 +2248,6 @@ import {
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
 
-      if (form.matches('[data-account-sign-up-form="true"]')) {
-        const nameField = getFieldFromForm(form, '#account-sign-up-name');
-        const emailField = getFieldFromForm(form, '#account-sign-up-email');
-      const passwordField = getFieldFromForm(form, '#account-sign-up-password');
-
-        patchOnboardingContext({
-          method: 'email',
-          provider: 'email',
-          name: normalizeString(nameField?.value || ''),
-          email: normalizeEmail(emailField?.value || ''),
-          password: String(passwordField?.value || ''),
-          password_confirm: String(passwordField?.value || '')
-        });
-      }
-
       if (form.matches('[data-account-email-auth-form="true"]')) {
         event.preventDefault();
 
@@ -2127,16 +2267,21 @@ import {
   function boot() {
     const returnParams = new URLSearchParams(window.location.search);
     const accountReturn = returnParams.get('account_return');
-    if (accountReturn === 'profile_setup') {
+    const accountCompletion = returnParams.get('complete') === 'account'
+      || returnParams.get('account_completion') === '1';
+
+    if (accountReturn === 'profile_setup' || accountCompletion) {
       setFlowState({
         resolveProfile: true,
         redirectToProfile: false
       });
 
-      returnParams.delete('account_return');
-      const nextSearch = returnParams.toString();
-      const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`;
-      window.history.replaceState({}, '', nextUrl);
+      if (accountReturn === 'profile_setup') {
+        returnParams.delete('account_return');
+        const nextSearch = returnParams.toString();
+        const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`;
+        window.history.replaceState({}, '', nextUrl);
+      }
     } else if (accountReturn === 'password_reset') {
       clearFlowState();
       clearOnboardingContext();

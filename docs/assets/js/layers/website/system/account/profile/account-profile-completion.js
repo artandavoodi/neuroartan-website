@@ -23,15 +23,6 @@ export function requestAccountProfileCompletion(detail = {}) {
       ...detail
     }
   }));
-
-  document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
-    detail:{
-      source:MODULE_ID,
-      state:'guest',
-      surface:'profile-setup',
-      ...detail
-    }
-  }));
 }
 
 export function requestAccountProfileRefresh(detail = {}) {

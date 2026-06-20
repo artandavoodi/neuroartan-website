@@ -24,7 +24,7 @@ import {
 } from '../../../system/model/model-training-store.js';
 import { listProfilePosts } from '../../../system/profile/profile-post-store.js';
 import { listProfileThoughts } from '../../../system/profile/profile-thought-store.js';
-import { listFeedPosts } from '../../../system/feed/feed-store.js';
+import { listOwnedFeedPosts } from '../../../system/feed/feed-store.js';
 
 const HOME_OVERVIEW_SNAPSHOT_TIMEOUT_MS = 6500;
 const HOME_OVERVIEW_SNAPSHOT_TIMEOUT = Object.freeze({ __homeOverviewSnapshotTimeout: true });
@@ -217,9 +217,9 @@ function createDirectionItems(snapshot = {}) {
   return items.sort((a, b) => a.priority - b.priority).slice(0, 4);
 }
 
-async function buildHomeOverviewSnapshot() {
+async function buildHomeOverviewSnapshot(authenticatedUser = null) {
   const backend = getModelStoreBackendState();
-  const user = await withReadTimeout(
+  const user = authenticatedUser || await withReadTimeout(
     safeRead('Current user', () => getCurrentSupabaseUser(), null),
     HOME_OVERVIEW_SNAPSHOT_TIMEOUT
   );
@@ -300,8 +300,14 @@ async function buildHomeOverviewSnapshot() {
     withReadTimeout(safeRead('Changelog events', () => listModelChangelogEvents(model.id), []), []),
     withReadTimeout(safeRead('Profile posts', () => listProfilePosts(), []), []),
     withReadTimeout(safeRead('Profile thoughts', () => listProfileThoughts(), []), []),
-    withReadTimeout(safeRead('Feed posts', () => listFeedPosts(), []), []),
+    withReadTimeout(safeRead('Owned feed posts', () => listOwnedFeedPosts(), []), []),
   ]);
+
+  // Do not render an in-flight snapshot after an account switch.
+  const currentUser = await safeRead('Current user ownership check', () => getCurrentSupabaseUser(), null);
+  if (!currentUser?.id || currentUser.id !== user.id) {
+    return { backend, user: currentUser || null, resolving: true };
+  }
 
   const sourceVaultCount = sourceVaultRecords.reduce((total, record) => total + getRecordAggregateCount(record), 0);
   const trainingDatasetCount = trainingDatasets.length;
@@ -370,15 +376,28 @@ export function clearHomeOverviewSnapshotCache() {
 }
 
 export async function readHomeOverviewSnapshot({ force = false } = {}) {
+  const user = await withReadTimeout(
+    safeRead('Current user cache key', () => getCurrentSupabaseUser(), null),
+    HOME_OVERVIEW_SNAPSHOT_TIMEOUT
+  );
+  const ownerAuthUserId = user?.id || '';
   const now = Date.now();
-  if (!force && snapshotCache && now - snapshotCache.createdAt < HOME_OVERVIEW_SNAPSHOT_CACHE_MS) {
+  if (
+    !force
+    && snapshotCache
+    && snapshotCache.ownerAuthUserId === ownerAuthUserId
+    && now - snapshotCache.createdAt < HOME_OVERVIEW_SNAPSHOT_CACHE_MS
+  ) {
     return snapshotCache.promise;
   }
 
-  const promise = buildHomeOverviewSnapshot().catch((error) => {
+  const promise = buildHomeOverviewSnapshot(user).catch((error) => {
     snapshotCache = null;
     throw error;
   });
-  snapshotCache = { createdAt: now, promise };
+  snapshotCache = { ownerAuthUserId, createdAt: now, promise };
   return promise;
 }
+
+window.addEventListener('account:profile-state-changed', clearHomeOverviewSnapshotCache);
+window.addEventListener('account:profile-signed-out', clearHomeOverviewSnapshotCache);

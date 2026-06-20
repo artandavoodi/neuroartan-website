@@ -22,3 +22,7 @@
   border-color:var(--field-border) !important;
   outline:none;
 }
+
+.home-platform-destination--settings-account .profile-settings__status{
+  margin-block-start:var(--spacing-sm);
+}

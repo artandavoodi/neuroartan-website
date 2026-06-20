@@ -145,6 +145,7 @@ function buildResolvedModelFromBackend(model) {
     || ''
   );
   const username = normalizeUsername(model.creator_username || model.model_slug || '');
+  const publicProfileRoutePath = username ? `/${username}` : '';
   const avatarUrl = normalizeString(model.public_avatar_url || model.model_image_url || '');
 
   return {
@@ -158,7 +159,7 @@ function buildResolvedModelFromBackend(model) {
     model_cover_url: normalizeString(model.model_cover_url || ''),
     model_type: normalizeString(model.model_type || 'personal') || 'personal',
     created_at: normalizeString(model.created_at || ''),
-    page_route: model.model_slug ? `/pages/models/index.html?model=${encodeURIComponent(model.model_slug)}` : '/pages/models/index.html',
+    page_route: publicProfileRoutePath || '/pages/profiles/index.html',
     selectable: true,
     status: normalizeString(model.lifecycle_state || 'draft'),
     readiness_state: normalizeString(model.readiness_state || 'uninitialized'),
@@ -181,8 +182,8 @@ function buildResolvedModelFromBackend(model) {
       public_profile_enabled: model.model_visibility === 'public',
       public_profile_discoverable: model.model_visibility === 'public',
       public_profile_visibility: model.model_visibility || 'private',
-      public_route_path: model.model_slug ? `/models/${model.model_slug}` : '',
-      public_route_canonical_url: model.model_slug ? `https://neuroartan.com/models/${model.model_slug}` : '',
+      public_route_path: publicProfileRoutePath,
+      public_route_canonical_url: publicProfileRoutePath ? `https://neuroartan.com${publicProfileRoutePath}` : '',
       public_route_status: model.publication_state || 'unpublished',
       public_summary: normalizeString(model.description || ''),
       public_links: []

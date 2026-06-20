@@ -1,3 +1,5 @@
+import '../../../home/shell/home-search-shell.js';
+
 /* =============================================================================
    01) PUBLIC PROFILE PAGE AUTHORITY
    02) PUBLIC PROFILE INIT

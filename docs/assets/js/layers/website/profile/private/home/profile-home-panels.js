@@ -53,6 +53,32 @@ function formatDate(value = '') {
   }).format(date);
 }
 
+function isVerifiedFeedPost(post = {}) {
+  const directStatus = [
+    post.verified,
+    post.profile_verified,
+    post.author_profile_verified,
+    post.public_profile?.profile_verified,
+    post.author?.profile_verified,
+    post.profile?.profile_verified
+  ].some(Boolean);
+
+  const verificationStatus = [
+    post.verification_status,
+    post.public_verification_status,
+    post.author_verification_status,
+    post.author_public_verification_status,
+    post.public_profile?.verification_status,
+    post.public_profile?.public_verification_status,
+    post.author?.verification_status,
+    post.author?.public_verification_status,
+    post.profile?.verification_status,
+    post.profile?.public_verification_status
+  ].map((value) => normalizeString(value).toLowerCase());
+
+  return directStatus || verificationStatus.includes('verified');
+}
+
 function loadMessages() {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(MESSAGE_STORAGE_KEY) || '[]');
@@ -98,6 +124,7 @@ function renderFeedPost(post = {}) {
   const avatar = normalizeString(post.avatar || '');
   const publicProfileRoute = normalizeString(post.publicRoute || post.href || '/profile.html');
   const handle = normalizeString(post.username) ? `@${normalizeString(post.username)}` : normalizeString(post.publicRoute || post.href || '');
+  const verified = isVerifiedFeedPost(post);
   const postId = normalizeString(post.id || '');
   const social = STATE.feedSocialState[postId] || getEmptyFeedPostSocialState();
   const counts = social.counts || {};
@@ -111,7 +138,14 @@ function renderFeedPost(post = {}) {
           ${avatar ? `<img src="${escapeHtml(avatar)}" alt="">` : ''}
         </a>
         <span class="profile-home-panel__item-meta">
-          <strong><a class="profile-home-panel__profile-link" href="${escapeHtml(publicProfileRoute)}">${escapeHtml(post.entityLabel || 'Profile')}</a></strong>
+          <strong class="profile-home-panel__profile-name-line">
+            <a class="profile-home-panel__profile-link" href="${escapeHtml(publicProfileRoute)}">${escapeHtml(post.entityLabel || 'Profile')}</a>
+            ${verified ? `
+              <span class="profile-home-panel__verified-badge" aria-label="Verified profile">
+                <img class="profile-home-panel__verified-badge-icon ui-icon-theme-aware" src="/registry/icons/public/assets/core/identity/trust/verified.svg" alt="" aria-hidden="true">
+              </span>
+            ` : ''}
+          </strong>
           ${handle ? `<span>${escapeHtml(handle)}</span>` : ''}
         </span>
         ${post.createdAt ? `<time>${escapeHtml(formatDate(post.createdAt))}</time>` : ''}

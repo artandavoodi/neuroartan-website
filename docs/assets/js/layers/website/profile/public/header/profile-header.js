@@ -1,18 +1,15 @@
 /* =============================================================================
    01) MODULE IMPORTS
-   02) PUBLIC PROFILE HEADER HELPERS
-   03) PUBLIC PROFILE HEADER RENDER
-   04) PUBLIC PROFILE HEADER INIT
-   ============================================================================= */
-
-/* =============================================================================
-   01) MODULE IMPORTS
    ============================================================================= */
 
 import {
   getProfileRuntimeState,
   subscribeProfileRuntime
 } from '../../private/shell/profile-runtime.js';
+import {
+  getProfileNavigationState,
+  subscribeProfileNavigation
+} from '../../private/navigation/profile-navigation.js';
 import {
   getProfileSubscriptionState,
   getProfileSocialGraphState
@@ -48,28 +45,119 @@ function setControlDisabled(control, disabled) {
   control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
 }
 
-function setFollowMenuOpen(root, open) {
-  const menu = root.querySelector('[data-profile-follow-menu]');
-  const toggle = null;
+function readHeaderModelText(model = {}, keys = []) {
+  for (const key of keys) {
+    const value = String(model?.[key] || '').trim();
+    if (value) return value;
+  }
+  return '';
+}
 
-  if (menu instanceof HTMLElement) {
-    menu.hidden = !open;
+function getPublicHeaderHashTabKey() {
+  const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
+  if (hash === 'model-management' || hash === 'model') return 'model';
+  if (hash === 'highlights') return 'highlights';
+  if (hash === 'posts') return 'posts';
+  return '';
+}
+
+function getPublicHeaderActiveTabKey() {
+  const hashTabKey = getPublicHeaderHashTabKey();
+  if (hashTabKey) return hashTabKey;
+
+  const navigationState = getProfileNavigationState();
+  if (navigationState.section === 'model-management' || navigationState.section === 'model') return 'model';
+  if (navigationState.section === 'highlights') return 'highlights';
+  return 'posts';
+}
+
+function buildPublicHeaderRenderState(state = getProfileRuntimeState()) {
+  const model = {
+    ...(state.publicProfile || {}),
+    ...(state.publicProfile?.model_public_identity || {}),
+    ...(state.publicProfile?.public_model || {}),
+    ...(state.publicProfile?.model || {}),
+    ...(state.public_model || {}),
+    ...(state.publicModel || {}),
+    ...(state.model || {})
+  };
+  const modelHeaderActive = getPublicHeaderActiveTabKey() === 'model';
+
+  if (!modelHeaderActive) {
+    return state;
   }
 
-  if (toggle instanceof HTMLElement) {
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  const modelDisplayName = readHeaderModelText(model, ['modelNickname', 'model_nickname', 'nickname', 'model_name', 'display_name', 'name']);
+  const modelSummary = readHeaderModelText(model, ['description', 'public_description', 'public_summary', 'modelPurposeDescription', 'model_purpose_description']);
+  const modelAvatarUrl = readHeaderModelText(model, ['public_avatar_url', 'model_avatar_url', 'public_model_avatar_url', 'model_image_url', 'modelAvatar', 'avatarDisplayUrl', 'avatarUrl', 'avatar_url', 'image_url']);
+  const modelAvatarColor = readHeaderModelText(model, ['model_avatar_color', 'modelAvatarColor', 'avatar_color', 'avatarColor']);
+  const modelCoverUrl = readHeaderModelText(model, ['public_cover_url', 'model_cover_url', 'public_model_cover_url', 'modelCover', 'coverDisplayUrl', 'coverUrl', 'cover_url', 'hero_image_url', 'header_image_url']);
+
+  return {
+    ...state,
+    modelHeaderActive: true,
+    displayName: modelDisplayName || state.displayName || state.profile?.public_display_name || state.profile?.display_name || '',
+    summary: modelSummary || state.summary || state.profile?.public_summary || state.profile?.public_bio || '',
+    avatarDisplayUrl: modelAvatarUrl,
+    avatarUrl: modelAvatarUrl,
+    modelAvatarColor,
+    model_avatar_color: modelAvatarColor,
+    avatar_color: modelAvatarColor,
+    coverDisplayUrl: modelCoverUrl,
+    coverUrl: modelCoverUrl
+  };
+}
+
+function setFollowMenuOpen(root, open) {
+  const menu = root.querySelector('[data-profile-follow-menu]');
+  const toggle = root.querySelector('[data-profile-follow-menu-toggle]');
+  const button = root.querySelector('[data-profile-follow-primary]');
+  const followed = button instanceof HTMLButtonElement && button.dataset.profileFollowState === 'followed';
+  const shouldOpen = Boolean(open && followed);
+
+  if (menu instanceof HTMLElement) {
+    menu.hidden = !shouldOpen;
+  }
+
+  if (toggle instanceof HTMLButtonElement) {
+    toggle.hidden = !followed;
+    toggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    toggle.setAttribute('aria-haspopup', 'menu');
+  }
+
+  if (button instanceof HTMLButtonElement) {
+    button.setAttribute('aria-pressed', followed ? 'true' : 'false');
   }
 }
 
 function renderAvatar(root, state) {
   const image = root.querySelector('[data-profile-avatar-image]');
   const placeholder = root.querySelector('[data-profile-avatar-placeholder]');
+  const surface = root.querySelector('.profile-header__avatar-surface');
+  const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
+
+  if (surface instanceof HTMLElement) {
+    surface.classList.toggle('model-management__avatar', state.modelHeaderActive === true);
+    if (state.modelHeaderActive === true) {
+      const avatarColor = String(state.modelAvatarColor || state.model_avatar_color || state.avatar_color || '').trim();
+      if (avatarUrl) {
+        surface.style.removeProperty('background-color');
+      } else if (avatarColor) {
+        surface.style.backgroundColor = avatarColor;
+      } else {
+        surface.style.removeProperty('background-color');
+      }
+    } else {
+      surface.style.removeProperty('background-color');
+    }
+  }
 
   if (image instanceof HTMLImageElement) {
-    const avatarUrl = state.avatarDisplayUrl || state.avatarUrl || '';
     if (avatarUrl) {
       image.hidden = false;
-      image.src = avatarUrl;
+      if (image.getAttribute('src') !== avatarUrl) {
+        image.src = avatarUrl;
+      }
       image.alt = `${state.displayName} avatar`;
     } else {
       image.hidden = true;
@@ -79,7 +167,7 @@ function renderAvatar(root, state) {
   }
 
   if (placeholder instanceof HTMLElement) {
-    placeholder.hidden = true;
+    placeholder.hidden = state.modelHeaderActive === true || Boolean(state.avatarDisplayUrl || state.avatarUrl);
   }
 }
 
@@ -90,7 +178,7 @@ function renderCover(root, state) {
   const coverUrl = state.coverDisplayUrl || state.coverUrl || state.defaultCoverUrl || '';
   if (coverUrl) {
     cover.style.backgroundImage = `linear-gradient(180deg, color-mix(in srgb, var(--bg-color) 12%, transparent), color-mix(in srgb, var(--bg-color) 48%, transparent)), url("${coverUrl}")`;
-    cover.dataset.profilePublicCoverState = state.coverUrl ? 'custom' : 'default';
+    cover.dataset.profilePublicCoverState = coverUrl ? 'custom' : 'default';
     return;
   }
 
@@ -103,21 +191,22 @@ function renderCover(root, state) {
    ============================================================================= */
 
 function renderPublicHeader(state = getProfileRuntimeState()) {
+  const renderState = buildPublicHeaderRenderState(state);
+  const activeTabKey = getPublicHeaderActiveTabKey();
+
   getProfileHeaderRoots().forEach((root) => {
     root.dataset.profileViewerState = 'public';
     root.dataset.profileStateKey = state.stateKey;
+    root.dataset.profileActiveSection = activeTabKey;
 
-    setText(root, '[data-profile-display-name]', state.displayName);
+    setText(root, '[data-profile-display-name]', renderState.displayName);
     setText(root, '[data-profile-username]', state.username.normalized ? `@${state.username.normalized}` : '@username');
-    setText(root, '[data-profile-summary]', state.summary);
+    setText(root, '[data-profile-summary]', renderState.summary);
 
     setHidden(root, '[data-profile-verified-block]', !state.verificationVisible);
 
-    renderAvatar(root, state);
-    renderCover(root, state);
-
-    const copyAction = root.querySelector('[data-profile-action="copy-link"]');
-    setControlDisabled(copyAction, !state.publicRouteUrl);
+    renderAvatar(root, renderState);
+    renderCover(root, renderState);
 
     renderPublicFollowControl(root, state);
     renderPublicSubscribeControl(root, state);
@@ -127,6 +216,7 @@ function renderPublicHeader(state = getProfileRuntimeState()) {
 async function renderPublicFollowControl(root, state = getProfileRuntimeState()) {
   const control = root.querySelector('[data-profile-follow-control]');
   const button = root.querySelector('[data-profile-follow-primary]');
+  const toggle = root.querySelector('[data-profile-follow-menu-toggle]');
   const label = root.querySelector('[data-profile-follow-label]');
   const profileId = String(state.profileId || '').trim();
   const available = state.routeOutcome === 'found_renderable' && Boolean(profileId);
@@ -147,16 +237,14 @@ async function renderPublicFollowControl(root, state = getProfileRuntimeState())
     root.dataset.profileSocialGraphBackend = graph.tableAvailable ? 'ready' : 'pending';
     setText(root, '[data-profile-followers-count]', String(graph.followersCount || 0));
     setText(root, '[data-profile-following-count]', String(graph.followingCount || 0));
-    button.dataset.profileAction = graph.viewerFollowing ? 'unfollow-profile' : 'follow-profile';
+    button.dataset.profileAction = graph.viewerFollowing ? 'profile-followed-state' : 'follow-profile';
     button.dataset.profileFollowState = graph.viewerFollowing ? 'followed' : 'unfollowed';
     button.setAttribute('aria-pressed', graph.viewerFollowing ? 'true' : 'false');
-    setFollowMenuOpen(root, false);
-
-    const menuToggle = null;
-    if (menuToggle instanceof HTMLButtonElement) {
-      menuToggle.hidden = true;
-      menuToggle.setAttribute('aria-expanded', 'false');
+    if (toggle instanceof HTMLButtonElement) {
+      toggle.hidden = !graph.viewerFollowing;
+      toggle.dataset.profileAction = 'open-follow-menu';
     }
+    setFollowMenuOpen(root, false);
 
     if (label) {
       label.textContent = graph.viewerFollowing ? 'Followed' : 'Follow';
@@ -226,6 +314,9 @@ async function renderPublicSubscribeControl(root, state = getProfileRuntimeState
 
 function initPublicProfileHeader() {
   subscribeProfileRuntime(renderPublicHeader);
+  subscribeProfileNavigation(() => renderPublicHeader(getProfileRuntimeState()));
+  window.addEventListener('hashchange', () => renderPublicHeader(getProfileRuntimeState()));
+  window.addEventListener('popstate', () => renderPublicHeader(getProfileRuntimeState()));
 
   document.addEventListener('click', (event) => {
     document.querySelectorAll('[data-profile-header][data-profile-surface="public"]').forEach((root) => {
@@ -234,8 +325,23 @@ function initPublicProfileHeader() {
     });
   });
 
+  document.addEventListener('click', (event) => {
+    const toggle = event.target instanceof Element ? event.target.closest('[data-profile-follow-menu-toggle]') : null;
+    if (!(toggle instanceof HTMLButtonElement)) return;
+    const root = toggle.closest('[data-profile-header][data-profile-surface="public"]');
+    if (!(root instanceof HTMLElement)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    setFollowMenuOpen(root, root.querySelector('[data-profile-follow-menu]')?.hidden !== false);
+  }, true);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('[data-profile-header][data-profile-surface="public"]').forEach((root) => setFollowMenuOpen(root, false));
+  });
+
   document.addEventListener('profile:social-graph-changed', () => {
-    renderPublicHeader();
+    renderPublicHeader(getProfileRuntimeState());
   });
 
   document.addEventListener('profile:action-request', (event) => {
@@ -249,15 +355,15 @@ function initPublicProfileHeader() {
   });
 
   document.addEventListener('profile:subscription-changed', () => {
-    renderPublicHeader();
+    renderPublicHeader(getProfileRuntimeState());
   });
 
   document.addEventListener('fragment:mounted', (event) => {
     if (event?.detail?.name !== 'profile-public-header') return;
-    renderPublicHeader();
+    renderPublicHeader(getProfileRuntimeState());
   });
 
-  renderPublicHeader();
+  renderPublicHeader(getProfileRuntimeState());
 }
 
 initPublicProfileHeader();

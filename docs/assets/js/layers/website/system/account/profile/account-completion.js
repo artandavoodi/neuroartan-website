@@ -326,6 +326,9 @@ import {
   const PROFILE_ROUTE_MATCHERS = ['/profile.html', '/profile/'];
   const FLOW_STATE_STORAGE_KEY = 'neuroartan_account_flow_state';
   const PENDING_PROFILE_STORAGE_KEY = 'neuroartan_pending_profile_setup';
+  const RETURN_TARGET_STORAGE_KEY = 'neuroartan_account_return_target';
+  const RETURN_TARGET_QUERY_KEY = 'return_to';
+  const ACCOUNT_ACTION_QUERY_KEY = 'account';
   const PROFILE_COLLECTION = 'profiles';
   const USERNAME_RESERVATION_COLLECTION = 'username_reservations';
   const USERNAME_CHANGE_EVENT = 'account:profile-setup-username-change';
@@ -351,7 +354,96 @@ import {
     window.location.href = PROFILE_ROUTE;
   }
 
+  function isAllowedAccountReturnTarget(rawTarget) {
+    if (!rawTarget) return '';
+
+    try {
+      const target = new URL(rawTarget, window.location.origin);
+      const allowedOrigins = new Set([
+        'https://developer.neuroartan.com',
+        'http://127.0.0.1:8085',
+        'http://localhost:8085'
+      ]);
+      return allowedOrigins.has(target.origin) ? target.toString() : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function readAccountReturnTarget() {
+    const fromQuery = isAllowedAccountReturnTarget(
+      new URLSearchParams(window.location.search).get(RETURN_TARGET_QUERY_KEY)
+    );
+    if (fromQuery) return fromQuery;
+
+    try {
+      return isAllowedAccountReturnTarget(window.sessionStorage.getItem(RETURN_TARGET_STORAGE_KEY));
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function persistAccountReturnTarget() {
+    const target = readAccountReturnTarget();
+    if (!target) return '';
+
+    try {
+      window.sessionStorage.setItem(RETURN_TARGET_STORAGE_KEY, target);
+    } catch (_) {}
+    return target;
+  }
+
+  function clearAccountReturnTarget() {
+    try {
+      window.sessionStorage.removeItem(RETURN_TARGET_STORAGE_KEY);
+    } catch (_) {}
+  }
+
+  function redirectToAccountReturnTarget() {
+    const target = readAccountReturnTarget();
+    if (!target) return false;
+
+    clearAccountReturnTarget();
+    window.location.assign(target);
+    return true;
+  }
+
+  function redirectToProfileOrAccountReturn() {
+    if (redirectToAccountReturnTarget()) return;
+    redirectToProfile();
+  }
+
+  function requestAccountSignInFromLocation() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get(ACCOUNT_ACTION_QUERY_KEY) !== 'sign-in') return;
+    if (!persistAccountReturnTarget()) return;
+
+    const open = async () => {
+      try {
+        const supabase = await waitForSupabaseClient();
+        const user = supabase ? await getSupabaseSessionUser() : null;
+        if (user && redirectToAccountReturnTarget()) return;
+      } catch (_) {}
+
+      document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
+        detail: {
+          source: MODULE_ID,
+          state: 'guest',
+          surface: 'sign-in'
+        }
+      }));
+    };
+
+    if (hasAccountDrawer()) {
+      void open();
+      return;
+    }
+
+    document.addEventListener('account-drawer:mounted', () => { void open(); }, { once: true });
+  }
+
   async function redirectToAccountLanding() {
+    if (redirectToAccountReturnTarget()) return;
     const target = await hydrateAccountLandingPreferenceFromSupabase();
     window.location.href = resolveAccountLandingHref(target);
   }
@@ -1032,6 +1124,8 @@ import {
 
     clearFlowState();
 
+    if (redirectToAccountReturnTarget()) return;
+
     if (!isProfileRoute()) {
       await redirectToAccountLanding();
       return;
@@ -1200,7 +1294,8 @@ import {
       });
 
       if (supabase && (provider === 'google' || provider === 'apple')) {
-        const redirectTo = `${window.location.origin}${resolveAccountLandingHref()}`;
+        persistAccountReturnTarget();
+        const redirectTo = window.location.href;
 
         await supabase.auth.signInWithOAuth({
           provider,
@@ -2125,6 +2220,8 @@ import {
   }
 
   function bindAccountEvents() {
+    requestAccountSignInFromLocation();
+
     document.addEventListener('account:entry-request', async (event) => {
       const detail = event instanceof CustomEvent ? event.detail || {} : {};
 
@@ -2142,7 +2239,7 @@ import {
             return;
           }
 
-          redirectToProfile();
+          redirectToProfileOrAccountReturn();
           return;
         }
       } catch (error) {

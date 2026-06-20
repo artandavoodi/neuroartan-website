@@ -69,6 +69,11 @@
   background:var(--profile-private-hero-avatar-bg);
 }
 
+.profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__avatar-surface.model-management__avatar{
+  background:var(--color-primary1);
+  background-image:none;
+}
+
 .profile-header:is([data-profile-surface="public"], [data-profile-surface="public-model"]) .profile-header__copy{
   padding-top:var(--spacing-none);
 }

@@ -83,44 +83,46 @@ function formatVisibilityCopy(state) {
   return 'Public route not yet enabled';
 }
 
-function getDefaultAvatarFallback() {
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" rx="128" fill="#e5e7eb"/><circle cx="128" cy="102" r="42" fill="#9ca3af"/><path d="M52 214c17-32 46-50 76-50s59 18 76 50" fill="#9ca3af"/></svg>'
-  )}`;
-}
-
-function getDefaultHeaderFallback() {
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 480"><rect width="1600" height="480" fill="#d1d5db"/><rect y="316" width="1600" height="164" fill="#cbd5e1"/><circle cx="1320" cy="136" r="72" fill="#9ca3af"/><rect x="120" y="96" width="520" height="32" rx="16" fill="#9ca3af"/><rect x="120" y="148" width="360" height="20" rx="10" fill="#a3a3a3"/></svg>'
-  )}`;
-}
-
-function setProfileImageSource(image, primarySrc, fallbackSrc, altText) {
+function setProfileImageSource(image, primarySrc, altText) {
   if (!(image instanceof HTMLImageElement)) return;
 
-  const resolvedSrc = primarySrc || fallbackSrc;
+  if (!primarySrc) {
+    image.hidden = true;
+    image.removeAttribute('src');
+    image.alt = '';
+    delete image.dataset.profileUsingFallback;
+    delete image.dataset.profileFallbackBound;
+    return;
+  }
 
-  if (image.dataset.profileFallbackBound !== 'true') {
+  if (image.dataset.profileErrorBound !== 'true') {
     image.addEventListener('error', () => {
-      if (image.dataset.profileUsingFallback === 'true') return;
-      image.dataset.profileUsingFallback = 'true';
-      image.src = fallbackSrc;
+      image.hidden = true;
+      image.removeAttribute('src');
+      image.alt = '';
     });
-    image.dataset.profileFallbackBound = 'true';
+    image.dataset.profileErrorBound = 'true';
   }
 
   image.hidden = false;
   image.alt = altText;
-  image.dataset.profileUsingFallback = primarySrc ? 'false' : 'true';
-  image.src = resolvedSrc;
+  image.src = primarySrc;
 }
 
-function setProfileBackgroundSource(node, primarySrc, fallbackSrc) {
+function setProfileBackgroundSource(node, primarySrc) {
   if (!(node instanceof HTMLElement)) return;
 
-  const resolvedSrc = primarySrc || fallbackSrc;
+  if (!primarySrc) {
+    node.hidden = true;
+    node.style.removeProperty('background-image');
+    node.style.removeProperty('background-size');
+    node.style.removeProperty('background-position');
+    node.style.removeProperty('background-repeat');
+    return;
+  }
+
   node.hidden = false;
-  node.style.backgroundImage = `url("${resolvedSrc}")`;
+  node.style.backgroundImage = `url("${primarySrc}")`;
   node.style.backgroundSize = 'cover';
   node.style.backgroundPosition = 'center';
   node.style.backgroundRepeat = 'no-repeat';
@@ -132,7 +134,7 @@ function renderAvatar(root, state) {
   const avatarUrl = resolveAvatarUrl(state);
 
   if (image instanceof HTMLImageElement) {
-    setProfileImageSource(image, avatarUrl, getDefaultAvatarFallback(), `${state.displayName} avatar`);
+    setProfileImageSource(image, avatarUrl, `${state.displayName} avatar`);
   }
 
   if (placeholder instanceof HTMLElement) {
@@ -150,13 +152,13 @@ function renderHeaderImage(root, state) {
 
   targets.forEach((node) => {
     if (node instanceof HTMLImageElement) {
-      setProfileImageSource(node, mediaUrl, getDefaultHeaderFallback(), `${state.displayName} header image`);
+      setProfileImageSource(node, mediaUrl, `${state.displayName} header image`);
       return;
     }
 
     if (!(node instanceof HTMLElement)) return;
 
-    setProfileBackgroundSource(node, mediaUrl, getDefaultHeaderFallback());
+    setProfileBackgroundSource(node, mediaUrl);
   });
 }
 

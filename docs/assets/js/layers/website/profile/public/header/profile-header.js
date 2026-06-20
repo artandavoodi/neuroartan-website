@@ -53,6 +53,11 @@ function readHeaderModelText(model = {}, keys = []) {
   return '';
 }
 
+function resolveModelAvatarColor(value = '') {
+  const normalized = String(value || '').trim();
+  return normalized || 'var(--color-primary1)';
+}
+
 function getPublicHeaderHashTabKey() {
   const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
   if (hash === 'model-management' || hash === 'model') return 'model';
@@ -90,7 +95,7 @@ function buildPublicHeaderRenderState(state = getProfileRuntimeState()) {
   const modelDisplayName = readHeaderModelText(model, ['modelNickname', 'model_nickname', 'nickname', 'model_name', 'display_name', 'name']);
   const modelSummary = readHeaderModelText(model, ['description', 'public_description', 'public_summary', 'modelPurposeDescription', 'model_purpose_description']);
   const modelAvatarUrl = readHeaderModelText(model, ['public_avatar_url', 'model_avatar_url', 'public_model_avatar_url', 'model_image_url', 'modelAvatar', 'avatarDisplayUrl', 'avatarUrl', 'avatar_url', 'image_url']);
-  const modelAvatarColor = readHeaderModelText(model, ['model_avatar_color', 'modelAvatarColor', 'avatar_color', 'avatarColor']);
+  const modelAvatarColor = resolveModelAvatarColor(readHeaderModelText(model, ['model_avatar_color', 'modelAvatarColor', 'avatar_color', 'avatarColor']));
   const modelCoverUrl = readHeaderModelText(model, ['public_cover_url', 'model_cover_url', 'public_model_cover_url', 'modelCover', 'coverDisplayUrl', 'coverUrl', 'cover_url', 'hero_image_url', 'header_image_url']);
 
   return {
@@ -139,16 +144,19 @@ function renderAvatar(root, state) {
   if (surface instanceof HTMLElement) {
     surface.classList.toggle('model-management__avatar', state.modelHeaderActive === true);
     if (state.modelHeaderActive === true) {
-      const avatarColor = String(state.modelAvatarColor || state.model_avatar_color || state.avatar_color || '').trim();
+      const avatarColor = resolveModelAvatarColor(state.modelAvatarColor || state.model_avatar_color || state.avatar_color || '');
       if (avatarUrl) {
         surface.style.removeProperty('background-color');
+        surface.style.removeProperty('background');
       } else if (avatarColor) {
-        surface.style.backgroundColor = avatarColor;
+        surface.style.background = avatarColor;
       } else {
         surface.style.removeProperty('background-color');
+        surface.style.removeProperty('background');
       }
     } else {
       surface.style.removeProperty('background-color');
+      surface.style.removeProperty('background');
     }
   }
 

@@ -281,8 +281,12 @@
     }
 
     if (!targetView) {
+      drawer.dataset.accountDrawerPendingSurface = normalizedAction;
+      applyAuthView('entry');
       return;
     }
+
+    delete drawer.dataset.accountDrawerPendingSurface;
 
     drawer.dataset.accountDrawerView = 'auth';
     drawer.dataset.accountDrawerSurface = normalizedAction;
@@ -656,6 +660,11 @@
     window.addEventListener('fragment:mounted', () => {
       if (!getDrawer()) return;
 
+      const pendingSurface = getDrawer().dataset.accountDrawerPendingSurface;
+      if (pendingSurface && hasMountedInnerView(pendingSurface)) {
+        applyInnerView(pendingSurface);
+      }
+
       initAccountDrawer({ preserveView: true });
     });
   }
@@ -689,7 +698,13 @@
       control.dataset.accountDrawerClose = 'true';
     });
 
-    if (options.preserveView && drawer.dataset.accountDrawerView) return;
+    if (options.preserveView && drawer.dataset.accountDrawerView) {
+      const pendingSurface = drawer.dataset.accountDrawerPendingSurface;
+      if (pendingSurface && hasMountedInnerView(pendingSurface)) {
+        applyInnerView(pendingSurface);
+      }
+      return;
+    }
 
     applyAuthView('entry');
   }

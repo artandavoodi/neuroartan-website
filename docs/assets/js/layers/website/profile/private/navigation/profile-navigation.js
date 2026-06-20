@@ -296,13 +296,6 @@ function shouldRequestModelAuthentication(state = parseHash(), runtimeState = ge
 }
 
 function requestModelAuthentication() {
-  document.dispatchEvent(new CustomEvent('account-sign-in-drawer:open-request', {
-    detail: {
-      source: 'model-navigation',
-      reason: 'private-model-route'
-    }
-  }));
-
   document.dispatchEvent(new CustomEvent('account-drawer:open-request', {
     detail: {
       source: 'model-navigation',

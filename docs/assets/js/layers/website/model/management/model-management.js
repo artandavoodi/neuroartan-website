@@ -953,6 +953,11 @@ function normalizeModelFoundationIdentity(value = {}) {
 function loadStoredModelFoundationIdentity() {
   try {
     const parsed = JSON.parse(window.localStorage?.getItem(MODEL_FOUNDATION_IDENTITY_STORAGE_KEY) || '{}');
+    if (parsed && typeof parsed === 'object') {
+      delete parsed.modelAvatar;
+      delete parsed.modelAvatarColor;
+      delete parsed.modelCover;
+    }
     return normalizeModelFoundationIdentity(parsed);
   } catch (error) {
     return normalizeModelFoundationIdentity();
@@ -961,9 +966,16 @@ function loadStoredModelFoundationIdentity() {
 
 function writeStoredModelFoundationIdentity(identity) {
   try {
+    const normalizedIdentity = normalizeModelFoundationIdentity(identity);
+    const persistentIdentity = {
+      ...normalizedIdentity,
+      modelAvatar: '',
+      modelAvatarColor: '',
+      modelCover: ''
+    };
     window.localStorage?.setItem(
       MODEL_FOUNDATION_IDENTITY_STORAGE_KEY,
-      JSON.stringify(normalizeModelFoundationIdentity(identity))
+      JSON.stringify(persistentIdentity)
     );
   } catch (error) {
     /* Local persistence is an enhancement; Supabase sync still attempts separately. */
@@ -1314,8 +1326,8 @@ async function hydrateModelFoundationIdentityFromBackend() {
       privacyLockState: identity?.privacyLockState || 'private_owner_controlled',
       createdAt: identity?.createdAt || model.created_at || '',
       updatedAt: identity?.updatedAt || model.updated_at || '',
-      modelAvatar: identity?.modelAvatar || model.model_image_url || '',
-      modelAvatarColor: identity?.modelAvatarColor || publicMedia?.modelAvatarColor || model.model_avatar_color || '',
+      modelAvatar: model.model_image_url || '',
+      modelAvatarColor: model.model_avatar_color || publicMedia?.modelAvatarColor || '',
       modelCover: publicMedia?.modelCover || model.model_cover_url || '',
       ownerRecordPolicy: identity?.ownerRecordPolicy || 'fixed_owner_binding'
     }, {
@@ -1894,8 +1906,8 @@ function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = 
   const displayName = String(runtimeState.displayName || profile.display_name || model?.creator_display_name || '').trim();
   const username = String(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || runtimeState.username?.normalized || model?.creator_username || '').trim();
   const modelName = String(identity.modelNickname || model?.model_name || displayName || 'Personal model').trim();
-  const avatarUrl = String(identity.modelAvatar || model?.model_image_url || '').trim();
-  const avatarColor = String(identity.modelAvatarColor || model?.model_avatar_color || '').trim();
+  const avatarUrl = String(model?.model_image_url || '').trim();
+  const avatarColor = String(model?.model_avatar_color || '').trim();
   const avatarStyle = !avatarUrl && avatarColor
     ? ` style="background-color:${escapeModelManagementText(avatarColor)}"`
     : '';
@@ -2889,9 +2901,16 @@ function createDirectoryCard(model = {}) {
 
   const avatar = document.createElement('span');
   avatar.className = 'model-management__directory-avatar';
-  if (model.public_profile?.public_avatar_url || model.creator?.image) {
+  const avatarUrl = String(model.model_image_url || model.modelAvatar || model.public_avatar_url || model.avatar_url || model.public_profile?.public_avatar_url || model.creator?.image || '').trim();
+  const avatarColor = String(model.model_avatar_color || model.modelAvatarColor || model.avatar_color || model.avatarColor || '').trim();
+  if (!avatarUrl && avatarColor) {
+    avatar.style.backgroundColor = avatarColor;
+  } else {
+    avatar.style.removeProperty('background-color');
+  }
+  if (avatarUrl) {
     const image = document.createElement('img');
-    image.src = model.public_profile?.public_avatar_url || model.creator?.image;
+    image.src = avatarUrl;
     image.alt = '';
     image.className = 'model-management__directory-avatar-image';
     avatar.append(image);
@@ -4018,7 +4037,7 @@ function registerModelMediaEditor() {
       updateModelFoundationIdentity({
         ...(kind === 'cover'
           ? { modelCover:model?.model_cover_url || '' }
-          : { modelAvatar:model?.model_image_url || '' })
+          : { modelAvatar:model?.model_image_url || '', modelAvatarColor:model?.model_avatar_color || '' })
       }, {
         source:kind === 'cover' ? 'model-cover-editor' : 'model-avatar-editor',
         sync:false

@@ -208,7 +208,7 @@
     const supabase = getSupabaseClient();
 
     if (supabase) {
-      const redirectTo = `${window.location.origin}/profile.html`;
+      const redirectTo = window.location.href;
       supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

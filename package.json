@@ -13,8 +13,8 @@
     "check:quality": "npm run clean:duplicate-icons && npm run check:duplicate-icons",
     "prepare": "node scripts/quality/install-git-hooks.mjs",
     "clean:duplicate-icons": "node scripts/quality/clean-duplicate-icons.mjs",
-    "icons:repair": "node tools/icon-governance/repair-icon-duplicates.mjs",
-    "icons:guard": "node tools/icon-governance/guard-icons.mjs"
+    "icons:repair": "node /Users/artan/Documents/Neuroartan/tools/icon-governance/repair-icon-duplicates.mjs",
+    "icons:guard": "node /Users/artan/Documents/Neuroartan/tools/icon-governance/guard-icons.mjs"
   },
   "engines": {
     "node": ">=20"

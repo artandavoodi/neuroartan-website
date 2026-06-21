@@ -453,12 +453,28 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 .model-source-summary__avatar{
   inline-size:var(--profile-private-hero-avatar-size);
   block-size:var(--profile-private-hero-avatar-size);
+  border:0;
+  outline:0;
+  box-shadow:none;
+  filter:none;
+  background-clip:padding-box;
   background:var(--color-primary1);
 }
 
 .model-source-summary__avatar.profile-private-hero__avatar{
+  border:0;
+  outline:0;
+  box-shadow:none;
+  filter:none;
+  background-clip:padding-box;
   background:var(--color-primary1);
   background-image:none;
+}
+
+.model-source-summary__avatar.profile-private-hero__avatar::before,
+.model-source-summary__avatar.profile-private-hero__avatar::after{
+  content:none;
+  display:none;
 }
 
 .model-source-summary__identity-copy{
@@ -510,8 +526,8 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   border-radius:var(--radius-none);
   background:transparent;
   box-shadow:none;
-  justify-items:center;
-  text-align:center;
+  justify-items:start;
+  text-align:left;
 }
 
 .model-source-summary__metric dt,
@@ -522,26 +538,33 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
 .model-source-summary__metric dt{
   display:inline-flex;
   align-items:center;
+  justify-content:flex-start;
   gap:var(--spacing-sm);
   min-width:0;
   color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
+  text-align:left;
 }
 
 .model-source-summary__metric dd{
   display:inline-flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
   gap:var(--spacing-sm);
   min-width:0;
   color:var(--text-primary-color);
   font-size:var(--headline-5-size);
   line-height:var(--headline-5-line-height);
+  text-align:left;
 }
 
 .model-source-summary__metric strong{
   font-weight:var(--font-weight-light);
+}
+
+.model-source-summary__metric dd strong{
+  text-align:left;
 }
 
 .model-source-summary__score{
@@ -549,11 +572,12 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
   font-weight:var(--font-weight-light);
+  text-align:left;
 }
 
 .model-source-summary__metric--key dd{
   display:grid;
-  justify-items:center;
+  justify-items:start;
   gap:var(--spacing-sm);
 }
 
@@ -721,12 +745,13 @@ body:has([data-model-personality-summary-overlay])::-webkit-scrollbar{
   .model-source-summary__metric{
     min-height:auto;
     padding-block:var(--spacing-sm);
-    justify-items:center;
-    text-align:center;
+    justify-items:start;
+    text-align:left;
   }
 
   .model-source-summary__metric dd{
-    justify-content:center;
+    justify-content:flex-start;
+    text-align:left;
   }
 }
 
@@ -1814,3 +1839,4 @@ body.model-management-identity-editor-open{
 .profile-workspace__layout:not([data-sidebar-right-hidden="true"]) .model-management__header{
   padding-inline:var(--spacing-sm);
 }
+

@@ -1904,7 +1904,8 @@ function createModelInfoRow(label = '', value = '') {
 function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = {}) {
   const profile = runtimeState.profile || {};
   const displayName = String(runtimeState.displayName || profile.display_name || model?.creator_display_name || '').trim();
-  const username = String(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || runtimeState.username?.normalized || model?.creator_username || '').trim();
+  const isPublicTargetInfo = runtimeState.publicModelInfoTarget === true;
+  const username = String(profile.username || profile.public_username || profile.username_normalized || profile.username_lower || runtimeState.username?.normalized || (isPublicTargetInfo ? '' : model?.creator_username) || '').trim();
   const modelName = String(identity.modelNickname || model?.model_name || displayName || 'Personal model').trim();
   const avatarUrl = String(model?.model_image_url || '').trim();
   const avatarColor = String(model?.model_avatar_color || '').trim();
@@ -1914,6 +1915,7 @@ function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = 
   const avatarImage = avatarUrl
     ? `<img class="profile-private-hero__avatar-image" src="${escapeModelManagementText(avatarUrl)}" alt="" aria-hidden="true">`
     : '';
+  const identityCaption = isPublicTargetInfo ? (displayName || 'Public profile linked') : (username ? `Linked to @${username}` : displayName || 'Owner profile linked');
 
   return `
     <section class="model-source-summary__identity" aria-label="Model identity">
@@ -1922,8 +1924,155 @@ function createModelInfoIdentityBlock(identity = {}, model = {}, runtimeState = 
       </div>
       <div class="model-source-summary__identity-copy">
         <strong>${escapeModelManagementText(modelName)}</strong>
-        <span>${escapeModelManagementText(username ? `Linked to @${username}` : displayName || 'Owner profile linked')}</span>
+        <span>${escapeModelManagementText(identityCaption)}</span>
       </div>
+    </section>
+  `;
+}
+
+
+function isPublicProfileModelInfoContext(runtimeState = getProfileRuntimeState(), detail = {}) {
+  const surface = String(runtimeState.surface || runtimeState.profileSurface || detail.surface || '').trim().toLowerCase();
+  const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
+  const requestedContext = String(detail.context || detail.section || detail.tab || '').trim().toLowerCase();
+
+  return surface === 'public'
+    && (hash === 'model-management' || hash === 'model' || requestedContext === 'model' || requestedContext === 'model-management');
+}
+
+function getPublicRouteUsername() {
+  const firstSegment = String(window.location.pathname || '')
+    .split('/')
+    .filter(Boolean)[0] || '';
+
+  const reservedRoutes = new Set([
+    'index.html',
+    'models',
+    'profile',
+    'settings',
+    'products',
+    'about',
+    'contact',
+    'privacy',
+    'terms'
+  ]);
+
+  const normalized = firstSegment.trim();
+  if (!normalized || reservedRoutes.has(normalized.toLowerCase())) return '';
+  return normalized;
+}
+
+function resolvePublicTargetModelInfo(runtimeState = getProfileRuntimeState()) {
+  const publicProfile = runtimeState.publicProfile || runtimeState.profile || {};
+  const model = {
+    ...(publicProfile.model_public_identity || {}),
+    ...(publicProfile.public_model || {}),
+    ...(publicProfile.model || {}),
+    ...(runtimeState.public_model || {}),
+    ...(runtimeState.publicModel || {}),
+    ...(runtimeState.model || {})
+  };
+
+  const ownerProfile = {
+    ...publicProfile,
+    ...(runtimeState.publicProfile || {})
+  };
+
+  const routeUsername = getPublicRouteUsername();
+
+  const ownerDisplayName = String(
+    ownerProfile.public_display_name
+    || ownerProfile.display_name
+    || runtimeState.displayName
+    || model.creator_display_name
+    || ''
+  ).trim();
+
+  const ownerUsername = String(
+    routeUsername
+    || ownerProfile.username
+    || ownerProfile.public_username
+    || ownerProfile.username_normalized
+    || ownerProfile.username_lower
+    || ''
+  ).trim();
+
+  const ownerAvatar = String(
+    ownerProfile.public_avatar_url
+    || ownerProfile.avatar_url
+    || ownerProfile.avatarDisplayUrl
+    || runtimeState.avatarDisplayUrl
+    || runtimeState.avatarUrl
+    || ''
+  ).trim();
+
+  const ownerVerified = ownerProfile.profile_verified === true
+    || ownerProfile.verified === true
+    || String(ownerProfile.public_verification_status || ownerProfile.verification_status || '').trim().toLowerCase() === 'verified';
+
+  return {
+    identity: normalizeModelFoundationIdentity({
+      modelNickname: model.model_name || model.modelNickname || model.display_name || 'Public model',
+      modelPurposeDescription: model.description || model.public_description || model.public_summary || '',
+      modelType: model.model_type || model.routing_class || 'Personal',
+      lifecycleState: model.lifecycle_state || 'created',
+      readinessState: model.readiness_state || 'Not shared',
+      verificationState: model.verification_state || ownerProfile.public_verification_status || ownerProfile.verification_status || 'unverified',
+      discoverabilityState: model.publication_state || model.model_visibility || 'public',
+      createdAt: model.created_at || '',
+      updatedAt: model.updated_at || '',
+      modelAvatar: model.model_image_url || model.public_avatar_url || '',
+      modelAvatarColor: model.model_avatar_color || 'var(--color-primary1)',
+      ownerRecordPolicy: 'Public profile target'
+    }),
+    model: {
+      ...model,
+      model_name: model.model_name || model.modelNickname || model.display_name || 'Public model',
+      description: model.description || model.public_description || model.public_summary || '',
+      model_image_url: model.model_image_url || model.public_avatar_url || '',
+      model_avatar_color: model.model_avatar_color || 'var(--color-primary1)',
+      creator_display_name: ownerDisplayName,
+      creator_username: ownerUsername
+    },
+    runtimeState: {
+      ...runtimeState,
+      publicModelInfoTarget: true,
+      profile: {
+        ...ownerProfile,
+        display_name: ownerDisplayName,
+        username: ownerUsername,
+        public_avatar_url: ownerAvatar,
+        profile_verified: ownerVerified
+      },
+      displayName: ownerDisplayName,
+      avatarDisplayUrl: ownerAvatar,
+      avatarUrl: ownerAvatar,
+      username: {
+        ...(runtimeState.username || {}),
+        normalized: ownerUsername
+      }
+    },
+    ownerDisplayName,
+    ownerUsername,
+    ownerVerified
+  };
+}
+
+function renderPublicTargetModelInfo(body, runtimeState = getProfileRuntimeState()) {
+  const target = resolvePublicTargetModelInfo(runtimeState);
+  const identity = target.identity;
+  const model = target.model;
+
+  body.innerHTML = `
+    <section class="model-source-summary" aria-label="Public model information dashboard">
+      ${createModelInfoIdentityBlock(identity, model, target.runtimeState)}
+      <dl class="model-source-summary__metrics">
+        ${createModelInfoRow('Model Type', identity.modelType)}
+        ${createModelInfoRow('Readiness', identity.readinessState)}
+        ${createModelInfoRow('Owner Verification', target.ownerVerified ? 'Verified' : identity.verificationState)}
+        ${createModelInfoRow('Discoverability', identity.discoverabilityState)}
+        ${createModelInfoRow('Created', formatModelIdentityDate(identity.createdAt, 'Not recorded'))}
+      </dl>
     </section>
   `;
 }
@@ -1990,7 +2139,7 @@ async function handleModelKeysOpenRequest() {
   }
 }
 
-async function handleModelInfoOpenRequest() {
+async function handleModelInfoOpenRequest(event) {
   removeModelInfoOverlay();
 
   const overlay = document.createElement('section');
@@ -2022,12 +2171,20 @@ async function handleModelInfoOpenRequest() {
   const body = overlay.querySelector('[data-model-info-overlay-body]');
   if (!(body instanceof HTMLElement)) return;
 
+  const detail = event instanceof CustomEvent ? event.detail || {} : {};
+  const currentRuntimeState = getProfileRuntimeState();
+
+  if (isPublicProfileModelInfoContext(currentRuntimeState, detail)) {
+    renderPublicTargetModelInfo(body, currentRuntimeState);
+    return;
+  }
+
   try {
     const identity = normalizeModelFoundationIdentity(modelFoundationIdentity);
     const model = await getOwnedCanonicalModel().catch(() => null);
     const runtimeState = getProfileRuntimeState();
     const profile = runtimeState.profile || {};
-    const username = String(profile.username || profile.username_lower || profile.username_normalized || profile.public_username || runtimeState.username?.normalized || model?.creator_username || '').trim();
+    const username = String(profile.username || profile.public_username || profile.username_normalized || profile.username_lower || runtimeState.username?.normalized || '').trim();
     const profileComplete = runtimeState.profileComplete === true || profile.profile_complete === true || runtimeState.completion?.complete === true;
     const createdAt = identity.createdAt || model?.created_at || '';
     const updatedAt = identity.updatedAt || model?.updated_at || '';
@@ -2361,8 +2518,8 @@ document.addEventListener('model:keys-open-request', () => {
   void handleModelKeysOpenRequest();
 });
 
-document.addEventListener('model:info-open-request', () => {
-  void handleModelInfoOpenRequest();
+document.addEventListener('model:info-open-request', (event) => {
+  void handleModelInfoOpenRequest(event);
 });
 
 document.addEventListener('click', (event) => {

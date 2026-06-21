@@ -446,8 +446,18 @@ const CONTEXT_ACTIONS = Object.freeze({
 const PUBLIC_CONTEXT_ACTIONS = Object.freeze({
   profile: ['followProfile', 'profileInfo'],
   overview: ['followProfile', 'profileInfo'],
-  posts: ['followProfile', 'profileInfo']
+  posts: ['followProfile', 'profileInfo'],
+  model: ['modelInfo'],
+  'model-management': ['modelInfo']
 });
+
+function getProfileHashContextKey() {
+  const hash = String(window.location.hash || '').trim().replace(/^#/, '').toLowerCase();
+  if (hash === 'model-management' || hash === 'model') return 'model';
+  if (hash === 'posts' || hash === 'post') return 'posts';
+  if (hash === 'overview' || hash === 'profile') return 'overview';
+  return '';
+}
 
 const MODEL_PANE_ACTIONS = Object.freeze({
   overview: ['modelIdentity', 'modelReadiness', 'modelLearn', 'modelReset', 'modelChangelog'],
@@ -578,7 +588,14 @@ function refreshRightToolbarActions(){
 
 function resolveActionKeys(state = getProfileNavigationState()){
   if (isPublicProfileSurface()) {
-    return PUBLIC_CONTEXT_ACTIONS[state.section] || [];
+    const runtimeState = getProfileRuntimeState();
+    const hashContextKey = getProfileHashContextKey();
+    const surface = String(runtimeState.surface || runtimeState.profileSurface || '').trim().toLowerCase();
+    const resolvedContextKey = surface === 'public' && hashContextKey
+      ? hashContextKey
+      : String(state.section || state.activeSection || state.activeTab || 'profile').trim().toLowerCase();
+
+    return PUBLIC_CONTEXT_ACTIONS[resolvedContextKey] || PUBLIC_CONTEXT_ACTIONS.profile || [];
   }
 
   if (state.section === 'model-personalization') {
@@ -869,6 +886,8 @@ function requestProfileToolAction(action){
       document.dispatchEvent(new CustomEvent('model:info-open-request', {
         detail: {
           source: 'profile-right-toolbar',
+          context: isPublicProfileSurface() && getProfileHashContextKey() === 'model' ? 'model' : '',
+          surface: isPublicProfileSurface() ? 'public' : '',
           filters: resolveModelOverlayFilters()
         }
       }));
@@ -1191,6 +1210,10 @@ subscribeProfileNavigation((state) => {
 subscribeProfileRuntime(() => {
   toolbarRoots().forEach((root) => renderToolbarActions(root, getProfileNavigationState()));
 });
+
+window.addEventListener('hashchange', refreshRightToolbarActions);
+window.addEventListener('popstate', refreshRightToolbarActions);
+document.addEventListener('profile:public-section-changed', refreshRightToolbarActions);
 
 document.addEventListener('fragment:mounted', (event) => {
   if(event?.detail?.name !== 'profile-private-right-toolbar') return;

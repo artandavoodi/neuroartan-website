@@ -436,7 +436,7 @@ const CONTEXT_ACTIONS = Object.freeze({
   'model-voice': ['modelVoice', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-readiness': ['modelLearn', 'modelReset', 'modelChangelog'],
   'model-runtime': ['modelProvider', 'modelLearn', 'modelReset', 'modelChangelog'],
-  'model-discovery': ['modelReputation', 'modelEconomy', 'filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
+  'model-discovery': ['filterModels', 'modelLearn', 'modelReset', 'modelChangelog'],
   'model-settings': ['modelLearn', 'modelReset', 'modelChangelog'],
   organizations: ['editProfile'],
   dashboard: ['filterDashboard'],
@@ -1111,9 +1111,20 @@ function requestProfileToolAction(action){
       }));
       return;
     case 'filter-models':
-      document.dispatchEvent(new CustomEvent('profile:navigate-request', {
-        detail: { section: 'model-foundation', modelPane: 'overview' }
-      }));
+      {
+        const state = getProfileNavigationState();
+        const modelPane = String(state?.modelPane || 'directory').trim() || 'directory';
+        document.dispatchEvent(new CustomEvent('profile:filter-open-request', {
+          detail: {
+            context: 'directory',
+            source: 'profile-right-toolbar',
+            filters: {
+              area: 'model',
+              pane: modelPane
+            }
+          }
+        }));
+      }
       return;
     case 'filter-dashboard':
       document.dispatchEvent(new CustomEvent('profile:filter-open-request', {

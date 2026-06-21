@@ -62,6 +62,7 @@ const HOME_SEARCH_SHELL_STATE = {
   dataReady: false,
   loadingPromise: null,
   indexedEntries: [],
+  indexedModelEntries: [],
   speechController: null,
 };
 
@@ -412,6 +413,43 @@ const HOME_SEARCH_PROFILE_MINIMAL_SELECT_FIELDS = [
   'updated_at'
 ].join(', ');
 
+const HOME_SEARCH_MODEL_SELECT_FIELDS = [
+  'id',
+  'profile_id',
+  'owner_profile_id',
+  'creator_username',
+  'username',
+  'public_username',
+  'public_route_path',
+  'page_route',
+  'display_name',
+  'search_title',
+  'model_nickname',
+  'model_display_name',
+  'model_name',
+  'description',
+  'model_description',
+  'public_summary',
+  'model_visibility',
+  'visibility',
+  'publication_state',
+  'discoverability_state',
+  'model_search_visible',
+  'directory_visible',
+  'readiness_state',
+  'verification_state',
+  'trust_label',
+  'model_type',
+  'model_scope',
+  'expertise_level',
+  'model_image_url',
+  'model_avatar_url',
+  'avatar_url',
+  'joined_year',
+  'created_at',
+  'updated_at'
+].join(', ');
+
 function isHomeSearchSupabaseMissingColumn(error) {
   const code = normalizeHomeSearchQuery(error?.code || '').toUpperCase();
   const message = normalizeHomeSearchQuery(error?.message || '').toLowerCase();
@@ -624,6 +662,178 @@ async function fetchSupabaseProfileSearchEntries() {
       .filter(Boolean);
   } catch (error) {
     console.error('[home-search-shell] Supabase profile indexing failed.', error);
+    return [];
+  }
+}
+
+function isDiscoverableSupabaseModel(model = {}) {
+  const visibility = normalizeHomeSearchQuery(model.model_visibility || model.visibility || '').toLowerCase();
+  const publicationState = normalizeHomeSearchQuery(model.publication_state || '').toLowerCase();
+  const discoverability = normalizeHomeSearchQuery(model.discoverability_state || '').toLowerCase();
+
+  if (['private', 'hidden', 'archived', 'deleted', 'disabled'].includes(visibility)) return false;
+  if (publicationState && ['draft', 'private', 'archived', 'deleted', 'disabled'].includes(publicationState)) return false;
+  if (model.model_search_visible === false || model.directory_visible === false) return false;
+  if (['hidden', 'private', 'disabled', 'unlisted', 'archived', 'deleted'].includes(discoverability)) return false;
+
+  return ['public', 'visible'].includes(visibility) || ['published', 'active', 'public'].includes(publicationState);
+}
+
+function resolveSupabaseModelProfileId(model = {}) {
+  return normalizeHomeSearchQuery(model.profile_id || model.owner_profile_id || '');
+}
+
+function mapSupabaseModelSearchEntry(model = {}, profile = {}) {
+  if (!model || typeof model !== 'object') return null;
+  if (!isDiscoverableSupabaseModel(model)) return null;
+
+  const modelRoute = normalizeHomeSearchQuery(model.public_route_path || model.page_route || '');
+  const routeUsername = normalizeUsername(modelRoute.split('/').filter(Boolean).pop() || '');
+  const username = normalizeUsername(
+    profile.username
+    || profile.username_normalized
+    || profile.username_lower
+    || profile.public_username
+    || model.creator_username
+    || model.username
+    || model.public_username
+    || routeUsername
+    || ''
+  );
+
+  const title = normalizeHomeSearchQuery(
+    model.display_name
+    || model.search_title
+    || model.model_nickname
+    || model.model_display_name
+    || model.model_name
+    || 'Continuity Model'
+  );
+  const summary = normalizeHomeSearchQuery(model.public_summary || model.model_description || model.description || '');
+  const publicRoute = username ? buildPublicProfilePath(username) : normalizeHomeSearchQuery(modelRoute || '/pages/profiles/index.html');
+  const createdYear = resolveHomeSearchYear(model.joined_year || model.created_at || model.updated_at || '');
+  const verified = isVerifiedHomeSearchModel(model);
+  const avatarUrl = normalizeHomeSearchQuery(
+    model.model_image_url
+    || model.model_avatar_url
+    || model.avatar_url
+    || profile.public_avatar_url
+    || profile.avatar_url
+    || profile.photo_url
+    || ''
+  );
+
+  return {
+    key: `supabase-model:${normalizeHomeSearchQuery(model.id || `${username}:${title}`)}`,
+    kind: 'model',
+    title,
+    eyebrow: '',
+    summary,
+    href: buildModelProfileModelTabRoute(publicRoute) || '/pages/profiles/index.html#model-management',
+    publicRoute,
+    activateModelId: normalizeHomeSearchQuery(model.id || ''),
+    queryLabel: title,
+    filterType: 'model',
+    year: createdYear,
+    avatarUrl,
+    verified,
+    verificationLabel: verified ? 'Verified' : '',
+    modelState: normalizeHomeSearchFilterValue(model.readiness_state || 'all'),
+    modelScope: normalizeHomeSearchFilterValue(model.model_scope || 'all'),
+    modelExpertise: normalizeHomeSearchFilterValue(model.expertise_level || 'all'),
+    username,
+    keywords: uniqueHomeSearchStrings([
+      username,
+      username ? `@${username}` : '',
+      model.creator_username,
+      model.username,
+      model.public_username,
+      model.public_route_path,
+      model.page_route,
+      model.model_type,
+      model.model_scope,
+      model.expertise_level,
+      model.readiness_state,
+      model.discoverability_state
+    ]),
+    scoreTokens: uniqueHomeSearchStrings([
+      title,
+      username,
+      username ? `@${username}` : '',
+      summary,
+      model.display_name,
+      model.search_title,
+      model.model_nickname,
+      model.model_display_name,
+      model.model_name,
+      model.creator_username,
+      model.username,
+      model.public_username,
+      model.public_route_path,
+      model.page_route,
+      model.model_type,
+      model.model_scope,
+      model.expertise_level,
+      model.readiness_state,
+      model.discoverability_state
+    ]).join(' ').toLowerCase()
+  };
+}
+
+async function fetchSupabaseModelSearchEntries() {
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
+
+  try {
+    let queryResult = await supabase
+      .from('models')
+      .select(HOME_SEARCH_MODEL_SELECT_FIELDS)
+      .order('updated_at', { ascending:false })
+      .limit(100);
+
+    if (queryResult.error && isHomeSearchSupabaseMissingColumn(queryResult.error)) {
+      queryResult = await supabase
+        .from('models')
+        .select('*')
+        .order('updated_at', { ascending:false })
+        .limit(100);
+    }
+
+    if (queryResult.error) {
+      if (isHomeSearchSupabaseRelationMissing(queryResult.error)) return [];
+      throw queryResult.error;
+    }
+
+    const rows = Array.isArray(queryResult.data) ? queryResult.data : [];
+    const discoverableRows = rows.filter((model) => isDiscoverableSupabaseModel(model));
+    const profileIds = uniqueHomeSearchStrings(discoverableRows.map((model) => resolveSupabaseModelProfileId(model)));
+
+    let profilesById = new Map();
+    if (profileIds.length) {
+      let profileResult = await supabase
+        .from('profiles')
+        .select(HOME_SEARCH_PROFILE_FALLBACK_SELECT_FIELDS)
+        .in('id', profileIds)
+        .limit(100);
+
+      if (profileResult.error && isHomeSearchSupabaseMissingColumn(profileResult.error)) {
+        profileResult = await supabase
+          .from('profiles')
+          .select(HOME_SEARCH_PROFILE_MINIMAL_SELECT_FIELDS)
+          .in('id', profileIds)
+          .limit(100);
+      }
+
+      if (!profileResult.error && Array.isArray(profileResult.data)) {
+        profilesById = new Map(profileResult.data.map((profile) => [normalizeHomeSearchQuery(profile.id || ''), profile]));
+      }
+    }
+
+    return discoverableRows
+      .map((model) => mapSupabaseModelSearchEntry(model, profilesById.get(resolveSupabaseModelProfileId(model)) || {}))
+      .filter(Boolean);
+  } catch (error) {
+    console.error('[home-search-shell] Supabase model indexing failed.', error);
     return [];
   }
 }
@@ -846,19 +1056,29 @@ function buildCuratedSurfaceEntries() {
 }
 
 function buildModelSearchEntries() {
-  return getPublicModels().map((model) => ({
+  const entryMap = new Map();
+  const addEntry = (entry) => {
+    if (!entry?.key) return;
+    const dedupeKey = `${normalizeHomeSearchQuery(entry.title).toLowerCase()}::${normalizeHomeSearchQuery(entry.publicRoute || entry.href).toLowerCase()}`;
+    const existingEntry = entryMap.get(dedupeKey);
+    if (!existingEntry || entry.key.startsWith('supabase-model:')) {
+      entryMap.set(dedupeKey, entry);
+    }
+  };
+
+  getPublicModels().map((model) => ({
     key: `model:${model.id}`,
     kind: 'model',
     title: model.display_name || model.search_title || 'Continuity Model',
     eyebrow: '',
     summary: normalizeHomeSearchQuery(model.description || ''),
-    href: normalizeHomeSearchQuery(model.page_route || '/pages/profiles/index.html'),
+    href: buildModelProfileModelTabRoute(normalizeHomeSearchQuery(model.public_profile?.public_route_path || model.page_route || '')) || normalizeHomeSearchQuery(model.page_route || '/pages/profiles/index.html'),
     publicRoute: normalizeHomeSearchQuery(model.public_profile?.public_route_path || ''),
     activateModelId: normalizeHomeSearchQuery(model.id),
     queryLabel: normalizeHomeSearchQuery(model.engine?.label || model.display_name || model.search_title || ''),
     filterType: 'model',
     year: resolveHomeSearchYear(model.joined_year || ''),
-    avatarUrl: normalizeHomeSearchQuery(model.public_profile?.public_avatar_url || ''),
+    avatarUrl: normalizeHomeSearchQuery(model.model_image_url || model.public_profile?.public_avatar_url || ''),
     verified: isVerifiedHomeSearchModel(model),
     verificationLabel: isVerifiedHomeSearchModel(model) ? 'Verified' : '',
     keywords: uniqueHomeSearchStrings([
@@ -874,7 +1094,11 @@ function buildModelSearchEntries() {
       ...(Array.isArray(model.tags) ? model.tags : []),
       ...(Array.isArray(model.identity_signals) ? model.identity_signals : [])
     ]).join(' ').toLowerCase()
-  }));
+  })).forEach(addEntry);
+
+  HOME_SEARCH_SHELL_STATE.indexedModelEntries.forEach(addEntry);
+
+  return Array.from(entryMap.values());
 }
 
 function getDefaultModelSearchEntries() {
@@ -946,9 +1170,11 @@ async function ensureHomeSearchData() {
       loadPublicModelRegistry(),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.routeIndex).catch(() => ({ routes: [] })),
       fetchHomeSearchJson(HOME_SEARCH_SHELL_INDEX_SOURCES.contentIndex).catch(() => ({ entries: [] })),
-      fetchSupabaseProfileSearchEntries()
+      fetchSupabaseProfileSearchEntries(),
+      fetchSupabaseModelSearchEntries()
     ])
-      .then(([, routeIndex, contentIndex, supabaseProfiles]) => {
+      .then(([, routeIndex, contentIndex, supabaseProfiles, supabaseModels]) => {
+        HOME_SEARCH_SHELL_STATE.indexedModelEntries = Array.isArray(supabaseModels) ? supabaseModels : [];
         HOME_SEARCH_SHELL_STATE.indexedEntries = [
           ...normalizeHomeSearchArray(routeIndex, 'routes')
             .map((entry) => buildIndexedEntry(entry, { keyPrefix: 'route', kind: 'route' }))
@@ -963,6 +1189,7 @@ async function ensureHomeSearchData() {
       })
       .catch(() => {
         HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+        HOME_SEARCH_SHELL_STATE.indexedModelEntries = [];
         HOME_SEARCH_SHELL_STATE.dataReady = true;
         return HOME_SEARCH_SHELL_STATE.indexedEntries;
       })
@@ -977,16 +1204,19 @@ async function ensureHomeSearchData() {
 document.addEventListener('account:profile-state-changed', () => {
   HOME_SEARCH_SHELL_STATE.dataReady = false;
   HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+  HOME_SEARCH_SHELL_STATE.indexedModelEntries = [];
 });
 
 document.addEventListener('account:profile-refresh-request', () => {
   HOME_SEARCH_SHELL_STATE.dataReady = false;
   HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+  HOME_SEARCH_SHELL_STATE.indexedModelEntries = [];
 });
 
 window.addEventListener('neuroartan:model-public-registry-invalidated', () => {
   HOME_SEARCH_SHELL_STATE.dataReady = false;
   HOME_SEARCH_SHELL_STATE.indexedEntries = [];
+  HOME_SEARCH_SHELL_STATE.indexedModelEntries = [];
   if (HOME_SEARCH_SHELL_STATE.isOpen) {
     void ensureHomeSearchData().then(() => renderHomeSearchShell());
   }

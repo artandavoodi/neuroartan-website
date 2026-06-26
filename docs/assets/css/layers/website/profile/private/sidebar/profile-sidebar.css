@@ -242,3 +242,17 @@ body.model-page [data-profile-sidebar-model-nav]:not([hidden]){
     min-block-size:calc(100dvh - var(--profile-workspace-rail-sticky-top) - var(--profile-workspace-sidebar-rail-start-offset));
   }
 }
+
+@media (min-width:1025px){
+  .profile-sidebar,
+  .profile-sidebar__surface{
+    block-size:100%;
+    min-block-size:0;
+    max-block-size:100%;
+    overflow:hidden;
+  }
+
+  .profile-sidebar__surface{
+    position:static;
+  }
+}

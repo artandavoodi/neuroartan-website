@@ -183,6 +183,20 @@
   }
 }
 
+@media (min-width:1025px){
+  .profile-right-toolbar,
+  .profile-right-toolbar__surface{
+    block-size:100%;
+    min-block-size:0;
+    max-block-size:100%;
+    overflow:hidden;
+  }
+
+  .profile-right-toolbar__surface{
+    position:static;
+  }
+}
+
 @media (max-width:980px){
   .profile-right-toolbar__surface{
     width:100%;

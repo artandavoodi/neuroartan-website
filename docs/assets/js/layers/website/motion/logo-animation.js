@@ -30,6 +30,10 @@
 
   // Scroll lock (lock page until ENTER; future-proof, no CSS dependency)
   const SCROLL_LOCK_KEY = "artan_scroll_lock_v1";
+  // Storage can be unavailable in private or restricted browser contexts.
+  const storage = (area, method, ...args) => {
+    try { return window[area][method](...args); } catch (_) { return null; }
+  };
   let __scrollLocked = false;
   let __scrollY = 0;
   let __lockHandlersBound = false;
@@ -104,7 +108,7 @@
     __scrollLocked = true;
     __scrollY = window.scrollY || window.pageYOffset || 0;
 
-    sessionStorage.setItem(SCROLL_LOCK_KEY, "1");
+    storage('sessionStorage', 'setItem', SCROLL_LOCK_KEY, "1");
 
     document.documentElement.style.scrollBehavior = "auto";
     document.body.style.overflow = "hidden";
@@ -121,7 +125,7 @@
     if (!__scrollLocked) return;
     __scrollLocked = false;
 
-    sessionStorage.removeItem(SCROLL_LOCK_KEY);
+    storage('sessionStorage', 'removeItem', SCROLL_LOCK_KEY);
 
     document.body.style.position = "";
     document.body.style.top = "";
@@ -162,8 +166,8 @@
     })();
 
     // ===== Browser gate =====
-    const introDone = localStorage.getItem(INTRO_DONE_KEY) === "1";
-    const entered = sessionStorage.getItem(ENTERED_KEY) === "1";
+    const introDone = storage('localStorage', 'getItem', INTRO_DONE_KEY) === "1";
+    const entered = storage('sessionStorage', 'getItem', ENTERED_KEY) === "1";
 
     // SAFETY: never start in entered state unless this session explicitly entered.
     if (!entered) {
@@ -387,6 +391,7 @@
       removeStageVideoMask({ immediate: true });
       showChrome();
       unlockScroll();
+      window.dispatchEvent(new Event('neuroartan:entered'));
     };
 
     // During intro: hide stage content (and the in-layout logo) so ONLY overlay shows.
@@ -452,9 +457,10 @@
     };
 
     const enterSite = once(() => {
-      sessionStorage.setItem(ENTERED_KEY, "1");
+      storage('sessionStorage', 'setItem', ENTERED_KEY, "1");
       body.classList.remove("intro-loading", "intro-reveal");
       body.classList.add("site-entered");
+      window.dispatchEvent(new Event('neuroartan:entered'));
       body.classList.add("hero-lock-released");
       body.classList.add("hero-released");
       // Finalize: fully remove the hero stage after the release transition.
@@ -562,7 +568,7 @@
 
     // Reduced motion: skip overlay pop; reveal stage content only.
     if (prefersReducedMotion()) {
-      localStorage.setItem(INTRO_DONE_KEY, "1");
+      storage('localStorage', 'setItem', INTRO_DONE_KEY, "1");
       hideChrome();
       hideStageContent();
       setStageVideoMask({ opacity: 0.5, hard: true });
@@ -583,19 +589,28 @@
     try {
       if (introLogoSource.tagName === "IMG") {
         if (!introLogoSource.complete) {
-          await new Promise((resolve) =>
-            introLogoSource.addEventListener("load", resolve, { once: true })
-          );
+          await new Promise((resolve) => {
+            const settle = () => {
+              clearTimeout(timeout);
+              introLogoSource.removeEventListener('load', settle);
+              introLogoSource.removeEventListener('error', settle);
+              resolve();
+            };
+            const timeout = setTimeout(settle, 3000);
+            introLogoSource.addEventListener('load', settle, { once: true });
+            introLogoSource.addEventListener('error', settle, { once: true });
+            if (introLogoSource.complete) settle();
+          });
         }
         if (typeof introLogoSource.decode === "function") {
-          await introLogoSource.decode().catch(() => {});
+          await Promise.race([introLogoSource.decode().catch(() => {}), new Promise(resolve => setTimeout(resolve, 1000))]);
         }
       }
     } catch (_) {}
 
     await new Promise((r) => requestAnimationFrame(r));
 
-    localStorage.setItem(INTRO_DONE_KEY, "1");
+    storage('localStorage', 'setItem', INTRO_DONE_KEY, "1");
 
     body.classList.add("intro-loading");
     setStageVideoMask({ opacity: 1, hard: true });

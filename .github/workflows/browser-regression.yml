@@ -4,7 +4,7 @@ permissions:
   contents: read
 jobs:
   browsers:
-    uses: artandavoodi/artanrecords/.github/workflows/browser-regression.yml@8b4a20b772f04b8bada70e1fa6641658ea80683c
+    uses: artandavoodi/artanrecords/.github/workflows/browser-regression.yml@f19defb0ccd84603e45dc96ee86e5b1832145dc2
     with:
       site: neuro
-      suite_ref: 8b4a20b772f04b8bada70e1fa6641658ea80683c
+      suite_ref: f19defb0ccd84603e45dc96ee86e5b1832145dc2

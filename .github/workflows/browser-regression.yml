@@ -3,6 +3,15 @@ on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
+  runtime-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/quality/test-logo-startup.mjs
+      - run: node scripts/quality/test-account-remount.mjs
   browsers:
     uses: artandavoodi/artanrecords/.github/workflows/browser-regression.yml@f19defb0ccd84603e45dc96ee86e5b1832145dc2
     with:

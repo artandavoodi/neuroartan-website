@@ -29,6 +29,14 @@ try {
     }
   };
   await scan(new URL('../../docs/',import.meta.url));
+  const base=await readFile(new URL('../../docs/assets/css/core/02-foundation/base.css',import.meta.url),'utf8');
+  const mainReset=base.match(/body\.site-body main\s*\{([^}]+)\}/)?.[1]||'';
+  assert(!/padding\s*:/.test(mainReset),'Base must not override page-owned header clearance');
+  const publication=await readFile(new URL('../../docs/assets/css/layers/website/publication/publication.css',import.meta.url),'utf8');
+  for(const token of ['padding-top','padding-top-tablet','padding-top-mobile']){
+    assert(publication.includes(`var(--layout-legal-page-shell-${token})`),'Information pages share responsive clearance tokens');
+  }
+  assert.match(publication,/body\.site-body:has\(> \.publication-main\)/,'Short information pages own their footer flow');
   console.log('PASS: preview serves canonical CSS without conditional-cache reuse.');
 } finally {
   server.closeAllConnections();

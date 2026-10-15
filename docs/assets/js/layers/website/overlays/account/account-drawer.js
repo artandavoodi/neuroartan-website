@@ -121,6 +121,8 @@
   ============================================================================= */
   function applyAuthView(surface = 'entry') {
     const drawer = getDrawer();
+    const entryHeading = drawer?.querySelector('.account-drawer-segment-header');
+    if (entryHeading) entryHeading.hidden = false;
     const authState = getAuthState();
     const profileState = getProfileState();
     const viewMount = getViewMount();
@@ -179,6 +181,8 @@
 
   function applyProfileView() {
     const drawer = getDrawer();
+    const entryHeading = drawer?.querySelector('.account-drawer-segment-header');
+    if (entryHeading) entryHeading.hidden = true;
     const authState = getAuthState();
     const profileState = getProfileState();
     const viewMount = getViewMount();
@@ -287,6 +291,8 @@
     }
 
     delete drawer.dataset.accountDrawerPendingSurface;
+    const entryHeading = drawer.querySelector('.account-drawer-segment-header');
+    if (entryHeading) entryHeading.hidden = true;
 
     drawer.dataset.accountDrawerView = 'auth';
     drawer.dataset.accountDrawerSurface = normalizedAction;

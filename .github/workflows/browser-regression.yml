@@ -13,6 +13,7 @@ jobs:
       - run: node scripts/quality/test-logo-startup.mjs
       - run: node scripts/quality/test-account-remount.mjs
       - run: node scripts/quality/test-preview-cache.mjs
+      - run: node scripts/quality/test-fragment-loading.mjs
   browsers:
     uses: artandavoodi/artanrecords/.github/workflows/browser-regression.yml@f19defb0ccd84603e45dc96ee86e5b1832145dc2
     with:

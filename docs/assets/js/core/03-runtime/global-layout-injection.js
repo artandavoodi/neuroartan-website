@@ -422,14 +422,20 @@ async function injectGlobalLayout() {
       shouldScanAgain = false;
       let mountedInThisPass = false;
 
-      const targets = document.querySelectorAll('[data-include]');
-      for (const el of targets) {
-        if (el.dataset.includeMounted === 'true') continue;
-
+      const targets = Array.from(document.querySelectorAll('[data-include]'))
+        .filter(el => el.dataset.includeMounted !== 'true');
+      // Fetch independent fragments together; commit in declaration order so
+      // existing mount events and nested-fragment discovery remain deterministic.
+      const fetched = await Promise.all(targets.map(async el => {
+        try {
+          return await fetchTextFromCandidates(resolveFragmentPath(el.getAttribute('data-include')), 'no-cache');
+        } catch { return null; }
+      }));
+      for (const [index, el] of targets.entries()) {
         const name = el.getAttribute('data-include');
         try {
-          const result = await fetchTextFromCandidates(resolveFragmentPath(name), 'no-store');
-          if (!result.ok) continue;
+          const result = fetched[index];
+          if (!result?.ok) continue;
           const html = result.text;
           el.innerHTML = html;
           el.dataset.includeMounted = 'true';

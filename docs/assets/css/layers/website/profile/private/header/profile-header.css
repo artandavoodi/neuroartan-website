@@ -300,7 +300,7 @@
   font-weight:var(--body-3-weight);
   line-height:var(--body-3-line-height);
   letter-spacing:var(--tracking-ui);
-  text-transform:uppercase;
+  text-transform: none;
   color:var(--text-secondary-color);
 }
 

@@ -178,7 +178,7 @@
   font-size: var(--error404-mark-size);
   font-weight: 500;
   letter-spacing: 0.24em;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--error404-mark-color);
 }
 
@@ -191,7 +191,7 @@
   font-size: var(--error404-eyebrow-size);
   font-weight: 500;
   letter-spacing: 0.22em;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--error404-eyebrow-color);
 }
 

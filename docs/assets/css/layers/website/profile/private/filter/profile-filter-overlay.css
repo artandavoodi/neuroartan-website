@@ -204,7 +204,7 @@ body:has(.profile-filter-overlay__confirm-layer){
   font-weight:var(--home-search-shell-eyebrow-weight, var(--body-3-weight));
   letter-spacing:var(--home-search-shell-eyebrow-tracking, var(--tracking-ui));
   line-height:var(--control-line-height);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .profile-filter-overlay__options{

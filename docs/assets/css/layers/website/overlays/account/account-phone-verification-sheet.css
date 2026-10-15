@@ -80,7 +80,7 @@
   letter-spacing: var(--type-caption-tracking);
   line-height: var(--type-caption-line-height);
   text-align: center;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .account-phone-verification-sheet-title{

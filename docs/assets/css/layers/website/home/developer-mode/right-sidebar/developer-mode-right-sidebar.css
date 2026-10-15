@@ -77,7 +77,7 @@
   font-weight:var(--font-weight-light);
   letter-spacing:var(--tracking-label);
   line-height:var(--line-height-tight);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-developer-mode-context__title{

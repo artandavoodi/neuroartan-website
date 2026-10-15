@@ -187,7 +187,7 @@
   font-size:var(--home-profile-control-panel-avatar-fallback-size);
   font-weight:var(--home-profile-control-panel-avatar-fallback-weight);
   letter-spacing:var(--home-profile-control-panel-avatar-fallback-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-profile-control-panel__identity-copy{
@@ -205,7 +205,7 @@
   font-size:var(--home-profile-control-panel-username-size);
   font-weight:var(--home-profile-control-panel-username-weight);
   letter-spacing:var(--home-profile-control-panel-username-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-profile-control-panel__plan{
@@ -213,7 +213,7 @@
   font-size:var(--home-profile-control-panel-plan-size);
   font-weight:var(--home-profile-control-panel-plan-weight);
   letter-spacing:var(--home-profile-control-panel-plan-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-profile-control-panel__meta{
@@ -247,7 +247,7 @@
   font-size:var(--home-profile-control-panel-status-label-size);
   font-weight:var(--home-profile-control-panel-status-label-weight);
   letter-spacing:var(--home-profile-control-panel-status-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-profile-control-panel__status-value{

@@ -155,7 +155,7 @@
   font-size:var(--models-filter-label-size);
   font-weight:var(--models-filter-label-weight);
   letter-spacing:var(--models-filter-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .models-directory-dashboard{
@@ -183,7 +183,7 @@
   color:var(--text-secondary-color);
   font-size:var(--catalog-row-label-size);
   letter-spacing:var(--catalog-row-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .models-directory-dashboard__value{
@@ -236,7 +236,7 @@
   font-size:var(--models-avatar-fallback-size);
   font-weight:var(--models-avatar-fallback-weight);
   letter-spacing:var(--models-avatar-fallback-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .models-directory-card__identity-copy{
@@ -276,7 +276,7 @@
   color:var(--text-secondary-color);
   font-size:var(--models-handle-size);
   letter-spacing:var(--models-verification-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .models-directory-card__meta{

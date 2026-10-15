@@ -120,7 +120,7 @@ body{
 #announcement.secondary{
   font-size:var(--home-layout-announcement-secondary-size);
   font-weight:var(--home-layout-announcement-secondary-weight);
-  text-transform:uppercase;
+  text-transform: none;
   letter-spacing:var(--home-layout-announcement-secondary-tracking);
 }
 
@@ -141,7 +141,7 @@ body{
   font-size:var(--home-layout-enter-size);
   font-weight:var(--home-layout-enter-weight);
   letter-spacing:var(--home-layout-enter-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   border:var(--home-layout-enter-border-width) solid var(--home-layout-enter-border);
   border-radius:var(--control-radius);
   overflow:hidden;

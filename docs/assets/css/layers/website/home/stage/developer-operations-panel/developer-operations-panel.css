@@ -339,7 +339,7 @@
   font-weight:var(--font-weight-light);
   letter-spacing:var(--tracking-label);
   line-height:var(--line-height-tight);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-stage-developer-operations-panel__title{

@@ -33,7 +33,7 @@
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
   font-weight:var(--font-weight-heading-soft);
-  text-transform:uppercase;
+  text-transform: none;
   letter-spacing:var(--letter-spacing-tight);
 }
 

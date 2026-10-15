@@ -35,7 +35,7 @@
 
 .profile-private-models__eyebrow,
 .profile-private-models__label{
-  text-transform:uppercase;
+  text-transform: none;
   letter-spacing:var(--tracking-ui);
 }
 

@@ -458,7 +458,7 @@ html.lang-rtl .featured-grid [data-i18n-key]{
   margin:0;
   font-weight:400;
   letter-spacing:0.07em;
-  text-transform:uppercase;
+  text-transform: none;
   color:var(--color-primary1);
   opacity:0.18;
   transform:translateY(0px) scale(0.96);

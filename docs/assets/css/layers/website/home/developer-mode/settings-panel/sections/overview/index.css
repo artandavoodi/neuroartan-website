@@ -26,7 +26,7 @@
   color:var(--text-secondary-color);
   font:var(--text-xxs-label-font);
   letter-spacing:var(--tracking-wide);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .developer-mode-settings-panel-section--overview .developer-mode-settings-panel-section__title{

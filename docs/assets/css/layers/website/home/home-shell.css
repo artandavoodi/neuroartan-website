@@ -223,7 +223,7 @@ body.home-page .site-footer{
   font-weight:500;
   letter-spacing:0.08em;
   line-height:1.2;
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-navigation-drawer__title,

@@ -266,7 +266,7 @@
   font-size:var(--feed-avatar-fallback-size);
   font-weight:var(--feed-avatar-fallback-weight);
   letter-spacing:var(--feed-avatar-fallback-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .feed-post__identity-copy{

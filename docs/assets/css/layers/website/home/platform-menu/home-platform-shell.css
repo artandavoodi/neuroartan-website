@@ -565,7 +565,7 @@ body.home-platform-shell-open .home-platform-shell{
   font-size:var(--home-platform-shell-label-size);
   font-weight:var(--home-platform-shell-label-weight);
   letter-spacing:var(--home-platform-shell-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   color:var(--home-platform-shell-muted-label-color);
 }
 
@@ -938,7 +938,7 @@ body[data-auth-state="resolving"] [data-profile-auth-visible]{
   font-size:var(--home-platform-shell-state-action-size);
   font-weight:var(--home-platform-shell-state-action-weight);
   letter-spacing:var(--home-platform-shell-state-action-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   line-height:var(--home-platform-shell-nav-indicator-line-height);
   transition:var(--interaction-transition-control);
 }
@@ -1031,7 +1031,7 @@ body[data-auth-state="resolving"] [data-profile-auth-visible]{
   font-weight:var(--home-platform-shell-label-weight);
   letter-spacing:var(--home-platform-shell-label-tracking);
   line-height:var(--control-line-height);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-platform-shell .home-platform-theme__section-header{

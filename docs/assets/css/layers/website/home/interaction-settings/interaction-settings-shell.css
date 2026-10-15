@@ -679,7 +679,7 @@
   font-size:var(--home-platform-shell-label-size);
   font-weight:var(--home-platform-shell-label-weight);
   letter-spacing:var(--home-platform-shell-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   color:var(--home-platform-shell-muted-label-color);
 }
 

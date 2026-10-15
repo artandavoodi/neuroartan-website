@@ -53,7 +53,7 @@
   font-size:var(--font-size-eyebrow);
   font-weight:var(--eyebrow-weight);
   letter-spacing:var(--eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .profile-private-media__title{

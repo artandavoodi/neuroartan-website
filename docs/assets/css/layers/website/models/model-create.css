@@ -56,7 +56,7 @@
   font-size:var(--font-size-eyebrow);
   font-weight:var(--eyebrow-weight);
   letter-spacing:var(--eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .model-create__title{

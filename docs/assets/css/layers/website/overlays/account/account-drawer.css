@@ -765,7 +765,7 @@ body.account-drawer-closing .account-drawer-close{
   font-weight: var(--account-drawer-entry-badge-weight);
   letter-spacing: var(--tracking-ui);
   line-height: var(--account-drawer-entry-badge-line-height);
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .account-drawer-entry-title,

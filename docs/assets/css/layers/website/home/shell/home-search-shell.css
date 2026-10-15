@@ -217,7 +217,7 @@ body.home-search-shell-open{
   font-size:var(--home-search-shell-eyebrow-size);
   font-weight:var(--home-search-shell-eyebrow-weight);
   letter-spacing:var(--home-search-shell-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   color:var(--home-search-shell-muted-color);
 }
 
@@ -473,7 +473,7 @@ body.home-search-shell-open{
   font-size:var(--home-search-shell-eyebrow-size);
   font-weight:var(--home-search-shell-eyebrow-weight);
   letter-spacing:var(--home-search-shell-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-search-shell__result-query{
@@ -1092,7 +1092,7 @@ html[data-theme-effective="dark"] .home-search-shell__input-row{
   font-weight:var(--home-search-shell-eyebrow-weight);
   letter-spacing:var(--home-search-shell-eyebrow-tracking);
   line-height:var(--control-line-height);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .home-search-shell__filter-options{

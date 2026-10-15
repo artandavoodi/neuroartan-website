@@ -54,7 +54,7 @@
   font-size:var(--layout-home-platform-label-size);
   font-weight:var(--layout-home-platform-label-weight);
   letter-spacing:var(--layout-home-platform-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .model-creation__title{
@@ -154,7 +154,7 @@
   font-size:var(--layout-home-platform-destination-label-size);
   font-weight:var(--layout-home-platform-destination-label-weight);
   letter-spacing:var(--layout-home-platform-destination-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .model-creation-panel__title,

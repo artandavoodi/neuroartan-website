@@ -150,7 +150,7 @@ body.models-page{
   font-size:var(--catalog-eyebrow-size);
   font-weight:var(--catalog-eyebrow-weight);
   letter-spacing:var(--catalog-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .catalog-page-title{
@@ -365,7 +365,7 @@ body.models-page{
   font-size:var(--catalog-card-eyebrow-size);
   font-weight:var(--catalog-card-eyebrow-weight);
   letter-spacing:var(--catalog-card-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .catalog-card__title{
@@ -460,7 +460,7 @@ body.models-page{
   color:var(--text-secondary-color);
   font-size:var(--catalog-row-label-size);
   letter-spacing:var(--catalog-row-label-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .catalog-row__value{
@@ -516,7 +516,7 @@ body.models-page{
   color:var(--text-secondary-color);
   font-size:var(--catalog-timeline-eyebrow-size);
   letter-spacing:var(--catalog-timeline-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .catalog-timeline-entry__title{

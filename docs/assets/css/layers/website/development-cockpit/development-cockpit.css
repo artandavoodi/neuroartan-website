@@ -106,7 +106,7 @@
   font-size:var(--font-size-eyebrow);
   font-weight:var(--font-weight-semibold);
   letter-spacing:var(--tracking-wide);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .development-cockpit__title{

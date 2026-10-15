@@ -27,7 +27,7 @@
   margin:var(--spacing-none);
   font:var(--type-body-strong);
   letter-spacing:var(--layout-home-platform-theme-eyebrow-tracking);
-  text-transform:uppercase;
+  text-transform: none;
   opacity:var(--layout-home-platform-theme-eyebrow-opacity);
 }
 

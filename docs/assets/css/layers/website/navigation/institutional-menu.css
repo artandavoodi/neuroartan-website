@@ -816,7 +816,7 @@ html[data-theme-effective="light"]{
   font-weight:var(--institutional-menu-panel-eyebrow-weight);
   letter-spacing:var(--institutional-menu-panel-eyebrow-tracking);
   line-height:var(--institutional-menu-panel-eyebrow-line-height);
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .institutional-menu-panel-label,

@@ -213,7 +213,7 @@ body.model-training-workspace-open{
   color:var(--text-secondary-color);
   font-size:var(--body-3-size);
   line-height:var(--body-3-line-height);
-  text-transform:uppercase;
+  text-transform: none;
 }
 
 .model-training-workspace__board-expand{

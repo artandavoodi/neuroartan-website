@@ -78,7 +78,7 @@ body.legal-page {
   margin: var(--spacing-none);
   font-size: var(--legal-page-eyebrow-size);
   letter-spacing: var(--legal-page-eyebrow-tracking);
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--legal-page-soft);
 }
 

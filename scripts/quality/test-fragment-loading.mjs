@@ -5,6 +5,9 @@ const source=readFileSync(new URL('../../docs/assets/js/core/03-runtime/global-l
 const start=source.indexOf('async function injectGlobalLayout()');
 const end=source.indexOf('\ninjectGlobalLayout().then',start);
 assert(start>=0&&end>start);
+const required=source.slice(source.indexOf('function ensureRequiredGlobalFragmentMounts()'),source.indexOf('function dispatchAccountDrawerMount'));
+assert(required.includes("ensureGlobalFragmentMount('account-drawer')"),'Shared account controls require their drawer on inner pages');
+assert(required.includes("ensureGlobalFragmentMount('menu')"),'Shared menu controls require their fragment on inner pages');
 const pending=new Map(),commits=[];
 const targets=['first','second'].map(name=>({
   dataset:{},getAttribute:()=>name,

@@ -344,23 +344,23 @@
     const trigger = getSecondaryToggle();
     if (!trigger) return;
     trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    trigger.setAttribute('aria-label', open ? 'Close secondary navigation' : 'Open secondary navigation');
   }
 
   function bindSecondaryToggle() {
     const trigger = getSecondaryToggle();
     const overlay = getOverlay();
-    const legacyButton = getLegacyMenuButton();
 
     if (!trigger || trigger.dataset.menuSecondaryBound === 'true') return;
     trigger.dataset.menuSecondaryBound = 'true';
 
     trigger.addEventListener('click', (event) => {
       event.preventDefault();
-
+      const legacyButton = getLegacyMenuButton();
       if (legacyButton && typeof legacyButton.click === 'function') {
         legacyButton.click();
       }
-      syncSecondaryToggleState(overlay?.getAttribute('aria-hidden') === 'false');
+      syncSecondaryToggleState(getOverlay()?.getAttribute('aria-hidden') === 'false');
     });
 
     if (overlay && overlay.dataset.menuSecondaryObserved !== 'true') {
@@ -704,7 +704,25 @@
 
     function loadSearchEntries() {
       if (!searchEntriesPromise) {
-        searchEntriesPromise = Promise.resolve(collectMenuSearchEntries());
+        searchEntriesPromise = Promise.all(['content', 'route', 'entity'].map(async (kind) => {
+          try {
+            const response = await fetch(`/assets/data/search/${kind}-index.json`);
+            if (!response.ok) return [];
+            const data = await response.json();
+            return data.entries || data.routes || data.entities || [];
+          } catch { return []; }
+        }).concat(fetch('/assets/data/company/founder.json').then(response => response.ok ? response.json() : null).then(founder => founder ? [{title:founder.display_name, path:'/pages/company/leadership/index.html', description:founder.title, keywords:[founder.legal_name, founder.public_name]}] : []).catch(() => []))).then((indexes) => {
+          const entries = collectMenuSearchEntries();
+          for (const item of indexes.flat()) {
+            const title = item.title || item.label;
+            const href = item.path;
+            if (!title || !href) continue;
+            const description = item.description || item.scope || item.type || '';
+            entries.push({title, href, description,
+              haystack: normalizeSearchValue([title, description, href, ...(item.keywords || [])].join(' '))});
+          }
+          return Array.from(new Map(entries.map(entry => [entry.href, entry])).values());
+        });
       }
       return searchEntriesPromise;
     }
@@ -722,10 +740,11 @@
 
       loadSearchEntries().then((entries) => {
         if (!menu.isConnected || !searchLinksHost) return;
+        if (normalizeSearchValue(searchInput?.value || '') !== normalizedQuery) return;
 
         const sourceEntries = Array.isArray(entries) ? entries : [];
         const matches = sourceEntries
-          .filter((entry) => entry.haystack.includes(normalizedQuery))
+          .filter((entry) => normalizedQuery.split(/\s+/).every(term => entry.haystack.includes(term)))
           .slice(0, 8);
 
         cleanupSearchTitleArtifacts();

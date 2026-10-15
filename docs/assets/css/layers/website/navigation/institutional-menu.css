@@ -607,13 +607,7 @@ html[data-theme-effective="light"]{
    13) SECONDARY TOGGLE
 ============================================================================= */
 .institutional-menu-secondary-toggle{
-  display: none !important;
-}
-
-.institutional-menu-secondary-toggle:hover,
-.institutional-menu-secondary-toggle:focus-visible,
-.institutional-menu-secondary-toggle:active{
-  display: none !important;
+  display:none;
 }
 
 .institutional-menu-toggle-line{

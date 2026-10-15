@@ -301,14 +301,16 @@ function ensureGlobalFragmentMount(name) {
   const existingMount = document.querySelector(`[data-include="${name}"]`);
   if (existingMount) return existingMount;
 
-  const mount = document.createElement('div');
+  const mount = document.getElementById(`${name}-mount`) || document.createElement('div');
   mount.dataset.include = name;
   mount.dataset.globalLayoutMount = 'true';
-  document.body.appendChild(mount);
+  if (!mount.isConnected) document.body.appendChild(mount);
   return mount;
 }
 
 function ensureRequiredGlobalFragmentMounts() {
+  ensureGlobalFragmentMount('account-drawer');
+  ensureGlobalFragmentMount('menu');
   ensureGlobalFragmentMount('home-platform-shell');
 }
 

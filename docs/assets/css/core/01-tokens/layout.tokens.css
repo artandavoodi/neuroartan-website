@@ -940,7 +940,7 @@
   --layout-account-drawer-shell-padding-bottom-mobile:calc(var(--layout-account-drawer-shell-padding-y-mobile) * 2);
   --layout-account-drawer-close-offset:1rem;
   --layout-account-drawer-close-offset-tablet:0.82rem;
-  --layout-account-drawer-close-offset-mobile:var(--spacing-none);
+  --layout-account-drawer-close-offset-mobile:var(--layout-account-drawer-close-offset-tablet);
   --layout-account-drawer-header-padding-bottom-mobile:1.04rem;
   --layout-account-drawer-content-stage-padding-inline:4.8rem;
   --layout-account-drawer-content-stage-padding-inline-tablet:3.2rem;
@@ -954,7 +954,7 @@
   --layout-account-drawer-meta-link-size-mobile:0.78rem;
   --layout-account-drawer-segment-title-weight:400;
   --layout-account-drawer-segment-title-max-width:18ch;
-  --layout-account-drawer-text-link-weight:400;
+  --layout-account-drawer-text-link-weight:var(--font-weight-semibold);
   --layout-account-drawer-text-link-opacity:1;
   --layout-account-drawer-text-link-opacity-hover:1;
   --layout-account-drawer-copy-weight:300;

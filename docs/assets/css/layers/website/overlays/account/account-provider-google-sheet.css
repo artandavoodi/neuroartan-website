@@ -204,7 +204,7 @@ html[data-theme-effective="dark"]{
 .account-provider-google-sheet-text-action{
   display: inline;
   color: var(--text-primary-color);
-  text-decoration: underline;
+  text-decoration: none;
   text-decoration-color: currentColor;
   text-decoration-thickness: var(--border-width-hairline);
   text-underline-offset: calc(0.14em * var(--accessibility-typography-scale));

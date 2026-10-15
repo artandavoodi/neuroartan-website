@@ -202,7 +202,7 @@ html[data-theme-effective="light"]{
 }
 
 .products-local-nav__link::after {
-  content: "";
+  content: none;
   position: absolute;
   left: 0;
   right: 0;

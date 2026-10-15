@@ -219,7 +219,7 @@
       stageVideo.addEventListener("canplay", markStageVideoReady, { once: true });
       stageVideo.addEventListener("playing", markStageVideoReady, { once: true });
 
-      stageVideo.play().catch(() => {});
+      try { Promise.resolve(stageVideo.play()).catch(() => {}); } catch (_) {}
     }
 
     // ===== Stage video mask (keeps video invisible during intro, then reveals softly) =====
@@ -608,8 +608,6 @@
       }
     } catch (_) {}
 
-    await new Promise((r) => requestAnimationFrame(r));
-
     storage('localStorage', 'setItem', INTRO_DONE_KEY, "1");
 
     body.classList.add("intro-loading");
@@ -693,6 +691,10 @@
       }
     });
 
+    // Safari may suspend animation frames while a first-load tab is hidden.
+    // Completion must not depend on the animation callback ever starting.
+    const completionTimer = window.setTimeout(finishIntro, POP_IN_MS + HOLD_MS + FADE_MS + 1400);
+
     raf2(() => {
       overlayLogo.style.transition = `transform ${POP_IN_MS}ms ${EASE_OUT}`;
       overlayLogo.style.transform = "translate3d(0,0,0) scale(1.03)";
@@ -713,13 +715,15 @@
         window.setTimeout(finishIntro, FADE_MS + 40);
       }, POP_IN_MS + HOLD_MS);
 
-      window.setTimeout(finishIntro, POP_IN_MS + HOLD_MS + FADE_MS + 1400);
     });
 
     window.addEventListener(
       "pageshow",
       () => {
-        if (body.classList.contains("intro-loading")) finishIntro();
+        if (body.classList.contains("intro-loading")) {
+          window.clearTimeout(completionTimer);
+          finishIntro();
+        }
       },
       { once: true }
     );

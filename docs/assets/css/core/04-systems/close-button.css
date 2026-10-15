@@ -105,18 +105,16 @@
   outline:none;
 }
 
+@media (hover:hover) and (pointer:fine){
 .global-close-button:hover .global-close-button__line--first,
-.global-close-button:hover span:nth-child(1),
-.global-close-button:focus-visible .global-close-button__line--first,
-.global-close-button:focus-visible span:nth-child(1){
+.global-close-button:hover span:nth-child(1){
   transform:translate(-50%, -50%) rotate(0deg);
 }
 
 .global-close-button:hover .global-close-button__line--second,
-.global-close-button:hover span:nth-child(2),
-.global-close-button:focus-visible .global-close-button__line--second,
-.global-close-button:focus-visible span:nth-child(2){
+.global-close-button:hover span:nth-child(2){
   transform:translate(-50%, -50%) rotate(0deg);
+}
 }
 
 /* =============================================================================

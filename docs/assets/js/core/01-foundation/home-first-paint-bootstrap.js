@@ -19,11 +19,13 @@ function applyHomeFirstPaintBootstrapState() {
 
   if (document.body) {
     document.body.classList.add(HOME_FIRST_PAINT_CLASS);
+    document.body.classList.remove('intro-loading');
     return;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     document.body?.classList.add(HOME_FIRST_PAINT_CLASS);
+    document.body?.classList.remove('intro-loading');
   }, { once:true });
 }
 

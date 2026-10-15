@@ -3,7 +3,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 
 const source=readFileSync(new URL('../../docs/assets/js/layers/website/motion/logo-animation.js',import.meta.url),'utf8');
-async function run({blocked=false,image='loaded',reduced=false}={}) {
+async function run({blocked=false,image='loaded',reduced=false,suspendedFrames=false}={}) {
   const nodes=[];
   const timers=new Map();
   let now=0, serial=0, enteredEvents=0;
@@ -28,7 +28,7 @@ async function run({blocked=false,image='loaded',reduced=false}={}) {
   const window={scrollY:0,scrollTo(){},addEventListener(){},removeEventListener(){},dispatchEvent(e){if(e.type==='neuroartan:entered')enteredEvents++;},matchMedia:()=>({matches:reduced}),setTimeout:schedule,clearTimeout:id=>timers.delete(id),getComputedStyle:()=>({position:'static',display:'block'})};
   for(const key of ['localStorage','sessionStorage'])Object.defineProperty(window,key,{get(){if(blocked)throw new Error('Storage denied');return store;}});
   const document={body,documentElement:root,readyState:'complete',querySelector:query,createElement:tag=>new Element(tag),addEventListener(){}};
-  vm.runInNewContext(source,{window,document,HTMLAnchorElement:Element,requestAnimationFrame:fn=>schedule(fn,16),setTimeout:schedule,clearTimeout:id=>timers.delete(id),Event});
+  vm.runInNewContext(source,{window,document,HTMLAnchorElement:Element,requestAnimationFrame:fn=>suspendedFrames?0:schedule(fn,16),setTimeout:schedule,clearTimeout:id=>timers.delete(id),Event});
   for(let i=0;i<150;i++) {
     await Promise.resolve();
     if(timers.size){const [id,t]=[...timers].sort((a,b)=>a[1].time-b[1].time)[0];timers.delete(id);now=t.time;t.fn();}
@@ -38,5 +38,5 @@ async function run({blocked=false,image='loaded',reduced=false}={}) {
   assert.notEqual(body.style.position,'fixed','Scroll must unlock');
   assert(enteredEvents>0,'Deferred homepage systems must receive the entered event');
 }
-for(const options of [{},{blocked:true},{image:'error'},{image:'stalled'},{blocked:true,image:'stalled'},{blocked:true,reduced:true}])await run(options);
+for(const options of [{},{blocked:true},{image:'error'},{image:'stalled'},{blocked:true,image:'stalled'},{blocked:true,reduced:true},{blocked:true,suspendedFrames:true}])await run(options);
 console.log('PASS: homepage startup survives failed/stalled logo requests and denied storage.');

@@ -683,6 +683,22 @@
     drawer.dataset.moduleId = MODULE_ID;
     drawer.dataset.modulePath = MODULE_PATH;
 
+    getCloseControls().forEach((control) => {
+      control.dataset.accountDrawerClose = 'true';
+    });
+
+    if (options.preserveView && drawer.dataset.accountDrawerView) {
+      const pendingSurface = drawer.dataset.accountDrawerPendingSurface;
+      if (pendingSurface && hasMountedInnerView(pendingSurface)) {
+        applyInnerView(pendingSurface);
+      } else if (drawer.dataset.accountDrawerView === 'profile') {
+        applyProfileView();
+      } else {
+        applyInnerView(drawer.dataset.accountDrawerSurface || ENTRY_ACTION_ENTRY);
+      }
+      return;
+    }
+
     const viewMount = getViewMount();
     if (viewMount) {
       viewMount.hidden = true;
@@ -693,18 +709,6 @@
       view.classList.remove('is-open');
       view.setAttribute('aria-hidden', 'true');
     });
-
-    getCloseControls().forEach((control) => {
-      control.dataset.accountDrawerClose = 'true';
-    });
-
-    if (options.preserveView && drawer.dataset.accountDrawerView) {
-      const pendingSurface = drawer.dataset.accountDrawerPendingSurface;
-      if (pendingSurface && hasMountedInnerView(pendingSurface)) {
-        applyInnerView(pendingSurface);
-      }
-      return;
-    }
 
     applyAuthView('entry');
   }

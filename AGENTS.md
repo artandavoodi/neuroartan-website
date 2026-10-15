@@ -462,6 +462,11 @@ If the answer is weak, the change is not good enough.
 
 ## Communication Discipline
 
+### Public Interface Copy
+- Use plain, direct, task-specific wording, with Apple and Disney Store as tone references, not sources to copy.
+- State availability and next steps accurately; never imply that an account unlocks unreleased features.
+- Avoid robotic architectural language, vague promises and unsupported production-readiness claims.
+
 All agents must:
 - Respond in max 5 sentences unless explicitly asked for a full report
 - Keep responses concise and direct

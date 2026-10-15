@@ -25,7 +25,7 @@
   font-size:var(--body-3-size);
   font-weight:var(--type-body-regular-weight);
   letter-spacing:var(--tracking-ui);
-  text-transform:uppercase;
+  text-transform:none;
   color:var(--control-text-unified);
   opacity:var(--state-opacity-high);
   transition:var(--interaction-transition-control);
@@ -86,7 +86,7 @@
   font-size:var(--body-3-size);
   font-weight:var(--type-body-regular-weight);
   letter-spacing:var(--tracking-ui);
-  text-transform:uppercase;
+  text-transform:none;
   color:var(--control-text-unified);
   text-decoration:none;
   transition:var(--interaction-transition-control);

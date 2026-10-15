@@ -103,7 +103,7 @@ html[data-theme-effective="dark"] .site-footer{
   font-size:var(--footer-locale-font-size);
   font-weight:400;
   letter-spacing:0.08em;
-  text-transform:uppercase;
+  text-transform:none;
   opacity:0.85;
   transition:opacity var(--interaction-motion-medium) var(--interaction-ease-standard);
 }

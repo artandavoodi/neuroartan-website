@@ -82,7 +82,7 @@
   font-size: var(--body-3-size);
   line-height: var(--type-body-sm-line-height);
   letter-spacing: var(--tracking-ui);
-  text-transform: uppercase;
+  text-transform: none;
   text-align: center;
   opacity: var(--state-opacity-muted);
   display: none;

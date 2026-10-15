@@ -938,8 +938,8 @@
   --layout-account-drawer-shell-padding-y-mobile:1.2rem;
   --layout-account-drawer-shell-padding-x-mobile:1.28rem;
   --layout-account-drawer-shell-padding-bottom-mobile:calc(var(--layout-account-drawer-shell-padding-y-mobile) * 2);
-  --layout-account-drawer-close-offset:1rem;
-  --layout-account-drawer-close-offset-tablet:0.82rem;
+  --layout-account-drawer-close-offset:var(--space-6);
+  --layout-account-drawer-close-offset-tablet:var(--space-5);
   --layout-account-drawer-close-offset-mobile:var(--layout-account-drawer-close-offset-tablet);
   --layout-account-drawer-header-padding-bottom-mobile:1.04rem;
   --layout-account-drawer-content-stage-padding-inline:4.8rem;

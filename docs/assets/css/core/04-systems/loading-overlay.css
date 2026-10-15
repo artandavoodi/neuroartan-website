@@ -19,6 +19,10 @@
   transition:var(--interaction-transition-control);
 }
 
+.loading-overlay[hidden]{
+  display:none;
+}
+
 .loading-overlay.is-active{
   opacity: var(--overlay-opacity-open);
   visibility: visible;

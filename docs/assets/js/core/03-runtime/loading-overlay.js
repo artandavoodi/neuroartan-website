@@ -78,6 +78,7 @@
     if (!overlay) return;
 
     visible = state;
+    overlay.hidden = !state;
     overlay.classList.toggle('is-active', state);
     overlay.setAttribute('aria-hidden', state ? 'false' : 'true');
 

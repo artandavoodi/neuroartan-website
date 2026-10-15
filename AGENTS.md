@@ -32,6 +32,7 @@ All agents must treat this repository as a bounded operating environment.
 
 ### Workflow
 - Audit first
+- Use the repository's `npm run dev` server for previews; it sends `Cache-Control: no-store` and serves this repository's canonical assets. Do not replace it with a generic cached static server or reuse a preview origin for another repository.
 - Identify the true owner file
 - Confirm whether the concern belongs to HTML, CSS, JS, fragment, collection, or shared system
 - Edit only the owner file

@@ -12,6 +12,7 @@ for(const [i,html] of after.entries()){
   assert.match(html,/data-last-updated="\d{4}-\d{2}-\d{2}"/);
   assert.match(html,/<section class="legal-page-section"/);
   assert.equal((html.match(/<h1[ >]/g)||[]).length,1,'One public heading per legal page');
+  assert(!/<h2>\d+\. /.test(html),'Section headings must not carry decorative numbering');
 }
 const behavior=await readFile('docs/assets/js/layers/website/sections/legal.js','utf8');
 assert(!/fetch\(|innerHTML|legalSyncPath/.test(behavior),'No remote legal content or raw HTML injection');

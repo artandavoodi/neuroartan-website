@@ -1,5 +1,12 @@
 # AGENTS.md
 
+## Public Legal Publication Boundary
+- Public legal content is owned by `docs/assets/data/legal/` and built by `scripts/build-legal.mjs`.
+- Do not sync private governance documents, agent logs, personnel identifiers, local paths or approval records into public assets.
+- Legal pages must contain their complete text in the initial HTML; scripts may enhance navigation only.
+- Preserve effective and last-updated dates; update them only when the notice is actually revised.
+- Scroll snapping and wheel/touch interception are desktop-only; tablet/mobile and coarse-pointer surfaces use natural scrolling.
+
 ## Purpose
 This repository is the sovereign public website layer of Neuroartan.
 

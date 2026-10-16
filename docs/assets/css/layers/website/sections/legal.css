@@ -126,6 +126,11 @@ body.legal-page {
   gap: var(--legal-page-content-gap);
 }
 
+.legal-page-topics { display:flex; flex-wrap:wrap; gap:var(--nav-local-gap); margin-block-start:var(--space-6); }
+.legal-page-topics a { color:inherit; text-decoration:none; opacity:var(--state-opacity-muted); }
+.legal-page-topics a[aria-selected="true"], .legal-page-topics a:hover { opacity:var(--local-nav-hover-opacity); }
+.legal-page-section[hidden] { display:none; }
+
 .legal-page-section {
   display: grid;
   gap: var(--legal-page-section-gap);

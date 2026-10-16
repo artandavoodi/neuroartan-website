@@ -1,28 +1,18 @@
 {
-  "document_id": "NA-LEG-PUB-2026-0002-ACT",
-  "source_document_id": "NA-LEG-PUB-2026-0002-ACT",
-  "contract_version": "NA-WEB-STD-LEGALSYNC-0001:v1.0",
-  "source_path": "/Users/artan/Documents/Neuroartan/I/01 - Governance/02 - Legal/03 - Public Legal Pages/01 - Public Legal Pages/02 - Privacy Policy.md",
-  "route_family": "pages/legal",
-  "route_path": "pages/legal/privacy",
-  "shell_family": "legal",
-  "render_family": "legal",
   "page": "privacy",
-  "destination_class": "legal_page",
   "lang": "en",
   "pageTitle": "Privacy Policy | Neuroartan",
   "title": "Privacy Policy",
-  "eyebrow": "Public Legal Page",
+  "eyebrow": "Legal",
   "description": "Privacy Policy for Neuroartan website services, public surfaces, communications, account-related services, and related digital interactions.",
   "canonicalUrl": "https://neuroartan.com/pages/legal/privacy/",
   "robots": "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
-  "effectiveDate": "2026-03-27",
-  "lastUpdated": "2026-03-27",
+  "effectiveDate": "2026-10-16",
+  "lastUpdated": "2026-10-16",
   "intro": "This Privacy Policy explains how Neuroartan may collect, use, store, protect, disclose, and otherwise process personal data through its websites, digital systems, communications channels, account-related services, and related operational infrastructure.",
   "meta": [
-    "Effective date: 2026-03-27",
-    "Last updated: 2026-03-27",
-    "Language: English"
+    "Effective date: October 16, 2026",
+    "Last updated: October 16, 2026"
   ],
   "sections": [
     {
@@ -30,24 +20,21 @@
       "title": "1. Purpose",
       "paragraphs": [
         "This Privacy Policy explains how Neuroartan may collect, use, store, protect, disclose, and otherwise process personal data through its websites, digital systems, communications channels, account-related services, and related operational infrastructure.",
-        "This Policy is intended to provide transparent information regarding the categories of personal data that may be processed, the purposes of processing, the legal bases relied upon where applicable, the role of third-party service providers, the possible use of authentication and profile systems, and the rights available to individuals under applicable data-protection law.",
-        "This Policy also functions as a binding public-legal design and implementation constraint for website execution, interface presentation, communication surfaces, account flows, profile flows, and front-end publication decisions. Public-facing design and implementation choices must not conflict with this Policy’s transparency, minimization, consent, rights, retention, security, or processor-disclosure posture.",
-        "Because Neuroartan is operating in a pre-incorporation development stage, this Policy must not be interpreted or presented as implying incorporation, registered-office status, revenue maturity, or broader commercial finality that does not yet legally exist. Public-facing privacy disclosures, interface language, contact surfaces, footer references, legal-page presentation, and account-entry messaging must remain accurate to the institution’s actual legal and operational stage."
+        "This Policy is intended to provide transparent information regarding the categories of personal data that may be processed, the purposes of processing, the legal bases relied upon where applicable, the role of third-party service providers, the possible use of authentication and profile systems, and the rights available to individuals under applicable data-protection law."
       ]
     },
     {
       "id": "privacy-scope",
       "title": "2. Scope",
       "paragraphs": [
-        "This Privacy Policy applies to personal data processed in connection with website visits and interactions; communications submitted through forms, email, or other contact channels; newsletter or update subscriptions, where applicable; account, profile, authentication, waitlist, support, or service-related interactions, where applicable; analytics, security, audit, fraud-prevention, and system-operation processes, where applicable; Firebase Authentication, profile storage, and related account infrastructure, where enabled; any additional digital touchpoint where this Policy is made available or referenced; and public legal-page presentation and disclosure language used during the pre-incorporation stage."
+        "This Privacy Policy applies to personal data processed in connection with website visits and interactions; communications submitted through forms, email, or other contact channels; newsletter or update subscriptions, where applicable; account, profile, authentication, waitlist, support, or service-related interactions, where applicable; analytics, security, audit, fraud-prevention, and system-operation processes, where applicable; account authentication, profile storage, and related account infrastructure, where enabled; any additional digital touchpoint where this Policy is made available or referenced; and public legal-page presentation and disclosure language used during the pre-incorporation stage."
       ]
     },
     {
       "id": "privacy-controller",
       "title": "3. Who Is Responsible for Processing",
       "paragraphs": [
-        "Neuroartan acts as the responsible controller for the personal data described in this Policy to the extent that it determines the purposes and means of the relevant processing.",
-        "During the pre-incorporation stage, controller-facing public contact presentation must remain accurate to Neuroartan’s actual legal and operational posture and must not imply a registered-office or mature corporate status that does not yet legally exist."
+        "Neuroartan is operated by Artan Davoodi (legal name: Saeed Davoodi), based in Croatia. He is responsible for deciding how personal data described in this policy is used. You can contact him at contact@neuroartan.com."
       ]
     },
     {
@@ -87,7 +74,7 @@
       "title": "8. Accounts, Authentication, and Profile Processing",
       "paragraphs": [
         "Where Neuroartan enables account creation, sign-in, or profile functionality, personal data may be processed to create and manage user accounts, authenticate access, prevent unauthorized use, maintain account security, support password reset or verification functions, and store profile information voluntarily provided by the user.",
-        "Where Firebase Authentication or related Google / Firebase infrastructure is used, account and authentication data may be processed through that infrastructure in accordance with the configured service architecture. Depending on the enabled flow, this may include email-based sign-in, sign-in metadata, account identifiers, device or security events, and related operational logs.",
+        "Where account authentication or related Google / authentication infrastructure is used, account and authentication data may be processed through that infrastructure in accordance with the configured service architecture. Depending on the enabled flow, this may include email-based sign-in, sign-in metadata, account identifiers, device or security events, and related operational logs.",
         "Where profile functionality is enabled, profile information submitted by the user may be stored and processed in order to present, maintain, or administer the relevant account or profile features.",
         "This Policy does not represent that every account, profile, or sign-in function described above is active at all times. These disclosures describe the processing architecture that may be used where such features are enabled."
       ]
@@ -124,8 +111,7 @@
       "title": "12. Security",
       "paragraphs": [
         "Neuroartan seeks to apply appropriate technical and organizational measures designed to protect personal data against unauthorized access, unlawful processing, loss, misuse, disclosure, or destruction.",
-        "No digital system can guarantee absolute security. However, reasonable measures are expected to remain aligned with the sensitivity of the data and the exposure profile of the processing environment.",
-        "Design execution, front-end behavior, account flows, and profile flows must support this security posture by avoiding misleading interface states, unnecessary exposure of personal-data pathways, insecure defaults, or public-surface patterns that weaken user understanding, trust, or lawful control."
+        "No digital system can guarantee absolute security. However, reasonable measures are expected to remain aligned with the sensitivity of the data and the exposure profile of the processing environment."
       ]
     },
     {
@@ -149,29 +135,24 @@
       "title": "15. Policy Updates",
       "paragraphs": [
         "This Privacy Policy may be updated to reflect changes in legal requirements, processing activities, infrastructure, operational practices, account systems, profile systems, or digital services.",
-        "Where material changes occur, the updated version will be published with a revised effective date.",
-        "Where changes in legal status, incorporation stage, public contact posture, processor usage, communication architecture, or account/authentication architecture materially affect public representation risk, this Policy should be reviewed by GCA before the revised public version is treated as production-ready.",
-        "Where website-interface, consent-flow, communication-surface, account-flow, or profile-flow behavior changes materially affect privacy disclosures or user expectations, this Policy should be reviewed in parallel before the updated experience is treated as production-ready."
+        "Where material changes occur, the updated version will be published with a revised effective date."
       ]
     },
     {
       "id": "privacy-contact",
       "title": "16. Contact",
       "paragraphs": [
-        "Questions regarding this Privacy Policy or related privacy matters may be directed through Neuroartan’s designated legal, privacy, or official contact channel as published on the website.",
-        "During the pre-incorporation stage, public contact presentation must remain accurate to the institution’s actual legal and operational posture and must not imply a registered-office or mature corporate status that does not yet legally exist."
+        "For questions about this notice or to exercise your rights, email contact@neuroartan.com."
       ]
     }
   ],
-  "footerHtml": "<p>This page is rendered through the shared legal publication system.</p>",
   "structuredData": {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Privacy Policy | Neuroartan",
-    "identifier": "NA-LEG-PUB-2026-0002-ACT",
     "url": "https://neuroartan.com/pages/legal/privacy/",
     "description": "Privacy Policy for Neuroartan website services, public surfaces, communications, account-related services, and related digital interactions.",
-    "dateModified": "2026-03-27",
+    "dateModified": "2026-10-16",
     "inLanguage": "en"
   }
 }

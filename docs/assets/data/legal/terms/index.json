@@ -1,28 +1,18 @@
 {
-  "document_id": "NA-LEG-PUB-2026-0003-ACT",
-  "source_document_id": "NA-LEG-PUB-2026-0003-ACT",
-  "contract_version": "NA-WEB-STD-LEGALSYNC-0001:v1.0",
-  "source_path": "/Users/artan/Documents/Neuroartan/I/01 - Governance/02 - Legal/03 - Public Legal Pages/01 - Public Legal Pages/03 - Terms of Use.md",
-  "route_family": "pages/legal",
-  "route_path": "pages/legal/terms",
-  "shell_family": "legal",
-  "render_family": "legal",
   "page": "terms",
-  "destination_class": "legal_page",
   "lang": "en",
   "pageTitle": "Terms of Use | Neuroartan",
   "title": "Terms of Use",
-  "eyebrow": "Public Legal Page",
+  "eyebrow": "Legal",
   "description": "Terms of Use for Neuroartan websites, digital surfaces, content, accounts, profiles, and related online services.",
   "canonicalUrl": "https://neuroartan.com/pages/legal/terms/",
   "robots": "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1",
-  "effectiveDate": "2026-03-26",
-  "lastUpdated": "2026-03-26",
+  "effectiveDate": "2026-10-16",
+  "lastUpdated": "2026-10-16",
   "intro": "These Terms of Use govern access to and use of Neuroartan websites, digital surfaces, content, account-related entry points, profile-related entry points, and related online services.",
   "meta": [
-    "Effective date: 2026-03-26",
-    "Last updated: 2026-03-26",
-    "Language: English"
+    "Effective date: October 16, 2026",
+    "Last updated: October 16, 2026"
   ],
   "sections": [
     {
@@ -32,7 +22,6 @@
         "These Terms of Use govern access to and use of Neuroartan websites, digital surfaces, content, account-related entry points, profile-related entry points, and related online services.",
         "By accessing or using the website, the user agrees to be bound by these Terms to the extent permitted by applicable law.",
         "If the user does not agree to these Terms, the website should not be used.",
-        "Because Neuroartan is operating in a pre-incorporation development stage, these Terms must not be interpreted or presented as implying incorporation, registered-office status, revenue maturity, or broader commercial finality that does not yet legally exist. Public-facing website terms, legal-page presentation, contact surfaces, footer references, account-entry presentation, and institutional language must remain accurate to Neuroartan’s actual legal and operational stage.",
         "In these Terms of Use, “Neuroartan”, “we”, “us”, and “our” refer to the Neuroartan project and, at the current stage, its founder-operator, Artan Davoodi (legal name: Saeed Davoodi), unless the context clearly requires a different meaning."
       ]
     },
@@ -203,8 +192,7 @@
         "These Terms of Use may be updated from time to time to reflect legal, operational, technical, editorial, structural, account-related, or profile-related changes.",
         "Where material changes occur, the revised version will be published with an updated effective date.",
         "The “Last Updated” date at the top of these Terms indicates when these Terms were last revised. Changes become effective when the revised Terms are posted, unless a different effective rule is stated in the updated notice.",
-        "Continued use of the website after such publication may constitute acceptance of the revised Terms to the extent permitted by applicable law.",
-        "Where changes in legal status, incorporation stage, public contact posture, communication architecture, account architecture, profile architecture, or public representation risk materially affect website-facing legal disclosures, these Terms should be reviewed by GCA before the revised public version is treated as production-ready."
+        "Continued use of the website after such publication may constitute acceptance of the revised Terms to the extent permitted by applicable law."
       ]
     },
     {
@@ -229,46 +217,15 @@
       "id": "16-contact",
       "title": "16. Contact",
       "paragraphs": [
-        "Questions regarding these Terms of Use may be directed through Neuroartan’s designated legal or official contact channel as published on the website.",
-        "During the pre-incorporation stage, public contact presentation must remain accurate to Neuroartan’s actual legal and operational posture and must not imply a registered-office or mature corporate status that does not yet legally exist.",
-        "---"
-      ]
-    },
-    {
-      "id": "change-log",
-      "title": "Change Log",
-      "paragraphs": [
-        "---"
-      ],
-      "list": [
-        "2026-03-29 — v1.3.0 Terms of Use updated to add the institutional “we / us / our” clarification, additional feature-specific terms logic, stronger prohibited-use language for reflective / thought / voice / profile-related misuse, a safety / self-harm / harm-to-others / illegal-use action posture, and children-and-minors protection language for higher-sensitivity product contexts. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Hardening of Terms of Use for public brand language, sensitive-thought product controls, and child-protection posture.",
-        "2026-03-26 — v1.2.0 Terms of Use finalized for current public-facing auth, profile, and legal-page linkage readiness. Scope and stakeholder coverage were expanded to include Firebase auth/profile terms readiness, account and user-conduct terms, and software / implementation stakeholders. The body was hardened to include account/profile-specific permitted-use, prohibited-conduct, service-availability, warranty, liability, privacy-linkage, and review-trigger language so Firebase-style public entry points can be linked without contradicting the current legal posture. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Public-legal hardening for Firebase auth/profile linkage and website legal-page finalization.",
-        "2026-03-10 — v1.1.0 Terms of Use synchronized to GCA legal review. Scope and stakeholder coverage expanded to include pre-incorporation public disclosure accuracy and public representation risk control; public-facing terms language was hardened so the Terms do not imply incorporation, registered-office status, revenue maturity, or broader commercial finality beyond verified fact; scope, informational-content, service-availability, policy-update, and contact clauses were strengthened to preserve accurate public legal posture during the pre-incorporation stage. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: General Counsel Agent (GCA) · Agent ID: A-2026-0005. Execution Context: Public terms-of-use hardening to align website-facing legal disclosures with pre-incorporation stage accuracy and public representation risk control.",
-        "2026-03-08 — v1.0.0 Terms of Use created from empty file and normalized into the canonical public-legal-page structure; acceptable-use, IP, availability, disclaimer, liability, privacy linkage, governing-law, and publication controls added; canonical end-section sequence applied. Operator: Artan · Personnel ID: CEO-001-01-01. Agent: Vault Governance Agent (A-2026-0001). Execution Context: Initial creation of public terms-of-use page."
-      ]
-    },
-    {
-      "id": "document-control-validation",
-      "title": "Document Control & Validation",
-      "paragraphs": [
-        "GSA PROTOCOL STATUS: Pending Founder Validation",
-        "GSA APPROVAL: false",
-        "DOCUMENT STATUS: Draft — Terms of Use",
-        "VISIBILITY: Public",
-        "PUBLISH TO WEBSITE: Yes",
-        "VERSION: 1.3.0",
-        "---",
-        "END OF DOCUMENT"
+        "For questions about this notice or to exercise your rights, email contact@neuroartan.com."
       ]
     }
   ],
-  "footer": "These Terms are published as part of Neuroartan public legal disclosures and must remain synchronized with the governed source document.",
   "structuredData": {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Terms of Use | Neuroartan",
     "url": "https://neuroartan.com/pages/legal/terms/",
-    "identifier": "NA-LEG-PUB-2026-0003-ACT",
-    "dateModified": "2026-03-26"
+    "dateModified": "2026-10-16"
   }
 }

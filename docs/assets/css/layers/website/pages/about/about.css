@@ -1362,21 +1362,25 @@ body.country-overlay-active .home-essence-effect__inner{
   max-width: var(--home-reading-width);
 }
 
-@media (max-width: 820px){
-  .home-featured-transition-shell > #about-featured-functions-mount{
-    min-height: var(--home-stack-panel-height);
+@media (max-width: 1024px), (hover: none), (pointer: coarse){
+  .home-featured-transition-shell,
+  .home-icos-stack-shell {
+    min-height: auto;
+    margin-block: var(--spacing-none);
+    overflow: visible;
   }
 
-  .home-featured-transition-shell{
-    min-height: calc((var(--home-stack-panel-height) * var(--layout-about-featured-mobile-shell-factor)) + var(--home-stack-panel-height));
-    margin-top: var(--layout-about-zero);
-    margin-bottom: calc(var(--home-stack-panel-height) * -1);
-    padding-top: var(--layout-about-zero);
-  }
-
-  .home-featured-transition-shell > .home-insights-chapter--cover{
-    min-height: var(--home-stack-panel-height);
-    margin-top: var(--layout-about-zero);
+  .home-featured-transition-shell > #about-featured-functions-mount,
+  .home-featured-transition-shell > #about-featured-functions-mount > *,
+  .home-featured-transition-shell > .home-insights-chapter--cover,
+  .home-featured-transition-shell > .home-insights-chapter--cover .home-inner,
+  .home-icos-stack-shell > .home-icos-chapter,
+  .home-icos-chapter-stage,
+  .home-essence-effect__inner,
+  .home-hero-headlines__inner {
+    position: relative;
+    min-height: auto;
+    height: auto;
   }
 
   .home-featured-transition-shell > .home-insights-chapter--cover .home-inner{

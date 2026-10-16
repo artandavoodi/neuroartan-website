@@ -24,10 +24,16 @@ for(const name of ['privacy','terms',...catalog.pages.map(p=>p.page)]){
     return `<section class="legal-page-section" id="${escape(section.id)}"><h2>${escape(section.title)}</h2>${paragraphs}${lists}</section>`;
   }).join('\n');
   const navigation=data.sections.map(s=>`<a href="#${escape(s.id)}">${escape(s.title)}</a>`).join('\n');
+  const documents=await Promise.all(['privacy','terms'].map(async page=>JSON.parse(await readFile(path.join(root,`docs/assets/data/legal/${page}/index.json`),'utf8'))));
+  const sidebar=[...documents,...catalog.pages].map(item=>`<a href="/pages/legal/${item.page==='index'?'':`${escape(item.page)}/`}"${item.page===name?' aria-current="page"':''}>${escape(item.title)}</a>`).join('');
   const output=`<section class="legal-page-shell" data-legal-page="${name}" data-effective-date="${escape(data.effectiveDate)}" data-last-updated="${escape(data.lastUpdated)}">
+  <div class="document-reader" data-document-reader>
+  <aside class="document-reader__sidebar"><details open data-reader-disclosure><summary>Legal information</summary><nav aria-label="Legal documents">${sidebar}</nav></details></aside>
+  <article class="document-reader__article"><nav class="document-reader__breadcrumb" aria-label="Breadcrumb"><a href="/">Neuroartan</a><span>/</span><a href="/pages/legal/">Legal</a><span>/</span><span>${escape(data.title)}</span></nav>
   <header class="legal-page-header"><p class="legal-page-eyebrow">Legal</p><h1 class="legal-page-title">${escape(data.title)}</h1><p class="legal-page-intro">${escape(data.intro)}</p><ul class="legal-page-meta">${data.meta.map(t=>`<li>${escape(t)}</li>`).join('')}</ul></header>
-  <nav class="legal-page-topics" aria-label="${escape(data.title)} sections">${navigation}</nav>
   <div class="legal-page-divider"></div><div class="legal-page-content">${sections}</div>
+  </article><aside class="document-reader__toc"><details open data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${navigation}</nav></details></aside>
+  </div>
 </section>
 `;
   const target=path.join(root,`docs/pages/legal/${name==='index'?'':`${name}/`}index.html`);

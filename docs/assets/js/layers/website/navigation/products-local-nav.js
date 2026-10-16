@@ -159,6 +159,10 @@
     const linksContainer = getLocalNavLinksContainer(config);
 
     if (!nav || !registry || !linksContainer) return false;
+    if (registry.layout?.topbar === false) {
+      nav.remove();
+      return true;
+    }
 
     if (label) {
       label.textContent = registry.label || config.label;

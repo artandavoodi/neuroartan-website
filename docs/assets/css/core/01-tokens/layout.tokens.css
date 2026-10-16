@@ -144,6 +144,10 @@
 :root{
   --section-min-height:100vh;
   --section-min-height-stable:100svh;
+  --reader-sidebar-min:11rem;
+  --reader-sidebar-max:15rem;
+  --reader-outline-min:12rem;
+  --reader-outline-max:16rem;
 }
 
 /* =============================================================================

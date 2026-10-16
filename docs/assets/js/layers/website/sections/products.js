@@ -216,7 +216,7 @@ import {bindDocumentReaders} from '../../../core/02-systems/document-reader.js';
     host.classList.remove('products-hub-layout');
     const title=escapeHtml(page.title||state.activeSection?.title||'Products');
     const outline=sections.map(section=>`<a href="#${escapeHtml(section.id)}">${escapeHtml(section.title||section.label)}</a>`).join('');
-    mountHtml(host, `<div class="document-reader document-reader--article" data-document-reader><article class="document-reader__article"><nav class="document-reader__breadcrumb" aria-label="Breadcrumb"><a href="/pages/products/">Products</a><span>/</span><span>${title}</span></nav><div class="products-detail-content">${blocks}</div></article><aside class="document-reader__toc"><details open data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${outline}</nav></details></aside></div>`, 'products-index-shell');
+    mountHtml(host, `<div class="document-reader document-reader--article" data-document-reader><article class="document-reader__article"><nav class="document-reader__breadcrumb" aria-label="Breadcrumb"><a href="/pages/products/">Products</a><span>/</span><span>${title}</span></nav><div class="products-detail-content">${blocks}</div></article><aside class="document-reader__toc"><details data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${outline}</nav></details></aside></div>`, 'products-index-shell');
     bindDocumentReaders(host);
   }
 

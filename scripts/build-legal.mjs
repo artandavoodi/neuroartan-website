@@ -29,11 +29,11 @@ for(const name of ['privacy','terms',...catalog.pages.map(p=>p.page)]){
   const sidebar=[...documents,...catalog.pages].map(item=>`<a href="/pages/legal/${item.page==='index'?'':`${escape(item.page)}/`}"${item.page===name?' aria-current="page"':''}>${escape(item.title)}</a>`).join('');
   const output=`<section class="legal-page-shell" data-legal-page="${name}" data-effective-date="${escape(data.effectiveDate)}" data-last-updated="${escape(data.lastUpdated)}">
   <div class="document-reader" data-document-reader>
-  <aside class="document-reader__sidebar"><details open data-reader-disclosure><summary>Legal information</summary><nav aria-label="Legal documents">${sidebar}</nav></details></aside>
+  <aside class="document-reader__sidebar"><details data-reader-disclosure><summary>Legal information</summary><nav aria-label="Legal documents">${sidebar}</nav></details></aside>
   <article class="document-reader__article"><nav class="document-reader__breadcrumb" aria-label="Breadcrumb"><a href="/">Neuroartan</a><span>/</span><a href="/pages/legal/">Legal</a><span>/</span><span>${escape(data.title)}</span></nav>
   <header class="legal-page-header"><p class="legal-page-eyebrow">Legal</p><h1 class="legal-page-title">${escape(data.title)}</h1><p class="legal-page-intro">${escape(data.intro)}</p><ul class="legal-page-meta publication-meta">${data.meta.map(t=>`<li>${escape(t)}</li>`).join('')}</ul></header>
   <div class="legal-page-divider"></div><div class="legal-page-content">${sections}</div>
-  </article><aside class="document-reader__toc"><details open data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${navigation}</nav></details></aside>
+  </article><aside class="document-reader__toc"><details data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${navigation}</nav></details></aside>
   </div>
 </section>
 `;

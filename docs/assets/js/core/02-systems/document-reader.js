@@ -33,7 +33,11 @@ export function bindDocumentReaders(root=document){
     const links=[...page.querySelectorAll('.document-reader__toc a')];
     const sections=links.map(link=>page.querySelector(link.hash)).filter(Boolean);
     const compact=matchMedia('(max-width: 1024px), (hover: none), (pointer: coarse)');
-    page.querySelectorAll('[data-reader-disclosure]').forEach(group=>{group.open=!compact.matches;});
+    const disclosures=[...page.querySelectorAll('[data-reader-disclosure]')];
+    const resetDisclosures=()=>disclosures.forEach(group=>{group.open=!compact.matches;});
+    resetDisclosures();
+    compact.addEventListener('change',resetDisclosures);
+    addEventListener('pageshow',resetDisclosures);
     let frame=0;
     const update=()=>{
       frame=0;

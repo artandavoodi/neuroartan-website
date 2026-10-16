@@ -46,6 +46,7 @@
 .products-page .products-shell {
   display: grid;
   gap:var(--products-content-rail-gap);
+  padding-block-end:var(--products-content-bottom-space);
 }
 
 /* =============================================================================
@@ -78,7 +79,6 @@
   grid-template-columns: minmax(calc(16rem * var(--accessibility-density-scale)), calc(19rem * var(--accessibility-density-scale))) minmax(0, 1fr);
   gap:var(--products-content-rail-gap);
   align-items:start;
-  margin-block-end:var(--products-hub-bottom-gap);
 }
 
 .products-page[data-products-sidebar-open="false"] .products-hub-layout {

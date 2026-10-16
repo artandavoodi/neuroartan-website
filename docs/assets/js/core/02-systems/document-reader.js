@@ -3,6 +3,26 @@ export function bindDocumentReaders(root=document){
   root.querySelectorAll('[data-document-reader]').forEach(page=>{
     if(page.dataset.readerBound)return;
     page.dataset.readerBound='true';
+    const summary=page.querySelector('.document-reader__toc summary');
+    if(summary){
+      const label=document.createElement('span');
+      label.textContent=summary.textContent;
+      summary.replaceChildren(label);
+      const focus=document.createElement('button');
+      focus.type='button';
+      focus.className='document-reader__focus';
+      focus.setAttribute('aria-label','Hide navigation for focused reading');
+      focus.setAttribute('aria-pressed','false');
+      focus.addEventListener('click',event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        const active=page.dataset.readerFocus!=='true';
+        page.dataset.readerFocus=String(active);
+        focus.setAttribute('aria-pressed',String(active));
+        focus.setAttribute('aria-label',active?'Show reading navigation':'Hide navigation for focused reading');
+      });
+      summary.append(focus);
+    }
     const links=[...page.querySelectorAll('.document-reader__toc a')];
     const sections=links.map(link=>page.querySelector(link.hash)).filter(Boolean);
     const compact=matchMedia('(max-width: 1024px), (hover: none), (pointer: coarse)');

@@ -6,7 +6,7 @@
   "defaultSection": "overview",
   "layout": {
     "sidebar": true,
-    "topbar": false,
+    "topbar": true,
     "hero": true,
     "contentPanel": true
   },

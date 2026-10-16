@@ -224,7 +224,7 @@
 
 .products-page .products-detail-block__inner{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) minmax(calc(14rem * var(--accessibility-density-scale)), calc(18rem * var(--accessibility-density-scale)));
+  grid-template-columns:minmax(0, 1fr);
   gap:var(--products-content-rail-gap);
   align-items:start;
 }
@@ -265,14 +265,11 @@
   gap:var(--space-2, calc(0.75rem * var(--accessibility-density-scale)));
   padding:0;
   margin:0;
-  list-style:none;
+  list-style:disc inside;
 }
 
 .products-page .products-detail-block__highlight{
-  padding:var(--space-3, calc(1rem * var(--accessibility-density-scale))) var(--space-4, calc(1.25rem * var(--accessibility-density-scale)));
-  border:calc(1px * var(--accessibility-density-scale)) solid var(--control-border-color, var(--border-soft, rgba(255, 255, 255, 0.08)));
-  border-radius:var(--radius-lg, calc(1rem * var(--accessibility-density-scale)));
-  background:var(--control-bg, var(--surface-elevated, rgba(255, 255, 255, 0.04)));
+  padding:var(--spacing-none);
   color:var(--text-secondary-color, var(--text-secondary, rgba(255, 255, 255, 0.72)));
   font-size:var(--body-3-size, calc(0.875rem * var(--accessibility-typography-scale)));
   line-height:var(--body-3-line-height, 1.5);

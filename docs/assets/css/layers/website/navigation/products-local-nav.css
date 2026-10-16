@@ -1,3 +1,9 @@
+.products-local-nav__picker { display:none; }
+@media (max-width:1024px), (hover:none), (pointer:coarse) {
+  .products-local-nav__nav, .products-local-nav__label-wrap { display:none; }
+  .products-local-nav__picker { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; gap:var(--spacing-md); inline-size:100%; }
+}
+
 /* =============================================================================
    FILE INDEX
    01) PRODUCTS LOCAL NAV TOKENS

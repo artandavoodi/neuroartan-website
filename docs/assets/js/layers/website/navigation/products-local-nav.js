@@ -183,6 +183,11 @@
       .join('');
 
     linksContainer.innerHTML = links;
+    const picker=nav.querySelector('[data-products-local-picker]');
+    if(picker){
+      picker.innerHTML=(registry.sections||[]).filter(section=>section.showInTopbar).map(section=>`<option value="${escapeHtml(section.route)}"${section.id===activeSection?.id?' selected':''}>${escapeHtml(section.label)}</option>`).join('');
+      picker.addEventListener('change',()=>location.assign(picker.value),{once:true});
+    }
     return true;
   }
 

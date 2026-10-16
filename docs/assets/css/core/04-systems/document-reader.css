@@ -15,13 +15,12 @@
 .document-reader details:not([open]) > summary::after { transform:rotate(-90deg); }
 .document-reader__toc summary > span { flex:1; }
 .document-reader__focus { display:inline-flex; align-items:center; justify-content:center; padding:var(--spacing-xs); border:0; background:none; color:inherit; cursor:pointer; }
-.document-reader__focus::before { content:""; width:var(--icon-size-xs); height:var(--icon-size-xs); background:currentColor; mask:url('/registry/icons/public/assets/layers/website/profile/social/Hide.svg') center / contain no-repeat; }
+.document-reader__focus-icon { width:var(--icon-size-xs); height:var(--icon-size-xs); }
 .document-reader[data-reader-focus="true"] { grid-template-columns:minmax(0,1fr) auto; }
 .document-reader[data-reader-focus="true"] .document-reader__sidebar,
 .document-reader[data-reader-focus="true"] .document-reader__toc nav,
 .document-reader[data-reader-focus="true"] .document-reader__toc summary > span,
 .document-reader[data-reader-focus="true"] .document-reader__toc summary::after { display:none; }
-.document-reader[data-reader-focus="true"] .document-reader__focus::before { mask-image:url('/registry/icons/public/assets/layers/website/profile/social/Unhide.svg'); }
 @media (prefers-reduced-motion:reduce) { .document-reader summary::after { transition:none; } }
 @media (max-width:1024px), (hover:none), (pointer:coarse) {
   .document-reader, .document-reader--article { grid-template-columns:minmax(0,1fr); }

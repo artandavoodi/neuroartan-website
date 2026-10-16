@@ -16,4 +16,11 @@ for(const [i,html] of after.entries()){
 }
 const behavior=await readFile('docs/assets/js/layers/website/sections/legal.js','utf8');
 assert(!/fetch\(|innerHTML|legalSyncPath/.test(behavior),'No remote legal content or raw HTML injection');
+const reader=await readFile('docs/assets/js/core/02-systems/document-reader.js','utf8');
+for(const name of ['visibility-on','visibility-off']){
+  const icon=`/registry/icons/public/assets/core/identity/access/${name}.svg`;
+  assert(reader.includes(icon),'Reader must use the registered visibility pair');
+  assert(!(await readFile(`docs${icon}`,'utf8')).includes('<circle cx="12" cy="12" r="2"'),'Visibility controls cannot use placeholder dots');
+}
+assert(reader.includes('ui-icon-theme-aware'),'Reader visibility icons follow the shared theme system');
 console.log('PASS: standalone legal HTML, publication boundaries, dates and deterministic generation.');

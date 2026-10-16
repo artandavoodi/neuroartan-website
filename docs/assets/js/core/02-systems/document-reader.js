@@ -13,6 +13,12 @@ export function bindDocumentReaders(root=document){
       focus.className='document-reader__focus';
       focus.setAttribute('aria-label','Hide navigation for focused reading');
       focus.setAttribute('aria-pressed','false');
+      const icon=document.createElement('img');
+      icon.className='document-reader__focus-icon ui-icon-theme-aware';
+      icon.src='/registry/icons/public/assets/core/identity/access/visibility-off.svg';
+      icon.alt='';
+      icon.setAttribute('aria-hidden','true');
+      focus.append(icon);
       focus.addEventListener('click',event=>{
         event.preventDefault();
         event.stopPropagation();
@@ -20,6 +26,7 @@ export function bindDocumentReaders(root=document){
         page.dataset.readerFocus=String(active);
         focus.setAttribute('aria-pressed',String(active));
         focus.setAttribute('aria-label',active?'Show reading navigation':'Hide navigation for focused reading');
+        icon.src=active?'/registry/icons/public/assets/core/identity/access/visibility-on.svg':'/registry/icons/public/assets/core/identity/access/visibility-off.svg';
       });
       summary.append(focus);
     }

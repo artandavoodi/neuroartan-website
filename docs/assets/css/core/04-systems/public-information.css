@@ -1,0 +1,37 @@
+/* Canonical ecosystem email and publication metadata presentation. */
+:root {
+  --email-text-size:var(--caption-1-size);
+  --email-text-weight:var(--font-weight-semibold);
+  --publication-meta-size:var(--caption-1-size);
+  --publication-meta-weight:var(--font-weight-medium);
+  --publication-meta-gap:var(--spacing-sm);
+  --publication-meta-padding-y:var(--spacing-xs);
+  --publication-meta-padding-x:var(--spacing-sm);
+  --publication-meta-radius:var(--radius-xs);
+  --publication-meta-background:var(--text-primary-color);
+  --publication-meta-color:var(--bg-color);
+}
+a[href^="mailto:"], .ui-email {
+  font-size:var(--email-text-size);
+  font-weight:var(--email-text-weight);
+  text-decoration:none;
+  overflow-wrap:anywhere;
+}
+.publication-meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--publication-meta-gap);
+  padding:0;
+  list-style:none;
+}
+.publication-meta > span, .publication-meta > li {
+  display:inline-block;
+  padding:var(--publication-meta-padding-y) var(--publication-meta-padding-x);
+  border:0;
+  border-radius:var(--publication-meta-radius);
+  background:var(--publication-meta-background);
+  color:var(--publication-meta-color);
+  font-size:var(--publication-meta-size);
+  font-weight:var(--publication-meta-weight);
+  line-height:var(--caption-1-line-height);
+}

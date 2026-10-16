@@ -25,11 +25,7 @@
   --legal-page-title-line-height: var(--layout-legal-page-title-line-height);
   --legal-page-title-tracking: var(--layout-legal-page-title-tracking);
   --legal-page-intro-line-height: var(--layout-legal-page-intro-line-height);
-  --legal-page-meta-gap: var(--layout-legal-page-meta-gap);
   --legal-page-meta-margin-top: var(--layout-legal-page-meta-margin-top);
-  --legal-page-meta-padding-y: var(--layout-legal-page-meta-padding-y);
-  --legal-page-meta-padding-x: var(--layout-legal-page-meta-padding-x);
-  --legal-page-meta-size: var(--layout-legal-page-meta-size);
   --legal-page-divider-height: var(--layout-legal-page-divider-height);
   --legal-page-divider-margin-top: var(--layout-legal-page-divider-margin-top);
   --legal-page-divider-margin-bottom: var(--layout-legal-page-divider-margin-bottom);
@@ -97,21 +93,7 @@ body.legal-page {
 }
 
 .legal-page-meta {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: var(--legal-page-meta-gap);
   margin: var(--legal-page-meta-margin-top) var(--spacing-none) var(--spacing-none);
-  padding: var(--spacing-none);
-  list-style: none;
-}
-
-.legal-page-meta li {
-  padding: var(--legal-page-meta-padding-y) var(--legal-page-meta-padding-x);
-  border: var(--border-width-hairline) solid var(--legal-page-border);
-  background: var(--legal-page-surface);
-  color: var(--legal-page-muted);
-  font-size: var(--legal-page-meta-size);
 }
 
 .legal-page-divider {

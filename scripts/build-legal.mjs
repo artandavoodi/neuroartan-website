@@ -3,6 +3,7 @@ import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const publicText=value=>escape(value).replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,email=>`<a href="mailto:${email}">${email}</a>`);
 const forbidden=/source_path|source_document_id|contract_version|Personnel ID|Agent ID|Execution Context|Document Control|Change Log|Vault Governance|shared legal publication|governed source document/i;
 const catalog=JSON.parse(await readFile(path.join(root,'docs/assets/data/legal/index.json'),'utf8'));
 for(const name of ['privacy','terms',...catalog.pages.map(p=>p.page)]){
@@ -14,7 +15,7 @@ for(const name of ['privacy','terms',...catalog.pages.map(p=>p.page)]){
   const sections=data.sections.map(section=>{
     const paragraphs=(section.paragraphs||[]).map(p=>{
       if(typeof p!=='string') throw Error('Public legal paragraphs must be plain text');
-      return `<p>${escape(p)}</p>`;
+      return `<p>${publicText(p)}</p>`;
     }).join('\n');
     const lists=['list','orderedList'].map(key=>{
       if(!section[key]?.length)return '';
@@ -30,7 +31,7 @@ for(const name of ['privacy','terms',...catalog.pages.map(p=>p.page)]){
   <div class="document-reader" data-document-reader>
   <aside class="document-reader__sidebar"><details open data-reader-disclosure><summary>Legal information</summary><nav aria-label="Legal documents">${sidebar}</nav></details></aside>
   <article class="document-reader__article"><nav class="document-reader__breadcrumb" aria-label="Breadcrumb"><a href="/">Neuroartan</a><span>/</span><a href="/pages/legal/">Legal</a><span>/</span><span>${escape(data.title)}</span></nav>
-  <header class="legal-page-header"><p class="legal-page-eyebrow">Legal</p><h1 class="legal-page-title">${escape(data.title)}</h1><p class="legal-page-intro">${escape(data.intro)}</p><ul class="legal-page-meta">${data.meta.map(t=>`<li>${escape(t)}</li>`).join('')}</ul></header>
+  <header class="legal-page-header"><p class="legal-page-eyebrow">Legal</p><h1 class="legal-page-title">${escape(data.title)}</h1><p class="legal-page-intro">${escape(data.intro)}</p><ul class="legal-page-meta publication-meta">${data.meta.map(t=>`<li>${escape(t)}</li>`).join('')}</ul></header>
   <div class="legal-page-divider"></div><div class="legal-page-content">${sections}</div>
   </article><aside class="document-reader__toc"><details open data-reader-disclosure><summary>In this article</summary><nav aria-label="In this article">${navigation}</nav></details></aside>
   </div>

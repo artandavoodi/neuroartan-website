@@ -10,6 +10,7 @@ for(const [i,html] of after.entries()){
   assert(!/vault-sync|source_path|Personnel ID|Agent ID|Execution Context|Change Log|Document Control|shared legal publication|LEGAL-DOCUMENT-ID/i.test(html),paths[i]);
   assert.match(html,/data-effective-date="\d{4}-\d{2}-\d{2}"/);
   assert.match(html,/data-last-updated="\d{4}-\d{2}-\d{2}"/);
+  assert.match(html,/class="legal-page-meta publication-meta"/,'Publication dates use the shared metadata component');
   assert.match(html,/<section class="legal-page-section"/);
   assert.equal((html.match(/<h1[ >]/g)||[]).length,1,'One public heading per legal page');
   assert(!/<h2>\d+\. /.test(html),'Section headings must not carry decorative numbering');

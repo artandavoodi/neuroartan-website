@@ -5,7 +5,5 @@ Disallow: /pages/legacy/
 Disallow: /pages/transitional/
 Disallow: /profile.html
 
-Disallow: /assets/
-Allow: /assets/images/brand/
-Allow: /registry/icons/public/assets/
+# Public CSS, scripts and data must remain crawlable for page rendering.
 Sitemap: https://neuroartan.com/sitemap.xml

@@ -146,6 +146,23 @@ function waitForSupabaseConfigReady(timeoutMs = 3000) {
   });
 }
 
+function authReturnUrl(location) {
+  return new URL(location.pathname, location.origin).href;
+}
+
+function normalizeOAuthCallbackUrl(href) {
+  const url=new URL(href);
+  const fragments=url.hash.split('#').filter(Boolean);
+  const callback=fragments.findLast(fragment=>{
+    const params=new URLSearchParams(fragment);
+    return params.has('access_token')&&params.has('refresh_token')&&params.get('token_type')==='bearer';
+  });
+  if(callback&&url.hash!==`#${callback}`)url.hash=callback;
+  return url.href;
+}
+
+window.neuroartanAuthReturnUrl = () => authReturnUrl(window.location);
+
 function isSharedNeuroartanAuthHost() {
   const hostname = String(window.location.hostname || '').toLowerCase();
   return hostname === 'neuroartan.com'
@@ -267,6 +284,9 @@ async function registerSupabaseClient() {
   if (typeof createClient !== 'function') {
     throw new Error('Supabase client library failed to expose createClient.');
   }
+
+  const callbackUrl=normalizeOAuthCallbackUrl(window.location.href);
+  if(callbackUrl!==window.location.href)window.history.replaceState(window.history.state,'',callbackUrl);
 
   const client = createClient(url, anonKey, {
     auth: {

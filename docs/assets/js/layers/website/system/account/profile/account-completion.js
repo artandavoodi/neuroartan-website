@@ -1295,7 +1295,7 @@ import {
 
       if (supabase && (provider === 'google' || provider === 'apple')) {
         persistAccountReturnTarget();
-        const redirectTo = window.location.href;
+        const redirectTo = window.neuroartanAuthReturnUrl();
 
         await supabase.auth.signInWithOAuth({
           provider,

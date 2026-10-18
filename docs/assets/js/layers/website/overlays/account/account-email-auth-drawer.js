@@ -275,7 +275,7 @@
     const supabase = getSupabaseClient();
 
     if (supabase) {
-      const redirectTo = window.location.href;
+      const redirectTo = window.neuroartanAuthReturnUrl();
       supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

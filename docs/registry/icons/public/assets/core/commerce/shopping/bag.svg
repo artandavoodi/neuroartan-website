@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
+   width="24"
+   height="24"
    viewBox="0 0 24 24"
+   fill="none"
    version="1.1"
    id="svg1"
    sodipodi:docname="bag.svg"
@@ -38,9 +41,9 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="10.062098"
-     inkscape:cx="26.435839"
-     inkscape:cy="3.8759313"
+     inkscape:zoom="1.0833333"
+     inkscape:cx="12"
+     inkscape:cy="12"
      inkscape:window-width="1472"
      inkscape:window-height="923"
      inkscape:window-x="0"
@@ -48,7 +51,7 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
   <g
-     id="g1"
+     id="g2"
      transform="translate(1.7474261,2.6756395)">
     <path
        id="rect1-5"

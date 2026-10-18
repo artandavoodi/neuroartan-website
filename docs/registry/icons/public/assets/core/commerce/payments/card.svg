@@ -1,1 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="card.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="1.0833333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-width="1472"
+     inkscape:window-height="923"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1" />
+  <g
+     id="g4"
+     transform="matrix(0.12400025,0,0,0.12400025,2.5511813,5.3039865)"
+     style="stroke-width:8.0645">
+	<rect
+   y="0"
+   class="st0"
+   width="152.39999"
+   height="108"
+   id="rect1"
+   style="fill:none;stroke-width:8.0645"
+   x="0" />
+
+	<g
+   id="g3"
+   style="stroke-width:8.0645">
+		<rect
+   x="60.400002"
+   y="25.700001"
+   class="st1"
+   width="31.5"
+   height="56.599998"
+   id="rect2"
+   style="fill:#ff5f00;stroke-width:8.0645" />
+
+		<path
+   class="st2"
+   d="M 62.4,54 C 62.4,43 67.5,32.5 76.1,25.7 60.5,13.4 37.8,16.1 25.5,31.8 13.3,47.4 16,70 31.7,82.3 44.8,92.6 63.1,92.6 76.2,82.3 67.5,75.5 62.4,65 62.4,54 Z"
+   id="path2"
+   style="fill:#eb001b;stroke-width:8.0645" />
+
+		<path
+   class="st3"
+   d="m 134.4,54 c 0,19.9 -16.1,36 -36,36 -8.1,0 -15.9,-2.7 -22.2,-7.7 15.6,-12.3 18.3,-34.9 6,-50.6 -1.8,-2.2 -3.8,-4.3 -6,-6 15.6,-12.3 38.3,-9.6 50.5,6.1 5,6.3 7.7,14.1 7.7,22.2 z"
+   id="path3"
+   style="fill:#f79e1b;stroke-width:8.0645" />
+
+	</g>
+
+</g>
+</svg>

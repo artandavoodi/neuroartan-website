@@ -185,24 +185,57 @@ function createNeuroartanAuthStorage() {
     ].join('; ');
   };
 
+  // OAuth sessions can exceed a browser's per-cookie limit. Keep each encoded
+  // part bounded while preserving the shared-domain session contract.
+  const chunkKeys = key => String(document.cookie || '').split('; ')
+    .map(entry => entry.split('=')[0])
+    .filter(name => name.startsWith(`${encodeURIComponent(key)}.`))
+    .map(name => decodeURIComponent(name))
+    .filter(name => /^\d+$/.test(name.slice(key.length + 1)))
+    .sort((a,b) => Number(a.slice(key.length+1))-Number(b.slice(key.length+1)));
+  const removeCookies = key => {
+    writeCookie(key, '', 0);
+    chunkKeys(key).forEach(name => writeCookie(name, '', 0));
+  };
+  const readSession = key => {
+    const single=readCookieValue(key);
+    if(single!==null)return single;
+    const keys=chunkKeys(key);
+    if(!keys.length)return null;
+    if(keys.some((name,index)=>name!==`${key}.${index}`))return null;
+    return keys.map(name=>readCookieValue(name)).join('');
+  };
+  const writeSession = (key,value) => {
+    const chunks=[];
+    let chunk='';
+    for(const character of String(value)){
+      if(encodeURIComponent(chunk+character).length>3000){chunks.push(chunk);chunk='';}
+      chunk+=character;
+    }
+    chunks.push(chunk);
+    removeCookies(key);
+    chunks.forEach((part,index)=>writeCookie(chunks.length===1?key:`${key}.${index}`,part,31536000));
+    if(readSession(key)!==String(value))throw new Error('Your browser could not save the sign-in session.');
+  };
+
   return {
     getItem(key) {
-      const cookieValue = readCookieValue(key);
+      const cookieValue = readSession(key);
       if (cookieValue !== null) return cookieValue;
 
       const legacyValue = window.localStorage.getItem(key);
       if (legacyValue !== null) {
-        writeCookie(key, legacyValue, 31536000);
+        writeSession(key, legacyValue);
         window.localStorage.removeItem(key);
       }
       return legacyValue;
     },
     setItem(key, value) {
-      writeCookie(key, value, 31536000);
+      writeSession(key, value);
       window.localStorage.removeItem(key);
     },
     removeItem(key) {
-      writeCookie(key, '', 0);
+      removeCookies(key);
       window.localStorage.removeItem(key);
     },
   };

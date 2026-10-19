@@ -91,7 +91,7 @@ function normalizeCloseButtonPrimitive(node) {
 
   const hasGlobalLineSystem = node.querySelector('.global-close-button__line');
 
-  if (!hasGlobalLineSystem) {
+  if (!hasGlobalLineSystem && !node.querySelector('img')) {
     node.replaceChildren(
       createCloseButtonLine('global-close-button__line--first'),
       createCloseButtonLine('global-close-button__line--second')

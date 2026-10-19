@@ -1505,11 +1505,11 @@ body.cookie-consent-closing .cookie-consent-panel{
   }
 
   .cookie-consent-row-status{
-    display: none;
+    display: inline;
   }
 
   .cookie-consent-row-summary{
-    grid-template-columns: auto minmax(var(--spacing-none), 1fr);
+    grid-template-columns: auto minmax(var(--spacing-none), 1fr) auto;
   }
 
   .cookie-consent-brand-wordmark{

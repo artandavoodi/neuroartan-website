@@ -943,7 +943,7 @@
         return;
       }
 
-      checkbox.checked = true;
+      checkbox.checked = false;
     });
 
     getSubcheckboxes().forEach((checkbox) => {

@@ -74,7 +74,7 @@ function getToggleStorageId(toggle) {
 
 function readStoredToggleState() {
   try {
-    const raw = window.localStorage.getItem(TOGGLE_STORAGE_KEY);
+    const raw = (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).getItem(TOGGLE_STORAGE_KEY);
     if (!raw) return {};
 
     const parsed = JSON.parse(raw);
@@ -90,7 +90,7 @@ function writeStoredToggleState(storageId, checked) {
   try {
     const state = readStoredToggleState();
     state[storageId] = Boolean(checked);
-    window.localStorage.setItem(TOGGLE_STORAGE_KEY, JSON.stringify(state));
+    (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).setItem(TOGGLE_STORAGE_KEY, JSON.stringify(state));
   } catch (_) {}
 }
 

@@ -145,7 +145,7 @@ function cloneDefaultThemeState() {
 
 function readStoredObject(key) {
   try {
-    const value = window.localStorage.getItem(key);
+    const value = (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).getItem(key);
     if (!value) return null;
     return JSON.parse(value);
   } catch (_) {
@@ -155,7 +155,7 @@ function readStoredObject(key) {
 
 function readStoredText(key) {
   try {
-    return window.localStorage.getItem(key);
+    return (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).getItem(key);
   } catch (_) {
     return null;
   }
@@ -163,13 +163,13 @@ function readStoredText(key) {
 
 function removeStoredKey(key) {
   try {
-    window.localStorage.removeItem(key);
+    (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).removeItem(key);
   } catch (_) {}
 }
 
 function writeStoredState(state) {
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    (window.__NEURO_MAIN_RUNTIME__?.preferenceStorage || window.localStorage).setItem(STORAGE_KEY, JSON.stringify(state));
     removeStoredKey(LEGACY_STORAGE_KEY);
   } catch (_) {}
 }

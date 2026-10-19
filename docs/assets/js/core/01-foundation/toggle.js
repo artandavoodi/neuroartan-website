@@ -161,6 +161,7 @@ function isToggleDisabled(toggle) {
 
 function normalizeToggle(toggle) {
   if (!isToggleRoot(toggle)) return;
+  if (toggle.dataset.toggleInitialized === 'true') return;
 
   if (!toggle.hasAttribute('role')) {
     toggle.setAttribute('role', 'switch');

@@ -1505,7 +1505,7 @@
 
     syncShellViewState();
     const stored = readStoredConsent();
-    if (shouldAutoOpenBanner(stored)) {
+    if (shouldAutoOpenBanner(stored) && getOverlay()?.dataset.cookieConsentAutoprompt !== 'false') {
       window.requestAnimationFrame(() => {
         openConsent('banner');
       });

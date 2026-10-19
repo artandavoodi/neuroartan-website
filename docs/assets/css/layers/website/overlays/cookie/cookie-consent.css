@@ -84,7 +84,7 @@
   --cookie-consent-brand-symbol-size:var(--dialog-consent-brand-symbol-size);
   --cookie-consent-brand-wordmark-width:var(--dialog-consent-brand-wordmark-width);
   --cookie-consent-action-gap:var(--dialog-consent-action-gap);
-  --cookie-consent-action-border: color-mix(in srgb, var(--text-primary-color) 8%, transparent);
+  --cookie-consent-action-border: transparent;
   --cookie-consent-action-surface: var(--cookie-consent-soft);
   --cookie-consent-action-surface-hover: var(--cookie-consent-soft-strong);
   --cookie-consent-action-text: var(--text-primary-color);
@@ -596,7 +596,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   font-weight:var(--cookie-consent-eyebrow-weight);
   letter-spacing:var(--cookie-consent-eyebrow-tracking);
   line-height:var(--cookie-consent-eyebrow-line-height);
-  text-transform:var(--eyebrow-transform);
+  text-transform:none;
   padding-top:var(--spacing-3xs);
   padding-bottom:var(--spacing-3xs);
 }

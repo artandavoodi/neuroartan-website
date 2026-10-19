@@ -780,7 +780,8 @@
       return INNER_SURFACE_CACHE.get(normalized) || '';
     }
 
-    const candidates = INNER_SURFACE_PATHS[normalized] || [];
+    const assetBase = getOverlay()?.dataset.cookieConsentAssetBase;
+    const candidates = assetBase ? [`${assetBase}/cookie-${normalized}-overlay.html`] : (INNER_SURFACE_PATHS[normalized] || []);
 
     for (const candidate of candidates) {
       try {

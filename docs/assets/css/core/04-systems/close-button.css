@@ -120,11 +120,11 @@
 }
 
 /* An open menu is the same close control; its resting hamburger stays menu-owned. */
-:is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"] > span{
+:is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"] > :is(.site-menu-toggle__line,.cv-menu-button__line){
   transition:transform var(--global-close-button-duration) var(--global-close-button-ease);
 }
 @media (hover:hover) and (pointer:fine){
-  :is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"]:hover > span{
+  :is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"]:hover > :is(.site-menu-toggle__line,.cv-menu-button__line){
     transform:rotate(0deg);
   }
 }

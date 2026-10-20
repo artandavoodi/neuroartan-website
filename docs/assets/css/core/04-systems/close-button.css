@@ -120,13 +120,17 @@
 }
 
 /* An open menu is the same close control; its resting hamburger stays menu-owned. */
-.site-menu-toggle[aria-expanded="true"] .site-menu-toggle__line{
+:is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"] > span{
   transition:transform var(--global-close-button-duration) var(--global-close-button-ease);
 }
 @media (hover:hover) and (pointer:fine){
-  .site-menu-toggle[aria-expanded="true"]:hover .site-menu-toggle__line{
+  :is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"]:hover > span{
     transform:rotate(0deg);
   }
+}
+@media(prefers-reduced-motion:reduce){
+  .global-close-button,.global-close-button__line,
+  :is(.site-menu-toggle,.cv-menu-button)[aria-expanded="true"] > span{transition:none;}
 }
 
 .global-close-button:hover .global-close-button__line--second,

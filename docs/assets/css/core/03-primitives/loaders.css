@@ -38,7 +38,7 @@
   display:block;
   width:var(--loader-circle-size);
   height:var(--loader-circle-size);
-  border-radius:var(--radius-full);
+  border-radius:var(--radius-circle);
   background:currentColor;
   box-shadow:0 0 var(--space-3) color-mix(in srgb, currentColor 12%, transparent);
   transform:scale(0.94);

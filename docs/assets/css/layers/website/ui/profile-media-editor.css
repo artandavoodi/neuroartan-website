@@ -138,6 +138,8 @@ body.profile-media-editor-open{
 }
 
 .profile-media-editor__image{
+  position:absolute;
+  inset:0;
   display:block;
   width:100%;
   height:100%;

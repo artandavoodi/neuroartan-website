@@ -25,7 +25,7 @@
 
     <div class="profile-media-editor__stage" data-profile-media-editor-stage="avatar">
       <div class="profile-media-editor__preview" data-profile-media-editor-preview tabindex="0" role="application" aria-label="Drag image to reposition the crop">
-        <img class="profile-media-editor__image" data-profile-media-editor-image src="/assets/images/layers/website/sections/home/hero/Fallback%20Profile%20Image.jpeg" alt="" aria-hidden="true" draggable="false">
+        <img class="profile-media-editor__image" data-profile-media-editor-image alt="" aria-hidden="true" draggable="false" hidden>
         <div class="profile-media-editor__guide" data-profile-media-editor-guide aria-hidden="true">
           <span></span>
           <span></span>
@@ -42,7 +42,7 @@
             <img class="ui-icon-theme-aware" src="/registry/icons/public/assets/core/media/image-add/image-add.svg" alt="">
           </span>
           <span>Choose image</span>
-          <input class="sr-only" type="file" accept="image/*" data-profile-media-editor-file>
+          <input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Choose editor image" data-profile-media-editor-file>
         </label>
 
         <button class="profile-media-editor__tool-button" type="button" data-profile-media-editor-recenter>
@@ -60,7 +60,7 @@
           </span>
           <span>Crop zoom</span>
         </span>
-        <input class="profile-media-editor__range ui-slider" type="range" min="0.75" max="2.4" step="0.05" value="1" data-profile-media-editor-zoom>
+        <input class="profile-media-editor__range ui-slider" type="range" min="0.75" max="2.4" step="0.05" value="1" aria-label="Crop zoom" data-profile-media-editor-zoom>
       </label>
 
       <div class="profile-media-editor__field">

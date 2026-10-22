@@ -13,8 +13,35 @@
    11) EDITOR STATUS TOKENS
    12) EDITOR PUBLISHING TOKENS
    13) EDITOR RESPONSIVE TOKENS
-   14) END OF FILE
+   14) SHARED PROFILE MEDIA EDITOR
 ============================================================================= */
+:root{
+  --profile-media-editor-z-index:var(--z-language-dropdown);
+  --profile-media-editor-dialog-width:min(34rem, var(--site-rail-width));
+  --profile-media-editor-cover-dialog-width:min(var(--site-rail-width), calc(100vw - (var(--site-shell-inline-padding) * 2)));
+  --profile-media-editor-dialog-radius:var(--dialog-overlay-radius);
+  --profile-media-editor-dialog-padding:var(--spacing-lg);
+  --profile-media-editor-backdrop-bg:var(--glass-overlay-backdrop-bg);
+  --profile-media-editor-backdrop-blur:var(--glass-overlay-backdrop-blur);
+  --profile-media-editor-shell-bg:var(--glass-overlay-shell-bg);
+  --profile-media-editor-shell-blur:var(--glass-overlay-shell-blur);
+  --profile-media-editor-preview-size:calc(13rem * var(--accessibility-density-scale));
+  --profile-media-editor-cover-preview-height:var(--profile-private-hero-cover-height, calc(13.5rem * var(--accessibility-density-scale)));
+  --profile-media-editor-avatar-radius:var(--control-radius-pill);
+  --profile-media-editor-cover-radius:var(--shape-card-radius);
+  --profile-media-editor-status-min-height:var(--body-3-line-height);
+  --profile-media-editor-preview-bg:var(--color-primary1);
+  --profile-media-editor-control-bg:var(--control-surface);
+  --profile-media-editor-control-bg-hover:var(--control-surface-hover);
+  --profile-media-editor-control-border:var(--control-border-unified);
+  --profile-media-editor-control-border-hover:var(--control-border-hover-unified);
+  --profile-media-editor-control-active-bg:color-mix(in srgb, var(--color-primary1) 16%, var(--control-surface));
+  --profile-media-editor-control-active-border:color-mix(in srgb, var(--color-primary1) 58%, var(--control-border-unified));
+  --profile-media-editor-guide-color:color-mix(in srgb, var(--text-primary-color) 42%, transparent);
+  --profile-media-editor-guide-center-color:color-mix(in srgb, var(--color-primary1) 54%, transparent);
+  --profile-portrait-size:calc(var(--control-height-lg) * 2);
+  --profile-portrait-header-overlap:calc(var(--profile-portrait-size) / 3);
+}
 
 /* =============================================================================
    01) MODULE IDENTITY

@@ -26,6 +26,7 @@
   --profile-media-editor-shell-bg:var(--glass-overlay-shell-bg);
   --profile-media-editor-shell-blur:var(--glass-overlay-shell-blur);
   --profile-media-editor-preview-size:calc(13rem * var(--accessibility-density-scale));
+  --profile-media-editor-icon-size:var(--layout-home-platform-nav-icon-size);
   --profile-media-editor-cover-preview-height:var(--profile-private-hero-cover-height, calc(13.5rem * var(--accessibility-density-scale)));
   --profile-media-editor-avatar-radius:var(--control-radius-pill);
   --profile-media-editor-cover-radius:var(--shape-card-radius);

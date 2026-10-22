@@ -261,8 +261,8 @@ body.profile-media-editor-open{
 .profile-media-editor__tool-button img,
 .profile-media-editor__label img,
 .profile-media-editor__actions img{
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:var(--profile-media-editor-icon-size);
+  height:var(--profile-media-editor-icon-size);
   display:block;
   object-fit:contain;
   object-position:center;
@@ -309,16 +309,16 @@ body.profile-media-editor-open{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:var(--profile-media-editor-icon-size);
+  height:var(--profile-media-editor-icon-size);
 }
 
 .profile-media-editor__dropdown-icon{
   position:absolute;
   top:50%;
   left:50%;
-  width:var(--home-platform-shell-nav-icon-size);
-  height:var(--home-platform-shell-nav-icon-size);
+  width:var(--profile-media-editor-icon-size);
+  height:var(--profile-media-editor-icon-size);
   pointer-events:none;
   transform:translate(-50%, -50%);
 }

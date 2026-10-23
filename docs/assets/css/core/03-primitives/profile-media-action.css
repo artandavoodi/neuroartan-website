@@ -1,0 +1,44 @@
+/* Canonical profile media action, extracted from the Neuroartan private hero. */
+.profile-private-hero__media-action,.profile-media-action {
+  appearance:none;
+  -webkit-appearance:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border:calc(0.0625rem * var(--accessibility-density-scale)) solid var(--avatar-media-action-border);
+  border-radius:var(--avatar-media-action-radius);
+  background:var(--avatar-media-action-bg);
+  color:var(--text-primary-color);
+  line-height:var(--spacing-none);
+  cursor:pointer;
+  pointer-events:auto;
+  transition:opacity var(--interaction-motion-fast) var(--interaction-ease-standard),color var(--interaction-motion-fast) var(--interaction-ease-standard),border-color var(--interaction-motion-fast) var(--interaction-ease-standard),background-color var(--interaction-motion-fast) var(--interaction-ease-standard);
+}
+.profile-private-hero__media-action:hover,.profile-private-hero__media-action:focus-visible,
+.profile-media-action:hover,.profile-media-action:focus-visible {
+  border-color:var(--avatar-media-action-border-hover);
+  background:var(--avatar-media-action-bg-hover);
+  color:var(--text-primary-color);
+  opacity:var(--nav-institutional-icon-hover-opacity);
+  outline:none;
+  transform:none;
+}
+.profile-private-hero__media-action--cover,.profile-media-action--cover {
+  position:absolute;
+  right:var(--spacing-md);
+  bottom:var(--spacing-md);
+  z-index:var(--z-above);
+}
+.profile-private-hero__media-action--avatar,.profile-media-action--avatar {
+  position:absolute;
+  right:0;
+  bottom:0;
+  z-index:var(--z-above);
+}
+.profile-media-action > img {
+  display:block;
+  width:var(--layout-home-platform-nav-icon-size);
+  height:var(--layout-home-platform-nav-icon-size);
+  object-fit:contain;
+}

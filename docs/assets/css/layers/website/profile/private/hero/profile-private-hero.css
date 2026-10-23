@@ -18,6 +18,7 @@
 /* =============================================================================
    01) PRIVATE PROFILE HERO TOKENS
 ============================================================================= */
+@import url('../../../../../core/03-primitives/profile-media-action.css');
 :root{
   --profile-private-hero-cover-height:calc(13.5rem * var(--accessibility-density-scale));
   --profile-private-hero-cover-height-mobile:calc(6rem * var(--accessibility-density-scale));
@@ -272,48 +273,6 @@
   opacity:var(--nav-institutional-icon-hover-opacity);
 }
 
-.profile-private-hero__media-action{
-  appearance:none;
-  -webkit-appearance:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0;
-  border:calc(0.0625rem * var(--accessibility-density-scale)) solid var(--avatar-media-action-border);
-  border-radius:var(--avatar-media-action-radius);
-  background:var(--avatar-media-action-bg);
-  color:var(--text-primary-color);
-  line-height:var(--spacing-none);
-  cursor:pointer;
-  pointer-events:auto;
-  transition:opacity var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), border-color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease), background-color var(--profile-private-hero-motion-fast) var(--profile-private-hero-motion-ease);
-}
-
-
-.profile-private-hero__media-action:hover,
-.profile-private-hero__media-action:focus-visible{
-  border-color:var(--avatar-media-action-border-hover);
-  background:var(--avatar-media-action-bg-hover);
-  color:var(--text-primary-color);
-  opacity:var(--nav-institutional-icon-hover-opacity);
-  outline:none;
-  transform:none;
-}
-
-
-.profile-private-hero__media-action--cover{
-  position:absolute;
-  right:var(--spacing-md);
-  bottom:var(--spacing-md);
-  z-index:var(--profile-private-hero-media-action-layer);
-}
-
-.profile-private-hero__media-action--avatar{
-  position:absolute;
-  right:0;
-  bottom:0;
-  z-index:var(--profile-private-hero-media-action-layer);
-}
 
 /* =============================================================================
    07) PRIVATE PROFILE HERO COPY

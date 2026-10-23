@@ -10,7 +10,7 @@
   pointer-events:none;
   opacity:0;
   transform:translateY(var(--spacing-xs));
-  transition:opacity var(--duration-normal) var(--ease-standard),transform var(--duration-normal) var(--ease-standard);
+  transition:opacity var(--duration-base) var(--ease-standard),transform var(--duration-base) var(--ease-standard);
   z-index:var(--z-above);
 }
 .system-save-confirmation[data-visible=true] { opacity:1; transform:none; }

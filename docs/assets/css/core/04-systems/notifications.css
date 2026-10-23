@@ -1,0 +1,29 @@
+/* Shared notification presentation; each platform retains its own data authority. */
+:root {
+  --notification-success-color:var(--color-primary8);
+  --notification-error-color:var(--color-primary7);
+  --notification-warning-color:var(--color-primary10);
+  --notification-info-color:var(--color-primary5);
+  --notification-dot-size:var(--spacing-xs);
+  --notification-read-size:var(--icon-size-sm);
+  --notification-row-gap:var(--spacing-md);
+  --notification-row-padding:var(--spacing-lg);
+}
+.system-notification-badge { position:absolute; inset-block-start:0; inset-inline-end:0; display:grid; place-items:center; min-inline-size:var(--icon-size-sm); block-size:var(--icon-size-sm); padding-inline:var(--spacing-xs); border-radius:var(--radius-circle); font-size:var(--text-caption-size); line-height:1; background:var(--color-primary7); color:var(--color-white); }
+.system-notification-tabs { display:flex; align-items:center; gap:var(--spacing-lg); padding-block:var(--spacing-md); }
+.system-notification-tabs button { border:0; padding:0; background:transparent; color:inherit; font:inherit; cursor:pointer; opacity:var(--state-opacity-muted); }
+.system-notification-tabs button[aria-pressed=true] { opacity:var(--overlay-opacity-open); }
+.system-notification-row { display:grid; grid-template-columns:var(--notification-dot-size) minmax(0,1fr) auto; align-items:start; gap:var(--notification-row-gap); padding-block:var(--notification-row-padding); border-block-end:var(--border-width-hairline) solid var(--border-color); }
+.system-notification-row:last-child { border-block-end:0; }
+.system-notification-dot { inline-size:var(--notification-dot-size); block-size:var(--notification-dot-size); margin-block-start:var(--spacing-xs); border-radius:var(--radius-circle); background:var(--notification-info-color); }
+[data-notification-tone=success] > .system-notification-dot { background:var(--notification-success-color); }
+[data-notification-tone=error] > .system-notification-dot { background:var(--notification-error-color); }
+[data-notification-tone=warning] > .system-notification-dot { background:var(--notification-warning-color); }
+.system-notification-copy { display:grid; gap:var(--spacing-sm); min-inline-size:0; overflow-wrap:anywhere; }
+.system-notification-copy :is(p,time) { margin:0; font-size:var(--text-caption-size); line-height:var(--line-height-body); }
+.system-notification-copy time { color:var(--text-secondary-color); }
+.system-notification-read { display:grid; place-items:center; inline-size:var(--control-height-sm); block-size:var(--control-height-sm); min-inline-size:var(--control-height-sm); border:0; padding:0; background:transparent; color:inherit; cursor:pointer; }
+.system-notification-read::before { content:''; inline-size:var(--notification-read-size); block-size:var(--notification-read-size); border:var(--border-width-hairline) solid currentColor; border-radius:var(--radius-circle); box-sizing:border-box; opacity:var(--state-opacity-muted); transition:background var(--duration-base) var(--ease-standard),opacity var(--duration-base) var(--ease-standard); }
+.system-notification-read:is(:hover,:focus-visible)::before { background:var(--control-bg-hover); opacity:var(--overlay-opacity-open); }
+.system-notification-read:disabled { opacity:var(--state-opacity-muted); cursor:wait; }
+.system-notification-open { display:inline-flex; justify-self:start; border:0; padding:0; background:transparent; color:inherit; font:inherit; text-align:start; cursor:pointer; }

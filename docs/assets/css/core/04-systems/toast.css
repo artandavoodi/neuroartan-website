@@ -6,7 +6,7 @@
   text-align:center;
   font-size:var(--toast-body-size);
   line-height:var(--toast-body-line-height);
-  color:var(--text-color);
+  color:var(--cv-text-primary,var(--text-primary-color));
   pointer-events:none;
   opacity:0;
   transform:translateY(var(--spacing-xs));

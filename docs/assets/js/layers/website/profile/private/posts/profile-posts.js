@@ -30,6 +30,7 @@ import {
   hasSpeechInputSupport
 } from '../../../../../core/02-systems/speech-input.js';
 import { normalizeString } from '../../../system/account/identity/account-profile-identity.js';
+import {syncCharacterCounter} from '../../../../../core/02-systems/character-counter.js';
 import {
   createFeedPost,
   deleteFeedPost,
@@ -202,23 +203,7 @@ function syncPostCounter(root, policy = STORE.policy || DEFAULT_POLICY) {
   if (!(textarea instanceof HTMLTextAreaElement) || !(counter instanceof HTMLElement)) return;
 
   const limit = getPostBodyLimit(policy);
-  const count = textarea.value.length;
-  textarea.maxLength = limit;
-
-  const progressCircle = counter.querySelector('.profile-posts__counter-circle-progress');
-  if (!(progressCircle instanceof SVGCircleElement)) return;
-
-  const percentage = Math.min((count / limit) * 100, 100);
-  const offset = 100 - percentage;
-  progressCircle.style.strokeDashoffset = `${offset}`;
-
-  if (count > limit) {
-    counter.dataset.profilePostCharacterState = 'over';
-  } else if (count >= limit * 0.8) {
-    counter.dataset.profilePostCharacterState = 'warning';
-  } else {
-    counter.dataset.profilePostCharacterState = 'ready';
-  }
+  syncCharacterCounter(textarea,counter,limit);
 }
 
 function syncSubmitLabel(root) {

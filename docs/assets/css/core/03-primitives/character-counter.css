@@ -1,0 +1,7 @@
+/* Canonical circular character progress, shared with the post composer. */
+.ui-character-counter { display:flex; align-items:center; justify-content:center; inline-size:calc(1.5rem * var(--accessibility-icon-scale)); block-size:calc(1.5rem * var(--accessibility-icon-scale)); margin:0; }
+.ui-character-counter svg { inline-size:100%; block-size:100%; transform:rotate(-90deg); }
+.ui-character-counter [data-character-track] { stroke:var(--control-border-unified); }
+.ui-character-counter [data-character-progress] { stroke:var(--text-primary-color); stroke-linecap:round; transition:stroke-dashoffset var(--interaction-transition-control) var(--interaction-ease-standard); }
+.ui-character-counter[data-character-state=warning] [data-character-progress] { stroke:var(--color-primary7); }
+.ui-character-counter[data-character-state=over] [data-character-progress] { stroke:var(--status-danger-color); }

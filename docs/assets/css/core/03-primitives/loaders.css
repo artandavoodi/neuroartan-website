@@ -65,6 +65,20 @@
   height:var(--loader-circle-size-lg);
 }
 
+/* Page readiness uses this same theme-aware surface in public and private apps. */
+.ui-loading-surface{display:none;}
+html[data-page-loading] .ui-loading-surface{
+  display:grid;
+  position:fixed;
+  inset:0;
+  place-items:center;
+  background:var(--cv-page-bg,var(--bg-primary));
+  color:var(--cv-text-primary,var(--text-primary-color));
+  --loader-circle-color:currentColor;
+  z-index:var(--z-header-controls);
+}
+html[data-page-loading] main{opacity:0;pointer-events:none;}
+
 @keyframes ui-loader-circle-breathe{
   0%,
   100%{

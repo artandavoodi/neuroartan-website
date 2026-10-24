@@ -579,39 +579,6 @@ html.profile-posts-overlay-open .profile-workspace__content-mount{
   gap:var(--spacing-2xs);
 }
 
-.profile-posts__counter{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:calc(1.5rem * var(--accessibility-icon-scale));
-  height:calc(1.5rem * var(--accessibility-icon-scale));
-  margin:0;
-}
-
-.profile-posts__counter-circle{
-  width:100%;
-  height:100%;
-  transform:rotate(-90deg);
-}
-
-.profile-posts__counter-circle-bg{
-  stroke:var(--control-border-unified);
-}
-
-.profile-posts__counter-circle-progress{
-  stroke:var(--text-primary-color);
-  stroke-linecap:round;
-  transition:stroke-dashoffset var(--interaction-transition-control) var(--interaction-ease-standard);
-}
-
-.profile-posts__counter[data-profile-post-character-state="over"] .profile-posts__counter-circle-progress{
-  stroke:#ff5555;
-}
-
-.profile-posts__counter[data-profile-post-character-state="warning"] .profile-posts__counter-circle-progress{
-  stroke:var(--color-primary7);
-}
-
 .profile-posts__list{
   display:grid;
   gap:var(--spacing-md);

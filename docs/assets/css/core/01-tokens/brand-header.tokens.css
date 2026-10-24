@@ -1,0 +1,5 @@
+/* Shared header wordmark frame. Artwork retains its own proportions. */
+:root {
+  --brand-wordmark-header-width:15.84rem;
+  --brand-wordmark-header-height:2.5rem;
+}

@@ -288,6 +288,7 @@
       }
 
       this.gl.viewport(0, 0, width, height);
+      if (this.isRunning && this.motionQuery.matches) this.drawFrame(this.startTime);
     }
 
     attachEvents() {

@@ -47,7 +47,8 @@
   visibility:hidden;
 }
 
-html[data-homepage-theme-breathing-circle="true"] body.home-page.site-entered .home-breathing-circle{
+html[data-homepage-theme-breathing-circle="true"] body.home-page.site-entered .home-breathing-circle,
+html[data-homepage-theme-breathing-circle="true"] .home-breathing-circle[data-visual-surface]{
   opacity:1;
   visibility:visible;
 }
@@ -122,4 +123,9 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
   0%{opacity:var(--home-stage-halo-start-opacity);}
   50%{opacity:1;}
   100%{opacity:var(--home-stage-halo-start-opacity);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .home-breathing-circle::before,
+  .home-breathing-circle::after{animation:none;}
 }

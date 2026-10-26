@@ -1,0 +1,16 @@
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const callbacks=new Map();let serial=0;
+const motion={matches:true,addEventListener(){},removeEventListener(){}};
+const window={matchMedia:()=>motion,requestAnimationFrame:fn=>{callbacks.set(++serial,fn);return serial;},cancelAnimationFrame:id=>callbacks.delete(id)};
+vm.runInNewContext(readFileSync(new URL('../../docs/assets/js/layers/website/ui/effects/shader-core.js',import.meta.url),'utf8'),{window,Element:class{},HTMLCanvasElement:class{},document:{hidden:false}});
+const core=new window.NeuroShaderCore();
+core.gl={};core.program={};core.startTime=100;const frames=[];core.drawFrame=time=>frames.push(time);
+core.start();assert.equal(callbacks.size,1);
+const [id,frame]=callbacks.entries().next().value;callbacks.delete(id);frame(500);
+assert.deepEqual(frames,[100]);assert.equal(callbacks.size,0,'Reduced motion draws once, without a continuous loop');
+motion.matches=false;core.boundMotionChange();assert.equal(callbacks.size,1);
+motion.matches=true;core.boundMotionChange();assert.equal(callbacks.size,0);
+core.stop();motion.matches=false;core.boundMotionChange();assert.equal(callbacks.size,0,'Stopped effects must not restart');
+console.log('PASS: shader respects reduced motion and stopped lifecycle.');

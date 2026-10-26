@@ -59,6 +59,17 @@
       this.boundPageShow = () => this.handlePageShow();
       this.resizeObserver = null;
       this.resizeFrame = null;
+      this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.boundMotionChange = () => {
+        if (!this.isRunning) return;
+        if (this.motionQuery.matches) {
+          window.cancelAnimationFrame(this.animationFrame);
+          this.animationFrame = null;
+          this.drawFrame(this.startTime);
+        } else if (!this.animationFrame) {
+          this.animationFrame = window.requestAnimationFrame(this.render);
+        }
+      };
     }
 
     /* =============================================================================
@@ -280,6 +291,7 @@
     }
 
     attachEvents() {
+      this.motionQuery.addEventListener('change', this.boundMotionChange);
       window.addEventListener('resize', this.boundResize, { passive: true });
       this.canvas.addEventListener('pointermove', this.boundPointerMove, { passive: true });
       this.canvas.addEventListener('pointerleave', this.boundPointerLeave, { passive: true });
@@ -300,6 +312,7 @@
     }
 
     detachEvents() {
+      this.motionQuery.removeEventListener('change', this.boundMotionChange);
       window.removeEventListener('resize', this.boundResize, { passive: true });
       this.canvas.removeEventListener('pointermove', this.boundPointerMove, { passive: true });
       this.canvas.removeEventListener('pointerleave', this.boundPointerLeave, { passive: true });
@@ -467,7 +480,9 @@
 
       if (!this.isRunning) return;
 
-      this.drawFrame(timestamp);
+      this.animationFrame = null;
+      this.drawFrame(this.motionQuery.matches ? this.startTime : timestamp);
+      if (this.motionQuery.matches) return;
       this.animationFrame = window.requestAnimationFrame(this.render);
     };
 

@@ -105,6 +105,16 @@
   line-height:var(--ui-inline-dropdown-label-line-height);
 }
 
+/* The native select owns the arrow hit area as well as its text. */
+.ui-inline-dropdown:has(> select.ui-dropdown:not(.ui-dropdown--icon-only)) > select{
+  padding-inline-end:calc(var(--ui-dropdown-padding-x) + var(--ui-dropdown-icon-size) + var(--ui-dropdown-icon-gap));
+}
+.ui-inline-dropdown:has(> select.ui-dropdown:not(.ui-dropdown--icon-only)) > .ui-inline-dropdown__icon-wrapper{
+  position:absolute;
+  inset-inline-end:var(--ui-dropdown-padding-x);
+  pointer-events:none;
+}
+
 .ui-inline-dropdown__icon-wrapper,
 .home-platform-theme__dropdown-icon-wrapper{
   position:relative;

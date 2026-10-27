@@ -1,6 +1,6 @@
 // Shared rail behaviour; each platform retains its layout, icons and storage owner.
 export function bindMagneticNavigation({root,shell,rail,resize,toggle,onState,readWidth,saveWidth,maximumToken,minimumToken,widthProperty,chevronProperty}){
- const tokenLength=name=>{const measure=document.createElement('span');measure.style.cssText='position:absolute;visibility:hidden;pointer-events:none;height:0;width:var('+name+')';root.append(measure);const width=measure.getBoundingClientRect().width;measure.remove();return width;};
+ const tokenLength=name=>{const measure=document.createElement('span');measure.style.cssText='position:absolute;visibility:hidden;pointer-events:none;height:0;min-width:0;max-width:none;width:var('+name+')';root.append(measure);const width=parseFloat(getComputedStyle(measure).width);measure.remove();return width;};
  const maximum=tokenLength(maximumToken),minimum=tokenLength(minimumToken),step=tokenLength('--spacing-md');
  const compact=tokenLength('--control-height-md')+2*tokenLength('--spacing-lg');
  if(!(maximum>=minimum&&minimum>compact&&step>0))throw Error('Invalid navigation sizing tokens');

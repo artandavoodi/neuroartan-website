@@ -1,0 +1,7 @@
+/* Shared with Neuroartan Home module priority. */
+.ui-reorder-list { display:flex; flex-direction:column; max-width:var(--size-full); width:var(--size-full); box-sizing:border-box; }
+.ui-reorder-row { display:flex; align-items:center; border:0; border-radius:var(--radius-panel); background:transparent; cursor:grab; max-width:var(--size-full); width:var(--size-full); box-sizing:border-box; }
+.ui-reorder-row:active,.ui-reorder-handle:active { cursor:grabbing; }
+.ui-reorder-row.dragging { opacity:0.5; }
+.ui-reorder-handle { display:flex; align-items:center; justify-content:flex-start; width:var(--control-height-sm); height:var(--control-height-sm); cursor:grab; opacity:var(--state-opacity-muted); border:0; padding:0; background:transparent; color:inherit; flex-shrink:0; touch-action:none; }
+.ui-reorder-handle img { width:var(--icon-size-sm); height:var(--icon-size-sm); }

@@ -1,0 +1,14 @@
+const bindings=new WeakSet();
+export function bindReorderList(list,{rowSelector,handleSelector,onChange}){
+ if(!list)return;
+ const rows=()=>[...list.querySelectorAll(rowSelector)];
+ list.classList.add('ui-reorder-list');for(const row of rows()){row.classList.add('ui-reorder-row');const handle=row.querySelector(handleSelector);if(handle){handle.classList.add('ui-reorder-handle');handle.tabIndex=0;if(handle.tagName!=='BUTTON')handle.setAttribute('role','button');if(!handle.hasAttribute('aria-label'))handle.setAttribute('aria-label','Reorder '+row.textContent.trim());}}
+ if(bindings.has(list))return;bindings.add(list);let dragged=null;
+ const finish=()=>{if(!dragged)return;dragged.classList.remove('dragging');dragged=null;onChange(rows());};
+ const move=event=>{const row=document.elementFromPoint(event.clientX,event.clientY)?.closest(rowSelector);if(!dragged||!row||row===dragged||row.parentElement!==list)return;event.preventDefault();const bounds=row.getBoundingClientRect();list.insertBefore(dragged,event.clientY<bounds.top+bounds.height/2?row:row.nextSibling);};
+ list.addEventListener('dragstart',event=>{const row=event.target.closest(rowSelector);if(!row||row.parentElement!==list)return;if(event.target.closest('input,select,textarea,a')){event.preventDefault();return;}dragged=row;row.classList.add('dragging');if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',row.dataset.reorderId||'reorder');}});
+ list.addEventListener('dragover',event=>{if(!dragged)return;event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect='move';move(event);});
+ list.addEventListener('drop',event=>{if(!dragged)return;event.preventDefault();event.stopPropagation();finish();});list.addEventListener('dragend',finish);
+ list.addEventListener('pointerdown',event=>{const handle=event.target.closest(handleSelector);if(!handle||event.pointerType==='mouse'||event.button!==0)return;dragged=handle.closest(rowSelector);if(!dragged)return;event.preventDefault();dragged.classList.add('dragging');handle.setPointerCapture(event.pointerId);const end=()=>{handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',end);handle.removeEventListener('pointercancel',end);finish();};handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);});
+ list.addEventListener('keydown',event=>{const handle=event.target.closest(handleSelector);if(!handle||!['ArrowUp','ArrowDown','Home','End'].includes(event.key))return;event.preventDefault();const row=handle.closest(rowSelector),items=rows(),index=items.indexOf(row),next=event.key==='Home'?0:event.key==='End'?items.length-1:Math.max(0,Math.min(items.length-1,index+(event.key==='ArrowUp'?-1:1)));if(index===next)return;list.insertBefore(row,next<index?items[next]:items[next].nextSibling);onChange(rows());handle.focus();});
+}

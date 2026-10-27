@@ -1,4 +1,5 @@
 import { mountSettingsCategory } from '../_shared/settings-category.js';
+import {bindReorderList} from '../../../../../../core/02-systems/reorder-list.js';
 import {
   HOME_SHORTCUT_ITEMS,
   getDefaultHomeShortcutEnabled,
@@ -122,43 +123,7 @@ function syncHomeShortcutToggle(toggle, checked) {
 function initDragAndDrop(root) {
   const priorityList = root.querySelector('[data-home-dashboard-priority-list]');
   if (!priorityList) return;
-
-  const priorityRows = [...priorityList.querySelectorAll('[data-home-dashboard-priority-row]')];
-  let draggedItem = null;
-
-  priorityRows.forEach(row => {
-    row.addEventListener('dragstart', (e) => {
-      draggedItem = row;
-      row.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
-    row.addEventListener('dragend', () => {
-      row.classList.remove('dragging');
-      draggedItem = null;
-      updatePriorityOrder(root);
-    });
-
-    row.addEventListener('dragover', (e) => {
-      if (draggedItem && draggedItem !== row) {
-        e.dataTransfer.dropEffect = 'move';
-        
-        const rect = row.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-        
-        if (e.clientY < midY) {
-          priorityList.insertBefore(draggedItem, row);
-        } else {
-          priorityList.insertBefore(draggedItem, row.nextSibling);
-        }
-      }
-    });
-
-    row.addEventListener('drop', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    });
-  });
+  bindReorderList(priorityList,{rowSelector:'[data-home-dashboard-priority-row]',handleSelector:'[data-home-dashboard-priority-handle]',onChange:()=>updatePriorityOrder(root)});
 }
 
 // Update priority order after drag-and-drop
@@ -548,53 +513,8 @@ function updateShortcutPriorityOrder(root) {
 
 function initShortcutDragAndDrop(root) {
   const shortcutsList = root.querySelector('[data-home-shortcuts-list]');
-  if (!(shortcutsList instanceof HTMLElement) || shortcutsList.dataset.homeShortcutDragBound === 'true') return;
-
-  shortcutsList.dataset.homeShortcutDragBound = 'true';
-  let draggedItem = null;
-
-  shortcutsList.addEventListener('dragstart', (event) => {
-    const row = event.target.closest('[data-home-shortcut-row]');
-    if (!(row instanceof HTMLElement)) return;
-    draggedItem = row;
-    row.classList.add('dragging');
-    if (event.dataTransfer) {
-      event.dataTransfer.effectAllowed = 'move';
-    }
-  });
-
-  shortcutsList.addEventListener('dragend', () => {
-    if (draggedItem instanceof HTMLElement) {
-      draggedItem.classList.remove('dragging');
-    }
-    draggedItem = null;
-    updateShortcutPriorityOrder(root);
-  });
-
-  shortcutsList.addEventListener('dragover', (event) => {
-    if (!(draggedItem instanceof HTMLElement)) return;
-    const row = event.target.closest('[data-home-shortcut-row]');
-    if (!(row instanceof HTMLElement) || row === draggedItem) return;
-
-    event.preventDefault();
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'move';
-    }
-
-    const rect = row.getBoundingClientRect();
-    const midY = rect.top + rect.height / 2;
-
-    if (event.clientY < midY) {
-      shortcutsList.insertBefore(draggedItem, row);
-    } else {
-      shortcutsList.insertBefore(draggedItem, row.nextSibling);
-    }
-  });
-
-  shortcutsList.addEventListener('drop', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-  });
+  if (!(shortcutsList instanceof HTMLElement)) return;
+  bindReorderList(shortcutsList,{rowSelector:'[data-home-shortcut-row]',handleSelector:'[data-home-shortcut-priority-handle]',onChange:()=>updateShortcutPriorityOrder(root)});
 }
 
 function syncShortcutToggleState(root) {

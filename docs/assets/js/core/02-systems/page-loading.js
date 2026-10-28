@@ -5,6 +5,7 @@
   root.dataset.pageLoading='true';
   const lock=()=>{const main=document.querySelector('main');if(main)main.inert=root.hasAttribute('data-page-loading');};
   const finish=()=>{clearTimeout(fallback);delete root.dataset.pageLoading;lock();};
+  const start=()=>{clearTimeout(fallback);root.dataset.pageLoading='true';lock();};
   const fallback=setTimeout(finish,20000);
   const images=async scope=>Promise.allSettled([...scope.querySelectorAll('img:not([loading=lazy])')]
     .filter(image=>image.getAttribute('src')&&!image.closest('[hidden]'))
@@ -15,5 +16,5 @@
     }));
   document.addEventListener('DOMContentLoaded',lock,{once:true});
   window.addEventListener('pageshow',event=>{if(event.persisted)finish();});
-  window.NeuroartanPageLoading={finish,images};
+  window.NeuroartanPageLoading={start,finish,images};
 })();

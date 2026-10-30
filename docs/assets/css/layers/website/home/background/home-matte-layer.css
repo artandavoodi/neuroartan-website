@@ -79,14 +79,14 @@ body.home-page{
   will-change: opacity, background, backdrop-filter;
   border: none;
 
-  background-color: rgb(var(--home-matte-rgb-dark));
+  background-color: var(--bg-color);
   background:
     linear-gradient(
       180deg,
-      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-top)) 0%,
-      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-mid)) 38%,
-      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-low)) 68%,
-      rgba(var(--home-matte-rgb-dark), var(--home-matte-opacity-bottom)) 100%
+      color-mix(in srgb,var(--bg-color) calc(var(--home-matte-opacity-top) * 100%),transparent) 0%,
+      color-mix(in srgb,var(--bg-color) calc(var(--home-matte-opacity-mid) * 100%),transparent) 38%,
+      color-mix(in srgb,var(--bg-color) calc(var(--home-matte-opacity-low) * 100%),transparent) 68%,
+      color-mix(in srgb,var(--bg-color) calc(var(--home-matte-opacity-bottom) * 100%),transparent) 100%
     );
 
   backdrop-filter: blur(var(--home-matte-blur)) saturate(var(--home-matte-saturate));

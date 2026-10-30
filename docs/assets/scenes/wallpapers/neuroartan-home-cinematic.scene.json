@@ -2,6 +2,19 @@
   "id": "neuroartan-home-cinematic-wallpaper",
   "version": "1.0.0",
   "engine": "neuroartan-wallpaper",
+  "themeBindings": {
+    "--color-primary3":"var(--text-color)",
+    "--color-primary4":"var(--color-primary2)",
+    "--color-primary5":"var(--color-primary1)",
+    "--color-primary6":"var(--color-primary2)",
+    "--color-secondary3":"var(--color-primary1)",
+    "--color-secondary4":"var(--color-primary2)",
+    "--color-secondary5":"var(--color-primary2)",
+    "--color-secondary6":"var(--color-primary1)",
+    "--color-secondary7":"var(--color-primary2)",
+    "--color-secondary8":"var(--color-primary2)",
+    "--color-secondary9":"var(--color-primary1)"
+  },
   "viewBox": [
     0,
     0,
@@ -15,7 +28,7 @@
     "amplitude": 1.55
   },
   "background": {
-    "fill": "var(--surface-primary-color, #070809)"
+    "fill": "var(--bg-color)"
   },
   "gradients": [
     {

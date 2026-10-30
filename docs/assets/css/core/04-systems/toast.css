@@ -10,7 +10,7 @@
   border:var(--toast-border-width) solid var(--cv-border,var(--border-color));
   border-radius:var(--toast-radius);
   background:var(--cv-page-bg,var(--bg-color));
-  box-shadow:var(--toast-shadow);
+  box-shadow:none;
   margin-block:0;
   text-align:center;
   font-size:var(--toast-body-size);

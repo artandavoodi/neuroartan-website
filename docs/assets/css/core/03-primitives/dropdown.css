@@ -138,6 +138,9 @@
   filter:var(--ui-dropdown-icon-filter);
 }
 
+.ui-inline-dropdown:has(.ui-dropdown--icon-only) > .home-platform-theme__dropdown-icon-wrapper{ position:static; }
+.ui-inline-dropdown:has(.ui-dropdown--icon-only) .home-platform-theme__dropdown-icon{ left:auto; right:0; transform:translateY(-50%); }
+
 .ui-dropdown--icon-only{
   position:absolute;
   inset:0;

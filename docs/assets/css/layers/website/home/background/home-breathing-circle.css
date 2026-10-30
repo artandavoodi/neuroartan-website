@@ -18,6 +18,7 @@
   --home-stage-circle-blur:var(--layout-home-circle-blur);
   --home-stage-circle-halo-scale:var(--layout-home-circle-halo-scale);
   --home-stage-circle-halo-opacity:var(--layout-home-circle-halo-opacity);
+  --home-stage-circle-opacity:0.18;
   --home-stage-circle-start-scale:var(--layout-home-circle-start-scale);
   --home-stage-circle-mid-scale:var(--layout-home-circle-mid-scale);
   --home-stage-circle-breathe-duration:var(--layout-home-circle-breathe-duration);
@@ -90,7 +91,7 @@ html[data-homepage-theme-breathing-circle="false"] .home-breathing-circle{
   );
   filter:blur(var(--home-stage-circle-blur));
   -webkit-filter:blur(var(--home-stage-circle-blur));
-  opacity:1;
+  opacity:var(--home-stage-circle-opacity);
   z-index:2;
   animation:dial-breathe var(--home-stage-circle-breathe-duration) var(--interaction-ease-standard) infinite;
 }

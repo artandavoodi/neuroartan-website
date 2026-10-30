@@ -30,6 +30,11 @@
     uniform vec2 u_resolution;
     uniform float u_time;
     uniform vec2 u_pointer;
+    uniform vec3 u_background;
+    uniform vec3 u_foreground;
+    uniform vec3 u_accent;
+    uniform vec3 u_accent_hover;
+    uniform vec3 u_surface;
 
     float hash(vec2 p) {
       return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -152,14 +157,11 @@
       float pointerGlow = exp(-pointerDistance * 7.3);
       float pointerInfluence = exp(-distance(pointer, roam) * 4.0);
 
-      vec3 colorBlack = vec3(0.0, 0.0, 0.0);
-      vec3 colorWhite = vec3(1.0, 1.0, 1.0);
-      vec3 colorPrimary1 = vec3(0.5686, 0.4863, 0.4353);
-      vec3 colorPrimary2 = vec3(0.3137, 0.2667, 0.0863);
-      vec3 colorPrimary3 = vec3(0.6, 0.6, 0.6);
-      vec3 colorPrimary8 = vec3(0.5686, 0.4863, 0.4353);
-      vec3 colorPrimary9 = vec3(0.3137, 0.2667, 0.0863);
-      vec3 colorPrimary10 = vec3(0.6, 0.6, 0.6);
+      vec3 colorBlack = u_background;
+      vec3 colorWhite = u_foreground;
+      vec3 colorPrimary1 = u_accent;
+      vec3 colorPrimary2 = u_accent_hover;
+      vec3 colorPrimary3 = u_surface;
 
       vec3 abyss = mix(colorBlack, colorPrimary2, 0.14);
       vec3 warmCore = mix(abyss, colorPrimary1, smoothstep(0.42, -0.03, combined));
@@ -295,7 +297,18 @@
       return true;
     }
 
+    syncPalette() {
+      if (!this.core) return;
+      const style = getComputedStyle(document.documentElement);
+      for (const [uniform,token,fallback] of [['u_background','--bg-color','--color-black'],['u_foreground','--text-color','--color-white'],['u_accent','--color-primary1','--color-primary3'],['u_accent_hover','--color-primary2','--color-primary3'],['u_surface','--surface-color','--color-primary3']]) {
+        const value = style.getPropertyValue(token).trim();
+        const color = /^#[0-9a-f]{6}$/i.test(value) ? value : style.getPropertyValue(fallback).trim();
+        if (/^#[0-9a-f]{6}$/i.test(color)) this.core.setUniform(uniform,[1,3,5].map(index=>parseInt(color.slice(index,index+2),16)/255));
+      }
+    }
+
     applyThemeVisibility() {
+      this.syncPalette();
       const shaderActive = shouldUseHomeHeroShader();
       const activeTheme = readHomeHeroShaderTheme();
 
@@ -333,6 +346,7 @@
             smoothing: 0.06
           });
           this.bindInteractionSurface();
+          this.syncPalette();
           this.core.start();
         }
       };

@@ -137,6 +137,9 @@ class NeuroartanWallpaperInstance {
       'aria-hidden': 'true',
     });
 
+    for (const [name,value] of Object.entries(this.scene?.themeBindings || {})) {
+      if (/^--[a-z0-9-]+$/.test(name) && /^var\(--[a-z0-9-]+\)$/.test(value)) svg.style.setProperty(name,value);
+    }
     const defs = createSvgElement('defs');
     const gradientMap = new Map();
 

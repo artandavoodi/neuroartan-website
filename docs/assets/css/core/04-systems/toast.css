@@ -1,7 +1,7 @@
 .system-save-confirmation {
   position:fixed;
   inset-inline:var(--spacing-lg);
-  inset-block-end:var(--spacing-xl);
+  inset-block-start:50%;
   inline-size:fit-content;
   max-inline-size:calc(100% - var(--spacing-lg) * 2);
   box-sizing:border-box;
@@ -18,9 +18,9 @@
   color:var(--cv-text-primary,var(--text-primary-color));
   pointer-events:none;
   opacity:0;
-  transform:translateY(var(--spacing-xs));
+  transform:translateY(calc(-50% + var(--spacing-xs)));
   transition:opacity var(--duration-base) var(--ease-standard),transform var(--duration-base) var(--ease-standard);
   z-index:var(--z-above);
 }
-.system-save-confirmation[data-visible=true] { opacity:1; transform:none; }
-@media (prefers-reduced-motion:reduce) { .system-save-confirmation { transition:none; transform:none; } }
+.system-save-confirmation[data-visible=true] { opacity:1; transform:translateY(-50%); }
+@media (prefers-reduced-motion:reduce) { .system-save-confirmation { transition:none; transform:translateY(-50%); } }

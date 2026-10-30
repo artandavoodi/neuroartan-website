@@ -445,7 +445,7 @@
   border:var(--spacing-none);
 }
 
-.home-platform-theme__token-input{
+.home-platform-theme__token-input:not([type="color"]){
   border:var(--border-width-hairline) solid var(--account-sign-in-input-border);
   border-radius:var(--account-sign-in-field-radius);
   background:transparent;

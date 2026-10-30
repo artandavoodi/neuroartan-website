@@ -412,6 +412,14 @@ function syncToggleNode(node) {
   if (!(node instanceof HTMLElement)) return;
 
   const state = getCurrentThemeState();
+  if (node instanceof HTMLInputElement && node.hasAttribute('data-theme-token')) {
+    const key = node.getAttribute('data-theme-token');
+    const fallback = {accent:'--accent-color',accentHover:'--accent-hover-color',background:'--bg-color',text:'--text-color',surface:'--surface-color',border:'--color-primary3'};
+    const value = state.tokens[key] || getComputedStyle(document.documentElement).getPropertyValue(fallback[key]).trim();
+    if (/^#[0-9a-f]{6}$/i.test(value)) node.value = value;
+    node.setAttribute('aria-label', `Custom ${key === 'accentHover' ? 'accent hover' : key} color`);
+    return;
+  }
   const explicitTheme = node.getAttribute('data-theme-option') || node.getAttribute('data-theme-mode');
   const explicitContrast = node.getAttribute('data-theme-contrast-option');
   const explicitPalette = node.getAttribute('data-theme-palette-option');

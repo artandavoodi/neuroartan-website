@@ -7,7 +7,7 @@ export function showSaveConfirmation(text='Changes saved.'){
     message.setAttribute('role','status');
     message.setAttribute('aria-live','polite');
     message.setAttribute('aria-atomic','true');
-    (document.querySelector('footer')||document.body).append(message);
+    document.body.append(message);
   }
   clearTimeout(hideTimer);clearTimeout(clearTimer);
   message.textContent=text;

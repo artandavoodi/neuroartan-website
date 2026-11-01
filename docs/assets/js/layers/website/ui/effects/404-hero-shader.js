@@ -328,7 +328,7 @@
 
   function animate(timestamp) {
     drawFrame(timestamp);
-    state.rafId = requestAnimationFrame(animate);
+    if (!state.isReducedMotion) state.rafId = requestAnimationFrame(animate);
   }
 
   function startAnimation() {

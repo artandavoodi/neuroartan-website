@@ -580,6 +580,11 @@
     toggle.dataset.cookieConsentEnabled = value ? 'true' : 'false';
     toggle.setAttribute('aria-checked', value ? 'true' : 'false');
 
+    if (window.NeuroartanToggle?.syncToggleState) {
+      window.NeuroartanToggle.syncToggleState(toggle, value, { emit: false, persist: false });
+      return;
+    }
+
     if (window.NeuroartanButtons && typeof window.NeuroartanButtons.setToggleChecked === 'function') {
       window.NeuroartanButtons.setToggleChecked(toggle, value, { emit: false });
       return;
@@ -609,6 +614,11 @@
     const value = Boolean(enabled);
     toggle.dataset.cookieConsentEnabled = value ? 'true' : 'false';
     toggle.setAttribute('aria-checked', value ? 'true' : 'false');
+
+    if (window.NeuroartanToggle?.syncToggleState) {
+      window.NeuroartanToggle.syncToggleState(toggle, value, { emit: false, persist: false });
+      return;
+    }
 
     if (window.NeuroartanButtons && typeof window.NeuroartanButtons.setToggleChecked === 'function') {
       window.NeuroartanButtons.setToggleChecked(toggle, value, { emit: false });

@@ -465,6 +465,13 @@ body.cookie-consent-closing .cookie-consent-panel{
   top:var(--cookie-consent-body-padding-top);
   right:var(--spacing-none);
   color:var(--cookie-consent-close-button-color);
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  min-width:0;
+  width:var(--cookie-consent-close-button-size);
+  height:var(--cookie-consent-close-button-size);
 }
 
 .cookie-consent-close[hidden]{
@@ -702,9 +709,8 @@ body.cookie-consent-closing .cookie-consent-panel{
    13) ACTIONS
 ============================================================================= */
 .cookie-consent-actions{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap: var(--cookie-consent-action-gap);
 }
 
@@ -723,7 +729,11 @@ body.cookie-consent-closing .cookie-consent-panel{
   font-weight:var(--cookie-consent-action-weight);
   letter-spacing:var(--cookie-consent-action-tracking);
   line-height:var(--cookie-consent-action-line-height);
-  white-space: nowrap;
+  white-space:normal;
+  text-align:center;
+  box-sizing:border-box;
+  width:100%;
+  border:var(--border-width-hairline) solid var(--cookie-consent-action-border);
   transition:var(--interaction-transition-control);
 }
 
@@ -735,14 +745,16 @@ body.cookie-consent-closing .cookie-consent-panel{
 }
 
 .cookie-consent-action--secondary{
-  background: var(--cookie-consent-action-surface);
-  color: var(--cookie-consent-action-text);
+  --cookie-consent-action-surface:var(--feedback-success-color);
+  --cookie-consent-action-surface-hover:var(--feedback-success-color);
+  --cookie-consent-action-text:var(--color-white);
   border-color: var(--cookie-consent-action-border);
 }
 
 .cookie-consent-action--tertiary{
-  background: var(--cookie-consent-action-surface);
-  color: var(--cookie-consent-action-text);
+  --cookie-consent-action-surface:var(--feedback-error-color);
+  --cookie-consent-action-surface-hover:var(--feedback-error-color);
+  --cookie-consent-action-text:var(--color-white);
   border-color: var(--cookie-consent-action-border);
 }
 
@@ -1439,7 +1451,7 @@ body.cookie-consent-closing .cookie-consent-panel{
   }
 
   .cookie-consent-actions{
-    flex-direction: column;
+    grid-template-columns:minmax(0,1fr);
     padding-top:var(--cookie-consent-mobile-actions-padding-top);
     padding-bottom:var(--cookie-consent-mobile-actions-padding-bottom);
   }

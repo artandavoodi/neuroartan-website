@@ -472,6 +472,16 @@ body.cookie-consent-closing .cookie-consent-panel{
   min-width:0;
   width:var(--cookie-consent-close-button-size);
   height:var(--cookie-consent-close-button-size);
+  display:grid;
+  place-items:center;
+}
+
+.cookie-consent-close-back-icon{
+  display:block;
+  width:var(--cookie-consent-row-icon-size);
+  height:var(--cookie-consent-row-icon-size);
+  object-fit:contain;
+  filter:var(--cookie-consent-row-icon-image-filter);
 }
 
 .cookie-consent-close[hidden]{

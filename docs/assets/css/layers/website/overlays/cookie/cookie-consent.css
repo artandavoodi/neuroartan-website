@@ -463,7 +463,7 @@ body.cookie-consent-closing .cookie-consent-panel{
 .cookie-consent-close{
   position:absolute;
   top:var(--cookie-consent-body-padding-top);
-  right:var(--spacing-none);
+  inset-inline-start:var(--spacing-none);
   color:var(--cookie-consent-close-button-color);
   background:transparent;
   border:0;
